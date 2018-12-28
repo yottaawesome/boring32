@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+
+# Custom
+Build/
+.vs/
+*.log
+*.tlog
+*.idb
+*.pdb
