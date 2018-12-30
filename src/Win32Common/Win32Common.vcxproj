@@ -154,21 +154,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Win32Common.h" />
-    <ClInclude Include="src\h\DynamicLinkLibrary.h" />
     <ClInclude Include="src\h\stdafx.h" />
     <ClInclude Include="src\h\targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\cpp\DynamicLinkLibrary.cpp" />
-    <ClCompile Include="src\cpp\Functions.cpp" />
     <ClCompile Include="src\cpp\GenericStrings.cpp" />
-    <ClCompile Include="src\cpp\stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\cpp\Win32Common.cpp" />
     <ClCompile Include="src\cpp\Win32Strings.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

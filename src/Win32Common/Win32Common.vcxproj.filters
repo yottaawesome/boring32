@@ -24,21 +24,9 @@
     <ClInclude Include="include\Win32Common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\h\DynamicLinkLibrary.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\cpp\stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\cpp\Win32Common.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\cpp\DynamicLinkLibrary.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\cpp\Functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\cpp\Win32Strings.cpp">

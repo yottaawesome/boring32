@@ -1,4 +1,4 @@
-#include "../h/DynamicLinkLibrary.h"
+#include "../../include/Win32Common.h"
 
 namespace Win32Common
 {
