@@ -2,7 +2,7 @@
 
 namespace Win32Common
 {
-	DynamicLinkLibrary::DynamicLinkLibrary(wstring& path)
+	DynamicLinkLibrary::DynamicLinkLibrary(const wstring& path)
 		: path(path)
 	{
 		std::unique_ptr<const char[]> ptr(GenericStrings::ConvertWCharToChar(path.c_str(), path.length()+1));
@@ -20,7 +20,12 @@ namespace Win32Common
 	{
 		return this->libraryHandle;
 	}
-	
+
+	void* DynamicLinkLibrary::Resolve(const wstring& path)
+	{
+		return GetProcAddress(this->libraryHandle, Win32Strings::ConvertWStringToString(path.c_str()).c_str());
+	}
+
 	DynamicLinkLibrary::~DynamicLinkLibrary()
 	{
 		FreeLibrary(libraryHandle);

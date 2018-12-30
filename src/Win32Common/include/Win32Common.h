@@ -24,11 +24,17 @@ namespace Win32Common
 			static wstring ConvertStringToWString(const string& str);
 	};
 
-	class IDynamicLinkLibrary
+	class DynamicLinkLibrary
 	{
 		public:
-			virtual const wstring& GetPath() = 0;
-			virtual const HMODULE GetHandle() = 0;
-			virtual ~IDynamicLinkLibrary() = 0;
+			DynamicLinkLibrary(const wstring& path);
+			virtual const wstring& GetPath();
+			virtual const HMODULE GetHandle();
+			virtual void* Resolve(const wstring& path);
+			virtual ~DynamicLinkLibrary();
+
+		protected:
+			const wstring path;
+			HMODULE libraryHandle;
 	};
 }

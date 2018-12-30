@@ -1,6 +1,3 @@
 #include "../../include/Win32Common.h"
 
-namespace Win32Common
-{
-	IDynamicLinkLibrary::~IDynamicLinkLibrary() { }
-}
+namespace Win32Common { }

@@ -4,12 +4,12 @@ namespace Win32Common
 {
 	string GenericStrings::ConvertWStringToString(const wstring& str)
 	{
-		return ConvertWCharToChar(str.c_str(), str.length()+1);
+		return std::unique_ptr<char[]>(ConvertWCharToChar(str.c_str(), str.length()+1)).get();
 	}
 
 	wstring GenericStrings::ConvertStringToWString(const string& str)
 	{
-		return ConvertCharToWChar(str.c_str(), str.length() + 1);
+		return std::unique_ptr<wchar_t[]>(ConvertCharToWChar(str.c_str(), str.length() + 1)).get();
 	}
 
 	wchar_t* GenericStrings::ConvertCharToWChar(const char* str, const size_t strLength)
