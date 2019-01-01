@@ -13,8 +13,8 @@ namespace Win32Common
 			static string ConvertWStringToString(const wstring& str);
 			static wstring ConvertStringToWString(const string& str);
 
-			static char* ConvertWCharToChar(const wchar_t* str, const size_t strLength);
-			static wchar_t* ConvertCharToWChar(const char* str, const size_t strLength);
+			//static char* ConvertWCharToChar(const wchar_t* str, const size_t strLength);
+			//static wchar_t* ConvertCharToWChar(const char* str, const size_t strLength);
 	};
 
 	class Win32Strings
