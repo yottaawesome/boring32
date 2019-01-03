@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32Common", "src\Win32Common\Win32Common.vcxproj", "{32C00709-6709-46D8-9167-4456047A2060}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32Common", "Win32Common\Win32Common.vcxproj", "{32C00709-6709-46D8-9167-4456047A2060}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32Common.Tests", "src\Win32Common.Tests\Win32Common.Tests.vcxproj", "{2AD9E4D4-E614-4A27-99AE-7DDDD232198B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32Common.Tests", "Win32Common.Tests\Win32Common.Tests.vcxproj", "{2AD9E4D4-E614-4A27-99AE-7DDDD232198B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{32C00709-6709-46D8-9167-4456047A2060} = {32C00709-6709-46D8-9167-4456047A2060}
 	EndProjectSection
