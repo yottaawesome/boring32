@@ -3,6 +3,9 @@
 ## What is it?
 This repo is for the Win32Common shared library project, which I use as a common code base when experimenting and developing with the Win32 API. It may or may not become part of the Onyx32 framework at some point in the future.
 
+## Status
+__In development.__
+
 ## So it's only for Windows?
 Yes, Windows. I do, however, have an interest in developing a Linux variant. My knowledge of Linux C++ development is currently limited, though, and such an undertaking might end up in a separate repo. I can definitely see common ground, however, as stuff like dynamic linking is not unique to Windows.
 
@@ -11,6 +14,3 @@ It's largely intended to assist me with playing around and learning Win32 by giv
 
 ## What's Onyx32?
 It's my prototype GUI framework for making Win32 apps. It's mainly worked on when I get overwhelmed learning about Python/Docker/Linux/Flask/Django. Some existing functionality in Onyx32 is due to be ported to Win32Common.
-
-## When will you finish it?
-In due course depending on my other projects. I typically chase multiple projects and ideas and the limited activity you see on GitHub is only a fraction of what I do. :-)
