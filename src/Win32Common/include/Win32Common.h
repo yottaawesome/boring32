@@ -25,10 +25,10 @@ namespace Win32Common
 	{
 		public:
 			DynamicLinkLibrary(const std::wstring& path);
+			virtual ~DynamicLinkLibrary();
 			virtual const std::wstring& GetPath();
 			virtual const HMODULE GetHandle();
 			virtual void* Resolve(const std::wstring& path);
-			virtual ~DynamicLinkLibrary();
 
 		protected:
 			const std::wstring path;
