@@ -1,4 +1,8 @@
 #include "../../include/Win32Common.h"
+#include <stdexcept>
+
+using std::string;
+using std::wstring;
 
 namespace Win32Common
 {

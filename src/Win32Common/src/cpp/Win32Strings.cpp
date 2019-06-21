@@ -1,5 +1,8 @@
 #include "../../include/Win32Common.h"
 
+using std::string;
+using std::wstring;
+
 namespace Win32Common
 {
 	string Win32Strings::ConvertWStringToString(const wstring& wstr)

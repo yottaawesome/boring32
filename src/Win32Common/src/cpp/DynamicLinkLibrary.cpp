@@ -1,8 +1,9 @@
 #include "../../include/Win32Common.h"
+#include <stdexcept>
 
 namespace Win32Common
 {
-	DynamicLinkLibrary::DynamicLinkLibrary(const wstring& path)
+	DynamicLinkLibrary::DynamicLinkLibrary(const std::wstring& path)
 		: path(path)
 	{
 		libraryHandle = LoadLibrary(path.c_str());
@@ -10,7 +11,7 @@ namespace Win32Common
 			throw std::runtime_error("Failed to load library");
 	}
 
-	const wstring& DynamicLinkLibrary::GetPath()
+	const std::wstring& DynamicLinkLibrary::GetPath()
 	{
 		return path;
 	}
@@ -20,7 +21,7 @@ namespace Win32Common
 		return this->libraryHandle;
 	}
 
-	void* DynamicLinkLibrary::Resolve(const wstring& path)
+	void* DynamicLinkLibrary::Resolve(const std::wstring& path)
 	{
 		return GetProcAddress(this->libraryHandle, Win32Strings::ConvertWStringToString(path.c_str()).c_str());
 	}
