@@ -21,7 +21,13 @@
     <ClInclude Include="src\targetver.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Win32Common.hpp">
+    <ClInclude Include="include\Win32Utils.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Process.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Strings.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -29,13 +35,10 @@
     <ClCompile Include="src\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\cpp\DynamicLinkLibrary.cpp">
+    <ClCompile Include="src\Process\DynamicLinkLibrary.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\cpp\GenericStrings.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\cpp\Win32Strings.cpp">
+    <ClCompile Include="src\Strings\Win32Strings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -166,15 +166,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\Win32Common.hpp" />
+    <ClInclude Include="include\Process.hpp" />
+    <ClInclude Include="include\Strings.hpp" />
+    <ClInclude Include="include\Win32Utils.hpp" />
     <ClInclude Include="src\pch.hpp" />
     <ClInclude Include="src\targetver.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\cpp\DynamicLinkLibrary.cpp" />
-    <ClCompile Include="src\cpp\GenericStrings.cpp" />
-    <ClCompile Include="src\cpp\Win32Strings.cpp" />
+    <ClCompile Include="src\Strings\Win32Strings.cpp" />
     <ClCompile Include="src\pch.cpp" />
+    <ClCompile Include="src\Process\DynamicLinkLibrary.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

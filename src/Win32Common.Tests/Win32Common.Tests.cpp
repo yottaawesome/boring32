@@ -1,22 +1,20 @@
 ﻿#include "Win32Common.Tests.h"
 #include <iostream>
-#include "../Win32Common/include/Win32Common.hpp"
+#include "../Win32Common/include/Win32Utils.hpp"
 #include <dbghelp.h>
-
-using Win32Utils::DynamicLinkLibrary;
 
 void TestConversions()
 {
 	const wchar_t test1[] = L"Test1";
 	std::wcout 
-		<< Win32Utils::ConvertStringToWString(
-			Win32Utils::ConvertWStringToString(test1))
+		<< Win32Utils::Strings::ConvertStringToWString(
+			Win32Utils::Strings::ConvertWStringToString(test1))
 		<< "\n";
 }
 
 void TestLibraryLoad()
 {
-	DynamicLinkLibrary d(L"Onyx32.Filesystem.dll");
+	Win32Utils::Process::DynamicLinkLibrary d(L"Onyx32.Filesystem.dll");
 	void* mainFunc = d.Resolve(L"GetMainInterface");
 	if (mainFunc == nullptr)
 		throw new std::runtime_error("Could not resolve function");
