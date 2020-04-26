@@ -13,6 +13,8 @@ namespace Win32Utils::Process
 	{
 		if (m_mutex != nullptr)
 		{
+			if (m_locked)
+				Unlock();
 			CloseHandle(m_mutex);
 			m_mutex = nullptr;
 		}
@@ -126,8 +128,8 @@ namespace Win32Utils::Process
 
 	void Mutex::Unlock()
 	{
-		m_locked = false;
 		if (!ReleaseMutex(m_mutex))
 			throw std::runtime_error("Failed to release mutex");
+		m_locked = false;
 	}
 }

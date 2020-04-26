@@ -52,6 +52,10 @@ namespace Win32Utils::Process
 			virtual void operator=(const MemoryMappedFile& other) = delete;
 
 		protected:
+			/// <summary>
+			///		Unlocks the mutex if it is currently owned, releases the 
+			///		mutex handle, and clears the underlying pointer.
+			/// </summary>
 			virtual void Cleanup();
 
 		protected:
