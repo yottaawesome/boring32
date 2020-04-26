@@ -30,13 +30,11 @@ namespace Win32Utils::IPC
 				const bool createFile,
 				const bool inheritable
 			);
+			MemoryMappedFile(const MemoryMappedFile& other);
+
 			virtual ~MemoryMappedFile();
 			virtual void* GetViewPointer();
-			virtual bool Initialised();
-
-		public:
-			MemoryMappedFile(const MemoryMappedFile& other) = delete;
-			virtual void operator=(const MemoryMappedFile& other) = delete;
+			virtual void operator=(const MemoryMappedFile& other);
 
 		protected:
 			/// <summary>
@@ -44,14 +42,14 @@ namespace Win32Utils::IPC
 			///		mutex handle, and clears the underlying pointer.
 			/// </summary>
 			virtual void Cleanup();
+			virtual void Duplicate(const MemoryMappedFile& other);
 
 		protected:
-			bool m_initialised;
 			bool m_createFile;
 			bool m_inheritable;
-			const std::wstring m_mmfName;
-			const UINT m_maxSize;
-			HANDLE m_MapFile;
+			std::wstring m_mmfName;
+			UINT m_maxSize;
+			HANDLE m_mapFile;
 			void* m_View;
 	};
 

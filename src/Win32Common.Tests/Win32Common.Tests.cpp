@@ -28,6 +28,14 @@ void TestConversions()
 		<< std::endl;
 }
 
+void TestMemoryMappedFile()
+{
+	Win32Utils::IPC::MemoryMappedFile m1(L"HelloMmf1", 1000, true, false);
+	Win32Utils::IPC::MemoryMappedFile m2(m1);
+	Win32Utils::IPC::MemoryMappedFile m3(L"HelloMmf3", 1000, true, false);
+	m2 = m3;
+}
+
 void TestLibraryLoad()
 {
 	Win32Utils::Library::DynamicLinkLibrary d(L"Onyx32.Filesystem.dll");
@@ -42,6 +50,7 @@ int main(int argc, char** args)
 
 	TestMutex();
 	TestConversions();
+	TestMemoryMappedFile();
 	//TestLibraryLoad();
 
 	return 0;
