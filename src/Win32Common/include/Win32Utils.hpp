@@ -1,11 +1,5 @@
 #pragma once
-#include <string>
 #include "Process.hpp"
 #include "Strings.hpp"
-
-namespace Win32Utils
-{
-	
-
-	
-}
+#include "Time.hpp"
+#include "Guid.hpp"

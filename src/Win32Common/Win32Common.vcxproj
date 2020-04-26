@@ -166,16 +166,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Error.hpp" />
+    <ClInclude Include="include\Guid.hpp" />
     <ClInclude Include="include\Process.hpp" />
     <ClInclude Include="include\Strings.hpp" />
+    <ClInclude Include="include\Time.hpp" />
     <ClInclude Include="include\Win32Utils.hpp" />
     <ClInclude Include="src\pch.hpp" />
     <ClInclude Include="src\targetver.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Error\Error.cpp" />
+    <ClCompile Include="src\Guid\Guid.cpp" />
     <ClCompile Include="src\Strings\Win32Strings.cpp" />
     <ClCompile Include="src\pch.cpp" />
     <ClCompile Include="src\Process\DynamicLinkLibrary.cpp" />
+    <ClCompile Include="src\Time\Time.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
