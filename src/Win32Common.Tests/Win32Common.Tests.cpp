@@ -1,20 +1,20 @@
 ﻿#include "Win32Common.Tests.h"
 #include <iostream>
-#include "../Win32Common/include/Win32Common.h"
+#include "../Win32Common/include/Win32Common.hpp"
 #include <dbghelp.h>
 
-using Win32Common::DynamicLinkLibrary;
+using Win32Utils::DynamicLinkLibrary;
 
-void testConversions()
+void TestConversions()
 {
 	const wchar_t test1[] = L"Test1";
 	std::wcout 
-		<< Win32Common::Win32Strings::ConvertStringToWString(
-			Win32Common::Win32Strings::ConvertWStringToString(test1))
+		<< Win32Utils::ConvertStringToWString(
+			Win32Utils::ConvertWStringToString(test1))
 		<< "\n";
 }
 
-void testLibraryLoad()
+void TestLibraryLoad()
 {
 	DynamicLinkLibrary d(L"Onyx32.Filesystem.dll");
 	void* mainFunc = d.Resolve(L"GetMainInterface");
@@ -22,10 +22,12 @@ void testLibraryLoad()
 		throw new std::runtime_error("Could not resolve function");
 }
 
-int main()
+int main(int argc, char** args)
 {
 	// todo: add a test framework like Catch2
 
-	testConversions();
-	testLibraryLoad();
+	TestConversions();
+	TestLibraryLoad();
+
+	return 0;
 }

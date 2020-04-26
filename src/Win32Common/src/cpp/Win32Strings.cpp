@@ -1,11 +1,12 @@
-#include "../../include/Win32Common.h"
+#include "pch.hpp"
+#include "include/Win32Common.hpp"
 
 using std::string;
 using std::wstring;
 
-namespace Win32Common
+namespace Win32Utils
 {
-	string Win32Strings::ConvertWStringToString(const wstring& wstr)
+	string ConvertWStringToString(const wstring& wstr)
 	{
 		if (wstr.empty())
 			return std::string();
@@ -16,7 +17,7 @@ namespace Win32Common
 		return strTo;
 	}
 
-	wstring Win32Strings::ConvertStringToWString(const string& str)
+	wstring ConvertStringToWString(const string& str)
 	{
 		if (str.empty())
 			return std::wstring();

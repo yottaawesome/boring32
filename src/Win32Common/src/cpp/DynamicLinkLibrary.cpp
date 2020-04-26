@@ -1,7 +1,8 @@
-#include "../../include/Win32Common.h"
+#include "pch.hpp"
+#include "include/Win32Common.hpp"
 #include <stdexcept>
 
-namespace Win32Common
+namespace Win32Utils
 {
 	DynamicLinkLibrary::DynamicLinkLibrary(const std::wstring& path)
 		: path(path)
@@ -23,7 +24,7 @@ namespace Win32Common
 
 	void* DynamicLinkLibrary::Resolve(const std::wstring& path)
 	{
-		return GetProcAddress(this->libraryHandle, Win32Strings::ConvertWStringToString(path.c_str()).c_str());
+		return GetProcAddress(this->libraryHandle, ConvertWStringToString(path.c_str()).c_str());
 	}
 
 	DynamicLinkLibrary::~DynamicLinkLibrary()

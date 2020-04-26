@@ -1,10 +1,11 @@
-#include "../../include/Win32Common.h"
+#include "pch.hpp"
 #include <stdexcept>
+#include "include/Win32Common.hpp"
 
 using std::string;
 using std::wstring;
 
-namespace Win32Common
+namespace Win32Utils
 {
 	string GenericStrings::ConvertWStringToString(const wstring& str)
 	{
