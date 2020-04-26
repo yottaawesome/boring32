@@ -3,6 +3,19 @@
 #include "../Win32Common/include/Win32Utils.hpp"
 #include <dbghelp.h>
 
+void TestMutex()
+{
+	Win32Utils::Process::Mutex m1(L"HelloMutex", true, false, false);
+	m1.Lock(1000);
+	m1.Unlock();
+
+	Win32Utils::Process::Mutex m2(m1);
+
+	Win32Utils::Process::Mutex m3(false, false);
+
+	m2 = m3;
+}
+
 void TestConversions()
 {
 	const wchar_t test1[] = L"Test1";
@@ -24,8 +37,9 @@ int main(int argc, char** args)
 {
 	// todo: add a test framework like Catch2
 
+	TestMutex();
 	TestConversions();
-	TestLibraryLoad();
+	//TestLibraryLoad();
 
 	return 0;
 }

@@ -6,6 +6,11 @@ namespace Win32Utils::Process
 {
 	Mutex::~Mutex()
 	{
+		Cleanup();
+	}
+
+	void Mutex::Cleanup()
+	{
 		if (m_mutex != nullptr)
 		{
 			CloseHandle(m_mutex);
@@ -37,17 +42,86 @@ namespace Win32Utils::Process
 		}
 
 		if (m_mutex == nullptr)
-		{
 			throw std::runtime_error("Failed to create or open mutex");
-		}
 
-		m_locked = acquire;
+		m_locked = create && acquire;
 	}
 
-	void Mutex::Lock()
+	Mutex::Mutex(const bool acquire, const bool inheritable)
+	:	m_name(L""),
+		m_inheritable(inheritable),
+		m_created(false),
+		m_locked(acquire),
+		m_mutex(nullptr)
 	{
-		WaitForSingleObject(m_mutex, INFINITE);
-		m_locked = true;
+		SECURITY_ATTRIBUTES lp{ 0 };
+		lp.nLength = sizeof(lp);
+		lp.bInheritHandle = m_inheritable;
+		m_mutex = CreateMutex(
+			&lp,
+			m_locked,
+			nullptr
+		);
+		if (m_mutex == nullptr)
+			throw std::runtime_error("Failed to create or open mutex");
+	}
+
+	Mutex::Mutex(const Mutex& other)
+	:	m_name(other.m_name),
+		m_inheritable(other.m_inheritable),
+		m_created(false),
+		m_locked(other.m_locked),
+		m_mutex(nullptr)
+	{
+		if (other.m_mutex == nullptr)
+			throw std::runtime_error("Other mutex is not in a valid state for assignment.");
+		bool succeeded = DuplicateHandle(
+			GetCurrentProcess(),
+			other.m_mutex,
+			GetCurrentProcess(),
+			&m_mutex,
+			0,
+			other.m_inheritable,
+			DUPLICATE_SAME_ACCESS
+		);
+		if (succeeded == false)
+			throw std::runtime_error("Failed to duplicated handle.");
+	}
+
+
+	void Mutex::operator=(const Mutex& other)
+	{
+		if (other.m_mutex == nullptr)
+			throw std::runtime_error("Other mutex is not in a valid state for assignment.");
+
+		Cleanup();
+		bool succeeded = DuplicateHandle(
+			GetCurrentProcess(),
+			other.m_mutex,
+			GetCurrentProcess(),
+			&m_mutex,
+			0,
+			other.m_inheritable,
+			DUPLICATE_SAME_ACCESS
+		);
+		if (succeeded == false)
+			throw std::runtime_error("Failed to duplicated handle.");
+	}
+
+	bool Mutex::Lock(const DWORD waitTime)
+	{
+		DWORD result = WaitForSingleObject(m_mutex, waitTime);
+		if (result == WAIT_OBJECT_0)
+		{
+			m_locked = true;
+			return true;
+		}
+		if (result == WAIT_TIMEOUT)
+		{
+			m_locked = false;
+			return false;
+		}
+		throw std::runtime_error("Failed to acquire mutex.");
 	}
 
 	void Mutex::Unlock()
