@@ -5,6 +5,10 @@
 
 namespace Win32Utils::IPC
 {
+	/// <summary>
+	///		Represents a <a href="https://docs.microsoft.com/en-us/dotnet/standard/io/memory-mapped-files">Win32 memory-mapped file</a>,
+	///		which is used for allowing process to share memory.
+	/// </summary>
 	class MemoryMappedFile
 	{
 		public:
@@ -30,11 +34,35 @@ namespace Win32Utils::IPC
 				const bool createFile,
 				const bool inheritable
 			);
+
+			/// <summary>
+			///		Duplicates the specified MemoryMappedFile.
+			/// </summary>
+			/// <param name="other">The MemoryMappedFile to duplicate.</param>
 			MemoryMappedFile(const MemoryMappedFile& other);
 
+			/// <summary>
+			///		Unmaps the view of the MemoryMappedFile and releases
+			///		the handle owned by this object.
+			/// </summary>
 			virtual ~MemoryMappedFile();
+			
+			/// <summary>
+			///		Gets the view pointer of the memory mapped file.
+			/// </summary>
+			/// <returns>The view object.</returns>
 			virtual void* GetViewPointer();
+
+			/// <summary>
+			///		Unmaps the view of the MemoryMappedFile and releases
+			///		the handle owned by this object before duplicating
+			///		from the specified MemoryMappedFile.
+			/// </summary>
+			/// <param name="other">The MemoryMappedFile to duplicate.</param>
 			virtual void operator=(const MemoryMappedFile& other);
+
+		public:
+			MemoryMappedFile() = delete;
 
 		protected:
 			/// <summary>
@@ -42,10 +70,14 @@ namespace Win32Utils::IPC
 			///		mutex handle, and clears the underlying pointer.
 			/// </summary>
 			virtual void Cleanup();
+
+			/// <summary>
+			///		Duplicates the specified MemoryMappedFile.
+			/// </summary>
+			/// <param name="other">The MemoryMappedFile to duplicate.</param>
 			virtual void Duplicate(const MemoryMappedFile& other);
 
 		protected:
-			bool m_createFile;
 			bool m_inheritable;
 			std::wstring m_mmfName;
 			UINT m_maxSize;

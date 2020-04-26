@@ -13,7 +13,6 @@ namespace Win32Utils::IPC
 	:	m_mmfName(name),
 		m_maxSize(maxSize),
 		m_mapFile(nullptr),
-		m_createFile(createFile),
 		m_inheritable(inheritable),
 		m_View(nullptr)
 	{
@@ -45,7 +44,7 @@ namespace Win32Utils::IPC
 			throw std::runtime_error("Failed to open memory mapped file");
 		}
 
-		m_View = (void*)MapViewOfFile(
+		m_View = MapViewOfFile(
 			m_mapFile,   // handle to map object
 			FILE_MAP_ALL_ACCESS, // read/write permission
 			0,
@@ -69,7 +68,6 @@ namespace Win32Utils::IPC
 	:	m_mmfName(other.m_mmfName),
 		m_maxSize(other.m_maxSize),
 		m_mapFile(nullptr),
-		m_createFile(other.m_createFile),
 		m_inheritable(other.m_inheritable)
 	{
 		if (other.m_mapFile == nullptr)
@@ -92,7 +90,6 @@ namespace Win32Utils::IPC
 		m_mmfName = other.m_mmfName;
 		m_maxSize = other.m_maxSize;
 		m_mapFile = nullptr;
-		m_createFile = other.m_createFile;
 		m_inheritable = other.m_inheritable;
 
 		bool succeeded = DuplicateHandle(
@@ -107,7 +104,7 @@ namespace Win32Utils::IPC
 		if (succeeded == false)
 			throw std::runtime_error("Failed to duplicated handle.");
 
-		m_View = (void*)MapViewOfFile(
+		m_View = MapViewOfFile(
 			m_mapFile,   // handle to map object
 			FILE_MAP_ALL_ACCESS, // read/write permission
 			0,
