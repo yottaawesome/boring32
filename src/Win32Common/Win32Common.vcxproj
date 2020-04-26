@@ -178,6 +178,8 @@
   <ItemGroup>
     <ClCompile Include="src\Error\Error.cpp" />
     <ClCompile Include="src\Guid\Guid.cpp" />
+    <ClCompile Include="src\Process\MemoryMappedFile.cpp" />
+    <ClCompile Include="src\Process\Mutex.cpp" />
     <ClCompile Include="src\Strings\Win32Strings.cpp" />
     <ClCompile Include="src\pch.cpp" />
     <ClCompile Include="src\Process\DynamicLinkLibrary.cpp" />
