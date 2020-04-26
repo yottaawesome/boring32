@@ -2,7 +2,7 @@
 #include "include/Win32Utils.hpp"
 #include <stdexcept>
 
-namespace Win32Utils::Process
+namespace Win32Utils::Library
 {
 	DynamicLinkLibrary::DynamicLinkLibrary(const std::wstring& path)
 		: path(path)

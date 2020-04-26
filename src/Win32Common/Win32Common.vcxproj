@@ -168,7 +168,8 @@
   <ItemGroup>
     <ClInclude Include="include\Error.hpp" />
     <ClInclude Include="include\Guid.hpp" />
-    <ClInclude Include="include\Process.hpp" />
+    <ClInclude Include="include\IPC.hpp" />
+    <ClInclude Include="include\Library.hpp" />
     <ClInclude Include="include\Strings.hpp" />
     <ClInclude Include="include\Time.hpp" />
     <ClInclude Include="include\Win32Utils.hpp" />
@@ -178,11 +179,11 @@
   <ItemGroup>
     <ClCompile Include="src\Error\Error.cpp" />
     <ClCompile Include="src\Guid\Guid.cpp" />
-    <ClCompile Include="src\Process\MemoryMappedFile.cpp" />
-    <ClCompile Include="src\Process\Mutex.cpp" />
+    <ClCompile Include="src\IPC\MemoryMappedFile.cpp" />
+    <ClCompile Include="src\IPC\Mutex.cpp" />
     <ClCompile Include="src\Strings\Win32Strings.cpp" />
     <ClCompile Include="src\pch.cpp" />
-    <ClCompile Include="src\Process\DynamicLinkLibrary.cpp" />
+    <ClCompile Include="src\Library\DynamicLinkLibrary.cpp" />
     <ClCompile Include="src\Time\Time.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
