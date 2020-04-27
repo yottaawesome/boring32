@@ -32,12 +32,21 @@ namespace Win32Utils::IPC
 			throw std::runtime_error("Failed to create anonymous pipe");
 	}
 
-	Pipe::Pipe(const bool inheritable, const DWORD size, const HANDLE m_readHandle, const HANDLE m_writeHandle)
-	:	m_readHandle(m_readHandle),
-		m_writeHandle(m_writeHandle),
+	Pipe::Pipe(
+		const bool inheritable,
+		const DWORD size,
+		const bool duplicate,
+		const HANDLE readHandle,
+		const HANDLE writeHandle
+	)
+	:	m_readHandle(duplicate ? nullptr : readHandle),
+		m_writeHandle(duplicate ? nullptr : writeHandle),
 		m_inheritable(inheritable),
 		m_size(size)
-	{ }
+	{
+		if(duplicate)
+			Duplicate(readHandle, writeHandle);
+	}
 
 	void Pipe::operator=(const Pipe& other)
 	{
@@ -45,18 +54,34 @@ namespace Win32Utils::IPC
 		Duplicate(other);
 	}
 
-	void Pipe::Duplicate(const Pipe& other)
+	void Pipe::SetPipes(
+		const bool inheritable,
+		const DWORD size,
+		const bool duplicate,
+		const HANDLE readHandle,
+		const HANDLE writeHandle)
 	{
-		m_size = other.m_size;
-		m_inheritable = other.m_inheritable;
-		m_readHandle = nullptr;
-		m_writeHandle = nullptr;
+		Cleanup();
+		m_size = size;
+		m_inheritable = inheritable;
+		if (duplicate)
+		{
+			Duplicate(readHandle, writeHandle);
+		}
+		else
+		{
+			m_readHandle = readHandle;
+			m_writeHandle = writeHandle;
+		}
+	}
 
-		if (other.m_readHandle)
+	void Pipe::Duplicate(const HANDLE readHandle, const HANDLE writeHandle)
+	{
+		if (readHandle)
 		{
 			bool succeeded = DuplicateHandle(
 				GetCurrentProcess(),
-				other.m_readHandle,
+				readHandle,
 				GetCurrentProcess(),
 				&m_readHandle,
 				0,
@@ -66,11 +91,11 @@ namespace Win32Utils::IPC
 			if (succeeded == false)
 				throw std::runtime_error("Failed to duplicate handle.");
 		}
-		if (other.m_writeHandle)
+		if (writeHandle)
 		{
 			bool succeeded = DuplicateHandle(
 				GetCurrentProcess(),
-				other.m_writeHandle,
+				writeHandle,
 				GetCurrentProcess(),
 				&m_writeHandle,
 				0,
@@ -80,6 +105,16 @@ namespace Win32Utils::IPC
 			if (succeeded == false)
 				throw std::runtime_error("Failed to duplicate handle.");
 		}
+	}
+
+	void Pipe::Duplicate(const Pipe& other)
+	{
+		m_size = other.m_size;
+		m_inheritable = other.m_inheritable;
+		m_readHandle = nullptr;
+		m_writeHandle = nullptr;
+
+		Duplicate(other.m_readHandle, other.m_writeHandle);
 	}
 
 	void Pipe::Cleanup()
@@ -103,17 +138,17 @@ namespace Win32Utils::IPC
 
 		DWORD bytesWritten;
 		bool bSuccess = WriteFile(
-			m_writeHandle, 
-			msg.data(), 
-			msg.size()*sizeof(wchar_t), 
-			&bytesWritten, 
+			m_writeHandle,
+			msg.data(),
+			msg.size() * sizeof(wchar_t),
+			&bytesWritten,
 			nullptr
 		);
 		if (bSuccess == false)
 			throw std::runtime_error("Write operation failed.");
 	}
 
-	std::wstring Pipe::ReadFromPipe()
+	std::wstring Pipe::Read()
 	{
 		if (m_readHandle == nullptr)
 			throw std::runtime_error("No active read handle.");
@@ -122,17 +157,17 @@ namespace Win32Utils::IPC
 		DWORD bytesRead;
 		msg.resize(m_size);
 		bool bSuccess = ReadFile(
-			m_readHandle, 
-			&msg[0], 
-			msg.size()*sizeof(wchar_t), 
-			&bytesRead, 
+			m_readHandle,
+			&msg[0],
+			msg.size() * sizeof(wchar_t),
+			&bytesRead,
 			nullptr
 		);
 		if (bSuccess == false)
 			throw std::runtime_error("Write operation failed");
 
 		msg.erase(std::find(msg.begin(), msg.end(), '\0'), msg.end());
-		
+
 		return msg;
 	}
 
@@ -144,7 +179,7 @@ namespace Win32Utils::IPC
 			m_readHandle = nullptr;
 		}
 	}
-	
+
 	void Pipe::CloseWrite()
 	{
 		if (m_writeHandle)
@@ -158,7 +193,7 @@ namespace Win32Utils::IPC
 	{
 		return m_readHandle;
 	}
-	
+
 	HANDLE Pipe::GetWrite()
 	{
 		return m_writeHandle;

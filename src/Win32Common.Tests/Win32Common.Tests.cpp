@@ -48,7 +48,7 @@ void TestAnonPipes()
 	std::wstring whatToSend(L"Poo");
 	Win32Utils::IPC::Pipe pipe(true, 512);
 	pipe.Write(whatToSend);
-	std::wstring response = pipe.ReadFromPipe();
+	std::wstring response = pipe.Read();
 	if (whatToSend != response)
 		throw std::runtime_error("Failed to match input to output");
 
