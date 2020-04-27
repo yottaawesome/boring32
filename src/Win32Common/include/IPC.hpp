@@ -7,9 +7,12 @@ namespace Win32Utils::IPC
 	class Pipe
 	{
 		public:
+			virtual ~Pipe();
+			Pipe(const Pipe& other);
 			Pipe(const bool inheritable, const DWORD size);
 			Pipe(const bool inheritable, const DWORD size, const HANDLE m_readHandle, const HANDLE m_writeHandle);
-			virtual ~Pipe();
+			
+			virtual void operator=(const Pipe& other);
 			virtual void Write(const std::wstring& msg);
 			virtual std::wstring ReadFromPipe();
 			virtual void CloseRead();
@@ -18,7 +21,8 @@ namespace Win32Utils::IPC
 			virtual HANDLE GetWrite();
 
 		protected:
-			void Cleanup();
+			virtual void Duplicate(const Pipe& other);
+			virtual void Cleanup();
 
 		protected:
 			DWORD m_size;

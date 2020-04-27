@@ -51,6 +51,8 @@ void TestAnonPipes()
 	std::wstring response = pipe.ReadFromPipe();
 	if (whatToSend != response)
 		throw std::runtime_error("Failed to match input to output");
+
+	Win32Utils::IPC::Pipe pipe2(pipe);
 }
 
 int main(int argc, char** args)

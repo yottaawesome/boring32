@@ -4,6 +4,20 @@
 
 namespace Win32Utils::IPC
 {
+	Pipe::~Pipe()
+	{
+		Cleanup();
+	}
+
+	Pipe::Pipe(const Pipe& other)
+	:	m_size(other.m_size),
+		m_inheritable(other.m_inheritable),
+		m_readHandle(nullptr),
+		m_writeHandle(nullptr)
+	{
+		Duplicate(other);
+	}
+
 	Pipe::Pipe(const bool inheritable, const DWORD size)
 	:	m_readHandle(nullptr),
 		m_writeHandle(nullptr),
@@ -25,9 +39,47 @@ namespace Win32Utils::IPC
 		m_size(size)
 	{ }
 
-	Pipe::~Pipe()
+	void Pipe::operator=(const Pipe& other)
 	{
 		Cleanup();
+		Duplicate(other);
+	}
+
+	void Pipe::Duplicate(const Pipe& other)
+	{
+		m_size = other.m_size;
+		m_inheritable = other.m_inheritable;
+		m_readHandle = nullptr;
+		m_writeHandle = nullptr;
+
+		if (other.m_readHandle)
+		{
+			bool succeeded = DuplicateHandle(
+				GetCurrentProcess(),
+				other.m_readHandle,
+				GetCurrentProcess(),
+				&m_readHandle,
+				0,
+				m_inheritable,
+				DUPLICATE_SAME_ACCESS
+			);
+			if (succeeded == false)
+				throw std::runtime_error("Failed to duplicate handle.");
+		}
+		if (other.m_writeHandle)
+		{
+			bool succeeded = DuplicateHandle(
+				GetCurrentProcess(),
+				other.m_writeHandle,
+				GetCurrentProcess(),
+				&m_writeHandle,
+				0,
+				m_inheritable,
+				DUPLICATE_SAME_ACCESS
+			);
+			if (succeeded == false)
+				throw std::runtime_error("Failed to duplicate handle.");
+		}
 	}
 
 	void Pipe::Cleanup()
@@ -46,6 +98,9 @@ namespace Win32Utils::IPC
 
 	void Pipe::Write(const std::wstring& msg)
 	{
+		if (m_writeHandle == nullptr)
+			throw std::runtime_error("No active write handle.");
+
 		DWORD bytesWritten;
 		bool bSuccess = WriteFile(
 			m_writeHandle, 
@@ -55,17 +110,27 @@ namespace Win32Utils::IPC
 			nullptr
 		);
 		if (bSuccess == false)
-			throw std::runtime_error("Write operation failed");
+			throw std::runtime_error("Write operation failed.");
 	}
 
 	std::wstring Pipe::ReadFromPipe()
 	{
+		if (m_readHandle == nullptr)
+			throw std::runtime_error("No active read handle.");
+
 		std::wstring msg;
 		DWORD bytesRead;
 		msg.resize(m_size);
-		bool bSuccess = ReadFile(m_readHandle, &msg[0], msg.size()*sizeof(wchar_t), &bytesRead, nullptr);
+		bool bSuccess = ReadFile(
+			m_readHandle, 
+			&msg[0], 
+			msg.size()*sizeof(wchar_t), 
+			&bytesRead, 
+			nullptr
+		);
 		if (bSuccess == false)
 			throw std::runtime_error("Write operation failed");
+
 		msg.erase(std::find(msg.begin(), msg.end(), '\0'), msg.end());
 		
 		return msg;

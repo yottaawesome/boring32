@@ -83,13 +83,12 @@ namespace Win32Utils::IPC
 			GetCurrentProcess(),
 			&m_mutex,
 			0,
-			other.m_inheritable,
+			m_inheritable,
 			DUPLICATE_SAME_ACCESS
 		);
 		if (succeeded == false)
-			throw std::runtime_error("Failed to duplicated handle.");
+			throw std::runtime_error("Failed to duplicate handle.");
 	}
-
 
 	void Mutex::operator=(const Mutex& other)
 	{
@@ -97,17 +96,22 @@ namespace Win32Utils::IPC
 			throw std::runtime_error("Other mutex is not in a valid state for assignment.");
 
 		Cleanup();
+		m_name = other.m_name;
+		m_inheritable = other.m_inheritable;
+		m_created = false;
+		m_locked = other.m_locked;
+
 		bool succeeded = DuplicateHandle(
 			GetCurrentProcess(),
 			other.m_mutex,
 			GetCurrentProcess(),
 			&m_mutex,
 			0,
-			other.m_inheritable,
+			m_inheritable,
 			DUPLICATE_SAME_ACCESS
 		);
 		if (succeeded == false)
-			throw std::runtime_error("Failed to duplicated handle.");
+			throw std::runtime_error("Failed to duplicate handle.");
 	}
 
 	bool Mutex::Lock(const DWORD waitTime)
