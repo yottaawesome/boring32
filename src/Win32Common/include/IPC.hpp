@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <string>
+#include <vector>
 
 namespace Win32Utils::IPC
 {
@@ -9,11 +10,12 @@ namespace Win32Utils::IPC
 		public:
 			virtual ~Pipe();
 			Pipe(const Pipe& other);
-			Pipe(const bool inheritable, const DWORD size);
+			Pipe(const bool inheritable, const DWORD size, const std::wstring& delimiter);
 			Pipe(
 				const bool inheritable,
 				const DWORD size, 
-				const bool duplicate, 
+				const bool duplicate,
+				const std::wstring& delimiter,
 				const HANDLE m_readHandle, 
 				const HANDLE m_writeHandle
 			);
@@ -23,10 +25,12 @@ namespace Win32Utils::IPC
 				const bool inheritable,
 				const DWORD size,
 				const bool duplicate,
+				const std::wstring& delimiter,
 				const HANDLE readHandle,
 				const HANDLE writeHandle);
 			virtual void Write(const std::wstring& msg);
 			virtual std::wstring Read();
+			virtual std::vector<std::wstring> DelimitedRead();
 			virtual void CloseRead();
 			virtual void CloseWrite();
 			virtual HANDLE GetRead();
@@ -38,6 +42,7 @@ namespace Win32Utils::IPC
 			virtual void Cleanup();
 
 		protected:
+			std::wstring m_delimiter;
 			DWORD m_size;
 			bool m_inheritable;
 			HANDLE m_readHandle;

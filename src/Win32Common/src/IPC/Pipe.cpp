@@ -12,17 +12,19 @@ namespace Win32Utils::IPC
 	Pipe::Pipe(const Pipe& other)
 	:	m_size(other.m_size),
 		m_inheritable(other.m_inheritable),
+		m_delimiter(other.m_delimiter),
 		m_readHandle(nullptr),
 		m_writeHandle(nullptr)
 	{
 		Duplicate(other);
 	}
 
-	Pipe::Pipe(const bool inheritable, const DWORD size)
+	Pipe::Pipe(const bool inheritable, const DWORD size, const std::wstring& delimiter)
 	:	m_readHandle(nullptr),
 		m_writeHandle(nullptr),
 		m_inheritable(inheritable),
-		m_size(size)
+		m_size(size),
+		m_delimiter(delimiter)
 	{
 		SECURITY_ATTRIBUTES lp{ 0 };
 		lp.nLength = sizeof(lp);
@@ -36,12 +38,14 @@ namespace Win32Utils::IPC
 		const bool inheritable,
 		const DWORD size,
 		const bool duplicate,
+		const std::wstring& delimiter,
 		const HANDLE readHandle,
 		const HANDLE writeHandle
 	)
 	:	m_readHandle(duplicate ? nullptr : readHandle),
 		m_writeHandle(duplicate ? nullptr : writeHandle),
 		m_inheritable(inheritable),
+		m_delimiter(delimiter),
 		m_size(size)
 	{
 		if(duplicate)
@@ -58,12 +62,14 @@ namespace Win32Utils::IPC
 		const bool inheritable,
 		const DWORD size,
 		const bool duplicate,
+		const std::wstring& delimiter,
 		const HANDLE readHandle,
 		const HANDLE writeHandle)
 	{
 		Cleanup();
 		m_size = size;
 		m_inheritable = inheritable;
+		m_delimiter = delimiter;
 		if (duplicate)
 		{
 			Duplicate(readHandle, writeHandle);
@@ -136,11 +142,15 @@ namespace Win32Utils::IPC
 		if (m_writeHandle == nullptr)
 			throw std::runtime_error("No active write handle.");
 
+		std::wstring msg2(msg);
+		if (m_delimiter != L"")
+			msg2 = m_delimiter + msg2 + m_delimiter;
+
 		DWORD bytesWritten;
 		bool bSuccess = WriteFile(
 			m_writeHandle,
-			msg.data(),
-			msg.size() * sizeof(wchar_t),
+			msg2.data(),
+			msg2.size() * sizeof(wchar_t),
 			&bytesWritten,
 			nullptr
 		);
@@ -169,6 +179,25 @@ namespace Win32Utils::IPC
 		msg.erase(std::find(msg.begin(), msg.end(), '\0'), msg.end());
 
 		return msg;
+	}
+
+	std::vector<std::wstring> Pipe::DelimitedRead()
+	{
+		std::wstring rawString = Read();
+		if (m_delimiter == L"")
+			return std::vector<std::wstring>{rawString};
+
+		std::vector<std::wstring> strings = Strings::TokeniseString(rawString, m_delimiter+m_delimiter);
+		if (strings.size() > 0)
+		{
+			strings[0] = Strings::Replace(strings[0], m_delimiter, L"");
+			if (strings.size() > 1)
+			{
+				size_t lastIndex = strings.size() - 1;
+				strings[lastIndex] = Strings::Replace(strings[lastIndex], m_delimiter, L"");
+			}
+		}
+		return strings;
 	}
 
 	void Pipe::CloseRead()

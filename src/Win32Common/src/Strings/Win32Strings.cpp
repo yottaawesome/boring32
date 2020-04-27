@@ -120,4 +120,57 @@ namespace Win32Utils::Strings
 
 	//	return buffer;
 	//}
+
+	std::vector<std::wstring> TokeniseString(const std::wstring& stringToTokenise, const std::wstring& delimiter)
+	{
+		std::vector<std::wstring> results;
+		size_t position = 0;
+		std::wstring intermediateString = stringToTokenise;
+
+		// If we don't find it at all, add the whole string
+		if (stringToTokenise.find(delimiter, position) == std::string::npos)
+		{
+			results.push_back(stringToTokenise);
+		}
+		else
+		{
+			while ((position = intermediateString.find(delimiter, position)) != std::string::npos)
+			{
+				// split and add to the results
+				std::wstring split = stringToTokenise.substr(0, position);
+				results.push_back(split);
+
+				// move up our position
+				position += delimiter.length();
+				intermediateString = stringToTokenise.substr(position);
+
+				// On the last iteration, enter the remainder
+				if (intermediateString.find(delimiter, position) == std::string::npos)
+					results.push_back(intermediateString);
+			}
+		}
+
+		return results;
+	}
+
+	// Adapted from https://stackoverflow.com/a/29752943/7448661
+	std::wstring Replace(std::wstring source, const std::wstring& from, const std::wstring& to)
+	{
+		std::wstring newString;
+		newString.reserve(source.length());
+
+		std::wstring::size_type lastPos = 0;
+		std::wstring::size_type findPos;
+
+		while (std::wstring::npos != (findPos = source.find(from, lastPos)))
+		{
+			newString.append(source, lastPos, findPos - lastPos);
+			newString += to;
+			lastPos = findPos + from.length();
+		}
+
+		newString += source.substr(lastPos);
+
+		return newString;
+	}
 }

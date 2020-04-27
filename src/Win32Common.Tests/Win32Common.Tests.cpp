@@ -45,17 +45,16 @@ void TestLibraryLoad()
 
 void TestAnonPipes()
 {
-	std::wstring whatToSend(L"||test||");
-	Win32Utils::IPC::Pipe pipe(true, 512);
-	pipe.Write(whatToSend);
-	pipe.Write(whatToSend);
+	std::wstring msg1(L"message1");
+	std::wstring msg2(L"message2");
+	Win32Utils::IPC::Pipe pipe(true, 512, L"||");
+	pipe.Write(msg1);
+	pipe.Write(msg2);
 
-	std::wstring response = pipe.Read();
-	std::wcout << response << std::endl;
-	//if (whatToSend != response)
-	//	throw std::runtime_error("Failed to match input to output");
-
-	Win32Utils::IPC::Pipe pipe2(pipe);
+	auto response = pipe.DelimitedRead();
+	std::wcout << response[0] << L" " << response[1] << std::endl;
+	if (msg1 != response[0] || msg2 != response[1])
+		throw std::runtime_error("Failed to match input to output");
 }
 
 int main(int argc, char** args)
