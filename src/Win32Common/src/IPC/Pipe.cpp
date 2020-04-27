@@ -9,6 +9,13 @@ namespace Win32Utils::IPC
 		Cleanup();
 	}
 
+	Pipe::Pipe()
+	:	m_size(0),
+		m_inheritable(false),
+		m_readHandle(nullptr),
+		m_writeHandle(nullptr)
+	{ }
+
 	Pipe::Pipe(const Pipe& other)
 	:	m_size(other.m_size),
 		m_inheritable(other.m_inheritable),

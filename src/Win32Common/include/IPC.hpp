@@ -9,6 +9,7 @@ namespace Win32Utils::IPC
 	{
 		public:
 			virtual ~Pipe();
+			Pipe();
 			Pipe(const Pipe& other);
 			Pipe(const bool inheritable, const DWORD size, const std::wstring& delimiter);
 			Pipe(
