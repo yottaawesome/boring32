@@ -148,7 +148,7 @@ namespace Win32Utils::IPC
 			}
 
 		protected:
-			Shared::Ipc::MemoryMappedFile m_mappedMemory;
+			MemoryMappedFile m_mappedMemory;
 			T* m_view;
 	};
 
