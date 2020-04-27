@@ -181,6 +181,7 @@
     <ClCompile Include="src\Guid\Guid.cpp" />
     <ClCompile Include="src\IPC\MemoryMappedFile.cpp" />
     <ClCompile Include="src\IPC\Mutex.cpp" />
+    <ClCompile Include="src\IPC\Pipe.cpp" />
     <ClCompile Include="src\Strings\Win32Strings.cpp" />
     <ClCompile Include="src\pch.cpp" />
     <ClCompile Include="src\Library\DynamicLinkLibrary.cpp" />

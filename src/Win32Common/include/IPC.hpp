@@ -4,6 +4,29 @@
 
 namespace Win32Utils::IPC
 {
+	class Pipe
+	{
+		public:
+			Pipe(const bool inheritable, const DWORD size);
+			Pipe(const bool inheritable, const DWORD size, const HANDLE m_readHandle, const HANDLE m_writeHandle);
+			virtual ~Pipe();
+			virtual void Write(const std::wstring& msg);
+			virtual std::wstring ReadFromPipe();
+			virtual void CloseRead();
+			virtual void CloseWrite();
+			virtual HANDLE GetRead();
+			virtual HANDLE GetWrite();
+
+		protected:
+			void Cleanup();
+
+		protected:
+			DWORD m_size;
+			bool m_inheritable;
+			HANDLE m_readHandle;
+			HANDLE m_writeHandle;
+	};
+
 	/// <summary>
 	///		Represents a <a href="https://docs.microsoft.com/en-us/dotnet/standard/io/memory-mapped-files">Win32 memory-mapped file</a>,
 	///		which is used for allowing process to share memory.
@@ -20,7 +43,7 @@ namespace Win32Utils::IPC
 			/// <param name="maxSize">
 			///		The maximum size of the memory mapped file.
 			/// </param>
-			/// <param name="createNewMutex">
+			/// <param name="createFile">
 			///		Whether to create a new memory mapped file or open an
 			///		existing one that has been inherited.
 			/// </param>

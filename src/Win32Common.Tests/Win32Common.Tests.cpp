@@ -10,7 +10,6 @@ void TestMutex()
 	m1.Unlock();
 
 	Win32Utils::IPC::Mutex m2(m1);
-
 	Win32Utils::IPC::Mutex m3(false, false);
 
 	m2 = m3;
@@ -44,6 +43,16 @@ void TestLibraryLoad()
 		throw new std::runtime_error("Could not resolve function");
 }
 
+void TestAnonPipes()
+{
+	std::wstring whatToSend(L"Poo");
+	Win32Utils::IPC::Pipe pipe(true, 512);
+	pipe.Write(whatToSend);
+	std::wstring response = pipe.ReadFromPipe();
+	if (whatToSend != response)
+		throw std::runtime_error("Failed to match input to output");
+}
+
 int main(int argc, char** args)
 {
 	// todo: add a test framework like Catch2
@@ -51,6 +60,7 @@ int main(int argc, char** args)
 	TestMutex();
 	TestConversions();
 	TestMemoryMappedFile();
+	TestAnonPipes();
 	//TestLibraryLoad();
 
 	return 0;
