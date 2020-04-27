@@ -124,6 +124,34 @@ namespace Win32Utils::IPC
 			void* m_View;
 	};
 
+	template<typename T>
+	class MemoryMappedView
+	{
+		public:
+			MemoryMappedView(const std::wstring& name, const bool create, const bool inheritable)
+			:	m_mappedMemory(
+					name,
+					sizeof(T),
+					create,
+					inheritable
+				),
+				m_view(nullptr)
+			{
+				m_view = (T*) m_mappedMemory.GetViewPointer();
+				if (create)
+					m_view = new (m_view) T();
+			}
+
+			T* GetView()
+			{
+				return m_view;
+			}
+
+		protected:
+			Shared::Ipc::MemoryMappedFile m_mappedMemory;
+			T* m_view;
+	};
+
 	/// <summary>
 	///		Represents a Win32 mutex, an object used primarily for interprocess
 	///		synchronisation and communication.
