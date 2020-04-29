@@ -37,6 +37,9 @@ namespace Win32Utils::IPC
 		lp.nLength = sizeof(lp);
 		lp.bInheritHandle = m_inheritable;
 		bool succeeded = CreatePipe(&m_readHandle, &m_writeHandle, &lp, size);
+		//DWORD mode = PIPE_READMODE_MESSAGE;
+		//SetNamedPipeHandleState(m_readHandle, &mode, nullptr, nullptr);
+		//SetNamedPipeHandleState(m_writeHandle, &mode, nullptr, nullptr);
 		if (succeeded == false)
 			throw std::runtime_error("Failed to create anonymous pipe");
 	}
