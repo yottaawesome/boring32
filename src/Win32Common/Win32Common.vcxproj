@@ -173,6 +173,7 @@
     <ClInclude Include="include\Strings.hpp" />
     <ClInclude Include="include\Time.hpp" />
     <ClInclude Include="include\Win32Utils.hpp" />
+    <ClInclude Include="include\WinHttp.hpp" />
     <ClInclude Include="src\pch.hpp" />
     <ClInclude Include="src\targetver.hpp" />
   </ItemGroup>
@@ -186,6 +187,8 @@
     <ClCompile Include="src\pch.cpp" />
     <ClCompile Include="src\Library\DynamicLinkLibrary.cpp" />
     <ClCompile Include="src\Time\Time.cpp" />
+    <ClCompile Include="src\WinHttp\WinHttpHandle.cpp" />
+    <ClCompile Include="src\WinHttp\WinHttpWebSocket.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

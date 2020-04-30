@@ -4,3 +4,4 @@
 #include "Time.hpp"
 #include "Guid.hpp"
 #include "IPC.hpp"
+#include "WinHttp.hpp"
