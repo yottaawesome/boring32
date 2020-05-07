@@ -104,13 +104,13 @@ namespace Win32Utils::WinHttp
 			m_port,
 			0);
 
-		WinHttpHandle m_hRequestHandle = WinHttpOpenRequest(
+		WinHttpHandle requestHandle = WinHttpOpenRequest(
 			m_hConnect.Get(),
 			L"GET",
 			path.c_str(),
-			NULL,
-			NULL,
-			NULL,
+			nullptr,
+			nullptr,
+			nullptr,
 			WINHTTP_FLAG_SECURE);
 
 		if (m_ignoreSslErrors)
@@ -121,7 +121,7 @@ namespace Win32Utils::WinHttp
 				SECURITY_FLAG_IGNORE_CERT_CN_INVALID |
 				SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
 			bool security = WinHttpSetOption(
-				m_hRequestHandle.Get(),
+				requestHandle.Get(),
 				WINHTTP_OPTION_SECURITY_FLAGS,
 				&dwFlags,
 				sizeof(dwFlags)
@@ -129,46 +129,46 @@ namespace Win32Utils::WinHttp
 			if (!security)
 			{
 				m_status = WinHttpWebSocketStatus::Error;
-				throw std::runtime_error(std::to_string(GetLastError()));
+				throw Error::Win32Exception("Failed to set security options");
 			}
 		}
 
 		bool websocket = WinHttpSetOption(
-			m_hRequestHandle.Get(),
+			requestHandle.Get(),
 			WINHTTP_OPTION_UPGRADE_TO_WEB_SOCKET,
 			NULL,
 			0);
 		if (!websocket)
 		{
 			m_status = WinHttpWebSocketStatus::Error;
-			throw std::runtime_error(std::to_string(GetLastError()));
+			throw Error::Win32Exception("Failed to set web socket upgrade option");
 		}
 
-		BOOL fStatus = WinHttpSendRequest(
-			m_hRequestHandle.Get(),
+		bool isSuccessful = WinHttpSendRequest(
+			requestHandle.Get(),
 			WINHTTP_NO_ADDITIONAL_HEADERS,
 			0,
 			nullptr,
 			0,
 			0,
 			0);
-		if (!fStatus)
+		if (!isSuccessful)
 		{
 			m_status = WinHttpWebSocketStatus::Error;
-			throw std::runtime_error(std::to_string(GetLastError()));
+			throw Error::Win32Exception("Failed to send web socket request");
 		}
 
-		fStatus = WinHttpReceiveResponse(m_hRequestHandle.Get(), 0);
-		if (!fStatus)
+		isSuccessful = WinHttpReceiveResponse(requestHandle.Get(), 0);
+		if (!isSuccessful)
 		{
 			m_status = WinHttpWebSocketStatus::Error;
-			throw std::runtime_error(std::to_string(GetLastError()));
+			throw Error::Win32Exception("Failed to receive web socket response");
 		}
 
 		DWORD statusCode = 0;
 		DWORD statusCodeSize = sizeof(statusCode);
 		WinHttpQueryHeaders(
-			m_hRequestHandle.Get(),
+			requestHandle.Get(),
 			WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
 			WINHTTP_HEADER_NAME_BY_INDEX,
 			&statusCode,
@@ -183,14 +183,14 @@ namespace Win32Utils::WinHttp
 			throw std::runtime_error(ss.str());
 		}
 
-		m_hWebSocketHandle = WinHttpWebSocketCompleteUpgrade(m_hRequestHandle.Get(), NULL);
-		if (m_hWebSocketHandle == nullptr)
+		m_webSocketHandle = WinHttpWebSocketCompleteUpgrade(requestHandle.Get(), 0);
+		if (m_webSocketHandle == nullptr)
 		{
 			m_status = WinHttpWebSocketStatus::Error;
-			throw std::runtime_error(std::to_string(GetLastError()));
+			throw Error::Win32Exception("Failed to complete web socket upgrade");
 		}
 
-		m_hRequestHandle = nullptr;
+		requestHandle = nullptr;
 		m_status = WinHttpWebSocketStatus::Connected;
 	}
 
@@ -205,7 +205,7 @@ namespace Win32Utils::WinHttp
 			throw std::runtime_error("WebSocket is not connected to send data");
 
 		DWORD dwError = WinHttpWebSocketSend(
-			m_hWebSocketHandle.Get(),
+			m_webSocketHandle.Get(),
 			WINHTTP_WEB_SOCKET_UTF8_MESSAGE_BUFFER_TYPE,
 			(PVOID)&msg[0],
 			msg.size() * sizeof(char)
@@ -223,7 +223,7 @@ namespace Win32Utils::WinHttp
 			throw std::runtime_error("WebSocket is not connected to send data");
 
 		DWORD dwError = WinHttpWebSocketSend(
-			m_hWebSocketHandle.Get(),
+			m_webSocketHandle.Get(),
 			WINHTTP_WEB_SOCKET_BINARY_MESSAGE_BUFFER_TYPE,
 			(PVOID)&buffer[0],
 			buffer.size() * sizeof(char)
@@ -249,23 +249,21 @@ namespace Win32Utils::WinHttp
 		{
 			DWORD dwBytesTransferred = 0;
 			DWORD dwError = WinHttpWebSocketReceive(
-				m_hWebSocketHandle.Get(),
+				m_webSocketHandle.Get(),
 				pbCurrentBufferPointer,
 				dwBufferLength,
 				&dwBytesTransferred,
 				&eBufferType);
 			// If the server terminates the connection, 12030 will returned.
 			if (dwError != ERROR_SUCCESS)
-				throw std::runtime_error(std::to_string(GetLastError()));
+				throw Error::Win32Exception("Connection error when receiving websocket data");
 			if (eBufferType == WINHTTP_WEB_SOCKET_CLOSE_BUFFER_TYPE)
 			{
 				Close();
 				return false;
 			}
-			{
-				pbCurrentBufferPointer += dwBytesTransferred;
-				dwBufferLength -= dwBytesTransferred;
-			}			
+			pbCurrentBufferPointer += dwBytesTransferred;
+			dwBufferLength -= dwBytesTransferred;		
 		} while (eBufferType == WINHTTP_WEB_SOCKET_UTF8_FRAGMENT_BUFFER_TYPE || eBufferType == WINHTTP_WEB_SOCKET_BINARY_FRAGMENT_BUFFER_TYPE);
 
 		charBuffer.shrink_to_fit();
@@ -274,7 +272,7 @@ namespace Win32Utils::WinHttp
 
 	void WinHttpWebSocket::Close()
 	{
-		WinHttpWebSocketClose(m_hWebSocketHandle.Get(), WINHTTP_WEB_SOCKET_SUCCESS_CLOSE_STATUS, nullptr, 0);
+		WinHttpWebSocketClose(m_webSocketHandle.Get(), WINHTTP_WEB_SOCKET_SUCCESS_CLOSE_STATUS, nullptr, 0);
 		m_status = WinHttpWebSocketStatus::Closed;
 	}
 }

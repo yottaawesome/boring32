@@ -51,7 +51,7 @@ namespace Win32Utils::WinHttp
 		protected:
 			WinHttpHandle m_hConnect;
 			WinHttpHandle m_hSession;
-			WinHttpHandle m_hWebSocketHandle;
+			WinHttpHandle m_webSocketHandle;
 			std::wstring m_server;
 			UINT m_port;
 			bool m_ignoreSslErrors;

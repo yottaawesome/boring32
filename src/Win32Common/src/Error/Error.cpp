@@ -4,7 +4,7 @@
 
 namespace Win32Utils::Error
 {
-	std::wstring GetErrorCodeAsWString(const DWORD errorCode)
+	std::wstring GetErrorCodeWString(const DWORD errorCode)
 	{
         LPVOID lpMsgBuf;
 

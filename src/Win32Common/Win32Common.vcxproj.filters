@@ -80,5 +80,8 @@
     <ClCompile Include="src\WinHttp\WinHttpWebSocket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Error\Win32Exception.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
