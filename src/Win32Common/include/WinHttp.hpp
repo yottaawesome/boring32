@@ -40,7 +40,7 @@ namespace Win32Utils::WinHttp
 			virtual void CleanServerString();
 			virtual void SendString(const std::string& msg);
 			virtual void SendBuffer(const std::vector<char>& buffer);
-			virtual bool Receive(std::string& buffer);
+			virtual bool Receive(std::vector<char>& buffer);
 			virtual void SetServer(const std::wstring& newServer, const UINT port, const bool ignoreSslErrors);
 			virtual void Close();
 			virtual WinHttpWebSocketStatus GetStatus();

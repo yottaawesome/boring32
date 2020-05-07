@@ -235,39 +235,63 @@ namespace Win32Utils::WinHttp
 		}
 	}
 
-	bool WinHttpWebSocket::Receive(std::string& charBuffer)
+	bool WinHttpWebSocket::Receive(std::vector<char>& receiveBuffer)
 	{
 		if (m_status != WinHttpWebSocketStatus::Connected)
 			throw std::runtime_error("WebSocket is not connected to receive data");
 
-		charBuffer.clear();
-		charBuffer.resize(2048);
-		WINHTTP_WEB_SOCKET_BUFFER_TYPE eBufferType;
-		DWORD dwBufferLength = charBuffer.size() * sizeof(char);
-		char* pbCurrentBufferPointer = &charBuffer[0];
-		do
+		constexpr UINT bufferBlockSize = 2048;
+		receiveBuffer.clear();
+		receiveBuffer.resize(bufferBlockSize);
+		WINHTTP_WEB_SOCKET_BUFFER_TYPE bufferType;
+		DWORD bufferLength = receiveBuffer.size() * sizeof(char);
+		DWORD totalBytesTransferred = 0;
+		char* currentBufferPointer = &receiveBuffer[0];
+		
+		while (true);
 		{
 			DWORD dwBytesTransferred = 0;
-			DWORD dwError = WinHttpWebSocketReceive(
-				m_webSocketHandle.Get(),
-				pbCurrentBufferPointer,
-				dwBufferLength,
-				&dwBytesTransferred,
-				&eBufferType);
-			// If the server terminates the connection, 12030 will returned.
-			if (dwError != ERROR_SUCCESS)
-				throw Error::Win32Exception("Connection error when receiving websocket data");
-			if (eBufferType == WINHTTP_WEB_SOCKET_CLOSE_BUFFER_TYPE)
+			if (bufferLength == 0)
 			{
-				Close();
-				return false;
+				receiveBuffer.resize(receiveBuffer.size() + bufferBlockSize);
+				bufferLength = receiveBuffer.size();
 			}
-			pbCurrentBufferPointer += dwBytesTransferred;
-			dwBufferLength -= dwBytesTransferred;		
-		} while (eBufferType == WINHTTP_WEB_SOCKET_UTF8_FRAGMENT_BUFFER_TYPE || eBufferType == WINHTTP_WEB_SOCKET_BINARY_FRAGMENT_BUFFER_TYPE);
+			DWORD statusCode = WinHttpWebSocketReceive(
+				m_webSocketHandle.Get(),
+				currentBufferPointer,
+				bufferLength,
+				&dwBytesTransferred,
+				&bufferType);
+			// If the server terminates the connection, 12030 will returned.
+			if (statusCode != ERROR_SUCCESS)
+				throw Error::Win32Exception("Connection error when receiving websocket data");
+			
+			switch (bufferType)
+			{
+				// The server closed the connection.
+				case WINHTTP_WEB_SOCKET_CLOSE_BUFFER_TYPE:
+					Close();
+					return false;
+				
+				// We're still reading data.
+				case WINHTTP_WEB_SOCKET_BINARY_FRAGMENT_BUFFER_TYPE:
+				case WINHTTP_WEB_SOCKET_UTF8_FRAGMENT_BUFFER_TYPE:
+					currentBufferPointer += dwBytesTransferred;
+					bufferLength -= dwBytesTransferred;
+					totalBytesTransferred += dwBytesTransferred;
+					break;
 
-		charBuffer.shrink_to_fit();
-		return true;
+				// We're done. We've got a complete buffer.
+				case WINHTTP_WEB_SOCKET_BINARY_MESSAGE_BUFFER_TYPE:
+				case WINHTTP_WEB_SOCKET_UTF8_MESSAGE_BUFFER_TYPE:
+					receiveBuffer.resize(totalBytesTransferred);
+					return true;
+
+				// This should never happen.
+				default:
+					throw std::runtime_error("Unexpected buffer type");
+			}
+		}
 	}
 
 	void WinHttpWebSocket::Close()
