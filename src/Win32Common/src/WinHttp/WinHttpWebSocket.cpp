@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <vector>
 #include <functional>
+#include <sstream>
 #include "include/Win32Utils.hpp"
 
 namespace Win32Utils::WinHttp
@@ -162,6 +163,24 @@ namespace Win32Utils::WinHttp
 		{
 			m_status = WinHttpWebSocketStatus::Error;
 			throw std::runtime_error(std::to_string(GetLastError()));
+		}
+
+		DWORD statusCode = 0;
+		DWORD statusCodeSize = sizeof(statusCode);
+		WinHttpQueryHeaders(
+			m_hRequestHandle.Get(),
+			WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
+			WINHTTP_HEADER_NAME_BY_INDEX,
+			&statusCode,
+			&statusCodeSize,
+			WINHTTP_NO_HEADER_INDEX);
+		if (statusCode != 101) // switching protocol
+		{
+			std::stringstream ss;
+			ss
+				<< "Received unexpected HTTP respons code while upgrading to websocket: "
+				<< std::to_string(statusCode);
+			throw std::runtime_error(ss.str());
 		}
 
 		m_hWebSocketHandle = WinHttpWebSocketCompleteUpgrade(m_hRequestHandle.Get(), NULL);
