@@ -250,12 +250,13 @@ namespace Win32Utils::WinHttp
 		
 		while (true);
 		{
-			DWORD dwBytesTransferred = 0;
 			if (bufferLength == 0)
 			{
 				receiveBuffer.resize(receiveBuffer.size() + bufferBlockSize);
 				bufferLength = receiveBuffer.size();
 			}
+
+			DWORD dwBytesTransferred = 0;
 			DWORD statusCode = WinHttpWebSocketReceive(
 				m_webSocketHandle.Get(),
 				currentBufferPointer,
@@ -266,30 +267,25 @@ namespace Win32Utils::WinHttp
 			if (statusCode != ERROR_SUCCESS)
 				throw Error::Win32Exception("Connection error when receiving websocket data");
 			
-			switch (bufferType)
+			// The server closed the connection.
+			if (bufferType == WINHTTP_WEB_SOCKET_CLOSE_BUFFER_TYPE)
 			{
-				// The server closed the connection.
-				case WINHTTP_WEB_SOCKET_CLOSE_BUFFER_TYPE:
-					Close();
-					return false;
-				
-				// We're still reading data.
-				case WINHTTP_WEB_SOCKET_BINARY_FRAGMENT_BUFFER_TYPE:
-				case WINHTTP_WEB_SOCKET_UTF8_FRAGMENT_BUFFER_TYPE:
-					currentBufferPointer += dwBytesTransferred;
-					bufferLength -= dwBytesTransferred;
-					totalBytesTransferred += dwBytesTransferred;
-					break;
+				Close();
+				return false;
+			}
 
-				// We're done. We've got a complete buffer.
-				case WINHTTP_WEB_SOCKET_BINARY_MESSAGE_BUFFER_TYPE:
-				case WINHTTP_WEB_SOCKET_UTF8_MESSAGE_BUFFER_TYPE:
-					receiveBuffer.resize(totalBytesTransferred);
-					return true;
+			currentBufferPointer += dwBytesTransferred;
+			bufferLength -= dwBytesTransferred;
+			totalBytesTransferred += dwBytesTransferred;
 
-				// This should never happen.
-				default:
-					throw std::runtime_error("Unexpected buffer type");
+			// We've now got a complete buffer of either binary or UTF8 type.
+			if (
+				bufferType == WINHTTP_WEB_SOCKET_BINARY_MESSAGE_BUFFER_TYPE
+				|| bufferType == WINHTTP_WEB_SOCKET_UTF8_MESSAGE_BUFFER_TYPE
+			)
+			{
+				receiveBuffer.resize(totalBytesTransferred);
+				return true;
 			}
 		}
 	}
