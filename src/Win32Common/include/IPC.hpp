@@ -18,8 +18,8 @@ namespace Win32Utils::IPC
 				const DWORD size, 
 				const bool duplicate,
 				const std::wstring& delimiter,
-				const HANDLE m_readHandle, 
-				const HANDLE m_writeHandle
+				const HANDLE readHandle, 
+				const HANDLE writeHandle
 			);
 			
 			virtual void operator=(const Pipe& other);
