@@ -11,6 +11,7 @@ namespace Win32Utils::IPC
 			virtual ~Pipe();
 			Pipe();
 			Pipe(const Pipe& other);
+			Pipe(Pipe&& other) noexcept;
 			Pipe(const bool inheritable, const DWORD size, const std::wstring& delimiter);
 			Pipe(
 				const bool inheritable,
@@ -22,6 +23,7 @@ namespace Win32Utils::IPC
 			);
 			
 			virtual void operator=(const Pipe& other);
+			virtual void operator=(Pipe&& other) noexcept;
 			virtual void SetPipes(
 				const bool inheritable,
 				const DWORD size,
@@ -203,6 +205,8 @@ namespace Win32Utils::IPC
 			/// <param name="other"></param>
 			Mutex(const Mutex& other);
 
+			Mutex(Mutex&& other) noexcept;
+
 			/// <summary>
 			/// Destroys this mutex.
 			/// </summary>
@@ -220,6 +224,9 @@ namespace Win32Utils::IPC
 			///		or if the duplicatation failed.
 			/// </exception>
 			virtual void operator=(const Mutex& other);
+
+			virtual void operator=(Mutex&& other) noexcept;
+
 
 			/// <summary>
 			///		Blocks the current thread for a specified amount of time 
@@ -252,6 +259,7 @@ namespace Win32Utils::IPC
 
 		protected:
 			virtual void Cleanup();
+			virtual void Move(Mutex& other) noexcept;
 
 		protected:
 			std::wstring m_name;

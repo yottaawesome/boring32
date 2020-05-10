@@ -20,6 +20,8 @@ namespace Win32Utils::Raii
 	{
 		m_inheritable = otherHandle.m_inheritable;
 		m_handle = otherHandle.m_handle;
+		otherHandle.m_inheritable = false;
+		otherHandle.m_handle = nullptr;
 	}
 
 	Win32Handle::Win32Handle(const HANDLE handle, const bool inheritable)
@@ -81,6 +83,7 @@ namespace Win32Utils::Raii
 			m_inheritable = other.m_inheritable;
 			m_handle = other.m_handle;
 			other.m_handle = nullptr;
+			other.m_inheritable = false;
 		}
 	}
 

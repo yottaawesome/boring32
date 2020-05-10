@@ -20,6 +20,11 @@ namespace Win32Utils::IPC
 		}
 	}
 
+	Mutex::Mutex(Mutex&& other) noexcept
+	{
+		Move(other);
+	}
+
 	Mutex::Mutex(const std::wstring_view name, const bool create, const bool acquire, const bool inheritable)
 	:	m_name(name),
 		m_inheritable(inheritable),
@@ -135,5 +140,20 @@ namespace Win32Utils::IPC
 		if (!ReleaseMutex(m_mutex))
 			throw std::runtime_error("Failed to release mutex");
 		m_locked = false;
+	}
+
+	void Mutex::operator=(Mutex&& other) noexcept
+	{
+		Move(other);
+	}
+
+	void Mutex::Move(Mutex& other) noexcept
+	{
+		m_name = other.m_name;
+		m_inheritable = other.m_inheritable;
+		m_created = other.m_created;
+		m_locked = other.m_locked;
+		m_mutex = other.m_mutex;
+		other.m_mutex = nullptr;
 	}
 }

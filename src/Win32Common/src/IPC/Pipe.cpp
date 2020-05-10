@@ -26,6 +26,40 @@ namespace Win32Utils::IPC
 		Duplicate(other);
 	}
 
+	Pipe::Pipe(Pipe&& other)
+	:	m_size(0),
+		m_inheritable(false),
+		m_readHandle(nullptr),
+		m_writeHandle(nullptr)
+	{
+		m_size = other.m_size;
+		m_inheritable = other.m_inheritable;
+		m_readHandle = other.m_readHandle;
+		m_writeHandle = other.m_writeHandle;
+		other.m_size = 0;
+		other.m_inheritable = false;
+		other.m_readHandle = nullptr;
+		other.m_writeHandle = nullptr;
+	}
+
+	void Pipe::operator=(Pipe&& other) noexcept
+	{
+		Cleanup();
+		m_size = other.m_size;
+		m_delimiter = other.m_delimiter;
+		m_inheritable = other.m_inheritable;
+		if (other.m_readHandle)
+		{
+			m_readHandle = other.m_readHandle;
+			other.m_readHandle = nullptr;
+		}
+		if (other.m_writeHandle)
+		{
+			m_writeHandle = other.m_writeHandle;
+			other.m_writeHandle = nullptr;
+		}
+	}
+
 	Pipe::Pipe(const bool inheritable, const DWORD size, const std::wstring& delimiter)
 	:	m_readHandle(nullptr),
 		m_writeHandle(nullptr),
