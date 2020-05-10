@@ -1,6 +1,6 @@
 #include "pch.hpp"
-#include "include/Win32Utils.hpp"
 #include <stdexcept>
+#include "include/Win32Utils.hpp"
 
 namespace Win32Utils::IPC
 {
@@ -33,10 +33,15 @@ namespace Win32Utils::IPC
 		Move(other);
 	}
 
-	Mutex::Mutex(const std::wstring_view name, const bool create, const bool acquire, const bool inheritable)
+	Mutex::Mutex(
+		const std::wstring_view name, 
+		const bool createNew, 
+		const bool acquireOnCreation, 
+		const bool inheritable
+	)
 	:	m_name(name),
 		m_inheritable(inheritable),
-		m_created(create),
+		m_created(createNew),
 		m_mutex(nullptr),
 		m_locked(false)
 	{
@@ -47,8 +52,8 @@ namespace Win32Utils::IPC
 			lp.bInheritHandle = inheritable;
 			m_mutex = CreateMutex(
 				&lp,
-				acquire,
-				m_name.c_str()
+				acquireOnCreation,
+				m_name.size() > 0 ? m_name.c_str() : nullptr
 			);
 		}
 		else
@@ -59,7 +64,7 @@ namespace Win32Utils::IPC
 		if (m_mutex == nullptr)
 			throw std::runtime_error("Failed to create or open mutex");
 
-		m_locked = create && acquire;
+		m_locked = createNew && acquireOnCreation;
 	}
 
 	Mutex::Mutex(const bool acquire, const bool inheritable)

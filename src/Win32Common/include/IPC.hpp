@@ -161,34 +161,43 @@ namespace Win32Utils::IPC
 	};
 
 	/// <summary>
-	///		Represents a Win32 mutex, an object used primarily for interprocess
+	///		Represents a Win32 mutex, an object used for interprocess
 	///		synchronisation and communication.
 	/// </summary>
 	class Mutex
 	{
 		public:
+			/// <summary>
+			/// Default constructor. Does not initialise any underlying mutex.
+			/// </summary>
 			Mutex();
 
 			/// <summary>
-			///		Creates a new mutex, or opens an existing mutex.
+			///		Creates a new named or anonymous mutex, or opens an existing named one.
 			/// </summary>
 			/// <param name="name">
-			///		The name of the mutex to create or open.
+			///		The name of the mutex to create or open. Pass an empty
+			///		string to create an anonymous mutex.
 			/// </param>
-			/// <param name="create">
+			/// <param name="createNew">
 			///		Whether to create a new mutex or open an existing one.
 			/// </param>
-			/// <param name="acquire">
+			/// <param name="acquireOnCreation">
 			///		Whether to acquire the mutex if it's being created.
-			///		If the create parameter is false, this parameter is ignored.
+			///		If the createNew parameter is false, this parameter is ignored.
 			/// </param>
 			/// <param name="inheritable">
 			///		Whether the handle can be inherited by child processes.
 			/// </param>
-			Mutex(const std::wstring_view name, const bool create, const bool acquire, const bool inheritable);
+			Mutex(
+				const std::wstring_view name,
+				const bool createNew,
+				const bool acquireOnCreation,
+				const bool inheritable
+			);
 			
 			/// <summary>
-			///		Creates an anymous mutex.
+			///		Creates an anonymous mutex.
 			/// </summary>
 			/// <param name="acquire">
 			///		Whether to request acquisition of the mutex.
@@ -202,15 +211,19 @@ namespace Win32Utils::IPC
 			Mutex(const bool acquire, const bool inheritable);
 
 			/// <summary>
-			/// Clones a mutex.
+			///		Clones a mutex.
 			/// </summary>
 			/// <param name="other"></param>
 			Mutex(const Mutex& other);
 
+			/// <summary>
+			///		Move constructor.
+			/// </summary>
+			/// <param name="other">The rvalue to move.</param>
 			Mutex(Mutex&& other) noexcept;
 
 			/// <summary>
-			/// Destroys this mutex.
+			///		Destroys this mutex.
 			/// </summary>
 			virtual ~Mutex();
 
@@ -227,6 +240,10 @@ namespace Win32Utils::IPC
 			/// </exception>
 			virtual void operator=(const Mutex& other);
 
+			/// <summary>
+			///		Move assignment.
+			/// </summary>
+			/// <param name="other">The mutex to move.</param>
 			virtual void operator=(Mutex&& other) noexcept;
 
 			/// <summary>
