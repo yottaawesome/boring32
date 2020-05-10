@@ -26,11 +26,7 @@ namespace Win32Utils::IPC
 		Duplicate(other);
 	}
 
-	Pipe::Pipe(Pipe&& other)
-	:	m_size(0),
-		m_inheritable(false),
-		m_readHandle(nullptr),
-		m_writeHandle(nullptr)
+	Pipe::Pipe(Pipe&& other) noexcept
 	{
 		m_size = other.m_size;
 		m_inheritable = other.m_inheritable;
