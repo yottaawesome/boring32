@@ -167,6 +167,8 @@ namespace Win32Utils::IPC
 	class Mutex
 	{
 		public:
+			Mutex();
+
 			/// <summary>
 			///		Creates a new mutex, or opens an existing mutex.
 			/// </summary>
@@ -227,7 +229,6 @@ namespace Win32Utils::IPC
 
 			virtual void operator=(Mutex&& other) noexcept;
 
-
 			/// <summary>
 			///		Blocks the current thread for a specified amount of time 
 			///		(or indefinitely) until the mutex is acquired.
@@ -253,9 +254,6 @@ namespace Win32Utils::IPC
 			/// </exception>
 			/// </summary>
 			virtual void Unlock();
-	
-		public:
-			Mutex() = delete;
 
 		protected:
 			virtual void Cleanup();

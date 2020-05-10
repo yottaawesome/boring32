@@ -13,6 +13,7 @@ void TestMutex()
 	Win32Utils::IPC::Mutex m3(false, false);
 
 	m2 = m3;
+	m2 = Win32Utils::IPC::Mutex(L"Assignment", true, false, false);
 }
 
 void TestConversions()

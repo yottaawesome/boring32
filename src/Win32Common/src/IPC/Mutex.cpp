@@ -20,6 +20,14 @@ namespace Win32Utils::IPC
 		}
 	}
 
+	Mutex::Mutex()
+	:	m_name(L""),
+		m_inheritable(false),
+		m_created(false),
+		m_mutex(nullptr),
+		m_locked(false)
+	{ }
+
 	Mutex::Mutex(Mutex&& other) noexcept
 	{
 		Move(other);
