@@ -170,6 +170,7 @@
     <ClInclude Include="include\Guid.hpp" />
     <ClInclude Include="include\IPC.hpp" />
     <ClInclude Include="include\Library.hpp" />
+    <ClInclude Include="include\Raii.hpp" />
     <ClInclude Include="include\Strings.hpp" />
     <ClInclude Include="include\Time.hpp" />
     <ClInclude Include="include\Win32Utils.hpp" />
@@ -184,6 +185,9 @@
     <ClCompile Include="src\IPC\MemoryMappedFile.cpp" />
     <ClCompile Include="src\IPC\Mutex.cpp" />
     <ClCompile Include="src\IPC\Pipe.cpp" />
+    <ClCompile Include="src\Raii\ProcessInfo.cpp" />
+    <ClCompile Include="src\Raii\Sid.cpp" />
+    <ClCompile Include="src\Raii\Win32Handle.cpp" />
     <ClCompile Include="src\Strings\Win32Strings.cpp" />
     <ClCompile Include="src\pch.cpp" />
     <ClCompile Include="src\Library\DynamicLinkLibrary.cpp" />

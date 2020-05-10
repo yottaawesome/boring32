@@ -250,12 +250,6 @@ namespace Win32Utils::WinHttp
 		
 		while (true);
 		{
-			if (bufferLength == 0)
-			{
-				receiveBuffer.resize(receiveBuffer.size() + bufferBlockSize);
-				bufferLength = receiveBuffer.size();
-			}
-
 			DWORD dwBytesTransferred = 0;
 			DWORD statusCode = WinHttpWebSocketReceive(
 				m_webSocketHandle.Get(),
@@ -286,6 +280,12 @@ namespace Win32Utils::WinHttp
 			{
 				receiveBuffer.resize(totalBytesTransferred);
 				return true;
+			}
+
+			if (bufferLength == 0)
+			{
+				receiveBuffer.resize(receiveBuffer.size() + bufferBlockSize);
+				bufferLength = receiveBuffer.size() * sizeof(char);
 			}
 		}
 	}
