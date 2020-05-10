@@ -65,8 +65,10 @@ namespace Win32Utils::Raii
 			virtual HANDLE* operator&();
 
 		protected:
+			virtual void Duplicate(const HANDLE otherHandle, const bool inheritable);
+
+		protected:
 			HANDLE m_handle;
 			bool m_inheritable;
-			virtual void Duplicate(const HANDLE otherHandle, const bool inheritable);
 	};
 }
