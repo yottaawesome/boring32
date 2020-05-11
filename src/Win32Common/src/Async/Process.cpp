@@ -55,7 +55,7 @@ namespace Win32Utils::Async
 		Move(other);
 	}
 
-	void Process::Move(Process& other)
+	void Process::Move(Process& other) noexcept
 	{
 		m_executablePath = std::move(other.m_executablePath);
 		m_commandLine = std::move(other.m_commandLine);
