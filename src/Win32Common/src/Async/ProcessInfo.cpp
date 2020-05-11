@@ -4,7 +4,7 @@
 namespace Win32Utils::Async
 {
 	ProcessInfo::ProcessInfo()
-		: m_processInfo{ 0 }
+	:	m_processInfo{ 0 }
 	{ }
 
 	ProcessInfo::~ProcessInfo()

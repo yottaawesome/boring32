@@ -179,6 +179,7 @@
     <ClInclude Include="src\targetver.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Async\Event.cpp" />
     <ClCompile Include="src\Error\Error.cpp" />
     <ClCompile Include="src\Error\Win32Exception.cpp" />
     <ClCompile Include="src\Guid\Guid.cpp" />
