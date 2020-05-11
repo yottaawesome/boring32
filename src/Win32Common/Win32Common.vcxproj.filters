@@ -89,10 +89,13 @@
     <ClCompile Include="src\Raii\Win32Handle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Raii\ProcessInfo.cpp">
+    <ClCompile Include="src\Raii\Sid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Raii\Sid.cpp">
+    <ClCompile Include="src\IPC\Process.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IPC\ProcessInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

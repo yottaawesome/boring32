@@ -6,21 +6,7 @@
 
 // Simple resource wrappers. See also: https://github.com/microsoft/wil
 namespace Win32Utils::Raii
-{
-	class ProcessInfo
-	{
-		public:
-			ProcessInfo();
-			virtual ~ProcessInfo();
-			virtual PROCESS_INFORMATION& GetProcessInfo();
-			virtual PROCESS_INFORMATION* operator&();
-			virtual HANDLE GetProcessHandle();
-			virtual HANDLE GetThreadHandle();
-
-		protected:
-			PROCESS_INFORMATION m_processInfo;
-	};
-	
+{	
 	class Sid
 	{
 		public:

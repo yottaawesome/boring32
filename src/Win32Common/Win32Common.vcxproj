@@ -185,7 +185,8 @@
     <ClCompile Include="src\IPC\MemoryMappedFile.cpp" />
     <ClCompile Include="src\IPC\Mutex.cpp" />
     <ClCompile Include="src\IPC\Pipe.cpp" />
-    <ClCompile Include="src\Raii\ProcessInfo.cpp" />
+    <ClCompile Include="src\IPC\Process.cpp" />
+    <ClCompile Include="src\IPC\ProcessInfo.cpp" />
     <ClCompile Include="src\Raii\Sid.cpp" />
     <ClCompile Include="src\Raii\Win32Handle.cpp" />
     <ClCompile Include="src\Strings\Win32Strings.cpp" />

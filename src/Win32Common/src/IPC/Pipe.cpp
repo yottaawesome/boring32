@@ -98,29 +98,6 @@ namespace Win32Utils::IPC
 		Duplicate(other);
 	}
 
-	void Pipe::SetPipes(
-		const bool inheritable,
-		const DWORD size,
-		const bool duplicate,
-		const std::wstring& delimiter,
-		const HANDLE readHandle,
-		const HANDLE writeHandle)
-	{
-		Cleanup();
-		m_size = size;
-		m_inheritable = inheritable;
-		m_delimiter = delimiter;
-		if (duplicate)
-		{
-			Duplicate(readHandle, writeHandle);
-		}
-		else
-		{
-			m_readHandle = readHandle;
-			m_writeHandle = writeHandle;
-		}
-	}
-
 	void Pipe::Duplicate(const HANDLE readHandle, const HANDLE writeHandle)
 	{
 		if (readHandle)

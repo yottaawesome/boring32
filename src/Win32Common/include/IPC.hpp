@@ -5,8 +5,23 @@
 
 namespace Win32Utils::IPC
 {
+	class ProcessInfo
+	{
+		public:
+			ProcessInfo();
+			virtual ~ProcessInfo();
+			virtual PROCESS_INFORMATION& GetProcessInfo();
+			virtual PROCESS_INFORMATION* operator&();
+			virtual HANDLE GetProcessHandle();
+			virtual HANDLE GetThreadHandle();
+
+		protected:
+			PROCESS_INFORMATION m_processInfo;
+	};
+
 	class Pipe
 	{
+		// Constructors
 		public:
 			virtual ~Pipe();
 			Pipe();
@@ -21,16 +36,9 @@ namespace Win32Utils::IPC
 				const HANDLE readHandle, 
 				const HANDLE writeHandle
 			);
-			
-			virtual void operator=(const Pipe& other);
-			virtual void operator=(Pipe&& other) noexcept;
-			virtual void SetPipes(
-				const bool inheritable,
-				const DWORD size,
-				const bool duplicate,
-				const std::wstring& delimiter,
-				const HANDLE readHandle,
-				const HANDLE writeHandle);
+		
+		// API
+		public:
 			virtual void Write(const std::wstring& msg);
 			virtual std::wstring Read();
 			virtual std::vector<std::wstring> DelimitedRead();
@@ -39,11 +47,18 @@ namespace Win32Utils::IPC
 			virtual HANDLE GetRead();
 			virtual HANDLE GetWrite();
 
+		// Overloaded operators
+		public:
+			virtual void operator=(const Pipe& other);
+			virtual void operator=(Pipe&& other) noexcept;
+
+		// Internal methods
 		protected:
 			virtual void Duplicate(const Pipe& other);
 			virtual void Duplicate(const HANDLE readHandle, const HANDLE writeHandle);
 			virtual void Cleanup();
 
+		// Internal variables
 		protected:
 			std::wstring m_delimiter;
 			DWORD m_size;
@@ -282,5 +297,47 @@ namespace Win32Utils::IPC
 			bool m_created;
 			bool m_locked;
 			HANDLE m_mutex;
+	};
+
+	class Process
+	{
+		public:
+			virtual ~Process();
+			Process();
+			Process(
+				const std::wstring& executablePath,
+				const std::wstring& commandLine,
+				const std::wstring& startingDirectory,
+				const bool canInheritHandles,
+				const DWORD creationFlags
+			);
+
+			// Move
+			Process(Process&& other) noexcept;
+			virtual void operator=(Process&& other) noexcept;
+
+			// Copy
+			Process(const Process& other);
+			virtual void operator=(Process& other);
+
+			virtual void Start();
+			virtual void CloseHandles();
+			virtual void CloseProcessHandle();
+			virtual void CloseThreadHandle();
+
+			virtual HANDLE GetProcessHandle();
+			virtual HANDLE GetThreadHandle();
+
+		protected:
+			virtual void Duplicate(const Process& other);
+			virtual void Move(Process& other);
+
+		protected:
+			std::wstring m_executablePath;
+			std::wstring m_commandLine;
+			std::wstring m_startingDirectory;
+			bool m_canInheritHandles;
+			PROCESS_INFORMATION m_processInfo;
+			DWORD m_creationFlags;
 	};
 }

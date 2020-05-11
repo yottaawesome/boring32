@@ -1,7 +1,7 @@
 #include "pch.hpp"
-#include "include/Raii.hpp"
+#include "include/IPC.hpp"
 
-namespace Win32Utils::Raii
+namespace Win32Utils::IPC
 {
 	ProcessInfo::ProcessInfo()
 		: m_processInfo{ 0 }
