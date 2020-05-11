@@ -367,7 +367,7 @@ namespace Win32Utils::Async
 
 		protected:
 			virtual void Duplicate(const Process& other);
-			virtual void Move(Process& other);
+			virtual void Move(Process& other) noexcept;
 
 		protected:
 			std::wstring m_executablePath;
