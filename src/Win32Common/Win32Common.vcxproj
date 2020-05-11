@@ -168,7 +168,7 @@
   <ItemGroup>
     <ClInclude Include="include\Error.hpp" />
     <ClInclude Include="include\Guid.hpp" />
-    <ClInclude Include="include\IPC.hpp" />
+    <ClInclude Include="include\Async.hpp" />
     <ClInclude Include="include\Library.hpp" />
     <ClInclude Include="include\Raii.hpp" />
     <ClInclude Include="include\Strings.hpp" />
@@ -182,11 +182,11 @@
     <ClCompile Include="src\Error\Error.cpp" />
     <ClCompile Include="src\Error\Win32Exception.cpp" />
     <ClCompile Include="src\Guid\Guid.cpp" />
-    <ClCompile Include="src\IPC\MemoryMappedFile.cpp" />
-    <ClCompile Include="src\IPC\Mutex.cpp" />
-    <ClCompile Include="src\IPC\Pipe.cpp" />
-    <ClCompile Include="src\IPC\Process.cpp" />
-    <ClCompile Include="src\IPC\ProcessInfo.cpp" />
+    <ClCompile Include="src\Async\MemoryMappedFile.cpp" />
+    <ClCompile Include="src\Async\Mutex.cpp" />
+    <ClCompile Include="src\Async\Pipe.cpp" />
+    <ClCompile Include="src\Async\Process.cpp" />
+    <ClCompile Include="src\Async\ProcessInfo.cpp" />
     <ClCompile Include="src\Raii\Sid.cpp" />
     <ClCompile Include="src\Raii\Win32Handle.cpp" />
     <ClCompile Include="src\Strings\Win32Strings.cpp" />

@@ -1,7 +1,7 @@
 #include "pch.hpp"
-#include "include/IPC.hpp"
+#include "include/Async.hpp"
 
-namespace Win32Utils::IPC
+namespace Win32Utils::Async
 {
 	ProcessInfo::ProcessInfo()
 		: m_processInfo{ 0 }

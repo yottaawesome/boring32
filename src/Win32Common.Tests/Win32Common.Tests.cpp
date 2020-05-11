@@ -5,15 +5,15 @@
 
 void TestMutex()
 {
-	Win32Utils::IPC::Mutex m1(L"HelloMutex", true, false, false);
+	Win32Utils::Async::Mutex m1(L"HelloMutex", true, false, false);
 	m1.Lock(1000);
 	m1.Unlock();
 
-	Win32Utils::IPC::Mutex m2(m1);
-	Win32Utils::IPC::Mutex m3(false, false);
+	Win32Utils::Async::Mutex m2(m1);
+	Win32Utils::Async::Mutex m3(false, false);
 
 	m2 = m3;
-	m2 = Win32Utils::IPC::Mutex(L"Assignment", true, false, false);
+	m2 = Win32Utils::Async::Mutex(L"Assignment", true, false, false);
 }
 
 void TestConversions()
@@ -30,9 +30,9 @@ void TestConversions()
 
 void TestMemoryMappedFile()
 {
-	Win32Utils::IPC::MemoryMappedFile m1(L"HelloMmf1", 1000, true, false);
-	Win32Utils::IPC::MemoryMappedFile m2(m1);
-	Win32Utils::IPC::MemoryMappedFile m3(L"HelloMmf3", 1000, true, false);
+	Win32Utils::Async::MemoryMappedFile m1(L"HelloMmf1", 1000, true, false);
+	Win32Utils::Async::MemoryMappedFile m2(m1);
+	Win32Utils::Async::MemoryMappedFile m3(L"HelloMmf3", 1000, true, false);
 	m2 = m3;
 }
 
@@ -48,7 +48,7 @@ void TestAnonPipes()
 {
 	std::wstring msg1(L"message1");
 	std::wstring msg2(L"message2");
-	Win32Utils::IPC::Pipe pipe(true, 512, L"||");
+	Win32Utils::Async::Pipe pipe(true, 512, L"||");
 	pipe.Write(msg1);
 	pipe.Write(msg2);
 

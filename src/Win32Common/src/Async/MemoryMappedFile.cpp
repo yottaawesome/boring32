@@ -2,7 +2,7 @@
 #include "include/Win32Utils.hpp"
 #include <stdexcept>
 
-namespace Win32Utils::IPC
+namespace Win32Utils::Async
 {
 	MemoryMappedFile::MemoryMappedFile(
 		const std::wstring& name,

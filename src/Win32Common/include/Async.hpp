@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-namespace Win32Utils::IPC
+namespace Win32Utils::Async
 {
 	class ProcessInfo
 	{

@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include "include/Win32Utils.hpp"
 
-namespace Win32Utils::IPC
+namespace Win32Utils::Async
 {
 	Process::~Process()
 	{
