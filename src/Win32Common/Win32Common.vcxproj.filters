@@ -101,5 +101,8 @@
     <ClCompile Include="src\Async\Event.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\WinHttp\WinHttpWebClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

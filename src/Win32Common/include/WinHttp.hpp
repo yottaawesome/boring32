@@ -36,6 +36,51 @@ namespace Win32Utils::WinHttp
 			HINTERNET m_handle;
 	};
 
+	class WinHttpRequestResult
+	{
+		public:
+			UINT StatusCode;
+			std::string ResponseBody;
+	};
+
+	class WinHttpWebClient
+	{
+		public:
+			virtual ~WinHttpWebClient();
+			WinHttpWebClient(
+				const std::wstring& userAgentName, 
+				const std::wstring& server,
+				const UINT port,
+				const bool ignoreSslErrors,
+				const std::vector<std::wstring>& acceptTypes,
+				const std::wstring& additionalHeaders
+			);
+
+			virtual void Get(const std::wstring& path);
+			virtual void Post(const std::wstring& path, const std::string& requestBody);
+			virtual void Put(const std::wstring& path, const std::string& requestBody);
+			virtual void Delete(const std::wstring& path, const std::string& requestBody);
+
+		protected:
+			virtual void Connect();
+			virtual WinHttpRequestResult ExecuteRequest(
+				const std::wstring& verb,
+				const std::wstring& path,
+				const std::string& requestBody,
+				const std::wstring& additionalHeaders
+			);
+
+		protected:
+			WinHttpHandle m_hSession;
+			WinHttpHandle m_hConnect;
+			std::wstring m_userAgentName;
+			std::wstring m_serverToConnectTo;
+			UINT m_port;
+			bool m_ignoreSslErrors;
+			std::vector<std::wstring> m_acceptTypes;
+			std::wstring m_additionalHeaders;
+	};
+
 	class WinHttpWebSocket
 	{
 		public:

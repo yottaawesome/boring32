@@ -68,5 +68,15 @@ int main(int argc, char** args)
 	TestAnonPipes();
 	//TestLibraryLoad();
 
+	Win32Utils::WinHttp::WinHttpWebClient client(
+		L"TestClientAgent", 
+		L"127.0.0.1", 
+		94873, 
+		true, 
+		{ L"application/json" },
+		L"Content-Type: application/json"
+	);
+	client.Post(L"/some/object", "");
+
 	return 0;
 }
