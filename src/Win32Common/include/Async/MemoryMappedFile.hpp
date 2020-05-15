@@ -6,11 +6,21 @@ namespace Win32Utils::Async
 {
 	/// <summary>
 	///		Represents a <a href="https://docs.microsoft.com/en-us/dotnet/standard/io/memory-mapped-files">Win32 memory-mapped file</a>,
-	///		which is used for allowing process to share memory.
+	///		which is used for allowing process to share memory. This is a copyable
+	///		and movable object.
 	/// </summary>
 	class MemoryMappedFile
 	{
+		// Constructors and destructor
 		public:
+			/// <summary>
+			///		Unmaps the view of the MemoryMappedFile and releases
+			///		the handle owned by this object.
+			/// </summary>
+			virtual ~MemoryMappedFile();
+
+			MemoryMappedFile();
+
 			/// <summary>
 			///		Creates or opens a new memory mapped file.
 			/// </summary>
@@ -42,26 +52,22 @@ namespace Win32Utils::Async
 
 			/// <summary>
 			///		Unmaps the view of the MemoryMappedFile and releases
-			///		the handle owned by this object.
-			/// </summary>
-			virtual ~MemoryMappedFile();
-			
-			/// <summary>
-			///		Gets the view pointer of the memory mapped file.
-			/// </summary>
-			/// <returns>The view object.</returns>
-			virtual void* GetViewPointer();
-
-			/// <summary>
-			///		Unmaps the view of the MemoryMappedFile and releases
 			///		the handle owned by this object before duplicating
 			///		from the specified MemoryMappedFile.
 			/// </summary>
 			/// <param name="other">The MemoryMappedFile to duplicate.</param>
 			virtual void operator=(const MemoryMappedFile& other);
 
+			MemoryMappedFile(MemoryMappedFile&& other) noexcept;
+			virtual void operator=(MemoryMappedFile&& other) noexcept;
+
+		// API
 		public:
-			MemoryMappedFile() = delete;
+			/// <summary>
+			///		Gets the view pointer of the memory mapped file.
+			/// </summary>
+			/// <returns>The view object.</returns>
+			virtual void* GetViewPointer();
 
 		protected:
 			/// <summary>
@@ -69,6 +75,8 @@ namespace Win32Utils::Async
 			///		mutex handle, and clears the underlying pointer.
 			/// </summary>
 			virtual void Cleanup();
+
+			virtual void Move(MemoryMappedFile& other) noexcept;
 
 			/// <summary>
 			///		Duplicates the specified MemoryMappedFile.
@@ -81,6 +89,6 @@ namespace Win32Utils::Async
 			std::wstring m_mmfName;
 			UINT m_maxSize;
 			HANDLE m_mapFile;
-			void* m_View;
+			void* m_view;
 	};
 }

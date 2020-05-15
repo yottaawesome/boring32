@@ -11,8 +11,6 @@ namespace Win32Utils::Async
 		public:
 			virtual ~Pipe();
 			Pipe();
-			Pipe(const Pipe& other);
-			Pipe(Pipe&& other) noexcept;
 			Pipe(const bool inheritable, const DWORD size, const std::wstring& delimiter);
 			Pipe(
 				const bool inheritable,
@@ -22,6 +20,12 @@ namespace Win32Utils::Async
 				const HANDLE readHandle, 
 				const HANDLE writeHandle
 			);
+
+			Pipe(const Pipe& other);
+			virtual void operator=(const Pipe& other);
+
+			Pipe(Pipe&& other) noexcept;
+			virtual void operator=(Pipe&& other) noexcept;
 		
 		// API
 		public:
@@ -32,11 +36,6 @@ namespace Win32Utils::Async
 			virtual void CloseWrite();
 			virtual HANDLE GetRead();
 			virtual HANDLE GetWrite();
-
-		// Overloaded operators
-		public:
-			virtual void operator=(const Pipe& other);
-			virtual void operator=(Pipe&& other) noexcept;
 
 		// Internal methods
 		protected:

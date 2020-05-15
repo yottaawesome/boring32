@@ -6,6 +6,7 @@ namespace Win32Utils::Async
 {
 	class Event
 	{
+		// Constructors
 		public:
 			virtual ~Event();
 			Event();
@@ -22,6 +23,8 @@ namespace Win32Utils::Async
 			Event(Event&& other) noexcept;
 			virtual void operator=(Event& other) noexcept;
 
+		// API
+		public:
 			virtual void Close();
 			virtual void Reset();
 			virtual HANDLE GetHandle();

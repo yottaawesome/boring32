@@ -4,6 +4,14 @@
 
 namespace Win32Utils::Async
 {
+	MemoryMappedFile::MemoryMappedFile()
+	:	m_mmfName(L""),
+		m_maxSize(0),
+		m_mapFile(nullptr),
+		m_inheritable(false),
+		m_view(nullptr)
+	{ }
+	
 	MemoryMappedFile::MemoryMappedFile(
 		const std::wstring& name,
 		const UINT maxSize,
@@ -14,7 +22,7 @@ namespace Win32Utils::Async
 		m_maxSize(maxSize),
 		m_mapFile(nullptr),
 		m_inheritable(inheritable),
-		m_View(nullptr)
+		m_view(nullptr)
 	{
 		if (createFile)
 		{
@@ -44,14 +52,14 @@ namespace Win32Utils::Async
 			throw std::runtime_error("Failed to open memory mapped file");
 		}
 
-		m_View = MapViewOfFile(
+		m_view = MapViewOfFile(
 			m_mapFile,   // handle to map object
 			FILE_MAP_ALL_ACCESS, // read/write permission
 			0,
 			0,
 			maxSize
 		);
-		if (m_View == nullptr)
+		if (m_view == nullptr)
 		{
 			Cleanup();
 			throw std::runtime_error("MapViewOfFile() failed");
@@ -60,7 +68,7 @@ namespace Win32Utils::Async
 		// Don't zero the memory if we're opening an existing handle, as it may have data.
 		if (createFile)
 		{
-			SecureZeroMemory(m_View, m_maxSize);
+			SecureZeroMemory(m_view, m_maxSize);
 		}
 	}
 
@@ -70,18 +78,12 @@ namespace Win32Utils::Async
 		m_mapFile(nullptr),
 		m_inheritable(other.m_inheritable)
 	{
-		if (other.m_mapFile == nullptr)
-			throw std::runtime_error("Invalid state");
-
 		Duplicate(other);
 	}
 	
 	void MemoryMappedFile::operator=(const MemoryMappedFile& other)
 	{
-		if (other.m_mapFile == nullptr)
-			throw std::runtime_error("Invalid state");
 		Cleanup();
-
 		Duplicate(other);
 	}
 
@@ -92,43 +94,68 @@ namespace Win32Utils::Async
 		m_mapFile = nullptr;
 		m_inheritable = other.m_inheritable;
 
-		bool succeeded = DuplicateHandle(
-			GetCurrentProcess(),
-			other.m_mapFile,
-			GetCurrentProcess(),
-			&m_mapFile,
-			0,
-			m_inheritable,
-			DUPLICATE_SAME_ACCESS
-		);
-		if (succeeded == false)
-			throw std::runtime_error("Failed to duplicated handle.");
-
-		m_View = MapViewOfFile(
-			m_mapFile,   // handle to map object
-			FILE_MAP_ALL_ACCESS, // read/write permission
-			0,
-			0,
-			m_maxSize
-		);
-		if (m_View == nullptr)
+		if (other.m_mapFile != nullptr)
 		{
-			Cleanup();
-			throw std::runtime_error("MapViewOfFile() failed");
+			bool succeeded = DuplicateHandle(
+				GetCurrentProcess(),
+				other.m_mapFile,
+				GetCurrentProcess(),
+				&m_mapFile,
+				0,
+				m_inheritable,
+				DUPLICATE_SAME_ACCESS
+			);
+			if (succeeded == false)
+				throw std::runtime_error("Failed to duplicated handle.");
+
+			m_view = MapViewOfFile(
+				m_mapFile,   // handle to map object
+				FILE_MAP_ALL_ACCESS, // read/write permission
+				0,
+				0,
+				m_maxSize
+			);
+			if (m_view == nullptr)
+			{
+				Cleanup();
+				throw std::runtime_error("MapViewOfFile() failed");
+			}
 		}
+	}
+
+	MemoryMappedFile::MemoryMappedFile(MemoryMappedFile&& other) noexcept
+	{
+		Move(other);
+	}
+
+	void MemoryMappedFile::operator=(MemoryMappedFile&& other) noexcept
+	{
+		Cleanup();
+		Move(other);
+	}
+
+	void MemoryMappedFile::Move(MemoryMappedFile& other) noexcept
+	{
+		m_mmfName = other.m_mmfName;
+		m_maxSize = other.m_maxSize;
+		m_mapFile = other.m_mapFile;
+		m_view = other.m_view;
+		m_inheritable = other.m_inheritable;
+		other.m_mapFile = nullptr;
+		other.m_view = nullptr;
 	}
 
 	void* MemoryMappedFile::GetViewPointer()
 	{
-		return m_View;
+		return m_view;
 	}
 
 	void MemoryMappedFile::Cleanup()
 	{
-		if (m_View)
+		if (m_view)
 		{
-			UnmapViewOfFile(m_View);
-			m_View = nullptr;
+			UnmapViewOfFile(m_view);
+			m_view = nullptr;
 		}
 		if (m_mapFile)
 		{
