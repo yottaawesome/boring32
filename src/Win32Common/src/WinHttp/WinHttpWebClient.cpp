@@ -8,8 +8,20 @@
 
 namespace Win32Utils::WinHttp
 {
-	WinHttpWebClient::~WinHttpWebClient() { }
+	WinHttpWebClient::~WinHttpWebClient() 
+	{
+		Close();
+	}
 	
+	WinHttpWebClient::WinHttpWebClient()
+	:	m_userAgentName(L""),
+		m_serverToConnectTo(L""),
+		m_port(0),
+		m_ignoreSslErrors(false),
+		m_acceptTypes({}),
+		m_additionalHeaders(L"")
+	{ }
+
 	WinHttpWebClient::WinHttpWebClient(
 		const std::wstring& userAgentName,
 		const std::wstring& serverToConnectTo,
@@ -25,7 +37,66 @@ namespace Win32Utils::WinHttp
 		m_acceptTypes(acceptTypes),
 		m_additionalHeaders(additionalHeaders)
 	{
+	}
+
+	WinHttpWebClient::WinHttpWebClient(const WinHttpWebClient& other)
+	{
+		Copy(other);
 		Connect();
+	}
+	
+	void WinHttpWebClient::operator=(const WinHttpWebClient& other)
+	{
+		Close();
+		Copy(other);
+		Connect();
+	}
+
+	void WinHttpWebClient::Copy(const WinHttpWebClient& other)
+	{
+		m_userAgentName = other.m_userAgentName;
+		m_serverToConnectTo = other.m_serverToConnectTo;
+		m_port = other.m_port;
+		m_ignoreSslErrors = other.m_ignoreSslErrors;
+		m_acceptTypes = other.m_acceptTypes;
+		m_additionalHeaders = other.m_additionalHeaders;
+	}
+
+	WinHttpWebClient::WinHttpWebClient(WinHttpWebClient&& other) noexcept
+	{
+		Move(other);
+		Connect();
+	}
+
+	void WinHttpWebClient::operator=(WinHttpWebClient&& other) noexcept
+	{
+		Close();
+		Move(other);
+		Connect();
+	}
+
+	void WinHttpWebClient::Move(WinHttpWebClient& other)
+	{
+		m_userAgentName = std::move(other.m_userAgentName);
+		m_serverToConnectTo = std::move(other.m_serverToConnectTo);
+		m_port = other.m_port;
+		m_ignoreSslErrors = other.m_ignoreSslErrors;
+		m_acceptTypes = std::move(other.m_acceptTypes);
+		m_additionalHeaders = std::move(other.m_additionalHeaders);
+	}
+
+	void WinHttpWebClient::Close()
+	{
+		if (m_hSession != nullptr)
+		{
+			m_hSession.Close();
+			m_hSession = nullptr;
+		}
+		if (m_hConnect != nullptr)
+		{
+			m_hConnect.Close();
+			m_hConnect = nullptr;
+		}
 	}
 
 	void WinHttpWebClient::Connect()
