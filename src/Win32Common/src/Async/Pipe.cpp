@@ -1,6 +1,7 @@
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Win32Utils.hpp"
+#include "include/Async/Pipe.hpp"
+#include "include/Strings.hpp"
 
 namespace Win32Utils::Async
 {

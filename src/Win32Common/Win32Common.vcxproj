@@ -166,9 +166,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Async\Event.hpp" />
+    <ClInclude Include="include\Async\MemoryMappedFile.hpp" />
+    <ClInclude Include="include\Async\Mutex.hpp" />
+    <ClInclude Include="include\Async\Pipe.hpp" />
+    <ClInclude Include="include\Async\Process.hpp" />
+    <ClInclude Include="include\Async\ProcessInfo.hpp" />
+    <ClInclude Include="include\Async\Thread.hpp" />
     <ClInclude Include="include\Error.hpp" />
     <ClInclude Include="include\Guid.hpp" />
-    <ClInclude Include="include\Async.hpp" />
+    <ClInclude Include="include\Async\Async.hpp" />
     <ClInclude Include="include\Library.hpp" />
     <ClInclude Include="include\Raii.hpp" />
     <ClInclude Include="include\Strings.hpp" />
@@ -198,6 +205,9 @@
     <ClCompile Include="src\WinHttp\WinHttpHandle.cpp" />
     <ClCompile Include="src\WinHttp\WinHttpWebClient.cpp" />
     <ClCompile Include="src\WinHttp\WinHttpWebSocket.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\Async\MemoryMappedView.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
