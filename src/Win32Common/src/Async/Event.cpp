@@ -142,5 +142,6 @@ namespace Win32Utils::Async
 			throw std::runtime_error("WaitForSingleObject failed");
 		if (status == WAIT_ABANDONED)
 			throw std::runtime_error("The wait was abandoned");
+		return false;
 	}
 }

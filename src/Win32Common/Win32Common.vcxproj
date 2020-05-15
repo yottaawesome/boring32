@@ -180,6 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Async\Event.cpp" />
+    <ClCompile Include="src\Async\Thread.cpp" />
     <ClCompile Include="src\Error\Error.cpp" />
     <ClCompile Include="src\Error\Win32Exception.cpp" />
     <ClCompile Include="src\Guid\Guid.cpp" />
