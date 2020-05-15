@@ -17,13 +17,20 @@ namespace Win32Utils::WinHttp
 	class WinHttpHandle
 	{
 		public:
+			virtual ~WinHttpHandle();
 			WinHttpHandle();
 			WinHttpHandle(HINTERNET handle);
-			WinHttpHandle(const WinHttpHandle& copy) = delete;
-			~WinHttpHandle();
-			void operator=(const HINTERNET& copy);
-			bool operator==(const HINTERNET other);
-			HINTERNET Get();
+			
+			WinHttpHandle(WinHttpHandle&& other) noexcept;
+			virtual void operator=(WinHttpHandle&& other) noexcept;
+
+			WinHttpHandle(const WinHttpHandle&) = delete;
+			virtual void operator=(const WinHttpHandle&) = delete;
+
+			virtual void operator=(const HINTERNET& copy);
+			virtual bool operator==(const HINTERNET other);
+			virtual HINTERNET Get();
+			virtual void Close();
 
 		private:
 			HINTERNET m_handle;

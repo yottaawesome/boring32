@@ -13,8 +13,22 @@ namespace Win32Utils::WinHttp
 		: m_handle(handle)
 	{ }
 
+	WinHttpHandle::WinHttpHandle(WinHttpHandle&& other) noexcept
+	{
+		m_handle = other.m_handle;
+		other.m_handle = nullptr;
+	}
+
+	void WinHttpHandle::operator=(WinHttpHandle&& other) noexcept
+	{
+		Close();
+		m_handle = other.m_handle;
+		other.m_handle = nullptr;
+	}
+
 	void WinHttpHandle::operator=(const HINTERNET& handle)
 	{
+		Close();
 		m_handle = handle;
 	}
 
@@ -30,7 +44,15 @@ namespace Win32Utils::WinHttp
 
 	WinHttpHandle::~WinHttpHandle()
 	{
+		Close();
+	}
+
+	void WinHttpHandle::Close()
+	{
 		if (m_handle != nullptr)
+		{
 			WinHttpCloseHandle(m_handle);
+			m_handle = nullptr;
+		}
 	}
 }
