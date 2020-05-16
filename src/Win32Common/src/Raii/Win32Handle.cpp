@@ -33,9 +33,9 @@ namespace Win32Utils::Raii
 	void Win32Handle::operator=(Win32Handle&& other) noexcept
 	{
 		Close();
+		m_inheritable = other.m_inheritable;
 		if (other.m_handle != nullptr)
 		{
-			m_inheritable = other.m_inheritable;
 			m_handle = other.m_handle;
 			other.m_handle = nullptr;
 			other.m_inheritable = false;

@@ -78,10 +78,5 @@ int main(int argc, char** args)
 	//);
 	//client.Post(L"/some/object", "");
 
-	Win32Utils::Async::Job job(true);
-	std::wcout << job.IsInheritable() << std::endl;
-	Win32Utils::Async::Job job2 = job;
-	std::wcout << job2.IsInheritable() << std::endl;
-
 	return 0;
 }
