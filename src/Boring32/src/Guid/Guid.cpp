@@ -1,8 +1,8 @@
 #include "pch.hpp"
 #include "Objbase.h"
-#include "include/Win32Utils.hpp"
+#include "include/Boring32.hpp"
 
-namespace Win32Utils::Guid
+namespace Boring32::Guid
 {
 	// Adapted from https://stackoverflow.com/a/19941516/7448661
 	std::wstring GetGuidAsWString(const GUID& guid)

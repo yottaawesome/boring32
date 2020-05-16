@@ -4,7 +4,7 @@
 #include <Windows.h>
 #include <winhttp.h>
 
-namespace Win32Utils::WinHttp
+namespace Boring32::WinHttp
 {
 	enum class WinHttpWebSocketStatus
 	{

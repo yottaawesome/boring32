@@ -2,27 +2,27 @@
 #include <iostream>
 #include <dbghelp.h>
 #include "Boring32.Tests.h"
-#include "../Boring32/include/Win32Utils.hpp"
+#include "../Boring32/include/Boring32.hpp"
 
 void TestMutex()
 {
-	Win32Utils::Async::Mutex m1(L"HelloMutex", true, false, false);
+	Boring32::Async::Mutex m1(L"HelloMutex", true, false, false);
 	m1.Lock(1000);
 	m1.Unlock();
 
-	Win32Utils::Async::Mutex m2(m1);
-	Win32Utils::Async::Mutex m3(false, false);
+	Boring32::Async::Mutex m2(m1);
+	Boring32::Async::Mutex m3(false, false);
 
 	m2 = m3;
-	m2 = Win32Utils::Async::Mutex(L"Assignment", true, false, false);
+	m2 = Boring32::Async::Mutex(L"Assignment", true, false, false);
 }
 
 void TestConversions()
 {
 	const wchar_t test1[] = L"Test1";
 	std::wcout 
-		<<	Win32Utils::Strings::ConvertStringToWString(
-				Win32Utils::Strings::ConvertWStringToString(
+		<<	Boring32::Strings::ConvertStringToWString(
+				Boring32::Strings::ConvertWStringToString(
 					test1
 				)
 			)
@@ -31,15 +31,15 @@ void TestConversions()
 
 void TestMemoryMappedFile()
 {
-	Win32Utils::Async::MemoryMappedFile m1(L"HelloMmf1", 1000, true, false);
-	Win32Utils::Async::MemoryMappedFile m2(m1);
-	Win32Utils::Async::MemoryMappedFile m3(L"HelloMmf3", 1000, true, false);
+	Boring32::Async::MemoryMappedFile m1(L"HelloMmf1", 1000, true, false);
+	Boring32::Async::MemoryMappedFile m2(m1);
+	Boring32::Async::MemoryMappedFile m3(L"HelloMmf3", 1000, true, false);
 	m2 = m3;
 }
 
 void TestLibraryLoad()
 {
-	Win32Utils::Library::DynamicLinkLibrary d(L"Onyx32.Filesystem.dll");
+	Boring32::Library::DynamicLinkLibrary d(L"Onyx32.Filesystem.dll");
 	void* mainFunc = d.Resolve(L"GetMainInterface");
 	if (mainFunc == nullptr)
 		throw new std::runtime_error("Could not resolve function");
@@ -49,7 +49,7 @@ void TestAnonPipes()
 {
 	std::wstring msg1(L"message1");
 	std::wstring msg2(L"message2");
-	Win32Utils::Async::AnonymousPipe pipe(true, 512, L"||");
+	Boring32::Async::AnonymousPipe pipe(true, 512, L"||");
 	pipe.Write(msg1);
 	pipe.Write(msg2);
 

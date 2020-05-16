@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include "include/Async/Process.hpp"
 
-namespace Win32Utils::Async
+namespace Boring32::Async
 {
 	Process::~Process()
 	{
@@ -14,8 +14,9 @@ namespace Win32Utils::Async
 		m_commandLine(L""),
 		m_startingDirectory(L""),
 		m_canInheritHandles(false),
-		m_processInfo{ 0 },
-		m_creationFlags(0)
+		m_creationFlags(0),
+		m_processId(0),
+		m_threadId(0)
 	{ }
 
 	Process::Process(
@@ -29,8 +30,11 @@ namespace Win32Utils::Async
 		m_commandLine(commandLine),
 		m_startingDirectory(startingDirectory),
 		m_canInheritHandles(canInheritHandles),
-		m_processInfo{ 0 },
-		m_creationFlags(creationFlags)
+		m_creationFlags(creationFlags),
+		m_processId(0),
+		m_threadId(0),
+		m_process(nullptr, false),
+		m_thread(nullptr, false)
 	{ }
 
 	Process::Process(const Process& other)
@@ -61,10 +65,11 @@ namespace Win32Utils::Async
 		m_commandLine = std::move(other.m_commandLine);
 		m_startingDirectory = std::move(other.m_startingDirectory);
 		m_canInheritHandles = other.m_canInheritHandles;
-		m_processInfo = other.m_processInfo;
 		m_creationFlags = other.m_creationFlags;
-		other.m_processInfo.hProcess = nullptr;
-		other.m_processInfo.hThread = nullptr;
+		m_processId = other.m_processId;
+		m_threadId = other.m_threadId;
+		m_process = std::move(other.m_process);
+		m_thread = std::move(other.m_thread);
 	}
 
 	void Process::Duplicate(const Process& other)
@@ -73,43 +78,20 @@ namespace Win32Utils::Async
 		m_commandLine = other.m_commandLine;
 		m_startingDirectory = other.m_startingDirectory;
 		m_canInheritHandles = other.m_canInheritHandles;
-		m_processInfo = other.m_processInfo;
 		m_creationFlags = other.m_creationFlags;
-		if (other.m_processInfo.hProcess)
-		{
-			m_processInfo.hProcess = nullptr;
-			DuplicateHandle(
-				GetCurrentProcess(),
-				other.m_processInfo.hProcess,
-				GetCurrentProcess(),
-				&m_processInfo.hProcess,
-				0,
-				m_canInheritHandles,
-				DUPLICATE_SAME_ACCESS
-			);
-			if (m_processInfo.hProcess == nullptr)
-				throw std::runtime_error("Failed to duplicate process handle");
-		}
-		if (other.m_processInfo.hThread)
-		{
-			m_processInfo.hProcess = nullptr;
-			DuplicateHandle(
-				GetCurrentProcess(),
-				other.m_processInfo.hThread,
-				GetCurrentProcess(),
-				&m_processInfo.hThread,
-				0,
-				m_canInheritHandles,
-				DUPLICATE_SAME_ACCESS
-			);
-			if (m_processInfo.hThread == nullptr)
-				throw std::runtime_error("Failed to duplicate thread handle");
-		}
+		m_processId = other.m_processId;
+		m_threadId = other.m_threadId;
+		m_process = other.m_process;
+		m_thread = other.m_thread;
 	}
 
 	void Process::Start()
 	{
+		if(m_executablePath == L"" && m_commandLine == L"")
+			throw std::runtime_error("No executable path or command line set");
+
 		STARTUPINFO dataSi{ 0 };
+		PROCESS_INFORMATION processInfo;
 		dataSi.cb = sizeof(dataSi);
 		// https://docs.microsoft.com/en-us/windows/win32/procthread/creating-processes
 		bool successfullyCreatedProcess =
@@ -129,8 +111,15 @@ namespace Win32Utils::Async
 					? m_startingDirectory.c_str()
 					: nullptr,				
 				&dataSi,				// Pointer to STARTUPINFO structure
-				&m_processInfo			// Pointer to PROCESS_INFORMATION structure
+				&processInfo			// Pointer to PROCESS_INFORMATION structure
 			);
+		if (successfullyCreatedProcess == false)
+			throw std::runtime_error("Failed to create process");
+
+		m_process = Raii::Win32Handle(processInfo.hProcess, false);
+		m_thread = Raii::Win32Handle(processInfo.hThread, false);
+		m_processId = processInfo.dwProcessId;
+		m_threadId = processInfo.dwThreadId;
 	}
 
 	void Process::CloseHandles()
@@ -141,29 +130,46 @@ namespace Win32Utils::Async
 
 	void Process::CloseProcessHandle()
 	{
-		if (m_processInfo.hProcess)
-		{
-			CloseHandle(m_processInfo.hProcess);
-			m_processInfo.hProcess = nullptr;
-		}
+		m_process.Close();
 	}
 
 	void Process::CloseThreadHandle()
 	{
-		if (m_processInfo.hThread)
-		{
-			CloseHandle(m_processInfo.hThread);
-			m_processInfo.hThread = nullptr;
-		}
+		m_thread.Close();
 	}
 
 	HANDLE Process::GetProcessHandle()
 	{
-		return m_processInfo.hProcess;
+		return m_process.GetHandle();
 	}
 
 	HANDLE Process::GetThreadHandle()
 	{
-		return m_processInfo.hThread;
+		return m_thread.GetHandle();
+	}
+
+	std::wstring Process::GetExecutablePath()
+	{
+		return m_executablePath;
+	}
+
+	std::wstring Process::GetCommandLineStr()
+	{
+		return m_commandLine;
+	}
+
+	std::wstring Process::GetStartingDirectory()
+	{
+		return m_startingDirectory;
+	}
+
+	bool Process::GetHandlesInheritability()
+	{
+		return m_canInheritHandles;
+	}
+
+	DWORD Process::GetCreationFlags()
+	{
+		return m_creationFlags;
 	}
 }

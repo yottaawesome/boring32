@@ -2,7 +2,7 @@
 #include <string>
 #include <Windows.h>
 
-namespace Win32Utils::Time
+namespace Boring32::Time
 {
 	SYSTEMTIME LargeIntegerTimeToSystemTime(const LARGE_INTEGER& li);
 	std::wstring GetTimeAsUtcString(const SYSTEMTIME& st);

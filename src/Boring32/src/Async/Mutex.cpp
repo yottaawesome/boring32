@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include "include/Async/Mutex.hpp"
 
-namespace Win32Utils::Async
+namespace Boring32::Async
 {
 	Mutex::~Mutex()
 	{

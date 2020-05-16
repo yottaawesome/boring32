@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include "include/Async/Event.hpp"
 
-namespace Win32Utils::Async
+namespace Boring32::Async
 {
 	Event::~Event()
 	{

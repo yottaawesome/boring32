@@ -1,9 +1,9 @@
 #include "pch.hpp"
 #include <stdexcept>
 #include <Windows.h>
-#include "include/Win32Utils.hpp"
+#include "include/Boring32.hpp"
 
-namespace Win32Utils::WinHttp
+namespace Boring32::WinHttp
 {
 	WinHttpHandle::WinHttpHandle()
 		: m_handle(nullptr)

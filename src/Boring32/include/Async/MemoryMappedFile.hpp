@@ -2,7 +2,7 @@
 #include <Windows.h>
 #include <string>
 
-namespace Win32Utils::Async
+namespace Boring32::Async
 {
 	/// <summary>
 	///		Represents a <a href="https://docs.microsoft.com/en-us/dotnet/standard/io/memory-mapped-files">Win32 memory-mapped file</a>,

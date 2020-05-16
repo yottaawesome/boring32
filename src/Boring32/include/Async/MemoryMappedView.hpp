@@ -2,7 +2,7 @@
 #include <string>
 #include "MemoryMappedFile.hpp"
 
-namespace Win32Utils::Async
+namespace Boring32::Async
 {
 	template<typename T>
 	class MemoryMappedView

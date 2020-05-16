@@ -4,9 +4,9 @@
 #include <functional>
 #include <sstream>
 #include <memory>
-#include "include/Win32Utils.hpp"
+#include "include/Boring32.hpp"
 
-namespace Win32Utils::WinHttp
+namespace Boring32::WinHttp
 {
 	WinHttpWebClient::~WinHttpWebClient() 
 	{

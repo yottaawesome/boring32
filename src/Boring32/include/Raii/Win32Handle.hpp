@@ -2,7 +2,7 @@
 #include <Windows.h>
 #include <string>
 
-namespace Win32Utils::Raii
+namespace Boring32::Raii
 {
 	class Win32Handle
 	{

@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include "include/Async/Job.hpp"
 
-namespace Win32Utils::Async
+namespace Boring32::Async
 {
 	Job::~Job()
 	{ 
@@ -125,6 +125,6 @@ namespace Win32Utils::Async
 		);
 		if (jobHandle == nullptr)
 			throw std::runtime_error("CreateJobObject failed");
-		m_job = Win32Utils::Raii::Win32Handle(jobHandle, isInheritable);
+		m_job = Boring32::Raii::Win32Handle(jobHandle, isInheritable);
 	}
 }

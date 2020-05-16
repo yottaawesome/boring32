@@ -3,9 +3,9 @@
 #include <vector>
 #include <functional>
 #include <sstream>
-#include "include/Win32Utils.hpp"
+#include "include/Boring32.hpp"
 
-namespace Win32Utils::WinHttp
+namespace Boring32::WinHttp
 {
 	WinHttpWebSocket::~WinHttpWebSocket()
 	{

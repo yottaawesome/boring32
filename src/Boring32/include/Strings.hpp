@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 
-namespace Win32Utils::Strings
+namespace Boring32::Strings
 {
 	std::string ConvertWStringToString(const std::wstring& wstr);
 	std::wstring ConvertStringToWString(const std::string& str);

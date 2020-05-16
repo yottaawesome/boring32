@@ -1,8 +1,8 @@
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Win32Utils.hpp"
+#include "include/Boring32.hpp"
 
-namespace Win32Utils::Strings
+namespace Boring32::Strings
 {
 	std::string ConvertWStringToString(const std::wstring& wstr)
 	{

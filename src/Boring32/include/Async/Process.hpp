@@ -1,8 +1,9 @@
 #pragma once
 #include <Windows.h>
 #include <string>
+#include "../Raii/Raii.hpp"
 
-namespace Win32Utils::Async
+namespace Boring32::Async
 {
 	class Process
 	{
@@ -32,6 +33,11 @@ namespace Win32Utils::Async
 
 			virtual HANDLE GetProcessHandle();
 			virtual HANDLE GetThreadHandle();
+			virtual std::wstring GetExecutablePath();
+			virtual std::wstring GetCommandLineStr();
+			virtual std::wstring GetStartingDirectory();
+			virtual bool GetHandlesInheritability();
+			virtual DWORD GetCreationFlags();
 
 		protected:
 			virtual void Duplicate(const Process& other);
@@ -42,7 +48,10 @@ namespace Win32Utils::Async
 			std::wstring m_commandLine;
 			std::wstring m_startingDirectory;
 			bool m_canInheritHandles;
-			PROCESS_INFORMATION m_processInfo;
 			DWORD m_creationFlags;
+			Boring32::Raii::Win32Handle m_process;
+			Boring32::Raii::Win32Handle m_thread;
+			DWORD m_processId;
+			DWORD m_threadId;
 	};
 }

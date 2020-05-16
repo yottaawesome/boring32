@@ -1,8 +1,8 @@
 #include "pch.hpp"
 #include <winhttp.h>
-#include "include/Win32Utils.hpp"
+#include "include/Boring32.hpp"
 
-namespace Win32Utils::Error
+namespace Boring32::Error
 {
 	std::wstring GetErrorCodeWString(const DWORD errorCode)
 	{

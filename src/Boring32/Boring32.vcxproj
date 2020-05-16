@@ -183,7 +183,8 @@
     <ClInclude Include="include\Raii\Win32Handle.hpp" />
     <ClInclude Include="include\Strings.hpp" />
     <ClInclude Include="include\Time.hpp" />
-    <ClInclude Include="include\Win32Utils.hpp" />
+    <ClInclude Include="include\Util\Util.hpp" />
+    <ClInclude Include="include\Boring32.hpp" />
     <ClInclude Include="include\WinHttp.hpp" />
     <ClInclude Include="src\pch.hpp" />
     <ClInclude Include="src\targetver.hpp" />
@@ -206,6 +207,7 @@
     <ClCompile Include="src\pch.cpp" />
     <ClCompile Include="src\Library\DynamicLinkLibrary.cpp" />
     <ClCompile Include="src\Time\Time.cpp" />
+    <ClCompile Include="src\Util\DuplicatePassedHandle.cpp" />
     <ClCompile Include="src\WinHttp\WinHttpHandle.cpp" />
     <ClCompile Include="src\WinHttp\WinHttpWebClient.cpp" />
     <ClCompile Include="src\WinHttp\WinHttpWebSocket.cpp" />

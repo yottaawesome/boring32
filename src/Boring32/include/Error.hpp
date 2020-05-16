@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <Windows.h>
 
-namespace Win32Utils::Error
+namespace Boring32::Error
 {
 	class Win32Exception : public std::runtime_error
 	{

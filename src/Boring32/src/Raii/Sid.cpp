@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include "include/Raii/Sid.hpp"
 
-namespace Win32Utils::Raii
+namespace Boring32::Raii
 {
 	Sid::~Sid()
 	{

@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include "include/Async/MemoryMappedFile.hpp"
 
-namespace Win32Utils::Async
+namespace Boring32::Async
 {
 	MemoryMappedFile::MemoryMappedFile()
 	:	m_mmfName(L""),

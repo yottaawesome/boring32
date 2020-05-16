@@ -2,7 +2,7 @@
 #include <Windows.h>
 #include <string>
 
-namespace Win32Utils::Library
+namespace Boring32::Library
 {
 	class DynamicLinkLibrary
 	{

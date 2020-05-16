@@ -2,7 +2,7 @@
 #include <Windows.h>
 #include <functional>
 
-namespace Win32Utils::Async
+namespace Boring32::Async
 {
 	enum class ThreadStatus
 	{

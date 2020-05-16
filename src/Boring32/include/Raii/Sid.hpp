@@ -1,7 +1,7 @@
 #pragma once
 #include <Windows.h>
 
-namespace Win32Utils::Raii
+namespace Boring32::Raii
 {
 	class Sid
 	{

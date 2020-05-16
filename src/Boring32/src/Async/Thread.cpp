@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include "include/Async/Thread.hpp"
 
-namespace Win32Utils::Async
+namespace Boring32::Async
 {
 	Thread::Thread(void* param, bool destroyOnCompletion)
 		: m_destroyOnCompletion(destroyOnCompletion),

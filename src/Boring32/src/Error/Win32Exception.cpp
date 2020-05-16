@@ -1,7 +1,7 @@
 #include "pch.hpp"
-#include "include/Win32Utils.hpp"
+#include "include/Boring32.hpp"
 
-namespace Win32Utils::Error
+namespace Boring32::Error
 {
 	Win32Exception::~Win32Exception() {}
 
@@ -32,13 +32,13 @@ namespace Win32Utils::Error
 
 	std::wstring Win32Exception::GetErrorCodeWString() const
 	{
-		return Win32Utils::Error::GetErrorCodeWString(m_errorCode);
+		return Boring32::Error::GetErrorCodeWString(m_errorCode);
 	}
 
 	std::wstring Win32Exception::GetFullErrorWString() const
 	{
 		std::string whatString(this->what());
-		std::wstring errorCodeWString(Win32Utils::Error::GetErrorCodeWString(m_errorCode));
+		std::wstring errorCodeWString(Boring32::Error::GetErrorCodeWString(m_errorCode));
 		std::wstring finalErrorString(Strings::ConvertStringToWString(whatString));
 		finalErrorString += L" :: ";
 		finalErrorString += L"(";

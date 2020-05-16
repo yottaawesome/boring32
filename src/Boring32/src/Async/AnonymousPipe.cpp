@@ -3,7 +3,7 @@
 #include "include/Async/AnonymousPipe.hpp"
 #include "include/Strings.hpp"
 
-namespace Win32Utils::Async
+namespace Boring32::Async
 {
 	AnonymousPipe::~AnonymousPipe()
 	{

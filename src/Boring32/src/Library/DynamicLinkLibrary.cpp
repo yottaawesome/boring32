@@ -1,8 +1,8 @@
 #include "pch.hpp"
-#include "include/Win32Utils.hpp"
 #include <stdexcept>
+#include "include/Boring32.hpp"
 
-namespace Win32Utils::Library
+namespace Boring32::Library
 {
 	DynamicLinkLibrary::DynamicLinkLibrary(const std::wstring& path)
 		: path(path)

@@ -4,7 +4,7 @@
 #include <vector>
 #include "../Raii/Raii.hpp"
 
-namespace Win32Utils::Async
+namespace Boring32::Async
 {
 	class AnonymousPipe
 	{

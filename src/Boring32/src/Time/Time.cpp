@@ -1,8 +1,8 @@
 #include "pch.hpp"
 #include <sstream>
-#include "include/Win32Utils.hpp"
+#include "include/Boring32.hpp"
 
-namespace Win32Utils::Time
+namespace Boring32::Time
 {
     DWORD SystemTimeToShortIsoDate(const SYSTEMTIME& st)
     {

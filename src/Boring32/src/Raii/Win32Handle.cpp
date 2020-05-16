@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include "include/Raii/Win32Handle.hpp"
 
-namespace Win32Utils::Raii
+namespace Boring32::Raii
 {
 	Win32Handle::Win32Handle()
 	:	m_handle(nullptr),

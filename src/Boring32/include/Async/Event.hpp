@@ -2,7 +2,7 @@
 #include <Windows.h>
 #include <string>
 
-namespace Win32Utils::Async
+namespace Boring32::Async
 {
 	class Event
 	{
