@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <string>
+#include "../Raii/Raii.hpp"
 
 namespace Win32Utils::Async
 {
@@ -116,15 +117,16 @@ namespace Win32Utils::Async
 			/// </summary>
 			virtual void Unlock();
 
+			virtual void Close();
+
 		protected:
-			virtual void Cleanup();
 			virtual void Move(Mutex& other) noexcept;
+			virtual void Copy(const Mutex& other);
 
 		protected:
 			std::wstring m_name;
-			bool m_inheritable;
 			bool m_created;
 			bool m_locked;
-			HANDLE m_mutex;
+			Raii::Win32Handle m_mutex;
 	};
 }

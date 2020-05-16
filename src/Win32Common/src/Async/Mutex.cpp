@@ -6,32 +6,25 @@ namespace Win32Utils::Async
 {
 	Mutex::~Mutex()
 	{
-		Cleanup();
+		Close();
 	}
 
-	void Mutex::Cleanup()
+	void Mutex::Close()
 	{
 		if (m_mutex != nullptr)
 		{
 			if (m_locked)
 				Unlock();
-			CloseHandle(m_mutex);
-			m_mutex = nullptr;
+			m_mutex.Close();
 		}
 	}
 
 	Mutex::Mutex()
 	:	m_name(L""),
-		m_inheritable(false),
 		m_created(false),
-		m_mutex(nullptr),
+		m_mutex(nullptr, false),
 		m_locked(false)
 	{ }
-
-	Mutex::Mutex(Mutex&& other) noexcept
-	{
-		Move(other);
-	}
 
 	Mutex::Mutex(
 		const std::wstring_view name, 
@@ -40,9 +33,8 @@ namespace Win32Utils::Async
 		const bool inheritable
 	)
 	:	m_name(name),
-		m_inheritable(inheritable),
 		m_created(createNew),
-		m_mutex(nullptr),
+		m_mutex(nullptr, false),
 		m_locked(false)
 	{
 		if (m_created)
@@ -64,19 +56,19 @@ namespace Win32Utils::Async
 		if (m_mutex == nullptr)
 			throw std::runtime_error("Failed to create or open mutex");
 
+		m_mutex = inheritable;
 		m_locked = createNew && acquireOnCreation;
 	}
 
 	Mutex::Mutex(const bool acquire, const bool inheritable)
 	:	m_name(L""),
-		m_inheritable(inheritable),
 		m_created(false),
 		m_locked(acquire),
-		m_mutex(nullptr)
+		m_mutex(nullptr, false)
 	{
 		SECURITY_ATTRIBUTES lp{ 0 };
 		lp.nLength = sizeof(lp);
-		lp.bInheritHandle = m_inheritable;
+		lp.bInheritHandle = inheritable;
 		m_mutex = CreateMutex(
 			&lp,
 			m_locked,
@@ -84,57 +76,52 @@ namespace Win32Utils::Async
 		);
 		if (m_mutex == nullptr)
 			throw std::runtime_error("Failed to create or open mutex");
+		m_mutex = inheritable;
 	}
 
 	Mutex::Mutex(const Mutex& other)
-	:	m_name(other.m_name),
-		m_inheritable(other.m_inheritable),
-		m_created(false),
-		m_locked(other.m_locked),
-		m_mutex(nullptr)
-	{
-		if (other.m_mutex == nullptr)
-			throw std::runtime_error("Other mutex is not in a valid state for assignment.");
-		bool succeeded = DuplicateHandle(
-			GetCurrentProcess(),
-			other.m_mutex,
-			GetCurrentProcess(),
-			&m_mutex,
-			0,
-			m_inheritable,
-			DUPLICATE_SAME_ACCESS
-		);
-		if (succeeded == false)
-			throw std::runtime_error("Failed to duplicate handle.");
+	{ 
+		Copy(other);
 	}
 
 	void Mutex::operator=(const Mutex& other)
 	{
-		if (other.m_mutex == nullptr)
-			throw std::runtime_error("Other mutex is not in a valid state for assignment.");
+		Copy(other);
+	}
 
-		Cleanup();
+	void Mutex::Copy(const Mutex& other)
+	{
+		Close();
 		m_name = other.m_name;
-		m_inheritable = other.m_inheritable;
 		m_created = false;
 		m_locked = other.m_locked;
+		m_mutex = other.m_mutex;
+	}
 
-		bool succeeded = DuplicateHandle(
-			GetCurrentProcess(),
-			other.m_mutex,
-			GetCurrentProcess(),
-			&m_mutex,
-			0,
-			m_inheritable,
-			DUPLICATE_SAME_ACCESS
-		);
-		if (succeeded == false)
-			throw std::runtime_error("Failed to duplicate handle.");
+	Mutex::Mutex(Mutex&& other) noexcept
+	{
+		Move(other);
+	}
+
+	void Mutex::operator=(Mutex&& other) noexcept
+	{
+		Move(other);
+	}
+
+	void Mutex::Move(Mutex& other) noexcept
+	{
+		m_name = std::move(other.m_name);
+		m_created = other.m_created;
+		m_locked = other.m_locked;
+		m_mutex = std::move(other.m_mutex);
 	}
 
 	bool Mutex::Lock(const DWORD waitTime)
 	{
-		DWORD result = WaitForSingleObject(m_mutex, waitTime);
+		if (m_mutex == nullptr)
+			throw std::runtime_error("Cannot wait on null mutex");
+
+		DWORD result = WaitForSingleObject(m_mutex.GetHandle(), waitTime);
 		if (result == WAIT_OBJECT_0)
 		{
 			m_locked = true;
@@ -150,23 +137,10 @@ namespace Win32Utils::Async
 
 	void Mutex::Unlock()
 	{
-		if (!ReleaseMutex(m_mutex))
+		if (!ReleaseMutex(m_mutex.GetHandle()))
 			throw std::runtime_error("Failed to release mutex");
 		m_locked = false;
 	}
 
-	void Mutex::operator=(Mutex&& other) noexcept
-	{
-		Move(other);
-	}
-
-	void Mutex::Move(Mutex& other) noexcept
-	{
-		m_name = other.m_name;
-		m_inheritable = other.m_inheritable;
-		m_created = other.m_created;
-		m_locked = other.m_locked;
-		m_mutex = other.m_mutex;
-		other.m_mutex = nullptr;
-	}
+	
 }

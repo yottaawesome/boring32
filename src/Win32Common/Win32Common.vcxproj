@@ -179,6 +179,8 @@
     <ClInclude Include="include\Async\Async.hpp" />
     <ClInclude Include="include\Library.hpp" />
     <ClInclude Include="include\Raii\Raii.hpp" />
+    <ClInclude Include="include\Raii\Sid.hpp" />
+    <ClInclude Include="include\Raii\Win32Handle.hpp" />
     <ClInclude Include="include\Strings.hpp" />
     <ClInclude Include="include\Time.hpp" />
     <ClInclude Include="include\Win32Utils.hpp" />

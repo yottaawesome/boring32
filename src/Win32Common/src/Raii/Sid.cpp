@@ -1,6 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Raii/Raii.hpp"
+#include "include/Raii/Sid.hpp"
 
 namespace Win32Utils::Raii
 {
@@ -24,7 +24,7 @@ namespace Win32Utils::Raii
 		: sidBuffer{ 0 }
 	{
 		SID_IDENTIFIER_AUTHORITY SIDAuth = SECURITY_NT_AUTHORITY;
-		if (!AllocateAndInitializeSid(
+		bool succeeded = AllocateAndInitializeSid(
 			&SIDAuth,
 			2,
 			SECURITY_BUILTIN_DOMAIN_RID,
@@ -35,11 +35,9 @@ namespace Win32Utils::Raii
 			0,
 			0,
 			0,
-			&pAdminSID)
-		)
-		{
+			&pAdminSID);
+		if (succeeded == false)
 			throw std::runtime_error("Raii::Sid -> Failed to initialise SID");
-		}
 	}
 
 	PSID Sid::GetSid()
