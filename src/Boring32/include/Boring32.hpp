@@ -5,5 +5,5 @@
 #include "Guid.hpp"
 #include "Async/Async.hpp"
 #include "Raii/Raii.hpp"
-#include "WinHttp.hpp"
+#include "WinHttp/WinHttp.hpp"
 #include "Error.hpp"

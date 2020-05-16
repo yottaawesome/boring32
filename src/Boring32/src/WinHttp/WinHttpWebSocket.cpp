@@ -1,9 +1,9 @@
 #include "pch.hpp"
 #include <stdexcept>
 #include <vector>
-#include <functional>
 #include <sstream>
-#include "include/Boring32.hpp"
+#include "include/WinHttp/WinHttpWebSocket.hpp"
+#include "include/Error.hpp"
 
 namespace Boring32::WinHttp
 {

@@ -3,8 +3,7 @@
 #include <vector>
 #include <functional>
 #include <sstream>
-#include <memory>
-#include "include/Boring32.hpp"
+#include "include/WinHttp/WinHttpWebClient.hpp"
 
 namespace Boring32::WinHttp
 {

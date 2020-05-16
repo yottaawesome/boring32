@@ -1,7 +1,5 @@
 #include "pch.hpp"
-#include <stdexcept>
-#include <Windows.h>
-#include "include/Boring32.hpp"
+#include "include/WinHttp/WinHttpHandle.hpp"
 
 namespace Boring32::WinHttp
 {
