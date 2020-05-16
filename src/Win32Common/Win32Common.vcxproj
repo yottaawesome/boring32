@@ -170,7 +170,7 @@
     <ClInclude Include="include\Async\Job.hpp" />
     <ClInclude Include="include\Async\MemoryMappedFile.hpp" />
     <ClInclude Include="include\Async\Mutex.hpp" />
-    <ClInclude Include="include\Async\Pipe.hpp" />
+    <ClInclude Include="include\Async\AnonymousPipe.hpp" />
     <ClInclude Include="include\Async\Process.hpp" />
     <ClInclude Include="include\Async\ProcessInfo.hpp" />
     <ClInclude Include="include\Async\Thread.hpp" />
@@ -195,7 +195,7 @@
     <ClCompile Include="src\Guid\Guid.cpp" />
     <ClCompile Include="src\Async\MemoryMappedFile.cpp" />
     <ClCompile Include="src\Async\Mutex.cpp" />
-    <ClCompile Include="src\Async\Pipe.cpp" />
+    <ClCompile Include="src\Async\AnonymousPipe.cpp" />
     <ClCompile Include="src\Async\Process.cpp" />
     <ClCompile Include="src\Async\ProcessInfo.cpp" />
     <ClCompile Include="src\Raii\Sid.cpp" />

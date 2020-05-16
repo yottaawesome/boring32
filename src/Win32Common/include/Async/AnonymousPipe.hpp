@@ -5,14 +5,14 @@
 
 namespace Win32Utils::Async
 {
-	class Pipe
+	class AnonymousPipe
 	{
 		// Constructors
 		public:
-			virtual ~Pipe();
-			Pipe();
-			Pipe(const bool inheritable, const DWORD size, const std::wstring& delimiter);
-			Pipe(
+			virtual ~AnonymousPipe();
+			AnonymousPipe();
+			AnonymousPipe(const bool inheritable, const DWORD size, const std::wstring& delimiter);
+			AnonymousPipe(
 				const bool inheritable,
 				const DWORD size, 
 				const bool duplicate,
@@ -21,11 +21,11 @@ namespace Win32Utils::Async
 				const HANDLE writeHandle
 			);
 
-			Pipe(const Pipe& other);
-			virtual void operator=(const Pipe& other);
+			AnonymousPipe(const AnonymousPipe& other);
+			virtual void operator=(const AnonymousPipe& other);
 
-			Pipe(Pipe&& other) noexcept;
-			virtual void operator=(Pipe&& other) noexcept;
+			AnonymousPipe(AnonymousPipe&& other) noexcept;
+			virtual void operator=(AnonymousPipe&& other) noexcept;
 		
 		// API
 		public:
@@ -39,7 +39,7 @@ namespace Win32Utils::Async
 
 		// Internal methods
 		protected:
-			virtual void Duplicate(const Pipe& other);
+			virtual void Duplicate(const AnonymousPipe& other);
 			virtual void Duplicate(const HANDLE readHandle, const HANDLE writeHandle);
 			virtual void Cleanup();
 

@@ -48,7 +48,7 @@ void TestAnonPipes()
 {
 	std::wstring msg1(L"message1");
 	std::wstring msg2(L"message2");
-	Win32Utils::Async::Pipe pipe(true, 512, L"||");
+	Win32Utils::Async::AnonymousPipe pipe(true, 512, L"||");
 	pipe.Write(msg1);
 	pipe.Write(msg2);
 

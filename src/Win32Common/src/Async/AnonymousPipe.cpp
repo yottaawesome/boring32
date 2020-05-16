@@ -1,23 +1,23 @@
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Async/Pipe.hpp"
+#include "include/Async/AnonymousPipe.hpp"
 #include "include/Strings.hpp"
 
 namespace Win32Utils::Async
 {
-	Pipe::~Pipe()
+	AnonymousPipe::~AnonymousPipe()
 	{
 		Cleanup();
 	}
 
-	Pipe::Pipe()
+	AnonymousPipe::AnonymousPipe()
 	:	m_size(0),
 		m_inheritable(false),
 		m_readHandle(nullptr),
 		m_writeHandle(nullptr)
 	{ }
 
-	Pipe::Pipe(const Pipe& other)
+	AnonymousPipe::AnonymousPipe(const AnonymousPipe& other)
 	:	m_size(other.m_size),
 		m_inheritable(other.m_inheritable),
 		m_delimiter(other.m_delimiter),
@@ -27,7 +27,7 @@ namespace Win32Utils::Async
 		Duplicate(other);
 	}
 
-	Pipe::Pipe(Pipe&& other) noexcept
+	AnonymousPipe::AnonymousPipe(AnonymousPipe&& other) noexcept
 	{
 		m_size = other.m_size;
 		m_inheritable = other.m_inheritable;
@@ -39,7 +39,7 @@ namespace Win32Utils::Async
 		other.m_writeHandle = nullptr;
 	}
 
-	void Pipe::operator=(Pipe&& other) noexcept
+	void AnonymousPipe::operator=(AnonymousPipe&& other) noexcept
 	{
 		Cleanup();
 		m_size = other.m_size;
@@ -57,7 +57,7 @@ namespace Win32Utils::Async
 		}
 	}
 
-	Pipe::Pipe(const bool inheritable, const DWORD size, const std::wstring& delimiter)
+	AnonymousPipe::AnonymousPipe(const bool inheritable, const DWORD size, const std::wstring& delimiter)
 	:	m_readHandle(nullptr),
 		m_writeHandle(nullptr),
 		m_inheritable(inheritable),
@@ -75,7 +75,7 @@ namespace Win32Utils::Async
 			throw std::runtime_error("Failed to create anonymous pipe");
 	}
 
-	Pipe::Pipe(
+	AnonymousPipe::AnonymousPipe(
 		const bool inheritable,
 		const DWORD size,
 		const bool duplicate,
@@ -93,13 +93,13 @@ namespace Win32Utils::Async
 			Duplicate(readHandle, writeHandle);
 	}
 
-	void Pipe::operator=(const Pipe& other)
+	void AnonymousPipe::operator=(const AnonymousPipe& other)
 	{
 		Cleanup();
 		Duplicate(other);
 	}
 
-	void Pipe::Duplicate(const HANDLE readHandle, const HANDLE writeHandle)
+	void AnonymousPipe::Duplicate(const HANDLE readHandle, const HANDLE writeHandle)
 	{
 		if (readHandle)
 		{
@@ -131,7 +131,7 @@ namespace Win32Utils::Async
 		}
 	}
 
-	void Pipe::Duplicate(const Pipe& other)
+	void AnonymousPipe::Duplicate(const AnonymousPipe& other)
 	{
 		m_size = other.m_size;
 		m_inheritable = other.m_inheritable;
@@ -141,7 +141,7 @@ namespace Win32Utils::Async
 		Duplicate(other.m_readHandle, other.m_writeHandle);
 	}
 
-	void Pipe::Cleanup()
+	void AnonymousPipe::Cleanup()
 	{
 		if (m_readHandle)
 		{
@@ -155,7 +155,7 @@ namespace Win32Utils::Async
 		}
 	}
 
-	void Pipe::Write(const std::wstring& msg)
+	void AnonymousPipe::Write(const std::wstring& msg)
 	{
 		if (m_writeHandle == nullptr)
 			throw std::runtime_error("No active write handle.");
@@ -176,7 +176,7 @@ namespace Win32Utils::Async
 			throw std::runtime_error("Write operation failed.");
 	}
 
-	std::wstring Pipe::Read()
+	std::wstring AnonymousPipe::Read()
 	{
 		if (m_readHandle == nullptr)
 			throw std::runtime_error("No active read handle.");
@@ -199,7 +199,7 @@ namespace Win32Utils::Async
 		return msg;
 	}
 
-	std::vector<std::wstring> Pipe::DelimitedRead()
+	std::vector<std::wstring> AnonymousPipe::DelimitedRead()
 	{
 		std::wstring rawString = Read();
 		if (m_delimiter == L"")
@@ -218,7 +218,7 @@ namespace Win32Utils::Async
 		return strings;
 	}
 
-	void Pipe::CloseRead()
+	void AnonymousPipe::CloseRead()
 	{
 		if (m_readHandle)
 		{
@@ -227,7 +227,7 @@ namespace Win32Utils::Async
 		}
 	}
 
-	void Pipe::CloseWrite()
+	void AnonymousPipe::CloseWrite()
 	{
 		if (m_writeHandle)
 		{
@@ -236,12 +236,12 @@ namespace Win32Utils::Async
 		}
 	}
 
-	HANDLE Pipe::GetRead()
+	HANDLE AnonymousPipe::GetRead()
 	{
 		return m_readHandle;
 	}
 
-	HANDLE Pipe::GetWrite()
+	HANDLE AnonymousPipe::GetWrite()
 	{
 		return m_writeHandle;
 	}

@@ -16,12 +16,30 @@ namespace Win32Utils::Raii
 		Duplicate(otherHandle.m_handle, otherHandle.m_inheritable);
 	}
 
+	void Win32Handle::operator=(const Win32Handle& other)
+	{
+		Close();
+		Duplicate(other.m_handle, other.m_inheritable);
+	}
+
 	Win32Handle::Win32Handle(Win32Handle&& otherHandle) noexcept
 	{
 		m_inheritable = otherHandle.m_inheritable;
 		m_handle = otherHandle.m_handle;
 		otherHandle.m_inheritable = false;
 		otherHandle.m_handle = nullptr;
+	}
+
+	void Win32Handle::operator=(Win32Handle&& other) noexcept
+	{
+		Close();
+		if (other.m_handle != nullptr)
+		{
+			m_inheritable = other.m_inheritable;
+			m_handle = other.m_handle;
+			other.m_handle = nullptr;
+			other.m_inheritable = false;
+		}
 	}
 
 	Win32Handle::Win32Handle(const HANDLE handle, const bool inheritable)
@@ -67,24 +85,6 @@ namespace Win32Utils::Raii
 	bool Win32Handle::operator==(const Win32Handle& other) const
 	{
 		return m_handle == other.m_handle;
-	}
-
-	void Win32Handle::operator=(const Win32Handle& other)
-	{
-		Close();
-		Duplicate(other.m_handle, other.m_inheritable);
-	}
-
-	void Win32Handle::operator=(Win32Handle&& other) noexcept
-	{
-		Close();
-		if (other.m_handle != nullptr)
-		{
-			m_inheritable = other.m_inheritable;
-			m_handle = other.m_handle;
-			other.m_handle = nullptr;
-			other.m_inheritable = false;
-		}
 	}
 
 	HANDLE* Win32Handle::operator&()

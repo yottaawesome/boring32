@@ -1,6 +1,6 @@
 #pragma once
 #include "ProcessInfo.hpp"
-#include "Pipe.hpp"
+#include "AnonymousPipe.hpp"
 #include "MemoryMappedFile.hpp"
 #include "MemoryMappedView.hpp"
 #include "Mutex.hpp"
