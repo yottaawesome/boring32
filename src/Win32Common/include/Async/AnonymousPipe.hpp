@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <string>
 #include <vector>
+#include "../Raii/Raii.hpp"
 
 namespace Win32Utils::Async
 {
@@ -15,7 +16,6 @@ namespace Win32Utils::Async
 			AnonymousPipe(
 				const bool inheritable,
 				const DWORD size, 
-				const bool duplicate,
 				const std::wstring& delimiter,
 				const HANDLE readHandle, 
 				const HANDLE writeHandle
@@ -39,16 +39,15 @@ namespace Win32Utils::Async
 
 		// Internal methods
 		protected:
-			virtual void Duplicate(const AnonymousPipe& other);
-			virtual void Duplicate(const HANDLE readHandle, const HANDLE writeHandle);
 			virtual void Cleanup();
+			virtual void Move(AnonymousPipe& other) noexcept;
+			virtual void Copy(const AnonymousPipe& other);
 
 		// Internal variables
 		protected:
 			std::wstring m_delimiter;
 			DWORD m_size;
-			bool m_inheritable;
-			HANDLE m_readHandle;
-			HANDLE m_writeHandle;
+			Raii::Win32Handle m_readHandle;
+			Raii::Win32Handle m_writeHandle;
 	};
 }

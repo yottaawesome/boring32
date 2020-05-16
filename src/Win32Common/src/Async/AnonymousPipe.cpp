@@ -12,147 +12,87 @@ namespace Win32Utils::Async
 
 	AnonymousPipe::AnonymousPipe()
 	:	m_size(0),
-		m_inheritable(false),
-		m_readHandle(nullptr),
-		m_writeHandle(nullptr)
+		m_readHandle(nullptr, false),
+		m_writeHandle(nullptr, false)
 	{ }
 
 	AnonymousPipe::AnonymousPipe(const AnonymousPipe& other)
-	:	m_size(other.m_size),
-		m_inheritable(other.m_inheritable),
-		m_delimiter(other.m_delimiter),
-		m_readHandle(nullptr),
-		m_writeHandle(nullptr)
+	{ 
+		Copy(other);
+	}
+
+	void AnonymousPipe::operator=(const AnonymousPipe& other)
 	{
-		Duplicate(other);
+		Cleanup();
+		Copy(other);
+	}
+
+	void AnonymousPipe::Copy(const AnonymousPipe& other)
+	{
+		m_delimiter = other.m_delimiter;
+		m_size = other.m_size;
+		m_readHandle = other.m_readHandle;
+		m_writeHandle = other.m_writeHandle;
 	}
 
 	AnonymousPipe::AnonymousPipe(AnonymousPipe&& other) noexcept
 	{
 		m_size = other.m_size;
-		m_inheritable = other.m_inheritable;
-		m_readHandle = other.m_readHandle;
-		m_writeHandle = other.m_writeHandle;
-		other.m_size = 0;
-		other.m_inheritable = false;
-		other.m_readHandle = nullptr;
-		other.m_writeHandle = nullptr;
+		Move(other);
 	}
 
 	void AnonymousPipe::operator=(AnonymousPipe&& other) noexcept
 	{
 		Cleanup();
+		Move(other);
+	}
+
+	void AnonymousPipe::Move(AnonymousPipe& other) noexcept
+	{
 		m_size = other.m_size;
-		m_delimiter = other.m_delimiter;
-		m_inheritable = other.m_inheritable;
-		if (other.m_readHandle)
-		{
-			m_readHandle = other.m_readHandle;
-			other.m_readHandle = nullptr;
-		}
-		if (other.m_writeHandle)
-		{
-			m_writeHandle = other.m_writeHandle;
-			other.m_writeHandle = nullptr;
-		}
+		m_delimiter = std::move(other.m_delimiter);
+		if (other.m_readHandle != nullptr)
+			m_readHandle = std::move(other.m_readHandle);
+		if (other.m_writeHandle != nullptr)
+			m_writeHandle = std::move(other.m_writeHandle);
 	}
 
 	AnonymousPipe::AnonymousPipe(const bool inheritable, const DWORD size, const std::wstring& delimiter)
-	:	m_readHandle(nullptr),
-		m_writeHandle(nullptr),
-		m_inheritable(inheritable),
+	:	m_readHandle(nullptr, false),
+		m_writeHandle(nullptr, false),
 		m_size(size),
 		m_delimiter(delimiter)
 	{
 		SECURITY_ATTRIBUTES lp{ 0 };
 		lp.nLength = sizeof(lp);
-		lp.bInheritHandle = m_inheritable;
+		lp.bInheritHandle = inheritable;
 		bool succeeded = CreatePipe(&m_readHandle, &m_writeHandle, &lp, size);
 		//DWORD mode = PIPE_READMODE_MESSAGE;
 		//SetNamedPipeHandleState(m_readHandle, &mode, nullptr, nullptr);
 		//SetNamedPipeHandleState(m_writeHandle, &mode, nullptr, nullptr);
 		if (succeeded == false)
 			throw std::runtime_error("Failed to create anonymous pipe");
+		m_readHandle = inheritable;
+		m_writeHandle = inheritable;
 	}
 
 	AnonymousPipe::AnonymousPipe(
 		const bool inheritable,
 		const DWORD size,
-		const bool duplicate,
 		const std::wstring& delimiter,
 		const HANDLE readHandle,
 		const HANDLE writeHandle
 	)
-	:	m_readHandle(duplicate ? nullptr : readHandle),
-		m_writeHandle(duplicate ? nullptr : writeHandle),
-		m_inheritable(inheritable),
-		m_delimiter(delimiter),
-		m_size(size)
-	{
-		if(duplicate)
-			Duplicate(readHandle, writeHandle);
-	}
-
-	void AnonymousPipe::operator=(const AnonymousPipe& other)
-	{
-		Cleanup();
-		Duplicate(other);
-	}
-
-	void AnonymousPipe::Duplicate(const HANDLE readHandle, const HANDLE writeHandle)
-	{
-		if (readHandle)
-		{
-			bool succeeded = DuplicateHandle(
-				GetCurrentProcess(),
-				readHandle,
-				GetCurrentProcess(),
-				&m_readHandle,
-				0,
-				m_inheritable,
-				DUPLICATE_SAME_ACCESS
-			);
-			if (succeeded == false)
-				throw std::runtime_error("Failed to duplicate handle.");
-		}
-		if (writeHandle)
-		{
-			bool succeeded = DuplicateHandle(
-				GetCurrentProcess(),
-				writeHandle,
-				GetCurrentProcess(),
-				&m_writeHandle,
-				0,
-				m_inheritable,
-				DUPLICATE_SAME_ACCESS
-			);
-			if (succeeded == false)
-				throw std::runtime_error("Failed to duplicate handle.");
-		}
-	}
-
-	void AnonymousPipe::Duplicate(const AnonymousPipe& other)
-	{
-		m_size = other.m_size;
-		m_inheritable = other.m_inheritable;
-		m_readHandle = nullptr;
-		m_writeHandle = nullptr;
-
-		Duplicate(other.m_readHandle, other.m_writeHandle);
-	}
+	:	m_delimiter(delimiter),
+		m_size(size),
+		m_readHandle(readHandle, inheritable),
+		m_writeHandle(writeHandle, inheritable)
+	{ }
 
 	void AnonymousPipe::Cleanup()
 	{
-		if (m_readHandle)
-		{
-			CloseHandle(m_readHandle);
-			m_readHandle = nullptr;
-		}
-		if (m_writeHandle)
-		{
-			CloseHandle(m_writeHandle);
-			m_writeHandle = nullptr;
-		}
+		m_readHandle.Close();
+		m_writeHandle.Close();
 	}
 
 	void AnonymousPipe::Write(const std::wstring& msg)
@@ -166,7 +106,7 @@ namespace Win32Utils::Async
 
 		DWORD bytesWritten;
 		bool bSuccess = WriteFile(
-			m_writeHandle,
+			m_writeHandle.GetHandle(),
 			msg2.data(),
 			msg2.size() * sizeof(wchar_t),
 			&bytesWritten,
@@ -185,7 +125,7 @@ namespace Win32Utils::Async
 		DWORD bytesRead;
 		msg.resize(m_size);
 		bool bSuccess = ReadFile(
-			m_readHandle,
+			m_readHandle.GetHandle(),
 			&msg[0],
 			msg.size() * sizeof(wchar_t),
 			&bytesRead,
@@ -220,29 +160,21 @@ namespace Win32Utils::Async
 
 	void AnonymousPipe::CloseRead()
 	{
-		if (m_readHandle)
-		{
-			CloseHandle(m_readHandle);
-			m_readHandle = nullptr;
-		}
+		m_readHandle.Close();
 	}
 
 	void AnonymousPipe::CloseWrite()
 	{
-		if (m_writeHandle)
-		{
-			CloseHandle(m_writeHandle);
-			m_writeHandle = nullptr;
-		}
+		m_writeHandle.Close();
 	}
 
 	HANDLE AnonymousPipe::GetRead()
 	{
-		return m_readHandle;
+		return m_readHandle.GetHandle();
 	}
 
 	HANDLE AnonymousPipe::GetWrite()
 	{
-		return m_writeHandle;
+		return m_writeHandle.GetHandle();
 	}
 }

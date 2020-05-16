@@ -52,12 +52,13 @@ namespace Win32Utils::Raii
 			virtual HANDLE GetHandle() const;
 			virtual HANDLE& GetHandleAddress();
 			virtual void Close();
-			virtual HANDLE Duplicate() const;
+			virtual HANDLE DuplicateCurrentHandle() const;
 
 			virtual bool IsInheritable() const;
 
 		protected:
-			virtual void Duplicate(const HANDLE otherHandle, const bool inheritable);
+			virtual void Copy(const Win32Handle& other);
+			virtual HANDLE DuplicatePassedHandle(const HANDLE handle, const bool isInheritable) const;
 
 		protected:
 			HANDLE m_handle;

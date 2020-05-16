@@ -13,13 +13,20 @@ namespace Win32Utils::Raii
 	:	m_handle(nullptr),
 		m_inheritable(otherHandle.m_inheritable)
 	{
-		Duplicate(otherHandle.m_handle, otherHandle.m_inheritable);
+		Copy(otherHandle);
 	}
 
 	void Win32Handle::operator=(const Win32Handle& other)
 	{
+		Copy(other);
+	}
+
+	void Win32Handle::Copy(const Win32Handle& other)
+	{
 		Close();
-		Duplicate(other.m_handle, other.m_inheritable);
+		m_inheritable = other.IsInheritable();
+		if (other != nullptr)
+			m_handle = DuplicatePassedHandle(other.GetHandle(), other.IsInheritable());
 	}
 
 	Win32Handle::Win32Handle(Win32Handle&& otherHandle) noexcept
@@ -34,12 +41,9 @@ namespace Win32Utils::Raii
 	{
 		Close();
 		m_inheritable = other.m_inheritable;
-		if (other.m_handle != nullptr)
-		{
-			m_handle = other.m_handle;
-			other.m_handle = nullptr;
-			other.m_inheritable = false;
-		}
+		m_handle = other.m_handle;
+		other.m_handle = nullptr;
+		other.m_inheritable = false;
 	}
 
 	Win32Handle::Win32Handle(const HANDLE handle, const bool inheritable)
@@ -92,42 +96,32 @@ namespace Win32Utils::Raii
 		return &m_handle;
 	}
 
-	void Win32Handle::Duplicate(const HANDLE otherHandle, const bool inheritable)
-	{
-		if (otherHandle != nullptr)
-		{
-			m_inheritable = inheritable;
-			bool succeeded = DuplicateHandle(
-				GetCurrentProcess(),
-				otherHandle,
-				GetCurrentProcess(),
-				&m_handle,
-				0,
-				m_inheritable,
-				DUPLICATE_SAME_ACCESS
-			);
-			if (succeeded == false)
-				throw std::runtime_error("Failed to duplicate handle.");
-		}
-	}
-
-	HANDLE Win32Handle::Duplicate() const
+	HANDLE Win32Handle::DuplicateCurrentHandle() const
 	{
 		if (m_handle == nullptr)
-			throw std::runtime_error("Failed to duplicate handle");
+			return nullptr;
+
+		return DuplicatePassedHandle(m_handle, m_inheritable);
+	}
+
+	HANDLE Win32Handle::DuplicatePassedHandle(const HANDLE handle, const bool isInheritable) const
+	{
+		if (handle == nullptr)
+			return nullptr;
 
 		HANDLE duplicateHandle = nullptr;
 		bool succeeded = DuplicateHandle(
 			GetCurrentProcess(),
-			m_handle,
+			handle,
 			GetCurrentProcess(),
 			&duplicateHandle,
 			0,
-			m_inheritable,
+			isInheritable,
 			DUPLICATE_SAME_ACCESS
 		);
 		if (succeeded == false)
-			throw std::runtime_error("Failed to duplicate job handle.");
+			throw std::runtime_error("Failed to duplicate handle.");
+
 		return duplicateHandle;
 	}
 
