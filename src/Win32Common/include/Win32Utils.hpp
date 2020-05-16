@@ -4,5 +4,6 @@
 #include "Time.hpp"
 #include "Guid.hpp"
 #include "Async/Async.hpp"
+#include "Raii/Raii.hpp"
 #include "WinHttp.hpp"
 #include "Error.hpp"

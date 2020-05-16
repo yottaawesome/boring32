@@ -36,19 +36,25 @@ namespace Win32Utils::Raii
 			virtual ~Win32Handle();
 			Win32Handle();
 			Win32Handle(const HANDLE handle, const bool inheritable);
+			
 			Win32Handle(const Win32Handle& otherHandle);
-			Win32Handle(Win32Handle&& otherHandle) noexcept;
+			virtual void operator=(const Win32Handle& other);
 
-			virtual HANDLE GetHandle();
+			Win32Handle(Win32Handle&& otherHandle) noexcept;
+			virtual void operator=(Win32Handle&& other) noexcept;
+
+			virtual void operator=(const bool isInheritable);
+			virtual void operator=(const HANDLE other);
+			virtual bool operator==(const HANDLE other) const;
+			virtual bool operator==(const Win32Handle& other) const;
+			virtual HANDLE* operator&();
+
+			virtual HANDLE GetHandle() const;
 			virtual HANDLE& GetHandleAddress();
 			virtual void Close();
+			virtual HANDLE Duplicate() const;
 
-			virtual void operator=(const HANDLE other);
-			virtual void operator=(const Win32Handle& other);
-			virtual void operator=(Win32Handle&& other) noexcept;
-			virtual bool operator==(const HANDLE other);
-			virtual bool operator==(const Win32Handle& other);
-			virtual HANDLE* operator&();
+			virtual bool IsInheritable() const;
 
 		protected:
 			virtual void Duplicate(const HANDLE otherHandle, const bool inheritable);

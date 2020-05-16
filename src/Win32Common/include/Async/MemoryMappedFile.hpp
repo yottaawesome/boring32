@@ -6,7 +6,7 @@ namespace Win32Utils::Async
 {
 	/// <summary>
 	///		Represents a <a href="https://docs.microsoft.com/en-us/dotnet/standard/io/memory-mapped-files">Win32 memory-mapped file</a>,
-	///		which is used for allowing process to share memory. This is a copyable
+	///		which allows processes to share memory. This is a copyable
 	///		and movable object.
 	/// </summary>
 	class MemoryMappedFile

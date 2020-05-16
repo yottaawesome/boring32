@@ -1,6 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Raii.hpp"
+#include "include/Raii/Raii.hpp"
 
 namespace Win32Utils::Raii
 {

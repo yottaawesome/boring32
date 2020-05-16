@@ -167,6 +167,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Async\Event.hpp" />
+    <ClInclude Include="include\Async\Job.hpp" />
     <ClInclude Include="include\Async\MemoryMappedFile.hpp" />
     <ClInclude Include="include\Async\Mutex.hpp" />
     <ClInclude Include="include\Async\Pipe.hpp" />
@@ -177,7 +178,7 @@
     <ClInclude Include="include\Guid.hpp" />
     <ClInclude Include="include\Async\Async.hpp" />
     <ClInclude Include="include\Library.hpp" />
-    <ClInclude Include="include\Raii.hpp" />
+    <ClInclude Include="include\Raii\Raii.hpp" />
     <ClInclude Include="include\Strings.hpp" />
     <ClInclude Include="include\Time.hpp" />
     <ClInclude Include="include\Win32Utils.hpp" />
@@ -187,6 +188,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Async\Event.cpp" />
+    <ClCompile Include="src\Async\Job.cpp" />
     <ClCompile Include="src\Async\Thread.cpp" />
     <ClCompile Include="src\Error\Error.cpp" />
     <ClCompile Include="src\Error\Win32Exception.cpp" />

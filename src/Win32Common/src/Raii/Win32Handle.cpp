@@ -1,6 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Raii.hpp"
+#include "include/Raii/Raii.hpp"
 
 namespace Win32Utils::Raii
 {
@@ -34,7 +34,7 @@ namespace Win32Utils::Raii
 		Close();
 	}
 
-	HANDLE Win32Handle::GetHandle()
+	HANDLE Win32Handle::GetHandle() const
 	{
 		return m_handle;
 	}
@@ -53,18 +53,18 @@ namespace Win32Utils::Raii
 		}
 	}
 
-	bool Win32Handle::operator==(const HANDLE other)
-	{
-		return m_handle == other;
-	}
-
 	void Win32Handle::operator=(const HANDLE other)
 	{
 		Close();
 		m_handle = other;
 	}
 
-	bool Win32Handle::operator==(const Win32Handle& other)
+	bool Win32Handle::operator==(const HANDLE other) const
+	{
+		return m_handle == other;
+	}
+
+	bool Win32Handle::operator==(const Win32Handle& other) const
 	{
 		return m_handle == other.m_handle;
 	}
@@ -109,5 +109,35 @@ namespace Win32Utils::Raii
 			if (succeeded == false)
 				throw std::runtime_error("Failed to duplicate handle.");
 		}
+	}
+
+	HANDLE Win32Handle::Duplicate() const
+	{
+		if (m_handle == nullptr)
+			throw std::runtime_error("Failed to duplicate handle");
+
+		HANDLE duplicateHandle = nullptr;
+		bool succeeded = DuplicateHandle(
+			GetCurrentProcess(),
+			m_handle,
+			GetCurrentProcess(),
+			&duplicateHandle,
+			0,
+			m_inheritable,
+			DUPLICATE_SAME_ACCESS
+		);
+		if (succeeded == false)
+			throw std::runtime_error("Failed to duplicate job handle.");
+		return duplicateHandle;
+	}
+
+	bool Win32Handle::IsInheritable() const
+	{
+		return m_inheritable;
+	}
+
+	void Win32Handle::operator=(const bool inheritable)
+	{
+		m_inheritable = inheritable;
 	}
 }
