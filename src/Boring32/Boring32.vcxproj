@@ -213,7 +213,7 @@
     <ClCompile Include="src\pch.cpp" />
     <ClCompile Include="src\Library\DynamicLinkLibrary.cpp" />
     <ClCompile Include="src\Time\Time.cpp" />
-    <ClCompile Include="src\Util\DuplicatePassedHandle.cpp" />
+    <ClCompile Include="src\Util\Util.cpp" />
     <ClCompile Include="src\WinHttp\WinHttpHandle.cpp" />
     <ClCompile Include="src\WinHttp\WinHttpWebClient.cpp" />
     <ClCompile Include="src\WinHttp\WinHttpWebSocket.cpp" />

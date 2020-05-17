@@ -110,12 +110,6 @@
     <ClCompile Include="src\Time\Time.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Guid\Guid.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Error\Error.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Library\DynamicLinkLibrary.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -161,7 +155,13 @@
     <ClCompile Include="src\Async\AnonymousPipe.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Util\DuplicatePassedHandle.cpp">
+    <ClCompile Include="src\Guid\Guid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Error\Error.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Util\Util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
