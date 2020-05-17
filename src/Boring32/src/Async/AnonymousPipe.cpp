@@ -1,7 +1,7 @@
 #include "pch.hpp"
 #include <stdexcept>
 #include "include/Async/AnonymousPipe.hpp"
-#include "include/Strings.hpp"
+#include "include/Strings/Strings.hpp"
 
 namespace Boring32::Async
 {

@@ -1,6 +1,6 @@
 #include "pch.hpp"
 #include <winhttp.h>
-#include "include/Boring32.hpp"
+#include "include/Error/Error.hpp"
 
 namespace Boring32::Error
 {

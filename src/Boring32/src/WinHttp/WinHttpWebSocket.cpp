@@ -3,7 +3,7 @@
 #include <vector>
 #include <sstream>
 #include "include/WinHttp/WinHttpWebSocket.hpp"
-#include "include/Error.hpp"
+#include "include/Error/Error.hpp"
 
 namespace Boring32::WinHttp
 {

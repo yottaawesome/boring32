@@ -21,6 +21,4 @@ namespace Boring32::Error
 		protected:
 			const DWORD m_errorCode;
 	};
-
-	std::wstring GetErrorCodeWString(const DWORD errorCode);
 }

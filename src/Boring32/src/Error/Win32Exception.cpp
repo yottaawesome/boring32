@@ -1,5 +1,6 @@
 #include "pch.hpp"
-#include "include/Boring32.hpp"
+#include "include/Error/Error.hpp"
+#include "include/Strings/Strings.hpp"
 
 namespace Boring32::Error
 {
