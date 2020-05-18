@@ -39,9 +39,6 @@ namespace Boring32::Async
 
 	void Thread::Copy(const Thread& other)
 	{
-		if (m_status != ThreadStatus::Ready)
-			throw std::runtime_error("Cannot copy to a Thread that is not in Ready stats");
-
 		Close();
 		m_func = other.m_func;
 		m_status = other.m_status;
@@ -65,16 +62,13 @@ namespace Boring32::Async
 	void Thread::Copy(Thread& other) noexcept
 	{
 		Close();
-		if (m_status == ThreadStatus::Ready)
-		{
-			m_func = std::move(other.m_func);
-			m_status = other.m_status;
-			m_returnCode = other.m_returnCode;
-			m_threadId = other.m_threadId;
-			m_hThread = std::move(other.m_hThread);
-			m_destroyOnCompletion = other.m_destroyOnCompletion;
-			m_threadParam = other.m_threadParam;
-		}
+		m_func = std::move(other.m_func);
+		m_status = other.m_status;
+		m_returnCode = other.m_returnCode;
+		m_threadId = other.m_threadId;
+		m_hThread = std::move(other.m_hThread);
+		m_destroyOnCompletion = other.m_destroyOnCompletion;
+		m_threadParam = other.m_threadParam;
 	}
 
 	void Thread::Start()
