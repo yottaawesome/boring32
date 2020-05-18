@@ -15,7 +15,8 @@ namespace Boring32::Async
 				const std::wstring& commandLine,
 				const std::wstring& startingDirectory,
 				const bool canInheritHandles,
-				const DWORD creationFlags
+				const DWORD creationFlags,
+				const STARTUPINFO& dataSi
 			);
 
 			// Move
@@ -53,5 +54,6 @@ namespace Boring32::Async
 			Boring32::Raii::Win32Handle m_thread;
 			DWORD m_processId;
 			DWORD m_threadId;
+			STARTUPINFO m_dataSi;
 	};
 }

@@ -16,7 +16,8 @@ namespace Boring32::Async
 		m_canInheritHandles(false),
 		m_creationFlags(0),
 		m_processId(0),
-		m_threadId(0)
+		m_threadId(0),
+		m_dataSi{0}
 	{ }
 
 	Process::Process(
@@ -24,7 +25,8 @@ namespace Boring32::Async
 		const std::wstring& commandLine,
 		const std::wstring& startingDirectory,
 		const bool canInheritHandles,
-		const DWORD creationFlags
+		const DWORD creationFlags,
+		const STARTUPINFO& dataSi
 	)
 	:	m_executablePath(executablePath),
 		m_commandLine(commandLine),
@@ -34,7 +36,8 @@ namespace Boring32::Async
 		m_processId(0),
 		m_threadId(0),
 		m_process(nullptr, false),
-		m_thread(nullptr, false)
+		m_thread(nullptr, false),
+		m_dataSi(dataSi)
 	{ }
 
 	Process::Process(const Process& other)
@@ -90,9 +93,8 @@ namespace Boring32::Async
 		if(m_executablePath == L"" && m_commandLine == L"")
 			throw std::runtime_error("No executable path or command line set");
 
-		STARTUPINFO dataSi{ 0 };
 		PROCESS_INFORMATION processInfo;
-		dataSi.cb = sizeof(dataSi);
+		m_dataSi.cb = sizeof(m_dataSi);
 		// https://docs.microsoft.com/en-us/windows/win32/procthread/creating-processes
 		bool successfullyCreatedProcess =
 			CreateProcess(
@@ -110,7 +112,7 @@ namespace Boring32::Async
 				m_startingDirectory != L"" // Starting directory 
 					? m_startingDirectory.c_str()
 					: nullptr,				
-				&dataSi,				// Pointer to STARTUPINFO structure
+				&m_dataSi,				// Pointer to STARTUPINFO structure
 				&processInfo			// Pointer to PROCESS_INFORMATION structure
 			);
 		if (successfullyCreatedProcess == false)
