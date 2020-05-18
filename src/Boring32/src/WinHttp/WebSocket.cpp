@@ -2,12 +2,12 @@
 #include <stdexcept>
 #include <vector>
 #include <sstream>
-#include "include/WinHttp/WinHttpWebSocket.hpp"
+#include "include/WinHttp/WebSocket.hpp"
 #include "include/Error/Error.hpp"
 
 namespace Boring32::WinHttp
 {
-	WinHttpWebSocket::~WinHttpWebSocket()
+	WebSocket::~WebSocket()
 	{
 		Close();
 	}
@@ -33,23 +33,23 @@ namespace Boring32::WinHttp
 		return newString;
 	}
 
-	WinHttpWebSocket::WinHttpWebSocket(std::wstring server, const UINT port, const bool ignoreSslErrors)
+	WebSocket::WebSocket(std::wstring server, const UINT port, const bool ignoreSslErrors)
 	:	m_server(std::move(server)),
 		m_port(port),
 		m_ignoreSslErrors(ignoreSslErrors),
 		m_hSession(nullptr),
 		m_hConnect(nullptr),
-		m_status(WinHttpWebSocketStatus::NotInitialised)
+		m_status(WebSocketStatus::NotInitialised)
 	{
 		CleanServerString();
 	}
 
-	const std::wstring& WinHttpWebSocket::GetServer()
+	const std::wstring& WebSocket::GetServer()
 	{
 		return m_server;
 	}
 
-	void WinHttpWebSocket::SetServer(const std::wstring& newServer, const UINT port, const bool ignoreSslErrors)
+	void WebSocket::SetServer(const std::wstring& newServer, const UINT port, const bool ignoreSslErrors)
 	{
 		m_server = newServer;
 		m_port = port;
@@ -57,7 +57,7 @@ namespace Boring32::WinHttp
 		CleanServerString();
 	}
 
-	void WinHttpWebSocket::CleanServerString()
+	void WebSocket::CleanServerString()
 	{
 		std::wstring whatToReplace1 = L"http://";
 		std::wstring whatToReplace2 = L"https://";
@@ -73,19 +73,19 @@ namespace Boring32::WinHttp
 			);
 	}
 
-	void WinHttpWebSocket::Connect(const std::wstring& path)
+	void WebSocket::Connect(const std::wstring& path)
 	{
 		InternalConnect(path);
 	}
 
-	void WinHttpWebSocket::Connect()
+	void WebSocket::Connect()
 	{
 		InternalConnect(L"");
 	}
 
-	void WinHttpWebSocket::InternalConnect(const std::wstring& path)
+	void WebSocket::InternalConnect(const std::wstring& path)
 	{
-		if (m_status != WinHttpWebSocketStatus::NotInitialised)
+		if (m_status != WebSocketStatus::NotInitialised)
 			throw std::runtime_error("WebSocket needs to be in NotInitialised state to connect");
 
 		m_hSession = WinHttpOpen(
@@ -128,7 +128,7 @@ namespace Boring32::WinHttp
 			);
 			if (!security)
 			{
-				m_status = WinHttpWebSocketStatus::Error;
+				m_status = WebSocketStatus::Error;
 				throw Error::Win32Exception("Failed to set security options");
 			}
 		}
@@ -140,7 +140,7 @@ namespace Boring32::WinHttp
 			0);
 		if (!websocket)
 		{
-			m_status = WinHttpWebSocketStatus::Error;
+			m_status = WebSocketStatus::Error;
 			throw Error::Win32Exception("Failed to set web socket upgrade option");
 		}
 
@@ -154,14 +154,14 @@ namespace Boring32::WinHttp
 			0);
 		if (!isSuccessful)
 		{
-			m_status = WinHttpWebSocketStatus::Error;
+			m_status = WebSocketStatus::Error;
 			throw Error::Win32Exception("Failed to send web socket request");
 		}
 
 		isSuccessful = WinHttpReceiveResponse(requestHandle.Get(), 0);
 		if (!isSuccessful)
 		{
-			m_status = WinHttpWebSocketStatus::Error;
+			m_status = WebSocketStatus::Error;
 			throw Error::Win32Exception("Failed to receive web socket response");
 		}
 
@@ -186,22 +186,22 @@ namespace Boring32::WinHttp
 		m_webSocketHandle = WinHttpWebSocketCompleteUpgrade(requestHandle.Get(), 0);
 		if (m_webSocketHandle == nullptr)
 		{
-			m_status = WinHttpWebSocketStatus::Error;
+			m_status = WebSocketStatus::Error;
 			throw Error::Win32Exception("Failed to complete web socket upgrade");
 		}
 
 		requestHandle = nullptr;
-		m_status = WinHttpWebSocketStatus::Connected;
+		m_status = WebSocketStatus::Connected;
 	}
 
-	WinHttpWebSocketStatus WinHttpWebSocket::GetStatus()
+	WebSocketStatus WebSocket::GetStatus()
 	{
 		return m_status;
 	}
 
-	void WinHttpWebSocket::SendString(const std::string& msg)
+	void WebSocket::SendString(const std::string& msg)
 	{
-		if (m_status != WinHttpWebSocketStatus::Connected)
+		if (m_status != WebSocketStatus::Connected)
 			throw std::runtime_error("WebSocket is not connected to send data");
 
 		DWORD dwError = WinHttpWebSocketSend(
@@ -212,14 +212,14 @@ namespace Boring32::WinHttp
 		);
 		if (dwError != ERROR_SUCCESS)
 		{
-			m_status = WinHttpWebSocketStatus::Error;
+			m_status = WebSocketStatus::Error;
 			throw std::runtime_error(std::to_string(GetLastError()));
 		}
 	}
 
-	void WinHttpWebSocket::SendBuffer(const std::vector<char>& buffer)
+	void WebSocket::SendBuffer(const std::vector<char>& buffer)
 	{
-		if (m_status != WinHttpWebSocketStatus::Connected)
+		if (m_status != WebSocketStatus::Connected)
 			throw std::runtime_error("WebSocket is not connected to send data");
 
 		DWORD dwError = WinHttpWebSocketSend(
@@ -230,14 +230,14 @@ namespace Boring32::WinHttp
 		);
 		if (dwError != ERROR_SUCCESS)
 		{
-			m_status = WinHttpWebSocketStatus::Error;
+			m_status = WebSocketStatus::Error;
 			throw std::runtime_error(std::to_string(GetLastError()));
 		}
 	}
 
-	bool WinHttpWebSocket::Receive(std::vector<char>& receiveBuffer)
+	bool WebSocket::Receive(std::vector<char>& receiveBuffer)
 	{
-		if (m_status != WinHttpWebSocketStatus::Connected)
+		if (m_status != WebSocketStatus::Connected)
 			throw std::runtime_error("WebSocket is not connected to receive data");
 
 		constexpr UINT bufferBlockSize = 2048;
@@ -290,9 +290,9 @@ namespace Boring32::WinHttp
 		}
 	}
 
-	void WinHttpWebSocket::Close()
+	void WebSocket::Close()
 	{
 		WinHttpWebSocketClose(m_webSocketHandle.Get(), WINHTTP_WEB_SOCKET_SUCCESS_CLOSE_STATUS, nullptr, 0);
-		m_status = WinHttpWebSocketStatus::Closed;
+		m_status = WebSocketStatus::Closed;
 	}
 }

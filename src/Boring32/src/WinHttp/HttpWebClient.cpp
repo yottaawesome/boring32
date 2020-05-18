@@ -3,16 +3,16 @@
 #include <vector>
 #include <functional>
 #include <sstream>
-#include "include/WinHttp/WinHttpWebClient.hpp"
+#include "include/WinHttp/HttpWebClient.hpp"
 
 namespace Boring32::WinHttp
 {
-	WinHttpWebClient::~WinHttpWebClient() 
+	HttpWebClient::~HttpWebClient() 
 	{
 		Close();
 	}
 	
-	WinHttpWebClient::WinHttpWebClient()
+	HttpWebClient::HttpWebClient()
 	:	m_userAgentName(L""),
 		m_serverToConnectTo(L""),
 		m_port(0),
@@ -21,7 +21,7 @@ namespace Boring32::WinHttp
 		m_additionalHeaders(L"")
 	{ }
 
-	WinHttpWebClient::WinHttpWebClient(
+	HttpWebClient::HttpWebClient(
 		const std::wstring& userAgentName,
 		const std::wstring& serverToConnectTo,
 		const UINT port,
@@ -38,20 +38,20 @@ namespace Boring32::WinHttp
 	{
 	}
 
-	WinHttpWebClient::WinHttpWebClient(const WinHttpWebClient& other)
+	HttpWebClient::HttpWebClient(const HttpWebClient& other)
 	{
 		Copy(other);
 		Connect();
 	}
 	
-	void WinHttpWebClient::operator=(const WinHttpWebClient& other)
+	void HttpWebClient::operator=(const HttpWebClient& other)
 	{
 		Close();
 		Copy(other);
 		Connect();
 	}
 
-	void WinHttpWebClient::Copy(const WinHttpWebClient& other)
+	void HttpWebClient::Copy(const HttpWebClient& other)
 	{
 		m_userAgentName = other.m_userAgentName;
 		m_serverToConnectTo = other.m_serverToConnectTo;
@@ -61,20 +61,20 @@ namespace Boring32::WinHttp
 		m_additionalHeaders = other.m_additionalHeaders;
 	}
 
-	WinHttpWebClient::WinHttpWebClient(WinHttpWebClient&& other) noexcept
+	HttpWebClient::HttpWebClient(HttpWebClient&& other) noexcept
 	{
 		Move(other);
 		Connect();
 	}
 
-	void WinHttpWebClient::operator=(WinHttpWebClient&& other) noexcept
+	void HttpWebClient::operator=(HttpWebClient&& other) noexcept
 	{
 		Close();
 		Move(other);
 		Connect();
 	}
 
-	void WinHttpWebClient::Move(WinHttpWebClient& other)
+	void HttpWebClient::Move(HttpWebClient& other)
 	{
 		m_userAgentName = std::move(other.m_userAgentName);
 		m_serverToConnectTo = std::move(other.m_serverToConnectTo);
@@ -84,7 +84,7 @@ namespace Boring32::WinHttp
 		m_additionalHeaders = std::move(other.m_additionalHeaders);
 	}
 
-	void WinHttpWebClient::Close()
+	void HttpWebClient::Close()
 	{
 		if (m_hSession != nullptr)
 		{
@@ -98,7 +98,7 @@ namespace Boring32::WinHttp
 		}
 	}
 
-	void WinHttpWebClient::Connect()
+	void HttpWebClient::Connect()
 	{
 		m_hSession = WinHttpOpen(
 			m_userAgentName.c_str(),
@@ -119,27 +119,27 @@ namespace Boring32::WinHttp
 			throw std::runtime_error("WinHttpConnect failed");
 	}
 	
-	void WinHttpWebClient::Get(const std::wstring& path)
+	void HttpWebClient::Get(const std::wstring& path)
 	{
 		ExecuteRequest(L"GET", path, "", m_additionalHeaders);
 	}
 
-	void WinHttpWebClient::Post(const std::wstring& path, const std::string& requestBody)
+	void HttpWebClient::Post(const std::wstring& path, const std::string& requestBody)
 	{
 		ExecuteRequest(L"POST", path, requestBody, m_additionalHeaders);
 	}
 
-	void WinHttpWebClient::Put(const std::wstring& path, const std::string& requestBody)
+	void HttpWebClient::Put(const std::wstring& path, const std::string& requestBody)
 	{
 		ExecuteRequest(L"PUT", path, requestBody, m_additionalHeaders);
 	}
 
-	void WinHttpWebClient::Delete(const std::wstring& path, const std::string& requestBody)
+	void HttpWebClient::Delete(const std::wstring& path, const std::string& requestBody)
 	{
 		ExecuteRequest(L"DELETE", path, requestBody, m_additionalHeaders);
 	}
 
-	WinHttpRequestResult WinHttpWebClient::ExecuteRequest(
+	HttpRequestResult HttpWebClient::ExecuteRequest(
 		const std::wstring& verb, 
 		const std::wstring& path,
 		const std::string& requestBody,
@@ -241,6 +241,6 @@ namespace Boring32::WinHttp
 			response.append(outBuffer.begin(), outBuffer.end());
 		} while (dwSize > 0);
 
-		return WinHttpRequestResult{ statusCode, response };
+		return HttpRequestResult{ statusCode, response };
 	}
 }

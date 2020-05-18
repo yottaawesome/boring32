@@ -188,10 +188,10 @@
     <ClInclude Include="include\Boring32.hpp" />
     <ClInclude Include="include\WinHttp\WinHttp.hpp" />
     <ClInclude Include="include\WinHttp\WinHttpHandle.hpp" />
-    <ClInclude Include="include\WinHttp\WinHttpRequestResult.hpp" />
-    <ClInclude Include="include\WinHttp\WinHttpWebClient.hpp" />
-    <ClInclude Include="include\WinHttp\WinHttpWebSocket.hpp" />
-    <ClInclude Include="include\WinHttp\WinHttpWebSocketStatus.hpp" />
+    <ClInclude Include="include\WinHttp\HttpRequestResult.hpp" />
+    <ClInclude Include="include\WinHttp\HttpWebClient.hpp" />
+    <ClInclude Include="include\WinHttp\WebSocket.hpp" />
+    <ClInclude Include="include\WinHttp\WebSocketStatus.hpp" />
     <ClInclude Include="src\pch.hpp" />
     <ClInclude Include="src\targetver.hpp" />
   </ItemGroup>
@@ -215,8 +215,8 @@
     <ClCompile Include="src\Time\Time.cpp" />
     <ClCompile Include="src\Util\Util.cpp" />
     <ClCompile Include="src\WinHttp\WinHttpHandle.cpp" />
-    <ClCompile Include="src\WinHttp\WinHttpWebClient.cpp" />
-    <ClCompile Include="src\WinHttp\WinHttpWebSocket.cpp" />
+    <ClCompile Include="src\WinHttp\HttpWebClient.cpp" />
+    <ClCompile Include="src\WinHttp\WebSocket.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

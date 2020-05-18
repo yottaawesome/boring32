@@ -69,7 +69,7 @@ int main(int argc, char** args)
 	TestAnonPipes();
 	//TestLibraryLoad();
 
-	//Win32Utils::WinHttp::WinHttpWebClient client(
+	//Boring32::WinHttp::HttpWebClient client(
 	//	L"TestClientAgent", 
 	//	L"127.0.0.1", 
 	//	94873, 

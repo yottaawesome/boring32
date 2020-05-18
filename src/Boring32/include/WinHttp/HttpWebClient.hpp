@@ -3,16 +3,16 @@
 #include <string>
 #include <vector>
 #include "WinHttpHandle.hpp"
-#include "WinHttpRequestResult.hpp"
+#include "HttpRequestResult.hpp"
 
 namespace Boring32::WinHttp
 {
-	class WinHttpWebClient
+	class HttpWebClient
 	{
 		public:
-			virtual ~WinHttpWebClient();
-			WinHttpWebClient();
-			WinHttpWebClient(
+			virtual ~HttpWebClient();
+			HttpWebClient();
+			HttpWebClient(
 				const std::wstring& userAgentName, 
 				const std::wstring& server,
 				const UINT port,
@@ -20,11 +20,11 @@ namespace Boring32::WinHttp
 				const std::vector<std::wstring>& acceptTypes,
 				const std::wstring& additionalHeaders
 			);
-			WinHttpWebClient(const WinHttpWebClient& other);
-			virtual void operator=(const WinHttpWebClient& other);
+			HttpWebClient(const HttpWebClient& other);
+			virtual void operator=(const HttpWebClient& other);
 
-			WinHttpWebClient(WinHttpWebClient&& other) noexcept;
-			virtual void operator=(WinHttpWebClient&& other) noexcept;
+			HttpWebClient(HttpWebClient&& other) noexcept;
+			virtual void operator=(HttpWebClient&& other) noexcept;
 
 			virtual void Get(const std::wstring& path);
 			virtual void Post(const std::wstring& path, const std::string& requestBody);
@@ -34,14 +34,14 @@ namespace Boring32::WinHttp
 
 		protected:
 			virtual void Connect();
-			virtual WinHttpRequestResult ExecuteRequest(
+			virtual HttpRequestResult ExecuteRequest(
 				const std::wstring& verb,
 				const std::wstring& path,
 				const std::string& requestBody,
 				const std::wstring& additionalHeaders
 			);
-			virtual void Copy(const WinHttpWebClient& other);
-			virtual void Move(WinHttpWebClient& other);
+			virtual void Copy(const HttpWebClient& other);
+			virtual void Move(HttpWebClient& other);
 
 		protected:
 			WinHttpHandle m_hSession;

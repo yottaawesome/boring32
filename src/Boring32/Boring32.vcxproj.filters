@@ -66,19 +66,7 @@
     <ClInclude Include="include\WinHttp\WinHttp.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\WinHttp\WinHttpWebSocket.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\WinHttp\WinHttpHandle.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\WinHttp\WinHttpWebSocketStatus.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\WinHttp\WinHttpRequestResult.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\WinHttp\WinHttpWebClient.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Error\Error.hpp">
@@ -99,6 +87,18 @@
     <ClInclude Include="include\Time\Time.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\WinHttp\HttpWebClient.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\WinHttp\WebSocket.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\WinHttp\WebSocketStatus.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\WinHttp\HttpRequestResult.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\pch.cpp">
@@ -114,9 +114,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\WinHttp\WinHttpHandle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\WinHttp\WinHttpWebSocket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Error\Win32Exception.cpp">
@@ -143,9 +140,6 @@
     <ClCompile Include="src\Async\Event.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\WinHttp\WinHttpWebClient.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Async\Thread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -162,6 +156,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Util\Util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WinHttp\HttpWebClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WinHttp\WebSocket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

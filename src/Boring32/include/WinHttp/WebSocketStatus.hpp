@@ -2,7 +2,7 @@
 
 namespace Boring32::WinHttp
 {
-	enum class WinHttpWebSocketStatus
+	enum class WebSocketStatus
 	{
 		NotInitialised,
 		Connected,

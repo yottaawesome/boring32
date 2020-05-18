@@ -3,15 +3,15 @@
 #include <string>
 #include <vector>
 #include "WinHttpHandle.hpp"
-#include "WinHttpWebSocketStatus.hpp"
+#include "WebSocketStatus.hpp"
 
 namespace Boring32::WinHttp
 {
-	class WinHttpWebSocket
+	class WebSocket
 	{
 		public:
-			virtual ~WinHttpWebSocket();
-			WinHttpWebSocket(std::wstring server, const UINT port, const bool ignoreSslErrors);
+			virtual ~WebSocket();
+			WebSocket(std::wstring server, const UINT port, const bool ignoreSslErrors);
 			virtual const std::wstring& GetServer();
 			virtual void Connect();
 			virtual void Connect(const std::wstring& path);
@@ -21,7 +21,7 @@ namespace Boring32::WinHttp
 			virtual bool Receive(std::vector<char>& buffer);
 			virtual void SetServer(const std::wstring& newServer, const UINT port, const bool ignoreSslErrors);
 			virtual void Close();
-			virtual WinHttpWebSocketStatus GetStatus();
+			virtual WebSocketStatus GetStatus();
 
 		protected:
 			virtual void InternalConnect(const std::wstring& path);
@@ -33,6 +33,6 @@ namespace Boring32::WinHttp
 			std::wstring m_server;
 			UINT m_port;
 			bool m_ignoreSslErrors;
-			WinHttpWebSocketStatus m_status;
+			WebSocketStatus m_status;
 	};
 }

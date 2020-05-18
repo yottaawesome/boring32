@@ -4,7 +4,7 @@
 
 namespace Boring32::WinHttp
 {
-	class WinHttpRequestResult
+	class HttpRequestResult
 	{
 		public:
 			UINT StatusCode;
