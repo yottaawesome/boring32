@@ -192,6 +192,7 @@
     <ClInclude Include="include\WinHttp\HttpWebClient.hpp" />
     <ClInclude Include="include\WinHttp\WebSocket.hpp" />
     <ClInclude Include="include\WinHttp\WebSocketStatus.hpp" />
+    <ClInclude Include="include\Async\ThreadStatus.hpp" />
     <ClInclude Include="src\pch.hpp" />
     <ClInclude Include="src\targetver.hpp" />
   </ItemGroup>

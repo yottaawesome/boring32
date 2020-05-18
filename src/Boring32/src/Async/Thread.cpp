@@ -4,26 +4,76 @@
 
 namespace Boring32::Async
 {
+	Thread::~Thread()
+	{
+		Close();
+	}
+
+	void Thread::Close()
+	{
+		if (this->m_hThread != nullptr)
+		{
+			m_hThread = nullptr;
+			m_threadId = 0;
+		}
+	}
+
 	Thread::Thread(void* param, bool destroyOnCompletion)
 		: m_destroyOnCompletion(destroyOnCompletion),
 		m_status(ThreadStatus::Ready),
 		m_threadParam(param),
 		m_threadId(0),
-		m_hThread(nullptr),
+		m_hThread(nullptr, false),
 		m_returnCode(STILL_ACTIVE)
 	{ }
 
-	Thread::~Thread()
+	Thread::Thread(const Thread& other)
 	{
-		Cleanup();
+		Copy(other);
 	}
 
-	void Thread::Cleanup()
+	void Thread::operator=(const Thread& other)
 	{
-		if (this->m_hThread)
+		Copy(other);
+	}
+
+	void Thread::Copy(const Thread& other)
+	{
+		if (m_status != ThreadStatus::Ready)
+			throw std::runtime_error("Cannot copy to a Thread that is not in Ready stats");
+
+		Close();
+		m_func = other.m_func;
+		m_status = other.m_status;
+		m_returnCode = other.m_returnCode;
+		m_threadId = other.m_threadId;
+		m_hThread = other.m_hThread;
+		m_destroyOnCompletion = other.m_destroyOnCompletion;
+		m_threadParam = other.m_threadParam;
+	}
+
+	Thread::Thread(const Thread&& other) noexcept
+	{
+		Copy(other);
+	}
+
+	void Thread::operator=(Thread&& other) noexcept
+	{
+		Copy(other);
+	}
+
+	void Thread::Copy(Thread& other) noexcept
+	{
+		Close();
+		if (m_status == ThreadStatus::Ready)
 		{
-			CloseHandle(m_hThread);
-			m_hThread = nullptr;
+			m_func = std::move(other.m_func);
+			m_status = other.m_status;
+			m_returnCode = other.m_returnCode;
+			m_threadId = other.m_threadId;
+			m_hThread = std::move(other.m_hThread);
+			m_destroyOnCompletion = other.m_destroyOnCompletion;
+			m_threadParam = other.m_threadParam;
 		}
 	}
 
@@ -53,25 +103,7 @@ namespace Boring32::Async
 		);
 	}
 
-	void Thread::Start(std::function<int()>* func)
-	{
-		m_func = *func;
-		m_hThread = (HANDLE)_beginthreadex(
-			0,
-			0,
-			Thread::ThreadProc,
-			this,
-			0,
-			&m_threadId
-		);
-		if (m_hThread == nullptr)
-		{
-			m_status = ThreadStatus::Failure;
-			throw std::runtime_error("Failed to start thread");
-		}
-	}
-
-	void Thread::Start(std::function<int()> func)
+	void Thread::Start(const std::function<int()>& func)
 	{
 		m_func = func;
 		m_hThread = (HANDLE)_beginthreadex(
@@ -99,7 +131,7 @@ namespace Boring32::Async
 		if (this->m_status != ThreadStatus::Running)
 			throw std::runtime_error("Thread was not running when request to terminate occurred.");
 
-		TerminateThread(m_hThread, (DWORD)ThreadStatus::Terminated);
+		TerminateThread(m_hThread.GetHandle(), (DWORD)ThreadStatus::Terminated);
 	}
 
 	void Thread::Suspend()
@@ -108,7 +140,7 @@ namespace Boring32::Async
 			throw std::runtime_error("Thread was not running when request to suspend occurred.");
 
 		this->m_status = ThreadStatus::Suspended;
-		SuspendThread(m_hThread);
+		SuspendThread(m_hThread.GetHandle());
 	}
 
 	void Thread::Resume()
@@ -117,7 +149,7 @@ namespace Boring32::Async
 			throw std::runtime_error("Thread was not suspended when request to resume occurred.");
 
 		this->m_status = ThreadStatus::Running;
-		ResumeThread(m_hThread);
+		ResumeThread(m_hThread.GetHandle());
 	}
 
 	UINT Thread::Run()
@@ -147,7 +179,7 @@ namespace Boring32::Async
 			threadObj->m_status = ThreadStatus::FinishedWithError;
 		}
 
-		threadObj->Cleanup();
+		threadObj->Close();
 		threadObj->m_returnCode = returnCode;
 		if (threadObj->m_destroyOnCompletion)
 			delete threadObj;

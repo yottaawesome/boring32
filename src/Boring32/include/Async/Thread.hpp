@@ -1,29 +1,30 @@
 #pragma once
 #include <Windows.h>
 #include <functional>
+#include "../Raii/Win32Handle.hpp"
+#include "ThreadStatus.hpp"
 
 namespace Boring32::Async
 {
-	enum class ThreadStatus
-	{
-		Finished = 0,
-		Failure = 1,
-		Ready = 2,
-		Running = 3,
-		Suspended = 4,
-		Terminated = 5,
-		FinishedWithError = 0,
-	};
-
 	class Thread
 	{
 		public:
-			Thread(void* param, bool destroyOnCompletion);
+			virtual void Close();
 			virtual ~Thread();
+			Thread(void* param, bool destroyOnCompletion);
+
+			Thread(const Thread& other);
+			virtual void operator=(const Thread& other);
+			virtual void Copy(const Thread& other);
+
+			Thread(const Thread&& other) noexcept;
+			virtual void operator=(Thread&& other) noexcept;
+			virtual void Copy(Thread& other) noexcept;
+
 			virtual void Start();
 			virtual void Start(int(*simpleFunc)());
-			virtual void Start(std::function<int()>* func);
-			virtual void Start(std::function<int()> func);
+			virtual void Start(const std::function<int()>& func);
+
 			virtual ThreadStatus GetStatus();
 			virtual UINT GetReturnCode();
 			virtual void Terminate();
@@ -32,14 +33,13 @@ namespace Boring32::Async
 
 		protected:
 			virtual UINT Run();
-			virtual void Cleanup();
 			static UINT WINAPI ThreadProc(void* param);
 
 		protected:
 			ThreadStatus m_status;
 			UINT m_returnCode;
 			UINT m_threadId;
-			HANDLE m_hThread;
+			Raii::Win32Handle m_hThread;
 			bool m_destroyOnCompletion;
 			void* m_threadParam;
 			std::function<int()> m_func;
