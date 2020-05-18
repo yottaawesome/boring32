@@ -11,7 +11,7 @@ namespace Boring32::Async
 
 	void Thread::Close()
 	{
-		if (this->m_hThread != nullptr)
+		if (m_hThread != nullptr)
 		{
 			m_hThread = nullptr;
 			m_threadId = 0;

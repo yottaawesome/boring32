@@ -135,6 +135,15 @@ namespace Boring32::Async
 		throw std::runtime_error("Failed to acquire mutex.");
 	}
 
+	bool Mutex::SafeLock(const DWORD waitTime)
+	{
+		if (waitTime == 0)
+			throw std::runtime_error("SafeLock() requires a positive timeout period");
+
+		while (Lock(waitTime) == false)
+			;
+	}
+
 	void Mutex::Unlock()
 	{
 		if (!ReleaseMutex(m_mutex.GetHandle()))

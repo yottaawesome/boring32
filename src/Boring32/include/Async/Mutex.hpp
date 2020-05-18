@@ -110,13 +110,31 @@ namespace Boring32::Async
 			virtual bool Lock(const DWORD waitTime);
 
 			/// <summary>
+			///		Repeatedly tries to acquire a lock with a specified timeout.
+			///		This allows threads to lock, but not be blocked indefinitely
+			///		and unable to be forced to terminate.
+			/// </summary>
+			/// <returns>
+			///		Returns true if the mutex was successfully acquired,
+			///		or false if the timeout occurred.
+			/// </returns>
+			/// <exception cref="std::runtime_error">
+			///		Failed to acquire the mutex for reasons other than the
+			///		timeout was reached.
+			/// </exception>
+			virtual bool SafeLock(const DWORD waitTime);
+
+			/// <summary>
 			///		Frees the mutex, allowing another process to acquire it.
+			/// </summary>
 			/// <exception cref="std::runtime_error">
 			///		Failed to release the mutex.
 			/// </exception>
-			/// </summary>
 			virtual void Unlock();
 
+			/// <summary>
+			///		Invalidates and closes the thread handle.
+			/// </summary>
 			virtual void Close();
 
 		protected:

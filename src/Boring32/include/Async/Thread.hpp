@@ -27,7 +27,17 @@ namespace Boring32::Async
 
 			virtual ThreadStatus GetStatus();
 			virtual UINT GetReturnCode();
+
+			/// <summary>
+			///		Terminates the thread. Be careful when using this
+			///		function, as it prevents proper clean up of the 
+			///		thread's objects and may leave shared objects in  
+			///		an inconsistent state. Note also that if a thread
+			///		is waiting on a kernel object, it will not be 
+			///		terminated until the wait is finished.
+			/// </summary>
 			virtual void Terminate();
+			
 			virtual void Suspend();
 			virtual void Resume();
 
