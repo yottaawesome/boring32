@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <string>
+#include "../Raii/Raii.hpp"
 
 namespace Boring32::Async
 {
@@ -58,7 +59,16 @@ namespace Boring32::Async
 			/// <param name="other">The MemoryMappedFile to duplicate.</param>
 			virtual void operator=(const MemoryMappedFile& other);
 
+			/// <summary>
+			///		Move constructor.
+			/// </summary>
+			/// <param name="other">The MemoryMappedFile to move.</param>
 			MemoryMappedFile(MemoryMappedFile&& other) noexcept;
+
+			/// <summary>
+			///		Move assignment.
+			/// </summary>
+			/// <param name="other">The MemoryMappedFile to move.</param>
 			virtual void operator=(MemoryMappedFile&& other) noexcept;
 
 		// API
@@ -76,19 +86,23 @@ namespace Boring32::Async
 			/// </summary>
 			virtual void Cleanup();
 
+			/// <summary>
+			///		Moves the MemoryMappedFile on the RHS into this object.
+			/// </summary>
+			/// <param name="other">The MemoryMappedFile to move.</param>
 			virtual void Move(MemoryMappedFile& other) noexcept;
 
 			/// <summary>
 			///		Duplicates the specified MemoryMappedFile.
 			/// </summary>
 			/// <param name="other">The MemoryMappedFile to duplicate.</param>
-			virtual void Duplicate(const MemoryMappedFile& other);
+			virtual void Copy(const MemoryMappedFile& other);
 
 		protected:
 			bool m_inheritable;
 			std::wstring m_mmfName;
 			UINT m_maxSize;
-			HANDLE m_mapFile;
+			Raii::Win32Handle m_mapFile;
 			void* m_view;
 	};
 }

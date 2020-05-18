@@ -7,7 +7,7 @@ namespace Boring32::Async
 	MemoryMappedFile::MemoryMappedFile()
 	:	m_mmfName(L""),
 		m_maxSize(0),
-		m_mapFile(nullptr),
+		m_mapFile(nullptr, false),
 		m_inheritable(false),
 		m_view(nullptr)
 	{ }
@@ -20,7 +20,7 @@ namespace Boring32::Async
 	)
 	:	m_mmfName(name),
 		m_maxSize(maxSize),
-		m_mapFile(nullptr),
+		m_mapFile(nullptr, inheritable),
 		m_inheritable(inheritable),
 		m_view(nullptr)
 	{
@@ -53,7 +53,7 @@ namespace Boring32::Async
 		}
 
 		m_view = MapViewOfFile(
-			m_mapFile,   // handle to map object
+			m_mapFile.GetHandle(),   // handle to map object
 			FILE_MAP_ALL_ACCESS, // read/write permission
 			0,
 			0,
@@ -75,41 +75,29 @@ namespace Boring32::Async
 	MemoryMappedFile::MemoryMappedFile(const MemoryMappedFile& other)
 	:	m_mmfName(other.m_mmfName),
 		m_maxSize(other.m_maxSize),
-		m_mapFile(nullptr),
+		m_mapFile(nullptr, other.m_inheritable),
 		m_inheritable(other.m_inheritable)
 	{
-		Duplicate(other);
+		Copy(other);
 	}
 	
 	void MemoryMappedFile::operator=(const MemoryMappedFile& other)
 	{
 		Cleanup();
-		Duplicate(other);
+		Copy(other);
 	}
 
-	void MemoryMappedFile::Duplicate(const MemoryMappedFile& other)
+	void MemoryMappedFile::Copy(const MemoryMappedFile& other)
 	{
 		m_mmfName = other.m_mmfName;
 		m_maxSize = other.m_maxSize;
 		m_mapFile = nullptr;
 		m_inheritable = other.m_inheritable;
-
-		if (other.m_mapFile != nullptr)
+		m_mapFile = other.m_mapFile;
+		if (m_mapFile != nullptr)
 		{
-			bool succeeded = DuplicateHandle(
-				GetCurrentProcess(),
-				other.m_mapFile,
-				GetCurrentProcess(),
-				&m_mapFile,
-				0,
-				m_inheritable,
-				DUPLICATE_SAME_ACCESS
-			);
-			if (succeeded == false)
-				throw std::runtime_error("Failed to duplicated handle.");
-
 			m_view = MapViewOfFile(
-				m_mapFile,   // handle to map object
+				m_mapFile.GetHandle(),   // handle to map object
 				FILE_MAP_ALL_ACCESS, // read/write permission
 				0,
 				0,
@@ -136,11 +124,11 @@ namespace Boring32::Async
 
 	void MemoryMappedFile::Move(MemoryMappedFile& other) noexcept
 	{
-		m_mmfName = other.m_mmfName;
+		m_mmfName = std::move(other.m_mmfName);
+		m_mapFile = std::move(other.m_mapFile);
 		m_maxSize = other.m_maxSize;
-		m_mapFile = other.m_mapFile;
-		m_view = other.m_view;
 		m_inheritable = other.m_inheritable;
+		m_view = other.m_view;
 		other.m_mapFile = nullptr;
 		other.m_view = nullptr;
 	}
@@ -157,9 +145,9 @@ namespace Boring32::Async
 			UnmapViewOfFile(m_view);
 			m_view = nullptr;
 		}
-		if (m_mapFile)
+		if (m_mapFile != nullptr)
 		{
-			CloseHandle(m_mapFile);
+			m_mapFile.Close();
 			m_mapFile = nullptr;
 		}
 	}
