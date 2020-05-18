@@ -20,6 +20,9 @@ namespace Boring32::Async
 			/// </summary>
 			virtual ~MemoryMappedFile();
 
+			/// <summary>
+			///		Default constructor. Does not initialise the MemoryMappedFile.
+			/// </summary>
 			MemoryMappedFile();
 
 			/// <summary>
@@ -79,12 +82,25 @@ namespace Boring32::Async
 			/// <returns>The view object.</returns>
 			virtual void* GetViewPointer();
 
+			/// <summary>
+			///		Get the name of this MemoryMappedFile.
+			/// </summary>
+			/// <returns>The name of this MemoryMappedFile.</returns>
+			virtual std::wstring GetName();
+
+			/// <summary>
+			///		Get whether this MemoryMappedFile can be inherited
+			///		by child processes.
+			/// </summary>
+			/// <returns></returns>
+			virtual bool IsInheritable();
+
 		protected:
 			/// <summary>
 			///		Unlocks the mutex if it is currently owned, releases the 
 			///		mutex handle, and clears the underlying pointer.
 			/// </summary>
-			virtual void Cleanup();
+			virtual void Close();
 
 			/// <summary>
 			///		Moves the MemoryMappedFile on the RHS into this object.
@@ -99,8 +115,7 @@ namespace Boring32::Async
 			virtual void Copy(const MemoryMappedFile& other);
 
 		protected:
-			bool m_inheritable;
-			std::wstring m_mmfName;
+			std::wstring m_name;
 			UINT m_maxSize;
 			Raii::Win32Handle m_mapFile;
 			void* m_view;
