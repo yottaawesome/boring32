@@ -1,8 +1,12 @@
 ﻿#include <Windows.h>
 #include <iostream>
+#include <sstream>
 #include <dbghelp.h>
 #include "Boring32.Tests.h"
 #include "../Boring32/include/Boring32.hpp"
+
+#include "pathcch.h"
+#pragma comment(lib, "Pathcch.lib")
 
 void TestMutex()
 {
@@ -50,8 +54,8 @@ void TestAnonPipes()
 	std::wstring msg1(L"message1");
 	std::wstring msg2(L"message2");
 	Boring32::Async::AnonymousPipe pipe(true, 512, L"||");
-	pipe.Write(msg1);
-	pipe.Write(msg2);
+	pipe.DelimitedWrite(msg1);
+	pipe.DelimitedWrite(msg2);
 
 	auto response = pipe.DelimitedRead();
 	std::wcout << response[0] << L" " << response[1] << std::endl;
@@ -68,6 +72,27 @@ int main(int argc, char** args)
 	TestMemoryMappedFile();
 	TestAnonPipes();
 	//TestLibraryLoad();
+
+
+	std::wstring directory;
+	directory.resize(1024);
+	GetModuleFileName(nullptr, &directory[0], directory.size());
+	PathCchRemoveFileSpec(&directory[0], directory.size());
+	directory.erase(std::find(directory.begin(), directory.end(), '\0'), directory.end());
+	std::wstring filePath = directory+L"\\TestProcess.exe";
+
+	Boring32::Async::AnonymousPipe childWrite(true, 2048, L"||");
+	Boring32::Async::AnonymousPipe childRead(true, 2048, L"||");
+	std::wstringstream ss;
+	ss << "TestProcess.exe " << (int)childWrite.GetWrite() << L" " << (int)childRead.GetRead();
+	//std::wcout << ss.str() << std::endl;
+
+	Boring32::Async::Process p(filePath, ss.str(), directory, true);
+	p.Start();
+
+	childRead.DelimitedWrite(L"Hello from parent!");
+	Sleep(1000);
+	std::wcout << std::endl << childWrite.Read() << std::endl;
 
 	//Boring32::WinHttp::HttpWebClient client(
 	//	L"TestClientAgent", 

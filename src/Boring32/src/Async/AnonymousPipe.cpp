@@ -95,7 +95,7 @@ namespace Boring32::Async
 		m_writeHandle.Close();
 	}
 
-	void AnonymousPipe::Write(const std::wstring& msg)
+	void AnonymousPipe::DelimitedWrite(const std::wstring& msg)
 	{
 		if (m_writeHandle == nullptr)
 			throw std::runtime_error("No active write handle.");
@@ -109,6 +109,23 @@ namespace Boring32::Async
 			m_writeHandle.GetHandle(),
 			msg2.data(),
 			msg2.size() * sizeof(wchar_t),
+			&bytesWritten,
+			nullptr
+		);
+		if (bSuccess == false)
+			throw std::runtime_error("Write operation failed.");
+	}
+
+	void AnonymousPipe::Write(const std::wstring& msg)
+	{
+		if (m_writeHandle == nullptr)
+			throw std::runtime_error("No active write handle.");
+
+		DWORD bytesWritten;
+		bool bSuccess = WriteFile(
+			m_writeHandle.GetHandle(),
+			msg.data(),
+			msg.size() * sizeof(wchar_t),
 			&bytesWritten,
 			nullptr
 		);

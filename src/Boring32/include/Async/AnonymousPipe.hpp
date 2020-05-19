@@ -30,6 +30,7 @@ namespace Boring32::Async
 		// API
 		public:
 			virtual void Write(const std::wstring& msg);
+			virtual void DelimitedWrite(const std::wstring& msg);
 			virtual std::wstring Read();
 			virtual std::vector<std::wstring> DelimitedRead();
 			virtual void CloseRead();

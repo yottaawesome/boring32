@@ -24,6 +24,24 @@ namespace Boring32::Async
 		const std::wstring& executablePath,
 		const std::wstring& commandLine,
 		const std::wstring& startingDirectory,
+		const bool canInheritHandles
+	)
+	:	m_executablePath(executablePath),
+		m_commandLine(commandLine),
+		m_startingDirectory(startingDirectory),
+		m_canInheritHandles(canInheritHandles),
+		m_creationFlags(0),
+		m_processId(0),
+		m_threadId(0),
+		m_process(nullptr, false),
+		m_thread(nullptr, false),
+		m_dataSi({0})
+	{ }
+
+	Process::Process(
+		const std::wstring& executablePath,
+		const std::wstring& commandLine,
+		const std::wstring& startingDirectory,
 		const bool canInheritHandles,
 		const DWORD creationFlags,
 		const STARTUPINFO& dataSi

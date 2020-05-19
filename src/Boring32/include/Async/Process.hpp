@@ -14,6 +14,12 @@ namespace Boring32::Async
 				const std::wstring& executablePath,
 				const std::wstring& commandLine,
 				const std::wstring& startingDirectory,
+				const bool canInheritHandles
+			);
+			Process(
+				const std::wstring& executablePath,
+				const std::wstring& commandLine,
+				const std::wstring& startingDirectory,
 				const bool canInheritHandles,
 				const DWORD creationFlags,
 				const STARTUPINFO& dataSi
