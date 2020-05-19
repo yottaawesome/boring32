@@ -286,6 +286,7 @@ namespace Boring32::WinHttp
 			{
 				receiveBuffer.resize(receiveBuffer.size() + bufferBlockSize);
 				bufferLength = receiveBuffer.size() * sizeof(char);
+				currentBufferPointer = &receiveBuffer[0] + totalBytesTransferred;
 			}
 		}
 	}
