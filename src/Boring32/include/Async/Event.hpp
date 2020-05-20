@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <string>
+#include "../Raii/Win32Handle.hpp"
 
 namespace Boring32::Async
 {
@@ -11,6 +12,7 @@ namespace Boring32::Async
 			virtual ~Event();
 			Event();
 			Event(
+				const bool createOrOpen,
 				const bool isInheritable, 
 				const bool manualReset, 
 				const bool isSignaled, 
@@ -21,7 +23,7 @@ namespace Boring32::Async
 			virtual void operator=(const Event& other);
 
 			Event(Event&& other) noexcept;
-			virtual void operator=(Event& other) noexcept;
+			virtual void operator=(Event&& other) noexcept;
 
 		// API
 		public:
@@ -32,15 +34,17 @@ namespace Boring32::Async
 			virtual void WaitOnEvent();
 			virtual bool WaitOnEvent(const DWORD millis);
 
+			virtual bool Signal();
+
 		protected:
 			virtual void Duplicate(const Event& other);
 			virtual void Move(Event& other) noexcept;
 
 		protected:
-			HANDLE m_event;
-			bool m_isInheritable;
+			Raii::Win32Handle m_event;
 			bool m_isManualReset;
 			bool m_isSignaled;
+			bool m_createEventOnTrue;
 			std::wstring m_name;
 	};
 }

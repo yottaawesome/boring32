@@ -178,7 +178,7 @@ namespace Boring32::WinHttp
 		{
 			std::stringstream ss;
 			ss
-				<< "Received unexpected HTTP respons code while upgrading to websocket: "
+				<< "Received unexpected HTTP response code while upgrading to websocket: "
 				<< std::to_string(statusCode);
 			throw std::runtime_error(ss.str());
 		}

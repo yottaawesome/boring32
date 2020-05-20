@@ -11,44 +11,53 @@ namespace Boring32::Async
 	
 	void Event::Close()
 	{
-		if (m_event)
+		if (m_event != nullptr)
 		{
-			CloseHandle(m_event);
+			m_event.Close();
 			m_event = nullptr;
 		}
 	}
 
 	Event::Event()
-	:	m_event(nullptr),
-		m_isInheritable(false),
+	:	m_event(nullptr, false),
 		m_isManualReset(false),
 		m_isSignaled(false),
 		m_name(L"")
 	{ }
 
 	Event::Event(
+		const bool createOrOpen,
 		const bool isInheritable,
 		const bool manualReset,
 		const bool isSignaled,
 		const std::wstring& name
 	)
-	:	m_event(nullptr),
-		m_isInheritable(isInheritable),
+	:	m_event(nullptr, isInheritable),
 		m_isManualReset(manualReset),
 		m_isSignaled(isSignaled),
-		m_name(name)
+		m_name(name),
+		m_createEventOnTrue(createOrOpen)
 	{
 		SECURITY_ATTRIBUTES sp{ 0 };
 		sp.nLength = sizeof(sp);
-		sp.bInheritHandle = true;
+		sp.bInheritHandle = isInheritable;
 
-		m_event = CreateEvent(
-			&sp,				// security attributes
-			m_isManualReset,    // manual reset event
-			m_isSignaled,		// is initially signalled
-			m_name != L""		// name
-				? m_name.c_str() 
-				: nullptr);   
+		if (m_createEventOnTrue)
+		{
+			m_event = CreateEvent(
+				&sp,				// security attributes
+				m_isManualReset,    // manual reset event
+				m_isSignaled,		// is initially signalled
+				m_name != L""		// name
+					? m_name.c_str()
+					: nullptr);
+		}
+		else
+		{
+			m_event = OpenEvent(EVENT_ALL_ACCESS, isInheritable, m_name.c_str());
+		}
+		if (m_event == nullptr)
+			throw std::runtime_error("Failed to create or open event");
 	}
 
 	Event::Event(const Event& other) 
@@ -64,24 +73,11 @@ namespace Boring32::Async
 
 	void Event::Duplicate(const Event& other)
 	{
-		other.m_isInheritable;
-		other.m_isManualReset;
-		other.m_isSignaled;
-		other.m_name;
-		if (other.m_event)
-		{
-			DuplicateHandle(
-				GetCurrentProcess(),
-				other.m_event,
-				GetCurrentProcess(),
-				&m_event,
-				0,
-				m_isInheritable,
-				DUPLICATE_SAME_ACCESS
-			);
-			if (m_event == nullptr)
-				throw std::runtime_error("Failed to duplicate event handle");
-		}
+		Close();
+		m_isManualReset = other.m_isManualReset;
+		m_isSignaled = other.m_isSignaled;
+		m_name = other.m_name;
+		m_event = other.m_event;
 	}
 
 	Event::Event(Event&& other) noexcept
@@ -89,7 +85,7 @@ namespace Boring32::Async
 		Move(other);
 	}
 
-	void Event::operator=(Event& other) noexcept
+	void Event::operator=(Event&& other) noexcept
 	{
 		Close();
 		Move(other);
@@ -97,31 +93,30 @@ namespace Boring32::Async
 
 	void Event::Move(Event& other) noexcept
 	{
-		m_isInheritable=other.m_isInheritable;
 		m_isManualReset = other.m_isManualReset;
 		m_isSignaled = other.m_isSignaled;
-		m_name = other.m_name;
-		m_event = other.m_event;
+		m_name = std::move(other.m_name);
+		m_event = std::move(other.m_event);
 		other.m_event = nullptr;
 	}
 
 	void Event::Reset()
 	{
-		if (m_isManualReset && m_event)
-			ResetEvent(m_event);
+		if (m_isManualReset && m_event != nullptr)
+			ResetEvent(m_event.GetHandle());
 	}
 	
 	HANDLE Event::GetHandle()
 	{
-		return m_event;
+		return m_event.GetHandle();
 	}
 
 	void Event::WaitOnEvent()
 	{
 		if (m_event == nullptr)
-			throw std::runtime_error("Event not created to wait on");
+			throw std::runtime_error("No Event to wait on");
 
-		DWORD status = WaitForSingleObject(m_event, INFINITE);
+		DWORD status = WaitForSingleObject(m_event.GetHandle(), INFINITE);
 		if (status == WAIT_FAILED)
 			throw std::runtime_error("WaitForSingleObject failed");
 		if (status == WAIT_ABANDONED)
@@ -131,9 +126,9 @@ namespace Boring32::Async
 	bool Event::WaitOnEvent(const DWORD millis)
 	{
 		if (m_event == nullptr)
-			throw std::runtime_error("Event not created to wait on");
+			throw std::runtime_error("No Event to wait on");
 
-		DWORD status = WaitForSingleObject(m_event, millis);
+		DWORD status = WaitForSingleObject(m_event.GetHandle(), millis);
 		if (status == WAIT_OBJECT_0)
 			return true;
 		if (status == WAIT_TIMEOUT)
@@ -143,5 +138,12 @@ namespace Boring32::Async
 		if (status == WAIT_ABANDONED)
 			throw std::runtime_error("The wait was abandoned");
 		return false;
+	}
+
+	bool Event::Signal()
+	{
+		if (m_event == nullptr)
+			throw std::runtime_error("No Event to signal");
+		return SetEvent(m_event.GetHandle());
 	}
 }

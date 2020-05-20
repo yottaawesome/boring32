@@ -87,12 +87,16 @@ int main(int argc, char** args)
 	ss << "TestProcess.exe " << (int)childWrite.GetWrite() << L" " << (int)childRead.GetRead();
 	//std::wcout << ss.str() << std::endl;
 
+	Boring32::Async::Event evt(true, true, true, false, L"TestEvent");
+
 	Boring32::Async::Process p(filePath, ss.str(), directory, true);
 	p.Start();
 
 	childRead.DelimitedWrite(L"Hello from parent!");
 	Sleep(1000);
+	
 	std::wcout << std::endl << childWrite.Read() << std::endl;
+	evt.Signal();
 
 	//Boring32::WinHttp::HttpWebClient client(
 	//	L"TestClientAgent", 
