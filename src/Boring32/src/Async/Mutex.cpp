@@ -146,10 +146,11 @@ namespace Boring32::Async
 
 	void Mutex::Unlock()
 	{
+		if (m_mutex == nullptr)
+			throw std::runtime_error("Cannot wait on null mutex");
 		if (!ReleaseMutex(m_mutex.GetHandle()))
 			throw std::runtime_error("Failed to release mutex");
+
 		m_locked = false;
 	}
-
-	
 }

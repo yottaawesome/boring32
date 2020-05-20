@@ -22,7 +22,8 @@ namespace Boring32::Async
 	:	m_event(nullptr, false),
 		m_isManualReset(false),
 		m_isSignaled(false),
-		m_name(L"")
+		m_name(L""),
+		m_createEventOnTrue(false)
 	{ }
 
 	Event::Event(
@@ -67,7 +68,6 @@ namespace Boring32::Async
 
 	void Event::operator=(const Event& other)
 	{
-		Close();
 		Duplicate(other);
 	}
 
