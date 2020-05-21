@@ -14,7 +14,6 @@ namespace Boring32::Async
 			AnonymousPipe();
 			AnonymousPipe(const bool inheritable, const DWORD size, const std::wstring& delimiter);
 			AnonymousPipe(
-				const bool inheritable,
 				const DWORD size, 
 				const std::wstring& delimiter,
 				const HANDLE readHandle, 

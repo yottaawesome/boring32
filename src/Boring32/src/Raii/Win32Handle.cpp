@@ -1,17 +1,16 @@
 #include "pch.hpp"
 #include <stdexcept>
 #include "include/Raii/Win32Handle.hpp"
+#include "include/Util/Util.hpp"
 
 namespace Boring32::Raii
 {
 	Win32Handle::Win32Handle()
-	:	m_handle(nullptr),
-		m_inheritable(false)
+	:	m_handle(nullptr)
 	{ }
 	
 	Win32Handle::Win32Handle(const Win32Handle& otherHandle)
-	:	m_handle(nullptr),
-		m_inheritable(otherHandle.m_inheritable)
+	:	m_handle(nullptr)
 	{
 		Copy(otherHandle);
 	}
@@ -24,31 +23,24 @@ namespace Boring32::Raii
 	void Win32Handle::Copy(const Win32Handle& other)
 	{
 		Close();
-		m_inheritable = other.IsInheritable();
-		if (other != nullptr)
-			m_handle = DuplicatePassedHandle(other.GetHandle(), other.IsInheritable());
+		m_handle = Win32Handle::DuplicatePassedHandle(other.GetHandle(), other.IsInheritable());
 	}
 
 	Win32Handle::Win32Handle(Win32Handle&& otherHandle) noexcept
 	{
-		m_inheritable = otherHandle.m_inheritable;
 		m_handle = otherHandle.m_handle;
-		otherHandle.m_inheritable = false;
 		otherHandle.m_handle = nullptr;
 	}
 
 	void Win32Handle::operator=(Win32Handle&& other) noexcept
 	{
 		Close();
-		m_inheritable = other.m_inheritable;
 		m_handle = other.m_handle;
 		other.m_handle = nullptr;
-		other.m_inheritable = false;
 	}
 
-	Win32Handle::Win32Handle(const HANDLE handle, const bool inheritable)
-	:	m_handle(handle),
-		m_inheritable(inheritable)
+	Win32Handle::Win32Handle(const HANDLE handle)
+	:	m_handle(handle)
 	{ }
 
 	Win32Handle::~Win32Handle()
@@ -98,13 +90,32 @@ namespace Boring32::Raii
 
 	HANDLE Win32Handle::DuplicateCurrentHandle() const
 	{
-		if (m_handle == nullptr)
-			return nullptr;
-
-		return DuplicatePassedHandle(m_handle, m_inheritable);
+		return Win32Handle::DuplicatePassedHandle(m_handle, IsInheritable());
 	}
 
-	HANDLE Win32Handle::DuplicatePassedHandle(const HANDLE handle, const bool isInheritable) const
+	bool Win32Handle::IsInheritable() const
+	{
+		return Win32Handle::HandleIsInheritable(m_handle);
+	}
+
+	void Win32Handle::SetInheritability(const bool isInheritable)
+	{
+		if (m_handle == nullptr)
+			throw std::runtime_error("Handle is null.");
+		if (!SetHandleInformation(m_handle, HANDLE_FLAG_INHERIT, isInheritable))
+			throw std::runtime_error("Failed to change handle inheritability.");
+	}
+
+	bool Win32Handle::HandleIsInheritable(const HANDLE handle)
+	{
+		if (handle == nullptr)
+			return false;
+		DWORD flags = 0;
+		GetHandleInformation(handle, &flags);
+		return flags & HANDLE_FLAG_INHERIT;
+	}
+
+	HANDLE Win32Handle::DuplicatePassedHandle(const HANDLE handle, const bool isInheritable)
 	{
 		if (handle == nullptr)
 			return nullptr;
@@ -123,15 +134,5 @@ namespace Boring32::Raii
 			throw std::runtime_error("Failed to duplicate handle.");
 
 		return duplicateHandle;
-	}
-
-	bool Win32Handle::IsInheritable() const
-	{
-		return m_inheritable;
-	}
-
-	void Win32Handle::operator=(const bool inheritable)
-	{
-		m_inheritable = inheritable;
 	}
 }

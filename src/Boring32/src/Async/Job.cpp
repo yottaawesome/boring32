@@ -125,6 +125,6 @@ namespace Boring32::Async
 		);
 		if (jobHandle == nullptr)
 			throw std::runtime_error("CreateJobObject failed");
-		m_job = Boring32::Raii::Win32Handle(jobHandle, isInheritable);
+		m_job = Boring32::Raii::Win32Handle(jobHandle);
 	}
 }

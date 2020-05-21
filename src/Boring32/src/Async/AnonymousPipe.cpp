@@ -12,8 +12,8 @@ namespace Boring32::Async
 
 	AnonymousPipe::AnonymousPipe()
 	:	m_size(0),
-		m_readHandle(nullptr, false),
-		m_writeHandle(nullptr, false)
+		m_readHandle(nullptr),
+		m_writeHandle(nullptr)
 	{ }
 
 	AnonymousPipe::AnonymousPipe(const AnonymousPipe& other)
@@ -58,8 +58,8 @@ namespace Boring32::Async
 	}
 
 	AnonymousPipe::AnonymousPipe(const bool inheritable, const DWORD size, const std::wstring& delimiter)
-	:	m_readHandle(nullptr, false),
-		m_writeHandle(nullptr, false),
+	:	m_readHandle(nullptr),
+		m_writeHandle(nullptr),
 		m_size(size),
 		m_delimiter(delimiter)
 	{
@@ -72,12 +72,9 @@ namespace Boring32::Async
 		//SetNamedPipeHandleState(m_writeHandle, &mode, nullptr, nullptr);
 		if (succeeded == false)
 			throw std::runtime_error("Failed to create anonymous pipe");
-		m_readHandle = inheritable;
-		m_writeHandle = inheritable;
 	}
 
 	AnonymousPipe::AnonymousPipe(
-		const bool inheritable,
 		const DWORD size,
 		const std::wstring& delimiter,
 		const HANDLE readHandle,
@@ -85,8 +82,8 @@ namespace Boring32::Async
 	)
 	:	m_delimiter(delimiter),
 		m_size(size),
-		m_readHandle(readHandle, inheritable),
-		m_writeHandle(writeHandle, inheritable)
+		m_readHandle(readHandle),
+		m_writeHandle(writeHandle)
 	{ }
 
 	void AnonymousPipe::Cleanup()

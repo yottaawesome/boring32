@@ -19,7 +19,7 @@ namespace Boring32::Async
 	}
 
 	Event::Event()
-	:	m_event(nullptr, false),
+	:	m_event(nullptr),
 		m_isManualReset(false),
 		m_isSignaled(false),
 		m_name(L""),
@@ -33,7 +33,7 @@ namespace Boring32::Async
 		const bool isSignaled,
 		const std::wstring& name
 	)
-	:	m_event(nullptr, isInheritable),
+	:	m_event(nullptr),
 		m_isManualReset(manualReset),
 		m_isSignaled(isSignaled),
 		m_name(name),

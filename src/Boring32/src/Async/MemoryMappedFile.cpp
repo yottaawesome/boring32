@@ -26,7 +26,7 @@ namespace Boring32::Async
 	MemoryMappedFile::MemoryMappedFile()
 	:	m_name(L""),
 		m_maxSize(0),
-		m_mapFile(nullptr, false),
+		m_mapFile(nullptr),
 		m_view(nullptr)
 	{ }
 	
@@ -38,7 +38,7 @@ namespace Boring32::Async
 	)
 	:	m_name(name),
 		m_maxSize(maxSize),
-		m_mapFile(nullptr, inheritable),
+		m_mapFile(nullptr),
 		m_view(nullptr)
 	{
 		if (createFile)
@@ -89,7 +89,7 @@ namespace Boring32::Async
 	MemoryMappedFile::MemoryMappedFile(const MemoryMappedFile& other)
 	:	m_name(other.m_name),
 		m_maxSize(other.m_maxSize),
-		m_mapFile(nullptr, false)
+		m_mapFile(nullptr)
 	{
 		Copy(other);
 	}

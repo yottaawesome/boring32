@@ -27,14 +27,13 @@ namespace Boring32::Async
 
 		// API
 		public:
-			virtual void Close();
+			virtual bool Signal();
 			virtual void Reset();
-			virtual HANDLE GetHandle();
-
 			virtual void WaitOnEvent();
 			virtual bool WaitOnEvent(const DWORD millis);
 
-			virtual bool Signal();
+			virtual HANDLE GetHandle();
+			virtual void Close();
 
 		protected:
 			virtual void Duplicate(const Event& other);

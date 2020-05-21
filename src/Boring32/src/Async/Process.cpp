@@ -33,8 +33,8 @@ namespace Boring32::Async
 		m_creationFlags(0),
 		m_processId(0),
 		m_threadId(0),
-		m_process(nullptr, false),
-		m_thread(nullptr, false),
+		m_process(nullptr),
+		m_thread(nullptr),
 		m_dataSi({0})
 	{ }
 
@@ -53,8 +53,8 @@ namespace Boring32::Async
 		m_creationFlags(creationFlags),
 		m_processId(0),
 		m_threadId(0),
-		m_process(nullptr, false),
-		m_thread(nullptr, false),
+		m_process(nullptr),
+		m_thread(nullptr),
 		m_dataSi(dataSi)
 	{ }
 
@@ -136,8 +136,8 @@ namespace Boring32::Async
 		if (successfullyCreatedProcess == false)
 			throw std::runtime_error("Failed to create process");
 
-		m_process = Raii::Win32Handle(processInfo.hProcess, false);
-		m_thread = Raii::Win32Handle(processInfo.hThread, false);
+		m_process = processInfo.hProcess;
+		m_thread = processInfo.hThread;
 		m_processId = processInfo.dwProcessId;
 		m_threadId = processInfo.dwThreadId;
 	}

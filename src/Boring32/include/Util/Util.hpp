@@ -3,5 +3,5 @@
 
 namespace Boring32::Util
 {
-	HANDLE DuplicatePassedHandle(const HANDLE handle, const bool isInheritable);
+	
 }

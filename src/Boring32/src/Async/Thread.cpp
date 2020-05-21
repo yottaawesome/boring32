@@ -23,7 +23,7 @@ namespace Boring32::Async
 		m_status(ThreadStatus::Ready),
 		m_threadParam(param),
 		m_threadId(0),
-		m_hThread(nullptr, false),
+		m_hThread(nullptr),
 		m_returnCode(STILL_ACTIVE)
 	{ }
 

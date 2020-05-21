@@ -9,7 +9,7 @@ int main(int argc, char** args)
     {
         int writeHandle = std::stoi(args[1]);
         int readHandle = std::stoi(args[2]);
-        Boring32::Async::AnonymousPipe pipe(false, 2048, L"||", (HANDLE)readHandle, (HANDLE)writeHandle);
+        Boring32::Async::AnonymousPipe pipe(2048, L"||", (HANDLE)readHandle, (HANDLE)writeHandle);
         std::wcout << pipe.Read();
         pipe.DelimitedWrite(L"Hello from child!");
     }

@@ -22,7 +22,7 @@ namespace Boring32::Async
 	Mutex::Mutex()
 	:	m_name(L""),
 		m_created(false),
-		m_mutex(nullptr, false),
+		m_mutex(nullptr),
 		m_locked(false)
 	{ }
 
@@ -34,7 +34,7 @@ namespace Boring32::Async
 	)
 	:	m_name(name),
 		m_created(createNew),
-		m_mutex(nullptr, false),
+		m_mutex(nullptr),
 		m_locked(false)
 	{
 		if (m_created)
@@ -56,7 +56,6 @@ namespace Boring32::Async
 		if (m_mutex == nullptr)
 			throw std::runtime_error("Failed to create or open mutex");
 
-		m_mutex = inheritable;
 		m_locked = createNew && acquireOnCreation;
 	}
 
@@ -64,7 +63,7 @@ namespace Boring32::Async
 	:	m_name(L""),
 		m_created(false),
 		m_locked(acquire),
-		m_mutex(nullptr, false)
+		m_mutex(nullptr)
 	{
 		SECURITY_ATTRIBUTES lp{ 0 };
 		lp.nLength = sizeof(lp);
@@ -76,7 +75,6 @@ namespace Boring32::Async
 		);
 		if (m_mutex == nullptr)
 			throw std::runtime_error("Failed to create or open mutex");
-		m_mutex = inheritable;
 	}
 
 	Mutex::Mutex(const Mutex& other)
@@ -142,6 +140,7 @@ namespace Boring32::Async
 
 		while (Lock(waitTime) == false)
 			;
+		return true;
 	}
 
 	void Mutex::Unlock()

@@ -9,7 +9,7 @@ namespace Boring32::Raii
 		public:
 			virtual ~Win32Handle();
 			Win32Handle();
-			Win32Handle(const HANDLE handle, const bool inheritable);
+			Win32Handle(const HANDLE handle);
 
 			Win32Handle(const Win32Handle& otherHandle);
 			virtual void operator=(const Win32Handle& other);
@@ -17,7 +17,6 @@ namespace Boring32::Raii
 			Win32Handle(Win32Handle&& otherHandle) noexcept;
 			virtual void operator=(Win32Handle&& other) noexcept;
 
-			virtual void operator=(const bool isInheritable);
 			virtual void operator=(const HANDLE other);
 			virtual bool operator==(const HANDLE other) const;
 			virtual bool operator==(const Win32Handle& other) const;
@@ -29,13 +28,15 @@ namespace Boring32::Raii
 			virtual HANDLE DuplicateCurrentHandle() const;
 
 			virtual bool IsInheritable() const;
+			virtual void SetInheritability(const bool isInheritable);
+
+			static bool HandleIsInheritable(const HANDLE handle);
+			static HANDLE DuplicatePassedHandle(const HANDLE handle, const bool isInheritable);
 
 		protected:
 			virtual void Copy(const Win32Handle& other);
-			virtual HANDLE DuplicatePassedHandle(const HANDLE handle, const bool isInheritable) const;
 
 		protected:
 			HANDLE m_handle;
-			bool m_inheritable;
 	};
 }

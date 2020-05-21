@@ -65,7 +65,16 @@ void TestAnonPipes()
 
 int main(int argc, char** args)
 {
-	// todo: add a test framework like Catch2
+	PROCESS_MEMORY_EXHAUSTION_INFO pmei{ 0 };
+	pmei.Version = PME_CURRENT_VERSION;
+	pmei.Type = PMETypeFailFastOnCommitFailure;
+	pmei.Value = PME_FAILFAST_ON_COMMIT_FAIL_ENABLE;
+	bool succeeded = SetProcessInformation(
+		GetCurrentProcess(),
+		ProcessMemoryExhaustionInfo,
+		&pmei,
+		sizeof(pmei)
+	);
 
 	TestMutex();
 	TestConversions();
@@ -75,7 +84,7 @@ int main(int argc, char** args)
 
 
 	std::wstring directory;
-	directory.resize(1024);
+	directory.resize(2048);
 	GetModuleFileName(nullptr, &directory[0], directory.size());
 	PathCchRemoveFileSpec(&directory[0], directory.size());
 	directory.erase(std::find(directory.begin(), directory.end(), '\0'), directory.end());
@@ -89,8 +98,13 @@ int main(int argc, char** args)
 
 	Boring32::Async::Event evt(true, true, true, false, L"TestEvent");
 
-	Boring32::Async::Process p(filePath, ss.str(), directory, true);
-	p.Start();
+	Boring32::Async::Job job(false);
+	JOBOBJECT_EXTENDED_LIMIT_INFORMATION jeli{ 0 };
+	jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+	job.SetInformation(jeli);
+	Boring32::Async::Process testProcess(filePath, ss.str(), directory, true);
+	testProcess.Start();
+	job.AssignProcessToThisJob(testProcess.GetProcessHandle());
 
 	childRead.DelimitedWrite(L"Hello from parent!");
 	Sleep(1000);
