@@ -7,6 +7,7 @@ namespace Boring32::Async
 {
 	class Job
 	{
+		// Constructors and destructor
 		public:
 			virtual ~Job();
 			Job();
@@ -19,6 +20,8 @@ namespace Boring32::Async
 			Job(Job&& other) noexcept;
 			virtual void operator=(Job&& other) noexcept;
 
+		// API
+		public:
 			virtual void SetInformation(JOBOBJECT_EXTENDED_LIMIT_INFORMATION& jeli);
 			virtual void AssignProcessToThisJob(const HANDLE process);
 			virtual HANDLE GetHandle();

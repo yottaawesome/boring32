@@ -8,6 +8,16 @@
 #include "pathcch.h"
 #pragma comment(lib, "Pathcch.lib")
 
+void TestWaitableTime()
+{
+	Boring32::Async::WaitableTimer timer(true, L"WaitableTimer", false, false);
+	timer.SetTimerInMillis(-10000, 0);
+
+	std::wcout << L"Waiting for 10s" << std::endl;
+	timer.WaitOnTimer(INFINITE);
+	timer.CancelTimer();
+}
+
 void TestSemaphore()
 {
 	Boring32::Async::Semaphore semaphore(true, L"Sem", false, 10, 10);
@@ -87,6 +97,7 @@ int main(int argc, char** args)
 		sizeof(pmei)
 	);
 
+	TestWaitableTime();
 	TestSemaphore();
 	TestMutex();
 	TestConversions();

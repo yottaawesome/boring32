@@ -22,8 +22,24 @@ namespace Boring32::Async
 			virtual void operator=(WaitableTimer&& other) noexcept;
 			virtual void Move(WaitableTimer& other) noexcept;
 
-			virtual void SetTimerInNanos(const int64_t hundredNanosecondIntervals, const bool isPeriodic);
-			virtual void SetTimerInMillis(const int64_t milliseconds, const bool isPeriodic);
+			/// <summary>
+			///		Set this timer using 100-nanosecond intervals.
+			/// </summary>
+			/// <param name="hundredNanosecondIntervals">
+			///		The time after which the state of the timer is to be set to signaled, in 100 nanosecond intervals.
+			///		Positive values indicate absolute time. Be sure to use a UTC-based absolute time, 
+			///		as the system uses UTC - based time internally.
+			///		Negative values indicate relative time. The actual timer accuracy 
+			///		depends on the capability of your hardware.
+			/// </param>
+			/// <param name="period">
+			///		The period of the timer, in milliseconds. If period is zero,
+			///		the timer is signaled once, else if it is greater than zero, the
+			///		timer is periodic. A periodic timer automatically reactivates
+			///		each time the period elapses, until the timer is canceled.
+			///	</param>
+			virtual void SetTimerInNanos(const int64_t hundredNanosecondIntervals, const UINT period);
+			virtual void SetTimerInMillis(const int64_t milliseconds, const UINT period);
 			virtual bool WaitOnTimer(const DWORD millis);
 			virtual bool CancelTimer();
 
@@ -31,7 +47,7 @@ namespace Boring32::Async
 			virtual std::wstring GetName();
 
 		protected:
-			virtual void InternalSetTimer(const int64_t time, const bool isPeriodic);
+			virtual void InternalSetTimer(const int64_t time, const UINT period);
 
 		protected:
 			Raii::Win32Handle m_handle;

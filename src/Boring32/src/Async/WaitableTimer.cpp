@@ -83,28 +83,28 @@ namespace Boring32::Async
 		m_isManualReset = other.m_isManualReset;
 	}
 	
-	void WaitableTimer::SetTimerInNanos(const int64_t hundredNanosecondIntervals, const bool isPeriodic)
+	void WaitableTimer::SetTimerInNanos(const int64_t hundredNanosecondIntervals, const UINT period)
 	{
 		if (m_handle == nullptr)
 			throw std::runtime_error("Timer handle is null");
-		InternalSetTimer(hundredNanosecondIntervals, isPeriodic);
+		InternalSetTimer(hundredNanosecondIntervals, period);
 	}
 
-	void WaitableTimer::SetTimerInMillis(const int64_t ms, const bool isPeriodic)
+	void WaitableTimer::SetTimerInMillis(const int64_t ms, const UINT period)
 	{
 		if (m_handle == nullptr)
 			throw std::runtime_error("Timer handle is null");
-		InternalSetTimer(ms * 10000, isPeriodic);
+		InternalSetTimer(ms * 10000, period);
 	}
 
-	void WaitableTimer::InternalSetTimer(const int64_t time, const bool isPeriodic)
+	void WaitableTimer::InternalSetTimer(const int64_t time, const UINT period)
 	{
 		LARGE_INTEGER liDueTime;
 		liDueTime.QuadPart = time;
 		bool succeeded = SetWaitableTimer(
 			m_handle.GetHandle(), 
 			&liDueTime, 
-			isPeriodic,
+			period,
 			nullptr, 
 			nullptr, 
 			false
