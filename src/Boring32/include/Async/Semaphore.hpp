@@ -31,6 +31,8 @@ namespace Boring32::Async
 			virtual int GetCurrentCount();
 			virtual int GetMaxCount();
 
+			virtual HANDLE GetHandle();
+
 		protected:
 			Raii::Win32Handle m_handle;
 			std::wstring m_name; 

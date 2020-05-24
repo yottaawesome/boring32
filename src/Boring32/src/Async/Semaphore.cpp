@@ -133,6 +133,7 @@ namespace Boring32::Async
 					Release(actualAcquired);
 				return false;
 			}
+			actualAcquired++;
 		}
 		return true;
 	}
@@ -150,5 +151,10 @@ namespace Boring32::Async
 	int Semaphore::GetMaxCount()
 	{
 		return m_maxCount;
+	}
+
+	HANDLE Semaphore::GetHandle()
+	{
+		return m_handle.GetHandle();
 	}
 }
