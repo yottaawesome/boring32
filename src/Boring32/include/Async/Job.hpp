@@ -11,7 +11,7 @@ namespace Boring32::Async
 			virtual ~Job();
 			Job();
 			Job(const bool isInheritable);
-			Job(const bool isInheritable, const std::wstring name);
+			Job(const bool createOrOpen, const bool isInheritable, const std::wstring name);
 
 			Job(const Job& other);
 			virtual void operator=(const Job& other);
@@ -28,6 +28,7 @@ namespace Boring32::Async
 
 		protected:
 			virtual void Create(const bool isInheritable);
+			virtual void Open(const bool isInheritable);
 			virtual void Copy(const Job& other);
 			virtual void Move(Job& other) noexcept;
 

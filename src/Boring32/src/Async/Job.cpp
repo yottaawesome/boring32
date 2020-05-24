@@ -28,10 +28,13 @@ namespace Boring32::Async
 		Create(isInheritable);
 	}
 
-	Job::Job(const bool isInheritable, const std::wstring name)
+	Job::Job(const bool createOrOpen, const bool isInheritable, const std::wstring name)
 	:	m_name(name)
-	{ 
-		Create(isInheritable);
+	{
+		if (createOrOpen)
+			Create(isInheritable);
+		else 
+			Open(isInheritable);
 	}
 
 	Job::Job(const Job& other)
@@ -111,20 +114,30 @@ namespace Boring32::Async
 		return m_job.IsInheritable();
 	}
 
+	void Job::Open(const bool isInheritable)
+	{
+		m_job = OpenJobObjectW(
+			JOB_OBJECT_ALL_ACCESS,
+			isInheritable,
+			m_name.c_str()
+		);
+		if (m_job == nullptr)
+			throw std::runtime_error("CreateJobObject failed");
+	}
+
 	void Job::Create(const bool isInheritable)
 	{
 		SECURITY_ATTRIBUTES jobAttributes{ 0 };
 		jobAttributes.nLength = sizeof(SECURITY_ATTRIBUTES);
 		jobAttributes.bInheritHandle = isInheritable;
 
-		HANDLE jobHandle = CreateJobObject(
+		m_job = CreateJobObject(
 			&jobAttributes, 
 			m_name.size() > 0 
 				? m_name.c_str() 
 				: nullptr
 		);
-		if (jobHandle == nullptr)
+		if (m_job == nullptr)
 			throw std::runtime_error("CreateJobObject failed");
-		m_job = Boring32::Raii::Win32Handle(jobHandle);
 	}
 }
