@@ -36,8 +36,8 @@ namespace Boring32::Async
 				&sa,
 				isManualReset,
 				m_name == L""
-				? nullptr
-				: m_name.c_str()
+					? nullptr
+					: m_name.c_str()
 			);
 		}
 		else
@@ -83,28 +83,28 @@ namespace Boring32::Async
 		m_isManualReset = other.m_isManualReset;
 	}
 	
-	void WaitableTimer::SetTimerInNanos(const int64_t hundredNanosecondIntervals)
+	void WaitableTimer::SetTimerInNanos(const int64_t hundredNanosecondIntervals, const bool isPeriodic)
 	{
 		if (m_handle == nullptr)
 			throw std::runtime_error("Timer handle is null");
-		InternalSetTimer(hundredNanosecondIntervals);
+		InternalSetTimer(hundredNanosecondIntervals, isPeriodic);
 	}
 
-	void WaitableTimer::SetTimerInMillis(const int64_t ms)
+	void WaitableTimer::SetTimerInMillis(const int64_t ms, const bool isPeriodic)
 	{
 		if (m_handle == nullptr)
 			throw std::runtime_error("Timer handle is null");
-		InternalSetTimer(ms * 10000);
+		InternalSetTimer(ms * 10000, isPeriodic);
 	}
 
-	void WaitableTimer::InternalSetTimer(const int64_t time)
+	void WaitableTimer::InternalSetTimer(const int64_t time, const bool isPeriodic)
 	{
 		LARGE_INTEGER liDueTime;
 		liDueTime.QuadPart = time;
 		bool succeeded = SetWaitableTimer(
 			m_handle.GetHandle(), 
 			&liDueTime, 
-			0, 
+			isPeriodic,
 			nullptr, 
 			nullptr, 
 			false
@@ -129,10 +129,21 @@ namespace Boring32::Async
 			throw std::runtime_error("The wait was abandoned");
 		return false;
 	}
+
 	bool WaitableTimer::CancelTimer()
 	{
 		if (m_handle == nullptr)
 			throw std::runtime_error("No timer to cancel");
 		return CancelWaitableTimer(m_handle.GetHandle());
+	}
+
+	bool WaitableTimer::IsManualReset()
+	{
+		return m_isManualReset;
+	}
+
+	std::wstring WaitableTimer::GetName()
+	{
+		return m_name;
 	}
 }

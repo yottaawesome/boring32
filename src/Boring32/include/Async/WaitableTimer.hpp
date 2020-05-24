@@ -9,6 +9,7 @@ namespace Boring32::Async
 	{
 		public:
 			virtual ~WaitableTimer();
+			virtual void Close();
 
 			WaitableTimer();
 			WaitableTimer(const bool createNew, const std::wstring& name, const bool isInheritable, const bool isManualReset);
@@ -21,15 +22,16 @@ namespace Boring32::Async
 			virtual void operator=(WaitableTimer&& other) noexcept;
 			virtual void Move(WaitableTimer& other) noexcept;
 
-			virtual void Close();
-
-			virtual void SetTimerInNanos(const int64_t hundredNanosecondIntervals);
-			virtual void SetTimerInMillis(const int64_t milliseconds);
+			virtual void SetTimerInNanos(const int64_t hundredNanosecondIntervals, const bool isPeriodic);
+			virtual void SetTimerInMillis(const int64_t milliseconds, const bool isPeriodic);
 			virtual bool WaitOnTimer(const DWORD millis);
 			virtual bool CancelTimer();
 
+			virtual bool IsManualReset();
+			virtual std::wstring GetName();
+
 		protected:
-			virtual void InternalSetTimer(const int64_t time);
+			virtual void InternalSetTimer(const int64_t time, const bool isPeriodic);
 
 		protected:
 			Raii::Win32Handle m_handle;

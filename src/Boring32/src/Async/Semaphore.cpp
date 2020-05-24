@@ -136,4 +136,19 @@ namespace Boring32::Async
 		}
 		return true;
 	}
+
+	std::wstring Semaphore::GetName()
+	{
+		return m_name;
+	}
+
+	int Semaphore::GetCurrentCount()
+	{
+		return m_currentCount;
+	}
+
+	int Semaphore::GetMaxCount()
+	{
+		return m_maxCount;
+	}
 }

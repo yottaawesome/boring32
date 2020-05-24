@@ -26,11 +26,15 @@ namespace Boring32::Async
 			virtual void Release(const int countToRelease);
 			virtual bool Acquire(const DWORD millisTimeout);
 			virtual bool Acquire(const int countToAcquire, const DWORD millisTimeout);
+			
+			virtual std::wstring GetName();
+			virtual int GetCurrentCount();
+			virtual int GetMaxCount();
 
 		protected:
 			Raii::Win32Handle m_handle;
 			std::wstring m_name; 
-			long m_currentCount;
-			long m_maxCount;
+			int m_currentCount;
+			int m_maxCount;
 	};
 }
