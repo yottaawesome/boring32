@@ -22,6 +22,7 @@ namespace Boring32::Async
 			virtual void operator=(WaitableTimer&& other) noexcept;
 			virtual void Move(WaitableTimer& other) noexcept;
 
+		public:
 			/// <summary>
 			///		Set this timer using 100-nanosecond intervals.
 			/// </summary>
@@ -42,9 +43,9 @@ namespace Boring32::Async
 			virtual void SetTimerInMillis(const int64_t milliseconds, const UINT period);
 			virtual bool WaitOnTimer(const DWORD millis);
 			virtual bool CancelTimer();
-
 			virtual bool IsManualReset();
 			virtual std::wstring GetName();
+			virtual HANDLE GetHandle();
 
 		protected:
 			virtual void InternalSetTimer(const int64_t time, const UINT period);

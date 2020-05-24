@@ -146,4 +146,9 @@ namespace Boring32::Async
 	{
 		return m_name;
 	}
+
+	HANDLE WaitableTimer::GetHandle()
+	{
+		return m_handle.GetHandle();
+	}
 }
