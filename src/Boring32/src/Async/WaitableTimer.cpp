@@ -42,7 +42,7 @@ namespace Boring32::Async
 		}
 		else
 		{
-			OpenWaitableTimer(TIMER_ALL_ACCESS, isInheritable, name.c_str());
+			m_handle = OpenWaitableTimer(TIMER_ALL_ACCESS, isInheritable, name.c_str());
 		}
 
 		if (m_handle == nullptr)

@@ -8,3 +8,5 @@
 #include "Process.hpp"
 #include "Thread.hpp"
 #include "Job.hpp"
+#include "Semaphore.hpp"
+#include "WaitableTimer.hpp"

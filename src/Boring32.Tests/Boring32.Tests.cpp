@@ -8,6 +8,17 @@
 #include "pathcch.h"
 #pragma comment(lib, "Pathcch.lib")
 
+void TestSemaphore()
+{
+	Boring32::Async::Semaphore semaphore(true, L"Sem", false, 10, 10);
+	semaphore.Acquire(2, INFINITE);
+	if (semaphore.GetCurrentCount() != 8)
+		throw std::runtime_error("Invalid error count");
+	semaphore.Release(2);
+	if (semaphore.GetCurrentCount() != 10)
+		throw std::runtime_error("Invalid error count");
+}
+
 void TestMutex()
 {
 	Boring32::Async::Mutex m1(L"HelloMutex", true, false, false);
@@ -76,6 +87,7 @@ int main(int argc, char** args)
 		sizeof(pmei)
 	);
 
+	TestSemaphore();
 	TestMutex();
 	TestConversions();
 	TestMemoryMappedFile();

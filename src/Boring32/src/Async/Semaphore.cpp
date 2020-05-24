@@ -29,11 +29,11 @@ namespace Boring32::Async
 		const wchar_t* wcName = m_name == L"" ? nullptr : m_name.c_str();
 		if (createOrOpen)
 		{
-			SECURITY_ATTRIBUTES lp{ 0 };
-			lp.nLength = sizeof(lp);
-			lp.bInheritHandle = isInheritable;
-			CreateSemaphore(
-				&lp,
+			SECURITY_ATTRIBUTES sa{ 0 };
+			sa.nLength = sizeof(sa);
+			sa.bInheritHandle = isInheritable;
+			m_handle = CreateSemaphore(
+				&sa,
 				initialCount,
 				maxCount,
 				wcName
@@ -41,8 +41,9 @@ namespace Boring32::Async
 		}
 		else
 		{
-			OpenSemaphore(SEMAPHORE_ALL_ACCESS, isInheritable, wcName);
+			m_handle = OpenSemaphore(SEMAPHORE_ALL_ACCESS, isInheritable, wcName);
 		}
+
 		if (m_handle == nullptr)
 			throw std::runtime_error("Failed to create or open semaphore");
 	}
