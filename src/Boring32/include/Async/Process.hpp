@@ -46,6 +46,8 @@ namespace Boring32::Async
 			virtual bool GetHandlesInheritability();
 			virtual DWORD GetCreationFlags();
 
+			virtual DWORD GetProcessExitCode();
+
 		protected:
 			virtual void Duplicate(const Process& other);
 			virtual void Move(Process& other) noexcept;

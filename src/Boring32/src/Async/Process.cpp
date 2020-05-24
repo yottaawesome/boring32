@@ -192,4 +192,12 @@ namespace Boring32::Async
 	{
 		return m_creationFlags;
 	}
+
+	DWORD Process::GetProcessExitCode()
+	{
+		DWORD exitCode = 0;
+		if (GetExitCodeProcess(m_process.GetHandle(), &exitCode) == false)
+			throw std::runtime_error("Failed to determine process exit code");
+		return exitCode;
+	}
 }
