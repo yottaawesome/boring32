@@ -11,7 +11,7 @@
 void TestWaitableTime()
 {
 	Boring32::Async::WaitableTimer timer(true, L"WaitableTimer", false, false);
-	timer.SetTimerInMillis(-10000, 0);
+	timer.SetTimerInMillis(-10000, 10000);
 
 	std::wcout << L"Waiting for 10s" << std::endl;
 	timer.WaitOnTimer(INFINITE);

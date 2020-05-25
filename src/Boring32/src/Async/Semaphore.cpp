@@ -1,7 +1,7 @@
 #include "pch.hpp"
 #include <stdexcept>
 #include "include/Async/WaitableTimer.hpp"
-#include "..\..\include\Async\Semaphore.hpp"
+#include "../../include/Async/Semaphore.hpp"
 
 namespace Boring32::Async
 {

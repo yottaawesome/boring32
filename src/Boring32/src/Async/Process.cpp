@@ -65,7 +65,6 @@ namespace Boring32::Async
 
 	void Process::operator=(Process& other)
 	{
-		CloseHandles();
 		Duplicate(other);
 	}
 
@@ -76,12 +75,12 @@ namespace Boring32::Async
 
 	void Process::operator=(Process&& other) noexcept
 	{
-		CloseHandles();
 		Move(other);
 	}
 
 	void Process::Move(Process& other) noexcept
 	{
+		CloseHandles();
 		m_executablePath = std::move(other.m_executablePath);
 		m_commandLine = std::move(other.m_commandLine);
 		m_startingDirectory = std::move(other.m_startingDirectory);
@@ -95,6 +94,7 @@ namespace Boring32::Async
 
 	void Process::Duplicate(const Process& other)
 	{
+		CloseHandles();
 		m_executablePath = other.m_executablePath;
 		m_commandLine = other.m_commandLine;
 		m_startingDirectory = other.m_startingDirectory;
@@ -151,11 +151,13 @@ namespace Boring32::Async
 	void Process::CloseProcessHandle()
 	{
 		m_process.Close();
+		m_process = nullptr;
 	}
 
 	void Process::CloseThreadHandle()
 	{
 		m_thread.Close();
+		m_thread = nullptr;
 	}
 
 	HANDLE Process::GetProcessHandle()

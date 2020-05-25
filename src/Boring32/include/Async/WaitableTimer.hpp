@@ -29,9 +29,8 @@ namespace Boring32::Async
 			/// <param name="hundredNanosecondIntervals">
 			///		The time after which the state of the timer is to be set to signaled, in 100 nanosecond intervals.
 			///		Positive values indicate absolute time. Be sure to use a UTC-based absolute time, 
-			///		as the system uses UTC - based time internally.
-			///		Negative values indicate relative time. The actual timer accuracy 
-			///		depends on the capability of your hardware.
+			///		as the system uses UTC-based time internally. Negative values indicate relative time. 
+			///		The actual timer accuracy depends on the capability of your hardware.
 			/// </param>
 			/// <param name="period">
 			///		The period of the timer, in milliseconds. If period is zero,
