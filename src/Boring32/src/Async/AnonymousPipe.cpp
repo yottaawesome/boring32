@@ -23,12 +23,12 @@ namespace Boring32::Async
 
 	void AnonymousPipe::operator=(const AnonymousPipe& other)
 	{
-		Cleanup();
 		Copy(other);
 	}
 
 	void AnonymousPipe::Copy(const AnonymousPipe& other)
 	{
+		Cleanup();
 		m_delimiter = other.m_delimiter;
 		m_size = other.m_size;
 		m_readHandle = other.m_readHandle;
@@ -43,12 +43,12 @@ namespace Boring32::Async
 
 	void AnonymousPipe::operator=(AnonymousPipe&& other) noexcept
 	{
-		Cleanup();
 		Move(other);
 	}
 
 	void AnonymousPipe::Move(AnonymousPipe& other) noexcept
 	{
+		Cleanup();
 		m_size = other.m_size;
 		m_delimiter = std::move(other.m_delimiter);
 		if (other.m_readHandle != nullptr)
