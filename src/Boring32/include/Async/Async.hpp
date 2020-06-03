@@ -1,6 +1,7 @@
 #pragma once
 #include "ProcessInfo.hpp"
 #include "AnonymousPipe.hpp"
+#include "NamedPipe.hpp"
 #include "MemoryMappedFile.hpp"
 #include "MemoryMappedView.hpp"
 #include "Mutex.hpp"
@@ -10,3 +11,4 @@
 #include "Job.hpp"
 #include "Semaphore.hpp"
 #include "WaitableTimer.hpp"
+#include "SlimReadWriteLock.hpp"

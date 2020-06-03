@@ -171,9 +171,11 @@
     <ClInclude Include="include\Async\MemoryMappedFile.hpp" />
     <ClInclude Include="include\Async\Mutex.hpp" />
     <ClInclude Include="include\Async\AnonymousPipe.hpp" />
+    <ClInclude Include="include\Async\NamedPipe.hpp" />
     <ClInclude Include="include\Async\Process.hpp" />
     <ClInclude Include="include\Async\ProcessInfo.hpp" />
     <ClInclude Include="include\Async\Semaphore.hpp" />
+    <ClInclude Include="include\Async\SlimReadWriteLock.hpp" />
     <ClInclude Include="include\Async\Thread.hpp" />
     <ClInclude Include="include\Async\WaitableTimer.hpp" />
     <ClInclude Include="include\Error\Error.hpp" />
@@ -201,7 +203,9 @@
   <ItemGroup>
     <ClCompile Include="src\Async\Event.cpp" />
     <ClCompile Include="src\Async\Job.cpp" />
+    <ClCompile Include="src\Async\NamedPipe.cpp" />
     <ClCompile Include="src\Async\Semaphore.cpp" />
+    <ClCompile Include="src\Async\SlimReadWriteLock.cpp" />
     <ClCompile Include="src\Async\Thread.cpp" />
     <ClCompile Include="src\Async\WaitableTimer.cpp" />
     <ClCompile Include="src\Error\Error.cpp" />
