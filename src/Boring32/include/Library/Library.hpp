@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <string>
+#include <stdexcept>
 
 namespace Boring32::Library
 {
@@ -8,13 +9,15 @@ namespace Boring32::Library
 	{
 		public:
 			DynamicLinkLibrary(const std::wstring& path);
+			DynamicLinkLibrary(const std::wstring& path, const std::nothrow_t& noThrow);
 			virtual ~DynamicLinkLibrary();
-			virtual const std::wstring& GetPath();
-			virtual const HMODULE GetHandle();
-			virtual void* Resolve(const std::wstring& path);
+			virtual void* Resolve(const std::wstring& symbolName);
+			virtual std::wstring GetPath() const;
+			virtual HMODULE GetHandle() const;
+			virtual bool IsLoaded() const;
 
 		protected:
-			const std::wstring path;
-			HMODULE libraryHandle;
+			const std::wstring m_path;
+			HMODULE m_libraryHandle;
 	};
 }

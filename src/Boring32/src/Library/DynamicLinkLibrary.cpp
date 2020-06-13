@@ -5,30 +5,46 @@
 namespace Boring32::Library
 {
 	DynamicLinkLibrary::DynamicLinkLibrary(const std::wstring& path)
-		: path(path)
+		: m_path(path)
 	{
-		libraryHandle = LoadLibrary(path.c_str());
-		if (libraryHandle == nullptr)
+		m_libraryHandle = LoadLibrary(path.c_str());
+		if (m_libraryHandle == nullptr)
 			throw std::runtime_error("Failed to load library");
 	}
 
-	const std::wstring& DynamicLinkLibrary::GetPath()
+	DynamicLinkLibrary::DynamicLinkLibrary(const std::wstring& path, const std::nothrow_t& noThrow)
 	{
-		return path;
+		m_libraryHandle = LoadLibrary(path.c_str());
 	}
 
-	const HMODULE DynamicLinkLibrary::GetHandle()
+	std::wstring DynamicLinkLibrary::GetPath() const
 	{
-		return this->libraryHandle;
+		return m_path;
 	}
 
-	void* DynamicLinkLibrary::Resolve(const std::wstring& path)
+	HMODULE DynamicLinkLibrary::GetHandle() const
 	{
-		return GetProcAddress(this->libraryHandle, Strings::ConvertWStringToString(path.c_str()).c_str());
+		return m_libraryHandle;
+	}
+	
+	bool DynamicLinkLibrary::IsLoaded() const
+	{
+		return m_libraryHandle != nullptr;
+	}
+
+	void* DynamicLinkLibrary::Resolve(const std::wstring& symbolName)
+	{
+		if (m_libraryHandle == nullptr)
+			throw std::runtime_error("Library handle is null");
+		return GetProcAddress(m_libraryHandle, Strings::ConvertWStringToString(m_path.c_str()).c_str());
 	}
 
 	DynamicLinkLibrary::~DynamicLinkLibrary()
 	{
-		FreeLibrary(libraryHandle);
+		if (m_libraryHandle != nullptr)
+		{
+			FreeLibrary(m_libraryHandle);
+			m_libraryHandle = nullptr;
+		}
 	}
 }

@@ -11,9 +11,9 @@
 void TestWaitableTime()
 {
 	Boring32::Async::WaitableTimer timer(true, L"WaitableTimer", false, false);
-	timer.SetTimerInMillis(-10000, 10000);
+	timer.SetTimerInMillis(-5000, 5000);
 
-	std::wcout << L"Waiting for 10s" << std::endl;
+	std::wcout << L"Waiting for 5s" << std::endl;
 	timer.WaitOnTimer(INFINITE);
 	timer.CancelTimer();
 }
@@ -113,10 +113,15 @@ int main(int argc, char** args)
 	directory.erase(std::find(directory.begin(), directory.end(), '\0'), directory.end());
 	std::wstring filePath = directory+L"\\TestProcess.exe";
 
-	Boring32::Async::AnonymousPipe childWrite(true, 2048, L"||");
-	Boring32::Async::AnonymousPipe childRead(true, 2048, L"||");
+	Boring32::Async::AnonymousPipe childWrite;
+	Boring32::Async::AnonymousPipe childRead;
+	childRead = Boring32::Async::AnonymousPipe(true, 2048, L"||");
+	childWrite = Boring32::Async::AnonymousPipe(true, 2048, L"||");
 	std::wstringstream ss;
-	ss << "TestProcess.exe " << (int)childWrite.GetWrite() << L" " << (int)childRead.GetRead();
+	ss	<< "TestProcess.exe " 
+		<< (int)childWrite.GetWrite() 
+		<< L" " 
+		<< (int)childRead.GetRead();
 	//std::wcout << ss.str() << std::endl;
 
 	Boring32::Async::Event evt(true, true, true, false, L"TestEvent");
