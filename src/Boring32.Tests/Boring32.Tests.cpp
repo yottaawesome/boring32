@@ -64,10 +64,10 @@ void TestMemoryMappedFile()
 
 void TestLibraryLoad()
 {
-	Boring32::Library::DynamicLinkLibrary d(L"Onyx32.Filesystem.dll");
-	void* mainFunc = d.Resolve(L"GetMainInterface");
-	if (mainFunc == nullptr)
-		throw new std::runtime_error("Could not resolve function");
+	Boring32::Library::DynamicLinkLibrary d(L"wlanapi.dll");
+	//void* mainFunc = d.Resolve(L"GetMainInterface");
+	//if (mainFunc == nullptr)
+	//	throw new std::runtime_error("Could not resolve function");
 }
 
 void TestAnonPipes()
@@ -103,7 +103,7 @@ int main(int argc, char** args)
 	TestConversions();
 	TestMemoryMappedFile();
 	TestAnonPipes();
-	//TestLibraryLoad();
+	TestLibraryLoad();
 
 
 	std::wstring directory;

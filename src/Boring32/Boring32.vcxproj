@@ -197,6 +197,7 @@
     <ClInclude Include="include\WinHttp\WebSocket.hpp" />
     <ClInclude Include="include\WinHttp\WebSocketStatus.hpp" />
     <ClInclude Include="include\Async\ThreadStatus.hpp" />
+    <ClInclude Include="include\Com\ComThreadScope.hpp" />
     <ClInclude Include="src\pch.hpp" />
     <ClInclude Include="src\targetver.hpp" />
   </ItemGroup>
@@ -208,6 +209,7 @@
     <ClCompile Include="src\Async\SlimReadWriteLock.cpp" />
     <ClCompile Include="src\Async\Thread.cpp" />
     <ClCompile Include="src\Async\WaitableTimer.cpp" />
+    <ClCompile Include="src\Com\ComThreadScope.cpp" />
     <ClCompile Include="src\Error\Error.cpp" />
     <ClCompile Include="src\Error\Win32Exception.cpp" />
     <ClCompile Include="src\Guid\Guid.cpp" />
