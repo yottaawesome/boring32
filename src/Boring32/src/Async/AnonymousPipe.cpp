@@ -71,9 +71,6 @@ namespace Boring32::Async
 		m_delimiter(delimiter),
 		m_mode(0)
 	{
-		if(m_mode != PIPE_READMODE_BYTE && m_mode != PIPE_READMODE_MESSAGE)
-			throw std::runtime_error("Invalid pipe mode specified");
-
 		SECURITY_ATTRIBUTES secAttrs{ 0 };
 		secAttrs.nLength = sizeof(secAttrs);
 		secAttrs.bInheritHandle = inheritable;
