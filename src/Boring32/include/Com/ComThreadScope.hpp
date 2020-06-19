@@ -56,12 +56,11 @@ namespace Boring32::Com
 			///		initialised with no corresponding uninitialisation, this
 			///		function has no effect.
 			/// </summary>
-			/// <param name="apartmentThreadingMode">The threading mode to initialise COM with.</param>
 			/// <exception cref="std::runtime_error">
 			///		Thrown if this function fails to initialise COM or set the
 			///		COM security level.
 			/// </exception>
-			virtual void Initialise(const COINIT apartmentThreadingMode);
+			virtual void Initialise();
 
 			/// <summary>
 			///		Uninitialises COM. If this object does not currently have

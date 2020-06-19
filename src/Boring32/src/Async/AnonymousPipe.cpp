@@ -37,7 +37,6 @@ namespace Boring32::Async
 
 	AnonymousPipe::AnonymousPipe(AnonymousPipe&& other) noexcept
 	{
-		m_size = other.m_size;
 		Move(other);
 	}
 
@@ -63,10 +62,10 @@ namespace Boring32::Async
 		m_size(size),
 		m_delimiter(delimiter)
 	{
-		SECURITY_ATTRIBUTES lp{ 0 };
-		lp.nLength = sizeof(lp);
-		lp.bInheritHandle = inheritable;
-		bool succeeded = CreatePipe(&m_readHandle, &m_writeHandle, &lp, size);
+		SECURITY_ATTRIBUTES secAttrs{ 0 };
+		secAttrs.nLength = sizeof(secAttrs);
+		secAttrs.bInheritHandle = inheritable;
+		bool succeeded = CreatePipe(&m_readHandle, &m_writeHandle, &secAttrs, size);
 		//DWORD mode = PIPE_READMODE_MESSAGE;
 		//SetNamedPipeHandleState(m_readHandle, &mode, nullptr, nullptr);
 		//SetNamedPipeHandleState(m_writeHandle, &mode, nullptr, nullptr);
@@ -97,19 +96,19 @@ namespace Boring32::Async
 		if (m_writeHandle == nullptr)
 			throw std::runtime_error("No active write handle.");
 
-		std::wstring msg2(msg);
+		std::wstring delimitedMsg(msg);
 		if (m_delimiter != L"")
-			msg2 = m_delimiter + msg2 + m_delimiter;
+			delimitedMsg = m_delimiter + delimitedMsg + m_delimiter;
 
-		DWORD bytesWritten;
-		bool bSuccess = WriteFile(
+		DWORD bytesWritten = 0;
+		bool success = WriteFile(
 			m_writeHandle.GetHandle(),
-			msg2.data(),
-			msg2.size() * sizeof(wchar_t),
+			delimitedMsg.data(),
+			delimitedMsg.size() * sizeof(wchar_t),
 			&bytesWritten,
 			nullptr
 		);
-		if (bSuccess == false)
+		if (success == false)
 			throw std::runtime_error("Write operation failed.");
 	}
 
@@ -119,14 +118,14 @@ namespace Boring32::Async
 			throw std::runtime_error("No active write handle.");
 
 		DWORD bytesWritten;
-		bool bSuccess = WriteFile(
+		bool success = WriteFile(
 			m_writeHandle.GetHandle(),
 			msg.data(),
 			msg.size() * sizeof(wchar_t),
 			&bytesWritten,
 			nullptr
 		);
-		if (bSuccess == false)
+		if (success == false)
 			throw std::runtime_error("Write operation failed.");
 	}
 
@@ -136,16 +135,16 @@ namespace Boring32::Async
 			throw std::runtime_error("No active read handle.");
 
 		std::wstring msg;
-		DWORD bytesRead;
+		DWORD bytesRead = 0;
 		msg.resize(m_size);
-		bool bSuccess = ReadFile(
+		bool success = ReadFile(
 			m_readHandle.GetHandle(),
 			&msg[0],
 			msg.size() * sizeof(wchar_t),
 			&bytesRead,
 			nullptr
 		);
-		if (bSuccess == false)
+		if (success == false)
 			throw std::runtime_error("Write operation failed");
 
 		msg.erase(std::find(msg.begin(), msg.end(), '\0'), msg.end());
@@ -190,5 +189,15 @@ namespace Boring32::Async
 	HANDLE AnonymousPipe::GetWrite()
 	{
 		return m_writeHandle.GetHandle();
+	}
+
+	std::wstring AnonymousPipe::GetDelimiter() const
+	{
+		return m_delimiter;
+	}
+
+	DWORD AnonymousPipe::GetSize() const
+	{
+		return m_size;
 	}
 }

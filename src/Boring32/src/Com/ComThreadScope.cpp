@@ -20,7 +20,7 @@ namespace Boring32::Com
 		m_comInitialisedThreadId(0),
 		m_apartmentThreadingMode(apartmentThreadingMode)
 	{
-		Initialise(apartmentThreadingMode);
+		Initialise();
 	}
 
 	ComThreadScope::ComThreadScope(const ComThreadScope& other)
@@ -43,7 +43,7 @@ namespace Boring32::Com
 		m_isInitialised = false;
 		m_apartmentThreadingMode = other.m_apartmentThreadingMode;
 		if (other.m_isInitialised)
-			Initialise(m_apartmentThreadingMode);
+			Initialise();
 	}
 
 	ComThreadScope::ComThreadScope(ComThreadScope&& other) noexcept
@@ -67,16 +67,15 @@ namespace Boring32::Com
 			other.m_isInitialised = false;
 	}
 
-	void ComThreadScope::Initialise(const COINIT apartmentThreadingMode)
+	void ComThreadScope::Initialise()
 	{
 		if (m_isInitialised)
 			return;
 
 		// Initialise COM for this thread
-		HRESULT hr = CoInitializeEx(nullptr, apartmentThreadingMode);
+		HRESULT hr = CoInitializeEx(nullptr, m_apartmentThreadingMode);
 		if (FAILED(hr))
 			throw std::runtime_error("CoInitializeEx() failed");
-		m_apartmentThreadingMode = apartmentThreadingMode;
 
 		// Set general COM security levels. This can only be set once per thread.
 		hr = CoInitializeSecurity(

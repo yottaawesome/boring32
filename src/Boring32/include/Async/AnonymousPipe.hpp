@@ -36,6 +36,8 @@ namespace Boring32::Async
 			virtual void CloseWrite();
 			virtual HANDLE GetRead();
 			virtual HANDLE GetWrite();
+			virtual std::wstring GetDelimiter() const;
+			virtual DWORD GetSize() const;
 
 		// Internal methods
 		protected:
