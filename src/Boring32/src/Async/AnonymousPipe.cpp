@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include "include/Async/AnonymousPipe.hpp"
 #include "include/Strings/Strings.hpp"
+#include <iostream>
 
 namespace Boring32::Async
 {
@@ -13,7 +14,8 @@ namespace Boring32::Async
 	AnonymousPipe::AnonymousPipe()
 	:	m_size(0),
 		m_readHandle(nullptr),
-		m_writeHandle(nullptr)
+		m_writeHandle(nullptr), 
+		m_charactersInPipe(0)
 	{ }
 
 	AnonymousPipe::AnonymousPipe(const AnonymousPipe& other)
@@ -33,6 +35,7 @@ namespace Boring32::Async
 		m_size = other.m_size;
 		m_readHandle = other.m_readHandle;
 		m_writeHandle = other.m_writeHandle;
+		m_charactersInPipe = other.m_charactersInPipe;
 	}
 
 	AnonymousPipe::AnonymousPipe(AnonymousPipe&& other) noexcept
@@ -50,6 +53,7 @@ namespace Boring32::Async
 		Cleanup();
 		m_size = other.m_size;
 		m_delimiter = std::move(other.m_delimiter);
+		m_charactersInPipe = other.m_charactersInPipe;
 		if (other.m_readHandle != nullptr)
 			m_readHandle = std::move(other.m_readHandle);
 		if (other.m_writeHandle != nullptr)
@@ -60,7 +64,8 @@ namespace Boring32::Async
 	:	m_readHandle(nullptr),
 		m_writeHandle(nullptr),
 		m_size(size),
-		m_delimiter(delimiter)
+		m_delimiter(delimiter),
+		m_charactersInPipe(0)
 	{
 		SECURITY_ATTRIBUTES secAttrs{ 0 };
 		secAttrs.nLength = sizeof(secAttrs);
@@ -82,8 +87,29 @@ namespace Boring32::Async
 	:	m_delimiter(delimiter),
 		m_size(size),
 		m_readHandle(readHandle),
-		m_writeHandle(writeHandle)
-	{ }
+		m_writeHandle(writeHandle),
+		m_charactersInPipe(0)
+	{
+		// We do this sequence of actions to determine how much space
+		// is used in the passed pipe handles, if any.
+		HANDLE handleToDetermineBytesAvailable = nullptr;
+		if (m_readHandle != nullptr)
+			handleToDetermineBytesAvailable = m_readHandle.GetHandle();
+		else if (m_writeHandle != nullptr)
+			handleToDetermineBytesAvailable = m_writeHandle.GetHandle();
+		if (handleToDetermineBytesAvailable)
+		{
+			PeekNamedPipe(
+				m_readHandle.GetHandle(),
+				nullptr,
+				0,
+				nullptr,
+				&m_charactersInPipe,
+				nullptr
+			);
+			m_charactersInPipe = m_charactersInPipe / sizeof(wchar_t);
+		}
+	}
 
 	void AnonymousPipe::Cleanup()
 	{
@@ -100,6 +126,9 @@ namespace Boring32::Async
 		if (m_delimiter != L"")
 			delimitedMsg = m_delimiter + delimitedMsg + m_delimiter;
 
+		if ((m_charactersInPipe + delimitedMsg.size()) >= m_size)
+			throw std::runtime_error("Pipe cannot fit message");
+
 		DWORD bytesWritten = 0;
 		bool success = WriteFile(
 			m_writeHandle.GetHandle(),
@@ -110,6 +139,7 @@ namespace Boring32::Async
 		);
 		if (success == false)
 			throw std::runtime_error("Write operation failed.");
+		m_charactersInPipe += delimitedMsg.size();
 	}
 
 	void AnonymousPipe::Write(const std::wstring& msg)
@@ -117,7 +147,10 @@ namespace Boring32::Async
 		if (m_writeHandle == nullptr)
 			throw std::runtime_error("No active write handle.");
 
-		DWORD bytesWritten;
+		if ((m_charactersInPipe + msg.size()) >= m_size)
+			throw std::runtime_error("Pipe cannot fit message");
+
+		DWORD bytesWritten = 0;
 		bool success = WriteFile(
 			m_writeHandle.GetHandle(),
 			msg.data(),
@@ -127,6 +160,7 @@ namespace Boring32::Async
 		);
 		if (success == false)
 			throw std::runtime_error("Write operation failed.");
+		m_charactersInPipe += bytesWritten / sizeof(wchar_t);
 	}
 
 	std::wstring AnonymousPipe::Read()
@@ -145,8 +179,9 @@ namespace Boring32::Async
 			nullptr
 		);
 		if (success == false)
-			throw std::runtime_error("Write operation failed");
+			throw std::runtime_error("Read operation failed");
 
+		m_charactersInPipe -= bytesRead / sizeof(wchar_t);
 		msg.erase(std::find(msg.begin(), msg.end(), '\0'), msg.end());
 
 		return msg;
@@ -168,6 +203,7 @@ namespace Boring32::Async
 				strings[lastIndex] = Strings::Replace(strings[lastIndex], m_delimiter, L"");
 			}
 		}
+
 		return strings;
 	}
 
@@ -199,5 +235,15 @@ namespace Boring32::Async
 	DWORD AnonymousPipe::GetSize() const
 	{
 		return m_size;
+	}
+
+	DWORD AnonymousPipe::GetUsedSize() const
+	{
+		return m_charactersInPipe;
+	}
+
+	DWORD AnonymousPipe::GetRemainingSize() const
+	{
+		return m_size - m_charactersInPipe;
 	}
 }

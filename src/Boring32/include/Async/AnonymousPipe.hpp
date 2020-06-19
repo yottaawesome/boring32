@@ -38,6 +38,8 @@ namespace Boring32::Async
 			virtual HANDLE GetWrite();
 			virtual std::wstring GetDelimiter() const;
 			virtual DWORD GetSize() const;
+			virtual DWORD GetUsedSize() const;
+			virtual DWORD GetRemainingSize() const;
 
 		// Internal methods
 		protected:
@@ -49,6 +51,7 @@ namespace Boring32::Async
 		protected:
 			std::wstring m_delimiter;
 			DWORD m_size;
+			DWORD m_charactersInPipe;
 			Raii::Win32Handle m_readHandle;
 			Raii::Win32Handle m_writeHandle;
 	};

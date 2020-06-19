@@ -78,7 +78,9 @@ void TestAnonPipes()
 	pipe.DelimitedWrite(msg1);
 	pipe.DelimitedWrite(msg2);
 
-	auto response = pipe.DelimitedRead();
+	std::vector<std::wstring> response = pipe.DelimitedRead();
+	if(response.size() != 2)
+		throw std::runtime_error("Unexpected number of tokens");
 	std::wcout << response[0] << L" " << response[1] << std::endl;
 	if (msg1 != response[0] || msg2 != response[1])
 		throw std::runtime_error("Failed to match input to output");
