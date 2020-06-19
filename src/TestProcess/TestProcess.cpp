@@ -13,7 +13,7 @@ int main(int argc, char** args)
             int readHandle = std::stoi(args[2]);
             Boring32::Async::AnonymousPipe pipe(2048, L"||", (HANDLE)readHandle, (HANDLE)writeHandle);
             std::wcout << pipe.Read();
-            pipe.DelimitedWrite(L"Hello from child!!");
+            pipe.DelimitedWrite(L"Hello from child!");
         }
 
         Boring32::Async::Event evt(false, true, true, false, L"TestEvent");

@@ -12,11 +12,15 @@ namespace Boring32::Async
 		public:
 			virtual ~AnonymousPipe();
 			AnonymousPipe();
-			AnonymousPipe(const bool inheritable, const DWORD size, const std::wstring& delimiter);
+			AnonymousPipe(
+				const bool inheritable, 
+				const DWORD size,
+				const std::wstring& delimiter
+			);
 			AnonymousPipe(
 				const DWORD size, 
 				const std::wstring& delimiter,
-				const HANDLE readHandle, 
+				const HANDLE readHandle,
 				const HANDLE writeHandle
 			);
 
@@ -34,6 +38,7 @@ namespace Boring32::Async
 			virtual std::vector<std::wstring> DelimitedRead();
 			virtual void CloseRead();
 			virtual void CloseWrite();
+			virtual void SetMode(const DWORD mode);
 			virtual HANDLE GetRead();
 			virtual HANDLE GetWrite();
 			virtual std::wstring GetDelimiter() const;
@@ -52,6 +57,7 @@ namespace Boring32::Async
 			std::wstring m_delimiter;
 			DWORD m_size;
 			DWORD m_charactersInPipe;
+			DWORD m_mode;
 			Raii::Win32Handle m_readHandle;
 			Raii::Win32Handle m_writeHandle;
 	};

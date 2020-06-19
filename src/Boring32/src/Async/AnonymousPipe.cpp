@@ -15,7 +15,8 @@ namespace Boring32::Async
 	:	m_size(0),
 		m_readHandle(nullptr),
 		m_writeHandle(nullptr), 
-		m_charactersInPipe(0)
+		m_charactersInPipe(0),
+		m_mode(0)
 	{ }
 
 	AnonymousPipe::AnonymousPipe(const AnonymousPipe& other)
@@ -36,6 +37,7 @@ namespace Boring32::Async
 		m_readHandle = other.m_readHandle;
 		m_writeHandle = other.m_writeHandle;
 		m_charactersInPipe = other.m_charactersInPipe;
+		m_mode = other.m_mode;
 	}
 
 	AnonymousPipe::AnonymousPipe(AnonymousPipe&& other) noexcept
@@ -54,26 +56,32 @@ namespace Boring32::Async
 		m_size = other.m_size;
 		m_delimiter = std::move(other.m_delimiter);
 		m_charactersInPipe = other.m_charactersInPipe;
+		m_mode = other.m_mode;
 		if (other.m_readHandle != nullptr)
 			m_readHandle = std::move(other.m_readHandle);
 		if (other.m_writeHandle != nullptr)
 			m_writeHandle = std::move(other.m_writeHandle);
 	}
 
-	AnonymousPipe::AnonymousPipe(const bool inheritable, const DWORD size, const std::wstring& delimiter)
+	AnonymousPipe::AnonymousPipe(
+		const bool inheritable, 
+		const DWORD size,
+		const std::wstring& delimiter
+	)
 	:	m_readHandle(nullptr),
 		m_writeHandle(nullptr),
 		m_size(size),
 		m_delimiter(delimiter),
-		m_charactersInPipe(0)
+		m_charactersInPipe(0),
+		m_mode(0)
 	{
+		if(m_mode != PIPE_READMODE_BYTE && m_mode != PIPE_READMODE_MESSAGE)
+			throw std::runtime_error("Invalid pipe mode specified");
+
 		SECURITY_ATTRIBUTES secAttrs{ 0 };
 		secAttrs.nLength = sizeof(secAttrs);
 		secAttrs.bInheritHandle = inheritable;
 		bool succeeded = CreatePipe(&m_readHandle, &m_writeHandle, &secAttrs, size);
-		//DWORD mode = PIPE_READMODE_MESSAGE;
-		//SetNamedPipeHandleState(m_readHandle, &mode, nullptr, nullptr);
-		//SetNamedPipeHandleState(m_writeHandle, &mode, nullptr, nullptr);
 		if (succeeded == false)
 			throw std::runtime_error("Failed to create anonymous pipe");
 	}
@@ -88,7 +96,8 @@ namespace Boring32::Async
 		m_size(size),
 		m_readHandle(readHandle),
 		m_writeHandle(writeHandle),
-		m_charactersInPipe(0)
+		m_charactersInPipe(0),
+		m_mode(0)
 	{
 		// We do this sequence of actions to determine how much space
 		// is used in the passed pipe handles, if any.
@@ -185,6 +194,24 @@ namespace Boring32::Async
 		msg.erase(std::find(msg.begin(), msg.end(), '\0'), msg.end());
 
 		return msg;
+	}
+
+	void AnonymousPipe::SetMode(const DWORD mode)
+	{
+		if(m_readHandle == nullptr && m_writeHandle == nullptr)
+			throw std::runtime_error("Cannot set pipe mode on null pipes");
+
+		HANDLE handleToSet = nullptr;
+		if (m_readHandle != nullptr)
+			handleToSet = m_readHandle.GetHandle();
+		else if (m_writeHandle != nullptr)
+			handleToSet = m_writeHandle.GetHandle();
+
+		// Do not pass PIPE_READMODE_MESSAGE, as anonymous pipes are created in
+		// byte mode, and cannot be changed.
+		bool succeeded = SetNamedPipeHandleState(handleToSet, &m_mode, nullptr, nullptr);
+		if (succeeded == false)
+			throw std::runtime_error("Failed to create set pipe handle state");
 	}
 
 	std::vector<std::wstring> AnonymousPipe::DelimitedRead()
