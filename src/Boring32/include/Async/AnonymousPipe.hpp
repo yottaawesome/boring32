@@ -56,7 +56,6 @@ namespace Boring32::Async
 		protected:
 			std::wstring m_delimiter;
 			DWORD m_size;
-			DWORD m_charactersInPipe;
 			DWORD m_mode;
 			Raii::Win32Handle m_readHandle;
 			Raii::Win32Handle m_writeHandle;

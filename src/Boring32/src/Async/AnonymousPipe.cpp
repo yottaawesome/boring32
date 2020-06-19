@@ -14,8 +14,7 @@ namespace Boring32::Async
 	AnonymousPipe::AnonymousPipe()
 	:	m_size(0),
 		m_readHandle(nullptr),
-		m_writeHandle(nullptr), 
-		m_charactersInPipe(0),
+		m_writeHandle(nullptr),
 		m_mode(0)
 	{ }
 
@@ -36,7 +35,6 @@ namespace Boring32::Async
 		m_size = other.m_size;
 		m_readHandle = other.m_readHandle;
 		m_writeHandle = other.m_writeHandle;
-		m_charactersInPipe = other.m_charactersInPipe;
 		m_mode = other.m_mode;
 	}
 
@@ -55,7 +53,6 @@ namespace Boring32::Async
 		Cleanup();
 		m_size = other.m_size;
 		m_delimiter = std::move(other.m_delimiter);
-		m_charactersInPipe = other.m_charactersInPipe;
 		m_mode = other.m_mode;
 		if (other.m_readHandle != nullptr)
 			m_readHandle = std::move(other.m_readHandle);
@@ -72,7 +69,6 @@ namespace Boring32::Async
 		m_writeHandle(nullptr),
 		m_size(size),
 		m_delimiter(delimiter),
-		m_charactersInPipe(0),
 		m_mode(0)
 	{
 		if(m_mode != PIPE_READMODE_BYTE && m_mode != PIPE_READMODE_MESSAGE)
@@ -96,29 +92,8 @@ namespace Boring32::Async
 		m_size(size),
 		m_readHandle(readHandle),
 		m_writeHandle(writeHandle),
-		m_charactersInPipe(0),
 		m_mode(0)
-	{
-		// We do this sequence of actions to determine how much space
-		// is used in the passed pipe handles, if any.
-		HANDLE handleToDetermineBytesAvailable = nullptr;
-		if (m_readHandle != nullptr)
-			handleToDetermineBytesAvailable = m_readHandle.GetHandle();
-		else if (m_writeHandle != nullptr)
-			handleToDetermineBytesAvailable = m_writeHandle.GetHandle();
-		if (handleToDetermineBytesAvailable)
-		{
-			PeekNamedPipe(
-				m_readHandle.GetHandle(),
-				nullptr,
-				0,
-				nullptr,
-				&m_charactersInPipe,
-				nullptr
-			);
-			m_charactersInPipe = m_charactersInPipe / sizeof(wchar_t);
-		}
-	}
+	{ }
 
 	void AnonymousPipe::Cleanup()
 	{
@@ -135,7 +110,7 @@ namespace Boring32::Async
 		if (m_delimiter != L"")
 			delimitedMsg = m_delimiter + delimitedMsg + m_delimiter;
 
-		if ((m_charactersInPipe + delimitedMsg.size()) >= m_size)
+		if ((GetUsedSize() + delimitedMsg.size()) >= m_size)
 			throw std::runtime_error("Pipe cannot fit message");
 
 		DWORD bytesWritten = 0;
@@ -148,7 +123,6 @@ namespace Boring32::Async
 		);
 		if (success == false)
 			throw std::runtime_error("Write operation failed.");
-		m_charactersInPipe += delimitedMsg.size();
 	}
 
 	void AnonymousPipe::Write(const std::wstring& msg)
@@ -156,7 +130,7 @@ namespace Boring32::Async
 		if (m_writeHandle == nullptr)
 			throw std::runtime_error("No active write handle.");
 
-		if ((m_charactersInPipe + msg.size()) >= m_size)
+		if ((GetUsedSize() + msg.size()) >= m_size)
 			throw std::runtime_error("Pipe cannot fit message");
 
 		DWORD bytesWritten = 0;
@@ -169,7 +143,6 @@ namespace Boring32::Async
 		);
 		if (success == false)
 			throw std::runtime_error("Write operation failed.");
-		m_charactersInPipe += bytesWritten / sizeof(wchar_t);
 	}
 
 	std::wstring AnonymousPipe::Read()
@@ -190,7 +163,6 @@ namespace Boring32::Async
 		if (success == false)
 			throw std::runtime_error("Read operation failed");
 
-		m_charactersInPipe -= bytesRead / sizeof(wchar_t);
 		msg.erase(std::find(msg.begin(), msg.end(), '\0'), msg.end());
 
 		return msg;
@@ -266,11 +238,32 @@ namespace Boring32::Async
 
 	DWORD AnonymousPipe::GetUsedSize() const
 	{
-		return m_charactersInPipe;
+		DWORD charactersInPipe = 0;
+		// We do this sequence of actions to determine how much space
+		// is used in the passed pipe handles, if any.
+		HANDLE handleToDetermineBytesAvailable = nullptr;
+		if (m_readHandle != nullptr)
+			handleToDetermineBytesAvailable = m_readHandle.GetHandle();
+		else if (m_writeHandle != nullptr)
+			handleToDetermineBytesAvailable = m_writeHandle.GetHandle();
+		if (handleToDetermineBytesAvailable)
+		{
+			PeekNamedPipe(
+				m_readHandle.GetHandle(),
+				nullptr,
+				0,
+				nullptr,
+				&charactersInPipe,
+				nullptr
+			);
+			charactersInPipe /= sizeof(wchar_t);
+		}
+
+		return charactersInPipe;
 	}
 
 	DWORD AnonymousPipe::GetRemainingSize() const
 	{
-		return m_size - m_charactersInPipe;
+		return m_size - GetUsedSize();
 	}
 }
