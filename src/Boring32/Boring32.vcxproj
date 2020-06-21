@@ -171,7 +171,6 @@
     <ClInclude Include="include\Async\MemoryMappedFile.hpp" />
     <ClInclude Include="include\Async\Mutex.hpp" />
     <ClInclude Include="include\Async\AnonymousPipe.hpp" />
-    <ClInclude Include="include\Async\NamedPipe.h" />
     <ClInclude Include="include\Async\NamedPipe.hpp" />
     <ClInclude Include="include\Async\Process.hpp" />
     <ClInclude Include="include\Async\ProcessInfo.hpp" />

@@ -30,6 +30,8 @@ namespace Boring32::Raii
 			virtual bool IsInheritable() const;
 			virtual void SetInheritability(const bool isInheritable);
 
+			virtual HANDLE Detach();
+
 			static bool HandleIsInheritable(const HANDLE handle);
 			static HANDLE DuplicatePassedHandle(const HANDLE handle, const bool isInheritable);
 

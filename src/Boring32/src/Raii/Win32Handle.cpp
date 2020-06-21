@@ -106,6 +106,13 @@ namespace Boring32::Raii
 			throw std::runtime_error("Failed to change handle inheritability.");
 	}
 
+	HANDLE Win32Handle::Detach()
+	{
+		HANDLE temp = m_handle;
+		m_handle = nullptr;
+		return temp;
+	}
+
 	bool Win32Handle::HandleIsInheritable(const HANDLE handle)
 	{
 		if (handle == nullptr)
