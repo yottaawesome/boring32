@@ -5,5 +5,8 @@
 
 namespace Boring32::Error
 {
-	std::wstring GetErrorCodeWString(const DWORD errorCode);
+	void GetErrorCodeString(const DWORD errorCode, std::string& stringToHoldMessage);
+	void GetErrorCodeString(const DWORD errorCode, std::wstring& stringToHoldMessage);
+	std::wstring CreateErrorStringFromCode(const std::wstring msg, const DWORD errorCode);
+	std::string CreateErrorStringFromCode(const std::string msg, const DWORD errorCode);
 }

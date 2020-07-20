@@ -120,31 +120,31 @@ namespace Boring32::WinHttp
 				SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE |
 				SECURITY_FLAG_IGNORE_CERT_CN_INVALID |
 				SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
-			bool security = WinHttpSetOption(
+			bool setSecurityOption = WinHttpSetOption(
 				requestHandle.Get(),
 				WINHTTP_OPTION_SECURITY_FLAGS,
 				&dwFlags,
 				sizeof(dwFlags)
 			);
-			if (!security)
+			if (setSecurityOption == false)
 			{
 				m_status = WebSocketStatus::Error;
-				throw Error::Win32Exception("Failed to set security options");
+				throw Error::Win32Exception("Failed to set security options", GetLastError());
 			}
 		}
 
-		bool websocket = WinHttpSetOption(
+		bool setWebsocketOption = WinHttpSetOption(
 			requestHandle.Get(),
 			WINHTTP_OPTION_UPGRADE_TO_WEB_SOCKET,
 			NULL,
 			0);
-		if (!websocket)
+		if (setWebsocketOption == false)
 		{
 			m_status = WebSocketStatus::Error;
-			throw Error::Win32Exception("Failed to set web socket upgrade option");
+			throw Error::Win32Exception("Failed to set web socket upgrade option", GetLastError());
 		}
 
-		bool isSuccessful = WinHttpSendRequest(
+		bool sentRequest = WinHttpSendRequest(
 			requestHandle.Get(),
 			WINHTTP_NO_ADDITIONAL_HEADERS,
 			0,
@@ -152,17 +152,17 @@ namespace Boring32::WinHttp
 			0,
 			0,
 			0);
-		if (!isSuccessful)
+		if (sentRequest == false)
 		{
 			m_status = WebSocketStatus::Error;
-			throw Error::Win32Exception("Failed to send web socket request");
+			throw Error::Win32Exception("Failed to send web socket request", GetLastError());
 		}
 
-		isSuccessful = WinHttpReceiveResponse(requestHandle.Get(), 0);
-		if (!isSuccessful)
+		sentRequest = WinHttpReceiveResponse(requestHandle.Get(), 0);
+		if (sentRequest == false)
 		{
 			m_status = WebSocketStatus::Error;
-			throw Error::Win32Exception("Failed to receive web socket response");
+			throw Error::Win32Exception("Failed to receive web socket response", GetLastError());
 		}
 
 		DWORD statusCode = 0;
@@ -187,7 +187,7 @@ namespace Boring32::WinHttp
 		if (m_webSocketHandle == nullptr)
 		{
 			m_status = WebSocketStatus::Error;
-			throw Error::Win32Exception("Failed to complete web socket upgrade");
+			throw Error::Win32Exception("Failed to complete web socket upgrade", GetLastError());
 		}
 
 		requestHandle = nullptr;
@@ -259,7 +259,7 @@ namespace Boring32::WinHttp
 				&bufferType);
 			// If the server terminates the connection, 12030 will returned.
 			if (statusCode != ERROR_SUCCESS)
-				throw Error::Win32Exception("Connection error when receiving websocket data");
+				throw Error::Win32Exception("Connection error when receiving websocket data", statusCode);
 			
 			// The server closed the connection.
 			if (bufferType == WINHTTP_WEB_SOCKET_CLOSE_BUFFER_TYPE)

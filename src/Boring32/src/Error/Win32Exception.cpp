@@ -6,46 +6,27 @@ namespace Boring32::Error
 {
 	Win32Exception::~Win32Exception() {}
 
-	Win32Exception::Win32Exception(const char* msg)
-		: std::runtime_error(msg),
-		m_errorCode(GetLastError())
-	{ }
-
-	Win32Exception::Win32Exception(const std::string& msg)
-		: std::runtime_error(msg),
-		m_errorCode(GetLastError())
-	{ }
-
-	Win32Exception::Win32Exception(const char* msg, DWORD errorCode)
+	Win32Exception::Win32Exception(const char* msg, const DWORD errorCode)
 		: std::runtime_error(msg),
 		m_errorCode(errorCode)
-	{ }
+	{
+		m_errorString = Boring32::Error::CreateErrorStringFromCode(msg, errorCode);
+	}
 
-	Win32Exception::Win32Exception(const std::string& msg, DWORD errorCode)
+	Win32Exception::Win32Exception(const std::string& msg, const DWORD errorCode)
 		: std::runtime_error(msg),
 		m_errorCode(errorCode)
-	{ }
+	{
+		m_errorString = Boring32::Error::CreateErrorStringFromCode(msg, errorCode);
+	}
 
-	DWORD Win32Exception::GetErrorCode() const
+	DWORD Win32Exception::GetErrorCode() const noexcept
 	{
 		return m_errorCode;
 	}
-
-	std::wstring Win32Exception::GetErrorCodeWString() const
+	
+	const char* Win32Exception::what() const noexcept
 	{
-		return Boring32::Error::GetErrorCodeWString(m_errorCode);
-	}
-
-	std::wstring Win32Exception::GetFullErrorWString() const
-	{
-		std::string whatString(this->what());
-		std::wstring errorCodeWString(Boring32::Error::GetErrorCodeWString(m_errorCode));
-		std::wstring finalErrorString(Strings::ConvertStringToWString(whatString));
-		finalErrorString += L" :: ";
-		finalErrorString += L"(";
-		finalErrorString += std::to_wstring(m_errorCode);
-		finalErrorString += L") ";
-		finalErrorString += errorCodeWString;
-		return finalErrorString;
+		return m_errorString.c_str();
 	}
 }
