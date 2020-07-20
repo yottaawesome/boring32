@@ -8,6 +8,38 @@
 #include "pathcch.h"
 #pragma comment(lib, "Pathcch.lib")
 
+void print_exception_info(const std::exception& e)
+{
+	std::wcout << e.what() << std::endl;
+	try 
+	{
+		rethrow_if_nested(e);
+	}
+	catch (const std::exception& ne)
+	{
+		print_exception_info(ne);
+	}
+}
+
+void TestException()
+{
+	try
+	{
+		throw std::logic_error("first");
+	}
+	catch (const std::exception& ex)
+	{
+		try
+		{
+			std::throw_with_nested(std::logic_error("second"));
+		}
+		catch (const std::exception& ex)
+		{
+			print_exception_info(ex);
+		}
+	}
+}
+
 void TestWaitableTime()
 {
 	Boring32::Async::WaitableTimer timer(true, L"WaitableTimer", false, false);
@@ -99,6 +131,7 @@ int main(int argc, char** args)
 		sizeof(pmei)
 	);
 
+	TestException();
 	TestWaitableTime();
 	TestSemaphore();
 	TestMutex();
