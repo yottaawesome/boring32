@@ -6,7 +6,7 @@ namespace Boring32::Raii
 {
 	Sid::~Sid()
 	{
-		FreeSid(pAdminSID);
+		FreeSid(sidBuffer);
 	}
 
 	Sid::Sid(
@@ -35,13 +35,13 @@ namespace Boring32::Raii
 			0,
 			0,
 			0,
-			&pAdminSID);
+			(PSID*)&sidBuffer);
 		if (succeeded == false)
 			throw std::runtime_error("Raii::Sid -> Failed to initialise SID");
 	}
 
 	PSID Sid::GetSid()
 	{
-		return pAdminSID;
+		return sidBuffer;
 	}
 }

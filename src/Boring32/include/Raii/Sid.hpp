@@ -21,8 +21,12 @@ namespace Boring32::Raii
 			virtual ~Sid();
 			virtual PSID GetSid();
 
+			Sid(const Sid&) = delete;
+			void operator=(const Sid&) = delete;
+			Sid(Sid&&) = delete;
+			void operator=(Sid&&) = delete;
+
 		protected:
 			BYTE sidBuffer[256];
-			PSID pAdminSID = (PSID)sidBuffer;
 	};
 }
