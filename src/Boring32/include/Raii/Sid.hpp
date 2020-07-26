@@ -7,7 +7,7 @@ namespace Boring32::Raii
 	{
 		public:
 			Sid(
-				PSID_IDENTIFIER_AUTHORITY pIdentifierAuthority,
+				SID_IDENTIFIER_AUTHORITY& pIdentifierAuthority,
 				BYTE                      nSubAuthorityCount,
 				DWORD                     nSubAuthority0,
 				DWORD                     nSubAuthority1,
@@ -27,6 +27,20 @@ namespace Boring32::Raii
 			void operator=(Sid&&) = delete;
 
 		protected:
-			BYTE sidBuffer[256];
+			virtual void Copy(const Sid& other);
+			virtual void Move(Sid&& other) noexcept;
+
+		protected:
+			BYTE m_sidBuffer[256];
+			SID_IDENTIFIER_AUTHORITY m_pIdentifierAuthority;
+			BYTE                      m_nSubAuthorityCount;
+			DWORD                     m_nSubAuthority0;
+			DWORD                     m_nSubAuthority1;
+			DWORD                     m_nSubAuthority2;
+			DWORD                     m_nSubAuthority3;
+			DWORD                     m_nSubAuthority4;
+			DWORD                     m_nSubAuthority5;
+			DWORD                     m_nSubAuthority6;
+			DWORD                     m_nSubAuthority7;
 	};
 }
