@@ -102,6 +102,26 @@ void TestLibraryLoad()
 	//	throw new std::runtime_error("Could not resolve function");
 }
 
+void TestThreadSafeVector()
+{
+	Boring32::Async::ThreadSafeVector<int> testVector;
+	testVector.Add(1);
+	testVector.Add(2);
+	testVector.Add(1);
+	testVector.Add(1);
+	testVector.Add(5);
+	// Erase all 1s
+	testVector.EraseMultiple(
+		[](const int& val) -> bool
+		{
+			return val == 1;
+		});
+	if(testVector.Size() != 2)
+		throw std::runtime_error("Unexpected size of vector");
+	if (testVector.CopyOfElementAt(0) != 2)
+		throw std::runtime_error("Unexpected element at index 0");
+}
+
 void TestAnonPipes()
 {
 	std::wstring msg1(L"message1");
@@ -120,6 +140,9 @@ void TestAnonPipes()
 
 int main(int argc, char** args)
 {
+	TestThreadSafeVector();
+	return 0;
+
 	PROCESS_MEMORY_EXHAUSTION_INFO pmei{ 0 };
 	pmei.Version = PME_CURRENT_VERSION;
 	pmei.Type = PMETypeFailFastOnCommitFailure;

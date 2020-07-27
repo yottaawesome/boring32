@@ -12,3 +12,5 @@
 #include "Semaphore.hpp"
 #include "WaitableTimer.hpp"
 #include "SlimReadWriteLock.hpp"
+#include "ThreadSafeVector.hpp"
+#include "CriticalSectionLock.hpp"

@@ -166,6 +166,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Async\CriticalSectionLock.hpp" />
     <ClInclude Include="include\Async\Event.hpp" />
     <ClInclude Include="include\Async\Job.hpp" />
     <ClInclude Include="include\Async\MemoryMappedFile.hpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="include\Async\Semaphore.hpp" />
     <ClInclude Include="include\Async\SlimReadWriteLock.hpp" />
     <ClInclude Include="include\Async\Thread.hpp" />
+    <ClInclude Include="include\Async\ThreadSafeVector.hpp" />
     <ClInclude Include="include\Async\WaitableTimer.hpp" />
     <ClInclude Include="include\Error\Error.hpp" />
     <ClInclude Include="include\Error\Win32Exception.hpp" />
@@ -202,6 +204,7 @@
     <ClInclude Include="src\targetver.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Async\CriticalSectionLock.cpp" />
     <ClCompile Include="src\Async\Event.cpp" />
     <ClCompile Include="src\Async\Job.cpp" />
     <ClCompile Include="src\Async\NamedPipe.cpp" />
