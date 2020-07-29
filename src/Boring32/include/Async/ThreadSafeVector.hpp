@@ -121,7 +121,11 @@ namespace Boring32::Async
 
 				int index = IndexOf(findFunc);
 				if (index > -1)
+				{
 					RemoveAt(index);
+					if (m_messages.size() == 0)
+						m_hasMessages.Reset();
+				}
 				return index > -1;
 			}
 
