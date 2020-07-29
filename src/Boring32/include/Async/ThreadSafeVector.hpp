@@ -115,6 +115,16 @@ namespace Boring32::Async
 				Clear();
 			}
 
+			virtual bool EraseOne(const std::function<bool(const T&)>& findFunc)
+			{
+				CriticalSection cs(m_criticalSection);
+
+				int index = IndexOf(findFunc);
+				if (index > -1)
+					RemoveAt(index);
+				return index > -1;
+			}
+
 			virtual void EraseMultiple(const std::function<bool(const T&)>& findFunc)
 			{
 				CriticalSectionLock cs(m_criticalSection);
