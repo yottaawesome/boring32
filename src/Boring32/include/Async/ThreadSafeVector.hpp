@@ -117,7 +117,7 @@ namespace Boring32::Async
 
 			virtual bool EraseOne(const std::function<bool(const T&)>& findFunc)
 			{
-				CriticalSection cs(m_criticalSection);
+				CriticalSectionLock cs(m_criticalSection);
 
 				int index = IndexOf(findFunc);
 				if (index > -1)
