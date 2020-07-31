@@ -42,6 +42,11 @@ namespace Boring32::Async
 				return m_messages.size();
 			}
 
+			virtual std::vector<T> ToVector() const
+			{
+				return std::vector<T>(m_messages);
+			}
+
 			virtual void Clear()
 			{
 				CriticalSectionLock cs(m_criticalSection);
