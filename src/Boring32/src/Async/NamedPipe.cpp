@@ -107,13 +107,40 @@ namespace Boring32::Async
 
     void NamedPipe::Write(const std::wstring& msg)
     {
-        // TODO
+        if (m_pipe == nullptr)
+            throw std::runtime_error("No pipe to write to");
+
+        DWORD bytesWritten = 0;
+        bool success = WriteFile(
+            m_pipe.GetHandle(),     // handle to pipe 
+            &msg[0],                // buffer to write from 
+            msg.size() * sizeof(wchar_t), // number of bytes to write 
+            &bytesWritten,          // number of bytes written 
+            nullptr                 // not overlapped I/O
+        );               
+        if (success == false)
+            throw std::runtime_error("Failed to read pipe");
     }
 
     std::wstring NamedPipe::Read()
     {
-        // TODO
-        return L"";
+        if (m_pipe == nullptr)
+            throw std::runtime_error("No pipe to read from");
+
+        std::wstring data;
+        data.resize(m_size * sizeof(wchar_t));
+        DWORD bytesRead = 0;
+        bool success = ReadFile(
+            m_pipe.GetHandle(),             // handle to pipe 
+            &data[0],                       // buffer to receive data 
+            data.size() * sizeof(wchar_t),    // size of buffer 
+            &bytesRead,                     // number of bytes read 
+            nullptr                         // not overlapped I/O
+        );
+        if (success == false)
+            throw std::runtime_error("Failed to read pipe");
+
+        return data;
     }
 
     Raii::Win32Handle& NamedPipe::GetInternalHandle()
