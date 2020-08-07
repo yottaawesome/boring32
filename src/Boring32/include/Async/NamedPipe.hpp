@@ -8,7 +8,12 @@ namespace Boring32::Async
 	{
 		public:
 			virtual ~NamedPipe();
-			NamedPipe(const std::wstring& pipeName, const DWORD size, const bool isOverlapped);
+			NamedPipe(
+				const std::wstring& pipeName, 
+				const DWORD size,
+				const DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
+				const bool isOverlapped
+			);
 
 			NamedPipe(const NamedPipe& other);
 			virtual void operator=(const NamedPipe& other);
@@ -26,6 +31,7 @@ namespace Boring32::Async
 
 			virtual std::wstring GetName() const;
 			virtual DWORD GetSize() const;
+			virtual DWORD GetMaxInstances() const;
 			virtual bool IsOverlapped() const;
 			virtual bool IsConnected() const;
 
@@ -37,6 +43,7 @@ namespace Boring32::Async
 			Raii::Win32Handle m_pipe;
 			std::wstring m_pipeName;
 			DWORD m_size;
+			DWORD m_maxInstances;
 			bool m_isOverlapped;
 			bool m_isConnected;
 	};

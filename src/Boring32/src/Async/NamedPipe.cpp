@@ -14,22 +14,28 @@ namespace Boring32::Async
         m_pipe.Close();
     }
 
-	NamedPipe::NamedPipe(const std::wstring& pipeName, const DWORD size, const bool isOverlapped)
+	NamedPipe::NamedPipe(
+        const std::wstring& pipeName, 
+        const DWORD size,
+        const DWORD maxInstances,
+        const bool isOverlapped
+    )
     :   m_pipeName(pipeName),
         m_size(size),
+        m_maxInstances(maxInstances),
         m_isOverlapped(isOverlapped),
         m_isConnected(false)
 	{
-        m_pipe = CreateNamedPipe(
+        m_pipe = CreateNamedPipeW(
             m_pipeName.c_str(),             // pipe name 
-            PIPE_ACCESS_DUPLEX,       // read/write access 
-            PIPE_TYPE_MESSAGE |       // message type pipe 
-                PIPE_READMODE_MESSAGE |   // message-read mode 
-                PIPE_WAIT,                // blocking mode 
-            PIPE_UNLIMITED_INSTANCES, // max. instances  
-            m_size,                  // output buffer size 
-            m_size,                  // input buffer size 
-            0,                        // client time-out 
+            PIPE_ACCESS_DUPLEX,             // read/write access 
+            PIPE_TYPE_MESSAGE |             // message type pipe 
+                PIPE_READMODE_MESSAGE |     // message-read mode 
+                PIPE_WAIT,                  // blocking mode 
+            m_maxInstances,                 // max. instances  
+            m_size,                         // output buffer size 
+            m_size,                         // input buffer size 
+            0,                              // client time-out 
             nullptr);
         if (m_pipe == nullptr)
             throw std::runtime_error("Failed to create named pipe");
@@ -54,6 +60,7 @@ namespace Boring32::Async
         m_pipe = other.m_pipe;
         m_pipeName = other.m_pipeName;
         m_size = other.m_size;
+        m_maxInstances = other.m_maxInstances;
         m_isOverlapped= other.m_isOverlapped;
         m_isConnected = other.m_isConnected;
     }
@@ -75,6 +82,7 @@ namespace Boring32::Async
         Close();
         m_pipeName = std::move(other.m_pipeName);
         m_size = other.m_size;
+        m_maxInstances = other.m_maxInstances;
         m_isOverlapped = other.m_isOverlapped;
         m_isConnected = other.m_isConnected;
         if (other.m_pipe != nullptr)
@@ -156,6 +164,11 @@ namespace Boring32::Async
     DWORD NamedPipe::GetSize() const
     {
         return m_size;
+    }
+
+    DWORD NamedPipe::GetMaxInstances() const
+    {
+        return m_maxInstances;
     }
 
     bool NamedPipe::IsOverlapped() const
