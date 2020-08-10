@@ -1,31 +1,33 @@
 #pragma once
 #include <string>
 #include "../Raii/Raii.hpp"
+#include "Event.hpp"
+#include "OverlappedIo.hpp"
 
 namespace Boring32::Async
 {
-	class NamedPipe
+	class OverlappedNamedPipe
 	{
 		public:
-			virtual ~NamedPipe();
-			NamedPipe(
+			virtual ~OverlappedNamedPipe();
+			OverlappedNamedPipe(
 				const std::wstring& pipeName, 
 				const DWORD size,
 				const DWORD maxInstances // PIPE_UNLIMITED_INSTANCES
 			);
 
-			NamedPipe(const NamedPipe& other);
-			virtual void operator=(const NamedPipe& other);
+			OverlappedNamedPipe(const OverlappedNamedPipe& other);
+			virtual void operator=(const OverlappedNamedPipe& other);
 
-			NamedPipe(NamedPipe&& other) noexcept;
-			virtual void operator=(NamedPipe&& other) noexcept;
+			OverlappedNamedPipe(OverlappedNamedPipe&& other) noexcept;
+			virtual void operator=(OverlappedNamedPipe&& other) noexcept;
 
 		public:
 			virtual void Close();
-			virtual void Connect();
+			virtual OverlappedIo Connect();
 			virtual void Disconnect();
-			virtual void Write(const std::wstring& msg);
-			virtual std::wstring Read();
+			virtual OverlappedIo Write(const std::wstring& msg);
+			virtual OverlappedIo Read(std::wstring& readData);
 			virtual Raii::Win32Handle& GetInternalHandle();
 
 			virtual std::wstring GetName() const;
@@ -34,8 +36,8 @@ namespace Boring32::Async
 			virtual bool IsConnected() const;
 
 		protected:
-			virtual void Copy(const NamedPipe& other);
-			virtual void Move(NamedPipe& other) noexcept;
+			virtual void Copy(const OverlappedNamedPipe& other);
+			virtual void Move(OverlappedNamedPipe& other) noexcept;
 
 		protected:
 			Raii::Win32Handle m_pipe;
