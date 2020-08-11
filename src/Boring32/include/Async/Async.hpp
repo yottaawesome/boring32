@@ -1,7 +1,10 @@
 #pragma once
 #include "ProcessInfo.hpp"
 #include "AnonymousPipe.hpp"
-#include "NamedPipe.hpp"
+#include "BlockingNamedPipeServer.hpp"
+#include "OverlappedNamedPipeServer.hpp"
+#include "BlockingNamedPipeClient.hpp"
+#include "OverlappedNamedPipeClient.hpp"
 #include "MemoryMappedFile.hpp"
 #include "MemoryMappedView.hpp"
 #include "Mutex.hpp"

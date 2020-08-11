@@ -1,21 +1,21 @@
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Async/OverlappedNamedPipe.hpp"
+#include "include/Async/BlockingNamedPipeServer.hpp"
 
 namespace Boring32::Async
 {
-    OverlappedNamedPipe::~OverlappedNamedPipe()
-    {
+	BlockingNamedPipeServer::~BlockingNamedPipeServer()
+	{
         Close();
     }
-
-    void OverlappedNamedPipe::Close()
+    
+    void BlockingNamedPipeServer::Close()
     {
         m_pipe.Close();
     }
 
-    OverlappedNamedPipe::OverlappedNamedPipe(
-        const std::wstring& pipeName,
+	BlockingNamedPipeServer::BlockingNamedPipeServer(
+        const std::wstring& pipeName, 
         const DWORD size,
         const DWORD maxInstances,
         const bool isLocalPipe
@@ -25,41 +25,41 @@ namespace Boring32::Async
         m_maxInstances(maxInstances),
         m_isConnected(false),
         m_openMode(
-            PIPE_ACCESS_DUPLEX              // read/write access
-            | FILE_FLAG_OVERLAPPED
+            PIPE_ACCESS_DUPLEX          // read/write access
         ),
         m_pipeMode(
             PIPE_TYPE_MESSAGE           // message type pipe 
             | PIPE_READMODE_MESSAGE     // message-read mode
             | PIPE_WAIT
         )
-    {
+	{
         if (isLocalPipe)
             m_pipeMode |= PIPE_ACCEPT_REMOTE_CLIENTS;
         else
             m_pipeMode |= PIPE_REJECT_REMOTE_CLIENTS;
+        m_openMode &= ~FILE_FLAG_OVERLAPPED;
         InternalCreatePipe();
-    }
+	}
 
-    OverlappedNamedPipe::OverlappedNamedPipe(
+    BlockingNamedPipeServer::BlockingNamedPipeServer(
         const std::wstring& pipeName,
         const DWORD size,
         const DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
         const DWORD openMode,
         const DWORD pipeMode
     )
-    :   m_pipeName(pipeName),
+        : m_pipeName(pipeName),
         m_size(size),
         m_maxInstances(maxInstances),
         m_isConnected(false),
         m_openMode(openMode),
         m_pipeMode(pipeMode)
     {
-        m_openMode |= FILE_FLAG_OVERLAPPED; // Ensure we're overlapped
+        m_openMode &= ~FILE_FLAG_OVERLAPPED; // Negate overlapped flag
         InternalCreatePipe();
     }
-    
-    void OverlappedNamedPipe::InternalCreatePipe()
+
+    void BlockingNamedPipeServer::InternalCreatePipe()
     {
         // https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createnamedpipea
         m_pipe = CreateNamedPipeW(
@@ -75,19 +75,19 @@ namespace Boring32::Async
             throw std::runtime_error("Failed to create named pipe");
     }
 
-    OverlappedNamedPipe::OverlappedNamedPipe(const OverlappedNamedPipe& other)
+    BlockingNamedPipeServer::BlockingNamedPipeServer(const BlockingNamedPipeServer& other)
     :   m_size(0),
         m_isConnected(false)
     {
         Copy(other);
     }
 
-    void OverlappedNamedPipe::operator=(const OverlappedNamedPipe& other)
+    void BlockingNamedPipeServer::operator=(const BlockingNamedPipeServer& other)
     {
         Copy(other);
     }
 
-    void OverlappedNamedPipe::Copy(const OverlappedNamedPipe& other)
+    void BlockingNamedPipeServer::Copy(const BlockingNamedPipeServer& other)
     {
         Close();
         m_pipe = other.m_pipe;
@@ -96,43 +96,43 @@ namespace Boring32::Async
         m_maxInstances = other.m_maxInstances;
         m_isConnected = other.m_isConnected;
         m_openMode = other.m_openMode;
+        m_pipeMode = other.m_pipeMode;
     }
 
-    OverlappedNamedPipe::OverlappedNamedPipe(OverlappedNamedPipe&& other) noexcept
-        : m_size(0)
+    BlockingNamedPipeServer::BlockingNamedPipeServer(BlockingNamedPipeServer&& other) noexcept
+    :   m_size(0)
     {
         Move(other);
     }
 
-    void OverlappedNamedPipe::operator=(OverlappedNamedPipe&& other) noexcept
+    void BlockingNamedPipeServer::operator=(BlockingNamedPipeServer&& other) noexcept
     {
         Move(other);
     }
 
-    void OverlappedNamedPipe::Move(OverlappedNamedPipe& other) noexcept
+    void BlockingNamedPipeServer::Move(BlockingNamedPipeServer& other) noexcept
     {
         Close();
         m_pipeName = std::move(other.m_pipeName);
         m_size = other.m_size;
         m_maxInstances = other.m_maxInstances;
         m_isConnected = other.m_isConnected;
+        m_openMode = other.m_openMode;
         m_pipeMode = other.m_pipeMode;
         if (other.m_pipe != nullptr)
             m_pipe = std::move(other.m_pipe);
     }
 
-    OverlappedIo OverlappedNamedPipe::Connect()
+    void BlockingNamedPipeServer::Connect()
     {
         if (m_pipe == nullptr)
             throw std::runtime_error("No valid pipe handle to connect");
-        OverlappedIo oio;
-        if (ConnectNamedPipe(m_pipe.GetHandle(), &oio.IoOverlapped) == false 
-            && GetLastError() != ERROR_IO_PENDING)
+
+        if (ConnectNamedPipe(m_pipe.GetHandle(), nullptr) == false)
             throw std::runtime_error("Failed to connect named pipe");
-        return oio;
     }
 
-    void OverlappedNamedPipe::Disconnect()
+    void BlockingNamedPipeServer::Disconnect()
     {
         if (m_pipe == nullptr)
             throw std::runtime_error("No valid pipe handle to disconnect");
@@ -143,78 +143,75 @@ namespace Boring32::Async
         }
     }
 
-    OverlappedIo OverlappedNamedPipe::Write(const std::wstring& msg)
+    void BlockingNamedPipeServer::Write(const std::wstring& msg)
     {
         if (m_pipe == nullptr)
             throw std::runtime_error("No pipe to write to");
 
-        OverlappedIo oio;
         DWORD bytesWritten = 0;
         bool success = WriteFile(
             m_pipe.GetHandle(),     // handle to pipe 
             &msg[0],                // buffer to write from 
             msg.size() * sizeof(wchar_t), // number of bytes to write 
             &bytesWritten,          // number of bytes written 
-            &oio.IoOverlapped       // overlapped I/O
-        );
-        if (success == false && GetLastError() != ERROR_IO_PENDING)
+            nullptr                 // not overlapped I/O
+        );               
+        if (success == false)
             throw std::runtime_error("Failed to read pipe");
-
-        return oio;
     }
 
-    OverlappedIo OverlappedNamedPipe::Read(std::wstring& data)
+    std::wstring BlockingNamedPipeServer::Read()
     {
         if (m_pipe == nullptr)
             throw std::runtime_error("No pipe to read from");
 
+        std::wstring data;
         data.resize(m_size * sizeof(wchar_t));
-        OverlappedIo oio;
         DWORD bytesRead = 0;
         bool success = ReadFile(
             m_pipe.GetHandle(),             // handle to pipe 
             &data[0],                       // buffer to receive data 
-            data.size() * sizeof(wchar_t),  // size of buffer 
+            data.size() * sizeof(wchar_t),    // size of buffer 
             &bytesRead,                     // number of bytes read 
-            &oio.IoOverlapped               // overlapped I/O
+            nullptr                         // not overlapped I/O
         );
-        if (success == false && GetLastError() != ERROR_IO_PENDING)
+        if (success == false)
             throw std::runtime_error("Failed to read pipe");
 
-        return oio;
+        return data;
     }
 
-    Raii::Win32Handle& OverlappedNamedPipe::GetInternalHandle()
+    Raii::Win32Handle& BlockingNamedPipeServer::GetInternalHandle()
     {
         return m_pipe;
     }
 
-    std::wstring OverlappedNamedPipe::GetName() const
+    std::wstring BlockingNamedPipeServer::GetName() const
     {
         return m_pipeName;
     }
 
-    DWORD OverlappedNamedPipe::GetSize() const
+    DWORD BlockingNamedPipeServer::GetSize() const
     {
         return m_size;
     }
 
-    DWORD OverlappedNamedPipe::GetMaxInstances() const
+    DWORD BlockingNamedPipeServer::GetMaxInstances() const
     {
         return m_maxInstances;
     }
 
-    bool OverlappedNamedPipe::IsConnected() const
+    bool BlockingNamedPipeServer::IsConnected() const
     {
         return m_isConnected;
     }
 
-    DWORD OverlappedNamedPipe::GetPipeMode() const
+    DWORD BlockingNamedPipeServer::GetPipeMode() const
     {
         return m_pipeMode;
     }
 
-    DWORD OverlappedNamedPipe::GetOpenMode() const
+    DWORD BlockingNamedPipeServer::GetOpenMode() const
     {
         return m_openMode;
     }

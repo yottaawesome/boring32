@@ -1,22 +1,20 @@
 #pragma once
 #include <string>
 #include "../Raii/Raii.hpp"
-#include "Event.hpp"
-#include "OverlappedIo.hpp"
 
 namespace Boring32::Async
 {
-	class OverlappedNamedPipe
+	class BlockingNamedPipeServer
 	{
 		public:
-			virtual ~OverlappedNamedPipe();
-			OverlappedNamedPipe(
+			virtual ~BlockingNamedPipeServer();
+			BlockingNamedPipeServer(
 				const std::wstring& pipeName, 
 				const DWORD size,
 				const DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
 				const bool isLocalPipe
 			);
-			OverlappedNamedPipe(
+			BlockingNamedPipeServer(
 				const std::wstring& pipeName,
 				const DWORD size,
 				const DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
@@ -24,18 +22,18 @@ namespace Boring32::Async
 				const DWORD pipeMode
 			);
 
-			OverlappedNamedPipe(const OverlappedNamedPipe& other);
-			virtual void operator=(const OverlappedNamedPipe& other);
+			BlockingNamedPipeServer(const BlockingNamedPipeServer& other);
+			virtual void operator=(const BlockingNamedPipeServer& other);
 
-			OverlappedNamedPipe(OverlappedNamedPipe&& other) noexcept;
-			virtual void operator=(OverlappedNamedPipe&& other) noexcept;
+			BlockingNamedPipeServer(BlockingNamedPipeServer&& other) noexcept;
+			virtual void operator=(BlockingNamedPipeServer&& other) noexcept;
 
 		public:
 			virtual void Close();
-			virtual OverlappedIo Connect();
+			virtual void Connect();
 			virtual void Disconnect();
-			virtual OverlappedIo Write(const std::wstring& msg);
-			virtual OverlappedIo Read(std::wstring& readData);
+			virtual void Write(const std::wstring& msg);
+			virtual std::wstring Read();
 			virtual Raii::Win32Handle& GetInternalHandle();
 
 			virtual std::wstring GetName() const;
@@ -44,11 +42,11 @@ namespace Boring32::Async
 			virtual bool IsConnected() const;
 			virtual DWORD GetPipeMode() const;
 			virtual DWORD GetOpenMode() const;
-
+			
 		protected:
 			virtual void InternalCreatePipe();
-			virtual void Copy(const OverlappedNamedPipe& other);
-			virtual void Move(OverlappedNamedPipe& other) noexcept;
+			virtual void Copy(const BlockingNamedPipeServer& other);
+			virtual void Move(BlockingNamedPipeServer& other) noexcept;
 
 		protected:
 			Raii::Win32Handle m_pipe;
