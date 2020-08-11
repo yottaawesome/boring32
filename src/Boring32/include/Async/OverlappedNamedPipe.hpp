@@ -13,7 +13,15 @@ namespace Boring32::Async
 			OverlappedNamedPipe(
 				const std::wstring& pipeName, 
 				const DWORD size,
-				const DWORD maxInstances // PIPE_UNLIMITED_INSTANCES
+				const DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
+				const bool isLocalPipe
+			);
+			OverlappedNamedPipe(
+				const std::wstring& pipeName,
+				const DWORD size,
+				const DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
+				const DWORD openMode,
+				const DWORD pipeMode
 			);
 
 			OverlappedNamedPipe(const OverlappedNamedPipe& other);
@@ -34,8 +42,11 @@ namespace Boring32::Async
 			virtual DWORD GetSize() const;
 			virtual DWORD GetMaxInstances() const;
 			virtual bool IsConnected() const;
+			virtual DWORD GetPipeMode() const;
+			virtual DWORD GetOpenMode() const;
 
 		protected:
+			virtual void InternalCreatePipe();
 			virtual void Copy(const OverlappedNamedPipe& other);
 			virtual void Move(OverlappedNamedPipe& other) noexcept;
 
@@ -45,5 +56,7 @@ namespace Boring32::Async
 			DWORD m_size;
 			DWORD m_maxInstances;
 			bool m_isConnected;
+			DWORD m_pipeMode;
+			DWORD m_openMode;
 	};
 }

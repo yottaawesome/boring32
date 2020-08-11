@@ -17,20 +17,55 @@ namespace Boring32::Async
     OverlappedNamedPipe::OverlappedNamedPipe(
         const std::wstring& pipeName,
         const DWORD size,
-        const DWORD maxInstances
+        const DWORD maxInstances,
+        const bool isLocalPipe
     )
-        : m_pipeName(pipeName),
+    :   m_pipeName(pipeName),
         m_size(size),
         m_maxInstances(maxInstances),
-        m_isConnected(false)
+        m_isConnected(false),
+        m_openMode(
+            PIPE_ACCESS_DUPLEX              // read/write access
+            | FILE_FLAG_OVERLAPPED
+        ),
+        m_pipeMode(
+            PIPE_TYPE_MESSAGE           // message type pipe 
+            | PIPE_READMODE_MESSAGE     // message-read mode
+            | PIPE_WAIT
+        )
     {
+        if (isLocalPipe)
+            m_pipeMode |= PIPE_ACCEPT_REMOTE_CLIENTS;
+        else
+            m_pipeMode |= PIPE_REJECT_REMOTE_CLIENTS;
+        InternalCreatePipe();
+    }
+
+    OverlappedNamedPipe::OverlappedNamedPipe(
+        const std::wstring& pipeName,
+        const DWORD size,
+        const DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
+        const DWORD openMode,
+        const DWORD pipeMode
+    )
+    :   m_pipeName(pipeName),
+        m_size(size),
+        m_maxInstances(maxInstances),
+        m_isConnected(false),
+        m_openMode(openMode),
+        m_pipeMode(pipeMode)
+    {
+        m_openMode |= FILE_FLAG_OVERLAPPED; // Ensure we're overlapped
+        InternalCreatePipe();
+    }
+    
+    void OverlappedNamedPipe::InternalCreatePipe()
+    {
+        // https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createnamedpipea
         m_pipe = CreateNamedPipeW(
             m_pipeName.c_str(),             // pipe name
-            PIPE_ACCESS_DUPLEX              // read/write access
-                | FILE_FLAG_OVERLAPPED,              
-            PIPE_TYPE_MESSAGE               // message type pipe 
-                | PIPE_READMODE_MESSAGE     // message-read mode
-                | PIPE_WAIT,                // blocking mode 
+            m_openMode,
+            m_pipeMode,
             m_maxInstances,                 // max. instances  
             m_size,                         // output buffer size 
             m_size,                         // input buffer size 
@@ -41,7 +76,7 @@ namespace Boring32::Async
     }
 
     OverlappedNamedPipe::OverlappedNamedPipe(const OverlappedNamedPipe& other)
-        : m_size(0),
+    :   m_size(0),
         m_isConnected(false)
     {
         Copy(other);
@@ -60,6 +95,7 @@ namespace Boring32::Async
         m_size = other.m_size;
         m_maxInstances = other.m_maxInstances;
         m_isConnected = other.m_isConnected;
+        m_openMode = other.m_openMode;
     }
 
     OverlappedNamedPipe::OverlappedNamedPipe(OverlappedNamedPipe&& other) noexcept
@@ -80,6 +116,7 @@ namespace Boring32::Async
         m_size = other.m_size;
         m_maxInstances = other.m_maxInstances;
         m_isConnected = other.m_isConnected;
+        m_pipeMode = other.m_pipeMode;
         if (other.m_pipe != nullptr)
             m_pipe = std::move(other.m_pipe);
     }
@@ -89,7 +126,8 @@ namespace Boring32::Async
         if (m_pipe == nullptr)
             throw std::runtime_error("No valid pipe handle to connect");
         OverlappedIo oio;
-        if (ConnectNamedPipe(m_pipe.GetHandle(), &oio.IoOverlapped) == false)
+        if (ConnectNamedPipe(m_pipe.GetHandle(), &oio.IoOverlapped) == false 
+            && GetLastError() != ERROR_IO_PENDING)
             throw std::runtime_error("Failed to connect named pipe");
         return oio;
     }
@@ -119,7 +157,7 @@ namespace Boring32::Async
             &bytesWritten,          // number of bytes written 
             &oio.IoOverlapped       // overlapped I/O
         );
-        if (success == false)
+        if (success == false && GetLastError() != ERROR_IO_PENDING)
             throw std::runtime_error("Failed to read pipe");
 
         return oio;
@@ -140,7 +178,7 @@ namespace Boring32::Async
             &bytesRead,                     // number of bytes read 
             &oio.IoOverlapped               // overlapped I/O
         );
-        if (success == false)
+        if (success == false && GetLastError() != ERROR_IO_PENDING)
             throw std::runtime_error("Failed to read pipe");
 
         return oio;
@@ -169,5 +207,15 @@ namespace Boring32::Async
     bool OverlappedNamedPipe::IsConnected() const
     {
         return m_isConnected;
+    }
+
+    DWORD OverlappedNamedPipe::GetPipeMode() const
+    {
+        return m_pipeMode;
+    }
+
+    DWORD OverlappedNamedPipe::GetOpenMode() const
+    {
+        return m_openMode;
     }
 }
