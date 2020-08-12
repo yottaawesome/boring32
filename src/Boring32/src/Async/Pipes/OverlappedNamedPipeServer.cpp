@@ -1,6 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Async/OverlappedNamedPipeServer.hpp"
+#include "include/Async/Pipes/OverlappedNamedPipeServer.hpp"
 
 namespace Boring32::Async
 {

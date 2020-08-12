@@ -1,20 +1,20 @@
 #pragma once
 #include <string>
-#include "../Raii/Raii.hpp"
+#include "../../Raii/Raii.hpp"
 
 namespace Boring32::Async
 {
-	class BlockingNamedPipeServer
+	class NamedPipeServerBase
 	{
 		public:
-			virtual ~BlockingNamedPipeServer();
-			BlockingNamedPipeServer(
+			virtual ~NamedPipeServerBase();
+			NamedPipeServerBase(
 				const std::wstring& pipeName, 
 				const DWORD size,
 				const DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
 				const bool isLocalPipe
 			);
-			BlockingNamedPipeServer(
+			NamedPipeServerBase(
 				const std::wstring& pipeName,
 				const DWORD size,
 				const DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
@@ -22,18 +22,16 @@ namespace Boring32::Async
 				const DWORD pipeMode
 			);
 
-			BlockingNamedPipeServer(const BlockingNamedPipeServer& other);
-			virtual void operator=(const BlockingNamedPipeServer& other);
+			NamedPipeServerBase(const NamedPipeServerBase& other);
+			virtual void operator=(const NamedPipeServerBase& other);
 
-			BlockingNamedPipeServer(BlockingNamedPipeServer&& other) noexcept;
-			virtual void operator=(BlockingNamedPipeServer&& other) noexcept;
+			NamedPipeServerBase(NamedPipeServerBase&& other) noexcept;
+			virtual void operator=(NamedPipeServerBase&& other) noexcept;
 
 		public:
 			virtual void Close();
-			virtual void Connect();
-			virtual void Disconnect();
-			virtual void Write(const std::wstring& msg);
-			virtual std::wstring Read();
+			virtual void Connect() = 0;
+			virtual void Disconnect() = 0;
 			virtual Raii::Win32Handle& GetInternalHandle();
 
 			virtual std::wstring GetName() const;
@@ -45,8 +43,8 @@ namespace Boring32::Async
 			
 		protected:
 			virtual void InternalCreatePipe();
-			virtual void Copy(const BlockingNamedPipeServer& other);
-			virtual void Move(BlockingNamedPipeServer& other) noexcept;
+			virtual void Copy(const NamedPipeServerBase& other);
+			virtual void Move(NamedPipeServerBase& other) noexcept;
 
 		protected:
 			Raii::Win32Handle m_pipe;

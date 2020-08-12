@@ -1,17 +1,12 @@
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Async/BlockingNamedPipeServer.hpp"
+#include "include/Async/Pipes/BlockingNamedPipeServer.hpp"
 
 namespace Boring32::Async
 {
 	BlockingNamedPipeServer::~BlockingNamedPipeServer()
 	{
         Close();
-    }
-    
-    void BlockingNamedPipeServer::Close()
-    {
-        m_pipe.Close();
     }
 
 	BlockingNamedPipeServer::BlockingNamedPipeServer(
@@ -20,18 +15,18 @@ namespace Boring32::Async
         const DWORD maxInstances,
         const bool isLocalPipe
     )
-    :   m_pipeName(pipeName),
-        m_size(size),
-        m_maxInstances(maxInstances),
-        m_isConnected(false),
-        m_openMode(
-            PIPE_ACCESS_DUPLEX          // read/write access
-        ),
-        m_pipeMode(
-            PIPE_TYPE_MESSAGE           // message type pipe 
-            | PIPE_READMODE_MESSAGE     // message-read mode
-            | PIPE_WAIT
-        )
+    : NamedPipeServerBase(
+        pipeName, 
+        size, 
+        maxInstances, 
+        PIPE_ACCESS_DUPLEX,
+        PIPE_TYPE_MESSAGE           // message type pipe 
+        | PIPE_READMODE_MESSAGE     // message-read mode
+        | PIPE_WAIT
+        | (isLocalPipe 
+            ? PIPE_REJECT_REMOTE_CLIENTS 
+            : PIPE_ACCEPT_REMOTE_CLIENTS)
+    )
 	{
         if (isLocalPipe)
             m_pipeMode |= PIPE_ACCEPT_REMOTE_CLIENTS;
@@ -48,43 +43,34 @@ namespace Boring32::Async
         const DWORD openMode,
         const DWORD pipeMode
     )
-        : m_pipeName(pipeName),
-        m_size(size),
-        m_maxInstances(maxInstances),
-        m_isConnected(false),
-        m_openMode(openMode),
-        m_pipeMode(pipeMode)
+    :   NamedPipeServerBase(
+            pipeName,
+            size,
+            maxInstances,
+            openMode,
+            pipeMode
+        )
     {
         m_openMode &= ~FILE_FLAG_OVERLAPPED; // Negate overlapped flag
         InternalCreatePipe();
     }
 
-    void BlockingNamedPipeServer::InternalCreatePipe()
-    {
-        // https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createnamedpipea
-        m_pipe = CreateNamedPipeW(
-            m_pipeName.c_str(),             // pipe name
-            m_openMode,
-            m_pipeMode,
-            m_maxInstances,                 // max. instances  
-            m_size,                         // output buffer size 
-            m_size,                         // input buffer size 
-            0,                              // client time-out 
-            nullptr);
-        if (m_pipe == nullptr)
-            throw std::runtime_error("Failed to create named pipe");
-    }
-
     BlockingNamedPipeServer::BlockingNamedPipeServer(const BlockingNamedPipeServer& other)
-    :   m_size(0),
-        m_isConnected(false)
+        : NamedPipeServerBase(
+            other.m_pipeName,
+            other.m_size,
+            other.m_maxInstances,
+            other.m_openMode,
+            other.m_pipeMode)
     {
         Copy(other);
+        InternalCreatePipe();
     }
 
     void BlockingNamedPipeServer::operator=(const BlockingNamedPipeServer& other)
     {
         Copy(other);
+        InternalCreatePipe();
     }
 
     void BlockingNamedPipeServer::Copy(const BlockingNamedPipeServer& other)
@@ -100,14 +86,21 @@ namespace Boring32::Async
     }
 
     BlockingNamedPipeServer::BlockingNamedPipeServer(BlockingNamedPipeServer&& other) noexcept
-    :   m_size(0)
+    : NamedPipeServerBase(
+        other.m_pipeName,
+        other.m_size,
+        other.m_maxInstances,
+        other.m_openMode,
+        other.m_pipeMode)
     {
         Move(other);
+        InternalCreatePipe();
     }
 
     void BlockingNamedPipeServer::operator=(BlockingNamedPipeServer&& other) noexcept
     {
         Move(other);
+        InternalCreatePipe();
     }
 
     void BlockingNamedPipeServer::Move(BlockingNamedPipeServer& other) noexcept
@@ -179,40 +172,5 @@ namespace Boring32::Async
             throw std::runtime_error("Failed to read pipe");
 
         return data;
-    }
-
-    Raii::Win32Handle& BlockingNamedPipeServer::GetInternalHandle()
-    {
-        return m_pipe;
-    }
-
-    std::wstring BlockingNamedPipeServer::GetName() const
-    {
-        return m_pipeName;
-    }
-
-    DWORD BlockingNamedPipeServer::GetSize() const
-    {
-        return m_size;
-    }
-
-    DWORD BlockingNamedPipeServer::GetMaxInstances() const
-    {
-        return m_maxInstances;
-    }
-
-    bool BlockingNamedPipeServer::IsConnected() const
-    {
-        return m_isConnected;
-    }
-
-    DWORD BlockingNamedPipeServer::GetPipeMode() const
-    {
-        return m_pipeMode;
-    }
-
-    DWORD BlockingNamedPipeServer::GetOpenMode() const
-    {
-        return m_openMode;
     }
 }

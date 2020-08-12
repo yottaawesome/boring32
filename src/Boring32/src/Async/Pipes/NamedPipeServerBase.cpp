@@ -1,5 +1,5 @@
 #include "pch.hpp"
-#include "include/Async/NamedPipeServerBase.hpp"
+#include "include/Async/Pipes/NamedPipeServerBase.hpp"
 
 namespace Boring32::Async
 {
