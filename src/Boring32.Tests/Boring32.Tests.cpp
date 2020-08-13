@@ -138,10 +138,103 @@ void TestAnonPipes()
 		throw std::runtime_error("Failed to match input to output");
 }
 
+void TestProcessNamedPipe()
+{
+	std::wstring directory;
+	directory.resize(2048);
+	GetModuleFileName(nullptr, &directory[0], directory.size());
+	PathCchRemoveFileSpec(&directory[0], directory.size());
+	directory.erase(std::find(directory.begin(), directory.end(), '\0'), directory.end());
+	std::wstring filePath = directory + L"\\TestProcess.exe";
+
+	Boring32::Async::Job job(false);
+	JOBOBJECT_EXTENDED_LIMIT_INFORMATION jeli{ 0 };
+	jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+	job.SetInformation(jeli);
+	Boring32::Async::Process testProcess(filePath, L"", directory, true);
+	testProcess.Start();
+	job.AssignProcessToThisJob(testProcess.GetProcessHandle());
+
+	Boring32::Async::BlockingNamedPipeServer p(L"\\\\.\\pipe\\mynamedpipe", 200, 5, true);
+	p.Connect();
+	p.Write(L"HAHA!");
+	p.Write(L"HAHA2!");
+	p.Disconnect();
+	WaitForSingleObject(testProcess.GetProcessHandle(), INFINITE);
+}
+
+void TestProcessOverlappedNamedPipe()
+{
+	std::wstring directory;
+	directory.resize(2048);
+	GetModuleFileName(nullptr, &directory[0], directory.size());
+	PathCchRemoveFileSpec(&directory[0], directory.size());
+	directory.erase(std::find(directory.begin(), directory.end(), '\0'), directory.end());
+	std::wstring filePath = directory + L"\\TestProcess.exe";
+
+	Boring32::Async::Job job(false);
+	JOBOBJECT_EXTENDED_LIMIT_INFORMATION jeli{ 0 };
+	jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+	job.SetInformation(jeli);
+	Boring32::Async::Process testProcess(filePath, L"", directory, true);
+	testProcess.Start();
+	job.AssignProcessToThisJob(testProcess.GetProcessHandle());
+
+	Boring32::Async::OverlappedNamedPipeServer p(L"\\\\.\\pipe\\mynamedpipe", 200, 5, true);
+	auto oio = p.Connect();
+	WaitForSingleObject(oio.IoEvent.GetHandle(), INFINITE);
+	p.Write(L"HAHA!");
+	WaitForSingleObject(testProcess.GetProcessHandle(), INFINITE);
+}
+
+void TestProcessAnonPipe()
+{
+	std::wstring directory;
+	directory.resize(2048);
+	GetModuleFileName(nullptr, &directory[0], directory.size());
+	PathCchRemoveFileSpec(&directory[0], directory.size());
+	directory.erase(std::find(directory.begin(), directory.end(), '\0'), directory.end());
+	std::wstring filePath = directory + L"\\TestProcess.exe";
+
+	Boring32::Async::AnonymousPipe childWrite;
+	Boring32::Async::AnonymousPipe childRead;
+	childRead = Boring32::Async::AnonymousPipe(true, 2048, L"||");
+	childWrite = Boring32::Async::AnonymousPipe(true, 2048, L"||");
+	std::wstringstream ss;
+	ss << "TestProcess.exe"
+		<< L" -w "
+		<< (int)childWrite.GetWrite()
+		<< L" -r "
+		<< (int)childRead.GetRead();
+	//std::wcout << ss.str() << std::endl;
+
+	Boring32::Async::Event evt(true, true, true, false, L"TestEvent");
+
+	Boring32::Async::Job job(false);
+	JOBOBJECT_EXTENDED_LIMIT_INFORMATION jeli{ 0 };
+	jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+	job.SetInformation(jeli);
+	Boring32::Async::Process testProcess(filePath, ss.str(), directory, true);
+	testProcess.Start();
+	job.AssignProcessToThisJob(testProcess.GetProcessHandle());
+
+	childRead.DelimitedWrite(L"Hello from parent!");
+	Sleep(1000);
+
+	std::wcout
+		<< std::endl 
+		<< childWrite.Read() 
+		<< std::endl;
+	evt.Signal();
+}
+
 int main(int argc, char** args)
 {
-	TestThreadSafeVector();
+	//TestProcessNamedPipe();
+	TestProcessOverlappedNamedPipe();
 	return 0;
+
+	TestThreadSafeVector();
 
 	PROCESS_MEMORY_EXHAUSTION_INFO pmei{ 0 };
 	pmei.Version = PME_CURRENT_VERSION;
@@ -163,40 +256,7 @@ int main(int argc, char** args)
 	TestAnonPipes();
 	TestLibraryLoad();
 
-
-	std::wstring directory;
-	directory.resize(2048);
-	GetModuleFileName(nullptr, &directory[0], directory.size());
-	PathCchRemoveFileSpec(&directory[0], directory.size());
-	directory.erase(std::find(directory.begin(), directory.end(), '\0'), directory.end());
-	std::wstring filePath = directory+L"\\TestProcess.exe";
-
-	Boring32::Async::AnonymousPipe childWrite;
-	Boring32::Async::AnonymousPipe childRead;
-	childRead = Boring32::Async::AnonymousPipe(true, 2048, L"||");
-	childWrite = Boring32::Async::AnonymousPipe(true, 2048, L"||");
-	std::wstringstream ss;
-	ss	<< "TestProcess.exe " 
-		<< (int)childWrite.GetWrite() 
-		<< L" " 
-		<< (int)childRead.GetRead();
-	//std::wcout << ss.str() << std::endl;
-
-	Boring32::Async::Event evt(true, true, true, false, L"TestEvent");
-
-	Boring32::Async::Job job(false);
-	JOBOBJECT_EXTENDED_LIMIT_INFORMATION jeli{ 0 };
-	jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
-	job.SetInformation(jeli);
-	Boring32::Async::Process testProcess(filePath, ss.str(), directory, true);
-	testProcess.Start();
-	job.AssignProcessToThisJob(testProcess.GetProcessHandle());
-
-	childRead.DelimitedWrite(L"Hello from parent!");
-	Sleep(1000);
 	
-	std::wcout << std::endl << childWrite.Read() << std::endl;
-	evt.Signal();
 
 	//Boring32::WinHttp::HttpWebClient client(
 	//	L"TestClientAgent", 

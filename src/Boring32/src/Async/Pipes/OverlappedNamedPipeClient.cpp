@@ -76,15 +76,23 @@ namespace Boring32::Async
 				&oio.IoOverlapped);    // overlapped
 			totalBytesRead += currentBytesRead;
 			oio.LastErrorValue = GetLastError();
-			if (oio.LastErrorValue == ERROR_MORE_DATA)
-				dataBuffer.resize(dataBuffer.size() + blockSize);
-			else if (oio.LastErrorValue != ERROR_IO_PENDING)
-				throw std::runtime_error("Failed to read from pipe");
+			if (oio.CallReturnValue == false)
+			{
+				if (oio.LastErrorValue == ERROR_MORE_DATA)
+					dataBuffer.resize(dataBuffer.size() + blockSize);
+				else if (oio.LastErrorValue == ERROR_IO_PENDING)
+					continueReading = false;
+				else
+					throw std::runtime_error("Failed to read from pipe");
+			}
+			else
+			{
+				continueReading = false;
+			}
 		}
 
 		if (totalBytesRead > 0)
 			dataBuffer.resize(totalBytesRead / sizeof(wchar_t));
-
 		return oio;
 	}
 }

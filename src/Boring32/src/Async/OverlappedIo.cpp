@@ -57,7 +57,6 @@ namespace Boring32::Async
 		IoOverlapped.hEvent = IoEvent.GetHandle();
 		CallReturnValue = other.CallReturnValue;
 		LastErrorValue = other.LastErrorValue;
-
 	}
 
 	void OverlappedIo::Move(OverlappedIo& other) noexcept

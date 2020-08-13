@@ -58,16 +58,20 @@ namespace Boring32::Async
 			nullptr);          // no template file 
 		if (m_handle == INVALID_HANDLE_VALUE)
 		{
-			if (GetLastError() == ERROR_PIPE_BUSY && timeout > 0)
-			{
-				if (WaitNamedPipeW(m_pipeName.c_str(), timeout) == false)
-					throw std::runtime_error("Failed to connect client pipe: timeout");
-			}
-			else
-			{
+			if (GetLastError() != ERROR_PIPE_BUSY || timeout == 0)
 				throw std::runtime_error("Failed to connect client pipe");
-			}
+			if (WaitNamedPipeW(m_pipeName.c_str(), timeout) == false)
+				throw std::runtime_error("Failed to connect client pipe: timeout");
 		}
+
+		DWORD dwMode = PIPE_READMODE_MESSAGE;
+		bool fSuccess = SetNamedPipeHandleState(
+			m_handle.GetHandle(),    // pipe handle 
+			&dwMode,  // new pipe mode 
+			nullptr,     // don't set maximum bytes 
+			nullptr);    // don't set maximum time 
+		if (fSuccess == false)
+			throw std::runtime_error("Failed to connect client pipe");
 	}
 
 	void NamedPipeClientBase::Close()
