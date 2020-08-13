@@ -22,7 +22,11 @@ namespace Boring32::Async
 			OverlappedIo(OverlappedIo&& other) noexcept;
 			virtual void operator=(OverlappedIo&& other) noexcept;
 
+			virtual DWORD GetBytesTransferred(const bool wait);
+
+		public:
 			Event IoEvent;
+			Raii::Win32Handle IoHandle;
 			OVERLAPPED IoOverlapped;
 			bool CallReturnValue;
 			DWORD LastErrorValue;

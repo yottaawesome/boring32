@@ -53,6 +53,7 @@ namespace Boring32::Async
 	void OverlappedIo::Copy(const OverlappedIo& other)
 	{
 		IoEvent = other.IoEvent;
+		IoHandle = other.IoHandle;
 		IoOverlapped = other.IoOverlapped;
 		IoOverlapped.hEvent = IoEvent.GetHandle();
 		CallReturnValue = other.CallReturnValue;
@@ -62,9 +63,22 @@ namespace Boring32::Async
 	void OverlappedIo::Move(OverlappedIo& other) noexcept
 	{
 		IoEvent = std::move(other.IoEvent);
+		IoHandle = std::move(other.IoHandle);
 		IoOverlapped = other.IoOverlapped;
 		IoOverlapped.hEvent = IoEvent.GetHandle();
 		CallReturnValue = other.CallReturnValue;
 		LastErrorValue = other.LastErrorValue;
+	}
+
+	DWORD OverlappedIo::GetBytesTransferred(const bool wait)
+	{
+		DWORD bytesTransferred = 0;
+		bool succeeded = GetOverlappedResult(
+			IoHandle.GetHandle(),
+			&IoOverlapped,
+			&bytesTransferred,
+			wait
+		);
+		return bytesTransferred;
 	}
 }

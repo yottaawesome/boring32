@@ -80,6 +80,7 @@ namespace Boring32::Async
         if (m_pipe == nullptr)
             throw std::runtime_error("No valid pipe handle to connect");
         OverlappedIo oio;
+        oio.IoHandle = m_pipe;
         oio.CallReturnValue = ConnectNamedPipe(m_pipe.GetHandle(), &oio.IoOverlapped);
         oio.LastErrorValue = GetLastError();
         if(oio.CallReturnValue == false && oio.LastErrorValue != ERROR_IO_PENDING)
@@ -93,6 +94,7 @@ namespace Boring32::Async
             throw std::runtime_error("No pipe to write to");
 
         OverlappedIo oio;
+        oio.IoHandle = m_pipe;
         DWORD bytesWritten = 0;
         oio.CallReturnValue = WriteFile(
             m_pipe.GetHandle(),     // handle to pipe 
@@ -117,6 +119,7 @@ namespace Boring32::Async
         dataBuffer.resize(blockSize);
 
         OverlappedIo oio;
+        oio.IoHandle = m_pipe;
         DWORD totalBytesRead = 0;
         bool continueReading = true;
         while (continueReading)

@@ -43,9 +43,12 @@ int MainOverlapped(int argc, char** args)
     std::wstring buffer;
     auto oio = p.Read(buffer);
     WaitForSingleObject(oio.IoEvent.GetHandle(), INFINITE);
-
+    const DWORD bytes = oio.GetBytesTransferred(false);
+    if (bytes > 0)
+        buffer.resize(bytes / sizeof(wchar_t));
     std::wcout << buffer << std::endl;
     p.Close();
+
     return 0;
 }
 
