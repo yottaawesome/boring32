@@ -1,4 +1,5 @@
 #include "pch.hpp"
+#include <stdexcept>
 #include "include/Async/OverlappedIo.hpp"
 
 namespace Boring32::Async
@@ -79,6 +80,9 @@ namespace Boring32::Async
 			&bytesTransferred,
 			wait
 		);
+		if (succeeded == false)
+			throw std::runtime_error("Failed to get overlapped result");
+
 		return bytesTransferred;
 	}
 }
