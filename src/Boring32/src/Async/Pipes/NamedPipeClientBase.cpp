@@ -1,1 +1,77 @@
 #include "pch.hpp"
+#include <stdexcept>
+#include "include/Async/Pipes/NamedPipeClientBase.hpp"
+
+namespace Boring32::Async
+{
+	NamedPipeClientBase::~NamedPipeClientBase()
+	{
+		Close();
+	}
+
+	NamedPipeClientBase::NamedPipeClientBase(const std::wstring& name)
+		: m_pipeName(name)
+	{ }
+
+	NamedPipeClientBase::NamedPipeClientBase(const NamedPipeClientBase& other)
+	{
+		Copy(other);
+	}
+
+	void NamedPipeClientBase::operator=(const NamedPipeClientBase& other)
+	{
+		Copy(other);
+	}
+
+	void NamedPipeClientBase::Copy(const NamedPipeClientBase& other)
+	{
+		m_handle = other.m_handle;
+		m_pipeName = other.m_pipeName;
+	}
+
+	NamedPipeClientBase::NamedPipeClientBase(NamedPipeClientBase&& other) noexcept
+	{
+		Move(other);
+	}
+
+	void NamedPipeClientBase::operator=(NamedPipeClientBase&& other) noexcept
+	{
+		Move(other);
+	}
+
+	void NamedPipeClientBase::Move(NamedPipeClientBase& other) noexcept
+	{
+		m_handle = std::move(other.m_handle);
+		m_pipeName = std::move(other.m_pipeName);
+	}
+
+	void NamedPipeClientBase::Connect(const DWORD timeout)
+	{
+		// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew
+		m_handle = CreateFileW(
+			m_pipeName.c_str(),   // pipe name 
+			GENERIC_READ | GENERIC_WRITE,// read and write access 
+			0,              // no sharing 
+			nullptr,           // default security attributes
+			OPEN_EXISTING,  // opens existing pipe 
+			0,              // default attributes 
+			nullptr);          // no template file 
+		if (m_handle == INVALID_HANDLE_VALUE)
+		{
+			if (GetLastError() == ERROR_PIPE_BUSY && timeout > 0)
+			{
+				if (WaitNamedPipeW(m_pipeName.c_str(), timeout) == false)
+					throw std::runtime_error("Failed to connect client pipe: timeout");
+			}
+			else
+			{
+				throw std::runtime_error("Failed to connect client pipe");
+			}
+		}
+	}
+
+	void NamedPipeClientBase::Close()
+	{
+		m_handle.Close();
+	}
+}

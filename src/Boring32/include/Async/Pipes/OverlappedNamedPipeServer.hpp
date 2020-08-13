@@ -3,10 +3,11 @@
 #include "../../Raii/Raii.hpp"
 #include "../Event.hpp"
 #include "../OverlappedIo.hpp"
+#include "NamedPipeServerBase.hpp"
 
 namespace Boring32::Async
 {
-	class OverlappedNamedPipeServer
+	class OverlappedNamedPipeServer : public NamedPipeServerBase
 	{
 		public:
 			virtual ~OverlappedNamedPipeServer();
@@ -31,32 +32,8 @@ namespace Boring32::Async
 			virtual void operator=(OverlappedNamedPipeServer&& other) noexcept;
 
 		public:
-			virtual void Close();
 			virtual OverlappedIo Connect();
-			virtual void Disconnect();
 			virtual OverlappedIo Write(const std::wstring& msg);
 			virtual OverlappedIo Read(std::wstring& readData);
-			virtual Raii::Win32Handle& GetInternalHandle();
-
-			virtual std::wstring GetName() const;
-			virtual DWORD GetSize() const;
-			virtual DWORD GetMaxInstances() const;
-			virtual bool IsConnected() const;
-			virtual DWORD GetPipeMode() const;
-			virtual DWORD GetOpenMode() const;
-
-		protected:
-			virtual void InternalCreatePipe();
-			virtual void Copy(const OverlappedNamedPipeServer& other);
-			virtual void Move(OverlappedNamedPipeServer& other) noexcept;
-
-		protected:
-			Raii::Win32Handle m_pipe;
-			std::wstring m_pipeName;
-			DWORD m_size;
-			DWORD m_maxInstances;
-			bool m_isConnected;
-			DWORD m_pipeMode;
-			DWORD m_openMode;
 	};
 }

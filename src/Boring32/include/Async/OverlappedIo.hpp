@@ -24,6 +24,8 @@ namespace Boring32::Async
 
 			Event IoEvent;
 			OVERLAPPED IoOverlapped;
+			bool CallReturnValue;
+			DWORD LastErrorValue;
 
 		protected:
 			virtual void Copy(const OverlappedIo& other);

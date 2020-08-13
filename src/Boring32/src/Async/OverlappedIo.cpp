@@ -8,7 +8,9 @@ namespace Boring32::Async
 	
 	OverlappedIo::OverlappedIo()
 	:	IoEvent(true, false, true, true, L""),
-		IoOverlapped{}
+		IoOverlapped{},
+		CallReturnValue(false),
+		LastErrorValue(0)
 	{
 		IoOverlapped.hEvent = IoEvent.GetHandle();
 	}
@@ -21,7 +23,9 @@ namespace Boring32::Async
 		const std::wstring name
 	)
 	:	IoEvent(createOrOpen, isInheritable, manualReset, isSignaled, name),
-		IoOverlapped{}
+		IoOverlapped{},
+		CallReturnValue(false),
+		LastErrorValue(0)
 	{ }
 
 	OverlappedIo::OverlappedIo(const OverlappedIo& other)
@@ -51,6 +55,9 @@ namespace Boring32::Async
 		IoEvent = other.IoEvent;
 		IoOverlapped = other.IoOverlapped;
 		IoOverlapped.hEvent = IoEvent.GetHandle();
+		CallReturnValue = other.CallReturnValue;
+		LastErrorValue = other.LastErrorValue;
+
 	}
 
 	void OverlappedIo::Move(OverlappedIo& other) noexcept
@@ -58,5 +65,7 @@ namespace Boring32::Async
 		IoEvent = std::move(other.IoEvent);
 		IoOverlapped = other.IoOverlapped;
 		IoOverlapped.hEvent = IoEvent.GetHandle();
+		CallReturnValue = other.CallReturnValue;
+		LastErrorValue = other.LastErrorValue;
 	}
 }

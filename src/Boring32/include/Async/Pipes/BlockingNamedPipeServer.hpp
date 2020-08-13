@@ -31,12 +31,7 @@ namespace Boring32::Async
 
 		public:
 			virtual void Connect();
-			virtual void Disconnect();
 			virtual void Write(const std::wstring& msg);
 			virtual std::wstring Read();
-			
-		protected:
-			virtual void Copy(const BlockingNamedPipeServer& other);
-			virtual void Move(BlockingNamedPipeServer& other) noexcept;
 	};
 }

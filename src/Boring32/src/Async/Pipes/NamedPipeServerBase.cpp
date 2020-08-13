@@ -118,6 +118,17 @@ namespace Boring32::Async
             m_pipe = std::move(other.m_pipe);
     }
 
+    void NamedPipeServerBase::Disconnect()
+    {
+        if (m_pipe == nullptr)
+            throw std::runtime_error("No valid pipe handle to disconnect");
+        if (m_isConnected)
+        {
+            DisconnectNamedPipe(m_pipe.GetHandle());
+            m_isConnected = false;
+        }
+    }
+
     Raii::Win32Handle& NamedPipeServerBase::GetInternalHandle()
     {
         return m_pipe;

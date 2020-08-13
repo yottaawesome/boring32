@@ -30,8 +30,7 @@ namespace Boring32::Async
 
 		public:
 			virtual void Close();
-			virtual void Connect() = 0;
-			virtual void Disconnect() = 0;
+			virtual void Disconnect();
 			virtual Raii::Win32Handle& GetInternalHandle();
 
 			virtual std::wstring GetName() const;

@@ -28,10 +28,6 @@ namespace Boring32::Async
             : PIPE_ACCEPT_REMOTE_CLIENTS)
     )
 	{
-        if (isLocalPipe)
-            m_pipeMode |= PIPE_ACCEPT_REMOTE_CLIENTS;
-        else
-            m_pipeMode |= PIPE_REJECT_REMOTE_CLIENTS;
         m_openMode &= ~FILE_FLAG_OVERLAPPED;
         InternalCreatePipe();
 	}
@@ -56,14 +52,8 @@ namespace Boring32::Async
     }
 
     BlockingNamedPipeServer::BlockingNamedPipeServer(const BlockingNamedPipeServer& other)
-        : NamedPipeServerBase(
-            other.m_pipeName,
-            other.m_size,
-            other.m_maxInstances,
-            other.m_openMode,
-            other.m_pipeMode)
+    :   NamedPipeServerBase(other)
     {
-        Copy(other);
         InternalCreatePipe();
     }
 
@@ -73,27 +63,9 @@ namespace Boring32::Async
         InternalCreatePipe();
     }
 
-    void BlockingNamedPipeServer::Copy(const BlockingNamedPipeServer& other)
-    {
-        Close();
-        m_pipe = other.m_pipe;
-        m_pipeName = other.m_pipeName;
-        m_size = other.m_size;
-        m_maxInstances = other.m_maxInstances;
-        m_isConnected = other.m_isConnected;
-        m_openMode = other.m_openMode;
-        m_pipeMode = other.m_pipeMode;
-    }
-
     BlockingNamedPipeServer::BlockingNamedPipeServer(BlockingNamedPipeServer&& other) noexcept
-    : NamedPipeServerBase(
-        other.m_pipeName,
-        other.m_size,
-        other.m_maxInstances,
-        other.m_openMode,
-        other.m_pipeMode)
+    :   NamedPipeServerBase(other)
     {
-        Move(other);
         InternalCreatePipe();
     }
 
@@ -103,19 +75,6 @@ namespace Boring32::Async
         InternalCreatePipe();
     }
 
-    void BlockingNamedPipeServer::Move(BlockingNamedPipeServer& other) noexcept
-    {
-        Close();
-        m_pipeName = std::move(other.m_pipeName);
-        m_size = other.m_size;
-        m_maxInstances = other.m_maxInstances;
-        m_isConnected = other.m_isConnected;
-        m_openMode = other.m_openMode;
-        m_pipeMode = other.m_pipeMode;
-        if (other.m_pipe != nullptr)
-            m_pipe = std::move(other.m_pipe);
-    }
-
     void BlockingNamedPipeServer::Connect()
     {
         if (m_pipe == nullptr)
@@ -123,17 +82,6 @@ namespace Boring32::Async
 
         if (ConnectNamedPipe(m_pipe.GetHandle(), nullptr) == false)
             throw std::runtime_error("Failed to connect named pipe");
-    }
-
-    void BlockingNamedPipeServer::Disconnect()
-    {
-        if (m_pipe == nullptr)
-            throw std::runtime_error("No valid pipe handle to disconnect");
-        if (m_isConnected)
-        {
-            DisconnectNamedPipe(m_pipe.GetHandle());
-            m_isConnected = false;
-        }
     }
 
     void BlockingNamedPipeServer::Write(const std::wstring& msg)
@@ -158,19 +106,35 @@ namespace Boring32::Async
         if (m_pipe == nullptr)
             throw std::runtime_error("No pipe to read from");
 
-        std::wstring data;
-        data.resize(m_size * sizeof(wchar_t));
-        DWORD bytesRead = 0;
-        bool success = ReadFile(
-            m_pipe.GetHandle(),             // handle to pipe 
-            &data[0],                       // buffer to receive data 
-            data.size() * sizeof(wchar_t),    // size of buffer 
-            &bytesRead,                     // number of bytes read 
-            nullptr                         // not overlapped I/O
-        );
-        if (success == false)
-            throw std::runtime_error("Failed to read pipe");
+        std::wstring dataBuffer;
+        constexpr DWORD blockSize = 1024;
+        dataBuffer.resize(1024);
 
-        return data;
+        bool continueReading = true;
+        DWORD totalBytesRead = 0;
+        while (continueReading)
+        {
+            DWORD currentBytesRead = 0;
+            // https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile
+            bool successfulRead = ReadFile(
+                m_pipe.GetHandle(),    // pipe handle 
+                &dataBuffer[0],    // buffer to receive reply 
+                dataBuffer.size() * sizeof(TCHAR),  // size of buffer 
+                &currentBytesRead,  // number of bytes read 
+                nullptr);    // not overlapped
+            totalBytesRead += currentBytesRead;
+
+            const DWORD lastError = GetLastError();
+            if (successfulRead == false && lastError != ERROR_MORE_DATA)
+                throw std::runtime_error("Failed to read from pipe");
+            if (lastError == ERROR_MORE_DATA)
+                dataBuffer.resize(dataBuffer.size() + blockSize);
+            continueReading = !successfulRead;
+        }
+
+        if (totalBytesRead > 0)
+            dataBuffer.resize(totalBytesRead / sizeof(wchar_t));
+
+        return dataBuffer;
     }
 }
