@@ -171,6 +171,7 @@
     <ClInclude Include="include\Async\Job.hpp" />
     <ClInclude Include="include\Async\MemoryMappedFile.hpp" />
     <ClInclude Include="include\Async\Mutex.hpp" />
+    <ClInclude Include="include\Async\OverlappedOp.hpp" />
     <ClInclude Include="include\Async\Pipes\AnonymousPipe.hpp" />
     <ClInclude Include="include\Async\Pipes\BlockingNamedPipeClient.hpp" />
     <ClInclude Include="include\Async\Pipes\NamedPipeClientBase.hpp" />
@@ -214,6 +215,7 @@
     <ClCompile Include="src\Async\CriticalSectionLock.cpp" />
     <ClCompile Include="src\Async\Event.cpp" />
     <ClCompile Include="src\Async\Job.cpp" />
+    <ClCompile Include="src\Async\OverlappedOp.cpp" />
     <ClCompile Include="src\Async\Pipes\BlockingNamedPipeClient.cpp" />
     <ClCompile Include="src\Async\Pipes\NamedPipeClientBase.cpp" />
     <ClCompile Include="src\Async\Pipes\BlockingNamedPipeServer.cpp" />

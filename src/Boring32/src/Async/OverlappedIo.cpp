@@ -8,10 +8,6 @@ namespace Boring32::Async
 	{ }
 	
 	OverlappedIo::OverlappedIo()
-	:	IoEvent(true, false, true, true, L""),
-		IoOverlapped{},
-		CallReturnValue(false),
-		LastErrorValue(0)
 	{
 		IoOverlapped.hEvent = IoEvent.GetHandle();
 	}
@@ -23,14 +19,11 @@ namespace Boring32::Async
 		const bool isSignaled,
 		const std::wstring name
 	)
-	:	IoEvent(createOrOpen, isInheritable, manualReset, isSignaled, name),
-		IoOverlapped{},
-		CallReturnValue(false),
-		LastErrorValue(0)
+	:	OverlappedOp(createOrOpen, isInheritable, manualReset, isSignaled, name)
 	{ }
 
 	OverlappedIo::OverlappedIo(const OverlappedIo& other)
-	:	IoOverlapped{}
+	:	OverlappedOp(other)
 	{
 		Copy(other);
 	}
@@ -41,7 +34,7 @@ namespace Boring32::Async
 	}
 
 	OverlappedIo::OverlappedIo(OverlappedIo&& other) noexcept
-	:	IoOverlapped{}
+	:	OverlappedOp(other)
 	{
 		Move(other);
 	}
@@ -53,36 +46,27 @@ namespace Boring32::Async
 
 	void OverlappedIo::Copy(const OverlappedIo& other)
 	{
-		IoEvent = other.IoEvent;
+		IoBuffer = other.IoBuffer;
 		IoHandle = other.IoHandle;
-		IoOverlapped = other.IoOverlapped;
-		IoOverlapped.hEvent = IoEvent.GetHandle();
-		CallReturnValue = other.CallReturnValue;
-		LastErrorValue = other.LastErrorValue;
 	}
 
 	void OverlappedIo::Move(OverlappedIo& other) noexcept
 	{
-		IoEvent = std::move(other.IoEvent);
+		IoBuffer = std::move(other.IoBuffer);
 		IoHandle = std::move(other.IoHandle);
-		IoOverlapped = other.IoOverlapped;
-		IoOverlapped.hEvent = IoEvent.GetHandle();
-		CallReturnValue = other.CallReturnValue;
-		LastErrorValue = other.LastErrorValue;
 	}
 
-	DWORD OverlappedIo::GetBytesTransferred(const bool wait)
+	bool OverlappedIo::GetBytesTransferred(const bool wait, DWORD& outBytes)
 	{
-		DWORD bytesTransferred = 0;
+		outBytes = 0;
 		bool succeeded = GetOverlappedResult(
 			IoHandle.GetHandle(),
 			&IoOverlapped,
-			&bytesTransferred,
+			&outBytes,
 			wait
 		);
-		if (succeeded == false)
+		if (succeeded == false && GetLastError() != ERROR_IO_PENDING)
 			throw std::runtime_error("Failed to get overlapped result");
-
-		return bytesTransferred;
+		return succeeded;
 	}
 }

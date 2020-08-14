@@ -11,9 +11,9 @@ namespace Boring32::Async
 
 	void Thread::Close()
 	{
-		if (m_hThread != nullptr)
+		if (m_thread != nullptr)
 		{
-			m_hThread = nullptr;
+			m_thread = nullptr;
 			m_threadId = 0;
 		}
 	}
@@ -23,7 +23,7 @@ namespace Boring32::Async
 		m_status(ThreadStatus::Ready),
 		m_threadParam(param),
 		m_threadId(0),
-		m_hThread(nullptr),
+		m_thread(nullptr),
 		m_returnCode(STILL_ACTIVE)
 	{ }
 
@@ -44,7 +44,7 @@ namespace Boring32::Async
 		m_status = other.m_status;
 		m_returnCode = other.m_returnCode;
 		m_threadId = other.m_threadId;
-		m_hThread = other.m_hThread;
+		m_thread = other.m_thread;
 		m_destroyOnCompletion = other.m_destroyOnCompletion;
 		m_threadParam = other.m_threadParam;
 	}
@@ -66,14 +66,14 @@ namespace Boring32::Async
 		m_status = other.m_status;
 		m_returnCode = other.m_returnCode;
 		m_threadId = other.m_threadId;
-		m_hThread = std::move(other.m_hThread);
+		m_thread = std::move(other.m_thread);
 		m_destroyOnCompletion = other.m_destroyOnCompletion;
 		m_threadParam = other.m_threadParam;
 	}
 
 	void Thread::Start()
 	{
-		m_hThread = (HANDLE)_beginthreadex(
+		m_thread = (HANDLE)_beginthreadex(
 			0,
 			0,
 			Thread::ThreadProc,
@@ -87,7 +87,7 @@ namespace Boring32::Async
 	{
 		m_func = simpleFunc;
 		// https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/beginthread-beginthreadex?view=vs-2019
-		m_hThread = (HANDLE)_beginthreadex(
+		m_thread = (HANDLE)_beginthreadex(
 			0,
 			0,
 			Thread::ThreadProc,
@@ -100,7 +100,7 @@ namespace Boring32::Async
 	void Thread::Start(const std::function<int()>& func)
 	{
 		m_func = func;
-		m_hThread = (HANDLE)_beginthreadex(
+		m_thread = (HANDLE)_beginthreadex(
 			0,
 			0,
 			Thread::ThreadProc,
@@ -108,7 +108,7 @@ namespace Boring32::Async
 			0,
 			&m_threadId
 		);
-		if (m_hThread == nullptr)
+		if (m_thread == nullptr)
 		{
 			m_status = ThreadStatus::Failure;
 			throw std::runtime_error("Failed to start thread");
@@ -125,7 +125,7 @@ namespace Boring32::Async
 		if (this->m_status != ThreadStatus::Running)
 			throw std::runtime_error("Thread was not running when request to terminate occurred.");
 
-		TerminateThread(m_hThread.GetHandle(), (DWORD)ThreadStatus::Terminated);
+		TerminateThread(m_thread.GetHandle(), (DWORD)ThreadStatus::Terminated);
 	}
 
 	void Thread::Suspend()
@@ -134,7 +134,7 @@ namespace Boring32::Async
 			throw std::runtime_error("Thread was not running when request to suspend occurred.");
 
 		this->m_status = ThreadStatus::Suspended;
-		SuspendThread(m_hThread.GetHandle());
+		SuspendThread(m_thread.GetHandle());
 	}
 
 	void Thread::Resume()
@@ -143,7 +143,21 @@ namespace Boring32::Async
 			throw std::runtime_error("Thread was not suspended when request to resume occurred.");
 
 		this->m_status = ThreadStatus::Running;
-		ResumeThread(m_hThread.GetHandle());
+		ResumeThread(m_thread.GetHandle());
+	}
+
+	bool Thread::Join(const DWORD waitTime)
+	{
+		if (this->m_status != ThreadStatus::Running)
+			throw std::runtime_error("Thread was not running when request to join occurred.");
+
+		const DWORD waitResult = WaitForSingleObject(m_thread.GetHandle(), waitTime);
+		if(waitResult == WAIT_OBJECT_0)
+			return true;
+		if (waitResult == WAIT_TIMEOUT)
+			return false;
+
+		throw std::runtime_error("Thread join operation failed");
 	}
 
 	UINT Thread::Run()

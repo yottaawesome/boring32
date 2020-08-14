@@ -37,9 +37,9 @@ namespace Boring32::Async
 			///		terminated until the wait is finished.
 			/// </summary>
 			virtual void Terminate();
-			
 			virtual void Suspend();
 			virtual void Resume();
+			virtual bool Join(const DWORD waitTime);
 
 		protected:
 			virtual UINT Run();
@@ -49,7 +49,7 @@ namespace Boring32::Async
 			ThreadStatus m_status;
 			UINT m_returnCode;
 			UINT m_threadId;
-			Raii::Win32Handle m_hThread;
+			Raii::Win32Handle m_thread;
 			bool m_destroyOnCompletion;
 			void* m_threadParam;
 			std::function<int()> m_func;

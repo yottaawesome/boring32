@@ -1,9 +1,9 @@
 #pragma once
-#include "Event.hpp"
+#include "OverlappedOp.hpp"
 
 namespace Boring32::Async
 {
-	class OverlappedIo
+	class OverlappedIo : public OverlappedOp
 	{
 		public:
 			virtual ~OverlappedIo();
@@ -22,14 +22,11 @@ namespace Boring32::Async
 			OverlappedIo(OverlappedIo&& other) noexcept;
 			virtual void operator=(OverlappedIo&& other) noexcept;
 
-			virtual DWORD GetBytesTransferred(const bool wait);
+			virtual bool GetBytesTransferred(const bool wait, DWORD& outBytes);
 
 		public:
-			Event IoEvent;
+			std::wstring IoBuffer;
 			Raii::Win32Handle IoHandle;
-			OVERLAPPED IoOverlapped;
-			bool CallReturnValue;
-			DWORD LastErrorValue;
 
 		protected:
 			virtual void Copy(const OverlappedIo& other);

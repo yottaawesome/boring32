@@ -42,7 +42,6 @@ namespace Boring32::Async
 		protected:
 			Raii::Win32Handle m_event;
 			bool m_isManualReset;
-			bool m_isSignaled;
 			bool m_createEventOnTrue;
 			std::wstring m_name;
 	};

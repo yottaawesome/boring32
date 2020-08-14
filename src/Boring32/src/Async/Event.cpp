@@ -21,7 +21,6 @@ namespace Boring32::Async
 	Event::Event()
 	:	m_event(nullptr),
 		m_isManualReset(false),
-		m_isSignaled(false),
 		m_name(L""),
 		m_createEventOnTrue(false)
 	{ }
@@ -35,7 +34,6 @@ namespace Boring32::Async
 	)
 	:	m_event(nullptr),
 		m_isManualReset(manualReset),
-		m_isSignaled(isSignaled),
 		m_name(name),
 		m_createEventOnTrue(createOrOpen)
 	{
@@ -48,7 +46,7 @@ namespace Boring32::Async
 			m_event = CreateEvent(
 				&sp,				// security attributes
 				m_isManualReset,    // manual reset event
-				m_isSignaled,		// is initially signalled
+				isSignaled,		// is initially signalled
 				m_name != L""		// name
 					? m_name.c_str()
 					: nullptr);
@@ -75,7 +73,6 @@ namespace Boring32::Async
 	{
 		Close();
 		m_isManualReset = other.m_isManualReset;
-		m_isSignaled = other.m_isSignaled;
 		m_name = other.m_name;
 		m_event = other.m_event;
 	}
@@ -94,7 +91,6 @@ namespace Boring32::Async
 	void Event::Move(Event& other) noexcept
 	{
 		m_isManualReset = other.m_isManualReset;
-		m_isSignaled = other.m_isSignaled;
 		m_name = std::move(other.m_name);
 		m_event = std::move(other.m_event);
 		other.m_event = nullptr;

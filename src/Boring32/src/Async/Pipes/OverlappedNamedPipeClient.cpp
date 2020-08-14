@@ -54,16 +54,16 @@ namespace Boring32::Async
 		return oio;
 	}
 
-	OverlappedIo OverlappedNamedPipeClient::Read(std::wstring& dataBuffer)
+	OverlappedIo OverlappedNamedPipeClient::Read()
 	{
 		if (m_handle == nullptr)
 			throw std::runtime_error("No pipe to read from");
 
 		constexpr DWORD blockSize = 1024;
-		if (dataBuffer.size() < blockSize)
-			dataBuffer.resize(blockSize);
-
 		OverlappedIo oio;
+		if (oio.IoBuffer.size() < blockSize)
+			oio.IoBuffer.resize(blockSize);
+
 		oio.IoHandle = m_handle;
 		DWORD totalBytesRead = 0;
 		bool continueReading = true;
@@ -72,8 +72,8 @@ namespace Boring32::Async
 			DWORD currentBytesRead = 0;
 			oio.CallReturnValue = ReadFile(
 				m_handle.GetHandle(),    // pipe handle 
-				&dataBuffer[0],    // buffer to receive reply 
-				dataBuffer.size() * sizeof(TCHAR),  // size of buffer 
+				&oio.IoBuffer[0],    // buffer to receive reply 
+				oio.IoBuffer.size() * sizeof(TCHAR),  // size of buffer 
 				&currentBytesRead,  // number of bytes read 
 				&oio.IoOverlapped);    // overlapped
 			totalBytesRead += currentBytesRead;
@@ -81,7 +81,7 @@ namespace Boring32::Async
 			if (oio.CallReturnValue == false)
 			{
 				if (oio.LastErrorValue == ERROR_MORE_DATA)
-					dataBuffer.resize(dataBuffer.size() + blockSize);
+					oio.IoBuffer.resize(oio.IoBuffer.size() + blockSize);
 				else if (oio.LastErrorValue == ERROR_IO_PENDING)
 					continueReading = false;
 				else
@@ -94,7 +94,8 @@ namespace Boring32::Async
 		}
 
 		if (totalBytesRead > 0)
-			dataBuffer.resize(totalBytesRead / sizeof(wchar_t));
+			oio.IoBuffer.resize(totalBytesRead / sizeof(wchar_t));
+
 		return oio;
 	}
 }

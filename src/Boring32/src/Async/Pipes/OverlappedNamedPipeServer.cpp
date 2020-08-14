@@ -75,12 +75,11 @@ namespace Boring32::Async
         InternalCreatePipe();
     }
 
-    OverlappedIo OverlappedNamedPipeServer::Connect()
+    OverlappedOp OverlappedNamedPipeServer::Connect()
     {
         if (m_pipe == nullptr)
             throw std::runtime_error("No valid pipe handle to connect");
-        OverlappedIo oio;
-        oio.IoHandle = m_pipe;
+        OverlappedOp oio;
         oio.CallReturnValue = ConnectNamedPipe(m_pipe.GetHandle(), &oio.IoOverlapped);
         oio.LastErrorValue = GetLastError();
         if(oio.CallReturnValue == false && oio.LastErrorValue != ERROR_IO_PENDING)
@@ -110,15 +109,15 @@ namespace Boring32::Async
         return oio;
     }
 
-    OverlappedIo OverlappedNamedPipeServer::Read(std::wstring& dataBuffer)
+    OverlappedIo OverlappedNamedPipeServer::Read()
     {
         if (m_pipe == nullptr)
             throw std::runtime_error("No pipe to read from");
 
         constexpr DWORD blockSize = 1024;
-        dataBuffer.resize(blockSize);
-
         OverlappedIo oio;
+        oio.IoBuffer.resize(blockSize);
+
         oio.IoHandle = m_pipe;
         DWORD totalBytesRead = 0;
         bool continueReading = true;
@@ -127,20 +126,20 @@ namespace Boring32::Async
             DWORD currentBytesRead = 0;
             oio.CallReturnValue = ReadFile(
                 m_pipe.GetHandle(),    // pipe handle 
-                &dataBuffer[0],    // buffer to receive reply 
-                dataBuffer.size() * sizeof(TCHAR),  // size of buffer 
+                &oio.IoBuffer[0],    // buffer to receive reply 
+                oio.IoBuffer.size() * sizeof(TCHAR),  // size of buffer 
                 &currentBytesRead,  // number of bytes read 
                 &oio.IoOverlapped);    // overlapped
             totalBytesRead += currentBytesRead;
             oio.LastErrorValue = GetLastError();
             if (oio.LastErrorValue == ERROR_MORE_DATA)
-                dataBuffer.resize(dataBuffer.size() + blockSize);
+                oio.IoBuffer.resize(oio.IoBuffer.size() + blockSize);
             else if (oio.LastErrorValue != ERROR_IO_PENDING)
                 throw std::runtime_error("Failed to read from pipe");
         }
 
         if (totalBytesRead > 0)
-            dataBuffer.resize(totalBytesRead / sizeof(wchar_t));
+            oio.IoBuffer.resize(totalBytesRead / sizeof(wchar_t));
 
         return oio;
     }
