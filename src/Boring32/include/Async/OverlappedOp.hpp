@@ -9,7 +9,6 @@ namespace Boring32::Async
 			virtual ~OverlappedOp();
 			OverlappedOp();
 			OverlappedOp(
-				const bool createOrOpen,
 				const bool isInheritable,
 				const bool manualReset,
 				const bool isSignaled,

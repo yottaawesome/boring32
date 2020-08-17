@@ -14,7 +14,7 @@ int MainAnon(int argc, char** args)
         pipe.DelimitedWrite(L"Hello from child!");
     }
 
-    Boring32::Async::Event evt(false, true, true, false, L"TestEvent");
+    Boring32::Async::Event evt(true, false, L"TestEvent", SYNCHRONIZE);
     evt.WaitOnEvent();
     std::wcout << L"Exiting after wait!" << std::endl;
 
@@ -53,12 +53,43 @@ int MainOverlapped(int argc, char** args)
     return 0;
 }
 
+int ConnectAndWriteToElevatedPipe()
+{
+    Boring32::Async::OverlappedNamedPipeClient p(L"\\\\.\\pipe\\mynamedpipe");
+    p.Connect(0);
+    //auto r = p.Write(L"Hello!");
+    //WaitForSingleObject(r.IoEvent.GetHandle(), INFINITE);
+    return 0;
+}
+
+DWORD ConnectToPrivateNamespace()
+{
+    Boring32::Security::PrivateNamespace pn(
+        false,
+        L"elevated",
+        L"elevated-boundary",
+        L"D:(A;;GA;;;BA)(A;;GR;;;BU)"
+    );
+    Boring32::Async::Event agentNamespacePipeAvailable(
+        true,
+        false,
+        L"elevated\\pipeAvailable",
+        SYNCHRONIZE
+    );
+    agentNamespacePipeAvailable.WaitOnEvent();
+    Boring32::Async::OverlappedNamedPipeClient p(L"\\\\.\\pipe\\\\mynamedpipe");
+    p.Connect(0);
+    return 0;
+}
+
 int main(int argc, char** args)
 {
     try
     {
+        return ConnectToPrivateNamespace();
+        return ConnectAndWriteToElevatedPipe();
         //MainNamed(argc, args);
-        MainOverlapped(argc, args);
+        return MainOverlapped(argc, args);
     }
     catch (const std::exception& ex)
     {

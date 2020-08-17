@@ -9,7 +9,6 @@ namespace Boring32::Async
 			virtual ~OverlappedIo();
 			OverlappedIo();
 			OverlappedIo(
-				const bool createOrOpen,
 				const bool isInheritable,
 				const bool manualReset,
 				const bool isSignaled, 

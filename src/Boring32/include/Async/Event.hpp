@@ -12,11 +12,16 @@ namespace Boring32::Async
 			virtual ~Event();
 			Event();
 			Event(
-				const bool createOrOpen,
 				const bool isInheritable, 
 				const bool manualReset, 
 				const bool isSignaled, 
 				const std::wstring& name
+			);
+			Event(
+				const bool isInheritable,
+				const bool manualReset,
+				const std::wstring& name,
+				const DWORD desiredAccess
 			);
 
 			Event(const Event& other);
@@ -27,7 +32,7 @@ namespace Boring32::Async
 
 		// API
 		public:
-			virtual bool Signal();
+			virtual void Signal();
 			virtual void Reset();
 			virtual void WaitOnEvent();
 			virtual bool WaitOnEvent(const DWORD millis);
@@ -44,5 +49,6 @@ namespace Boring32::Async
 			bool m_isManualReset;
 			bool m_createEventOnTrue;
 			std::wstring m_name;
+			DWORD m_access;
 	};
 }

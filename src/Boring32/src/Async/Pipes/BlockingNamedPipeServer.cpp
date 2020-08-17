@@ -13,12 +13,16 @@ namespace Boring32::Async
         const std::wstring& pipeName, 
         const DWORD size,
         const DWORD maxInstances,
+        const std::wstring& sid,
+        const bool isInheritable,
         const bool isLocalPipe
     )
     : NamedPipeServerBase(
         pipeName, 
         size, 
-        maxInstances, 
+        maxInstances,
+        sid,
+        isInheritable,
         PIPE_ACCESS_DUPLEX,
         PIPE_TYPE_MESSAGE           // message type pipe 
         | PIPE_READMODE_MESSAGE     // message-read mode
@@ -36,6 +40,8 @@ namespace Boring32::Async
         const std::wstring& pipeName,
         const DWORD size,
         const DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
+        const std::wstring& sid,
+        const bool isInheritable,
         const DWORD openMode,
         const DWORD pipeMode
     )
@@ -43,6 +49,8 @@ namespace Boring32::Async
             pipeName,
             size,
             maxInstances,
+            sid,
+            isInheritable,
             openMode,
             pipeMode
         )

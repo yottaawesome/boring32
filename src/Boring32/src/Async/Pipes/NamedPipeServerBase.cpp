@@ -1,4 +1,6 @@
 #include "pch.hpp"
+#include <Sddl.h>
+#include "include/Error/Win32Exception.hpp"
 #include "include/Async/Pipes/NamedPipeServerBase.hpp"
 
 namespace Boring32::Async
@@ -17,12 +19,16 @@ namespace Boring32::Async
         const std::wstring& pipeName,
         const DWORD size,
         const DWORD maxInstances,
+        const std::wstring& sid,
+        const bool isInheritable,
         const bool isLocalPipe
     )
         : m_pipeName(pipeName),
         m_size(size),
         m_maxInstances(maxInstances),
         m_isConnected(false),
+        m_sid(sid),
+        m_isInheritable(isInheritable),
         m_openMode(
             PIPE_ACCESS_DUPLEX          // read/write access
         ),
@@ -42,6 +48,8 @@ namespace Boring32::Async
         const std::wstring& pipeName,
         const DWORD size,
         const DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
+        const std::wstring& sid,
+        const bool isInheritable,
         const DWORD openMode,
         const DWORD pipeMode
     )
@@ -49,6 +57,8 @@ namespace Boring32::Async
         m_size(size),
         m_maxInstances(maxInstances),
         m_isConnected(false),
+        m_sid(sid),
+        m_isInheritable(isInheritable),
         m_openMode(openMode),
         m_pipeMode(pipeMode)
     {
@@ -56,6 +66,21 @@ namespace Boring32::Async
 
     void NamedPipeServerBase::InternalCreatePipe()
     {
+        SECURITY_ATTRIBUTES sa;
+        sa.nLength = sizeof(sa);
+        sa.bInheritHandle = m_isInheritable;
+        if (m_sid != L"")
+        {
+            bool converted = ConvertStringSecurityDescriptorToSecurityDescriptorW(
+                m_sid.c_str(),
+                SDDL_REVISION_1,
+                &sa.lpSecurityDescriptor,
+                nullptr
+            );
+            if (converted == false)
+                throw Error::Win32Exception("Failed to convert security descriptor", GetLastError());
+        }
+
         // https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createnamedpipea
         m_pipe = CreateNamedPipeW(
             m_pipeName.c_str(),             // pipe name
@@ -65,9 +90,11 @@ namespace Boring32::Async
             m_size,                         // output buffer size 
             m_size,                         // input buffer size 
             0,                              // client time-out 
-            nullptr);
+            m_sid != L"" ? &sa : nullptr);
+        if (m_sid != L"")
+            LocalFree(sa.lpSecurityDescriptor);
         if (m_pipe == nullptr)
-            throw std::runtime_error("Failed to create named pipe");
+            throw Error::Win32Exception("Failed to create named pipe", GetLastError());
     }
 
     NamedPipeServerBase::NamedPipeServerBase(const NamedPipeServerBase& other)
@@ -89,6 +116,7 @@ namespace Boring32::Async
         m_pipeName = other.m_pipeName;
         m_size = other.m_size;
         m_maxInstances = other.m_maxInstances;
+        m_sid = other.m_sid;
         m_isConnected = other.m_isConnected;
         m_openMode = other.m_openMode;
         m_pipeMode = other.m_pipeMode;
@@ -111,6 +139,7 @@ namespace Boring32::Async
         m_pipeName = std::move(other.m_pipeName);
         m_size = other.m_size;
         m_maxInstances = other.m_maxInstances;
+        m_sid = std::move(other.m_sid);
         m_isConnected = other.m_isConnected;
         m_openMode = other.m_openMode;
         m_pipeMode = other.m_pipeMode;

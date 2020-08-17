@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
+#include "include/Error/Win32Exception.hpp"
 #include "include/Async/Event.hpp"
 
 namespace Boring32::Async
@@ -22,11 +23,11 @@ namespace Boring32::Async
 	:	m_event(nullptr),
 		m_isManualReset(false),
 		m_name(L""),
-		m_createEventOnTrue(false)
+		m_createEventOnTrue(false),
+		m_access(0)
 	{ }
 
 	Event::Event(
-		const bool createOrOpen,
 		const bool isInheritable,
 		const bool manualReset,
 		const bool isSignaled,
@@ -35,28 +36,39 @@ namespace Boring32::Async
 	:	m_event(nullptr),
 		m_isManualReset(manualReset),
 		m_name(name),
-		m_createEventOnTrue(createOrOpen)
+		m_createEventOnTrue(true),
+		m_access(EVENT_ALL_ACCESS)
 	{
 		SECURITY_ATTRIBUTES sp{ 0 };
 		sp.nLength = sizeof(sp);
 		sp.bInheritHandle = isInheritable;
 
-		if (m_createEventOnTrue)
-		{
-			m_event = CreateEvent(
-				&sp,				// security attributes
-				m_isManualReset,    // manual reset event
-				isSignaled,		// is initially signalled
-				m_name != L""		// name
-					? m_name.c_str()
-					: nullptr);
-		}
-		else
-		{
-			m_event = OpenEvent(EVENT_ALL_ACCESS, isInheritable, m_name.c_str());
-		}
+		m_event = CreateEventW(
+			&sp,				// security attributes
+			m_isManualReset,    // manual reset event
+			isSignaled,		// is initially signalled
+			m_name != L""		// name
+				? m_name.c_str()
+				: nullptr);
 		if (m_event == nullptr)
-			throw std::runtime_error("Failed to create or open event");
+			throw Error::Win32Exception("Failed to create or open event", GetLastError());
+	}
+
+	Event::Event(
+		const bool isInheritable,
+		const bool manualReset,
+		const std::wstring& name,
+		const DWORD desiredAccess
+	)
+	:	m_event(nullptr),
+		m_isManualReset(manualReset),
+		m_name(name),
+		m_createEventOnTrue(false),
+		m_access(desiredAccess)
+	{
+		m_event = OpenEventW(m_access, isInheritable, m_name.c_str());
+		if (m_event == nullptr)
+			throw Error::Win32Exception("Failed to create or open event", GetLastError());
 	}
 
 	Event::Event(const Event& other) 
@@ -136,10 +148,11 @@ namespace Boring32::Async
 		return false;
 	}
 
-	bool Event::Signal()
+	void Event::Signal()
 	{
 		if (m_event == nullptr)
 			throw std::runtime_error("No Event to signal");
-		return SetEvent(m_event.GetHandle());
+		if (SetEvent(m_event.GetHandle()) == false)
+			throw Error::Win32Exception("Failed to signal event", GetLastError());
 	}
 }

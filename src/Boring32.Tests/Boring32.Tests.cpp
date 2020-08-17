@@ -155,7 +155,14 @@ void TestProcessNamedPipe()
 	testProcess.Start();
 	job.AssignProcessToThisJob(testProcess.GetProcessHandle());
 
-	Boring32::Async::BlockingNamedPipeServer p(L"\\\\.\\pipe\\mynamedpipe", 200, 5, true);
+	Boring32::Async::BlockingNamedPipeServer p(
+		L"\\\\.\\pipe\\mynamedpipe", 
+		200, 
+		5, 
+		L"", 
+		false,
+		true
+	);
 	p.Connect();
 	p.Write(L"HAHA!");
 	p.Write(L"HAHA2!");
@@ -180,7 +187,14 @@ void TestProcessOverlappedNamedPipe()
 	testProcess.Start();
 	job.AssignProcessToThisJob(testProcess.GetProcessHandle());
 
-	Boring32::Async::OverlappedNamedPipeServer p(L"\\\\.\\pipe\\mynamedpipe", 200, 5, true);
+	Boring32::Async::OverlappedNamedPipeServer p(
+		L"\\\\.\\pipe\\mynamedpipe", 
+		200, 
+		5, 
+		L"",
+		false,
+		true
+	);
 	auto oio = p.Connect();
 	WaitForSingleObject(oio.IoEvent.GetHandle(), INFINITE);
 	p.Write(L"HAHA!");
@@ -208,7 +222,7 @@ void TestProcessAnonPipe()
 		<< (int)childRead.GetRead();
 	//std::wcout << ss.str() << std::endl;
 
-	Boring32::Async::Event evt(true, true, true, false, L"TestEvent");
+	Boring32::Async::Event evt(true, true, false, L"TestEvent");
 
 	Boring32::Async::Job job(false);
 	JOBOBJECT_EXTENDED_LIMIT_INFORMATION jeli{ 0 };

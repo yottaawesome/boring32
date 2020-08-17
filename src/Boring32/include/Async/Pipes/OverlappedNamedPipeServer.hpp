@@ -15,12 +15,16 @@ namespace Boring32::Async
 				const std::wstring& pipeName, 
 				const DWORD size,
 				const DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
+				const std::wstring& sid,
+				const bool isInheritable,
 				const bool isLocalPipe
 			);
 			OverlappedNamedPipeServer(
 				const std::wstring& pipeName,
 				const DWORD size,
 				const DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
+				const std::wstring& sid,
+				const bool isInheritable,
 				const DWORD openMode,
 				const DWORD pipeMode
 			);

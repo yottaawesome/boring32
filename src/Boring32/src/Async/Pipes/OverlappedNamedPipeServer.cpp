@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
+#include "include/Error/Win32Exception.hpp"
 #include "include/Async/Pipes/OverlappedNamedPipeServer.hpp"
 
 namespace Boring32::Async
@@ -13,12 +14,16 @@ namespace Boring32::Async
         const std::wstring& pipeName,
         const DWORD size,
         const DWORD maxInstances,
+        const std::wstring& sid,
+        const bool isInheritable,
         const bool isLocalPipe
     )
     : NamedPipeServerBase(
         pipeName,
         size,
         maxInstances,
+        sid,
+        isInheritable,
         PIPE_ACCESS_DUPLEX 
             | FILE_FLAG_OVERLAPPED,
         PIPE_TYPE_MESSAGE           // message type pipe 
@@ -36,6 +41,8 @@ namespace Boring32::Async
         const std::wstring& pipeName,
         const DWORD size,
         const DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
+        const std::wstring& sid,
+        const bool isInheritable,
         const DWORD openMode,
         const DWORD pipeMode
     )
@@ -43,6 +50,8 @@ namespace Boring32::Async
             pipeName,
             size,
             maxInstances,
+            sid,
+            isInheritable,
             openMode,
             pipeMode
         )
@@ -83,7 +92,7 @@ namespace Boring32::Async
         oio.CallReturnValue = ConnectNamedPipe(m_pipe.GetHandle(), &oio.IoOverlapped);
         oio.LastErrorValue = GetLastError();
         if(oio.CallReturnValue == false && oio.LastErrorValue != ERROR_IO_PENDING)
-            throw std::runtime_error("Failed to connect named pipe");
+            throw Error::Win32Exception("Failed to connect named pipe", oio.LastErrorValue);
         return oio;
     }
 
@@ -104,7 +113,7 @@ namespace Boring32::Async
         );
         oio.LastErrorValue = GetLastError();
         if (oio.CallReturnValue == false && oio.LastErrorValue != ERROR_IO_PENDING)
-            throw std::runtime_error("Failed to read pipe");
+            throw Error::Win32Exception("Failed to read pipe", oio.LastErrorValue);
 
         return oio;
     }
@@ -135,7 +144,7 @@ namespace Boring32::Async
             if (oio.LastErrorValue == ERROR_MORE_DATA)
                 oio.IoBuffer.resize(oio.IoBuffer.size() + blockSize);
             else if (oio.LastErrorValue != ERROR_IO_PENDING)
-                throw std::runtime_error("Failed to read from pipe");
+                throw Error::Win32Exception("Failed to read from pipe", oio.LastErrorValue);
         }
 
         if (totalBytesRead > 0)

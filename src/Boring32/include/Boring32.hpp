@@ -7,3 +7,4 @@
 #include "Raii/Raii.hpp"
 #include "WinHttp/WinHttp.hpp"
 #include "Error/Error.hpp"
+#include "Security/Security.hpp"

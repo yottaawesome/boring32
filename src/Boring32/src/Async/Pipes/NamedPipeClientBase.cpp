@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
+#include "include/Error/Win32Exception.hpp"
 #include "include/Async/Pipes/NamedPipeClientBase.hpp"
 
 namespace Boring32::Async
@@ -59,9 +60,9 @@ namespace Boring32::Async
 		if (m_handle == INVALID_HANDLE_VALUE)
 		{
 			if (GetLastError() != ERROR_PIPE_BUSY || timeout == 0)
-				throw std::runtime_error("Failed to connect client pipe");
+				throw Error::Win32Exception("Failed to connect client pipe", GetLastError());
 			if (WaitNamedPipeW(m_pipeName.c_str(), timeout) == false)
-				throw std::runtime_error("Failed to connect client pipe: timeout");
+				throw Error::Win32Exception("Failed to connect client pipe: timeout", GetLastError());
 		}
 
 		DWORD dwMode = PIPE_READMODE_MESSAGE;
@@ -71,7 +72,7 @@ namespace Boring32::Async
 			nullptr,     // don't set maximum bytes 
 			nullptr);    // don't set maximum time 
 		if (fSuccess == false)
-			throw std::runtime_error("Failed to connect client pipe");
+			throw Error::Win32Exception("Failed to SetNamedPipeHandleState", GetLastError());
 	}
 
 	void NamedPipeClientBase::Close()

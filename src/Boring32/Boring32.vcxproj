@@ -195,6 +195,7 @@
     <ClInclude Include="include\Raii\Raii.hpp" />
     <ClInclude Include="include\Raii\Sid.hpp" />
     <ClInclude Include="include\Raii\Win32Handle.hpp" />
+    <ClInclude Include="include\Security\PrivateNamespace.hpp" />
     <ClInclude Include="include\Strings\Strings.hpp" />
     <ClInclude Include="include\Time\Time.hpp" />
     <ClInclude Include="include\Util\Util.hpp" />
@@ -209,6 +210,7 @@
     <ClInclude Include="include\Com\ComThreadScope.hpp" />
     <ClInclude Include="include\Async\Pipes\Pipes.hpp" />
     <ClInclude Include="src\pch.hpp" />
+    <ClInclude Include="include\Security\Security.hpp" />
     <ClInclude Include="src\targetver.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -238,6 +240,7 @@
     <ClCompile Include="src\Async\ProcessInfo.cpp" />
     <ClCompile Include="src\Raii\Sid.cpp" />
     <ClCompile Include="src\Raii\Win32Handle.cpp" />
+    <ClCompile Include="src\Security\PrivateNamespace.cpp" />
     <ClCompile Include="src\Strings\Win32Strings.cpp" />
     <ClCompile Include="src\pch.cpp" />
     <ClCompile Include="src\Library\DynamicLinkLibrary.cpp" />

@@ -17,7 +17,7 @@ namespace Boring32::Async
 			}
 
 			ThreadSafeVector()
-				: m_hasMessages(true, false, true, false, L"")
+				: m_hasMessages(false, true, false, L"")
 			{
 				InitializeCriticalSection(&m_criticalSection);
 			}

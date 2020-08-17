@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <memory>
 #include "../../Raii/Raii.hpp"
 
 namespace Boring32::Async
@@ -12,12 +13,16 @@ namespace Boring32::Async
 				const std::wstring& pipeName, 
 				const DWORD size,
 				const DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
+				const std::wstring& sid,
+				const bool isInheritable,
 				const bool isLocalPipe
 			);
 			NamedPipeServerBase(
 				const std::wstring& pipeName,
 				const DWORD size,
 				const DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
+				const std::wstring& sid,
+				const bool isInheritable,
 				const DWORD openMode,
 				const DWORD pipeMode
 			);
@@ -48,9 +53,11 @@ namespace Boring32::Async
 		protected:
 			Raii::Win32Handle m_pipe;
 			std::wstring m_pipeName;
+			std::wstring m_sid;
 			DWORD m_size;
 			DWORD m_maxInstances;
 			bool m_isConnected;
+			bool m_isInheritable;
 			DWORD m_pipeMode;
 			DWORD m_openMode;
 	};

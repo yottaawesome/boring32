@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
+#include "include/Error/Win32Exception.hpp"
 #include "include/Async/Pipes/OverlappedNamedPipeClient.hpp"
 
 namespace Boring32::Async
@@ -49,7 +50,7 @@ namespace Boring32::Async
 			&oio.IoOverlapped);           // not overlapped 
 		oio.LastErrorValue = GetLastError();
 		if (oio.CallReturnValue == false && oio.LastErrorValue != ERROR_IO_PENDING)
-			throw std::runtime_error("Failed to write to pipe");
+			throw Error::Win32Exception("Failed to write to pipe", oio.LastErrorValue);
 
 		return oio;
 	}
@@ -85,7 +86,7 @@ namespace Boring32::Async
 				else if (oio.LastErrorValue == ERROR_IO_PENDING)
 					continueReading = false;
 				else
-					throw std::runtime_error("Failed to read from pipe");
+					throw Error::Win32Exception("Failed to read from pipe", oio.LastErrorValue);
 			}
 			else
 			{

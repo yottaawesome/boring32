@@ -1,5 +1,5 @@
 #include "pch.hpp"
-#include <stdexcept>
+#include "include/Error/Win32Exception.hpp"
 #include "include/Async/OverlappedIo.hpp"
 
 namespace Boring32::Async
@@ -13,13 +13,12 @@ namespace Boring32::Async
 	}
 
 	OverlappedIo::OverlappedIo(
-		const bool createOrOpen,
 		const bool isInheritable,
 		const bool manualReset,
 		const bool isSignaled,
 		const std::wstring name
 	)
-	:	OverlappedOp(createOrOpen, isInheritable, manualReset, isSignaled, name)
+	:	OverlappedOp(isInheritable, manualReset, isSignaled, name)
 	{ }
 
 	OverlappedIo::OverlappedIo(const OverlappedIo& other)
@@ -65,8 +64,9 @@ namespace Boring32::Async
 			&outBytes,
 			wait
 		);
-		if (succeeded == false && GetLastError() != ERROR_IO_PENDING)
-			throw std::runtime_error("Failed to get overlapped result");
+		const DWORD lastError = GetLastError();
+		if (succeeded == false && lastError != ERROR_IO_PENDING)
+			throw Error::Win32Exception("Failed to get overlapped result", lastError);
 		return succeeded;
 	}
 }

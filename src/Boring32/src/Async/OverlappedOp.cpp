@@ -8,7 +8,7 @@ namespace Boring32::Async
 	{ }
 
 	OverlappedOp::OverlappedOp()
-		: IoEvent(true, false, true, true, L""),
+		: IoEvent(false, true, true, L""),
 		IoOverlapped{},
 		CallReturnValue(false),
 		LastErrorValue(0)
@@ -17,13 +17,12 @@ namespace Boring32::Async
 	}
 
 	OverlappedOp::OverlappedOp(
-		const bool createOrOpen,
 		const bool isInheritable,
 		const bool manualReset,
 		const bool isSignaled,
 		const std::wstring name
 	)
-		: IoEvent(createOrOpen, isInheritable, manualReset, isSignaled, name),
+		: IoEvent(isInheritable, manualReset, isSignaled, name),
 		IoOverlapped{},
 		CallReturnValue(false),
 		LastErrorValue(0)
