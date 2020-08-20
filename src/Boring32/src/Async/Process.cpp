@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
+#include "include/Error/Win32Exception.hpp"
 #include "include/Async/Process.hpp"
 
 namespace Boring32::Async
@@ -59,6 +60,14 @@ namespace Boring32::Async
 	{ }
 
 	Process::Process(const Process& other)
+	:	m_executablePath(L""),
+		m_commandLine(L""),
+		m_startingDirectory(L""),
+		m_canInheritHandles(false),
+		m_creationFlags(0),
+		m_processId(0),
+		m_threadId(0),
+		m_dataSi{ 0 }
 	{
 		Duplicate(other);
 	}
@@ -69,6 +78,14 @@ namespace Boring32::Async
 	}
 
 	Process::Process(Process&& other) noexcept
+	:	m_executablePath(L""),
+		m_commandLine(L""),
+		m_startingDirectory(L""),
+		m_canInheritHandles(false),
+		m_creationFlags(0),
+		m_processId(0),
+		m_threadId(0),
+		m_dataSi{ 0 }
 	{
 		Move(other);
 	}
@@ -111,11 +128,11 @@ namespace Boring32::Async
 		if(m_executablePath == L"" && m_commandLine == L"")
 			throw std::runtime_error("No executable path or command line set");
 
-		PROCESS_INFORMATION processInfo;
+		PROCESS_INFORMATION processInfo{ 0 };
 		m_dataSi.cb = sizeof(m_dataSi);
 		// https://docs.microsoft.com/en-us/windows/win32/procthread/creating-processes
 		bool successfullyCreatedProcess =
-			CreateProcess(
+			CreateProcessW(
 				m_executablePath != L"" 
 					? m_executablePath.c_str()
 					: nullptr,		// Module name
@@ -134,7 +151,7 @@ namespace Boring32::Async
 				&processInfo			// Pointer to PROCESS_INFORMATION structure
 			);
 		if (successfullyCreatedProcess == false)
-			throw std::runtime_error("Failed to create process");
+			throw Error::Win32Exception("Failed to create process", GetLastError());
 
 		m_process = processInfo.hProcess;
 		m_thread = processInfo.hThread;
@@ -199,7 +216,7 @@ namespace Boring32::Async
 	{
 		DWORD exitCode = 0;
 		if (GetExitCodeProcess(m_process.GetHandle(), &exitCode) == false)
-			throw std::runtime_error("Failed to determine process exit code");
+			throw Error::Win32Exception("Failed to determine process exit code", GetLastError());
 		return exitCode;
 	}
 }
