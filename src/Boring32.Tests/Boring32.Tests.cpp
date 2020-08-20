@@ -33,7 +33,7 @@ void TestException()
 		{
 			std::throw_with_nested(std::logic_error("second"));
 		}
-		catch (const std::exception& ex)
+		catch (const std::exception& ex2)
 		{
 			print_exception_info(ex);
 		}
@@ -63,7 +63,7 @@ void TestSemaphore()
 
 void TestMutex()
 {
-	Boring32::Async::Mutex m1(L"HelloMutex", true, false, false);
+	Boring32::Async::Mutex m1(L"HelloMutex", false, false);
 	m1.Lock(1000);
 	m1.Unlock();
 
@@ -71,7 +71,7 @@ void TestMutex()
 	Boring32::Async::Mutex m3(false, false);
 
 	m2 = m3;
-	m2 = Boring32::Async::Mutex(L"Assignment", true, false, false);
+	m2 = Boring32::Async::Mutex(L"Assignment", false, false);
 }
 
 void TestConversions()

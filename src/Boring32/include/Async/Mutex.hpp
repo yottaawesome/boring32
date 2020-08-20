@@ -18,27 +18,40 @@ namespace Boring32::Async
 			Mutex();
 
 			/// <summary>
-			///		Creates a new named or anonymous mutex, or opens an existing named one.
+			///		Creates a new named or anonymous mutex.
 			/// </summary>
 			/// <param name="name">
-			///		The name of the mutex to create or open. Pass an empty
+			///		The name of the mutex to create. Pass an empty
 			///		string to create an anonymous mutex.
 			/// </param>
-			/// <param name="createNew">
-			///		Whether to create a new mutex or open an existing one.
-			/// </param>
 			/// <param name="acquireOnCreation">
-			///		Whether to acquire the mutex if it's being created.
-			///		If the createNew parameter is false, this parameter is ignored.
+			///		Whether to acquire the mutex on creation.
 			/// </param>
 			/// <param name="inheritable">
 			///		Whether the handle can be inherited by child processes.
 			/// </param>
 			Mutex(
 				const std::wstring_view name,
-				const bool createNew,
 				const bool acquireOnCreation,
 				const bool inheritable
+			);
+
+			/// <summary>
+			///		Opens an existing named mutex.
+			/// </summary>
+			/// <param name="inheritable">
+			///		Whether the handle can be inherited by child processes.
+			/// </param>
+			/// <param name="name">
+			///		The name of the mutex to open. Must not be the empty string.
+			/// </param>
+			/// <param name="desiredAccess">
+			///		The desired access to open the mutex, e.g. SYNCHRONIZE.
+			/// </param>
+			Mutex(
+				const bool isInheritable,
+				const std::wstring& name,
+				const DWORD desiredAccess
 			);
 			
 			/// <summary>
@@ -122,7 +135,7 @@ namespace Boring32::Async
 			///		Failed to acquire the mutex for reasons other than the
 			///		timeout was reached.
 			/// </exception>
-			virtual bool SafeLock(const DWORD waitTime);
+			virtual bool SafeLock(const DWORD waitTime, const DWORD sleepTime);
 
 			/// <summary>
 			///		Frees the mutex, allowing another process to acquire it.
