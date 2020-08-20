@@ -111,7 +111,8 @@ namespace Boring32::Async
 	void Event::Reset()
 	{
 		if (m_isManualReset && m_event != nullptr)
-			ResetEvent(m_event.GetHandle());
+			if(ResetEvent(m_event.GetHandle()) == false)
+				throw Error::Win32Exception("ResetEvent failed", GetLastError());
 	}
 	
 	HANDLE Event::GetHandle()
@@ -126,7 +127,7 @@ namespace Boring32::Async
 
 		DWORD status = WaitForSingleObject(m_event.GetHandle(), INFINITE);
 		if (status == WAIT_FAILED)
-			throw std::runtime_error("WaitForSingleObject failed");
+			throw Error::Win32Exception("WaitForSingleObject failed", GetLastError());
 		if (status == WAIT_ABANDONED)
 			throw std::runtime_error("The wait was abandoned");
 	}
@@ -142,7 +143,7 @@ namespace Boring32::Async
 		if (status == WAIT_TIMEOUT)
 			return false;
 		if (status == WAIT_FAILED)
-			throw std::runtime_error("WaitForSingleObject failed");
+			throw Error::Win32Exception("WaitForSingleObject failed", GetLastError());
 		if (status == WAIT_ABANDONED)
 			throw std::runtime_error("The wait was abandoned");
 		return false;

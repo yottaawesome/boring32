@@ -28,6 +28,7 @@ namespace Boring32::Async
 	}
 
 	ProcessInfo::ProcessInfo(const ProcessInfo& other)
+		: m_processInfo{ 0 }
 	{
 		Copy(other);
 	}
@@ -46,6 +47,7 @@ namespace Boring32::Async
 	}
 
 	ProcessInfo::ProcessInfo(ProcessInfo&& other) noexcept
+		: m_processInfo{ 0 }
 	{
 		Move(other);
 	}
