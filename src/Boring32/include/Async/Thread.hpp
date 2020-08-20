@@ -11,22 +11,12 @@ namespace Boring32::Async
 		public:
 			virtual void Close();
 			virtual ~Thread();
-			Thread(void* param, bool destroyOnCompletion);
 
+			Thread(void* param, bool destroyOnCompletion);
 			Thread(const Thread& other);
 			virtual void operator=(const Thread& other);
-			virtual void Copy(const Thread& other);
-
 			Thread(const Thread&& other) noexcept;
 			virtual void operator=(Thread&& other) noexcept;
-			virtual void Copy(Thread& other) noexcept;
-
-			virtual void Start();
-			virtual void Start(int(*simpleFunc)());
-			virtual void Start(const std::function<int()>& func);
-
-			virtual ThreadStatus GetStatus();
-			virtual UINT GetReturnCode();
 
 			/// <summary>
 			///		Terminates the thread. Be careful when using this
@@ -40,9 +30,16 @@ namespace Boring32::Async
 			virtual void Suspend();
 			virtual void Resume();
 			virtual bool Join(const DWORD waitTime);
+			virtual void Start();
+			virtual void Start(int(*simpleFunc)());
+			virtual void Start(const std::function<int()>& func);
+			virtual ThreadStatus GetStatus();
+			virtual UINT GetReturnCode();
 
 		protected:
 			virtual UINT Run();
+			virtual void Copy(const Thread& other);
+			virtual void Move(Thread& other) noexcept;
 			static UINT WINAPI ThreadProc(void* param);
 
 		protected:

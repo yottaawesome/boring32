@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
+#include <iostream>
 #include "include/Error/Win32Exception.hpp"
 #include "include/Async/Thread.hpp"
 
@@ -60,16 +61,23 @@ namespace Boring32::Async
 		Copy(other);
 	}
 
-	void Thread::Copy(Thread& other) noexcept
+	void Thread::Move(Thread& other) noexcept
 	{
-		Close();
-		m_func = std::move(other.m_func);
-		m_status = other.m_status;
-		m_returnCode = other.m_returnCode;
-		m_threadId = other.m_threadId;
-		m_thread = std::move(other.m_thread);
-		m_destroyOnCompletion = other.m_destroyOnCompletion;
-		m_threadParam = other.m_threadParam;
+		try
+		{
+			Close();
+			m_func = std::move(other.m_func);
+			m_status = other.m_status;
+			m_returnCode = other.m_returnCode;
+			m_threadId = other.m_threadId;
+			m_thread = std::move(other.m_thread);
+			m_destroyOnCompletion = other.m_destroyOnCompletion;
+			m_threadParam = other.m_threadParam;
+		}
+		catch (const std::exception& ex)
+		{
+			std::wcout << L"Thread::Move() failed: " << ex.what() << std::endl;
+		}
 	}
 
 	void Thread::Start()
