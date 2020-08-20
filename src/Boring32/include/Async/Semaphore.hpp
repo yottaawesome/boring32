@@ -12,26 +12,36 @@ namespace Boring32::Async
 			virtual void Close();
 
 			Semaphore();
-			Semaphore(const bool createOrOpen, const std::wstring& name, const bool isInheritable, const long initialCount, const long maxCount);
+			Semaphore(
+				const std::wstring& name, 
+				const bool isInheritable, 
+				const long initialCount, 
+				const long maxCount);
+			Semaphore(
+				const std::wstring& name,
+				const bool isInheritable,
+				const long initialCount,
+				const long maxCount,
+				const DWORD desiredAccess);
 
 			Semaphore(const Semaphore& other);
 			virtual void operator=(const Semaphore& other);
-			virtual void Copy(const Semaphore& other);
-
 			Semaphore(Semaphore&& other) noexcept;
 			virtual void operator=(Semaphore&& other) noexcept;
-			virtual void Move(Semaphore& other) noexcept;
 
+		public:
 			virtual void Release();
 			virtual void Release(const int countToRelease);
 			virtual bool Acquire(const DWORD millisTimeout);
 			virtual bool Acquire(const int countToAcquire, const DWORD millisTimeout);
-			
 			virtual std::wstring GetName();
 			virtual int GetCurrentCount();
 			virtual int GetMaxCount();
-
 			virtual HANDLE GetHandle();
+
+		protected:
+			virtual void Copy(const Semaphore& other);
+			virtual void Move(Semaphore& other) noexcept;
 
 		protected:
 			Raii::Win32Handle m_handle;

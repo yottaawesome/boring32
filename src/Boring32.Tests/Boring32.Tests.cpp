@@ -52,7 +52,7 @@ void TestWaitableTime()
 
 void TestSemaphore()
 {
-	Boring32::Async::Semaphore semaphore(true, L"Sem", false, 10, 10);
+	Boring32::Async::Semaphore semaphore(L"Sem", false, 10, 10);
 	semaphore.Acquire(2, INFINITE);
 	if (semaphore.GetCurrentCount() != 8)
 		throw std::runtime_error("Invalid error count");

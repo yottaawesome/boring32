@@ -31,7 +31,7 @@ namespace Boring32::Async
 			///		Whether the handle can be inherited by child processes.
 			/// </param>
 			Mutex(
-				const std::wstring_view name,
+				const std::wstring& name,
 				const bool acquireOnCreation,
 				const bool inheritable
 			);

@@ -28,7 +28,7 @@ namespace Boring32::Async
 	{ }
 
 	Mutex::Mutex(
-		const std::wstring_view name,
+		const std::wstring& name,
 		const bool acquireOnCreation, 
 		const bool inheritable
 	)
