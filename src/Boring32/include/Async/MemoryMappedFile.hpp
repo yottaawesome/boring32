@@ -26,7 +26,7 @@ namespace Boring32::Async
 			MemoryMappedFile();
 
 			/// <summary>
-			///		Creates or opens a new memory mapped file.
+			///		Creates a new memory mapped file.
 			/// </summary>
 			/// <param name="name">
 			///		The name of the memory mapped file to create or open.
@@ -34,18 +34,35 @@ namespace Boring32::Async
 			/// <param name="maxSize">
 			///		The maximum size of the memory mapped file.
 			/// </param>
-			/// <param name="createFile">
-			///		Whether to create a new memory mapped file or open an
-			///		existing one that has been inherited.
-			/// </param>
 			/// <param name="inheritable">
 			///		Whether the acquired handle can be inherited by child processes.
 			/// </param>
 			MemoryMappedFile(
 				const std::wstring& name,
 				const UINT maxSize,
-				const bool createFile,
 				const bool inheritable
+			);
+
+			/// <summary>
+			///		Opens a memory mapped file.
+			/// </summary>
+			/// <param name="name">
+			///		The name of the memory mapped file to create or open.
+			/// </param>
+			/// <param name="maxSize">
+			///		The maximum size of the memory mapped file.
+			/// </param>
+			/// <param name="inheritable">
+			///		Whether the acquired handle can be inherited by child processes.
+			/// </param>
+			/// <param name="desiredAccess">
+			///		The desired access to open the file. See: https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-mapviewoffile
+			/// </param>
+			MemoryMappedFile(
+				const std::wstring& name,
+				const UINT maxSize,
+				const bool inheritable,
+				const DWORD desiredAccess
 			);
 
 			/// <summary>

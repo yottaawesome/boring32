@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
+#include "include/Error/Win32Exception.hpp"
 #include "include/Async/MemoryMappedFile.hpp"
 
 namespace Boring32::Async
@@ -33,7 +34,6 @@ namespace Boring32::Async
 	MemoryMappedFile::MemoryMappedFile(
 		const std::wstring& name,
 		const UINT maxSize,
-		const bool createFile,
 		const bool inheritable
 	)
 	:	m_name(name),
@@ -41,32 +41,18 @@ namespace Boring32::Async
 		m_mapFile(nullptr),
 		m_view(nullptr)
 	{
-		if (createFile)
-		{
-			SECURITY_ATTRIBUTES lp{ 0 };
-			lp.nLength = sizeof(lp);
-			lp.bInheritHandle = inheritable;
-			m_mapFile = CreateFileMapping(
-				INVALID_HANDLE_VALUE,		// use paging file
-				&lp,						// default security
-				PAGE_READWRITE,				// read/write access
-				0,							// maximum object size (high-order DWORD)
-				m_maxSize,					// maximum object size (low-order DWORD)
-				m_name.c_str());			// m_name of mapping object
-		}
-		else
-		{
-			m_mapFile = OpenFileMapping(
-				FILE_MAP_ALL_ACCESS,	// read/write access
-				inheritable,			// Should the handle be inheritable
-				m_name.c_str()		// name of mapping object
-			);
-		}
+		SECURITY_ATTRIBUTES lp{ 0 };
+		lp.nLength = sizeof(lp);
+		lp.bInheritHandle = inheritable;
+		m_mapFile = CreateFileMappingW(
+			INVALID_HANDLE_VALUE,		// use paging file
+			&lp,						// default security
+			PAGE_READWRITE,				// read/write access
+			0,							// maximum object size (high-order DWORD)
+			m_maxSize,					// maximum object size (low-order DWORD)
+			m_name.c_str());			// m_name of mapping object
 		if (m_mapFile == nullptr)
-		{
-			Close();
-			throw std::runtime_error("Failed to open memory mapped file");
-		}
+			throw Error::Win32Exception("Failed to open memory mapped file", GetLastError());
 
 		m_view = MapViewOfFile(
 			m_mapFile.GetHandle(),	// handle to map object
@@ -78,12 +64,44 @@ namespace Boring32::Async
 		if (m_view == nullptr)
 		{
 			Close();
-			throw std::runtime_error("MapViewOfFile() failed");
+			throw Error::Win32Exception("MapViewOfFile() failed", GetLastError());
 		}
 
-		// Don't zero the memory if we're opening an existing handle, as it may have data.
-		if (createFile)
-			SecureZeroMemory(m_view, m_maxSize);
+		RtlSecureZeroMemory(m_view, m_maxSize);
+	}
+
+	MemoryMappedFile::MemoryMappedFile(
+		const std::wstring& name,
+		const UINT maxSize,
+		const bool inheritable,
+		const DWORD desiredAccess
+	)
+	:	m_name(name),
+		m_maxSize(maxSize),
+		m_mapFile(nullptr),
+		m_view(nullptr)
+	{
+		// desiredAccess: https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-mapviewoffile
+		m_mapFile = OpenFileMappingW(
+			desiredAccess,	// read/write access
+			inheritable,			// Should the handle be inheritable
+			m_name.c_str()		// name of mapping object
+		);
+		if (m_mapFile == nullptr)
+			throw Error::Win32Exception("Failed to open memory mapped file", GetLastError());
+
+		m_view = MapViewOfFile(
+			m_mapFile.GetHandle(),	// handle to map object
+			desiredAccess,	// read/write permission
+			0,
+			0,
+			maxSize
+		);
+		if (m_view == nullptr)
+		{
+			Close();
+			throw Error::Win32Exception("MapViewOfFile() failed", GetLastError());
+		}
 	}
 
 	MemoryMappedFile::MemoryMappedFile(const MemoryMappedFile& other)
