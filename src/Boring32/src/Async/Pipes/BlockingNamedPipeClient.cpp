@@ -8,7 +8,7 @@ namespace Boring32::Async
 	BlockingNamedPipeClient::~BlockingNamedPipeClient() { }
 
 	BlockingNamedPipeClient::BlockingNamedPipeClient(const std::wstring& name)
-	: NamedPipeClientBase(name)
+	: NamedPipeClientBase(name, 0)
 	{ }
 
 	BlockingNamedPipeClient::BlockingNamedPipeClient(const BlockingNamedPipeClient& other)
@@ -23,7 +23,7 @@ namespace Boring32::Async
 	}
 
 	BlockingNamedPipeClient::BlockingNamedPipeClient(BlockingNamedPipeClient&& other) noexcept
-		: NamedPipeClientBase(other)
+		: NamedPipeClientBase(std::move(other))
 	{
 		Move(other);
 	}

@@ -41,13 +41,9 @@ int MainOverlapped(int argc, char** args)
     p.Connect(0);
 
     auto oio = p.Read();
-    DWORD bytes = 0;
-    oio.GetBytesTransferred(true, bytes);
-    if (bytes > 0)
-    {
-        oio.IoBuffer.resize(bytes / sizeof(wchar_t));
-        std::wcout << oio.IoBuffer << std::endl;
-    }
+    oio.WaitForCompletion(INFINITE);
+    oio.ResizeBuffer();
+    std::wcout << oio.IoBuffer << std::endl;
     p.Close();
 
     return 0;
@@ -86,8 +82,8 @@ int main(int argc, char** args)
 {
     try
     {
-        return ConnectToPrivateNamespace();
-        return ConnectAndWriteToElevatedPipe();
+        //return ConnectToPrivateNamespace();
+        //return ConnectAndWriteToElevatedPipe();
         //MainNamed(argc, args);
         return MainOverlapped(argc, args);
     }

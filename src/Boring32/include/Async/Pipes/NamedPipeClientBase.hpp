@@ -8,7 +8,7 @@ namespace Boring32::Async
 	{
 		public:
 			virtual ~NamedPipeClientBase();
-			NamedPipeClientBase(const std::wstring& name);
+			NamedPipeClientBase(const std::wstring& name, const DWORD fileAttributes);
 
 			NamedPipeClientBase(const NamedPipeClientBase& other);
 			virtual void operator=(const NamedPipeClientBase& other);
@@ -26,5 +26,6 @@ namespace Boring32::Async
 		protected:
 			Raii::Win32Handle m_handle;
 			std::wstring m_pipeName;
+			DWORD m_fileAttributes;
 	};
 }

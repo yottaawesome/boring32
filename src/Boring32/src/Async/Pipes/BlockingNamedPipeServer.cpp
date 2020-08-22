@@ -72,7 +72,7 @@ namespace Boring32::Async
     }
 
     BlockingNamedPipeServer::BlockingNamedPipeServer(BlockingNamedPipeServer&& other) noexcept
-    :   NamedPipeServerBase(other)
+    :   NamedPipeServerBase(std::move(other))
     {
         InternalCreatePipe();
     }

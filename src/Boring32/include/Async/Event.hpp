@@ -36,7 +36,7 @@ namespace Boring32::Async
 			virtual void Reset();
 			virtual void WaitOnEvent();
 			virtual bool WaitOnEvent(const DWORD millis);
-
+			virtual HANDLE Detach();
 			virtual HANDLE GetHandle();
 			virtual void Close();
 

@@ -10,25 +10,34 @@ namespace Boring32::Async
 			OverlappedOp();
 			OverlappedOp(
 				const bool isInheritable,
-				const bool manualReset,
-				const bool isSignaled,
 				const std::wstring name
 			);
-
-			OverlappedOp(const OverlappedOp& other);
-			virtual void operator=(const OverlappedOp& other);
-
+			
+		// Non-copyable, moveable
+		public:
+			OverlappedOp(const OverlappedOp& other) = delete;
+			virtual void operator=(const OverlappedOp& other) = delete;	
 			OverlappedOp(OverlappedOp&& other) noexcept;
 			virtual void operator=(OverlappedOp&& other) noexcept;
 
 		public:
+			virtual void WaitForCompletion(const DWORD timeout);
+			virtual OVERLAPPED* GetOverlapped();
+			virtual uint64_t GetStatus();
+			virtual uint64_t GetBytesTransferred();
+			virtual bool IsComplete();
+			virtual bool IsSuccessful();
+			virtual void Cancel();
+			virtual bool Cancel(std::nothrow_t);
+
+		public:
 			Event IoEvent;
-			OVERLAPPED IoOverlapped;
 			bool CallReturnValue;
 			DWORD LastErrorValue;
+			Raii::Win32Handle IoHandle;
 
 		protected:
-			virtual void Copy(const OverlappedOp& other);
+			OVERLAPPED* IoOverlapped;
 			virtual void Move(OverlappedOp& other) noexcept;
 	};
 }

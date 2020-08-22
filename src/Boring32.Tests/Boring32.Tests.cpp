@@ -79,10 +79,7 @@ void TestConversions()
 	const wchar_t test1[] = L"Test1";
 	std::wcout 
 		<<	Boring32::Strings::ConvertStringToWString(
-				Boring32::Strings::ConvertWStringToString(
-					test1
-				)
-			)
+				Boring32::Strings::ConvertWStringToString(test1))
 		<< std::endl;
 }
 

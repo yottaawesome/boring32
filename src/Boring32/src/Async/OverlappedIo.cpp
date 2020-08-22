@@ -4,69 +4,42 @@
 
 namespace Boring32::Async
 {
-	OverlappedIo::~OverlappedIo()
-	{ }
-	
+	OverlappedIo::~OverlappedIo() { }
+
 	OverlappedIo::OverlappedIo()
-	{
-		IoOverlapped.hEvent = IoEvent.GetHandle();
-	}
+	:	OverlappedOp()
+	{ }
 
 	OverlappedIo::OverlappedIo(
 		const bool isInheritable,
-		const bool manualReset,
-		const bool isSignaled,
 		const std::wstring name
 	)
-	:	OverlappedOp(isInheritable, manualReset, isSignaled, name)
+	:	OverlappedOp(isInheritable, name)
 	{ }
 
-	OverlappedIo::OverlappedIo(const OverlappedIo& other)
-	:	OverlappedOp(other)
-	{
-		Copy(other);
-	}
-
-	void OverlappedIo::operator=(const OverlappedIo& other)
-	{
-		Copy(other);
-	}
-
 	OverlappedIo::OverlappedIo(OverlappedIo&& other) noexcept
-	:	OverlappedOp(other)
+	:	OverlappedOp(std::move(other))
 	{
 		Move(other);
 	}
 
 	void OverlappedIo::operator=(OverlappedIo&& other) noexcept
 	{
+		OverlappedOp::Move(other);
 		Move(other);
-	}
-
-	void OverlappedIo::Copy(const OverlappedIo& other)
-	{
-		IoBuffer = other.IoBuffer;
-		IoHandle = other.IoHandle;
 	}
 
 	void OverlappedIo::Move(OverlappedIo& other) noexcept
 	{
 		IoBuffer = std::move(other.IoBuffer);
-		IoHandle = std::move(other.IoHandle);
 	}
 
-	bool OverlappedIo::GetBytesTransferred(const bool wait, DWORD& outBytes)
+	void OverlappedIo::ResizeBuffer()
 	{
-		outBytes = 0;
-		bool succeeded = GetOverlappedResult(
-			IoHandle.GetHandle(),
-			&IoOverlapped,
-			&outBytes,
-			wait
-		);
-		const DWORD lastError = GetLastError();
-		if (succeeded == false && lastError != ERROR_IO_PENDING)
-			throw Error::Win32Exception("Failed to get overlapped result", lastError);
-		return succeeded;
+		if (IsSuccessful() == false)
+			throw std::runtime_error("ResizeBuffer(): operation is not successful");
+		const uint64_t bytesTransferred = GetBytesTransferred();
+		if (bytesTransferred > 0)
+			IoBuffer.resize(bytesTransferred / sizeof(wchar_t));
 	}
 }

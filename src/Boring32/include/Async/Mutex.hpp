@@ -49,9 +49,9 @@ namespace Boring32::Async
 			///		The desired access to open the mutex, e.g. SYNCHRONIZE.
 			/// </param>
 			Mutex(
-				const bool isInheritable,
 				const std::wstring& name,
-				const DWORD desiredAccess
+				const DWORD desiredAccess,
+				const bool isInheritable
 			);
 			
 			/// <summary>

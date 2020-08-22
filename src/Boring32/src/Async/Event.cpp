@@ -148,6 +148,11 @@ namespace Boring32::Async
 			throw std::runtime_error("The wait was abandoned");
 		return false;
 	}
+	
+	HANDLE Event::Detach()
+	{
+		return m_event.Detach();
+	}
 
 	void Event::Signal()
 	{

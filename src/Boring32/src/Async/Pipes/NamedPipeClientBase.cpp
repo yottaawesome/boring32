@@ -10,8 +10,9 @@ namespace Boring32::Async
 		Close();
 	}
 
-	NamedPipeClientBase::NamedPipeClientBase(const std::wstring& name)
-		: m_pipeName(name)
+	NamedPipeClientBase::NamedPipeClientBase(const std::wstring& name, const DWORD fileAttributes)
+	:	m_pipeName(name),
+		m_fileAttributes(fileAttributes)
 	{ }
 
 	NamedPipeClientBase::NamedPipeClientBase(const NamedPipeClientBase& other)
@@ -28,6 +29,7 @@ namespace Boring32::Async
 	{
 		m_handle = other.m_handle;
 		m_pipeName = other.m_pipeName;
+		m_fileAttributes = other.m_fileAttributes;
 	}
 
 	NamedPipeClientBase::NamedPipeClientBase(NamedPipeClientBase&& other) noexcept
@@ -44,6 +46,7 @@ namespace Boring32::Async
 	{
 		m_handle = std::move(other.m_handle);
 		m_pipeName = std::move(other.m_pipeName);
+		m_fileAttributes = other.m_fileAttributes;
 	}
 
 	void NamedPipeClientBase::Connect(const DWORD timeout)
@@ -55,7 +58,7 @@ namespace Boring32::Async
 			0,              // no sharing 
 			nullptr,           // default security attributes
 			OPEN_EXISTING,  // opens existing pipe 
-			0,              // default attributes 
+			m_fileAttributes, // attributes 
 			nullptr);          // no template file 
 		if (m_handle == INVALID_HANDLE_VALUE)
 		{

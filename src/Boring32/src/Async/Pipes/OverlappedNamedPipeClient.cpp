@@ -8,7 +8,7 @@ namespace Boring32::Async
 	OverlappedNamedPipeClient::~OverlappedNamedPipeClient() { }
 
 	OverlappedNamedPipeClient::OverlappedNamedPipeClient(const std::wstring& name)
-		: NamedPipeClientBase(name)
+		: NamedPipeClientBase(name, FILE_FLAG_OVERLAPPED)
 	{ }
 
 	OverlappedNamedPipeClient::OverlappedNamedPipeClient(const OverlappedNamedPipeClient& other)
@@ -23,7 +23,7 @@ namespace Boring32::Async
 	}
 
 	OverlappedNamedPipeClient::OverlappedNamedPipeClient(OverlappedNamedPipeClient&& other) noexcept
-		: NamedPipeClientBase(other)
+		: NamedPipeClientBase(std::move(other))
 	{
 		Move(other);
 	}
@@ -47,7 +47,7 @@ namespace Boring32::Async
 			msg.c_str(),        // message 
 			msg.size(),         // message length 
 			&bytesWritten,      // bytes written 
-			&oio.IoOverlapped);           // not overlapped 
+			oio.GetOverlapped());           // not overlapped 
 		oio.LastErrorValue = GetLastError();
 		if (oio.CallReturnValue == false && oio.LastErrorValue != ERROR_IO_PENDING)
 			throw Error::Win32Exception("Failed to write to pipe", oio.LastErrorValue);
@@ -76,7 +76,7 @@ namespace Boring32::Async
 				&oio.IoBuffer[0],    // buffer to receive reply 
 				oio.IoBuffer.size() * sizeof(TCHAR),  // size of buffer 
 				&currentBytesRead,  // number of bytes read 
-				&oio.IoOverlapped);    // overlapped
+				oio.GetOverlapped());    // overlapped
 			totalBytesRead += currentBytesRead;
 			oio.LastErrorValue = GetLastError();
 			if (oio.CallReturnValue == false)
