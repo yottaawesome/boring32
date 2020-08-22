@@ -5,14 +5,14 @@
 
 int MainAnon(int argc, char** args)
 {
-    if (argc > 0)
-    {
-        int writeHandle = std::stoi(args[1]);
-        int readHandle = std::stoi(args[2]);
-        Boring32::Async::AnonymousPipe pipe(2048, L"||", (HANDLE)readHandle, (HANDLE)writeHandle);
-        std::wcout << pipe.Read();
-        pipe.DelimitedWrite(L"Hello from child!");
-    }
+    if (argc != 4)
+        throw std::runtime_error("MainAnon(): required arguments missing");
+
+    int writeHandle = std::stoi(args[3]);
+    int readHandle = std::stoi(args[4]);
+    Boring32::Async::AnonymousPipe pipe(2048, L"||", (HANDLE)readHandle, (HANDLE)writeHandle);
+    std::wcout << pipe.Read() << std::endl;
+    pipe.DelimitedWrite(L"Hello from child!");
 
     Boring32::Async::Event evt(true, false, L"TestEvent", SYNCHRONIZE);
     evt.WaitOnEvent();
@@ -21,7 +21,7 @@ int MainAnon(int argc, char** args)
     return 0;
 }
 
-int MainNamed(int argc, char** args)
+int MainBlocking(int argc, char** args)
 {
     Sleep(1000);
 
@@ -82,10 +82,22 @@ int main(int argc, char** args)
 {
     try
     {
+        if (argc < 2)
+            throw std::runtime_error("Minimum number of args not given");
+        std::string testType(args[1]);
+        std::cout << "Start " << testType << std::endl;
+
+        if (testType == "1")
+            MainBlocking(argc, args);
+        if (testType == "2")
+            MainOverlapped(argc, args);
+        if (testType == "3")
+            MainAnon(argc, args);
+
         //return ConnectToPrivateNamespace();
         //return ConnectAndWriteToElevatedPipe();
-        //MainNamed(argc, args);
-        return MainOverlapped(argc, args);
+        std::wcout << L"Test process exited without error" << std::endl;
+        return 0;
     }
     catch (const std::exception& ex)
     {

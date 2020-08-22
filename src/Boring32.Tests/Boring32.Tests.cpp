@@ -43,9 +43,9 @@ void TestException()
 void TestWaitableTime()
 {
 	Boring32::Async::WaitableTimer timer(true, L"WaitableTimer", false, false);
-	timer.SetTimerInMillis(-5000, 5000);
-
-	std::wcout << L"Waiting for 5s" << std::endl;
+	const int millis = 5000;
+	std::wcout << L"Timer set for " << millis << L" from now" << std::endl;
+	timer.SetTimerInMillis(-millis, millis);
 	timer.WaitOnTimer(INFINITE);
 	timer.CancelTimer();
 }
@@ -85,9 +85,9 @@ void TestConversions()
 
 void TestMemoryMappedFile()
 {
-	Boring32::Async::MemoryMappedFile m1(L"HelloMmf1", 1000, true, false);
+	Boring32::Async::MemoryMappedFile m1(L"HelloMmf1", 1000, false);
 	Boring32::Async::MemoryMappedFile m2(m1);
-	Boring32::Async::MemoryMappedFile m3(L"HelloMmf3", 1000, true, false);
+	Boring32::Async::MemoryMappedFile m3(L"HelloMmf3", 1000, false);
 	m2 = m3;
 }
 
@@ -135,7 +135,7 @@ void TestAnonPipes()
 		throw std::runtime_error("Failed to match input to output");
 }
 
-void TestProcessNamedPipe()
+void TestProcessBlockingNamedPipe()
 {
 	std::wstring directory;
 	directory.resize(2048);
@@ -148,7 +148,10 @@ void TestProcessNamedPipe()
 	JOBOBJECT_EXTENDED_LIMIT_INFORMATION jeli{ 0 };
 	jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
 	job.SetInformation(jeli);
-	Boring32::Async::Process testProcess(filePath, L"", directory, true);
+	std::wstringstream ss;
+	ss	<< "TestProcess.exe"
+		<< L" 1";
+	Boring32::Async::Process testProcess(filePath, ss.str(), directory, true);
 	testProcess.Start();
 	job.AssignProcessToThisJob(testProcess.GetProcessHandle());
 
@@ -176,25 +179,29 @@ void TestProcessOverlappedNamedPipe()
 	directory.erase(std::find(directory.begin(), directory.end(), '\0'), directory.end());
 	std::wstring filePath = directory + L"\\TestProcess.exe";
 
-	Boring32::Async::Job job(false);
-	JOBOBJECT_EXTENDED_LIMIT_INFORMATION jeli{ 0 };
-	jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
-	job.SetInformation(jeli);
-	Boring32::Async::Process testProcess(filePath, L"", directory, true);
-	testProcess.Start();
-	job.AssignProcessToThisJob(testProcess.GetProcessHandle());
-
-	Boring32::Async::OverlappedNamedPipeServer p(
-		L"\\\\.\\pipe\\mynamedpipe", 
-		200, 
-		5, 
+	Boring32::Async::OverlappedNamedPipeServer serverPipe(
+		L"\\\\.\\pipe\\mynamedpipe",
+		200,
+		5,
 		L"",
 		false,
 		true
 	);
-	auto oio = p.Connect();
+	auto oio = serverPipe.Connect();
+
+	Boring32::Async::Job job(false);
+	JOBOBJECT_EXTENDED_LIMIT_INFORMATION jeli{ 0 };
+	jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+	job.SetInformation(jeli);
+	std::wstringstream ss;
+	ss	<< "TestProcess.exe"
+		<< L" 2";
+	Boring32::Async::Process testProcess(filePath, ss.str(), directory, true);
+	testProcess.Start();
+	job.AssignProcessToThisJob(testProcess.GetProcessHandle());
+
 	WaitForSingleObject(oio.IoEvent.GetHandle(), INFINITE);
-	p.Write(L"HAHA!");
+	oio = serverPipe.Write(L"HAHA!");
 	WaitForSingleObject(testProcess.GetProcessHandle(), INFINITE);
 }
 
@@ -213,9 +220,9 @@ void TestProcessAnonPipe()
 	childWrite = Boring32::Async::AnonymousPipe(true, 2048, L"||");
 	std::wstringstream ss;
 	ss << "TestProcess.exe"
-		<< L" -w "
+		<< L" 3 "
 		<< (int)childWrite.GetWrite()
-		<< L" -r "
+		<< L" "
 		<< (int)childRead.GetRead();
 	//std::wcout << ss.str() << std::endl;
 
@@ -241,12 +248,6 @@ void TestProcessAnonPipe()
 
 int main(int argc, char** args)
 {
-	//TestProcessNamedPipe();
-	TestProcessOverlappedNamedPipe();
-	return 0;
-
-	TestThreadSafeVector();
-
 	PROCESS_MEMORY_EXHAUSTION_INFO pmei{ 0 };
 	pmei.Version = PME_CURRENT_VERSION;
 	pmei.Type = PMETypeFailFastOnCommitFailure;
@@ -258,15 +259,42 @@ int main(int argc, char** args)
 		sizeof(pmei)
 	);
 
-	TestException();
-	TestWaitableTime();
-	TestSemaphore();
-	TestMutex();
-	TestConversions();
-	TestMemoryMappedFile();
-	TestAnonPipes();
-	TestLibraryLoad();
-
+	//TestProcessNamedPipe();
+	for (int i = 0; i < 12; i++)
+	{
+		try
+		{
+			std::wcout << L"Test: " << i << std::endl;
+			if (i == 0)
+				TestProcessOverlappedNamedPipe();
+			if (i == 1)
+				TestThreadSafeVector();
+			if (i == 2)
+				TestException();
+			if (i == 3)
+				TestWaitableTime();
+			if (i == 4)
+				TestSemaphore();
+			if (i == 5)
+				TestMutex();
+			if (i == 6)
+				TestConversions();
+			if (i == 7)
+				TestMemoryMappedFile();
+			if (i == 8)
+				TestAnonPipes();
+			if (i == 9)
+				TestLibraryLoad();
+			if (i == 10)
+				TestProcessBlockingNamedPipe();
+			if (i == 11)
+				TestProcessAnonPipe();
+		}
+		catch (const std::exception& ex)
+		{
+			std::wcout << ex.what() << std::endl;
+		}
+	}
 	
 
 	//Boring32::WinHttp::HttpWebClient client(
