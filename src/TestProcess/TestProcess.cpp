@@ -8,13 +8,13 @@ int MainAnon(int argc, char** args)
     if (argc != 4)
         throw std::runtime_error("MainAnon(): required arguments missing");
 
-    int writeHandle = std::stoi(args[3]);
-    int readHandle = std::stoi(args[4]);
+    int writeHandle = std::stoi(args[2]);
+    int readHandle = std::stoi(args[3]);
     Boring32::Async::AnonymousPipe pipe(2048, L"||", (HANDLE)readHandle, (HANDLE)writeHandle);
     std::wcout << pipe.Read() << std::endl;
     pipe.DelimitedWrite(L"Hello from child!");
 
-    Boring32::Async::Event evt(true, false, L"TestEvent", SYNCHRONIZE);
+    Boring32::Async::Event evt(false, false, L"TestEvent", SYNCHRONIZE);
     evt.WaitOnEvent();
     std::wcout << L"Exiting after wait!" << std::endl;
 
@@ -85,7 +85,7 @@ int main(int argc, char** args)
         if (argc < 2)
             throw std::runtime_error("Minimum number of args not given");
         std::string testType(args[1]);
-        std::cout << "Start " << testType << std::endl;
+        std::cout << "Child process started in mode: " << testType << std::endl;
 
         if (testType == "1")
             MainBlocking(argc, args);
@@ -96,7 +96,11 @@ int main(int argc, char** args)
 
         //return ConnectToPrivateNamespace();
         //return ConnectAndWriteToElevatedPipe();
-        std::wcout << L"Test process exited without error" << std::endl;
+        std::wcout 
+            << L"Child process in mode " 
+            << testType.c_str()
+            << L" exited without error" 
+            << std::endl;
         return 0;
     }
     catch (const std::exception& ex)

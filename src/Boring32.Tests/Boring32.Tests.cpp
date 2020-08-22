@@ -40,12 +40,11 @@ void TestException()
 	}
 }
 
-void TestWaitableTime()
+void TestWaitableTime(int64_t relativeMillis)
 {
 	Boring32::Async::WaitableTimer timer(true, L"WaitableTimer", false, false);
-	const int millis = 5000;
-	std::wcout << L"Timer set for " << millis << L" from now" << std::endl;
-	timer.SetTimerInMillis(-millis, millis);
+	std::wcout << L"Timer set for " << relativeMillis << L" from now" << std::endl;
+	timer.SetTimerInMillis(-relativeMillis, relativeMillis);
 	timer.WaitOnTimer(INFINITE);
 	timer.CancelTimer();
 }
@@ -155,7 +154,7 @@ void TestProcessBlockingNamedPipe()
 	testProcess.Start();
 	job.AssignProcessToThisJob(testProcess.GetProcessHandle());
 
-	Boring32::Async::BlockingNamedPipeServer p(
+	Boring32::Async::BlockingNamedPipeServer pipeServer(
 		L"\\\\.\\pipe\\mynamedpipe", 
 		200, 
 		5, 
@@ -163,10 +162,10 @@ void TestProcessBlockingNamedPipe()
 		false,
 		true
 	);
-	p.Connect();
-	p.Write(L"HAHA!");
-	p.Write(L"HAHA2!");
-	p.Disconnect();
+	pipeServer.Connect();
+	pipeServer.Write(L"HAHA!");
+	pipeServer.Write(L"HAHA2!");
+	pipeServer.Disconnect();
 	WaitForSingleObject(testProcess.GetProcessHandle(), INFINITE);
 }
 
@@ -214,6 +213,7 @@ void TestProcessAnonPipe()
 	directory.erase(std::find(directory.begin(), directory.end(), '\0'), directory.end());
 	std::wstring filePath = directory + L"\\TestProcess.exe";
 
+	Boring32::Async::Event evt(true, true, false, L"TestEvent");
 	Boring32::Async::AnonymousPipe childWrite;
 	Boring32::Async::AnonymousPipe childRead;
 	childRead = Boring32::Async::AnonymousPipe(true, 2048, L"||");
@@ -224,26 +224,23 @@ void TestProcessAnonPipe()
 		<< (int)childWrite.GetWrite()
 		<< L" "
 		<< (int)childRead.GetRead();
-	//std::wcout << ss.str() << std::endl;
-
-	Boring32::Async::Event evt(true, true, false, L"TestEvent");
+	Boring32::Async::Process testProcess(filePath, ss.str(), directory, true);
 
 	Boring32::Async::Job job(false);
 	JOBOBJECT_EXTENDED_LIMIT_INFORMATION jeli{ 0 };
 	jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
 	job.SetInformation(jeli);
-	Boring32::Async::Process testProcess(filePath, ss.str(), directory, true);
 	testProcess.Start();
 	job.AssignProcessToThisJob(testProcess.GetProcessHandle());
 
 	childRead.DelimitedWrite(L"Hello from parent!");
-	Sleep(1000);
+	Sleep(500);
 
 	std::wcout
-		<< std::endl 
 		<< childWrite.Read() 
 		<< std::endl;
 	evt.Signal();
+	WaitForSingleObject(testProcess.GetProcessHandle(), INFINITE);
 }
 
 int main(int argc, char** args)
@@ -272,7 +269,7 @@ int main(int argc, char** args)
 			if (i == 2)
 				TestException();
 			if (i == 3)
-				TestWaitableTime();
+				TestWaitableTime(2000);
 			if (i == 4)
 				TestSemaphore();
 			if (i == 5)
@@ -296,7 +293,6 @@ int main(int argc, char** args)
 		}
 	}
 	
-
 	//Boring32::WinHttp::HttpWebClient client(
 	//	L"TestClientAgent", 
 	//	L"127.0.0.1", 
