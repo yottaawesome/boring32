@@ -27,6 +27,7 @@ int MainBlocking(int argc, char** args)
 
     Boring32::Async::BlockingNamedPipeClient p(L"\\\\.\\pipe\\mynamedpipe");
     p.Connect(0);
+    p.SetMode(PIPE_READMODE_MESSAGE);
     std::wcout << p.Read() << std::endl;
     std::wcout << p.Read() << std::endl;
     p.Close();
@@ -39,7 +40,7 @@ int MainOverlapped(int argc, char** args)
 
     Boring32::Async::OverlappedNamedPipeClient p(L"\\\\.\\pipe\\mynamedpipe");
     p.Connect(0);
-
+    p.SetMode(PIPE_READMODE_MESSAGE);
     auto oio = p.Read();
     oio.WaitForCompletion(INFINITE);
     oio.ResizeBuffer();
@@ -53,6 +54,7 @@ int ConnectAndWriteToElevatedPipe()
 {
     Boring32::Async::OverlappedNamedPipeClient p(L"\\\\.\\pipe\\mynamedpipe");
     p.Connect(0);
+    p.SetMode(PIPE_READMODE_MESSAGE);
     //auto r = p.Write(L"Hello!");
     //WaitForSingleObject(r.IoEvent.GetHandle(), INFINITE);
     return 0;
@@ -75,6 +77,7 @@ DWORD ConnectToPrivateNamespace()
     agentNamespacePipeAvailable.WaitOnEvent();
     Boring32::Async::OverlappedNamedPipeClient p(L"\\\\.\\pipe\\\\mynamedpipe");
     p.Connect(0);
+    p.SetMode(PIPE_READMODE_MESSAGE);
     return 0;
 }
 

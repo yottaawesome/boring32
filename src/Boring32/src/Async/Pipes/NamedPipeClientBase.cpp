@@ -67,11 +67,15 @@ namespace Boring32::Async
 			if (WaitNamedPipeW(m_pipeName.c_str(), timeout) == false)
 				throw Error::Win32Exception("Failed to connect client pipe: timeout", GetLastError());
 		}
+	}
 
-		DWORD dwMode = PIPE_READMODE_MESSAGE;
+	void NamedPipeClientBase::SetMode(const DWORD pipeMode)
+	{
+		//PIPE_READMODE_MESSAGE or PIPE_READMODE_BYTE
+		DWORD passedPipeMode = pipeMode;
 		bool fSuccess = SetNamedPipeHandleState(
 			m_handle.GetHandle(),    // pipe handle 
-			&dwMode,  // new pipe mode 
+			&passedPipeMode,  // new pipe mode 
 			nullptr,     // don't set maximum bytes 
 			nullptr);    // don't set maximum time 
 		if (fSuccess == false)
