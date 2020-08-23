@@ -12,11 +12,7 @@ namespace Boring32::Async
 			UnmapViewOfFile(m_view);
 			m_view = nullptr;
 		}
-		if (m_mapFile != nullptr)
-		{
-			m_mapFile.Close();
-			m_mapFile = nullptr;
-		}
+		m_mapFile = nullptr;
 	}
 
 	MemoryMappedFile::~MemoryMappedFile()
@@ -112,10 +108,11 @@ namespace Boring32::Async
 		Copy(other);
 	}
 	
-	void MemoryMappedFile::operator=(const MemoryMappedFile& other)
+	MemoryMappedFile& MemoryMappedFile::operator=(const MemoryMappedFile& other)
 	{
 		Close();
 		Copy(other);
+		return *this;
 	}
 
 	void MemoryMappedFile::Copy(const MemoryMappedFile& other)
@@ -136,7 +133,7 @@ namespace Boring32::Async
 			if (m_view == nullptr)
 			{
 				Close();
-				throw std::runtime_error("MapViewOfFile() failed");
+				throw Error::Win32Exception("MapViewOfFile() failed", GetLastError());
 			}
 		}
 	}
@@ -146,9 +143,10 @@ namespace Boring32::Async
 		Move(other);
 	}
 
-	void MemoryMappedFile::operator=(MemoryMappedFile&& other) noexcept
+	MemoryMappedFile& MemoryMappedFile::operator=(MemoryMappedFile&& other) noexcept
 	{
 		Move(other);
+		return *this;
 	}
 
 	void MemoryMappedFile::Move(MemoryMappedFile& other) noexcept

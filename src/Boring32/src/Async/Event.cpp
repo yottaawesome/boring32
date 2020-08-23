@@ -76,9 +76,10 @@ namespace Boring32::Async
 		Duplicate(other);
 	}
 
-	void Event::operator=(const Event& other)
+	Event& Event::operator=(const Event& other)
 	{
 		Duplicate(other);
+		return *this;
 	}
 
 	void Event::Duplicate(const Event& other)
@@ -94,10 +95,11 @@ namespace Boring32::Async
 		Move(other);
 	}
 
-	void Event::operator=(Event&& other) noexcept
+	Event& Event::operator=(Event&& other) noexcept
 	{
 		Close();
 		Move(other);
+		return *this;
 	}
 
 	void Event::Move(Event& other) noexcept

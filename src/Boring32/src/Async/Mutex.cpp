@@ -91,9 +91,10 @@ namespace Boring32::Async
 		Copy(other);
 	}
 
-	void Mutex::operator=(const Mutex& other)
+	Mutex& Mutex::operator=(const Mutex& other)
 	{
 		Copy(other);
+		return *this;
 	}
 
 	void Mutex::Copy(const Mutex& other)
@@ -110,9 +111,10 @@ namespace Boring32::Async
 		Move(other);
 	}
 
-	void Mutex::operator=(Mutex&& other) noexcept
+	Mutex& Mutex::operator=(Mutex&& other) noexcept
 	{
 		Move(other);
+		return *this;
 	}
 
 	void Mutex::Move(Mutex& other) noexcept

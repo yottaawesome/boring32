@@ -96,13 +96,13 @@ namespace Boring32::Async
 			///		Thrown when the RHS operand is in an invalid state,
 			///		or if the duplicatation failed.
 			/// </exception>
-			virtual void operator=(const Mutex& other);
+			virtual Mutex& operator=(const Mutex& other);
 
 			/// <summary>
 			///		Move assignment.
 			/// </summary>
 			/// <param name="other">The mutex to move.</param>
-			virtual void operator=(Mutex&& other) noexcept;
+			virtual Mutex& operator=(Mutex&& other) noexcept;
 
 			/// <summary>
 			///		Blocks the current thread for a specified amount of time 

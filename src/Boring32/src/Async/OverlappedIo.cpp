@@ -20,10 +20,11 @@ namespace Boring32::Async
 		Move(other);
 	}
 
-	void OverlappedIo::operator=(OverlappedIo&& other) noexcept
+	OverlappedIo& OverlappedIo::operator=(OverlappedIo&& other) noexcept
 	{
 		OverlappedOp::Move(other);
 		Move(other);
+		return *this;
 	}
 
 	void OverlappedIo::Move(OverlappedIo& other) noexcept

@@ -11,9 +11,9 @@ namespace Boring32::Async
 
 			// Non-movable and non-copyable
 			CriticalSectionLock(const CriticalSectionLock& other) = delete;
-			void operator=(const CriticalSectionLock& other) = delete;
+			CriticalSectionLock& operator=(const CriticalSectionLock& other) = delete;
 			CriticalSectionLock(const CriticalSectionLock&& other) = delete;
-			void operator=(const CriticalSectionLock&& other) = delete;
+			CriticalSectionLock& operator=(const CriticalSectionLock&& other) = delete;
 
 		protected:
 			CRITICAL_SECTION& m_criticalSection;

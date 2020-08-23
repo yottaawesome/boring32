@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include "Event.hpp"
 
 namespace Boring32::Async
@@ -13,9 +14,9 @@ namespace Boring32::Async
 		// Non-copyable, moveable
 		public:
 			OverlappedOp(const OverlappedOp& other) = delete;
-			virtual void operator=(const OverlappedOp& other) = delete;	
+			virtual OverlappedOp& operator=(const OverlappedOp& other) = delete;
 			OverlappedOp(OverlappedOp&& other) noexcept;
-			virtual void operator=(OverlappedOp&& other) noexcept;
+			virtual OverlappedOp& operator=(OverlappedOp&& other) noexcept;
 
 		public:
 			virtual void WaitForCompletion(const DWORD timeout);
@@ -37,6 +38,6 @@ namespace Boring32::Async
 		protected:
 			Event m_ioEvent;
 			Raii::Win32Handle m_ioHandle;
-			OVERLAPPED* m_ioOverlapped;
+			std::unique_ptr<OVERLAPPED> m_ioOverlapped;
 	};
 }

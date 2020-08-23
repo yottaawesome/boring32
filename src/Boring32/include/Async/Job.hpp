@@ -12,13 +12,14 @@ namespace Boring32::Async
 			virtual ~Job();
 			Job();
 			Job(const bool isInheritable);
-			Job(const bool createOrOpen, const bool isInheritable, const std::wstring name);
+			Job(const bool isInheritable, const std::wstring& name);
+			Job(const bool isInheritable, const std::wstring& name, const DWORD desiredAccess);
 
 			Job(const Job& other);
-			virtual void operator=(const Job& other);
+			virtual Job& operator=(const Job& other);
 
 			Job(Job&& other) noexcept;
-			virtual void operator=(Job&& other) noexcept;
+			virtual Job& operator=(Job&& other) noexcept;
 
 		// API
 		public:

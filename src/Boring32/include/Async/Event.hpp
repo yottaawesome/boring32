@@ -25,10 +25,10 @@ namespace Boring32::Async
 			);
 
 			Event(const Event& other);
-			virtual void operator=(const Event& other);
+			virtual Event& operator=(const Event& other);
 
 			Event(Event&& other) noexcept;
-			virtual void operator=(Event&& other) noexcept;
+			virtual Event& operator=(Event&& other) noexcept;
 
 		// API
 		public:

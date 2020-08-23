@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
+#include "include/Error/Win32Exception.hpp"
 #include "include/Async/Job.hpp"
 
 namespace Boring32::Async
@@ -11,11 +12,7 @@ namespace Boring32::Async
 
 	void Job::Close()
 	{
-		if (m_job != nullptr)
-		{
-			m_job.Close();
-			m_job = nullptr;
-		}
+		m_job = nullptr;
 	}
 
 	Job::Job()
@@ -28,13 +25,16 @@ namespace Boring32::Async
 		Create(isInheritable);
 	}
 
-	Job::Job(const bool createOrOpen, const bool isInheritable, const std::wstring name)
+	Job::Job(const bool isInheritable, const std::wstring& name)
 	:	m_name(name)
 	{
-		if (createOrOpen)
-			Create(isInheritable);
-		else 
-			Open(isInheritable);
+		Create(isInheritable);
+	}
+	
+	Job::Job(const bool isInheritable, const std::wstring& name, const DWORD desiredAccess)
+	:	m_name(name)
+	{
+		Open(isInheritable);
 	}
 
 	Job::Job(const Job& other)
@@ -42,10 +42,11 @@ namespace Boring32::Async
 		Copy(other);
 	}
 
-	void Job::operator=(const Job& other)
+	Job& Job::operator=(const Job& other)
 	{
 		Close();
 		Copy(other);
+		return *this;
 	}
 
 	void Job::Copy(const Job& other)
@@ -60,17 +61,17 @@ namespace Boring32::Async
 		Move(other);
 	}
 
-	void Job::operator=(Job&& other) noexcept
+	Job& Job::operator=(Job&& other) noexcept
 	{
 		Close();
 		Move(other);
+		return *this;
 	}
 
 	void Job::Move(Job& other) noexcept
 	{
 		m_name = std::move(other.m_name);
-		if (other.m_job != nullptr)
-			m_job = std::move(other.m_job);
+		m_job = std::move(other.m_job);
 	}
 
 	void Job::SetInformation(JOBOBJECT_EXTENDED_LIMIT_INFORMATION& jeli)
@@ -85,7 +86,7 @@ namespace Boring32::Async
 			sizeof(jeli)
 		);
 		if (bSuccess == false)
-			throw std::runtime_error("SetInformationJobObject failed");
+			throw Error::Win32Exception("SetInformationJobObject failed", GetLastError());
 	}
 
 	void Job::AssignProcessToThisJob(const HANDLE process)
@@ -95,8 +96,8 @@ namespace Boring32::Async
 		if (process == nullptr)
 			throw std::runtime_error("Cannot assign process to job; process is null.");
 
-		if(AssignProcessToJobObject(m_job.GetHandle(), process) == false)
-			throw std::runtime_error("Cannot assign process to job; AssignProcessToJobObject() failed.");
+		if (AssignProcessToJobObject(m_job.GetHandle(), process) == false)
+			throw Error::Win32Exception("Cannot assign process to job; AssignProcessToJobObject() failed.", GetLastError());
 	}
 
 	HANDLE Job::GetHandle()
@@ -122,22 +123,19 @@ namespace Boring32::Async
 			m_name.c_str()
 		);
 		if (m_job == nullptr)
-			throw std::runtime_error("CreateJobObject failed");
+			throw Error::Win32Exception("OpenJobObjectW() failed", GetLastError());
 	}
 
 	void Job::Create(const bool isInheritable)
 	{
-		SECURITY_ATTRIBUTES jobAttributes{ 0 };
-		jobAttributes.nLength = sizeof(SECURITY_ATTRIBUTES);
-		jobAttributes.bInheritHandle = isInheritable;
-
-		m_job = CreateJobObject(
-			&jobAttributes, 
+		m_job = CreateJobObjectW(
+			nullptr, 
 			m_name.size() > 0 
 				? m_name.c_str() 
 				: nullptr
 		);
 		if (m_job == nullptr)
-			throw std::runtime_error("CreateJobObject failed");
+			throw Error::Win32Exception("CreateJobObjectW() failed", GetLastError());
+		m_job.SetInheritability(isInheritable);
 	}
 }

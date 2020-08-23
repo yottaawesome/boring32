@@ -77,7 +77,7 @@ namespace Boring32::Async
 			///		from the specified MemoryMappedFile.
 			/// </summary>
 			/// <param name="other">The MemoryMappedFile to duplicate.</param>
-			virtual void operator=(const MemoryMappedFile& other);
+			virtual MemoryMappedFile& operator=(const MemoryMappedFile& other);
 
 			/// <summary>
 			///		Move constructor.
@@ -89,7 +89,7 @@ namespace Boring32::Async
 			///		Move assignment.
 			/// </summary>
 			/// <param name="other">The MemoryMappedFile to move.</param>
-			virtual void operator=(MemoryMappedFile&& other) noexcept;
+			virtual MemoryMappedFile& operator=(MemoryMappedFile&& other) noexcept;
 
 		// API
 		public:
