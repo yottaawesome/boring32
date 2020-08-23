@@ -8,10 +8,7 @@ namespace Boring32::Async
 		public:
 			virtual ~OverlappedOp();
 			OverlappedOp();
-			OverlappedOp(
-				const bool isInheritable,
-				const std::wstring name
-			);
+			OverlappedOp(const Raii::Win32Handle& handle);
 			
 		// Non-copyable, moveable
 		public:
@@ -31,13 +28,15 @@ namespace Boring32::Async
 			virtual bool Cancel(std::nothrow_t);
 
 		public:
-			Event IoEvent;
 			bool CallReturnValue;
 			DWORD LastErrorValue;
-			Raii::Win32Handle IoHandle;
 
 		protected:
-			OVERLAPPED* IoOverlapped;
 			virtual void Move(OverlappedOp& other) noexcept;
+
+		protected:
+			Event m_ioEvent;
+			Raii::Win32Handle m_ioHandle;
+			OVERLAPPED* m_ioOverlapped;
 	};
 }

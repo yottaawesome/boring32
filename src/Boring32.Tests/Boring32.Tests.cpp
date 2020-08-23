@@ -199,7 +199,7 @@ void TestProcessOverlappedNamedPipe()
 	testProcess.Start();
 	job.AssignProcessToThisJob(testProcess.GetProcessHandle());
 
-	WaitForSingleObject(oio.IoEvent.GetHandle(), INFINITE);
+	oio.WaitForCompletion(INFINITE);
 	oio = serverPipe.Write(L"HAHA!");
 	WaitForSingleObject(testProcess.GetProcessHandle(), INFINITE);
 }

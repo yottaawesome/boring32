@@ -10,11 +10,8 @@ namespace Boring32::Async
 	:	OverlappedOp()
 	{ }
 
-	OverlappedIo::OverlappedIo(
-		const bool isInheritable,
-		const std::wstring name
-	)
-	:	OverlappedOp(isInheritable, name)
+	OverlappedIo::OverlappedIo(const Raii::Win32Handle& handle)
+	:	OverlappedOp(handle)
 	{ }
 
 	OverlappedIo::OverlappedIo(OverlappedIo&& other) noexcept

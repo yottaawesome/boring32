@@ -8,10 +8,7 @@ namespace Boring32::Async
 		public:
 			virtual ~OverlappedIo();
 			OverlappedIo();
-			OverlappedIo(
-				const bool isInheritable,
-				const std::wstring name
-			);
+			OverlappedIo(const Raii::Win32Handle& handle);
 			OverlappedIo(OverlappedIo&& other) noexcept;
 			virtual void operator=(OverlappedIo&& other) noexcept;
 
