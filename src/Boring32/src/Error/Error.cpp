@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include <winhttp.h>
+#include "include/Strings/Strings.hpp"
 #include "include/Error/Error.hpp"
 
 namespace Boring32::Error
@@ -89,5 +90,33 @@ namespace Boring32::Error
             << std::to_string(errorCode)
             << ")";
         return wss.str();
+    }
+
+    std::wstring GetErrorFromHResult(const std::wstring& msg, const HRESULT hr)
+    {
+        std::wstringstream ss;
+        _com_error ce(hr);
+        ss
+            << msg
+            << std::endl
+            << ce.ErrorMessage()
+            << L" (HRESULT: "
+            << std::to_wstring(hr)
+            << ")";
+        return ss.str();
+    }
+
+    std::string GetErrorFromHResult(const std::string& msg, const HRESULT hr)
+    {
+        std::stringstream ss;
+        _com_error ce(hr);
+        ss
+            << msg
+            << std::endl
+            << Strings::ConvertWStringToString(ce.ErrorMessage())
+            << " (HRESULT: "
+            << std::to_string(hr)
+            << ")";
+        return ss.str();
     }
 }

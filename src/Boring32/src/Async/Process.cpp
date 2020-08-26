@@ -1,6 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Error/Win32Exception.hpp"
+#include "include/Error/Win32Error.hpp"
 #include "include/Async/Process.hpp"
 
 namespace Boring32::Async
@@ -151,7 +151,7 @@ namespace Boring32::Async
 				&processInfo			// Pointer to PROCESS_INFORMATION structure
 			);
 		if (successfullyCreatedProcess == false)
-			throw Error::Win32Exception("Failed to create process", GetLastError());
+			throw Error::Win32Error("Failed to create process", GetLastError());
 
 		m_process = processInfo.hProcess;
 		m_thread = processInfo.hThread;
@@ -216,7 +216,7 @@ namespace Boring32::Async
 	{
 		DWORD exitCode = 0;
 		if (GetExitCodeProcess(m_process.GetHandle(), &exitCode) == false)
-			throw Error::Win32Exception("Failed to determine process exit code", GetLastError());
+			throw Error::Win32Error("Failed to determine process exit code", GetLastError());
 		return exitCode;
 	}
 }

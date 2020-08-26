@@ -41,7 +41,7 @@ int MainOverlapped(int argc, char** args)
     Boring32::Async::OverlappedNamedPipeClient p(L"\\\\.\\pipe\\mynamedpipe");
     p.Connect(0);
     p.SetMode(PIPE_READMODE_MESSAGE);
-    auto oio = p.Read();
+    auto oio = p.Read(1024);
     oio.WaitForCompletion(INFINITE);
     oio.ResizeBuffer();
     std::wcout << oio.IoBuffer << std::endl;

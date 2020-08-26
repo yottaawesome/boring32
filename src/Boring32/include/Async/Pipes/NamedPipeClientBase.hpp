@@ -8,6 +8,7 @@ namespace Boring32::Async
 	{
 		public:
 			virtual ~NamedPipeClientBase();
+			NamedPipeClientBase();
 			NamedPipeClientBase(const std::wstring& name, const DWORD fileAttributes);
 
 		// Moveable, copyable
@@ -21,6 +22,7 @@ namespace Boring32::Async
 			virtual void SetMode(const DWORD pipeMode);
 			virtual void Connect(const DWORD timeout);
 			virtual void Close();
+			virtual DWORD UnreadCharactersRemaining() const;
 
 		protected:
 			virtual void Copy(const NamedPipeClientBase& other);

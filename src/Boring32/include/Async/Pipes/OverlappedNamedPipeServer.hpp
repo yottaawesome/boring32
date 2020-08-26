@@ -11,6 +11,7 @@ namespace Boring32::Async
 	{
 		public:
 			virtual ~OverlappedNamedPipeServer();
+			OverlappedNamedPipeServer();
 			OverlappedNamedPipeServer(
 				const std::wstring& pipeName, 
 				const DWORD size,
@@ -38,6 +39,6 @@ namespace Boring32::Async
 		public:
 			virtual OverlappedOp Connect();
 			virtual OverlappedIo Write(const std::wstring& msg);
-			virtual OverlappedIo Read();
+			virtual OverlappedIo Read(const DWORD noOfCharacters);
 	};
 }

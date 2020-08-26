@@ -1,6 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Error/Win32Exception.hpp"
+#include "include/Error/Win32Error.hpp"
 #include "include/Async/Semaphore.hpp"
 
 namespace Boring32::Async
@@ -36,7 +36,7 @@ namespace Boring32::Async
 			m_name == L"" ? nullptr : m_name.c_str()
 		);
 		if (m_handle == nullptr)
-			throw Error::Win32Exception("Failed to open semaphore", GetLastError());
+			throw Error::Win32Error("Failed to open semaphore", GetLastError());
 	}
 
 	Semaphore::Semaphore(
@@ -55,7 +55,7 @@ namespace Boring32::Async
 		//SEMAPHORE_ALL_ACCESS
 		m_handle = OpenSemaphoreW(desiredAccess, isInheritable, m_name.c_str());
 		if (m_handle == nullptr)
-			throw Error::Win32Exception("Failed to open semaphore", GetLastError());
+			throw Error::Win32Error("Failed to open semaphore", GetLastError());
 	}
 
 	Semaphore::Semaphore(const Semaphore& other)
@@ -103,14 +103,14 @@ namespace Boring32::Async
 	void Semaphore::Release()
 	{
 		if (ReleaseSemaphore(m_handle.GetHandle(), 1, 0) == false)
-			throw Error::Win32Exception("Failed to release semaphore", GetLastError());
+			throw Error::Win32Error("Failed to release semaphore", GetLastError());
 		m_currentCount++;
 	}
 
 	void Semaphore::Release(const int countToRelease)
 	{
 		if (ReleaseSemaphore(m_handle.GetHandle(), 1, 0) == false)
-			throw Error::Win32Exception("Failed to release semaphore", GetLastError());
+			throw Error::Win32Error("Failed to release semaphore", GetLastError());
 		if((m_currentCount + countToRelease) > m_maxCount)
 			throw std::runtime_error("Release count would exceed maximum");
 		m_currentCount += countToRelease;
@@ -129,7 +129,7 @@ namespace Boring32::Async
 		if (status == WAIT_ABANDONED)
 			throw std::runtime_error("The wait was abandoned");
 		if (status == WAIT_FAILED)
-			throw Error::Win32Exception("Semaphore::Acquire(): WaitForSingleObject() failed", GetLastError());
+			throw Error::Win32Error("Semaphore::Acquire(): WaitForSingleObject() failed", GetLastError());
 		return false;
 	}
 

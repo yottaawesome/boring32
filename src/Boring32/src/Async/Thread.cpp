@@ -1,7 +1,7 @@
 #include "pch.hpp"
 #include <stdexcept>
 #include <iostream>
-#include "include/Error/Win32Exception.hpp"
+#include "include/Error/Win32Error.hpp"
 #include "include/Async/Thread.hpp"
 
 namespace Boring32::Async
@@ -135,7 +135,7 @@ namespace Boring32::Async
 			throw std::runtime_error("Thread was not running when request to terminate occurred.");
 
 		if (TerminateThread(m_thread.GetHandle(), (DWORD)ThreadStatus::Terminated) == false)
-			throw Error::Win32Exception("Thread::Suspend(): TerminateThread() failed", GetLastError());
+			throw Error::Win32Error("Thread::Suspend(): TerminateThread() failed", GetLastError());
 	}
 
 	void Thread::Suspend()
@@ -145,7 +145,7 @@ namespace Boring32::Async
 
 		this->m_status = ThreadStatus::Suspended;
 		if (SuspendThread(m_thread.GetHandle()) == false)
-			throw Error::Win32Exception("Thread::Suspend(): SuspendThread() failed", GetLastError());
+			throw Error::Win32Error("Thread::Suspend(): SuspendThread() failed", GetLastError());
 	}
 
 	void Thread::Resume()
@@ -155,7 +155,7 @@ namespace Boring32::Async
 
 		this->m_status = ThreadStatus::Running;
 		if (ResumeThread(m_thread.GetHandle()) == false)
-			throw Error::Win32Exception("Thread::Suspend(): ResumeThread() failed", GetLastError());
+			throw Error::Win32Error("Thread::Suspend(): ResumeThread() failed", GetLastError());
 	}
 
 	bool Thread::Join(const DWORD waitTime)
@@ -170,7 +170,7 @@ namespace Boring32::Async
 			return false;
 		if (waitResult == WAIT_ABANDONED)
 			throw std::runtime_error("Thread::Join(): wait was abandoned");
-		throw Error::Win32Exception("Thread::Join(): WaitForSingleObject() failed", GetLastError());
+		throw Error::Win32Error("Thread::Join(): WaitForSingleObject() failed", GetLastError());
 	}
 
 	UINT Thread::Run()

@@ -1,6 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Error/Win32Exception.hpp"
+#include "include/Error/Win32Error.hpp"
 #include "include/Async/MemoryMappedFile.hpp"
 
 namespace Boring32::Async
@@ -48,7 +48,7 @@ namespace Boring32::Async
 			m_maxSize,					// maximum object size (low-order DWORD)
 			m_name.c_str());			// m_name of mapping object
 		if (m_mapFile == nullptr)
-			throw Error::Win32Exception("Failed to open memory mapped file", GetLastError());
+			throw Error::Win32Error("Failed to open memory mapped file", GetLastError());
 
 		m_view = MapViewOfFile(
 			m_mapFile.GetHandle(),	// handle to map object
@@ -60,7 +60,7 @@ namespace Boring32::Async
 		if (m_view == nullptr)
 		{
 			Close();
-			throw Error::Win32Exception("MapViewOfFile() failed", GetLastError());
+			throw Error::Win32Error("MapViewOfFile() failed", GetLastError());
 		}
 
 		RtlSecureZeroMemory(m_view, m_maxSize);
@@ -84,7 +84,7 @@ namespace Boring32::Async
 			m_name.c_str()		// name of mapping object
 		);
 		if (m_mapFile == nullptr)
-			throw Error::Win32Exception("Failed to open memory mapped file", GetLastError());
+			throw Error::Win32Error("Failed to open memory mapped file", GetLastError());
 
 		m_view = MapViewOfFile(
 			m_mapFile.GetHandle(),	// handle to map object
@@ -96,7 +96,7 @@ namespace Boring32::Async
 		if (m_view == nullptr)
 		{
 			Close();
-			throw Error::Win32Exception("MapViewOfFile() failed", GetLastError());
+			throw Error::Win32Error("MapViewOfFile() failed", GetLastError());
 		}
 	}
 
@@ -133,7 +133,7 @@ namespace Boring32::Async
 			if (m_view == nullptr)
 			{
 				Close();
-				throw Error::Win32Exception("MapViewOfFile() failed", GetLastError());
+				throw Error::Win32Error("MapViewOfFile() failed", GetLastError());
 			}
 		}
 	}

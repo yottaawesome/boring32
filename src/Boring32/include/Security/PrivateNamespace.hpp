@@ -9,6 +9,12 @@ namespace Boring32::Security
 	{
 		public:
 			virtual ~PrivateNamespace();
+			PrivateNamespace();
+			PrivateNamespace(const PrivateNamespace& other);
+			virtual PrivateNamespace& operator=(const PrivateNamespace& other);
+			PrivateNamespace(PrivateNamespace&& other) noexcept;
+			virtual PrivateNamespace& operator=(PrivateNamespace&& other) noexcept;
+
 			PrivateNamespace(
 				const bool create,
 				const std::wstring& namespaceName,
@@ -18,6 +24,11 @@ namespace Boring32::Security
 
 		public:
 			virtual void Close();
+
+		protected:
+			virtual void Copy(const PrivateNamespace& other);
+			virtual void Move(PrivateNamespace& other) noexcept;
+			virtual void CreateOrOpen(const bool create);
 
 		protected:
 			std::wstring m_namespaceName;

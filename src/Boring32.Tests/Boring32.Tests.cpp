@@ -256,6 +256,8 @@ int main(int argc, char** args)
 		sizeof(pmei)
 	);
 
+	std::wcout << Boring32::Util::GetCurrentExecutableDirectory() << std::endl;
+
 	//TestProcessNamedPipe();
 	for (int i = 0; i < 12; i++)
 	{

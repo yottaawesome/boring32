@@ -1,11 +1,13 @@
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Error/Win32Exception.hpp"
+#include "include/Error/Win32Error.hpp"
 #include "include/Async/Pipes/BlockingNamedPipeClient.hpp"
 
 namespace Boring32::Async
 {
 	BlockingNamedPipeClient::~BlockingNamedPipeClient() { }
+
+	BlockingNamedPipeClient::BlockingNamedPipeClient() { }
 
 	BlockingNamedPipeClient::BlockingNamedPipeClient(const std::wstring& name)
 	: NamedPipeClientBase(name, 0)
@@ -48,7 +50,7 @@ namespace Boring32::Async
 			nullptr);           // not overlapped 
 
 		if (successfulWrite == false)
-			throw Error::Win32Exception("Failed to write to client pipe", GetLastError());
+			throw Error::Win32Error("Failed to write to client pipe", GetLastError());
 	}
 
 	std::wstring BlockingNamedPipeClient::Read()
@@ -76,7 +78,7 @@ namespace Boring32::Async
 			
 			const DWORD lastError = GetLastError();
 			if (successfulRead == false && lastError != ERROR_MORE_DATA)
-				throw Error::Win32Exception("Failed to read from pipe", GetLastError());
+				throw Error::Win32Error("Failed to read from pipe", GetLastError());
 			if (lastError == ERROR_MORE_DATA)
 				dataBuffer.resize(dataBuffer.size() + blockSize);
 			continueReading = !successfulRead;

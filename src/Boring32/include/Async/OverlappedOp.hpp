@@ -20,11 +20,12 @@ namespace Boring32::Async
 
 		public:
 			virtual void WaitForCompletion(const DWORD timeout);
+			virtual HANDLE GetWaitableHandle() const;
 			virtual OVERLAPPED* GetOverlapped();
-			virtual uint64_t GetStatus();
-			virtual uint64_t GetBytesTransferred();
-			virtual bool IsComplete();
-			virtual bool IsSuccessful();
+			virtual uint64_t GetStatus() const;
+			virtual uint64_t GetBytesTransferred() const;
+			virtual bool IsComplete() const;
+			virtual bool IsSuccessful() const;
 			virtual void Cancel();
 			virtual bool Cancel(std::nothrow_t);
 

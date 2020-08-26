@@ -8,6 +8,7 @@ namespace Boring32::Async
 	{
 		public:
 			virtual ~OverlappedNamedPipeClient();
+			OverlappedNamedPipeClient();
 			OverlappedNamedPipeClient(const std::wstring& name);
 
 			OverlappedNamedPipeClient(const OverlappedNamedPipeClient& other);
@@ -17,6 +18,6 @@ namespace Boring32::Async
 			virtual void operator=(OverlappedNamedPipeClient&& other) noexcept;
 
 			virtual OverlappedIo Write(const std::wstring& msg);
-			virtual OverlappedIo Read();
+			virtual OverlappedIo Read(const DWORD noOfCharacters);
 	};
 }

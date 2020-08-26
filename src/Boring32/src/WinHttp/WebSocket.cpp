@@ -129,7 +129,7 @@ namespace Boring32::WinHttp
 			if (setSecurityOption == false)
 			{
 				m_status = WebSocketStatus::Error;
-				throw Error::Win32Exception("Failed to set security options", GetLastError());
+				throw Error::Win32Error("Failed to set security options", GetLastError());
 			}
 		}
 
@@ -141,7 +141,7 @@ namespace Boring32::WinHttp
 		if (setWebsocketOption == false)
 		{
 			m_status = WebSocketStatus::Error;
-			throw Error::Win32Exception("Failed to set web socket upgrade option", GetLastError());
+			throw Error::Win32Error("Failed to set web socket upgrade option", GetLastError());
 		}
 
 		bool sentRequest = WinHttpSendRequest(
@@ -155,14 +155,14 @@ namespace Boring32::WinHttp
 		if (sentRequest == false)
 		{
 			m_status = WebSocketStatus::Error;
-			throw Error::Win32Exception("Failed to send web socket request", GetLastError());
+			throw Error::Win32Error("Failed to send web socket request", GetLastError());
 		}
 
 		sentRequest = WinHttpReceiveResponse(requestHandle.Get(), 0);
 		if (sentRequest == false)
 		{
 			m_status = WebSocketStatus::Error;
-			throw Error::Win32Exception("Failed to receive web socket response", GetLastError());
+			throw Error::Win32Error("Failed to receive web socket response", GetLastError());
 		}
 
 		DWORD statusCode = 0;
@@ -187,7 +187,7 @@ namespace Boring32::WinHttp
 		if (m_webSocketHandle == nullptr)
 		{
 			m_status = WebSocketStatus::Error;
-			throw Error::Win32Exception("Failed to complete web socket upgrade", GetLastError());
+			throw Error::Win32Error("Failed to complete web socket upgrade", GetLastError());
 		}
 
 		requestHandle = nullptr;
@@ -259,7 +259,7 @@ namespace Boring32::WinHttp
 				&bufferType);
 			// If the server terminates the connection, 12030 will returned.
 			if (statusCode != ERROR_SUCCESS)
-				throw Error::Win32Exception("Connection error when receiving websocket data", statusCode);
+				throw Error::Win32Error("Connection error when receiving websocket data", statusCode);
 			
 			// The server closed the connection.
 			if (bufferType == WINHTTP_WEB_SOCKET_CLOSE_BUFFER_TYPE)

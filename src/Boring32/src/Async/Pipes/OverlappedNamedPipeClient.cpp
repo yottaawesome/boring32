@@ -1,11 +1,13 @@
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Error/Win32Exception.hpp"
+#include "include/Error/Win32Error.hpp"
 #include "include/Async/Pipes/OverlappedNamedPipeClient.hpp"
 
 namespace Boring32::Async
 {
 	OverlappedNamedPipeClient::~OverlappedNamedPipeClient() { }
+
+	OverlappedNamedPipeClient::OverlappedNamedPipeClient() { }
 
 	OverlappedNamedPipeClient::OverlappedNamedPipeClient(const std::wstring& name)
 		: NamedPipeClientBase(name, FILE_FLAG_OVERLAPPED)
@@ -49,20 +51,18 @@ namespace Boring32::Async
 			oio.GetOverlapped());           // not overlapped 
 		oio.LastErrorValue = GetLastError();
 		if (oio.CallReturnValue == false && oio.LastErrorValue != ERROR_IO_PENDING)
-			throw Error::Win32Exception("Failed to write to pipe", oio.LastErrorValue);
+			throw Error::Win32Error("Failed to write to pipe", oio.LastErrorValue);
 
 		return oio;
 	}
 
-	OverlappedIo OverlappedNamedPipeClient::Read()
+	OverlappedIo OverlappedNamedPipeClient::Read(const DWORD noOfCharacters)
 	{
 		if (m_handle == nullptr)
 			throw std::runtime_error("No pipe to read from");
 
-		constexpr DWORD blockSize = 1024;
 		OverlappedIo oio(m_handle);
-		if (oio.IoBuffer.size() < blockSize)
-			oio.IoBuffer.resize(blockSize);
+		oio.IoBuffer.resize(noOfCharacters);
 
 		DWORD totalBytesRead = 0;
 		bool continueReading = true;
@@ -79,12 +79,10 @@ namespace Boring32::Async
 			oio.LastErrorValue = GetLastError();
 			if (oio.CallReturnValue == false)
 			{
-				if (oio.LastErrorValue == ERROR_MORE_DATA)
-					oio.IoBuffer.resize(oio.IoBuffer.size() + blockSize);
-				else if (oio.LastErrorValue == ERROR_IO_PENDING)
+				if (oio.LastErrorValue == ERROR_IO_PENDING)
 					continueReading = false;
 				else
-					throw Error::Win32Exception("Failed to read from pipe", oio.LastErrorValue);
+					throw Error::Win32Error("Failed to read from pipe", oio.LastErrorValue);
 			}
 			else
 			{

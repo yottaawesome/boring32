@@ -1,6 +1,6 @@
 #include "pch.hpp"
 #include <Sddl.h>
-#include "include/Error/Win32Exception.hpp"
+#include "include/Error/Win32Error.hpp"
 #include "include/Async/Pipes/NamedPipeServerBase.hpp"
 
 namespace Boring32::Async
@@ -14,6 +14,17 @@ namespace Boring32::Async
     {
         m_pipe.Close();
     }
+
+    NamedPipeServerBase::NamedPipeServerBase()
+    :   m_pipeName(L""),
+        m_size(0),
+        m_maxInstances(0),
+        m_isConnected(false),
+        m_sid(L""),
+        m_isInheritable(false),
+        m_openMode(0),
+        m_pipeMode(0)
+    { }
 
     NamedPipeServerBase::NamedPipeServerBase(
         const std::wstring& pipeName,
@@ -78,7 +89,7 @@ namespace Boring32::Async
                 nullptr
             );
             if (converted == false)
-                throw Error::Win32Exception("Failed to convert security descriptor", GetLastError());
+                throw Error::Win32Error("Failed to convert security descriptor", GetLastError());
         }
 
         // https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createnamedpipea
@@ -94,7 +105,7 @@ namespace Boring32::Async
         if (m_sid != L"")
             LocalFree(sa.lpSecurityDescriptor);
         if (m_pipe == nullptr)
-            throw Error::Win32Exception("Failed to create named pipe", GetLastError());
+            throw Error::Win32Error("Failed to create named pipe", GetLastError());
     }
 
     NamedPipeServerBase::NamedPipeServerBase(const NamedPipeServerBase& other)
@@ -191,5 +202,24 @@ namespace Boring32::Async
     DWORD NamedPipeServerBase::GetOpenMode() const
     {
         return m_openMode;
+    }
+
+    DWORD NamedPipeServerBase::UnreadCharactersRemaining() const
+    {
+        if (m_pipe == nullptr)
+            throw std::runtime_error("No pipe to read from");
+        DWORD bytesLeft = 0;
+        bool succeeded = PeekNamedPipe(
+            m_pipe.GetHandle(),
+            nullptr,
+            0,
+            nullptr,
+            nullptr,
+            &bytesLeft
+        );
+        if (succeeded == false)
+            throw Error::Win32Error("PeekNamedPipe() failed", GetLastError());
+
+        return bytesLeft / sizeof(wchar_t);
     }
 }

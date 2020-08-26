@@ -187,8 +187,11 @@
     <ClInclude Include="include\Async\Thread.hpp" />
     <ClInclude Include="include\Async\ThreadSafeVector.hpp" />
     <ClInclude Include="include\Async\WaitableTimer.hpp" />
+    <ClInclude Include="include\Compression\Compression.hpp" />
+    <ClInclude Include="include\Error\ComError.hpp" />
+    <ClInclude Include="include\Security\Crypto\Crypto.hpp" />
     <ClInclude Include="include\Error\Error.hpp" />
-    <ClInclude Include="include\Error\Win32Exception.hpp" />
+    <ClInclude Include="include\Error\Win32Error.hpp" />
     <ClInclude Include="include\Guid\Guid.hpp" />
     <ClInclude Include="include\Async\Async.hpp" />
     <ClInclude Include="include\Library\Library.hpp" />
@@ -230,8 +233,9 @@
     <ClCompile Include="src\Async\Thread.cpp" />
     <ClCompile Include="src\Async\WaitableTimer.cpp" />
     <ClCompile Include="src\Com\ComThreadScope.cpp" />
+    <ClCompile Include="src\Error\ComError.cpp" />
     <ClCompile Include="src\Error\Error.cpp" />
-    <ClCompile Include="src\Error\Win32Exception.cpp" />
+    <ClCompile Include="src\Error\Win32Error.cpp" />
     <ClCompile Include="src\Guid\Guid.cpp" />
     <ClCompile Include="src\Async\MemoryMappedFile.cpp" />
     <ClCompile Include="src\Async\Mutex.cpp" />

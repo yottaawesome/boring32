@@ -1,6 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Error/Win32Exception.hpp"
+#include "include/Error/Win32Error.hpp"
 #include "include/Raii/Win32Handle.hpp"
 #include "include/Util/Util.hpp"
 
@@ -16,7 +16,7 @@ namespace Boring32::Raii
 		if (m_handle)
 		{
 			if (CloseHandle(m_handle) == false && throwOnFailure)
-				throw Error::Win32Exception("CloseHandle() failed", GetLastError());
+				throw Error::Win32Error("CloseHandle() failed", GetLastError());
 			m_handle = nullptr;
 		}
 	}
@@ -115,7 +115,7 @@ namespace Boring32::Raii
 		if (m_handle == nullptr)
 			throw std::runtime_error("Handle is null.");
 		if (SetHandleInformation(m_handle, HANDLE_FLAG_INHERIT, isInheritable) == false)
-			throw Error::Win32Exception("SetHandleInformation() failed", GetLastError());
+			throw Error::Win32Error("SetHandleInformation() failed", GetLastError());
 	}
 
 	HANDLE Win32Handle::Detach()
@@ -131,7 +131,7 @@ namespace Boring32::Raii
 			return false;
 		DWORD flags = 0;
 		if (GetHandleInformation(handle, &flags) == false)
-			throw Error::Win32Exception("GetHandleInformation() failed", GetLastError());
+			throw Error::Win32Error("GetHandleInformation() failed", GetLastError());
 		return flags & HANDLE_FLAG_INHERIT;
 	}
 
@@ -151,7 +151,7 @@ namespace Boring32::Raii
 			DUPLICATE_SAME_ACCESS
 		);
 		if (succeeded == false)
-			throw Error::Win32Exception("DuplicateHandle() failed", GetLastError());
+			throw Error::Win32Error("DuplicateHandle() failed", GetLastError());
 
 		return duplicateHandle;
 	}

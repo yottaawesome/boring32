@@ -1,6 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Error/Win32Exception.hpp"
+#include "include/Error/Win32Error.hpp"
 #include "include/Async/Pipes/NamedPipeClientBase.hpp"
 
 namespace Boring32::Async
@@ -9,6 +9,11 @@ namespace Boring32::Async
 	{
 		Close();
 	}
+
+	NamedPipeClientBase::NamedPipeClientBase()
+		: m_pipeName(L""),
+		m_fileAttributes(0)
+	{ }
 
 	NamedPipeClientBase::NamedPipeClientBase(const std::wstring& name, const DWORD fileAttributes)
 	:	m_pipeName(name),
@@ -63,9 +68,9 @@ namespace Boring32::Async
 		if (m_handle == INVALID_HANDLE_VALUE)
 		{
 			if (GetLastError() != ERROR_PIPE_BUSY || timeout == 0)
-				throw Error::Win32Exception("Failed to connect client pipe", GetLastError());
+				throw Error::Win32Error("Failed to connect client pipe", GetLastError());
 			if (WaitNamedPipeW(m_pipeName.c_str(), timeout) == false)
-				throw Error::Win32Exception("Failed to connect client pipe: timeout", GetLastError());
+				throw Error::Win32Error("Failed to connect client pipe: timeout", GetLastError());
 		}
 	}
 
@@ -79,11 +84,30 @@ namespace Boring32::Async
 			nullptr,     // don't set maximum bytes 
 			nullptr);    // don't set maximum time 
 		if (fSuccess == false)
-			throw Error::Win32Exception("Failed to SetNamedPipeHandleState", GetLastError());
+			throw Error::Win32Error("Failed to SetNamedPipeHandleState", GetLastError());
 	}
 
 	void NamedPipeClientBase::Close()
 	{
 		m_handle.Close();
+	}
+
+	DWORD NamedPipeClientBase::UnreadCharactersRemaining() const
+	{
+		if (m_handle == nullptr)
+			throw std::runtime_error("No pipe to read from");
+		DWORD bytesLeft = 0;
+		bool succeeded = PeekNamedPipe(
+			m_handle.GetHandle(),
+			nullptr,
+			0,
+			nullptr,
+			nullptr,
+			&bytesLeft
+		);
+		if (succeeded == false)
+			throw Error::Win32Error("PeekNamedPipe() failed", GetLastError());
+
+		return bytesLeft / sizeof(wchar_t);
 	}
 }

@@ -5,12 +5,12 @@
 
 namespace Boring32::Error
 {
-	class Win32Exception : public std::runtime_error
+	class Win32Error : public std::runtime_error
 	{
 		public:
-			virtual ~Win32Exception();
-			Win32Exception(const char* msg, const DWORD errorCode);
-			Win32Exception(const std::string& msg, const DWORD errorCode);
+			virtual ~Win32Error();
+			Win32Error(const char* msg, const DWORD errorCode);
+			Win32Error(const std::string& msg, const DWORD errorCode);
 
 			virtual DWORD GetErrorCode() const noexcept;
 			virtual const char* what() const noexcept override;

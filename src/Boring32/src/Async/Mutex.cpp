@@ -1,6 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Error/Win32Exception.hpp"
+#include "include/Error/Win32Error.hpp"
 #include "include/Async/Mutex.hpp"
 
 namespace Boring32::Async
@@ -46,7 +46,7 @@ namespace Boring32::Async
 			m_name.size() > 0 ? m_name.c_str() : nullptr
 		);
 		if (m_mutex == nullptr)
-			throw Error::Win32Exception("Failed to create mutex", GetLastError());
+			throw Error::Win32Error("Failed to create mutex", GetLastError());
 
 		m_locked = acquireOnCreation;
 	}
@@ -65,7 +65,7 @@ namespace Boring32::Async
 			throw std::runtime_error("Cannot open mutex with empty name");
 		m_mutex = OpenMutexW(desiredAccess, isInheritable, m_name.c_str());
 		if (m_mutex == nullptr)
-			throw Error::Win32Exception("Failed to open mutex", GetLastError());
+			throw Error::Win32Error("Failed to open mutex", GetLastError());
 	}
 
 	Mutex::Mutex(const bool acquire, const bool inheritable)
@@ -83,7 +83,7 @@ namespace Boring32::Async
 			nullptr
 		);
 		if (m_mutex == nullptr)
-			throw Error::Win32Exception("Failed to create mutex", GetLastError());
+			throw Error::Win32Error("Failed to create mutex", GetLastError());
 	}
 
 	Mutex::Mutex(const Mutex& other)
@@ -132,7 +132,7 @@ namespace Boring32::Async
 
 		DWORD result = WaitForSingleObject(m_mutex.GetHandle(), waitTime);
 		if (result == WAIT_FAILED)
-			throw Error::Win32Exception("Failed to acquire mutex", GetLastError());
+			throw Error::Win32Error("Failed to acquire mutex", GetLastError());
 		if (result == WAIT_OBJECT_0)
 			m_locked = true;
 		if (result == WAIT_TIMEOUT)
@@ -155,7 +155,7 @@ namespace Boring32::Async
 		if (m_mutex == nullptr)
 			throw std::runtime_error("Cannot wait on null mutex");
 		if (ReleaseMutex(m_mutex.GetHandle()) == false)
-			throw Error::Win32Exception("Failed to release mutex", GetLastError());
+			throw Error::Win32Error("Failed to release mutex", GetLastError());
 
 		m_locked = false;
 	}

@@ -7,6 +7,7 @@ namespace Boring32::Async
 	{
 		public:
 			virtual ~BlockingNamedPipeClient();
+			BlockingNamedPipeClient();
 			BlockingNamedPipeClient(const std::wstring& name);
 
 			BlockingNamedPipeClient(const BlockingNamedPipeClient& other);

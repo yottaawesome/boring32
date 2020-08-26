@@ -1,6 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Error/Win32Exception.hpp"
+#include "include/Error/Win32Error.hpp"
 #include "include/Async/Pipes/OverlappedNamedPipeServer.hpp"
 
 namespace Boring32::Async
@@ -9,6 +9,8 @@ namespace Boring32::Async
     {
         Close();
     }
+
+    OverlappedNamedPipeServer::OverlappedNamedPipeServer() { }
 
     OverlappedNamedPipeServer::OverlappedNamedPipeServer(
         const std::wstring& pipeName,
@@ -91,8 +93,8 @@ namespace Boring32::Async
         OverlappedOp oio(m_pipe);
         oio.CallReturnValue = ConnectNamedPipe(m_pipe.GetHandle(), oio.GetOverlapped());
         oio.LastErrorValue = GetLastError();
-        if(oio.CallReturnValue == false && oio.LastErrorValue != ERROR_IO_PENDING)
-            throw Error::Win32Exception("Failed to connect named pipe", oio.LastErrorValue);
+        if (oio.CallReturnValue == false && oio.LastErrorValue != ERROR_IO_PENDING)
+            throw Error::Win32Error("Failed to connect named pipe", oio.LastErrorValue);
         return oio;
     }
 
@@ -112,19 +114,18 @@ namespace Boring32::Async
         );
         oio.LastErrorValue = GetLastError();
         if (oio.CallReturnValue == false && oio.LastErrorValue != ERROR_IO_PENDING)
-            throw Error::Win32Exception("Failed to read pipe", oio.LastErrorValue);
+            throw Error::Win32Error("Failed to read pipe", oio.LastErrorValue);
 
         return oio;
     }
 
-    OverlappedIo OverlappedNamedPipeServer::Read()
+    OverlappedIo OverlappedNamedPipeServer::Read(const DWORD noOfCharacters)
     {
         if (m_pipe == nullptr)
             throw std::runtime_error("No pipe to read from");
 
-        constexpr DWORD blockSize = 1024;
         OverlappedIo oio(m_pipe);
-        oio.IoBuffer.resize(blockSize);
+        oio.IoBuffer.resize(noOfCharacters);
 
         DWORD totalBytesRead = 0;
         bool continueReading = true;
@@ -134,15 +135,13 @@ namespace Boring32::Async
             oio.CallReturnValue = ReadFile(
                 m_pipe.GetHandle(),    // pipe handle 
                 &oio.IoBuffer[0],    // buffer to receive reply 
-                oio.IoBuffer.size() * sizeof(TCHAR),  // size of buffer 
+                oio.IoBuffer.size() * sizeof(wchar_t),  // size of buffer 
                 &currentBytesRead,  // number of bytes read 
                 oio.GetOverlapped());    // overlapped
             totalBytesRead += currentBytesRead;
             oio.LastErrorValue = GetLastError();
-            if (oio.LastErrorValue == ERROR_MORE_DATA)
-                oio.IoBuffer.resize(oio.IoBuffer.size() + blockSize);
-            else if (oio.LastErrorValue != ERROR_IO_PENDING)
-                throw Error::Win32Exception("Failed to read from pipe", oio.LastErrorValue);
+            if (oio.LastErrorValue != ERROR_IO_PENDING)
+                throw Error::Win32Error("Failed to read from pipe", oio.LastErrorValue);
         }
 
         if (totalBytesRead > 0)

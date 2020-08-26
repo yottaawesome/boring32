@@ -9,6 +9,7 @@ namespace Boring32::Async
 	{
 		public:
 			virtual ~NamedPipeServerBase();
+			NamedPipeServerBase();
 			NamedPipeServerBase(
 				const std::wstring& pipeName, 
 				const DWORD size,
@@ -37,14 +38,14 @@ namespace Boring32::Async
 			virtual void Close();
 			virtual void Disconnect();
 			virtual Raii::Win32Handle& GetInternalHandle();
-
 			virtual std::wstring GetName() const;
 			virtual DWORD GetSize() const;
 			virtual DWORD GetMaxInstances() const;
 			virtual bool IsConnected() const;
 			virtual DWORD GetPipeMode() const;
 			virtual DWORD GetOpenMode() const;
-			
+			virtual DWORD UnreadCharactersRemaining() const;
+
 		protected:
 			virtual void InternalCreatePipe();
 			virtual void Copy(const NamedPipeServerBase& other);
