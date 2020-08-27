@@ -6,23 +6,23 @@ namespace Boring32::Error
 {
 	ComError::~ComError() {}
 
-	ComError::ComError(const char* msg, const HRESULT errorCode)
-		: std::runtime_error(msg),
-		m_errorCode(errorCode)
+	ComError::ComError(const char* msg, const HRESULT hr)
+		: std::runtime_error(""),
+		m_hresult(hr)
 	{
-		m_errorString = Boring32::Error::GetErrorFromHResult(msg, errorCode);
+		m_errorString = Boring32::Error::GetErrorFromHResult(msg, hr);
 	}
 
-	ComError::ComError(const std::string& msg, const HRESULT errorCode)
-		: std::runtime_error(msg),
-		m_errorCode(errorCode)
+	ComError::ComError(const std::string& msg, const HRESULT hr)
+		: std::runtime_error(""),
+		m_hresult(hr)
 	{
-		m_errorString = Boring32::Error::GetErrorFromHResult(msg, errorCode);
+		m_errorString = Boring32::Error::GetErrorFromHResult(msg, hr);
 	}
 
-	HRESULT ComError::GetErrorCode() const noexcept
+	HRESULT ComError::GetHResult() const noexcept
 	{
-		return m_errorCode;
+		return m_hresult;
 	}
 
 	const char* ComError::what() const noexcept

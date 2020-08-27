@@ -34,7 +34,8 @@ namespace Boring32::Async
 			virtual void Start(int(*simpleFunc)());
 			virtual void Start(const std::function<int()>& func);
 			virtual ThreadStatus GetStatus();
-			virtual UINT GetReturnCode();
+			virtual UINT GetExitCode();
+			Raii::Win32Handle GetHandle();
 
 		protected:
 			virtual UINT Run();
@@ -46,7 +47,7 @@ namespace Boring32::Async
 			ThreadStatus m_status;
 			UINT m_returnCode;
 			UINT m_threadId;
-			Raii::Win32Handle m_thread;
+			Raii::Win32Handle m_threadHandle;
 			bool m_destroyOnCompletion;
 			void* m_threadParam;
 			std::function<int()> m_func;

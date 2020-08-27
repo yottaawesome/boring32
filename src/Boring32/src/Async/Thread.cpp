@@ -13,9 +13,9 @@ namespace Boring32::Async
 
 	void Thread::Close()
 	{
-		if (m_thread != nullptr)
+		if (m_threadHandle != nullptr)
 		{
-			m_thread = nullptr;
+			m_threadHandle = nullptr;
 			m_threadId = 0;
 		}
 	}
@@ -25,7 +25,7 @@ namespace Boring32::Async
 		m_status(ThreadStatus::Ready),
 		m_threadParam(param),
 		m_threadId(0),
-		m_thread(nullptr),
+		m_threadHandle(nullptr),
 		m_returnCode(STILL_ACTIVE)
 	{ }
 
@@ -46,7 +46,7 @@ namespace Boring32::Async
 		m_status = other.m_status;
 		m_returnCode = other.m_returnCode;
 		m_threadId = other.m_threadId;
-		m_thread = other.m_thread;
+		m_threadHandle = other.m_threadHandle;
 		m_destroyOnCompletion = other.m_destroyOnCompletion;
 		m_threadParam = other.m_threadParam;
 	}
@@ -70,7 +70,7 @@ namespace Boring32::Async
 			m_status = other.m_status;
 			m_returnCode = other.m_returnCode;
 			m_threadId = other.m_threadId;
-			m_thread = std::move(other.m_thread);
+			m_threadHandle = std::move(other.m_threadHandle);
 			m_destroyOnCompletion = other.m_destroyOnCompletion;
 			m_threadParam = other.m_threadParam;
 		}
@@ -82,7 +82,7 @@ namespace Boring32::Async
 
 	void Thread::Start()
 	{
-		m_thread = (HANDLE)_beginthreadex(
+		m_threadHandle = (HANDLE)_beginthreadex(
 			0,
 			0,
 			Thread::ThreadProc,
@@ -96,7 +96,7 @@ namespace Boring32::Async
 	{
 		m_func = simpleFunc;
 		// https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/beginthread-beginthreadex?view=vs-2019
-		m_thread = (HANDLE)_beginthreadex(
+		m_threadHandle = (HANDLE)_beginthreadex(
 			0,
 			0,
 			Thread::ThreadProc,
@@ -109,7 +109,7 @@ namespace Boring32::Async
 	void Thread::Start(const std::function<int()>& func)
 	{
 		m_func = func;
-		m_thread = (HANDLE)_beginthreadex(
+		m_threadHandle = (HANDLE)_beginthreadex(
 			0,
 			0,
 			Thread::ThreadProc,
@@ -117,7 +117,7 @@ namespace Boring32::Async
 			0,
 			&m_threadId
 		);
-		if (m_thread == nullptr)
+		if (m_threadHandle == nullptr)
 		{
 			m_status = ThreadStatus::Failure;
 			throw std::runtime_error("Failed to start thread");
@@ -131,40 +131,43 @@ namespace Boring32::Async
 
 	void Thread::Terminate()
 	{
-		if (this->m_status != ThreadStatus::Running)
-			throw std::runtime_error("Thread was not running when request to terminate occurred.");
-
-		if (TerminateThread(m_thread.GetHandle(), (DWORD)ThreadStatus::Terminated) == false)
+		if (m_threadHandle == nullptr)
+			throw std::runtime_error("No thread handle to suspend");
+		if (TerminateThread(m_threadHandle.GetHandle(), (DWORD)ThreadStatus::Terminated) == false)
 			throw Error::Win32Error("Thread::Suspend(): TerminateThread() failed", GetLastError());
 	}
 
 	void Thread::Suspend()
 	{
-		if (this->m_status != ThreadStatus::Running)
+		if (m_threadHandle == nullptr)
+			throw std::runtime_error("No thread handle to suspend");
+		if (m_status != ThreadStatus::Running)
 			throw std::runtime_error("Thread was not running when request to suspend occurred.");
 
 		this->m_status = ThreadStatus::Suspended;
-		if (SuspendThread(m_thread.GetHandle()) == false)
+		if (SuspendThread(m_threadHandle.GetHandle()) == false)
 			throw Error::Win32Error("Thread::Suspend(): SuspendThread() failed", GetLastError());
 	}
 
 	void Thread::Resume()
 	{
+		if (m_threadHandle == nullptr)
+			throw std::runtime_error("No thread handle to resume");
 		if (this->m_status != ThreadStatus::Suspended)
 			throw std::runtime_error("Thread was not suspended when request to resume occurred.");
 
 		this->m_status = ThreadStatus::Running;
-		if (ResumeThread(m_thread.GetHandle()) == false)
+		if (ResumeThread(m_threadHandle.GetHandle()) == false)
 			throw Error::Win32Error("Thread::Suspend(): ResumeThread() failed", GetLastError());
 	}
 
 	bool Thread::Join(const DWORD waitTime)
 	{
-		if (this->m_status != ThreadStatus::Running)
-			throw std::runtime_error("Thread was not running when request to join occurred.");
+		if (m_threadHandle == nullptr)
+			throw std::runtime_error("No thread handle to wait on");
 
-		const DWORD waitResult = WaitForSingleObject(m_thread.GetHandle(), waitTime);
-		if(waitResult == WAIT_OBJECT_0)
+		const DWORD waitResult = WaitForSingleObject(m_threadHandle.GetHandle(), waitTime);
+		if (waitResult == WAIT_OBJECT_0)
 			return true;
 		if (waitResult == WAIT_TIMEOUT)
 			return false;
@@ -178,9 +181,14 @@ namespace Boring32::Async
 		return m_func();
 	}
 
-	UINT Thread::GetReturnCode()
+	UINT Thread::GetExitCode()
 	{
 		return m_returnCode;
+	}
+
+	Raii::Win32Handle Thread::GetHandle()
+	{
+		return m_threadHandle;
 	}
 
 	UINT Thread::ThreadProc(void* param)
@@ -200,7 +208,6 @@ namespace Boring32::Async
 			threadObj->m_status = ThreadStatus::FinishedWithError;
 		}
 
-		threadObj->Close();
 		threadObj->m_returnCode = returnCode;
 		if (threadObj->m_destroyOnCompletion)
 			delete threadObj;
