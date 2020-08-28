@@ -11,8 +11,9 @@ namespace Boring32::Security
 	}
 
 	PrivateNamespace::PrivateNamespace()
-		: m_boundaryDescriptor(nullptr),
-		m_namespace(nullptr)
+	:	m_boundaryDescriptor(nullptr),
+		m_namespace(nullptr),
+		m_destroyOnClose(true)
 	{ }
 
 	void PrivateNamespace::Close()
@@ -31,11 +32,13 @@ namespace Boring32::Security
 
 	PrivateNamespace::PrivateNamespace(
 		const bool create,
+		const bool destroyOnClose,
 		const std::wstring& namespaceName,
 		const std::wstring& boundaryName,
 		const std::wstring& sid
 	)
-		: m_boundaryDescriptor(nullptr),
+	:	m_destroyOnClose(destroyOnClose),
+		m_boundaryDescriptor(nullptr),
 		m_namespace(nullptr),
 		m_namespaceName(namespaceName),
 		m_boundaryName(boundaryName),
@@ -116,6 +119,10 @@ namespace Boring32::Security
 	void PrivateNamespace::Copy(const PrivateNamespace& other)
 	{
 		Close();
+		m_namespaceName = other.m_namespaceName;
+		m_boundaryName = other.m_boundaryName;
+		m_namespaceSid = other.m_namespaceSid;
+		m_destroyOnClose = other.m_destroyOnClose;
 		if (other.m_namespace)
 			CreateOrOpen(false);
 	}

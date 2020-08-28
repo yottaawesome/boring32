@@ -12,6 +12,7 @@ namespace Boring32::Async
 
     void NamedPipeServerBase::Close()
     {
+        Disconnect();
         m_pipe.Close();
     }
 
@@ -160,9 +161,7 @@ namespace Boring32::Async
 
     void NamedPipeServerBase::Disconnect()
     {
-        if (m_pipe == nullptr)
-            throw std::runtime_error("No valid pipe handle to disconnect");
-        if (m_isConnected)
+        if (m_pipe != nullptr && m_isConnected)
         {
             DisconnectNamedPipe(m_pipe.GetHandle());
             m_isConnected = false;

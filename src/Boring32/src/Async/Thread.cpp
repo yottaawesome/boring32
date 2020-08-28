@@ -51,14 +51,14 @@ namespace Boring32::Async
 		m_threadParam = other.m_threadParam;
 	}
 
-	Thread::Thread(const Thread&& other) noexcept
+	Thread::Thread(Thread&& other) noexcept
 	{
-		Copy(other);
+		Move(other);
 	}
 
 	void Thread::operator=(Thread&& other) noexcept
 	{
-		Copy(other);
+		Move(other);
 	}
 
 	void Thread::Move(Thread& other) noexcept
@@ -76,7 +76,7 @@ namespace Boring32::Async
 		}
 		catch (const std::exception& ex)
 		{
-			std::wcout << L"Thread::Move() failed: " << ex.what() << std::endl;
+			std::wcerr << L"Thread::Move() failed: " << ex.what() << std::endl;
 		}
 	}
 

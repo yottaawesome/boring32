@@ -128,24 +128,15 @@ namespace Boring32::Async
         oio.IoBuffer.resize(noOfCharacters);
 
         DWORD totalBytesRead = 0;
-        bool continueReading = true;
-        while (continueReading)
-        {
-            DWORD currentBytesRead = 0;
-            oio.CallReturnValue = ReadFile(
-                m_pipe.GetHandle(),    // pipe handle 
-                &oio.IoBuffer[0],    // buffer to receive reply 
-                oio.IoBuffer.size() * sizeof(wchar_t),  // size of buffer 
-                &currentBytesRead,  // number of bytes read 
-                oio.GetOverlapped());    // overlapped
-            totalBytesRead += currentBytesRead;
-            oio.LastErrorValue = GetLastError();
-            if (oio.LastErrorValue != ERROR_IO_PENDING)
-                throw Error::Win32Error("Failed to read from pipe", oio.LastErrorValue);
-        }
-
-        if (totalBytesRead > 0)
-            oio.IoBuffer.resize(totalBytesRead / sizeof(wchar_t));
+        oio.CallReturnValue = ReadFile(
+            m_pipe.GetHandle(),    // pipe handle 
+            &oio.IoBuffer[0],    // buffer to receive reply 
+            oio.IoBuffer.size() * sizeof(wchar_t),  // size of buffer 
+            &totalBytesRead,  // number of bytes read 
+            oio.GetOverlapped());    // overlapped
+        oio.LastErrorValue = GetLastError();
+        if (oio.LastErrorValue != ERROR_IO_PENDING)
+            throw Error::Win32Error("Failed to read from pipe", oio.LastErrorValue);
 
         return oio;
     }

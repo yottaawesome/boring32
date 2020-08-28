@@ -64,6 +64,7 @@ DWORD ConnectToPrivateNamespace()
 {
     Boring32::Security::PrivateNamespace pn(
         false,
+        false,
         L"elevated",
         L"elevated-boundary",
         L"D:(A;;GA;;;BA)(A;;GR;;;BU)"

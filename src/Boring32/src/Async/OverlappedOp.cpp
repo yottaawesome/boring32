@@ -92,6 +92,7 @@ namespace Boring32::Async
 			throw std::runtime_error("IoOverlapped is null");
 		if (CancelIo(m_ioHandle.GetHandle()) == false)
 			throw Error::Win32Error("CancelIo failed", GetLastError());
+		m_ioHandle = nullptr;
 	}
 
 	bool OverlappedOp::Cancel(std::nothrow_t)
@@ -100,7 +101,9 @@ namespace Boring32::Async
 			return false;
 		if (m_ioOverlapped == nullptr)
 			throw std::runtime_error("IoOverlapped is null");
-		return CancelIo(m_ioHandle.GetHandle());
+		const bool returnValue = CancelIo(m_ioHandle.GetHandle());
+		m_ioHandle = nullptr;
+		return returnValue;
 	}
 
 	void OverlappedOp::Move(OverlappedOp& other) noexcept

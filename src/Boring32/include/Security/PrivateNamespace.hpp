@@ -17,6 +17,7 @@ namespace Boring32::Security
 
 			PrivateNamespace(
 				const bool create,
+				const bool destroyOnClose,
 				const std::wstring& namespaceName,
 				const std::wstring& boundaryName,
 				const std::wstring& sid
@@ -36,5 +37,6 @@ namespace Boring32::Security
 			std::wstring m_namespaceSid;
 			HANDLE m_boundaryDescriptor;
 			HANDLE m_namespace;
+			bool m_destroyOnClose;
 	};
 }

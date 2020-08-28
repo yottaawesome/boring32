@@ -15,7 +15,7 @@ namespace Boring32::Async
 			Thread(void* param, bool destroyOnCompletion);
 			Thread(const Thread& other);
 			virtual void operator=(const Thread& other);
-			Thread(const Thread&& other) noexcept;
+			Thread(Thread&& other) noexcept;
 			virtual void operator=(Thread&& other) noexcept;
 
 			/// <summary>
