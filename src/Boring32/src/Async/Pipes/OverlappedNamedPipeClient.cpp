@@ -41,13 +41,12 @@ namespace Boring32::Async
 			throw std::runtime_error("No pipe to write to");
 
 		OverlappedIo oio(m_handle);
-		DWORD bytesWritten = 0;
 		// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile
 		oio.CallReturnValue = WriteFile(
 			m_handle.GetHandle(),   // pipe handle 
 			msg.c_str(),        // message 
 			msg.size(),         // message length 
-			&bytesWritten,      // bytes written 
+			nullptr,      // bytes written 
 			oio.GetOverlapped());           // not overlapped 
 		oio.LastErrorValue = GetLastError();
 		if (oio.CallReturnValue == false && oio.LastErrorValue != ERROR_IO_PENDING)
@@ -64,12 +63,11 @@ namespace Boring32::Async
 		OverlappedIo oio(m_handle);
 		oio.IoBuffer.resize(noOfCharacters);
 
-		DWORD totalBytesRead = 0;
 		oio.CallReturnValue = ReadFile(
 			m_handle.GetHandle(),    // pipe handle 
 			&oio.IoBuffer[0],    // buffer to receive reply 
 			oio.IoBuffer.size() * sizeof(TCHAR),  // size of buffer 
-			&totalBytesRead,  // number of bytes read 
+			nullptr,  // number of bytes read 
 			oio.GetOverlapped());    // overlapped
 		oio.LastErrorValue = GetLastError();
 		if (oio.CallReturnValue == false && oio.LastErrorValue != ERROR_IO_PENDING)

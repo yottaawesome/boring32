@@ -104,12 +104,11 @@ namespace Boring32::Async
             throw std::runtime_error("No pipe to write to");
 
         OverlappedIo oio(m_pipe);
-        DWORD bytesWritten = 0;
         oio.CallReturnValue = WriteFile(
             m_pipe.GetHandle(),     // handle to pipe 
             &msg[0],                // buffer to write from 
             msg.size() * sizeof(wchar_t), // number of bytes to write 
-            &bytesWritten,          // number of bytes written 
+            nullptr,          // number of bytes written 
             oio.GetOverlapped()       // overlapped I/O
         );
         oio.LastErrorValue = GetLastError();
@@ -127,12 +126,11 @@ namespace Boring32::Async
         OverlappedIo oio(m_pipe);
         oio.IoBuffer.resize(noOfCharacters);
 
-        DWORD totalBytesRead = 0;
         oio.CallReturnValue = ReadFile(
             m_pipe.GetHandle(),    // pipe handle 
             &oio.IoBuffer[0],    // buffer to receive reply 
             oio.IoBuffer.size() * sizeof(wchar_t),  // size of buffer 
-            &totalBytesRead,  // number of bytes read 
+            nullptr,  // number of bytes read 
             oio.GetOverlapped());    // overlapped
         oio.LastErrorValue = GetLastError();
         if (oio.LastErrorValue != ERROR_IO_PENDING)
