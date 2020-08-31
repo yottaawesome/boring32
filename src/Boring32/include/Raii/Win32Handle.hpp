@@ -25,13 +25,15 @@ namespace Boring32::Raii
 
 		public:
 			virtual HANDLE GetHandle() const;
-			virtual HANDLE& GetHandleAddress();
-			virtual void Close();
+			virtual bool IsNotNull() const;
 			virtual HANDLE DuplicateCurrentHandle() const;
 			virtual bool IsInheritable() const;
+			virtual HANDLE& GetHandleAddress();
+			virtual void Close();
 			virtual void SetInheritability(const bool isInheritable);
 			virtual HANDLE Detach();
 
+		public:
 			static bool HandleIsInheritable(const HANDLE handle);
 			static HANDLE DuplicatePassedHandle(const HANDLE handle, const bool isInheritable);
 

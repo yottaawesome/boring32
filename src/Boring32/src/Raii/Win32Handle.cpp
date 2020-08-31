@@ -13,7 +13,7 @@ namespace Boring32::Raii
 
 	void Win32Handle::InternalClose(const bool throwOnFailure)
 	{
-		if (m_handle)
+		if (m_handle != nullptr && m_handle != INVALID_HANDLE_VALUE)
 		{
 			if (CloseHandle(m_handle) == false && throwOnFailure)
 				throw Error::Win32Error("CloseHandle() failed", GetLastError());
@@ -123,6 +123,12 @@ namespace Boring32::Raii
 		HANDLE temp = m_handle;
 		m_handle = nullptr;
 		return temp;
+	}
+
+	bool Win32Handle::IsNotNull() const
+	{
+		// https://devblogs.microsoft.com/oldnewthing/20040302-00/?p=40443
+		return m_handle != nullptr && m_handle != INVALID_HANDLE_VALUE;
 	}
 
 	bool Win32Handle::HandleIsInheritable(const HANDLE handle)
