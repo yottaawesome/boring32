@@ -243,6 +243,12 @@ void TestProcessAnonPipe()
 	WaitForSingleObject(testProcess.GetProcessHandle(), INFINITE);
 }
 
+void TestCompression()
+{
+	Boring32::Compression::Compressor compressor(Boring32::Compression::CompressionType::MSZIP);
+	Boring32::Compression::Decompressor decompressor(Boring32::Compression::CompressionType::MSZIP);
+}
+
 int main(int argc, char** args)
 {
 	PROCESS_MEMORY_EXHAUSTION_INFO pmei{ 0 };
@@ -259,7 +265,7 @@ int main(int argc, char** args)
 	std::wcout << Boring32::Util::GetCurrentExecutableDirectory() << std::endl;
 
 	//TestProcessNamedPipe();
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < 13; i++)
 	{
 		try
 		{
@@ -288,6 +294,8 @@ int main(int argc, char** args)
 				TestProcessBlockingNamedPipe();
 			if (i == 11)
 				TestProcessAnonPipe();
+			if (i == 12)
+				TestCompression();
 		}
 		catch (const std::exception& ex)
 		{

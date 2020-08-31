@@ -9,7 +9,9 @@
 #include <process.h>
 #include <pathcch.h>
 #include <comdef.h>
+#include <compressapi.h>
 
 #pragma comment(lib, "winhttp.lib")
 #pragma comment(lib, "Pathcch.lib")
 #pragma comment(lib, "comsuppw.lib")
+#pragma comment(lib, "Cabinet.lib")

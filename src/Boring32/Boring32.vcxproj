@@ -188,6 +188,9 @@
     <ClInclude Include="include\Async\ThreadSafeVector.hpp" />
     <ClInclude Include="include\Async\WaitableTimer.hpp" />
     <ClInclude Include="include\Compression\Compression.hpp" />
+    <ClInclude Include="include\Compression\CompressionType.hpp" />
+    <ClInclude Include="include\Compression\Compressor.hpp" />
+    <ClInclude Include="include\Compression\Decompressor.hpp" />
     <ClInclude Include="include\Error\ComError.hpp" />
     <ClInclude Include="include\Security\Crypto\Crypto.hpp" />
     <ClInclude Include="include\Error\Error.hpp" />
@@ -232,6 +235,8 @@
     <ClCompile Include="src\Async\SlimReadWriteLock.cpp" />
     <ClCompile Include="src\Async\Thread.cpp" />
     <ClCompile Include="src\Async\WaitableTimer.cpp" />
+    <ClCompile Include="src\Compression\Compressor.cpp" />
+    <ClCompile Include="src\Compression\Decompressor.cpp" />
     <ClCompile Include="src\Com\ComThreadScope.cpp" />
     <ClCompile Include="src\Error\ComError.cpp" />
     <ClCompile Include="src\Error\Error.cpp" />
