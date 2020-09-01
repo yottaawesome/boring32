@@ -15,10 +15,10 @@ namespace Boring32::Raii
 			virtual void operator=(const Win32Handle& other);
 
 			Win32Handle(Win32Handle&& otherHandle) noexcept;
-			virtual void operator=(Win32Handle&& other) noexcept;
+			virtual Win32Handle& operator=(Win32Handle&& other) noexcept;
 
 		public:
-			virtual void operator=(const HANDLE other);
+			virtual Win32Handle& operator=(const HANDLE other);
 			virtual bool operator==(const HANDLE other) const;
 			virtual bool operator==(const Win32Handle& other) const;
 			virtual HANDLE* operator&();

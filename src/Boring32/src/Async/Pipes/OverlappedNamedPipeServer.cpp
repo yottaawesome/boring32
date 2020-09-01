@@ -94,7 +94,7 @@ namespace Boring32::Async
         oio.CallReturnValue = ConnectNamedPipe(m_pipe.GetHandle(), oio.GetOverlapped());
         oio.LastErrorValue = GetLastError();
         if (oio.CallReturnValue == false && oio.LastErrorValue != ERROR_IO_PENDING)
-            throw Error::Win32Error("Failed to connect named pipe", oio.LastErrorValue);
+            throw Error::Win32Error("OverlappedNamedPipeServer::Connect(): ConnectNamedPipe() failed", oio.LastErrorValue);
         return oio;
     }
 
@@ -113,7 +113,7 @@ namespace Boring32::Async
         );
         oio.LastErrorValue = GetLastError();
         if (oio.CallReturnValue == false && oio.LastErrorValue != ERROR_IO_PENDING)
-            throw Error::Win32Error("Failed to read pipe", oio.LastErrorValue);
+            throw Error::Win32Error("OverlappedNamedPipeServer::Write(): WriteFile() failed", oio.LastErrorValue);
 
         return oio;
     }
@@ -134,7 +134,7 @@ namespace Boring32::Async
             oio.GetOverlapped());    // overlapped
         oio.LastErrorValue = GetLastError();
         if (oio.LastErrorValue != ERROR_IO_PENDING)
-            throw Error::Win32Error("Failed to read from pipe", oio.LastErrorValue);
+            throw Error::Win32Error("OverlappedNamedPipeServer::Read(): ReadFile() failed", oio.LastErrorValue);
 
         return oio;
     }

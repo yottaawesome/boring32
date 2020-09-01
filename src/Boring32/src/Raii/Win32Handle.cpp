@@ -53,9 +53,10 @@ namespace Boring32::Raii
 		Move(other);
 	}
 
-	void Win32Handle::operator=(Win32Handle&& other) noexcept
+	Win32Handle& Win32Handle::operator=(Win32Handle&& other) noexcept
 	{
 		Move(other);
+		return *this;
 	}
 
 	void Win32Handle::Move(Win32Handle& other) noexcept
@@ -69,10 +70,11 @@ namespace Boring32::Raii
 	:	m_handle(handle)
 	{ }
 
-	void Win32Handle::operator=(const HANDLE other)
+	Win32Handle& Win32Handle::operator=(const HANDLE other)
 	{
 		Close();
 		m_handle = other;
+		return *this;
 	}
 
 	bool Win32Handle::operator==(const HANDLE other) const

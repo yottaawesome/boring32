@@ -10,8 +10,7 @@ namespace Boring32::Util
     std::wstring GetCurrentExecutableDirectory()
     {
         constexpr size_t blockSize = 5096;
-        std::wstring filePath;
-        filePath.resize(0);
+        std::wstring filePath(L"\0", 0);
         DWORD status = ERROR_INSUFFICIENT_BUFFER;
         while (status == ERROR_INSUFFICIENT_BUFFER)
         {
@@ -33,7 +32,7 @@ namespace Boring32::Util
         ft.dwLowDateTime = li.LowPart;
         ft.dwHighDateTime = li.HighPart;
         SYSTEMTIME st{ 0 };
-        if (FileTimeToSystemTime(&ft, &st) == 0)
+        if (FileTimeToSystemTime(&ft, &st) == false)
             throw Error::Win32Error("LargeIntegerTimeToSystemTime(): FileTimeToSystemTime() failed", GetLastError());
         return st;
     }
