@@ -1,6 +1,6 @@
 # Boring32
 
-[![Language](https://img.shields.io/badge/Language%20-C++20-blue.svg?style=flat-square)](https://github.com/yottaawesome/boring32/)
+[![Language](https://img.shields.io/badge/Language%20-C++20-blue.svg)](https://github.com/yottaawesome/boring32/)
 
 ## Introduction
 
