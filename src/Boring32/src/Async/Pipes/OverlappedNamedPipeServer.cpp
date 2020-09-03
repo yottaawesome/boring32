@@ -100,6 +100,16 @@ namespace Boring32::Async
 
     OverlappedIo OverlappedNamedPipeServer::Write(const std::wstring& msg)
     {
+        return InternalWrite(msg, true);
+    }
+
+    OverlappedIo OverlappedNamedPipeServer::Write(const std::wstring& msg, const std::nothrow_t)
+    {
+        return InternalWrite(msg, false);
+    }
+
+    OverlappedIo OverlappedNamedPipeServer::InternalWrite(const std::wstring& msg, const bool throwOnWin32Error)
+    {
         if (m_pipe == nullptr)
             throw std::runtime_error("No pipe to write to");
 
@@ -112,13 +122,23 @@ namespace Boring32::Async
             oio.GetOverlapped()       // overlapped I/O
         );
         oio.LastErrorValue = GetLastError();
-        if (oio.CallReturnValue == false && oio.LastErrorValue != ERROR_IO_PENDING)
+        if (throwOnWin32Error && oio.CallReturnValue == false && oio.LastErrorValue != ERROR_IO_PENDING)
             throw Error::Win32Error("OverlappedNamedPipeServer::Write(): WriteFile() failed", oio.LastErrorValue);
 
         return oio;
     }
 
     OverlappedIo OverlappedNamedPipeServer::Read(const DWORD noOfCharacters)
+    {
+        return InternalRead(noOfCharacters, true);
+    }
+
+    OverlappedIo OverlappedNamedPipeServer::Read(const DWORD noOfCharacters, const std::nothrow_t)
+    {
+        return InternalRead(noOfCharacters, false);
+    }
+
+    OverlappedIo OverlappedNamedPipeServer::InternalRead(const DWORD noOfCharacters, const bool throwOnWin32Error)
     {
         if (m_pipe == nullptr)
             throw std::runtime_error("No pipe to read from");
@@ -133,7 +153,7 @@ namespace Boring32::Async
             nullptr,  // number of bytes read 
             oio.GetOverlapped());    // overlapped
         oio.LastErrorValue = GetLastError();
-        if (oio.LastErrorValue != ERROR_IO_PENDING)
+        if (throwOnWin32Error && oio.LastErrorValue != ERROR_IO_PENDING)
             throw Error::Win32Error("OverlappedNamedPipeServer::Read(): ReadFile() failed", oio.LastErrorValue);
 
         return oio;
