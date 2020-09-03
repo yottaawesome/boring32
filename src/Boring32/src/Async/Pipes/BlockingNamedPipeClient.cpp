@@ -37,6 +37,24 @@ namespace Boring32::Async
 
 	void BlockingNamedPipeClient::Write(const std::wstring& msg)
 	{
+		InternalWrite(msg);
+	}
+	
+	bool BlockingNamedPipeClient::Write(const std::wstring& msg, const std::nothrow_t)
+	{
+		try
+		{
+			InternalWrite(msg);
+			return true;
+		}
+		catch (...)
+		{
+			return false;
+		}
+	}
+
+	void BlockingNamedPipeClient::InternalWrite(const std::wstring& msg)
+	{
 		if (m_handle == nullptr)
 			throw std::runtime_error("No pipe to write to");
 
@@ -54,6 +72,24 @@ namespace Boring32::Async
 	}
 
 	std::wstring BlockingNamedPipeClient::Read()
+	{
+		return InternalRead();
+	}
+
+	bool BlockingNamedPipeClient::Read(std::wstring& out, const std::nothrow_t)
+	{
+		try
+		{
+			out = InternalRead();
+			return true;
+		}
+		catch (...)
+		{
+			return false;
+		}
+	}
+
+	std::wstring BlockingNamedPipeClient::InternalRead()
 	{
 		if (m_handle == nullptr)
 			throw std::runtime_error("No pipe to read from");

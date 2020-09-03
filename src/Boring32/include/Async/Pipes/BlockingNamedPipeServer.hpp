@@ -36,6 +36,12 @@ namespace Boring32::Async
 		public:
 			virtual void Connect();
 			virtual void Write(const std::wstring& msg);
+			virtual bool Write(const std::wstring& msg, const std::nothrow_t);
 			virtual std::wstring Read();
+			virtual bool Read(std::wstring& out, const std::nothrow_t);
+
+		protected:
+			virtual void InternalWrite(const std::wstring& msg);
+			virtual std::wstring InternalRead();
 	};
 }

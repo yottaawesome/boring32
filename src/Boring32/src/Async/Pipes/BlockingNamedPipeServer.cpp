@@ -25,11 +25,11 @@ namespace Boring32::Async
         isInheritable,
         PIPE_ACCESS_DUPLEX,
         PIPE_TYPE_MESSAGE           // message type pipe 
-        | PIPE_READMODE_MESSAGE     // message-read mode
-        | PIPE_WAIT
-        | (isLocalPipe 
-            ? PIPE_REJECT_REMOTE_CLIENTS 
-            : PIPE_ACCEPT_REMOTE_CLIENTS)
+            | PIPE_READMODE_MESSAGE     // message-read mode
+            | PIPE_WAIT
+            | (isLocalPipe 
+                ? PIPE_REJECT_REMOTE_CLIENTS 
+                : PIPE_ACCEPT_REMOTE_CLIENTS)
     )
 	{
         m_openMode &= ~FILE_FLAG_OVERLAPPED;
@@ -94,6 +94,24 @@ namespace Boring32::Async
 
     void BlockingNamedPipeServer::Write(const std::wstring& msg)
     {
+        InternalWrite(msg);
+    }
+
+    bool BlockingNamedPipeServer::Write(const std::wstring& msg, const std::nothrow_t)
+    {
+        try
+        {
+            InternalWrite(msg);
+            return true;
+        }
+        catch (...)
+        {
+            return false;
+        }
+    }
+
+    void BlockingNamedPipeServer::InternalWrite(const std::wstring& msg)
+    {
         if (m_pipe == nullptr)
             throw std::runtime_error("No pipe to write to");
 
@@ -110,6 +128,24 @@ namespace Boring32::Async
     }
 
     std::wstring BlockingNamedPipeServer::Read()
+    {
+        return InternalRead();
+    }
+
+    bool BlockingNamedPipeServer::Read(std::wstring& out, const std::nothrow_t)
+    {
+        try
+        {
+            out = InternalRead();
+            return true;
+        }
+        catch (...)
+        {
+            return false;
+        }
+    }
+
+    std::wstring BlockingNamedPipeServer::InternalRead()
     {
         if (m_pipe == nullptr)
             throw std::runtime_error("No pipe to read from");
