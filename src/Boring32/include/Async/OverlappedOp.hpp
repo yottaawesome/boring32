@@ -26,12 +26,9 @@ namespace Boring32::Async
 			virtual uint64_t GetBytesTransferred() const;
 			virtual bool IsComplete() const;
 			virtual bool IsSuccessful() const;
+			virtual void SetEvent(const bool signaled);
 			virtual void Cancel();
 			virtual bool Cancel(std::nothrow_t);
-
-		public:
-			bool CallReturnValue;
-			DWORD LastErrorValue;
 
 		protected:
 			virtual void Move(OverlappedOp& other) noexcept;

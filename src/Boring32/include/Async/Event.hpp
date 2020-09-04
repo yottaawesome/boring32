@@ -41,7 +41,7 @@ namespace Boring32::Async
 			virtual void Close();
 
 		protected:
-			virtual void Duplicate(const Event& other);
+			virtual void Copy(const Event& other);
 			virtual void Move(Event& other) noexcept;
 
 		protected:

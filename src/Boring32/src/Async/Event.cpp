@@ -12,11 +12,7 @@ namespace Boring32::Async
 	
 	void Event::Close()
 	{
-		if (m_event != nullptr)
-		{
-			m_event.Close();
-			m_event = nullptr;
-		}
+		m_event = nullptr;
 	}
 
 	Event::Event()
@@ -73,16 +69,16 @@ namespace Boring32::Async
 
 	Event::Event(const Event& other) 
 	{ 
-		Duplicate(other);
+		Copy(other);
 	}
 
 	Event& Event::operator=(const Event& other)
 	{
-		Duplicate(other);
+		Copy(other);
 		return *this;
 	}
 
-	void Event::Duplicate(const Event& other)
+	void Event::Copy(const Event& other)
 	{
 		Close();
 		m_isManualReset = other.m_isManualReset;

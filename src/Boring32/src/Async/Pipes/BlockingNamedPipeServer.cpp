@@ -68,7 +68,6 @@ namespace Boring32::Async
     void BlockingNamedPipeServer::operator=(const BlockingNamedPipeServer& other)
     {
         Copy(other);
-        InternalCreatePipe();
     }
 
     BlockingNamedPipeServer::BlockingNamedPipeServer(BlockingNamedPipeServer&& other) noexcept
@@ -80,7 +79,6 @@ namespace Boring32::Async
     void BlockingNamedPipeServer::operator=(BlockingNamedPipeServer&& other) noexcept
     {
         Move(other);
-        InternalCreatePipe();
     }
 
     void BlockingNamedPipeServer::Connect()

@@ -9,16 +9,13 @@ namespace Boring32::Async
 
 	OverlappedOp::OverlappedOp()
 	:	m_ioOverlapped(nullptr),
-		CallReturnValue(false),
-		LastErrorValue(0)
+		m_ioEvent(false, true, false, L"")
 	{ }
 
 	OverlappedOp::OverlappedOp(const Raii::Win32Handle& handle)
 	:	m_ioHandle(handle),
 		m_ioEvent(false, true, false, L""),
-		m_ioOverlapped(std::make_unique<OVERLAPPED>()),
-		CallReturnValue(false),
-		LastErrorValue(0)
+		m_ioOverlapped(std::make_unique<OVERLAPPED>())
 	{
 		m_ioOverlapped->hEvent = m_ioEvent.GetHandle();
 	}
@@ -84,6 +81,14 @@ namespace Boring32::Async
 		return m_ioOverlapped->Internal == NOERROR;
 	}
 
+	void OverlappedOp::SetEvent(const bool signaled)
+	{
+		if (signaled)
+			m_ioEvent.Signal();
+		else
+			m_ioEvent.Reset();
+	}
+
 	void OverlappedOp::Cancel()
 	{
 		if (m_ioHandle == nullptr)
@@ -108,8 +113,6 @@ namespace Boring32::Async
 
 	void OverlappedOp::Move(OverlappedOp& other) noexcept
 	{
-		CallReturnValue = other.CallReturnValue;
-		LastErrorValue = other.LastErrorValue;
 		m_ioEvent = std::move(other.m_ioEvent);
 		m_ioHandle = std::move(other.m_ioHandle);
 		m_ioOverlapped = std::move(other.m_ioOverlapped);
