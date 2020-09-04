@@ -36,7 +36,7 @@ namespace Boring32::Async
 	{
 		if (m_ioOverlapped == nullptr)
 			throw std::runtime_error("IoOverlapped is null");
-		m_ioEvent.WaitOnEvent(timeout);
+		m_ioEvent.WaitOnEvent(timeout, true);
 	}
 
 	HANDLE OverlappedOp::GetWaitableHandle() const
@@ -126,6 +126,7 @@ namespace Boring32::Async
 		m_ioEvent = std::move(other.m_ioEvent);
 		m_ioHandle = std::move(other.m_ioHandle);
 		m_ioOverlapped = std::move(other.m_ioOverlapped);
+		m_lastError = other.m_lastError;
 		if (m_ioOverlapped != nullptr)
 			m_ioOverlapped->hEvent = m_ioEvent.GetHandle();
 	}

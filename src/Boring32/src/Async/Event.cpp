@@ -130,12 +130,12 @@ namespace Boring32::Async
 			throw std::runtime_error("The wait was abandoned");
 	}
 
-	bool Event::WaitOnEvent(const DWORD millis)
+	bool Event::WaitOnEvent(const DWORD millis, const bool alertable)
 	{
 		if (m_event == nullptr)
 			throw std::runtime_error("No Event to wait on");
 
-		DWORD status = WaitForSingleObject(m_event.GetHandle(), millis);
+		DWORD status = WaitForSingleObjectEx(m_event.GetHandle(), millis, alertable);
 		if (status == WAIT_OBJECT_0)
 			return true;
 		if (status == WAIT_TIMEOUT)
