@@ -90,8 +90,9 @@ namespace Boring32::Async
             throw std::runtime_error("No valid pipe handle to connect");
         OverlappedOp oio(m_pipe);
         bool succeeded = ConnectNamedPipe(m_pipe.GetHandle(), oio.GetOverlapped());
-        if (succeeded == false && oio.GetStatus() != STATUS_PENDING)
-            throw Error::Win32Error("OverlappedNamedPipeServer::Connect(): ConnectNamedPipe() failed", oio.GetStatus());
+        oio.LastError(GetLastError());
+        if (succeeded == false && oio.LastError() != ERROR_IO_PENDING)
+            throw Error::Win32Error("OverlappedNamedPipeServer::Connect(): ConnectNamedPipe() failed", oio.LastError());
         return oio;
     }
 
@@ -118,8 +119,9 @@ namespace Boring32::Async
             nullptr,          // number of bytes written 
             oio.GetOverlapped()       // overlapped I/O
         );
-        if (throwOnWin32Error && succeeded == false && oio.GetStatus() != STATUS_PENDING)
-            throw Error::Win32Error("OverlappedNamedPipeServer::Write(): WriteFile() failed", oio.GetStatus());
+        oio.LastError(GetLastError());
+        if (throwOnWin32Error && succeeded == false && oio.LastError() != ERROR_IO_PENDING)
+            throw Error::Win32Error("OverlappedNamedPipeServer::Write(): WriteFile() failed", oio.LastError());
 
         return oio;
     }
@@ -148,8 +150,9 @@ namespace Boring32::Async
             oio.IoBuffer.size() * sizeof(wchar_t),  // size of buffer 
             nullptr,  // number of bytes read 
             oio.GetOverlapped());    // overlapped
-        if (throwOnWin32Error && succeeded == false && oio.GetStatus() != STATUS_PENDING)
-            throw Error::Win32Error("OverlappedNamedPipeServer::Read(): ReadFile() failed", oio.GetStatus());
+        oio.LastError(GetLastError());
+        if (throwOnWin32Error && succeeded == false && oio.LastError() != ERROR_IO_PENDING)
+            throw Error::Win32Error("OverlappedNamedPipeServer::Read(): ReadFile() failed", oio.LastError());
 
         return oio;
     }

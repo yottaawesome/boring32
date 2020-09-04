@@ -41,7 +41,6 @@ namespace Boring32::Async
 			virtual std::wstring GetName() const;
 			virtual DWORD GetSize() const;
 			virtual DWORD GetMaxInstances() const;
-			virtual bool IsConnected() const;
 			virtual DWORD GetPipeMode() const;
 			virtual DWORD GetOpenMode() const;
 			virtual DWORD UnreadCharactersRemaining() const;
@@ -57,7 +56,6 @@ namespace Boring32::Async
 			std::wstring m_sid;
 			DWORD m_size;
 			DWORD m_maxInstances;
-			bool m_isConnected;
 			bool m_isInheritable;
 			DWORD m_pipeMode;
 			DWORD m_openMode;

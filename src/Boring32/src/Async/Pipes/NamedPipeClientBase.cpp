@@ -56,6 +56,9 @@ namespace Boring32::Async
 
 	void NamedPipeClientBase::Connect(const DWORD timeout)
 	{
+		if (m_pipeName.starts_with(L"\\\\.\\pipe\\") == false)
+			m_pipeName = L"\\\\.\\pipe\\" + m_pipeName;
+
 		// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew
 		m_handle = CreateFileW(
 			m_pipeName.c_str(),   // pipe name 

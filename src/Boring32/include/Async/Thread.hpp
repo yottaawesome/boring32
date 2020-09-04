@@ -14,9 +14,9 @@ namespace Boring32::Async
 
 			Thread(void* param, bool destroyOnCompletion);
 			Thread(const Thread& other);
-			virtual void operator=(const Thread& other);
+			virtual Thread& operator=(const Thread& other);
 			Thread(Thread&& other) noexcept;
-			virtual void operator=(Thread&& other) noexcept;
+			virtual Thread& operator=(Thread&& other) noexcept;
 
 			/// <summary>
 			///		Terminates the thread. Be careful when using this
@@ -35,7 +35,7 @@ namespace Boring32::Async
 			virtual void Start(const std::function<int()>& func);
 			virtual ThreadStatus GetStatus();
 			virtual UINT GetExitCode();
-			Raii::Win32Handle GetHandle();
+			virtual Raii::Win32Handle GetHandle();
 
 		protected:
 			virtual UINT Run();

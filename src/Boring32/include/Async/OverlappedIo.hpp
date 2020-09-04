@@ -15,7 +15,7 @@ namespace Boring32::Async
 		// Non-copyable
 		public:
 			OverlappedIo(const OverlappedIo& other) = delete;
-			virtual void operator=(const OverlappedIo& other) = delete;
+			virtual OverlappedIo& operator=(const OverlappedIo& other) = delete;
 
 		public:
 			std::wstring IoBuffer;

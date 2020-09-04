@@ -37,14 +37,12 @@ namespace Boring32::Async
 		m_mutex(nullptr),
 		m_locked(false)
 	{
-		SECURITY_ATTRIBUTES lp{ 0 };
-		lp.nLength = sizeof(lp);
-		lp.bInheritHandle = inheritable;
 		m_mutex = CreateMutexW(
-			&lp,
+			nullptr,
 			acquireOnCreation,
 			m_name.size() > 0 ? m_name.c_str() : nullptr
 		);
+		m_mutex.SetInheritability(inheritable);
 		if (m_mutex == nullptr)
 			throw Error::Win32Error("Failed to create mutex", GetLastError());
 
@@ -74,14 +72,12 @@ namespace Boring32::Async
 		m_locked(acquire),
 		m_mutex(nullptr)
 	{
-		SECURITY_ATTRIBUTES lp{ 0 };
-		lp.nLength = sizeof(lp);
-		lp.bInheritHandle = inheritable;
 		m_mutex = CreateMutexW(
-			&lp,
+			nullptr,
 			m_locked,
 			nullptr
 		);
+		m_mutex.SetInheritability(inheritable);
 		if (m_mutex == nullptr)
 			throw Error::Win32Error("Failed to create mutex", GetLastError());
 	}

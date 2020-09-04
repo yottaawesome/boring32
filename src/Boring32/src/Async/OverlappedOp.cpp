@@ -21,7 +21,7 @@ namespace Boring32::Async
 	}
 
 	OverlappedOp::OverlappedOp(OverlappedOp&& other) noexcept
-		: m_ioOverlapped{}
+		: m_ioOverlapped(nullptr)
 	{
 		Move(other);
 	}
@@ -57,7 +57,7 @@ namespace Boring32::Async
 			throw std::runtime_error("IoOverlapped is null");
 		//STATUS_PENDING,
 		//ERROR_IO_INCOMPLETE
-		return m_ioOverlapped->Internal;
+		return m_lastError == ERROR_IO_PENDING ? m_ioOverlapped->Internal : m_lastError;
 	}
 
 	uint64_t OverlappedOp::GetBytesTransferred() const
@@ -109,6 +109,16 @@ namespace Boring32::Async
 		const bool returnValue = CancelIo(m_ioHandle.GetHandle());
 		m_ioHandle = nullptr;
 		return returnValue;
+	}
+
+	DWORD OverlappedOp::LastError()
+	{
+		return m_lastError;
+	}
+
+	void OverlappedOp::LastError(const DWORD lastError)
+	{
+		m_lastError = lastError;
 	}
 
 	void OverlappedOp::Move(OverlappedOp& other) noexcept

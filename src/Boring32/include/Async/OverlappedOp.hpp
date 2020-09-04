@@ -29,6 +29,8 @@ namespace Boring32::Async
 			virtual void SetEvent(const bool signaled);
 			virtual void Cancel();
 			virtual bool Cancel(std::nothrow_t);
+			virtual DWORD LastError();
+			virtual void LastError(const DWORD lastError);
 
 		protected:
 			virtual void Move(OverlappedOp& other) noexcept;
@@ -37,5 +39,6 @@ namespace Boring32::Async
 			Event m_ioEvent;
 			Raii::Win32Handle m_ioHandle;
 			std::unique_ptr<OVERLAPPED> m_ioOverlapped;
+			DWORD m_lastError;
 	};
 }

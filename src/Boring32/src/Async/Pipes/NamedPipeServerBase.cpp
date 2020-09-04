@@ -20,7 +20,6 @@ namespace Boring32::Async
     :   m_pipeName(L""),
         m_size(0),
         m_maxInstances(0),
-        m_isConnected(false),
         m_sid(L""),
         m_isInheritable(false),
         m_openMode(0),
@@ -38,7 +37,6 @@ namespace Boring32::Async
         : m_pipeName(pipeName),
         m_size(size),
         m_maxInstances(maxInstances),
-        m_isConnected(false),
         m_sid(sid),
         m_isInheritable(isInheritable),
         m_openMode(
@@ -68,7 +66,6 @@ namespace Boring32::Async
         : m_pipeName(pipeName),
         m_size(size),
         m_maxInstances(maxInstances),
-        m_isConnected(false),
         m_sid(sid),
         m_isInheritable(isInheritable),
         m_openMode(openMode),
@@ -78,6 +75,9 @@ namespace Boring32::Async
 
     void NamedPipeServerBase::InternalCreatePipe()
     {
+        if (m_pipeName.starts_with(L"\\\\.\\pipe\\") == false)
+            m_pipeName = L"\\\\.\\pipe\\" + m_pipeName;
+
         SECURITY_ATTRIBUTES sa;
         sa.nLength = sizeof(sa);
         sa.bInheritHandle = m_isInheritable;
@@ -105,13 +105,12 @@ namespace Boring32::Async
             m_sid != L"" ? &sa : nullptr);
         if (m_sid != L"")
             LocalFree(sa.lpSecurityDescriptor);
-        if (m_pipe == nullptr)
+        if (m_pipe.IsNotNull() == false)
             throw Error::Win32Error("Failed to create named pipe", GetLastError());
     }
 
     NamedPipeServerBase::NamedPipeServerBase(const NamedPipeServerBase& other)
-        : m_size(0),
-        m_isConnected(false)
+        : m_size(0)
     {
         Copy(other);
     }
@@ -129,7 +128,6 @@ namespace Boring32::Async
         m_size = other.m_size;
         m_maxInstances = other.m_maxInstances;
         m_sid = other.m_sid;
-        m_isConnected = other.m_isConnected;
         m_openMode = other.m_openMode;
         m_pipeMode = other.m_pipeMode;
     }
@@ -152,7 +150,6 @@ namespace Boring32::Async
         m_size = other.m_size;
         m_maxInstances = other.m_maxInstances;
         m_sid = std::move(other.m_sid);
-        m_isConnected = other.m_isConnected;
         m_openMode = other.m_openMode;
         m_pipeMode = other.m_pipeMode;
         if (other.m_pipe != nullptr)
@@ -161,11 +158,8 @@ namespace Boring32::Async
 
     void NamedPipeServerBase::Disconnect()
     {
-        if (m_pipe != nullptr && m_isConnected)
-        {
+        if (m_pipe != nullptr)
             DisconnectNamedPipe(m_pipe.GetHandle());
-            m_isConnected = false;
-        }
     }
 
     Raii::Win32Handle& NamedPipeServerBase::GetInternalHandle()
@@ -186,11 +180,6 @@ namespace Boring32::Async
     DWORD NamedPipeServerBase::GetMaxInstances() const
     {
         return m_maxInstances;
-    }
-
-    bool NamedPipeServerBase::IsConnected() const
-    {
-        return m_isConnected;
     }
 
     DWORD NamedPipeServerBase::GetPipeMode() const

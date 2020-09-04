@@ -165,8 +165,8 @@ void TestProcessBlockingNamedPipe()
 	pipeServer.Connect();
 	pipeServer.Write(L"HAHA!");
 	pipeServer.Write(L"HAHA2!");
-	pipeServer.Disconnect();
 	WaitForSingleObject(testProcess.GetProcessHandle(), INFINITE);
+	pipeServer.Disconnect();
 }
 
 void TestProcessOverlappedNamedPipe()

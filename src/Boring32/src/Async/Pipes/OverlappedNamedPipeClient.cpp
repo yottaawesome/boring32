@@ -58,8 +58,9 @@ namespace Boring32::Async
 			msg.size(),         // message length 
 			nullptr,      // bytes written 
 			oio.GetOverlapped());           // not overlapped 
-		if (throwOnWin32Error && succeeded == false && oio.GetStatus() != STATUS_PENDING)
-			throw Error::Win32Error("OverlappedNamedPipeClient::Write(): WriteFile() failed", oio.GetStatus());
+		oio.LastError(GetLastError());
+		if (throwOnWin32Error && succeeded == false && oio.LastError() != ERROR_IO_PENDING)
+			throw Error::Win32Error("OverlappedNamedPipeClient::Write(): WriteFile() failed", oio.LastError());
 
 		return oio;
 	}
@@ -88,8 +89,9 @@ namespace Boring32::Async
 			oio.IoBuffer.size() * sizeof(TCHAR),  // size of buffer 
 			nullptr,  // number of bytes read 
 			oio.GetOverlapped());    // overlapped
-		if (throwOnWin32Error && succeeded == false && oio.GetStatus() != STATUS_PENDING)
-			throw Error::Win32Error("OverlappedNamedPipeClient::Read(): ReadFile() failed", oio.GetStatus());
+		oio.LastError(GetLastError());
+		if (throwOnWin32Error && succeeded == false && oio.LastError() != ERROR_IO_PENDING)
+			throw Error::Win32Error("OverlappedNamedPipeClient::Read(): ReadFile() failed", oio.LastError());
 
 		return oio;
 	}

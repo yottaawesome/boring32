@@ -34,9 +34,10 @@ namespace Boring32::Async
 		Copy(other);
 	}
 
-	void Thread::operator=(const Thread& other)
+	Thread& Thread::operator=(const Thread& other)
 	{
 		Copy(other);
+		return *this;
 	}
 
 	void Thread::Copy(const Thread& other)
@@ -56,9 +57,10 @@ namespace Boring32::Async
 		Move(other);
 	}
 
-	void Thread::operator=(Thread&& other) noexcept
+	Thread& Thread::operator=(Thread&& other) noexcept
 	{
 		Move(other);
+		return *this;
 	}
 
 	void Thread::Move(Thread& other) noexcept
