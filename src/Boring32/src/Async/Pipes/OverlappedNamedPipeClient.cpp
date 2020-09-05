@@ -55,7 +55,7 @@ namespace Boring32::Async
 		bool succeeded = WriteFile(
 			m_handle.GetHandle(),   // pipe handle 
 			msg.c_str(),        // message 
-			msg.size(),         // message length 
+			(DWORD)msg.size(),         // message length 
 			nullptr,      // bytes written 
 			oio.GetOverlapped());           // not overlapped 
 		oio.LastError(GetLastError());
@@ -86,7 +86,7 @@ namespace Boring32::Async
 		bool succeeded = ReadFile(
 			m_handle.GetHandle(),    // pipe handle 
 			&oio.IoBuffer[0],    // buffer to receive reply 
-			oio.IoBuffer.size() * sizeof(TCHAR),  // size of buffer 
+			(DWORD)(oio.IoBuffer.size() * sizeof(TCHAR)),  // size of buffer 
 			nullptr,  // number of bytes read 
 			oio.GetOverlapped());    // overlapped
 		oio.LastError(GetLastError());

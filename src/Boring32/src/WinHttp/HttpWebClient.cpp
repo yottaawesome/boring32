@@ -196,15 +196,15 @@ namespace Boring32::WinHttp
 			requestBody.size() > 0 
 				? (LPVOID)requestBody.c_str()
 				: WINHTTP_NO_REQUEST_DATA,
-			requestBody.size(),
-			requestBody.size(),
+			(DWORD)requestBody.size(),
+			(DWORD)requestBody.size(),
 			reinterpret_cast<DWORD_PTR>(this)
 		);
 		if (succeeded == false)
 			throw std::runtime_error("WinHttpSendRequest failed");
 
 		succeeded = WinHttpReceiveResponse(hRequest.Get(), nullptr);
-		if (!succeeded)
+		if (succeeded == false)
 			throw std::runtime_error("WinHttpReceiveResponse failed");
 
 		DWORD statusCode = 0;
@@ -226,7 +226,7 @@ namespace Boring32::WinHttp
 				throw std::runtime_error("WinHttpQueryDataAvailable failed");
 
 			// Allocate space for the buffer.
-			std::vector<char> outBuffer(dwSize + 1, 0);
+			std::vector<char> outBuffer((size_t)dwSize + 1, 0);
 			DWORD dwDownloaded = 0;
 
 			succeeded = WinHttpReadData(

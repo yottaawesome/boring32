@@ -114,7 +114,7 @@ namespace Boring32::Async
 		bool success = WriteFile(
 			m_writeHandle.GetHandle(),
 			delimitedMsg.data(),
-			delimitedMsg.size() * sizeof(wchar_t),
+			(DWORD)(delimitedMsg.size()*sizeof(wchar_t)),
 			&bytesWritten,
 			nullptr
 		);
@@ -134,7 +134,7 @@ namespace Boring32::Async
 		bool success = WriteFile(
 			m_writeHandle.GetHandle(),
 			msg.data(),
-			msg.size() * sizeof(wchar_t),
+			(DWORD)(msg.size()*sizeof(wchar_t)),
 			&bytesWritten,
 			nullptr
 		);
@@ -153,7 +153,7 @@ namespace Boring32::Async
 		bool success = ReadFile(
 			m_readHandle.GetHandle(),
 			&msg[0],
-			msg.size() * sizeof(wchar_t),
+			(DWORD)(msg.size() * sizeof(wchar_t)),
 			&bytesRead,
 			nullptr
 		);
@@ -175,6 +175,8 @@ namespace Boring32::Async
 			handleToSet = m_readHandle.GetHandle();
 		else if (m_writeHandle != nullptr)
 			handleToSet = m_writeHandle.GetHandle();
+		if (handleToSet == nullptr)
+			throw std::runtime_error("No handleToSet");
 
 		// Do not pass PIPE_READMODE_MESSAGE, as anonymous pipes are created in
 		// byte mode, and cannot be changed.

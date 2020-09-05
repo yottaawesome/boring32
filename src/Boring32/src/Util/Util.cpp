@@ -15,7 +15,7 @@ namespace Boring32::Util
         while (status == ERROR_INSUFFICIENT_BUFFER)
         {
             filePath.resize(filePath.size() + blockSize);
-            status = GetModuleFileNameW(nullptr, &filePath[0], filePath.size());
+            status = GetModuleFileNameW(nullptr, &filePath[0], (DWORD)filePath.size());
             if(status == 0)
                 throw Error::Win32Error("GetCurrentExecutableDirectory(): GetModuleFileNameW() failed", GetLastError());
         }

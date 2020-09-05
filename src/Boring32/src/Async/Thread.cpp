@@ -204,7 +204,7 @@ namespace Boring32::Async
 			returnCode = threadObj->Run();
 			threadObj->m_status = ThreadStatus::Finished;
 		}
-		catch (const std::exception& ex)
+		catch (const std::exception&)
 		{
 			returnCode = 1;
 			threadObj->m_status = ThreadStatus::FinishedWithError;

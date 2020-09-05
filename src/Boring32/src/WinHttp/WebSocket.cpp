@@ -208,7 +208,7 @@ namespace Boring32::WinHttp
 			m_webSocketHandle.Get(),
 			WINHTTP_WEB_SOCKET_UTF8_MESSAGE_BUFFER_TYPE,
 			(PVOID)&msg[0],
-			msg.size() * sizeof(char)
+			(DWORD)(msg.size() * sizeof(char))
 		);
 		if (dwError != ERROR_SUCCESS)
 		{
@@ -226,7 +226,7 @@ namespace Boring32::WinHttp
 			m_webSocketHandle.Get(),
 			WINHTTP_WEB_SOCKET_BINARY_MESSAGE_BUFFER_TYPE,
 			(PVOID)&buffer[0],
-			buffer.size() * sizeof(char)
+			(DWORD)(buffer.size() * sizeof(char))
 		);
 		if (dwError != ERROR_SUCCESS)
 		{
@@ -244,7 +244,7 @@ namespace Boring32::WinHttp
 		receiveBuffer.clear();
 		receiveBuffer.resize(bufferBlockSize);
 		WINHTTP_WEB_SOCKET_BUFFER_TYPE bufferType;
-		DWORD bufferLength = receiveBuffer.size() * sizeof(char);
+		DWORD bufferLength = (DWORD)(receiveBuffer.size() * sizeof(char));
 		DWORD totalBytesTransferred = 0;
 		char* currentBufferPointer = &receiveBuffer[0];
 		
@@ -285,7 +285,7 @@ namespace Boring32::WinHttp
 			if (bufferLength == 0)
 			{
 				receiveBuffer.resize(receiveBuffer.size() + bufferBlockSize);
-				bufferLength = receiveBuffer.size() * sizeof(char);
+				bufferLength = (DWORD)receiveBuffer.size() * sizeof(char);
 				currentBufferPointer = &receiveBuffer[0] + totalBytesTransferred;
 			}
 		}

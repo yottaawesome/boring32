@@ -84,6 +84,11 @@ namespace Boring32::Async
         Move(other);
     }
 
+    void NTAPI Poop(void* data, BYTE timedOut)
+    {
+        int i = 0;
+    }
+
     OverlappedOp OverlappedNamedPipeServer::Connect()
     {
         if (m_pipe == nullptr)
@@ -93,6 +98,19 @@ namespace Boring32::Async
         oio.LastError(GetLastError());
         if (succeeded == false && oio.LastError() != ERROR_IO_PENDING)
             throw Error::Win32Error("OverlappedNamedPipeServer::Connect(): ConnectNamedPipe() failed", oio.LastError());
+        
+        /*
+        HANDLE out = nullptr;
+        RegisterWaitForSingleObject(
+            &out,
+            oio.GetWaitableHandle(),
+            Poop,//[](void* data, BYTE timedOut)->void {},
+            this, 
+            INFINITE, 
+            WT_EXECUTEDEFAULT
+        );
+        */
+
         return oio;
     }
 
@@ -115,7 +133,7 @@ namespace Boring32::Async
         bool succeeded = WriteFile(
             m_pipe.GetHandle(),     // handle to pipe 
             &msg[0],                // buffer to write from 
-            msg.size() * sizeof(wchar_t), // number of bytes to write 
+            (DWORD)(msg.size()*sizeof(wchar_t)), // number of bytes to write 
             nullptr,          // number of bytes written 
             oio.GetOverlapped()       // overlapped I/O
         );
@@ -147,7 +165,7 @@ namespace Boring32::Async
         bool succeeded = ReadFile(
             m_pipe.GetHandle(),    // pipe handle 
             &oio.IoBuffer[0],    // buffer to receive reply 
-            oio.IoBuffer.size() * sizeof(wchar_t),  // size of buffer 
+            (DWORD)(oio.IoBuffer.size()*sizeof(wchar_t)),  // size of buffer 
             nullptr,  // number of bytes read 
             oio.GetOverlapped());    // overlapped
         oio.LastError(GetLastError());

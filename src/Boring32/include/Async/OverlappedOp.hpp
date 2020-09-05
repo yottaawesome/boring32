@@ -4,17 +4,19 @@
 
 namespace Boring32::Async
 {
-	class OverlappedOp
+	class 
+		[[nodiscard("This object must remain live while the I/O operation is in progress")]] 
+		OverlappedOp
 	{
 		public:
 			virtual ~OverlappedOp();
 			OverlappedOp();
 			OverlappedOp(const Raii::Win32Handle& handle);
 			
-		// Non-copyable, moveable
+		// Shareable, moveable
 		public:
-			OverlappedOp(const OverlappedOp& other) = delete;
-			virtual OverlappedOp& operator=(const OverlappedOp& other) = delete;
+			OverlappedOp(const OverlappedOp& other);
+			virtual OverlappedOp& operator=(const OverlappedOp& other);
 			OverlappedOp(OverlappedOp&& other) noexcept;
 			virtual OverlappedOp& operator=(OverlappedOp&& other) noexcept;
 
@@ -34,11 +36,12 @@ namespace Boring32::Async
 
 		protected:
 			virtual void Move(OverlappedOp& other) noexcept;
+			virtual void Share(const OverlappedOp& other);
 
 		protected:
 			Event m_ioEvent;
 			Raii::Win32Handle m_ioHandle;
-			std::unique_ptr<OVERLAPPED> m_ioOverlapped;
+			std::shared_ptr<OVERLAPPED> m_ioOverlapped;
 			DWORD m_lastError;
 	};
 }
