@@ -1,5 +1,7 @@
 #include "pch.hpp"
 #include <stdexcept>
+//#include <winternl.h>
+//#include <ntstatus.h>
 #include "include/Async/OverlappedOp.hpp"
 #include "include/Error/Win32Error.hpp"
 
@@ -96,6 +98,13 @@ namespace Boring32::Async
 		// which is decimal value 2147483653. See error code STATUS_BUFFER_OVERFLOW:
 		// https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/596a1078-e883-4972-9bbc-49e60bebca55
 		return m_ioOverlapped->Internal == NOERROR;
+	}
+
+	bool OverlappedOp::IsPartial() const
+	{
+		if (m_ioOverlapped == nullptr)
+			throw std::runtime_error("IoOverlapped is null");
+		return m_ioOverlapped->Internal == 0x80000005L;// STATUS_BUFFER_OVERFLOW;
 	}
 
 	void OverlappedOp::SetEvent(const bool signaled)
