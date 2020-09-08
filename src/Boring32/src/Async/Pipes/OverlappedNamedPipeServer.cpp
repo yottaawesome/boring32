@@ -163,14 +163,21 @@ namespace Boring32::Async
         oio.IoBuffer.resize(noOfCharacters);
 
         bool succeeded = ReadFile(
-            m_pipe.GetHandle(),    // pipe handle 
-            &oio.IoBuffer[0],    // buffer to receive reply 
-            (DWORD)(oio.IoBuffer.size()*sizeof(wchar_t)),  // size of buffer 
-            nullptr,  // number of bytes read 
-            oio.GetOverlapped());    // overlapped
+            m_pipe.GetHandle(),                             // pipe handle 
+            &oio.IoBuffer[0],                               // buffer to receive reply 
+            (DWORD)(oio.IoBuffer.size()*sizeof(wchar_t)),   // size of buffer, in bytes
+            nullptr,                                        // number of bytes read 
+            oio.GetOverlapped());                           // overlapped
         oio.LastError(GetLastError());
-        if (throwOnWin32Error && succeeded == false && oio.LastError() != ERROR_IO_PENDING)
+        if (
+            throwOnWin32Error
+            && succeeded == false
+            && oio.LastError() != ERROR_IO_PENDING
+            && oio.LastError() != ERROR_MORE_DATA
+        )
+        {
             throw Error::Win32Error("OverlappedNamedPipeServer::Read(): ReadFile() failed", oio.LastError());
+        }
 
         return oio;
     }

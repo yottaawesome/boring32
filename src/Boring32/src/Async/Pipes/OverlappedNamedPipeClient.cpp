@@ -53,11 +53,11 @@ namespace Boring32::Async
 		OverlappedIo oio(m_handle);
 		// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile
 		bool succeeded = WriteFile(
-			m_handle.GetHandle(),   // pipe handle 
-			msg.c_str(),        // message 
-			(DWORD)msg.size(),         // message length 
-			nullptr,      // bytes written 
-			oio.GetOverlapped());           // not overlapped 
+			m_handle.GetHandle(),					// pipe handle 
+			msg.c_str(),							// message 
+			(DWORD)(msg.size()*sizeof(wchar_t)),	// message length, in bytes
+			nullptr,								// bytes written 
+			oio.GetOverlapped());					// overlapped 
 		oio.LastError(GetLastError());
 		if (throwOnWin32Error && succeeded == false && oio.LastError() != ERROR_IO_PENDING)
 			throw Error::Win32Error("OverlappedNamedPipeClient::Write(): WriteFile() failed", oio.LastError());
@@ -82,16 +82,23 @@ namespace Boring32::Async
 
 		OverlappedIo oio(m_handle);
 		oio.IoBuffer.resize(noOfCharacters);
-
+		// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile
 		bool succeeded = ReadFile(
-			m_handle.GetHandle(),    // pipe handle 
-			&oio.IoBuffer[0],    // buffer to receive reply 
-			(DWORD)(oio.IoBuffer.size() * sizeof(TCHAR)),  // size of buffer 
-			nullptr,  // number of bytes read 
-			oio.GetOverlapped());    // overlapped
+			m_handle.GetHandle(),							// pipe handle 
+			&oio.IoBuffer[0],								// buffer to receive reply 
+			(DWORD)(oio.IoBuffer.size()*sizeof(wchar_t)),	// size of buffer, in bytes 
+			nullptr,										// number of bytes read 
+			oio.GetOverlapped());							// overlapped
 		oio.LastError(GetLastError());
-		if (throwOnWin32Error && succeeded == false && oio.LastError() != ERROR_IO_PENDING)
+		if (
+			throwOnWin32Error 
+			&& succeeded == false 
+			&& oio.LastError() != ERROR_IO_PENDING
+			&& oio.LastError() != ERROR_MORE_DATA
+		)
+		{
 			throw Error::Win32Error("OverlappedNamedPipeClient::Read(): ReadFile() failed", oio.LastError());
+		}
 
 		return oio;
 	}

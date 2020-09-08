@@ -180,7 +180,7 @@ void TestProcessOverlappedNamedPipe()
 
 	Boring32::Async::OverlappedNamedPipeServer serverPipe(
 		L"\\\\.\\pipe\\mynamedpipe",
-		200,
+		1024,
 		5,
 		L"",
 		false,
@@ -202,6 +202,10 @@ void TestProcessOverlappedNamedPipe()
 	oio.WaitForCompletion(INFINITE);
 	oio = serverPipe.Write(L"HAHA!");
 	WaitForSingleObject(testProcess.GetProcessHandle(), INFINITE);
+	auto oio2 = serverPipe.Read(1024);
+	oio2.WaitForCompletion(INFINITE);
+	std::wcout << oio2.IsSuccessful() << std::endl;
+	int i = 0;
 }
 
 void TestProcessAnonPipe()
@@ -257,8 +261,8 @@ int main(int argc, char** args)
 		auto a = server.Connect();
 		Boring32::Async::OverlappedNamedPipeClient client(L"A");
 		client.Connect(0);
-		auto b = server.Read(0);
 		client.Close();
+		auto b = server.Read(0);
 		b.WaitForCompletion(INFINITE);
 		std::wcout << b.IsSuccessful() << std::endl;
 	}

@@ -45,7 +45,9 @@ int MainOverlapped(int argc, char** args)
     oio.WaitForCompletion(INFINITE);
     oio.ResizeBuffer();
     std::wcout << oio.IoBuffer << std::endl;
-    p.Close();
+    Sleep(1000);
+    p.Write(L"Indeed!");
+    //p.Close();;
 
     return 0;
 }

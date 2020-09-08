@@ -113,4 +113,12 @@ namespace Boring32::Async
 
 		return bytesLeft / sizeof(wchar_t);
 	}
+
+	void NamedPipeClientBase::Flush()
+	{
+		if (m_handle == nullptr)
+			throw std::runtime_error("No pipe to flush");
+		if (FlushFileBuffers(m_handle.GetHandle()) == false)
+			throw Error::Win32Error("NamedPipeClientBase::Flush() failed", GetLastError());
+	}
 }

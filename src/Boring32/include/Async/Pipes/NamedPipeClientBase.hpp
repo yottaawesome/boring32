@@ -23,6 +23,7 @@ namespace Boring32::Async
 			virtual void Connect(const DWORD timeout);
 			virtual void Close();
 			virtual DWORD UnreadCharactersRemaining() const;
+			virtual void Flush();
 
 		protected:
 			virtual void Copy(const NamedPipeClientBase& other);

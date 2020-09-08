@@ -135,7 +135,7 @@ namespace Boring32::Async
 		if (m_event == nullptr)
 			throw std::runtime_error("No Event to wait on");
 
-		DWORD status = WaitForSingleObjectEx(m_event.GetHandle(), millis, alertable);
+		DWORD status = WaitForSingleObject(m_event.GetHandle(), millis);
 		if (status == WAIT_OBJECT_0)
 			return true;
 		if (status == WAIT_TIMEOUT)

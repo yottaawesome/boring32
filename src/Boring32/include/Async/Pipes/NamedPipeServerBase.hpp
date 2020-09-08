@@ -44,6 +44,7 @@ namespace Boring32::Async
 			virtual DWORD GetPipeMode() const;
 			virtual DWORD GetOpenMode() const;
 			virtual DWORD UnreadCharactersRemaining() const;
+			virtual void Flush();
 
 		protected:
 			virtual void InternalCreatePipe();
