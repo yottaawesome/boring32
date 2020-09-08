@@ -91,6 +91,10 @@ namespace Boring32::Async
 	{
 		if (m_ioOverlapped == nullptr)
 			throw std::runtime_error("IoOverlapped is null");
+
+		// If the buffer is insufficient, Internal will be value 0x80000005L,
+		// which is decimal value 2147483653. See error code STATUS_BUFFER_OVERFLOW:
+		// https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/596a1078-e883-4972-9bbc-49e60bebca55
 		return m_ioOverlapped->Internal == NOERROR;
 	}
 
