@@ -11,18 +11,19 @@ namespace Boring32::Strings
 			return "";
 
 		std::string strTo(wstr.size(), '\0');
+		// https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-widechartomultibyte
 		DWORD status = WideCharToMultiByte(
-			CP_UTF8, 
-			0, 
-			wstr.c_str(), 
-			(int)wstr.size(), 
-			&strTo[0], 
-			(int)strTo.size(), 
-			nullptr, 
-			nullptr
+			CP_UTF8,			// CodePage
+			0,					// dwFlags 
+			wstr.c_str(),		// lpWideCharStr
+			(int)wstr.size(),	// cchWideChar 
+			&strTo[0],			// lpMultiByteStr
+			(int)strTo.size(),	// cbMultiByte
+			nullptr,			// lpDefaultChar
+			nullptr				// lpUsedDefaultChar
 		);
 		if (status == 0)
-			throw Error::Win32Error("ConvertWStringToString(): [1] WideCharToMultiByte() failed", GetLastError());
+			throw Error::Win32Error("ConvertWStringToString(): WideCharToMultiByte() failed", GetLastError());
 
 		return strTo;
 	}
@@ -33,16 +34,17 @@ namespace Boring32::Strings
 			return L"";
 
 		std::wstring wstrTo(str.size(), '\0');
+		// https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar
 		DWORD status = MultiByteToWideChar(
-			CP_UTF8, 
-			0, 
-			&str[0], 
-			(int)str.size(), 
-			&wstrTo[0], 
-			(int)wstrTo.size()
+			CP_UTF8,			// CodePage
+			0,					// dwFlags
+			&str[0],			// lpMultiByteStr
+			(int)str.size(),	// cbMultiByte
+			&wstrTo[0],			// lpWideCharStr
+			(int)wstrTo.size()	// cchWideChar
 		);
 		if (status == 0)
-			throw Error::Win32Error("ConvertStringToWString(): [1] MultiByteToWideChar() failed", GetLastError());
+			throw Error::Win32Error("ConvertStringToWString(): MultiByteToWideChar() failed", GetLastError());
 
 		return wstrTo;
 	}
