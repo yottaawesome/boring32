@@ -204,7 +204,10 @@ void TestProcessOverlappedNamedPipe()
 	WaitForSingleObject(testProcess.GetProcessHandle(), INFINITE);
 	auto oio2 = serverPipe.Read(1024);
 	oio2.WaitForCompletion(INFINITE);
-	std::wcout << oio2.IsSuccessful() << std::endl;
+	std::wcout << oio2.IoBuffer << std::endl;
+	oio2 = serverPipe.Read(1024);
+	oio2.WaitForCompletion(INFINITE);
+	std::wcout << oio2.IoBuffer << std::endl;
 	int i = 0;
 }
 

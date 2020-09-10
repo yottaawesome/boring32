@@ -47,6 +47,7 @@ int MainOverlapped(int argc, char** args)
     std::wcout << oio.IoBuffer << std::endl;
     Sleep(1000);
     p.Write(L"Indeed!");
+    p.Write(L"Indeed!");
     //p.Close();;
 
     return 0;

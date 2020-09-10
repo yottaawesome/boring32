@@ -37,6 +37,7 @@ namespace Boring32::Async
 		public:
 			virtual void Close();
 			virtual void Disconnect();
+			virtual void Flush();
 			virtual Raii::Win32Handle& GetInternalHandle();
 			virtual std::wstring GetName() const;
 			virtual DWORD GetSize() const;
@@ -44,12 +45,13 @@ namespace Boring32::Async
 			virtual DWORD GetPipeMode() const;
 			virtual DWORD GetOpenMode() const;
 			virtual DWORD UnreadCharactersRemaining() const;
-			virtual void Flush();
+			virtual bool UnreadCharactersRemaining(DWORD& charactersRemaining, std::nothrow_t) const;
 
 		protected:
 			virtual void InternalCreatePipe();
 			virtual void Copy(const NamedPipeServerBase& other);
 			virtual void Move(NamedPipeServerBase& other) noexcept;
+			virtual bool InternalUnreadCharactersRemaining(DWORD& charactersRemaining, const bool throwOnError) const;
 
 		protected:
 			Raii::Win32Handle m_pipe;

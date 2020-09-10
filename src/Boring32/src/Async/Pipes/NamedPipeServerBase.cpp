@@ -194,21 +194,38 @@ namespace Boring32::Async
 
     DWORD NamedPipeServerBase::UnreadCharactersRemaining() const
     {
+        DWORD charactersRemaining = 0;
+        InternalUnreadCharactersRemaining(charactersRemaining, true);
+        return charactersRemaining;
+    }
+
+    bool NamedPipeServerBase::UnreadCharactersRemaining(DWORD& charactersRemaining, std::nothrow_t) const
+    {
+        return InternalUnreadCharactersRemaining(charactersRemaining, false);
+    }
+
+    bool NamedPipeServerBase::InternalUnreadCharactersRemaining(DWORD& charactersRemaining, const bool throwOnError) const
+    {
         if (m_pipe == nullptr)
-            throw std::runtime_error("No pipe to read from");
-        DWORD bytesLeft = 0;
+            return false;
+        charactersRemaining = 0;
         bool succeeded = PeekNamedPipe(
             m_pipe.GetHandle(),
             nullptr,
             0,
             nullptr,
             nullptr,
-            &bytesLeft
+            &charactersRemaining
         );
         if (succeeded == false)
-            throw Error::Win32Error("PeekNamedPipe() failed", GetLastError());
+        {
+            if (throwOnError)
+                throw Error::Win32Error("NamedPipeServerBase::InternalUnreadCharactersRemaining(): PeekNamedPipe() failed", GetLastError());
+            return false;
+        }
 
-        return bytesLeft / sizeof(wchar_t);
+        charactersRemaining /= sizeof(wchar_t);
+        return true;
     }
 
     void NamedPipeServerBase::Flush()

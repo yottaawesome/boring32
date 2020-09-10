@@ -1,34 +1,41 @@
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Boring32.hpp"
+#include "include/Error/Error.hpp"
+#include "include/Strings/Strings.hpp"
 
 namespace Boring32::Strings
 {
 	std::string ConvertWStringToString(const std::wstring& wstr)
 	{
 		if (wstr.empty())
-			return std::string();
+			return "";
 
 		int sizeNeeded = WideCharToMultiByte(
 			CP_UTF8, 
 			0, 
 			wstr.c_str(), 
-			-1, 
+			(int)wstr.size(),
 			nullptr, 
 			0,
 			nullptr, 
-			nullptr);
+			nullptr
+		);
+		if (sizeNeeded == 0)
+			throw Error::Win32Error("ConvertWStringToString(): [1] WideCharToMultiByte() failed", GetLastError());
 
-		std::string strTo(sizeNeeded, 0);
-		WideCharToMultiByte(
+		std::string strTo(sizeNeeded, '\0');
+		DWORD status = WideCharToMultiByte(
 			CP_UTF8, 
 			0, 
 			wstr.c_str(), 
-			-1, 
+			(int)wstr.size(), 
 			&strTo[0], 
 			sizeNeeded, 
 			nullptr, 
-			nullptr);
+			nullptr
+		);
+		if (status == 0)
+			throw Error::Win32Error("ConvertWStringToString(): [2] WideCharToMultiByte() failed", GetLastError());
 
 		return strTo;
 	}
@@ -36,7 +43,7 @@ namespace Boring32::Strings
 	std::wstring ConvertStringToWString(const std::string& str)
 	{
 		if (str.empty())
-			return std::wstring();
+			return L"";
 
 		int sizeNeeded = MultiByteToWideChar(
 			CP_UTF8, 
@@ -44,16 +51,22 @@ namespace Boring32::Strings
 			&str[0], 
 			(int)str.size(), 
 			nullptr, 
-			0);
+			0
+		);
+		if (sizeNeeded == 0)
+			throw Error::Win32Error("ConvertStringToWString(): [1] MultiByteToWideChar() failed", GetLastError());
 
-		std::wstring wstrTo(sizeNeeded, 0);
-		MultiByteToWideChar(
+		std::wstring wstrTo(sizeNeeded, '\0');
+		DWORD status = MultiByteToWideChar(
 			CP_UTF8, 
 			0, 
 			&str[0], 
 			(int)str.size(), 
 			&wstrTo[0], 
-			sizeNeeded);
+			sizeNeeded
+		);
+		if (status == 0)
+			throw Error::Win32Error("ConvertStringToWString(): [2] MultiByteToWideChar() failed", GetLastError());
 
 		return wstrTo;
 	}
