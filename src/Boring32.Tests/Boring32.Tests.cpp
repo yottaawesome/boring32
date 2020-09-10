@@ -75,11 +75,12 @@ void TestMutex()
 
 void TestConversions()
 {
-	const wchar_t test1[] = L"Test1";
-	std::wcout 
-		<<	Boring32::Strings::ConvertStringToWString(
-				Boring32::Strings::ConvertWStringToString(test1))
-		<< std::endl;
+	std::wstring wstrTest = L"Test1";
+	std::string strTest = Boring32::Strings::ConvertWStringToString(wstrTest);
+	std::wstring wstrTest2 = Boring32::Strings::ConvertStringToWString(strTest);
+
+	if (wstrTest != wstrTest2)
+		throw std::runtime_error("Strings do not match");
 }
 
 void TestMemoryMappedFile()
