@@ -11,9 +11,16 @@ namespace Boring32::Compression
 			virtual ~Compressor();
 			Compressor(const CompressionType type);
 
+			Compressor(const Compressor& other);
+			virtual Compressor& operator=(const Compressor other);
+
+			Compressor(Compressor&& other) noexcept;
+			virtual Compressor& operator=(Compressor&& other) noexcept;
+
 		public:
 			virtual void Close();
 			virtual size_t GetCompressedSize(std::vector<std::byte>& buffer);
+			virtual CompressionType GetType();
 
 		protected:
 			virtual void Create();
@@ -22,6 +29,6 @@ namespace Boring32::Compression
 
 		protected:
 			CompressionType m_type;
-			COMPRESSOR_HANDLE m_handle;
+			COMPRESSOR_HANDLE m_compressor;
 	};
 }
