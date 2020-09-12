@@ -259,7 +259,7 @@ void TestCompression()
 
 int main(int argc, char** args)
 {
-	try
+	/*try
 	{
 		Boring32::Async::OverlappedNamedPipeServer server(L"A", 512, 1, L"", false, true);
 		auto a = server.Connect();
@@ -273,7 +273,7 @@ int main(int argc, char** args)
 	catch (const std::exception& ex)
 	{
 		std::wcout << ex.what() << std::endl;
-	}
+	}*/
 
 	PROCESS_MEMORY_EXHAUSTION_INFO pmei{ 0 };
 	pmei.Version = PME_CURRENT_VERSION;
