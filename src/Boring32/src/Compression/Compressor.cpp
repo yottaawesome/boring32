@@ -2,6 +2,7 @@
 #include "include/Error/Win32Error.hpp"
 #include "include/Compression/Compressor.hpp"
 
+// For reference see: https://docs.microsoft.com/en-us/windows/win32/cmpapi/using-the-compression-api-in-block-mode
 namespace Boring32::Compression
 {
 	void Compressor::Close()
@@ -74,7 +75,7 @@ namespace Boring32::Compression
 		}
 	}
 
-	size_t Compressor::GetCompressedSize(std::vector<std::byte>& buffer)
+	size_t Compressor::GetCompressedSize(const std::vector<std::byte>& buffer)
 	{
 		if (m_compressor == nullptr)
 			throw std::runtime_error("Compressor::GetCompressedSize(): compressor handle is null");
@@ -84,7 +85,7 @@ namespace Boring32::Compression
 		size_t compressedBufferSize = 0;
 		// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-compress
 		bool succeeded = Compress(
-			m_compressor,               //  Compressor Handle
+			m_compressor,           //  Compressor Handle
 			&buffer[0],             //  Input buffer, Uncompressed data
 			buffer.size(),          //  Uncompressed data size
 			nullptr,                //  Compressed Buffer
@@ -92,8 +93,33 @@ namespace Boring32::Compression
 			&compressedBufferSize);	//  Compressed Data size
 		if (succeeded == false)
 			throw Error::Win32Error("Compressor::GetCompressedSize(): Compress() failed", GetLastError());
+
 		return compressedBufferSize;
 	}
+
+	std::vector<std::byte> Compressor::CompressBuffer(const std::vector<std::byte>& buffer)
+	{
+		if (m_compressor == nullptr)
+			throw std::runtime_error("Compressor::CompressBuffer(): compressor handle is null");
+		if (buffer.size() == 0)
+			throw std::runtime_error("Compressor::CompressBuffer(): buffer is empty");
+
+		std::vector<std::byte> returnVal(GetCompressedSize(buffer), (std::byte)0);
+		size_t compressedBufferSize = 0;
+		// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-compress
+		bool succeeded = Compress(
+			m_compressor,           //  Compressor Handle
+			&buffer[0],             //  Input buffer, Uncompressed data
+			buffer.size(),          //  Uncompressed data size
+			&returnVal[0],          //  Compressed Buffer
+			returnVal.size(),       //  Compressed Buffer size
+			&compressedBufferSize);	//  Compressed Data size
+		if (succeeded == false)
+			throw Error::Win32Error("Compressor::CompressBuffer(): Compress() failed", GetLastError());
+
+		return returnVal;
+	}
+
 	
 	CompressionType Compressor::GetType()
 	{
