@@ -127,6 +127,11 @@ namespace Boring32::Raii
 		return temp;
 	}
 
+	bool Win32Handle::IsNull() const
+	{
+		return !IsNotNull();
+	}
+
 	bool Win32Handle::IsNotNull() const
 	{
 		// https://devblogs.microsoft.com/oldnewthing/20040302-00/?p=40443

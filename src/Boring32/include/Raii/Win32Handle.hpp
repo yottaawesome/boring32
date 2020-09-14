@@ -25,6 +25,7 @@ namespace Boring32::Raii
 
 		public:
 			virtual HANDLE GetHandle() const;
+			virtual bool IsNull() const;
 			virtual bool IsNotNull() const;
 			virtual HANDLE DuplicateCurrentHandle() const;
 			virtual bool IsInheritable() const;

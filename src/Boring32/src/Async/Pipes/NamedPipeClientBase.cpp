@@ -116,7 +116,7 @@ namespace Boring32::Async
 
 	void NamedPipeClientBase::Flush()
 	{
-		if (m_handle == nullptr)
+		if (m_handle.IsNotNull() == false)
 			throw std::runtime_error("No pipe to flush");
 		if (FlushFileBuffers(m_handle.GetHandle()) == false)
 			throw Error::Win32Error("NamedPipeClientBase::Flush() failed", GetLastError());

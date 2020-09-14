@@ -12,6 +12,9 @@ namespace Boring32::Compression
 	{
 		public:
 			virtual ~Compressor();
+
+			Compressor();
+
 			Compressor(const CompressionType type);
 
 			Compressor(const Compressor& other);
@@ -22,29 +25,29 @@ namespace Boring32::Compression
 
 		public:
 			/// <summary>
-			///		Releases all resources associated with this Compressor.
-			/// </summary>
-			virtual void Close();
-
-			/// <summary>
 			///		Returns the size, in bytes, of the compressed buffer specified in the parameter.
 			/// </summary>
 			/// <param name="buffer">The buffer to determine the compressed size of.</param>
 			/// <returns>The size, in bytes, of the compressed buffer specified in the parameter</returns>
-			virtual size_t GetCompressedSize(const std::vector<std::byte>& buffer);
+			[[nodiscard]] virtual size_t GetCompressedSize(const std::vector<std::byte>& buffer) const;
+
+			/// <summary>
+			///		Returns the type of algorithm of this compressor.
+			/// </summary>
+			/// <returns>The algorithm used by this compressor.</returns>
+			[[nodiscard]] virtual CompressionType GetType() const;
 
 			/// <summary>
 			///		Returns a buffer that is the compressed data of the input argument, buffer.
 			/// </summary>
 			/// <param name="buffer">The buffer to compress.</param>
 			/// <returns>The compressed buffer.</returns>
-			virtual std::vector<std::byte> CompressBuffer(const std::vector<std::byte>& buffer);
+			[[nodiscard]] virtual std::vector<std::byte> CompressBuffer(const std::vector<std::byte>& buffer);
 
 			/// <summary>
-			///		Returns the type of algorithm of this compressor.
+			///		Releases all resources associated with this Compressor.
 			/// </summary>
-			/// <returns>The algorithm used by this compressor.</returns>
-			virtual CompressionType GetType();
+			virtual void Close();
 
 		protected:
 			virtual void Create();

@@ -1,8 +1,9 @@
 #pragma once
+#include <Windows.h>
 
 namespace Boring32::Compression
 {
-	enum class CompressionType
+	enum class CompressionType : DWORD
 	{
 		NotSet = 0,
 		MSZIP = 2,

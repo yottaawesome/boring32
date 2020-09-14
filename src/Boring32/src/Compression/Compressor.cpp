@@ -15,6 +15,11 @@ namespace Boring32::Compression
 		}
 	}
 
+	Compressor::Compressor()
+	:	m_type(CompressionType::NotSet),
+		m_compressor(nullptr)
+	{ }
+
 	Compressor::~Compressor()
 	{
 		Close();
@@ -75,7 +80,7 @@ namespace Boring32::Compression
 		}
 	}
 
-	size_t Compressor::GetCompressedSize(const std::vector<std::byte>& buffer)
+	size_t Compressor::GetCompressedSize(const std::vector<std::byte>& buffer) const
 	{
 		if (m_compressor == nullptr)
 			throw std::runtime_error("Compressor::GetCompressedSize(): compressor handle is null");
@@ -95,6 +100,11 @@ namespace Boring32::Compression
 			throw Error::Win32Error("Compressor::GetCompressedSize(): Compress() failed", GetLastError());
 
 		return compressedBufferSize;
+	}
+
+	CompressionType Compressor::GetType() const
+	{
+		return m_type;
 	}
 
 	std::vector<std::byte> Compressor::CompressBuffer(const std::vector<std::byte>& buffer)
@@ -120,12 +130,6 @@ namespace Boring32::Compression
 		return returnVal;
 	}
 
-	
-	CompressionType Compressor::GetType()
-	{
-		return m_type;
-	}
-
 	void Compressor::Create()
 	{
 		if (m_compressor == nullptr)
@@ -135,7 +139,7 @@ namespace Boring32::Compression
 		bool succeeded = CreateCompressor(
 			(DWORD)m_type,	// Algorithm
 			nullptr,		// AllocationRoutines
-			&m_compressor		// CompressorHandle
+			&m_compressor	// CompressorHandle
 		);
 		if (succeeded == false)
 			throw Error::Win32Error("Compressor::Create(): CreateCompressor() failed", GetLastError());

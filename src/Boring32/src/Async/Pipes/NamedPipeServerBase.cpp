@@ -158,7 +158,7 @@ namespace Boring32::Async
 
     void NamedPipeServerBase::Disconnect()
     {
-        if (m_pipe != nullptr)
+        if (m_pipe.IsNotNull())
             DisconnectNamedPipe(m_pipe.GetHandle());
     }
 
