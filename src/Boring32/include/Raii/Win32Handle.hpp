@@ -18,9 +18,31 @@ namespace Boring32::Raii
 			virtual Win32Handle& operator=(Win32Handle&& other) noexcept;
 
 		public:
+			/// <summary>
+			///		Closes the current handle, if valid, and assumes
+			///		ownership of handle in the parameter.
+			/// </summary>
+			/// <param name="other">The handle to assume ownership of. This paremeter can be nullptr.</param>
 			virtual Win32Handle& operator=(const HANDLE other);
+			
+			/// <summary>
+			///		Compares the current handle to the specified handle.
+			///		For the purposes of comparison, a nullptr handle is
+			///		considered equivalent to INVALID_HANDLE_VALUE.
+			/// </summary>
+			/// <param name="other">The handle to compare against.</param>
+			/// <returns>Whether the handles are equivalent.</returns>
 			virtual bool operator==(const HANDLE other) const;
+
+			/// <summary>
+			///		Compares the current handle to the specified handle.
+			///		For the purposes of comparison, a nullptr handle is
+			///		considered equivalent to INVALID_HANDLE_VALUE.
+			/// </summary>
+			/// <param name="other">The handle to compare against.</param>
+			/// <returns>Whether the handles are equivalent.</returns>
 			virtual bool operator==(const Win32Handle& other) const;
+			
 			virtual HANDLE* operator&();
 
 		public:

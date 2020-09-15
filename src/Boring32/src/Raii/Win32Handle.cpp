@@ -79,11 +79,15 @@ namespace Boring32::Raii
 
 	bool Win32Handle::operator==(const HANDLE other) const
 	{
+		if (other == nullptr || m_handle == INVALID_HANDLE_VALUE)
+			return m_handle == nullptr || m_handle == INVALID_HANDLE_VALUE;
 		return m_handle == other;
 	}
 
 	bool Win32Handle::operator==(const Win32Handle& other) const
 	{
+		if (other.m_handle == nullptr || other.m_handle == INVALID_HANDLE_VALUE)
+			return m_handle == nullptr || m_handle == INVALID_HANDLE_VALUE;
 		return m_handle == other.m_handle;
 	}
 
