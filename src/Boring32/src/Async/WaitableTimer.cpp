@@ -11,7 +11,7 @@ namespace Boring32::Async
 
 	void WaitableTimer::Close()
 	{
-		if (m_handle.IsNotNull())
+		if (m_handle != nullptr)
 		{
 			CancelTimer();
 			m_handle = nullptr;
@@ -38,7 +38,7 @@ namespace Boring32::Async
 				? nullptr
 				: m_name.c_str()
 		);
-		if (m_handle.IsNull())
+		if (m_handle == nullptr)
 			throw std::runtime_error("Failed to create waitable timer");
 		m_handle.SetInheritability(isInheritable);
 	}
@@ -54,7 +54,7 @@ namespace Boring32::Async
 	{
 		//TIMER_ALL_ACCESS
 		m_handle = OpenWaitableTimerW(desiredAccess, isInheritable, name.c_str());
-		if (m_handle.IsNull())
+		if (m_handle == nullptr)
 			throw std::runtime_error("Failed to open waitable timer");
 	}
 
@@ -98,14 +98,14 @@ namespace Boring32::Async
 	
 	void WaitableTimer::SetTimerInNanos(const int64_t hundredNanosecondIntervals, const UINT period)
 	{
-		if (m_handle.IsNull())
+		if (m_handle == nullptr)
 			throw std::runtime_error("Timer handle is null");
 		InternalSetTimer(hundredNanosecondIntervals, period);
 	}
 
 	void WaitableTimer::SetTimerInMillis(const int64_t ms, const UINT period)
 	{
-		if (m_handle.IsNull())
+		if (m_handle == nullptr)
 			throw std::runtime_error("Timer handle is null");
 		InternalSetTimer(ms * 10000, period);
 	}
@@ -128,7 +128,7 @@ namespace Boring32::Async
 
 	bool WaitableTimer::WaitOnTimer(const DWORD millis)
 	{
-		if (m_handle.IsNull())
+		if (m_handle == nullptr)
 			throw std::runtime_error("No timer to wait on");
 		DWORD status = WaitForSingleObject(m_handle.GetHandle(), millis);
 		if (status == WAIT_OBJECT_0)
@@ -144,7 +144,7 @@ namespace Boring32::Async
 
 	bool WaitableTimer::CancelTimer()
 	{
-		if (m_handle.IsNull())
+		if (m_handle == nullptr)
 			throw std::runtime_error("No timer to cancel");
 		return CancelWaitableTimer(m_handle.GetHandle());
 	}

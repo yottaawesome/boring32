@@ -105,7 +105,7 @@ namespace Boring32::Async
             m_sid != L"" ? &sa : nullptr);
         if (m_sid != L"")
             LocalFree(sa.lpSecurityDescriptor);
-        if (m_pipe.IsNotNull() == false)
+        if (m_pipe == nullptr)
             throw Error::Win32Error("Failed to create named pipe", GetLastError());
     }
 
@@ -158,7 +158,7 @@ namespace Boring32::Async
 
     void NamedPipeServerBase::Disconnect()
     {
-        if (m_pipe.IsNotNull())
+        if (m_pipe != nullptr)
             DisconnectNamedPipe(m_pipe.GetHandle());
     }
 

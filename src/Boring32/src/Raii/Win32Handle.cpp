@@ -86,6 +86,7 @@ namespace Boring32::Raii
 
 	bool Win32Handle::operator==(const Win32Handle& other) const
 	{
+		// https://devblogs.microsoft.com/oldnewthing/20040302-00/?p=40443
 		if (other.m_handle == nullptr || other.m_handle == INVALID_HANDLE_VALUE)
 			return m_handle == nullptr || m_handle == INVALID_HANDLE_VALUE;
 		return m_handle == other.m_handle;
@@ -129,17 +130,6 @@ namespace Boring32::Raii
 		HANDLE temp = m_handle;
 		m_handle = nullptr;
 		return temp;
-	}
-
-	bool Win32Handle::IsNull() const
-	{
-		return !IsNotNull();
-	}
-
-	bool Win32Handle::IsNotNull() const
-	{
-		// https://devblogs.microsoft.com/oldnewthing/20040302-00/?p=40443
-		return m_handle != nullptr && m_handle != INVALID_HANDLE_VALUE;
 	}
 
 	bool Win32Handle::HandleIsInheritable(const HANDLE handle)
