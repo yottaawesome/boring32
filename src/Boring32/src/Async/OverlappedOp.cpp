@@ -36,7 +36,7 @@ namespace Boring32::Async
 	}
 
 	OverlappedOp::OverlappedOp(OverlappedOp&& other) noexcept
-		: m_ioOverlapped(nullptr)
+	:	m_ioOverlapped(nullptr)
 	{
 		Move(other);
 	}
@@ -78,22 +78,26 @@ namespace Boring32::Async
 	uint64_t OverlappedOp::GetBytesTransferred() const
 	{
 		if (m_ioOverlapped == nullptr)
-			throw std::runtime_error("IoOverlapped is null");
+			return 0;
 		return m_ioOverlapped->InternalHigh;
+	}
+
+	bool OverlappedOp::IsReady() const
+	{
+		return m_ioOverlapped != nullptr;
 	}
 
 	bool OverlappedOp::IsComplete() const
 	{
 		if (m_ioOverlapped == nullptr)
-			throw std::runtime_error("IoOverlapped is null");
+			return false;
 		return m_ioOverlapped->Internal != STATUS_PENDING;
 	}
 
 	bool OverlappedOp::IsSuccessful() const
 	{
 		if (m_ioOverlapped == nullptr)
-			throw std::runtime_error("IoOverlapped is null");
-
+			return false;
 		// If the buffer is insufficient, Internal will be value 0x80000005L,
 		// which is decimal value 2147483653. See error code STATUS_BUFFER_OVERFLOW:
 		// https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/596a1078-e883-4972-9bbc-49e60bebca55
@@ -103,7 +107,7 @@ namespace Boring32::Async
 	bool OverlappedOp::IsPartial() const
 	{
 		if (m_ioOverlapped == nullptr)
-			throw std::runtime_error("IoOverlapped is null");
+			return false;
 		return m_ioOverlapped->Internal == 0x80000005L;// STATUS_BUFFER_OVERFLOW;
 	}
 

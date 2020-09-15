@@ -26,6 +26,7 @@ namespace Boring32::Async
 			virtual OVERLAPPED* GetOverlapped();
 			virtual uint64_t GetStatus() const;
 			virtual uint64_t GetBytesTransferred() const;
+			virtual bool IsReady() const;
 			virtual bool IsComplete() const;
 			virtual bool IsSuccessful() const;
 			virtual bool IsPartial() const;
