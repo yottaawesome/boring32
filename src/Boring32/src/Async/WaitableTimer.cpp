@@ -11,7 +11,7 @@ namespace Boring32::Async
 
 	void WaitableTimer::Close()
 	{
-		if (m_handle != nullptr)
+		if (m_handle.IsNotNull())
 		{
 			CancelTimer();
 			m_handle = nullptr;
@@ -23,30 +23,39 @@ namespace Boring32::Async
 		m_isManualReset(false)
 	{ }
 
-	WaitableTimer::WaitableTimer(const bool createNew, const std::wstring& name, const bool isInheritable, const bool isManualReset)
+	WaitableTimer::WaitableTimer(
+		const std::wstring& name, 
+		const bool isInheritable, 
+		const bool isManualReset
+	)
 	:	m_name(name),
 		m_isManualReset(isManualReset)
 	{
-		SECURITY_ATTRIBUTES sa{ 0 };
-		sa.nLength = sizeof(sa);
-		sa.bInheritHandle = isInheritable;
-		if (createNew)
-		{
-			m_handle = CreateWaitableTimer(
-				&sa,
-				isManualReset,
-				m_name == L""
-					? nullptr
-					: m_name.c_str()
-			);
-		}
-		else
-		{
-			m_handle = OpenWaitableTimer(TIMER_ALL_ACCESS, isInheritable, name.c_str());
-		}
-
-		if (m_handle == nullptr)
+		m_handle = CreateWaitableTimerW(
+			nullptr,
+			isManualReset,
+			m_name == L""
+				? nullptr
+				: m_name.c_str()
+		);
+		if (m_handle.IsNull())
 			throw std::runtime_error("Failed to create waitable timer");
+		m_handle.SetInheritability(isInheritable);
+	}
+
+	WaitableTimer::WaitableTimer(
+		const std::wstring& name, 
+		const bool isInheritable, 
+		const bool isManualReset, 
+		const DWORD desiredAccess
+	)
+	:	m_name(name),
+		m_isManualReset(isManualReset)
+	{
+		//TIMER_ALL_ACCESS
+		m_handle = OpenWaitableTimerW(desiredAccess, isInheritable, name.c_str());
+		if (m_handle.IsNull())
+			throw std::runtime_error("Failed to open waitable timer");
 	}
 
 	// Copy constructor
@@ -54,10 +63,12 @@ namespace Boring32::Async
 	{
 		Copy(other);
 	}
+	
 	void WaitableTimer::operator=(const WaitableTimer& other)
 	{
 		Copy(other);
 	}
+
 	void WaitableTimer::Copy(const WaitableTimer& other)
 	{
 		Close();
@@ -71,10 +82,12 @@ namespace Boring32::Async
 	{
 		Move(other);
 	}
+	
 	void WaitableTimer::operator=(WaitableTimer&& other) noexcept
 	{
 		Move(other);
 	}
+	
 	void WaitableTimer::Move(WaitableTimer& other) noexcept
 	{
 		Close();
@@ -85,14 +98,14 @@ namespace Boring32::Async
 	
 	void WaitableTimer::SetTimerInNanos(const int64_t hundredNanosecondIntervals, const UINT period)
 	{
-		if (m_handle == nullptr)
+		if (m_handle.IsNull())
 			throw std::runtime_error("Timer handle is null");
 		InternalSetTimer(hundredNanosecondIntervals, period);
 	}
 
 	void WaitableTimer::SetTimerInMillis(const int64_t ms, const UINT period)
 	{
-		if (m_handle == nullptr)
+		if (m_handle.IsNull())
 			throw std::runtime_error("Timer handle is null");
 		InternalSetTimer(ms * 10000, period);
 	}
@@ -109,14 +122,13 @@ namespace Boring32::Async
 			nullptr, 
 			false
 		);
-
 		if (succeeded == false)
 			throw std::runtime_error("Failed to set timer");
 	}
 
 	bool WaitableTimer::WaitOnTimer(const DWORD millis)
 	{
-		if (m_handle == nullptr)
+		if (m_handle.IsNull())
 			throw std::runtime_error("No timer to wait on");
 		DWORD status = WaitForSingleObject(m_handle.GetHandle(), millis);
 		if (status == WAIT_OBJECT_0)
@@ -132,22 +144,22 @@ namespace Boring32::Async
 
 	bool WaitableTimer::CancelTimer()
 	{
-		if (m_handle == nullptr)
+		if (m_handle.IsNull())
 			throw std::runtime_error("No timer to cancel");
 		return CancelWaitableTimer(m_handle.GetHandle());
 	}
 
-	bool WaitableTimer::IsManualReset()
+	bool WaitableTimer::IsManualReset() const
 	{
 		return m_isManualReset;
 	}
 
-	std::wstring WaitableTimer::GetName()
+	std::wstring WaitableTimer::GetName() const
 	{
 		return m_name;
 	}
 
-	HANDLE WaitableTimer::GetHandle()
+	HANDLE WaitableTimer::GetHandle() const
 	{
 		return m_handle.GetHandle();
 	}

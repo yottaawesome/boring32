@@ -9,10 +9,19 @@ namespace Boring32::Async
 	{
 		public:
 			virtual ~WaitableTimer();
-			virtual void Close();
 
 			WaitableTimer();
-			WaitableTimer(const bool createNew, const std::wstring& name, const bool isInheritable, const bool isManualReset);
+			WaitableTimer(
+				const std::wstring& name, 
+				const bool isInheritable, 
+				const bool isManualReset
+			);
+			WaitableTimer(
+				const std::wstring& name, 
+				const bool isInheritable, 
+				const bool isManualReset, 
+				const DWORD desiredAccess
+			);
 
 			WaitableTimer(const WaitableTimer& other);
 			virtual void operator=(const WaitableTimer& other);
@@ -42,9 +51,10 @@ namespace Boring32::Async
 			virtual void SetTimerInMillis(const int64_t milliseconds, const UINT period);
 			virtual bool WaitOnTimer(const DWORD millis);
 			virtual bool CancelTimer();
-			virtual bool IsManualReset();
-			virtual std::wstring GetName();
-			virtual HANDLE GetHandle();
+			virtual bool IsManualReset() const;
+			virtual std::wstring GetName() const;
+			virtual HANDLE GetHandle() const;
+			virtual void Close();
 
 		protected:
 			virtual void InternalSetTimer(const int64_t time, const UINT period);

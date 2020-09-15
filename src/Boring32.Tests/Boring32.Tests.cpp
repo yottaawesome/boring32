@@ -42,11 +42,12 @@ void TestException()
 
 void TestWaitableTime(int64_t relativeMillis)
 {
-	Boring32::Async::WaitableTimer timer(true, L"WaitableTimer", false, false);
+	Boring32::Async::WaitableTimer timer1(L"WaitableTimer", false, false);
+	Boring32::Async::WaitableTimer timer2(L"WaitableTimer", false, false, SYNCHRONIZE);
 	std::wcout << L"Timer set for " << relativeMillis << L" from now" << std::endl;
-	timer.SetTimerInMillis(-relativeMillis, relativeMillis);
-	timer.WaitOnTimer(INFINITE);
-	timer.CancelTimer();
+	timer1.SetTimerInMillis(-relativeMillis, relativeMillis);
+	timer1.WaitOnTimer(INFINITE);
+	timer1.CancelTimer();
 }
 
 void TestSemaphore()

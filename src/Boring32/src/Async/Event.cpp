@@ -35,19 +35,16 @@ namespace Boring32::Async
 		m_createEventOnTrue(true),
 		m_access(EVENT_ALL_ACCESS)
 	{
-		SECURITY_ATTRIBUTES sp{ 0 };
-		sp.nLength = sizeof(sp);
-		sp.bInheritHandle = isInheritable;
-
 		m_event = CreateEventW(
-			&sp,				// security attributes
-			m_isManualReset,    // manual reset event
-			isSignaled,		// is initially signalled
+			nullptr,			// security attributes
+			m_isManualReset,	// manual reset event
+			isSignaled,			// is initially signalled
 			m_name != L""		// name
 				? m_name.c_str()
 				: nullptr);
 		if (m_event == nullptr)
 			throw Error::Win32Error("Failed to create or open event", GetLastError());
+		m_event.SetInheritability(isInheritable);
 	}
 
 	Event::Event(
