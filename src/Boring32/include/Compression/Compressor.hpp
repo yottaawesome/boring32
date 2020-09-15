@@ -45,7 +45,7 @@ namespace Boring32::Compression
 			[[nodiscard]] virtual std::vector<std::byte> CompressBuffer(const std::vector<std::byte>& buffer);
 
 			/// <summary>
-			///		Releases all resources associated with this Compressor.
+			///		Releases all resources associated with this object.
 			/// </summary>
 			virtual void Close();
 

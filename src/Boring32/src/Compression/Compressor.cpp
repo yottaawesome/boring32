@@ -132,16 +132,16 @@ namespace Boring32::Compression
 
 	void Compressor::Create()
 	{
-		if (m_compressor == nullptr)
-			throw std::runtime_error("Compressor::Create(): compressor handle is null");
-
-		// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-createcompressor
-		bool succeeded = CreateCompressor(
-			(DWORD)m_type,	// Algorithm
-			nullptr,		// AllocationRoutines
-			&m_compressor	// CompressorHandle
-		);
-		if (succeeded == false)
-			throw Error::Win32Error("Compressor::Create(): CreateCompressor() failed", GetLastError());
+		if (m_type != CompressionType::NotSet)
+		{
+			// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-createcompressor
+			bool succeeded = CreateCompressor(
+				(DWORD)m_type,	// Algorithm
+				nullptr,		// AllocationRoutines
+				&m_compressor	// CompressorHandle
+			);
+			if (succeeded == false)
+				throw Error::Win32Error("Compressor::Create(): CreateCompressor() failed", GetLastError());
+		}
 	}
 }
