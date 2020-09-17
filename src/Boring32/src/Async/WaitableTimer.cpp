@@ -115,11 +115,11 @@ namespace Boring32::Async
 		LARGE_INTEGER liDueTime;
 		liDueTime.QuadPart = time;
 		bool succeeded = SetWaitableTimer(
-			m_handle.GetHandle(), 
-			&liDueTime, 
+			m_handle.GetHandle(),
+			&liDueTime,
 			period,
-			nullptr, 
-			nullptr, 
+			nullptr,
+			nullptr,
 			false
 		);
 		if (succeeded == false)
