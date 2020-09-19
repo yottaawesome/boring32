@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include <compressapi.h>
 #include "CompressionType.hpp"
 
@@ -27,6 +28,10 @@ namespace Boring32::Compression
 			/// <returns>The algorithm used by this decompressor.</returns>
 			[[nodiscard]] virtual CompressionType GetType() const;
 
+			[[nodiscard]] virtual size_t GetDecompressedSize(const std::vector<std::byte>& compressedBuffer) const;
+
+			[[nodiscard]] virtual std::vector<std::byte> DecompressBuffer(const std::vector<std::byte>& compressedBuffer);
+
 		protected:
 			virtual void Create();
 			virtual void Copy(const Decompressor& other);
@@ -34,6 +39,6 @@ namespace Boring32::Compression
 
 		protected:
 			CompressionType m_type;
-			DECOMPRESSOR_HANDLE m_handle;
+			DECOMPRESSOR_HANDLE m_decompressor;
 	};
 }

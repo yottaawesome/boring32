@@ -6,10 +6,10 @@ namespace Boring32::Compression
 {
 	void Decompressor::Close()
 	{
-		if (m_handle != nullptr)
+		if (m_decompressor != nullptr)
 		{
-			CloseDecompressor(m_handle);
-			m_handle = nullptr;
+			CloseDecompressor(m_decompressor);
+			m_decompressor = nullptr;
 		}
 	}
 
@@ -20,12 +20,12 @@ namespace Boring32::Compression
 
 	Decompressor::Decompressor()
 	:	m_type(CompressionType::NotSet),
-		m_handle(nullptr)
+		m_decompressor(nullptr)
 	{ }
 
 	Decompressor::Decompressor(const Decompressor& other)
 	:	m_type(CompressionType::NotSet),
-		m_handle(nullptr)
+		m_decompressor(nullptr)
 	{ }
 
 	Decompressor& Decompressor::operator=(const Decompressor& other)
@@ -43,7 +43,7 @@ namespace Boring32::Compression
 
 	Decompressor::Decompressor(Decompressor&& other) noexcept
 	:	m_type(CompressionType::NotSet),
-		m_handle(nullptr)
+		m_decompressor(nullptr)
 	{ }
 
 	Decompressor& Decompressor::operator=(Decompressor&& other) noexcept
@@ -56,13 +56,13 @@ namespace Boring32::Compression
 	{
 		Close();
 		m_type = other.m_type;
-		m_handle = other.m_handle;
-		other.m_handle = nullptr;
+		m_decompressor = other.m_decompressor;
+		other.m_decompressor = nullptr;
 	}
 
 	Decompressor::Decompressor(const CompressionType type)
 	:	m_type(type),
-		m_handle(nullptr)
+		m_decompressor(nullptr)
 	{
 		Create();
 	}
@@ -74,7 +74,7 @@ namespace Boring32::Compression
 			bool succeeded = CreateCompressor(
 				(DWORD)m_type,
 				nullptr,
-				&m_handle
+				&m_decompressor
 			);
 			if (succeeded == false)
 				throw Error::Win32Error("Failed to create decompressor", GetLastError());
@@ -84,5 +84,49 @@ namespace Boring32::Compression
 	CompressionType Decompressor::GetType() const
 	{
 		return m_type;
+	}
+
+	size_t Decompressor::GetDecompressedSize(const std::vector<std::byte>& compressedBuffer) const
+	{
+		if (m_decompressor == nullptr)
+			throw std::runtime_error("Decompressor::DecompressBuffer(): decompressor handle is null");
+		if (compressedBuffer.size() == 0)
+			throw std::runtime_error("Decompressor::DecompressBuffer(): buffer is empty");
+
+		size_t decompressedBufferSize = 0;
+		//https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-decompress
+		bool success = Decompress(
+			m_decompressor,					// Compressor handle
+			&compressedBuffer[0],		// Compressed data
+			compressedBuffer.size(),	// Compressed data size
+			nullptr,                    // Buffer set to NULL
+			0,                          // Buffer size set to 0
+			&decompressedBufferSize);	// Decompressed data size
+		if (success == false)
+			throw Error::Win32Error("Decompressor::GetDecompressedSize(): Decompress() failed", GetLastError());
+		return decompressedBufferSize;
+	}
+
+	std::vector<std::byte> Decompressor::DecompressBuffer(const std::vector<std::byte>& compressedBuffer)
+	{
+		if (m_decompressor == nullptr)
+			throw std::runtime_error("Decompressor::DecompressBuffer(): decompressor handle is null");
+		if (compressedBuffer.size() == 0)
+			throw std::runtime_error("Decompressor::DecompressBuffer(): buffer is empty");
+
+		std::vector<std::byte> returnVal(GetDecompressedSize(compressedBuffer), (std::byte)0);
+		size_t decompressedBufferSize = 0;
+		// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-compress
+		bool succeeded = Decompress(
+			m_decompressor,					//  Decompressor handle
+			&compressedBuffer[0],		//  Input buffer, compressed data
+			compressedBuffer.size(),	//  Compressed data size
+			&returnVal[0],				//  Uncompressed buffer
+			returnVal.size(),			//  Uncompressed buffer size
+			&decompressedBufferSize);	//  Decompressed data size
+		if (succeeded == false)
+			throw Error::Win32Error("Decompressor::DecompressBuffer(): Decompressor() failed", GetLastError());
+
+		return returnVal;
 	}
 }
