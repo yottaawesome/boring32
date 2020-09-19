@@ -71,7 +71,7 @@ namespace Boring32::Compression
 	{
 		if (m_type != CompressionType::NotSet)
 		{
-			bool succeeded = CreateCompressor(
+			bool succeeded = CreateDecompressor(
 				(DWORD)m_type,
 				nullptr,
 				&m_decompressor
@@ -96,7 +96,7 @@ namespace Boring32::Compression
 		size_t decompressedBufferSize = 0;
 		//https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-decompress
 		bool success = Decompress(
-			m_decompressor,					// Compressor handle
+			m_decompressor,				// Decompressor handle
 			&compressedBuffer[0],		// Compressed data
 			compressedBuffer.size(),	// Compressed data size
 			nullptr,                    // Buffer set to NULL
@@ -118,7 +118,7 @@ namespace Boring32::Compression
 		size_t decompressedBufferSize = 0;
 		// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-compress
 		bool succeeded = Decompress(
-			m_decompressor,					//  Decompressor handle
+			m_decompressor,				//  Decompressor handle
 			&compressedBuffer[0],		//  Input buffer, compressed data
 			compressedBuffer.size(),	//  Compressed data size
 			&returnVal[0],				//  Uncompressed buffer
