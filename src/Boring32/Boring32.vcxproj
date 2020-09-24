@@ -188,6 +188,8 @@
     <ClInclude Include="include\Async\SlimReadWriteLock.hpp" />
     <ClInclude Include="include\Async\Thread.hpp" />
     <ClInclude Include="include\Async\ThreadSafeVector.hpp" />
+    <ClInclude Include="include\Async\TimerQueue.hpp" />
+    <ClInclude Include="include\Async\TimerQueueTimer.hpp" />
     <ClInclude Include="include\Async\WaitableTimer.hpp" />
     <ClInclude Include="include\Compression\Compression.hpp" />
     <ClInclude Include="include\Compression\CompressionType.hpp" />
@@ -236,6 +238,8 @@
     <ClCompile Include="src\Async\Semaphore.cpp" />
     <ClCompile Include="src\Async\SlimReadWriteLock.cpp" />
     <ClCompile Include="src\Async\Thread.cpp" />
+    <ClCompile Include="src\Async\TimerQueue.cpp" />
+    <ClCompile Include="src\Async\TimerQueueTimer.cpp" />
     <ClCompile Include="src\Async\WaitableTimer.cpp" />
     <ClCompile Include="src\Compression\Compressor.cpp" />
     <ClCompile Include="src\Compression\Decompressor.cpp" />

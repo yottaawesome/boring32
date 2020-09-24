@@ -13,3 +13,5 @@
 #include "SlimReadWriteLock.hpp"
 #include "ThreadSafeVector.hpp"
 #include "CriticalSectionLock.hpp"
+#include "TimerQueue.hpp"
+#include "TimerQueueTimer.hpp"
