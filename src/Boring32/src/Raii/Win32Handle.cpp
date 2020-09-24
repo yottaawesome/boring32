@@ -97,6 +97,11 @@ namespace Boring32::Raii
 		return &m_handle;
 	}
 
+	bool Win32Handle::IsValidValue() const
+	{
+		return m_handle != nullptr && m_handle != INVALID_HANDLE_VALUE;
+	}
+
 	HANDLE Win32Handle::GetHandle() const
 	{
 		return m_handle;

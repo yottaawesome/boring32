@@ -43,7 +43,22 @@ namespace Boring32::Raii
 			/// <returns>Whether the handles are equivalent.</returns>
 			virtual bool operator==(const Win32Handle& other) const;
 			
+			/// <summary>
+			///		Returns the internal HANDLE address.
+			/// </summary>
+			/// <returns>The internal HANDLE's address.</returns>
 			virtual HANDLE* operator&();
+
+			/// <summary>
+			///		Returns whether the internal HANDLE's value is not 
+			///		nullptr or INVALID_HANDLE_VALUE. Note: this does not mean
+			///		the value is an actual current and valid HANDLE.
+			/// </summary>
+			/// <returns>
+			///		True if the internal HANDLE is not nullptr and 
+			///		INVALID_HANDLE_VALUE, false otherwise.
+			/// </returns>
+			virtual bool IsValidValue() const;
 
 		public:
 			virtual HANDLE GetHandle() const;
