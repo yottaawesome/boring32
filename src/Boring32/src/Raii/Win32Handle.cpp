@@ -146,6 +146,8 @@ namespace Boring32::Raii
 	{
 		if (handle == nullptr)
 			return nullptr;
+		if (handle == INVALID_HANDLE_VALUE)
+			return INVALID_HANDLE_VALUE;
 
 		HANDLE duplicateHandle = nullptr;
 		bool succeeded = DuplicateHandle(

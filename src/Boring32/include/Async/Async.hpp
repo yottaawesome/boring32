@@ -15,3 +15,4 @@
 #include "CriticalSectionLock.hpp"
 #include "TimerQueue.hpp"
 #include "TimerQueueTimer.hpp"
+#include "TimerQueueTimerCallback.hpp"

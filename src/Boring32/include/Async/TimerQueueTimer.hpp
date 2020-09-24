@@ -11,7 +11,7 @@ namespace Boring32::Async
 			TimerQueueTimer();
 			
 			TimerQueueTimer(
-				HANDLE associatedQueue,
+				HANDLE timerQueue,
 				const DWORD dueTime,
 				const DWORD period,
 				const DWORD flags,
@@ -20,7 +20,7 @@ namespace Boring32::Async
 			);
 			
 			TimerQueueTimer(
-				HANDLE associatedQueue, 
+				HANDLE timerQueue,
 				const DWORD dueTime,
 				const DWORD period,
 				const DWORD flags,
@@ -36,6 +36,7 @@ namespace Boring32::Async
 			virtual TimerQueueTimer& operator=(const TimerQueueTimer& other) = delete;
 
 		public:
+			virtual void Update(const ULONG dueTime, const ULONG period);
 			virtual void Close();
 			virtual bool Close(const std::nothrow_t) noexcept;
 
@@ -47,7 +48,6 @@ namespace Boring32::Async
 			HANDLE m_timerQueue;
 			HANDLE m_timerQueueTimer;
 			HANDLE m_completionEvent;
-
 			DWORD m_dueTime;
 			DWORD m_period;
 			DWORD m_flags;

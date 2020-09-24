@@ -62,7 +62,7 @@ namespace Boring32::Async
 		m_timerQueueTimer(nullptr)
 	{
 		if (m_timerQueue == nullptr || m_timerQueue == INVALID_HANDLE_VALUE)
-			throw std::runtime_error("TimerQueueTimer::TimerQueueTimer(): Invalid handle");
+			throw std::invalid_argument("TimerQueueTimer::TimerQueueTimer(): Invalid handle");
 		InternalCreate();
 	}
 
@@ -78,6 +78,21 @@ namespace Boring32::Async
 	{
 		Move(other);
 		return *this;
+	}
+
+	void TimerQueueTimer::Update(const ULONG dueTime, const ULONG period)
+	{
+		if (m_timerQueueTimer == nullptr || m_timerQueueTimer == INVALID_HANDLE_VALUE)
+			throw std::runtime_error("TimerQueueTimer::Update(): m_timerQueueTimer is null");
+
+		bool success = ChangeTimerQueueTimer(
+			m_timerQueue,
+			m_timerQueueTimer,
+			dueTime,
+			period
+		);
+		if (success == false)
+			throw Error::Win32Error("TimerQueueTimer::Update(): ChangeTimerQueueTimer() failed", GetLastError());
 	}
 
 	void TimerQueueTimer::Close()
