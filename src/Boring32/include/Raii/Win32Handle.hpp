@@ -49,6 +49,15 @@ namespace Boring32::Raii
 			/// <returns>The internal HANDLE's address.</returns>
 			virtual HANDLE* operator&();
 
+		public:
+			virtual HANDLE GetHandle() const;
+			virtual HANDLE DuplicateCurrentHandle() const;
+			virtual bool IsInheritable() const;
+			virtual HANDLE& GetHandleAddress();
+			virtual void Close();
+			virtual void SetInheritability(const bool isInheritable);
+			virtual HANDLE Detach();
+
 			/// <summary>
 			///		Returns whether the internal HANDLE's value is not 
 			///		nullptr or INVALID_HANDLE_VALUE. Note: this does not mean
@@ -59,15 +68,6 @@ namespace Boring32::Raii
 			///		INVALID_HANDLE_VALUE, false otherwise.
 			/// </returns>
 			virtual bool IsValidValue() const;
-
-		public:
-			virtual HANDLE GetHandle() const;
-			virtual HANDLE DuplicateCurrentHandle() const;
-			virtual bool IsInheritable() const;
-			virtual HANDLE& GetHandleAddress();
-			virtual void Close();
-			virtual void SetInheritability(const bool isInheritable);
-			virtual HANDLE Detach();
 
 		public:
 			static bool HandleIsInheritable(const HANDLE handle);
