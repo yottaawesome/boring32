@@ -258,6 +258,28 @@ void TestCompression()
 	Boring32::Compression::Decompressor decompressor(Boring32::Compression::CompressionType::MSZIP);
 }
 
+void TestTimerQueues()
+{
+	std::wcout << L"Testing timer queues..." << std::endl;
+	Boring32::Async::Event eventToWaitOn(false, true, false, L"");
+	Boring32::Async::TimerQueue timerQueue;
+	Boring32::Async::TimerQueueTimer timerQueueTimer(
+		timerQueue.GetHandle(),
+		3000,
+		0,
+		0,
+		[](void* lpParam, BOOLEAN TimerOrWaitFired) -> void 
+		{
+			Boring32::Async::Event* eventObj = (Boring32::Async::Event*)lpParam;
+			eventObj->Signal();
+		},
+		&eventToWaitOn
+	);
+
+	eventToWaitOn.WaitOnEvent(INFINITE, true);
+	std::wcout << L"Timer Queue test OK" << std::endl;
+}
+
 int main(int argc, char** args)
 {
 	/*try
@@ -290,7 +312,7 @@ int main(int argc, char** args)
 	std::wcout << Boring32::Util::GetCurrentExecutableDirectory() << std::endl;
 
 	//TestProcessNamedPipe();
-	for (int i = 0; i < 13; i++)
+	for (int i = 0; i < 14; i++)
 	{
 		try
 		{
@@ -321,6 +343,8 @@ int main(int argc, char** args)
 				TestProcessAnonPipe();
 			if (i == 12)
 				TestCompression();
+			if (i == 13)
+				TestTimerQueues();
 		}
 		catch (const std::exception& ex)
 		{

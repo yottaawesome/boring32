@@ -12,14 +12,14 @@ namespace Boring32::Async
 
 	TimerQueue::TimerQueue()
 	:	m_timer(nullptr),
-		m_deleteWithoutWaiting(true)
+		m_completionEvent(INVALID_HANDLE_VALUE)
 	{
 		InternalCreate();
 	}
 
-	TimerQueue::TimerQueue(const bool deleteWithoutWaiting)
+	TimerQueue::TimerQueue(HANDLE completionEvent)
 	:	m_timer(nullptr),
-		m_deleteWithoutWaiting(deleteWithoutWaiting)
+		m_completionEvent(completionEvent)
 	{
 		InternalCreate();
 	}
@@ -40,7 +40,7 @@ namespace Boring32::Async
 		try
 		{
 			Close(std::nothrow);
-			m_deleteWithoutWaiting = other.m_deleteWithoutWaiting;
+			m_completionEvent = other.m_completionEvent;
 			m_timer = other.m_timer;
 			other.m_timer = nullptr;
 		}
@@ -54,9 +54,8 @@ namespace Boring32::Async
 	{
 		if (m_timer)
 		{
-			HANDLE complete = m_deleteWithoutWaiting ? nullptr : INVALID_HANDLE_VALUE;
 			//https://docs.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-deletetimerqueueex
-			bool succeeded = DeleteTimerQueueEx(m_timer, complete);
+			bool succeeded = DeleteTimerQueueEx(m_timer, m_completionEvent);
 			if (succeeded == false)
 				throw Error::Win32Error("TimerQueue::Close(): DeleteTimerQueueEx() failed", GetLastError());
 			m_timer = nullptr;

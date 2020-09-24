@@ -10,7 +10,7 @@ namespace Boring32::Async
 		public:
 			virtual ~TimerQueue();
 			TimerQueue();
-			TimerQueue(const bool deleteWithoutWaiting);
+			TimerQueue(HANDLE completionEvent);
 
 			TimerQueue(TimerQueue&& other) noexcept;
 			virtual TimerQueue& operator=(TimerQueue&& other) noexcept;
@@ -29,6 +29,6 @@ namespace Boring32::Async
 
 		protected:
 			HANDLE m_timer;
-			bool m_deleteWithoutWaiting;
+			HANDLE m_completionEvent;
 	};
 }
