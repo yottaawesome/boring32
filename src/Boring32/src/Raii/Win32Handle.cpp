@@ -119,8 +119,8 @@ namespace Boring32::Raii
 
 	void Win32Handle::SetInheritability(const bool isInheritable)
 	{
-		if (m_handle == nullptr)
-			throw std::runtime_error("Handle is null.");
+		if (m_handle == nullptr || m_handle == INVALID_HANDLE_VALUE)
+			throw std::runtime_error("Handle is null or invalid.");
 		if (SetHandleInformation(m_handle, HANDLE_FLAG_INHERIT, isInheritable) == false)
 			throw Error::Win32Error("SetHandleInformation() failed", GetLastError());
 	}
@@ -134,8 +134,9 @@ namespace Boring32::Raii
 
 	bool Win32Handle::HandleIsInheritable(const HANDLE handle)
 	{
-		if (handle == nullptr)
+		if (handle == nullptr || handle == INVALID_HANDLE_VALUE)
 			return false;
+
 		DWORD flags = 0;
 		if (GetHandleInformation(handle, &flags) == false)
 			throw Error::Win32Error("GetHandleInformation() failed", GetLastError());
