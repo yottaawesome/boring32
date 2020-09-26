@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
+#include "include/Error/Win32Error.hpp"
 #include "include/Async/WaitableTimer.hpp"
 
 namespace Boring32::Async
@@ -39,7 +40,7 @@ namespace Boring32::Async
 				: m_name.c_str()
 		);
 		if (m_handle == nullptr)
-			throw std::runtime_error("Failed to create waitable timer");
+			throw Error::Win32Error("WaitableTimer::WaitableTimer(): Failed to create waitable timer", GetLastError());
 		m_handle.SetInheritability(isInheritable);
 	}
 
@@ -55,7 +56,7 @@ namespace Boring32::Async
 		//TIMER_ALL_ACCESS
 		m_handle = OpenWaitableTimerW(desiredAccess, isInheritable, name.c_str());
 		if (m_handle == nullptr)
-			throw std::runtime_error("Failed to open waitable timer");
+			throw Error::Win32Error("WaitableTimer::WaitableTimer(): Failed to open waitable timer", GetLastError());
 	}
 
 	// Copy constructor
@@ -104,7 +105,7 @@ namespace Boring32::Async
 	)
 	{
 		if (m_handle == nullptr)
-			throw std::runtime_error("Timer handle is null");
+			throw std::runtime_error("WaitableTimer::SetTimerInNanos(): Timer handle is null");
 		InternalSetTimer(hundredNanosecondIntervals, period, callback, param);
 	}
 
@@ -116,7 +117,7 @@ namespace Boring32::Async
 	)
 	{
 		if (m_handle == nullptr)
-			throw std::runtime_error("Timer handle is null");
+			throw std::runtime_error("WaitableTimer::SetTimerInMillis(): Timer handle is null");
 		InternalSetTimer(ms * 10000, period, callback, param);
 	}
 
@@ -138,29 +139,29 @@ namespace Boring32::Async
 			false
 		);
 		if (succeeded == false)
-			throw std::runtime_error("Failed to set timer");
+			throw Error::Win32Error("WaitableTimer::InternalSetTimer(): Failed to set timer", GetLastError());
 	}
 
 	bool WaitableTimer::WaitOnTimer(const DWORD millis)
 	{
 		if (m_handle == nullptr)
-			throw std::runtime_error("No timer to wait on");
+			throw std::runtime_error("WaitableTimer::WaitOnTimer(): No timer to wait on");
 		DWORD status = WaitForSingleObject(m_handle.GetHandle(), millis);
 		if (status == WAIT_OBJECT_0)
 			return true;
 		if (status == WAIT_TIMEOUT)
 			return false;
 		if (status == WAIT_FAILED)
-			throw std::runtime_error("WaitForSingleObject failed");
+			throw std::runtime_error("WaitableTimer::WaitOnTimer(): WaitForSingleObject failed");
 		if (status == WAIT_ABANDONED)
-			throw std::runtime_error("The wait was abandoned");
+			throw std::runtime_error("WaitableTimer::WaitOnTimer(): The wait was abandoned");
 		return false;
 	}
 
 	bool WaitableTimer::CancelTimer()
 	{
 		if (m_handle == nullptr)
-			throw std::runtime_error("No timer to cancel");
+			return false;
 		return CancelWaitableTimer(m_handle.GetHandle());
 	}
 
