@@ -96,21 +96,36 @@ namespace Boring32::Async
 		m_isManualReset = other.m_isManualReset;
 	}
 	
-	void WaitableTimer::SetTimerInNanos(const int64_t hundredNanosecondIntervals, const UINT period)
+	void WaitableTimer::SetTimerInNanos(
+		const int64_t hundredNanosecondIntervals, 
+		const UINT period,
+		const PTIMERAPCROUTINE callback,
+		void* param
+	)
 	{
 		if (m_handle == nullptr)
 			throw std::runtime_error("Timer handle is null");
-		InternalSetTimer(hundredNanosecondIntervals, period);
+		InternalSetTimer(hundredNanosecondIntervals, period, callback, param);
 	}
 
-	void WaitableTimer::SetTimerInMillis(const int64_t ms, const UINT period)
+	void WaitableTimer::SetTimerInMillis(
+		const int64_t ms, 
+		const UINT period,
+		const PTIMERAPCROUTINE callback,
+		void* param
+	)
 	{
 		if (m_handle == nullptr)
 			throw std::runtime_error("Timer handle is null");
-		InternalSetTimer(ms * 10000, period);
+		InternalSetTimer(ms * 10000, period, callback, param);
 	}
 
-	void WaitableTimer::InternalSetTimer(const int64_t time, const UINT period)
+	void WaitableTimer::InternalSetTimer(
+		const int64_t time, 
+		const UINT period,
+		const PTIMERAPCROUTINE callback,
+		void* param
+	)
 	{
 		LARGE_INTEGER liDueTime;
 		liDueTime.QuadPart = time;
@@ -118,8 +133,8 @@ namespace Boring32::Async
 			m_handle.GetHandle(),
 			&liDueTime,
 			period,
-			nullptr,
-			nullptr,
+			callback,
+			param,
 			false
 		);
 		if (succeeded == false)

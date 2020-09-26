@@ -47,8 +47,18 @@ namespace Boring32::Async
 			///		timer is periodic. A periodic timer automatically reactivates
 			///		each time the period elapses, until the timer is canceled.
 			///	</param>
-			virtual void SetTimerInNanos(const int64_t hundredNanosecondIntervals, const UINT period);
-			virtual void SetTimerInMillis(const int64_t milliseconds, const UINT period);
+			virtual void SetTimerInNanos(
+				const int64_t hundredNanosecondIntervals, 
+				const UINT period,
+				const PTIMERAPCROUTINE callback,
+				void* param
+			);
+			virtual void SetTimerInMillis(
+				const int64_t milliseconds, 
+				const UINT period,
+				const PTIMERAPCROUTINE callback,
+				void* param
+			);
 			virtual bool WaitOnTimer(const DWORD millis);
 			virtual bool CancelTimer();
 			virtual bool IsManualReset() const;
@@ -57,7 +67,12 @@ namespace Boring32::Async
 			virtual void Close();
 
 		protected:
-			virtual void InternalSetTimer(const int64_t time, const UINT period);
+			virtual void InternalSetTimer(
+				const int64_t time, 
+				const UINT period,
+				const PTIMERAPCROUTINE callback, 
+				void* param
+			);
 
 		protected:
 			Raii::Win32Handle m_handle;

@@ -45,7 +45,7 @@ void TestWaitableTime(int64_t relativeMillis)
 	Boring32::Async::WaitableTimer timer1(L"WaitableTimer", false, false);
 	Boring32::Async::WaitableTimer timer2(L"WaitableTimer", false, false, SYNCHRONIZE);
 	std::wcout << L"Timer set for " << relativeMillis << L" from now" << std::endl;
-	timer1.SetTimerInMillis(-relativeMillis, relativeMillis);
+	timer1.SetTimerInMillis(-relativeMillis, relativeMillis, nullptr, nullptr);
 	timer1.WaitOnTimer(INFINITE);
 	timer1.CancelTimer();
 }
