@@ -16,3 +16,4 @@
 #include "TimerQueue.hpp"
 #include "TimerQueueTimer.hpp"
 #include "TimerQueueTimerCallback.hpp"
+#include "SynchronizationBarrier.hpp"

@@ -63,7 +63,17 @@ namespace Boring32::Async
 			virtual bool CancelTimer();
 			virtual bool IsManualReset() const;
 			virtual std::wstring GetName() const;
+
+			/// <summary>
+			///		Returns the underlying HANDLE for this timer, or null
+			///		if no timer has been created.
+			/// </summary>
+			/// <returns></returns>
 			virtual HANDLE GetHandle() const;
+
+			/// <summary>
+			///		Frees all native resources associated with this timer.
+			/// </summary>
 			virtual void Close();
 
 		protected:

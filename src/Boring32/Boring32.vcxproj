@@ -239,6 +239,7 @@
     <ClCompile Include="src\Async\Pipes\OverlappedNamedPipeServer.cpp" />
     <ClCompile Include="src\Async\Semaphore.cpp" />
     <ClCompile Include="src\Async\SlimReadWriteLock.cpp" />
+    <ClCompile Include="src\Async\SynchronizationBarrier.cpp" />
     <ClCompile Include="src\Async\Thread.cpp" />
     <ClCompile Include="src\Async\TimerQueue.cpp" />
     <ClCompile Include="src\Async\TimerQueueTimer.cpp" />

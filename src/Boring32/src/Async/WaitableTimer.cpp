@@ -3,6 +3,7 @@
 #include "include/Error/Win32Error.hpp"
 #include "include/Async/WaitableTimer.hpp"
 
+//https://docs.microsoft.com/en-us/windows/win32/sync/using-a-waitable-timer-with-an-asynchronous-procedure-call
 namespace Boring32::Async
 {
 	WaitableTimer::~WaitableTimer() 
@@ -32,6 +33,7 @@ namespace Boring32::Async
 	:	m_name(name),
 		m_isManualReset(isManualReset)
 	{
+		//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createwaitabletimerw
 		m_handle = CreateWaitableTimerW(
 			nullptr,
 			isManualReset,
@@ -54,6 +56,7 @@ namespace Boring32::Async
 		m_isManualReset(isManualReset)
 	{
 		//TIMER_ALL_ACCESS
+		//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-openwaitabletimerw
 		m_handle = OpenWaitableTimerW(desiredAccess, isInheritable, name.c_str());
 		if (m_handle == nullptr)
 			throw Error::Win32Error("WaitableTimer::WaitableTimer(): Failed to open waitable timer", GetLastError());
@@ -130,6 +133,7 @@ namespace Boring32::Async
 	{
 		LARGE_INTEGER liDueTime;
 		liDueTime.QuadPart = time;
+		//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-setwaitabletimer
 		bool succeeded = SetWaitableTimer(
 			m_handle.GetHandle(),
 			&liDueTime,
