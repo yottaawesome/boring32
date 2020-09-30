@@ -22,6 +22,7 @@ namespace Boring32::Async
 		m_isInitialized(false),
 		m_barrier{ 0 }
 	{
+		//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-initializesynchronizationbarrier
 		if (InitializeSynchronizationBarrier(&m_barrier, m_totalThreads, m_spinCount) == false)
 			throw Error::Win32Error("SynchronizationBarrier::SynchronizationBarrier(): InitializeSynchronizationBarrier() failed", GetLastError());
 		m_isInitialized = true;
@@ -31,6 +32,7 @@ namespace Boring32::Async
 	{
 		if (m_isInitialized)
 		{
+			//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-deletesynchronizationbarrier
 			DeleteSynchronizationBarrier(&m_barrier);
 			m_isInitialized = false;
 		}
@@ -40,6 +42,7 @@ namespace Boring32::Async
 	{
 		if (m_isInitialized == false)
 			throw std::runtime_error("SynchronizationBarrier::Enter(): Barrier is no initialised");
+		//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-entersynchronizationbarrier
 		return EnterSynchronizationBarrier(&m_barrier, flags);
 	}
 }
