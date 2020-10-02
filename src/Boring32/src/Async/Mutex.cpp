@@ -28,11 +28,11 @@ namespace Boring32::Async
 	{ }
 
 	Mutex::Mutex(
-		const std::wstring& name,
+		std::wstring name,
 		const bool acquireOnCreation, 
 		const bool inheritable
 	)
-	:	m_name(name),
+	:	m_name(std::move(name)),
 		m_created(true),
 		m_mutex(nullptr),
 		m_locked(false)
@@ -50,7 +50,7 @@ namespace Boring32::Async
 	}
 
 	Mutex::Mutex(
-		const std::wstring& name,
+		std::wstring name,
 		const DWORD desiredAccess,
 		const bool isInheritable
 	)

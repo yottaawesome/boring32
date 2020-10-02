@@ -15,12 +15,12 @@ namespace Boring32::Async
 				const bool isInheritable, 
 				const bool manualReset, 
 				const bool isSignaled, 
-				const std::wstring& name
+				std::wstring name
 			);
 			Event(
 				const bool isInheritable,
 				const bool manualReset,
-				const std::wstring& name,
+				std::wstring name,
 				const DWORD desiredAccess
 			);
 
@@ -39,6 +39,7 @@ namespace Boring32::Async
 			virtual HANDLE Detach();
 			virtual HANDLE GetHandle() const;
 			virtual void Close();
+			virtual const std::wstring& GetName() const;
 
 		protected:
 			virtual void Copy(const Event& other);

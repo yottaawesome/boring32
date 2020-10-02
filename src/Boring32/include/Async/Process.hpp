@@ -11,15 +11,15 @@ namespace Boring32::Async
 			virtual ~Process();
 			Process();
 			Process(
-				const std::wstring& executablePath,
-				const std::wstring& commandLine,
-				const std::wstring& startingDirectory,
+				std::wstring executablePath,
+				std::wstring commandLine,
+				std::wstring startingDirectory,
 				const bool canInheritHandles
 			);
 			Process(
-				const std::wstring& executablePath,
-				const std::wstring& commandLine,
-				const std::wstring& startingDirectory,
+				std::wstring executablePath,
+				std::wstring commandLine,
+				std::wstring startingDirectory,
 				const bool canInheritHandles,
 				const DWORD creationFlags,
 				const STARTUPINFO& dataSi

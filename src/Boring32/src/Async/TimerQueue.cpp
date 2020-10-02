@@ -17,7 +17,7 @@ namespace Boring32::Async
 		InternalCreate();
 	}
 
-	TimerQueue::TimerQueue(HANDLE completionEvent)
+	TimerQueue::TimerQueue(const HANDLE completionEvent)
 	:	m_timer(nullptr),
 		m_completionEvent(completionEvent)
 	{
@@ -76,7 +76,7 @@ namespace Boring32::Async
 		}
 	}
 
-	HANDLE TimerQueue::GetHandle()
+	HANDLE TimerQueue::GetHandle() const
 	{
 		return m_timer;
 	}

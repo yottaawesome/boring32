@@ -25,14 +25,14 @@ namespace Boring32::Async
 		Create(isInheritable);
 	}
 
-	Job::Job(const bool isInheritable, const std::wstring& name)
-	:	m_name(name)
+	Job::Job(const bool isInheritable, std::wstring name)
+	:	m_name(std::move(name))
 	{
 		Create(isInheritable);
 	}
 	
-	Job::Job(const bool isInheritable, const std::wstring& name, const DWORD desiredAccess)
-	:	m_name(name)
+	Job::Job(const bool isInheritable, std::wstring name, const DWORD desiredAccess)
+	:	m_name(std::move(name))
 	{
 		Open(isInheritable);
 	}
@@ -105,7 +105,7 @@ namespace Boring32::Async
 		return m_job.GetHandle();
 	}
 
-	std::wstring Job::GetName() const
+	const std::wstring& Job::GetName() const
 	{
 		return m_name;
 	}

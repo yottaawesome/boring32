@@ -31,7 +31,7 @@ namespace Boring32::Async
 			///		Whether the handle can be inherited by child processes.
 			/// </param>
 			Mutex(
-				const std::wstring& name,
+				std::wstring name,
 				const bool acquireOnCreation,
 				const bool inheritable
 			);
@@ -49,7 +49,7 @@ namespace Boring32::Async
 			///		The desired access to open the mutex, e.g. SYNCHRONIZE.
 			/// </param>
 			Mutex(
-				const std::wstring& name,
+				std::wstring name,
 				const DWORD desiredAccess,
 				const bool isInheritable
 			);

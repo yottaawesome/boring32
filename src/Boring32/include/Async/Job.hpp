@@ -12,8 +12,8 @@ namespace Boring32::Async
 			virtual ~Job();
 			Job();
 			Job(const bool isInheritable);
-			Job(const bool isInheritable, const std::wstring& name);
-			Job(const bool isInheritable, const std::wstring& name, const DWORD desiredAccess);
+			Job(const bool isInheritable, std::wstring name);
+			Job(const bool isInheritable, std::wstring name, const DWORD desiredAccess);
 
 			Job(const Job& other);
 			virtual Job& operator=(const Job& other);
@@ -26,7 +26,7 @@ namespace Boring32::Async
 			virtual void SetInformation(JOBOBJECT_EXTENDED_LIMIT_INFORMATION& jeli);
 			virtual void AssignProcessToThisJob(const HANDLE process);
 			virtual HANDLE GetHandle();
-			virtual std::wstring GetName() const;
+			virtual const std::wstring& GetName() const;
 			virtual void Close();
 			virtual bool IsInheritable() const;
 

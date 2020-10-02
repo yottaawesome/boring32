@@ -38,7 +38,7 @@ namespace Boring32::Async
 			///		Whether the acquired handle can be inherited by child processes.
 			/// </param>
 			MemoryMappedFile(
-				const std::wstring& name,
+				std::wstring name,
 				const UINT maxSize,
 				const bool inheritable
 			);
@@ -59,7 +59,7 @@ namespace Boring32::Async
 			///		The desired access to open the file. See: https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-mapviewoffile
 			/// </param>
 			MemoryMappedFile(
-				const std::wstring& name,
+				std::wstring name,
 				const UINT maxSize,
 				const bool inheritable,
 				const DWORD desiredAccess
@@ -103,14 +103,14 @@ namespace Boring32::Async
 			///		Get the name of this MemoryMappedFile.
 			/// </summary>
 			/// <returns>The name of this MemoryMappedFile.</returns>
-			virtual std::wstring GetName();
+			virtual const std::wstring& GetName() const;
 
 			/// <summary>
 			///		Get whether this MemoryMappedFile can be inherited
 			///		by child processes.
 			/// </summary>
 			/// <returns></returns>
-			virtual bool IsInheritable();
+			virtual bool IsInheritable() const;
 
 		protected:
 			/// <summary>

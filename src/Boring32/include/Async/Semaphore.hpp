@@ -13,12 +13,12 @@ namespace Boring32::Async
 
 			Semaphore();
 			Semaphore(
-				const std::wstring& name, 
+				std::wstring name, 
 				const bool isInheritable, 
 				const long initialCount, 
 				const long maxCount);
 			Semaphore(
-				const std::wstring& name,
+				std::wstring name,
 				const bool isInheritable,
 				const long initialCount,
 				const long maxCount,
@@ -34,10 +34,10 @@ namespace Boring32::Async
 			virtual void Release(const int countToRelease);
 			virtual bool Acquire(const DWORD millisTimeout);
 			virtual bool Acquire(const int countToAcquire, const DWORD millisTimeout);
-			virtual std::wstring GetName();
-			virtual int GetCurrentCount();
-			virtual int GetMaxCount();
-			virtual HANDLE GetHandle();
+			virtual const std::wstring& GetName() const;
+			virtual int GetCurrentCount() const;
+			virtual int GetMaxCount() const;
+			virtual HANDLE GetHandle() const;
 
 		protected:
 			virtual void Copy(const Semaphore& other);

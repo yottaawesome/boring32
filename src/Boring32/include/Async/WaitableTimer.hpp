@@ -12,12 +12,12 @@ namespace Boring32::Async
 
 			WaitableTimer();
 			WaitableTimer(
-				const std::wstring& name, 
+				std::wstring name, 
 				const bool isInheritable, 
 				const bool isManualReset
 			);
 			WaitableTimer(
-				const std::wstring& name, 
+				std::wstring name, 
 				const bool isInheritable, 
 				const bool isManualReset, 
 				const DWORD desiredAccess
@@ -62,7 +62,7 @@ namespace Boring32::Async
 			virtual bool WaitOnTimer(const DWORD millis);
 			virtual bool CancelTimer();
 			virtual bool IsManualReset() const;
-			virtual std::wstring GetName() const;
+			virtual const std::wstring& GetName() const;
 
 			/// <summary>
 			///		Returns the underlying HANDLE for this timer, or null

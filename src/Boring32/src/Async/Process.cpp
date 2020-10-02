@@ -22,14 +22,14 @@ namespace Boring32::Async
 	{ }
 
 	Process::Process(
-		const std::wstring& executablePath,
-		const std::wstring& commandLine,
-		const std::wstring& startingDirectory,
+		std::wstring executablePath,
+		std::wstring commandLine,
+		std::wstring startingDirectory,
 		const bool canInheritHandles
 	)
-	:	m_executablePath(executablePath),
-		m_commandLine(commandLine),
-		m_startingDirectory(startingDirectory),
+	:	m_executablePath(std::move(executablePath)),
+		m_commandLine(std::move(commandLine)),
+		m_startingDirectory(std::move(startingDirectory)),
 		m_canInheritHandles(canInheritHandles),
 		m_creationFlags(0),
 		m_processId(0),
@@ -40,16 +40,16 @@ namespace Boring32::Async
 	{ }
 
 	Process::Process(
-		const std::wstring& executablePath,
-		const std::wstring& commandLine,
-		const std::wstring& startingDirectory,
+		std::wstring executablePath,
+		std::wstring commandLine,
+		std::wstring startingDirectory,
 		const bool canInheritHandles,
 		const DWORD creationFlags,
 		const STARTUPINFO& dataSi
 	)
-	:	m_executablePath(executablePath),
-		m_commandLine(commandLine),
-		m_startingDirectory(startingDirectory),
+	:	m_executablePath(std::move(executablePath)),
+		m_commandLine(std::move(commandLine)),
+		m_startingDirectory(std::move(startingDirectory)),
 		m_canInheritHandles(canInheritHandles),
 		m_creationFlags(creationFlags),
 		m_processId(0),

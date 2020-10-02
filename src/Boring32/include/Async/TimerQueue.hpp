@@ -10,7 +10,7 @@ namespace Boring32::Async
 		public:
 			virtual ~TimerQueue();
 			TimerQueue();
-			TimerQueue(HANDLE completionEvent);
+			TimerQueue(const HANDLE completionEvent);
 
 			TimerQueue(TimerQueue&& other) noexcept;
 			virtual TimerQueue& operator=(TimerQueue&& other) noexcept;
@@ -21,7 +21,7 @@ namespace Boring32::Async
 		public:
 			virtual void Close();
 			virtual bool Close(const std::nothrow_t) noexcept;
-			virtual HANDLE GetHandle();
+			virtual HANDLE GetHandle() const;
 
 		protected:
 			virtual void InternalCreate();

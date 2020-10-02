@@ -198,6 +198,7 @@
     <ClInclude Include="include\Compression\Compressor.hpp" />
     <ClInclude Include="include\Compression\Decompressor.hpp" />
     <ClInclude Include="include\Error\ComError.hpp" />
+    <ClInclude Include="include\Registry\Registry.hpp" />
     <ClInclude Include="include\Security\Crypto\Crypto.hpp" />
     <ClInclude Include="include\Error\Error.hpp" />
     <ClInclude Include="include\Error\Win32Error.hpp" />
@@ -221,6 +222,7 @@
     <ClInclude Include="include\Async\ThreadStatus.hpp" />
     <ClInclude Include="include\Com\ComThreadScope.hpp" />
     <ClInclude Include="include\Async\Pipes\Pipes.hpp" />
+    <ClInclude Include="include\Wmi\Wmi.hpp" />
     <ClInclude Include="src\pch.hpp" />
     <ClInclude Include="include\Security\Security.hpp" />
     <ClInclude Include="src\targetver.hpp" />

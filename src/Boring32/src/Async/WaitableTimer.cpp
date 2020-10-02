@@ -26,11 +26,11 @@ namespace Boring32::Async
 	{ }
 
 	WaitableTimer::WaitableTimer(
-		const std::wstring& name, 
+		std::wstring name, 
 		const bool isInheritable, 
 		const bool isManualReset
 	)
-	:	m_name(name),
+	:	m_name(std::move(name)),
 		m_isManualReset(isManualReset)
 	{
 		//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createwaitabletimerw
@@ -47,12 +47,12 @@ namespace Boring32::Async
 	}
 
 	WaitableTimer::WaitableTimer(
-		const std::wstring& name, 
+		std::wstring name, 
 		const bool isInheritable, 
 		const bool isManualReset, 
 		const DWORD desiredAccess
 	)
-	:	m_name(name),
+	:	m_name(std::move(name)),
 		m_isManualReset(isManualReset)
 	{
 		//TIMER_ALL_ACCESS
@@ -174,7 +174,7 @@ namespace Boring32::Async
 		return m_isManualReset;
 	}
 
-	std::wstring WaitableTimer::GetName() const
+	const std::wstring& WaitableTimer::GetName() const
 	{
 		return m_name;
 	}

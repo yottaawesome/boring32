@@ -28,21 +28,18 @@ namespace Boring32::Async
 	{ }
 	
 	MemoryMappedFile::MemoryMappedFile(
-		const std::wstring& name,
+		std::wstring name,
 		const UINT maxSize,
 		const bool inheritable
 	)
-	:	m_name(name),
+	:	m_name(std::move(name)),
 		m_maxSize(maxSize),
 		m_mapFile(nullptr),
 		m_view(nullptr)
 	{
-		SECURITY_ATTRIBUTES lp{ 0 };
-		lp.nLength = sizeof(lp);
-		lp.bInheritHandle = inheritable;
 		m_mapFile = CreateFileMappingW(
 			INVALID_HANDLE_VALUE,		// use paging file
-			&lp,						// default security
+			nullptr,					// default security
 			PAGE_READWRITE,				// read/write access
 			0,							// maximum object size (high-order DWORD)
 			m_maxSize,					// maximum object size (low-order DWORD)
@@ -50,6 +47,7 @@ namespace Boring32::Async
 		if (m_mapFile == nullptr)
 			throw Error::Win32Error("Failed to open memory mapped file", GetLastError());
 
+		m_mapFile.SetInheritability(inheritable);
 		m_view = MapViewOfFile(
 			m_mapFile.GetHandle(),	// handle to map object
 			FILE_MAP_ALL_ACCESS,	// read/write permission
@@ -67,12 +65,12 @@ namespace Boring32::Async
 	}
 
 	MemoryMappedFile::MemoryMappedFile(
-		const std::wstring& name,
+		std::wstring name,
 		const UINT maxSize,
 		const bool inheritable,
 		const DWORD desiredAccess
 	)
-	:	m_name(name),
+	:	m_name(std::move(name)),
 		m_maxSize(maxSize),
 		m_mapFile(nullptr),
 		m_view(nullptr)
@@ -165,12 +163,12 @@ namespace Boring32::Async
 		return m_view;
 	}
 
-	std::wstring MemoryMappedFile::GetName()
+	const std::wstring& MemoryMappedFile::GetName() const
 	{
 		return m_name;
 	}
 
-	bool MemoryMappedFile::IsInheritable()
+	bool MemoryMappedFile::IsInheritable() const
 	{
 		return m_mapFile.IsInheritable();
 	}

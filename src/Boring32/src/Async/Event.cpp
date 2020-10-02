@@ -27,11 +27,11 @@ namespace Boring32::Async
 		const bool isInheritable,
 		const bool manualReset,
 		const bool isSignaled,
-		const std::wstring& name
+		std::wstring name
 	)
 	:	m_event(nullptr),
 		m_isManualReset(manualReset),
-		m_name(name),
+		m_name(std::move(name)),
 		m_createEventOnTrue(true),
 		m_access(EVENT_ALL_ACCESS)
 	{
@@ -50,12 +50,12 @@ namespace Boring32::Async
 	Event::Event(
 		const bool isInheritable,
 		const bool manualReset,
-		const std::wstring& name,
+		std::wstring name,
 		const DWORD desiredAccess
 	)
 	:	m_event(nullptr),
 		m_isManualReset(manualReset),
-		m_name(name),
+		m_name(std::move(name)),
 		m_createEventOnTrue(false),
 		m_access(desiredAccess)
 	{
@@ -155,5 +155,10 @@ namespace Boring32::Async
 			throw std::runtime_error("No Event to signal");
 		if (SetEvent(m_event.GetHandle()) == false)
 			throw Error::Win32Error("Failed to signal event", GetLastError());
+	}
+
+	const std::wstring& Event::GetName() const
+	{
+		return m_name;
 	}
 }

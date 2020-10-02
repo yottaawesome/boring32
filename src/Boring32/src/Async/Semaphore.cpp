@@ -21,8 +21,13 @@ namespace Boring32::Async
 		m_maxCount(0)
 	{ }
 
-	Semaphore::Semaphore(const std::wstring& name, const bool isInheritable, const long initialCount, const long maxCount)
-	:	m_name(name),
+	Semaphore::Semaphore(
+		std::wstring name, 
+		const bool isInheritable, 
+		const long initialCount, 
+		const long maxCount
+	)
+	:	m_name(std::move(name)),
 		m_currentCount(initialCount),
 		m_maxCount(maxCount)
 	{
@@ -40,13 +45,13 @@ namespace Boring32::Async
 	}
 
 	Semaphore::Semaphore(
-		const std::wstring& name,
+		std::wstring name,
 		const bool isInheritable,
 		const long initialCount,
 		const long maxCount,
 		const DWORD desiredAccess
 	)
-	:	m_name(name),
+	:	m_name(std::move(name)),
 		m_currentCount(initialCount),
 		m_maxCount(maxCount)
 	{
@@ -152,22 +157,22 @@ namespace Boring32::Async
 		return true;
 	}
 
-	std::wstring Semaphore::GetName()
+	const std::wstring& Semaphore::GetName() const
 	{
 		return m_name;
 	}
 
-	int Semaphore::GetCurrentCount()
+	int Semaphore::GetCurrentCount() const
 	{
 		return m_currentCount;
 	}
 
-	int Semaphore::GetMaxCount()
+	int Semaphore::GetMaxCount() const
 	{
 		return m_maxCount;
 	}
 
-	HANDLE Semaphore::GetHandle()
+	HANDLE Semaphore::GetHandle() const
 	{
 		return m_handle.GetHandle();
 	}
