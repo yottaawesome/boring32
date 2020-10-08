@@ -4,6 +4,7 @@
 #include <vector>
 #include "WinHttpHandle.hpp"
 #include "HttpRequestResult.hpp"
+#include "ProxyInfo.hpp"
 
 namespace Boring32::WinHttp
 {
@@ -13,8 +14,15 @@ namespace Boring32::WinHttp
 			virtual ~HttpWebClient();
 			HttpWebClient();
 			HttpWebClient(
+				const std::wstring& userAgentName,
+				const std::wstring& serverToConnectTo,
+				const std::wstring& proxy,
+				const UINT port,
+				const bool ignoreSslErrors
+			);
+			HttpWebClient(
 				const std::wstring& userAgentName, 
-				const std::wstring& server,
+				const std::wstring& serverToConnectTo,
 				const UINT port,
 				const bool ignoreSslErrors,
 				const std::vector<std::wstring>& acceptTypes,
@@ -48,9 +56,11 @@ namespace Boring32::WinHttp
 			WinHttpHandle m_hConnect;
 			std::wstring m_userAgentName;
 			std::wstring m_serverToConnectTo;
+			std::wstring m_proxy;
 			UINT m_port;
 			bool m_ignoreSslErrors;
 			std::vector<std::wstring> m_acceptTypes;
 			std::wstring m_additionalHeaders;
+			ProxyInfo m_proxyInfo;
 	};
 }

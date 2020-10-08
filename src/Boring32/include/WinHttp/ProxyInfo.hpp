@@ -17,12 +17,21 @@ namespace Boring32::WinHttp
 				const std::wstring& url,
 				WINHTTP_AUTOPROXY_OPTIONS& options
 			);
+			
 			virtual void Close();
-			virtual void SetInfo(
+			
+			virtual void SetNamedProxy(
 				const std::wstring& proxy,
-				const std::wstring& proxyBypass, 
+				const std::wstring& proxyBypass
+			);
+
+			virtual void SetAllInfo(
+				const std::wstring& proxy,
+				const std::wstring& proxyBypass,
 				const DWORD accessType
 			);
+
+			virtual void SetOnSession(HINTERNET session);
 
 		protected:
 			WINHTTP_PROXY_INFO m_info;

@@ -311,7 +311,14 @@ int main(int argc, char** args)
 
 	try
 	{
-		Boring32::WinHttp::HttpWebClient webClient(L"test-ua", L"google.com", 443, false, { L"" }, { L"" });
+		//Test proxy: L"185.20.224.239:3128"
+		Boring32::WinHttp::HttpWebClient webClient(
+			L"test-ua", 
+			L"google.com", 
+			L"", 
+			443, 
+			false
+		);
 		webClient.Connect();
 		Boring32::WinHttp::HttpRequestResult result = webClient.Get(L"/");
 		std::wcout << result.StatusCode << std::endl;

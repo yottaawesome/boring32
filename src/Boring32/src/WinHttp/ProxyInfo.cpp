@@ -33,11 +33,26 @@ namespace Boring32::WinHttp
 				GlobalFree(m_info.lpszProxy);
 			if (m_info.lpszProxyBypass)
 				GlobalFree(m_info.lpszProxyBypass);
+			m_info.lpszProxy = nullptr;
+			m_info.lpszProxyBypass = nullptr;
 			m_mustRelease = false;
 		}
 	}
 
-	void ProxyInfo::SetInfo(
+	void ProxyInfo::SetNamedProxy(
+		const std::wstring& proxy,
+		const std::wstring& proxyBypass
+	)
+	{
+		Close();
+		m_proxy = proxy;
+		m_proxyBypass = proxyBypass;
+		m_info.lpszProxy = m_proxy.empty() ? nullptr : &m_proxy[0];
+		m_info.lpszProxyBypass = m_proxyBypass.empty() ? nullptr : &m_proxyBypass[0];
+		m_info.dwAccessType = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
+	}
+
+	void ProxyInfo::SetAllInfo(
 		const std::wstring& proxy,
 		const std::wstring& proxyBypass,
 		const DWORD accessType
@@ -49,5 +64,13 @@ namespace Boring32::WinHttp
 		m_info.lpszProxy = m_proxy.empty() ? nullptr : &m_proxy[0];
 		m_info.lpszProxyBypass = m_proxyBypass.empty() ? nullptr : &m_proxyBypass[0];
 		m_info.dwAccessType = accessType;
+	}
+
+	void ProxyInfo::SetOnSession(HINTERNET session)
+	{
+		if (m_info.lpszProxy == nullptr)
+			throw std::runtime_error("No proxy set");
+		if (WinHttpSetOption(session, WINHTTP_OPTION_PROXY, &m_info, sizeof(m_info)) == false)
+			throw Error::Win32Error("ProxyInfo::SetOnSession(): WinHttpSetOption() failed", GetLastError());
 	}
 }
