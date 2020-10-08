@@ -4,6 +4,7 @@
 #include <functional>
 #include <sstream>
 #include "include/WinHttp/HttpWebClient.hpp"
+#include "include/Error/Win32Error.hpp"
 
 namespace Boring32::WinHttp
 {
@@ -41,14 +42,12 @@ namespace Boring32::WinHttp
 	HttpWebClient::HttpWebClient(const HttpWebClient& other)
 	{
 		Copy(other);
-		Connect();
 	}
 	
 	void HttpWebClient::operator=(const HttpWebClient& other)
 	{
 		Close();
 		Copy(other);
-		Connect();
 	}
 
 	void HttpWebClient::Copy(const HttpWebClient& other)
@@ -64,7 +63,6 @@ namespace Boring32::WinHttp
 	HttpWebClient::HttpWebClient(HttpWebClient&& other) noexcept
 	{
 		Move(other);
-		Connect();
 	}
 
 	void HttpWebClient::operator=(HttpWebClient&& other) noexcept
@@ -108,7 +106,7 @@ namespace Boring32::WinHttp
 			0
 		);
 		if (m_hSession == nullptr)
-			throw std::runtime_error("WinHttpOpen failed");
+			throw Error::Win32Error("WinHttpOpen failed", GetLastError());
 
 		m_hConnect = WinHttpConnect(
 			m_hSession.Get(),
@@ -116,27 +114,27 @@ namespace Boring32::WinHttp
 			m_port,
 			0);
 		if (m_hConnect == nullptr)
-			throw std::runtime_error("WinHttpConnect failed");
+			throw Error::Win32Error("WinHttpConnect failed", GetLastError());
 	}
 	
-	void HttpWebClient::Get(const std::wstring& path)
+	HttpRequestResult HttpWebClient::Get(const std::wstring& path)
 	{
-		ExecuteRequest(L"GET", path, "", m_additionalHeaders);
+		return ExecuteRequest(L"GET", path, "", m_additionalHeaders);
 	}
 
-	void HttpWebClient::Post(const std::wstring& path, const std::string& requestBody)
+	HttpRequestResult HttpWebClient::Post(const std::wstring& path, const std::string& requestBody)
 	{
-		ExecuteRequest(L"POST", path, requestBody, m_additionalHeaders);
+		return ExecuteRequest(L"POST", path, requestBody, m_additionalHeaders);
 	}
 
-	void HttpWebClient::Put(const std::wstring& path, const std::string& requestBody)
+	HttpRequestResult HttpWebClient::Put(const std::wstring& path, const std::string& requestBody)
 	{
-		ExecuteRequest(L"PUT", path, requestBody, m_additionalHeaders);
+		return ExecuteRequest(L"PUT", path, requestBody, m_additionalHeaders);
 	}
 
-	void HttpWebClient::Delete(const std::wstring& path, const std::string& requestBody)
+	HttpRequestResult HttpWebClient::Delete(const std::wstring& path, const std::string& requestBody)
 	{
-		ExecuteRequest(L"DELETE", path, requestBody, m_additionalHeaders);
+		return ExecuteRequest(L"DELETE", path, requestBody, m_additionalHeaders);
 	}
 
 	HttpRequestResult HttpWebClient::ExecuteRequest(
@@ -168,7 +166,7 @@ namespace Boring32::WinHttp
 			WINHTTP_FLAG_SECURE
 		);
 		if (hRequest == nullptr)
-			throw std::runtime_error("WinHttpOpenRequest failed");
+			throw Error::Win32Error("WinHttpOpenRequest failed", GetLastError());
 
 		if (m_ignoreSslErrors)
 		{
@@ -184,7 +182,7 @@ namespace Boring32::WinHttp
 				sizeof(dwFlags)
 			);
 			if(succeeded == false)
-				throw std::runtime_error("WinHttpOpenRequest failed to set SSL options");
+				throw Error::Win32Error("WinHttpSetOption failed", GetLastError());
 		}
 
 		bool succeeded = WinHttpSendRequest(
@@ -201,11 +199,11 @@ namespace Boring32::WinHttp
 			reinterpret_cast<DWORD_PTR>(this)
 		);
 		if (succeeded == false)
-			throw std::runtime_error("WinHttpSendRequest failed");
+			throw Error::Win32Error("WinHttpSendRequest failed", GetLastError());
 
 		succeeded = WinHttpReceiveResponse(hRequest.Get(), nullptr);
 		if (succeeded == false)
-			throw std::runtime_error("WinHttpReceiveResponse failed");
+			throw Error::Win32Error("WinHttpReceiveResponse failed", GetLastError());
 
 		DWORD statusCode = 0;
 		DWORD statusCodeSize = sizeof(statusCode);
@@ -223,10 +221,13 @@ namespace Boring32::WinHttp
 		{
 			bool succeeded = WinHttpQueryDataAvailable(hRequest.Get(), &dwSize);
 			if (succeeded == false)
-				throw std::runtime_error("WinHttpQueryDataAvailable failed");
+				throw Error::Win32Error("WinHttpQueryDataAvailable failed", GetLastError());
+			if (dwSize == 0)
+				continue;
 
 			// Allocate space for the buffer.
-			std::vector<char> outBuffer((size_t)dwSize + 1, 0);
+			std::vector<char> outBuffer;
+			outBuffer.resize(dwSize);
 			DWORD dwDownloaded = 0;
 
 			succeeded = WinHttpReadData(
@@ -236,7 +237,7 @@ namespace Boring32::WinHttp
 				&dwDownloaded
 			);
 			if (succeeded == false)
-				throw std::runtime_error("WinHttpReadData failed");
+				throw Error::Win32Error("WinHttpQueryDataAvailable failed", GetLastError());
 
 			response.append(outBuffer.begin(), outBuffer.end());
 		} while (dwSize > 0);

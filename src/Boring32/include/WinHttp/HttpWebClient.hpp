@@ -26,14 +26,14 @@ namespace Boring32::WinHttp
 			HttpWebClient(HttpWebClient&& other) noexcept;
 			virtual void operator=(HttpWebClient&& other) noexcept;
 
-			virtual void Get(const std::wstring& path);
-			virtual void Post(const std::wstring& path, const std::string& requestBody);
-			virtual void Put(const std::wstring& path, const std::string& requestBody);
-			virtual void Delete(const std::wstring& path, const std::string& requestBody);
+			virtual HttpRequestResult Get(const std::wstring& path);
+			virtual HttpRequestResult Post(const std::wstring& path, const std::string& requestBody);
+			virtual HttpRequestResult Put(const std::wstring& path, const std::string& requestBody);
+			virtual HttpRequestResult Delete(const std::wstring& path, const std::string& requestBody);
 			virtual void Close();
+			virtual void Connect();
 
 		protected:
-			virtual void Connect();
 			virtual HttpRequestResult ExecuteRequest(
 				const std::wstring& verb,
 				const std::wstring& path,

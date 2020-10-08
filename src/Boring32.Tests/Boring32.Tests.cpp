@@ -309,6 +309,19 @@ int main(int argc, char** args)
 		sizeof(pmei)
 	);
 
+	try
+	{
+		Boring32::WinHttp::HttpWebClient webClient(L"test-ua", L"google.com", 443, false, { L"" }, { L"" });
+		webClient.Connect();
+		Boring32::WinHttp::HttpRequestResult result = webClient.Get(L"/");
+		std::wcout << result.StatusCode << std::endl;
+		std::wcout << result.ResponseBody.c_str() << std::endl;
+	}
+	catch (const std::exception& ex)
+	{
+		std::wcout << ex.what() << std::endl;
+	}
+
 	std::wcout << Boring32::Util::GetCurrentExecutableDirectory() << std::endl;
 
 	//TestProcessNamedPipe();

@@ -213,6 +213,7 @@
     <ClInclude Include="include\Time\Time.hpp" />
     <ClInclude Include="include\Util\Util.hpp" />
     <ClInclude Include="include\Boring32.hpp" />
+    <ClInclude Include="include\WinHttp\ProxyInfo.hpp" />
     <ClInclude Include="include\WinHttp\WinHttp.hpp" />
     <ClInclude Include="include\WinHttp\WinHttpHandle.hpp" />
     <ClInclude Include="include\WinHttp\HttpRequestResult.hpp" />
@@ -267,6 +268,7 @@
     <ClCompile Include="src\Library\DynamicLinkLibrary.cpp" />
     <ClCompile Include="src\Time\Time.cpp" />
     <ClCompile Include="src\Util\Util.cpp" />
+    <ClCompile Include="src\WinHttp\ProxyInfo.cpp" />
     <ClCompile Include="src\WinHttp\WinHttpHandle.cpp" />
     <ClCompile Include="src\WinHttp\HttpWebClient.cpp" />
     <ClCompile Include="src\WinHttp\WebSocket.cpp" />
