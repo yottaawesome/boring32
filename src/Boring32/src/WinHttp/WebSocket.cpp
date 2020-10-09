@@ -8,11 +8,6 @@
 
 namespace Boring32::WinHttp
 {
-	WebSocket::~WebSocket()
-	{
-		Close();
-	}
-
 	// Adapted from https://stackoverflow.com/a/29752943/7448661
 	std::wstring Replace(std::wstring source, const std::wstring& from, const std::wstring& to)
 	{
@@ -34,52 +29,52 @@ namespace Boring32::WinHttp
 		return newString;
 	}
 
-	WebSocket::WebSocket(
-		std::wstring server,
-		const UINT port,
-		const bool ignoreSslErrors,
-		std::wstring proxy,
-		const std::wstring pacUrl
-	)
-	:	m_server(std::move(server)),
-		m_port(port),
-		m_ignoreSslErrors(ignoreSslErrors),
-		m_proxy(std::move(proxy)),
-		m_pacUrl(std::move(pacUrl)),
+	WebSocket::~WebSocket()
+	{
+		Close();
+	}
+
+	WebSocket::WebSocket()
+	:	m_settings({}),
+		m_winHttpSession(nullptr),
+		m_winHttpConnection(nullptr),
+		m_status(WebSocketStatus::NotInitialised)
+	{ }
+
+	WebSocket::WebSocket(WebSocketSettings settings)
+	:	m_settings(std::move(settings)),
+		m_winHttpSession(nullptr),
+		m_winHttpConnection(nullptr),
+		m_status(WebSocketStatus::NotInitialised)
+	{ }
+
+	WebSocket::WebSocket(WebSocket&& other) noexcept
+	:	m_settings({}),
 		m_winHttpSession(nullptr),
 		m_winHttpConnection(nullptr),
 		m_status(WebSocketStatus::NotInitialised)
 	{
-		CleanServerString();
+		Move(other);
 	}
 
-	const std::wstring& WebSocket::GetServer()
+	WebSocket& WebSocket::operator=(WebSocket&& other) noexcept
 	{
-		return m_server;
+		Move(other);
+		return *this;
+	}
+	
+	void WebSocket::Move(WebSocket& other) noexcept
+	{
+		m_settings = std::move(other.m_settings);
+		m_status = other.m_status;
+		m_winHttpConnection = std::move(other.m_winHttpConnection);
+		m_winHttpSession = std::move(other.m_winHttpSession);
+		m_winHttpWebSocket = std::move(other.m_winHttpWebSocket);
 	}
 
-	void WebSocket::SetServer(const std::wstring& newServer, const UINT port, const bool ignoreSslErrors)
+	const WebSocketSettings& WebSocket::GetSettings()
 	{
-		m_server = newServer;
-		m_port = port;
-		m_ignoreSslErrors = ignoreSslErrors;
-		CleanServerString();
-	}
-
-	void WebSocket::CleanServerString()
-	{
-		std::wstring whatToReplace1 = L"http://";
-		std::wstring whatToReplace2 = L"https://";
-		m_server =
-			Replace(
-				Replace(
-					m_server,
-					whatToReplace1,
-					L""
-				),
-				whatToReplace2,
-				L""
-			);
+		return m_settings;
 	}
 
 	void WebSocket::Connect(const std::wstring& path)
@@ -98,32 +93,36 @@ namespace Boring32::WinHttp
 			throw std::runtime_error("WebSocket needs to be in NotInitialised state to connect");
 
 		DWORD accessType = WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY;
-		if (m_pacUrl != L"")
+		if (m_settings.PacUrl != L"")
 			accessType = WINHTTP_ACCESS_TYPE_NO_PROXY;
-		else if (m_proxy != L"")
+		else if (m_settings.Proxies != L"")
 			accessType = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
 
 		m_winHttpSession = WinHttpOpen(
-			L"websocket-user-agent/1.0",
+			m_settings.UserAgent.empty()
+				? L"websocket-user-agent" 
+				: m_settings.UserAgent.c_str(),
 			accessType,
-			accessType == WINHTTP_ACCESS_TYPE_NAMED_PROXY ? m_proxy.c_str() : WINHTTP_NO_PROXY_NAME,
+			accessType == WINHTTP_ACCESS_TYPE_NAMED_PROXY 
+				? m_settings.Proxies.c_str() 
+				: WINHTTP_NO_PROXY_NAME,
 			WINHTTP_NO_PROXY_BYPASS,
 			0
 		);
 		if (m_winHttpSession == nullptr)
 			throw Error::Win32Error("WebSocket::InternalConnect(): WinHttpOpen() failed", GetLastError());
 
-		if (m_pacUrl != L"")
+		if (m_settings.PacUrl != L"")
 		{
 			ProxyInfo proxyInfo;
-			proxyInfo.SetAutoProxy(m_winHttpSession.Get(), m_pacUrl, m_server + path);
+			proxyInfo.SetAutoProxy(m_winHttpSession.Get(), m_settings.PacUrl, m_settings.Server + path);
 			proxyInfo.SetOnSession(m_winHttpSession.Get());
 		}
 
 		m_winHttpConnection = WinHttpConnect(
 			m_winHttpSession.Get(),
-			m_server.c_str(),
-			m_port,
+			m_settings.Server.c_str(),
+			m_settings.Port,
 			0
 		);
 		if (m_winHttpConnection == nullptr)
@@ -141,7 +140,7 @@ namespace Boring32::WinHttp
 		if (requestHandle == nullptr)
 			throw Error::Win32Error("WebSocket::InternalConnect(): WinHttpOpenRequest() failed", GetLastError());
 
-		if (m_ignoreSslErrors)
+		if (m_settings.IgnoreSslErrors)
 		{
 			DWORD dwFlags =
 				SECURITY_FLAG_IGNORE_UNKNOWN_CA |
@@ -164,7 +163,7 @@ namespace Boring32::WinHttp
 		bool setWebsocketOption = WinHttpSetOption(
 			requestHandle.Get(),
 			WINHTTP_OPTION_UPGRADE_TO_WEB_SOCKET,
-			NULL,
+			nullptr,
 			0
 		);
 		if (setWebsocketOption == false)

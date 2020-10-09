@@ -4,6 +4,7 @@
 #include <vector>
 #include "WinHttpHandle.hpp"
 #include "WebSocketStatus.hpp"
+#include "WebSocketSettings.hpp"
 
 namespace Boring32::WinHttp
 {
@@ -11,36 +12,34 @@ namespace Boring32::WinHttp
 	{
 		public:
 			virtual ~WebSocket();
-			WebSocket(
-				std::wstring server, 
-				const UINT port, 
-				const bool ignoreSslErrors,
-				const std::wstring proxy,
-				const std::wstring pacUrl
-			);
-			virtual const std::wstring& GetServer();
+			WebSocket();
+			WebSocket(WebSocketSettings settings);
+
+			WebSocket(WebSocket&& other) noexcept;
+			virtual WebSocket& operator=(WebSocket&& other) noexcept;
+
+			WebSocket(const WebSocket&) = delete;
+			virtual WebSocket& operator=(const WebSocket&) = delete;
+
+		public:
+			virtual const WebSocketSettings& GetSettings();
 			virtual void Connect();
 			virtual void Connect(const std::wstring& path);
-			virtual void CleanServerString();
 			virtual void SendString(const std::string& msg);
 			virtual void SendBuffer(const std::vector<char>& buffer);
 			virtual bool Receive(std::vector<char>& buffer);
-			virtual void SetServer(const std::wstring& newServer, const UINT port, const bool ignoreSslErrors);
 			virtual void Close();
 			virtual WebSocketStatus GetStatus();
 
 		protected:
 			virtual void InternalConnect(const std::wstring& path);
+			virtual void Move(WebSocket& other) noexcept;
 
 		protected:
 			WinHttpHandle m_winHttpConnection;
 			WinHttpHandle m_winHttpSession;
 			WinHttpHandle m_winHttpWebSocket;
-			std::wstring m_server;
-			std::wstring m_proxy;
-			std::wstring m_pacUrl;
-			UINT m_port;
-			bool m_ignoreSslErrors;
 			WebSocketStatus m_status;
+			WebSocketSettings m_settings;
 	};
 }

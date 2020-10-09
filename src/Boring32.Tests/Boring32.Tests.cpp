@@ -330,11 +330,13 @@ int main(int argc, char** args)
 		std::wcout << result.ResponseBody.c_str() << std::endl;
 		*/
 		Boring32::WinHttp::WebSocket socket(
-			L"echo.websocket.org", 
-			443, 
-			false, 
-			L"",//L"36.67.96.217:3128", 
-			L""//,L"file:///A:/Code/C++/Boring32/src/Boring32.Tests/pac.js"
+			Boring32::WinHttp::WebSocketSettings{
+				.Server = L"echo.websocket.org",
+				.Proxies = L"",//L"36.67.96.217:3128"
+				.PacUrl = L"",//L"file:///A:/Code/C++/Boring32/src/Boring32.Tests/pac.js",
+				.Port = 443,
+				.IgnoreSslErrors = false,
+			}
 		);
 		socket.Connect();
 		std::vector<char> buffer;
