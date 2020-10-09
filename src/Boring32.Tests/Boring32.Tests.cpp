@@ -311,6 +311,8 @@ int main(int argc, char** args)
 
 	try
 	{
+		Boring32::Async::ThreadPool tp1(1, 10);
+
 		// https://spys.one/en/https-ssl-proxy/
 		//Test proxy: L"185.20.224.239:3128"
 		//Test proxy: L"45.76.52.195:8081"

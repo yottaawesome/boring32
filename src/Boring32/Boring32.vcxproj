@@ -188,6 +188,7 @@
     <ClInclude Include="include\Async\SlimReadWriteLock.hpp" />
     <ClInclude Include="include\Async\SynchronizationBarrier.hpp" />
     <ClInclude Include="include\Async\Thread.hpp" />
+    <ClInclude Include="include\Async\ThreadPool.hpp" />
     <ClInclude Include="include\Async\ThreadSafeVector.hpp" />
     <ClInclude Include="include\Async\TimerQueue.hpp" />
     <ClInclude Include="include\Async\TimerQueueTimer.hpp" />
@@ -245,6 +246,7 @@
     <ClCompile Include="src\Async\SlimReadWriteLock.cpp" />
     <ClCompile Include="src\Async\SynchronizationBarrier.cpp" />
     <ClCompile Include="src\Async\Thread.cpp" />
+    <ClCompile Include="src\Async\ThreadPool.cpp" />
     <ClCompile Include="src\Async\TimerQueue.cpp" />
     <ClCompile Include="src\Async\TimerQueueTimer.cpp" />
     <ClCompile Include="src\Async\TimerQueueTimerCallback.cpp" />
