@@ -39,6 +39,7 @@ namespace Boring32::WinHttp
 	HttpWebClient::HttpWebClient(
 		const std::wstring& userAgentName,
 		const std::wstring& serverToConnectTo,
+		const std::wstring& proxy,
 		const UINT port,
 		const bool ignoreSslErrors,
 		const std::vector<std::wstring>& acceptTypes,
@@ -49,7 +50,8 @@ namespace Boring32::WinHttp
 		m_port(port),
 		m_ignoreSslErrors(ignoreSslErrors),
 		m_acceptTypes(acceptTypes),
-		m_additionalHeaders(additionalHeaders)
+		m_additionalHeaders(additionalHeaders),
+		m_proxy(proxy)
 	{ }
 
 	HttpWebClient::HttpWebClient(const HttpWebClient& other)
@@ -116,18 +118,18 @@ namespace Boring32::WinHttp
 		m_hSession = WinHttpOpen(
 			m_userAgentName.c_str(),
 			useAutomaticProxy ? WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY : WINHTTP_ACCESS_TYPE_NO_PROXY,
-			WINHTTP_NO_PROXY_NAME,
+			useAutomaticProxy ? WINHTTP_NO_PROXY_NAME : m_proxy.c_str(),
 			WINHTTP_NO_PROXY_BYPASS,
 			0
 		);
 		if (m_hSession == nullptr)
 			throw Error::Win32Error("WinHttpOpen failed", GetLastError());
 
-		if (m_proxy.empty() == false)
-		{
-			m_proxyInfo.SetNamedProxy(m_proxy, L"");
-			m_proxyInfo.SetOnSession(m_hSession.Get());
-		}
+		//if (m_proxy.empty() == false)
+		//{
+		//	m_proxyInfo.SetNamedProxy(m_proxy, L"");
+		//	m_proxyInfo.SetOnSession(m_hSession.Get());
+		//}
 
 		m_hConnect = WinHttpConnect(
 			m_hSession.Get(),

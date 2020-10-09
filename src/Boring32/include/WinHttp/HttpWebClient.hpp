@@ -23,6 +23,7 @@ namespace Boring32::WinHttp
 			HttpWebClient(
 				const std::wstring& userAgentName, 
 				const std::wstring& serverToConnectTo,
+				const std::wstring& proxy,
 				const UINT port,
 				const bool ignoreSslErrors,
 				const std::vector<std::wstring>& acceptTypes,

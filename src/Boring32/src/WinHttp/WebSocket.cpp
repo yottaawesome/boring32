@@ -3,6 +3,7 @@
 #include <vector>
 #include <sstream>
 #include "include/WinHttp/WebSocket.hpp"
+#include "include/WinHttp/ProxyInfo.hpp"
 #include "include/Error/Error.hpp"
 
 namespace Boring32::WinHttp
@@ -33,10 +34,18 @@ namespace Boring32::WinHttp
 		return newString;
 	}
 
-	WebSocket::WebSocket(std::wstring server, const UINT port, const bool ignoreSslErrors)
+	WebSocket::WebSocket(
+		std::wstring server,
+		const UINT port,
+		const bool ignoreSslErrors,
+		std::wstring proxy,
+		const std::wstring pacUrl
+	)
 	:	m_server(std::move(server)),
 		m_port(port),
 		m_ignoreSslErrors(ignoreSslErrors),
+		m_proxy(std::move(proxy)),
+		m_pacUrl(std::move(pacUrl)),
 		m_hSession(nullptr),
 		m_hConnect(nullptr),
 		m_status(WebSocketStatus::NotInitialised)
@@ -88,15 +97,39 @@ namespace Boring32::WinHttp
 		if (m_status != WebSocketStatus::NotInitialised)
 			throw std::runtime_error("WebSocket needs to be in NotInitialised state to connect");
 
+		DWORD accessType = WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY;
+		if (m_pacUrl != L"")
+		{
+			accessType = WINHTTP_ACCESS_TYPE_NO_PROXY;
+		}
+		else if (m_proxy != L"")
+		{
+			accessType = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
+		}
+
 		m_hSession = WinHttpOpen(
-			L"Sinefa Windows Agent/1.0",
-			WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY,
-			WINHTTP_NO_PROXY_NAME,
+			L"websocket-user-agent/1.0",
+			accessType,
+			accessType == WINHTTP_ACCESS_TYPE_NAMED_PROXY ? m_proxy.c_str() : WINHTTP_NO_PROXY_NAME,
 			WINHTTP_NO_PROXY_BYPASS,
 			0
 		);
 		if (m_hSession == nullptr)
 			throw std::runtime_error("WinHttpOpen failed");
+
+		if (m_pacUrl != L"")
+		{
+			ProxyInfo proxyInfo;
+			proxyInfo.SetAutoProxy(m_hSession.Get(), m_pacUrl, m_server + path);
+			proxyInfo.SetOnSession(m_hSession.Get());
+		}
+
+		//if (m_proxy.empty() == false)
+		//{
+		//	ProxyInfo proxyInfo;
+		//	proxyInfo.SetNamedProxy(m_proxy, L"");
+		//	proxyInfo.SetOnSession(m_hSession.Get());
+		//}
 
 		m_hConnect = WinHttpConnect(
 			m_hSession.Get(),
@@ -111,7 +144,8 @@ namespace Boring32::WinHttp
 			nullptr,
 			nullptr,
 			nullptr,
-			WINHTTP_FLAG_SECURE);
+			WINHTTP_FLAG_SECURE
+		);
 
 		if (m_ignoreSslErrors)
 		{
@@ -248,7 +282,7 @@ namespace Boring32::WinHttp
 		DWORD totalBytesTransferred = 0;
 		char* currentBufferPointer = &receiveBuffer[0];
 		
-		while (true);
+		while (true)
 		{
 			DWORD dwBytesTransferred = 0;
 			DWORD statusCode = WinHttpWebSocketReceive(

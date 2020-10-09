@@ -11,7 +11,13 @@ namespace Boring32::WinHttp
 	{
 		public:
 			virtual ~WebSocket();
-			WebSocket(std::wstring server, const UINT port, const bool ignoreSslErrors);
+			WebSocket(
+				std::wstring server, 
+				const UINT port, 
+				const bool ignoreSslErrors,
+				const std::wstring proxy,
+				const std::wstring pacUrl
+			);
 			virtual const std::wstring& GetServer();
 			virtual void Connect();
 			virtual void Connect(const std::wstring& path);
@@ -31,6 +37,8 @@ namespace Boring32::WinHttp
 			WinHttpHandle m_hSession;
 			WinHttpHandle m_webSocketHandle;
 			std::wstring m_server;
+			std::wstring m_proxy;
+			std::wstring m_pacUrl;
 			UINT m_port;
 			bool m_ignoreSslErrors;
 			WebSocketStatus m_status;

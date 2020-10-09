@@ -25,6 +25,12 @@ namespace Boring32::WinHttp
 				const std::wstring& proxyBypass
 			);
 
+			virtual void SetAutoProxy(
+				HINTERNET session, 
+				const std::wstring& pacUrl, 
+				const std::wstring& url
+			);
+
 			virtual void SetAllInfo(
 				const std::wstring& proxy,
 				const std::wstring& proxyBypass,

@@ -52,6 +52,20 @@ namespace Boring32::WinHttp
 		m_info.dwAccessType = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
 	}
 
+	void ProxyInfo::SetAutoProxy(HINTERNET session, const std::wstring& pacUrl, const std::wstring& url)
+	{
+		Close();
+		WINHTTP_AUTOPROXY_OPTIONS autoProxyOptions{ 0 };
+		autoProxyOptions.dwFlags = WINHTTP_AUTOPROXY_CONFIG_URL;
+		autoProxyOptions.lpszAutoConfigUrl = pacUrl.c_str();
+		autoProxyOptions.dwAutoDetectFlags = 0;
+		autoProxyOptions.fAutoLogonIfChallenged = false;
+		autoProxyOptions.lpvReserved = 0;
+		autoProxyOptions.dwReserved = 0;
+		if (WinHttpGetProxyForUrl(session, url.c_str(), &autoProxyOptions, &m_info) == false)
+			throw Error::Win32Error("ProxyInfo::SetAutoProxy(): WinHttpGetProxyForUrl() failed", GetLastError());
+	}
+
 	void ProxyInfo::SetAllInfo(
 		const std::wstring& proxy,
 		const std::wstring& proxyBypass,

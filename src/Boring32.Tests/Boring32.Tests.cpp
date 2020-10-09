@@ -311,18 +311,37 @@ int main(int argc, char** args)
 
 	try
 	{
+		// https://spys.one/en/https-ssl-proxy/
 		//Test proxy: L"185.20.224.239:3128"
-		Boring32::WinHttp::HttpWebClient webClient(
+		//Test proxy: L"45.76.52.195:8081"
+		//Test proxy: L"36.67.96.217:3128"
+		/*Boring32::WinHttp::HttpWebClient webClient(
 			L"test-ua", 
 			L"google.com", 
-			L"", 
+			L"36.90.12.80:8181", 
 			443, 
-			false
+			false,
+			{L"text/html"},
+			{L""}
 		);
 		webClient.Connect();
 		Boring32::WinHttp::HttpRequestResult result = webClient.Get(L"/");
 		std::wcout << result.StatusCode << std::endl;
 		std::wcout << result.ResponseBody.c_str() << std::endl;
+		*/
+		Boring32::WinHttp::WebSocket socket(
+			L"echo.websocket.org", 
+			443, 
+			false, 
+			L"36.67.96.217:3128", 
+			L""//,L"file:///A:/Code/C++/Boring32/src/Boring32.Tests/pac.js"
+		);
+		socket.Connect();
+		std::vector<char> buffer;
+		socket.SendString("Hello!");
+		socket.Receive(buffer);
+		std::string response(buffer.begin(), buffer.end());
+		std::wcout << response.c_str() << std::endl;
 	}
 	catch (const std::exception& ex)
 	{
