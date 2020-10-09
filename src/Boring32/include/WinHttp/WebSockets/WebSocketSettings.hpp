@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-namespace Boring32::WinHttp
+namespace Boring32::WinHttp::WebSockets
 {
 	struct WebSocketSettings
 	{

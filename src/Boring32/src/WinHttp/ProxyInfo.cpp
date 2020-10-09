@@ -12,7 +12,9 @@ namespace Boring32::WinHttp
 	ProxyInfo::ProxyInfo()
 	:	m_info{0},
 		m_mustRelease(false)
-	{ }
+	{
+		// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/ns-winhttp-winhttp_proxy_info
+	}
 
 	void ProxyInfo::GetProxyForUrl(
 		const HINTERNET session, 
@@ -55,6 +57,7 @@ namespace Boring32::WinHttp
 	void ProxyInfo::SetAutoProxy(HINTERNET session, const std::wstring& pacUrl, const std::wstring& url)
 	{
 		Close();
+		// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/ns-winhttp-winhttp_autoproxy_options
 		WINHTTP_AUTOPROXY_OPTIONS autoProxyOptions{ 0 };
 		autoProxyOptions.dwFlags = WINHTTP_AUTOPROXY_CONFIG_URL;
 		autoProxyOptions.lpszAutoConfigUrl = pacUrl.c_str();
@@ -62,6 +65,7 @@ namespace Boring32::WinHttp
 		autoProxyOptions.fAutoLogonIfChallenged = false;
 		autoProxyOptions.lpvReserved = 0;
 		autoProxyOptions.dwReserved = 0;
+		// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpgetproxyforurl
 		if (WinHttpGetProxyForUrl(session, url.c_str(), &autoProxyOptions, &m_info) == false)
 			throw Error::Win32Error("ProxyInfo::SetAutoProxy(): WinHttpGetProxyForUrl() failed", GetLastError());
 	}

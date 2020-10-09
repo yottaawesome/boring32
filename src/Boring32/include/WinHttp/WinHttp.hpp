@@ -2,5 +2,5 @@
 #include "WinHttpHandle.hpp"
 #include "HttpRequestResult.hpp"
 #include "HttpWebClient.hpp"
-#include "WebSocket.hpp"
-#include "WebSocketStatus.hpp"
+#include "WebSockets/WebSocket.hpp"
+#include "WebSockets/WebSocketStatus.hpp"

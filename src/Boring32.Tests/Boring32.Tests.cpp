@@ -329,8 +329,8 @@ int main(int argc, char** args)
 		std::wcout << result.StatusCode << std::endl;
 		std::wcout << result.ResponseBody.c_str() << std::endl;
 		*/
-		Boring32::WinHttp::WebSocket socket(
-			Boring32::WinHttp::WebSocketSettings{
+		Boring32::WinHttp::WebSockets::WebSocket socket(
+			Boring32::WinHttp::WebSockets::WebSocketSettings{
 				.Server = L"echo.websocket.org",
 				.Proxies = L"",//L"36.67.96.217:3128"
 				.PacUrl = L"",//L"file:///A:/Code/C++/Boring32/src/Boring32.Tests/pac.js",

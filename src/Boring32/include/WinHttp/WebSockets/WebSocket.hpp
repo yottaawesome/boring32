@@ -2,11 +2,11 @@
 #include <Windows.h>
 #include <string>
 #include <vector>
-#include "WinHttpHandle.hpp"
+#include "../WinHttpHandle.hpp"
 #include "WebSocketStatus.hpp"
 #include "WebSocketSettings.hpp"
 
-namespace Boring32::WinHttp
+namespace Boring32::WinHttp::WebSockets
 {
 	class WebSocket
 	{

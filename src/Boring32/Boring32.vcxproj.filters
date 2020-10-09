@@ -84,12 +84,6 @@
     <ClInclude Include="include\WinHttp\HttpWebClient.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\WinHttp\WebSocket.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\WinHttp\WebSocketStatus.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\WinHttp\HttpRequestResult.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -192,7 +186,13 @@
     <ClInclude Include="include\WinHttp\ProxyInfo.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\WinHttp\WebSocketSettings.hpp">
+    <ClInclude Include="include\WinHttp\WebSockets\WebSocket.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\WinHttp\WebSockets\WebSocketSettings.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\WinHttp\WebSockets\WebSocketStatus.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
