@@ -333,7 +333,7 @@ int main(int argc, char** args)
 			L"echo.websocket.org", 
 			443, 
 			false, 
-			L"36.67.96.217:3128", 
+			L"",//L"36.67.96.217:3128", 
 			L""//,L"file:///A:/Code/C++/Boring32/src/Boring32.Tests/pac.js"
 		);
 		socket.Connect();

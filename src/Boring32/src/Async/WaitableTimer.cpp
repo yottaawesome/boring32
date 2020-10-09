@@ -57,7 +57,7 @@ namespace Boring32::Async
 	{
 		//TIMER_ALL_ACCESS
 		//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-openwaitabletimerw
-		m_handle = OpenWaitableTimerW(desiredAccess, isInheritable, name.c_str());
+		m_handle = OpenWaitableTimerW(desiredAccess, isInheritable, m_name.c_str());
 		if (m_handle == nullptr)
 			throw Error::Win32Error("WaitableTimer::WaitableTimer(): Failed to open waitable timer", GetLastError());
 	}

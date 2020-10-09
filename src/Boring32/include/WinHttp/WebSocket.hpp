@@ -33,9 +33,9 @@ namespace Boring32::WinHttp
 			virtual void InternalConnect(const std::wstring& path);
 
 		protected:
-			WinHttpHandle m_hConnect;
-			WinHttpHandle m_hSession;
-			WinHttpHandle m_webSocketHandle;
+			WinHttpHandle m_winHttpConnection;
+			WinHttpHandle m_winHttpSession;
+			WinHttpHandle m_winHttpWebSocket;
 			std::wstring m_server;
 			std::wstring m_proxy;
 			std::wstring m_pacUrl;

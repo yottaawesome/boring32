@@ -46,8 +46,8 @@ namespace Boring32::WinHttp
 		m_ignoreSslErrors(ignoreSslErrors),
 		m_proxy(std::move(proxy)),
 		m_pacUrl(std::move(pacUrl)),
-		m_hSession(nullptr),
-		m_hConnect(nullptr),
+		m_winHttpSession(nullptr),
+		m_winHttpConnection(nullptr),
 		m_status(WebSocketStatus::NotInitialised)
 	{
 		CleanServerString();
@@ -99,46 +99,38 @@ namespace Boring32::WinHttp
 
 		DWORD accessType = WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY;
 		if (m_pacUrl != L"")
-		{
 			accessType = WINHTTP_ACCESS_TYPE_NO_PROXY;
-		}
 		else if (m_proxy != L"")
-		{
 			accessType = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
-		}
 
-		m_hSession = WinHttpOpen(
+		m_winHttpSession = WinHttpOpen(
 			L"websocket-user-agent/1.0",
 			accessType,
 			accessType == WINHTTP_ACCESS_TYPE_NAMED_PROXY ? m_proxy.c_str() : WINHTTP_NO_PROXY_NAME,
 			WINHTTP_NO_PROXY_BYPASS,
 			0
 		);
-		if (m_hSession == nullptr)
-			throw std::runtime_error("WinHttpOpen failed");
+		if (m_winHttpSession == nullptr)
+			throw Error::Win32Error("WebSocket::InternalConnect(): WinHttpOpen() failed", GetLastError());
 
 		if (m_pacUrl != L"")
 		{
 			ProxyInfo proxyInfo;
-			proxyInfo.SetAutoProxy(m_hSession.Get(), m_pacUrl, m_server + path);
-			proxyInfo.SetOnSession(m_hSession.Get());
+			proxyInfo.SetAutoProxy(m_winHttpSession.Get(), m_pacUrl, m_server + path);
+			proxyInfo.SetOnSession(m_winHttpSession.Get());
 		}
 
-		//if (m_proxy.empty() == false)
-		//{
-		//	ProxyInfo proxyInfo;
-		//	proxyInfo.SetNamedProxy(m_proxy, L"");
-		//	proxyInfo.SetOnSession(m_hSession.Get());
-		//}
-
-		m_hConnect = WinHttpConnect(
-			m_hSession.Get(),
+		m_winHttpConnection = WinHttpConnect(
+			m_winHttpSession.Get(),
 			m_server.c_str(),
 			m_port,
-			0);
+			0
+		);
+		if (m_winHttpConnection == nullptr)
+			throw Error::Win32Error("WebSocket::InternalConnect(): WinHttpConnect() failed", GetLastError());
 
 		WinHttpHandle requestHandle = WinHttpOpenRequest(
-			m_hConnect.Get(),
+			m_winHttpConnection.Get(),
 			L"GET",
 			path.c_str(),
 			nullptr,
@@ -146,6 +138,8 @@ namespace Boring32::WinHttp
 			nullptr,
 			WINHTTP_FLAG_SECURE
 		);
+		if (requestHandle == nullptr)
+			throw Error::Win32Error("WebSocket::InternalConnect(): WinHttpOpenRequest() failed", GetLastError());
 
 		if (m_ignoreSslErrors)
 		{
@@ -163,7 +157,7 @@ namespace Boring32::WinHttp
 			if (setSecurityOption == false)
 			{
 				m_status = WebSocketStatus::Error;
-				throw Error::Win32Error("Failed to set security options", GetLastError());
+				throw Error::Win32Error("WebSocket::InternalConnect(): WinHttpSetOption() failed", GetLastError());
 			}
 		}
 
@@ -171,11 +165,12 @@ namespace Boring32::WinHttp
 			requestHandle.Get(),
 			WINHTTP_OPTION_UPGRADE_TO_WEB_SOCKET,
 			NULL,
-			0);
+			0
+		);
 		if (setWebsocketOption == false)
 		{
 			m_status = WebSocketStatus::Error;
-			throw Error::Win32Error("Failed to set web socket upgrade option", GetLastError());
+			throw Error::Win32Error("WebSocket::InternalConnect(): WinHttpSetOption() failed", GetLastError());
 		}
 
 		bool sentRequest = WinHttpSendRequest(
@@ -185,18 +180,19 @@ namespace Boring32::WinHttp
 			nullptr,
 			0,
 			0,
-			0);
+			0
+		);
 		if (sentRequest == false)
 		{
 			m_status = WebSocketStatus::Error;
-			throw Error::Win32Error("Failed to send web socket request", GetLastError());
+			throw Error::Win32Error("WebSocket::InternalConnect(): WinHttpSendRequest() failed", GetLastError());
 		}
 
 		sentRequest = WinHttpReceiveResponse(requestHandle.Get(), 0);
 		if (sentRequest == false)
 		{
 			m_status = WebSocketStatus::Error;
-			throw Error::Win32Error("Failed to receive web socket response", GetLastError());
+			throw Error::Win32Error("WebSocket::InternalConnect(): WinHttpReceiveResponse() failed", GetLastError());
 		}
 
 		DWORD statusCode = 0;
@@ -207,7 +203,8 @@ namespace Boring32::WinHttp
 			WINHTTP_HEADER_NAME_BY_INDEX,
 			&statusCode,
 			&statusCodeSize,
-			WINHTTP_NO_HEADER_INDEX);
+			WINHTTP_NO_HEADER_INDEX
+		);
 		if (statusCode != 101) // switching protocol
 		{
 			std::stringstream ss;
@@ -217,11 +214,11 @@ namespace Boring32::WinHttp
 			throw std::runtime_error(ss.str());
 		}
 
-		m_webSocketHandle = WinHttpWebSocketCompleteUpgrade(requestHandle.Get(), 0);
-		if (m_webSocketHandle == nullptr)
+		m_winHttpWebSocket = WinHttpWebSocketCompleteUpgrade(requestHandle.Get(), 0);
+		if (m_winHttpWebSocket == nullptr)
 		{
 			m_status = WebSocketStatus::Error;
-			throw Error::Win32Error("Failed to complete web socket upgrade", GetLastError());
+			throw Error::Win32Error("WebSocket::InternalConnect(): WinHttpWebSocketCompleteUpgrade() failed", GetLastError());
 		}
 
 		requestHandle = nullptr;
@@ -239,7 +236,7 @@ namespace Boring32::WinHttp
 			throw std::runtime_error("WebSocket is not connected to send data");
 
 		DWORD dwError = WinHttpWebSocketSend(
-			m_webSocketHandle.Get(),
+			m_winHttpWebSocket.Get(),
 			WINHTTP_WEB_SOCKET_UTF8_MESSAGE_BUFFER_TYPE,
 			(PVOID)&msg[0],
 			(DWORD)(msg.size() * sizeof(char))
@@ -257,7 +254,7 @@ namespace Boring32::WinHttp
 			throw std::runtime_error("WebSocket is not connected to send data");
 
 		DWORD dwError = WinHttpWebSocketSend(
-			m_webSocketHandle.Get(),
+			m_winHttpWebSocket.Get(),
 			WINHTTP_WEB_SOCKET_BINARY_MESSAGE_BUFFER_TYPE,
 			(PVOID)&buffer[0],
 			(DWORD)(buffer.size() * sizeof(char))
@@ -286,7 +283,7 @@ namespace Boring32::WinHttp
 		{
 			DWORD dwBytesTransferred = 0;
 			DWORD statusCode = WinHttpWebSocketReceive(
-				m_webSocketHandle.Get(),
+				m_winHttpWebSocket.Get(),
 				currentBufferPointer,
 				bufferLength,
 				&dwBytesTransferred,
@@ -327,7 +324,7 @@ namespace Boring32::WinHttp
 
 	void WebSocket::Close()
 	{
-		WinHttpWebSocketClose(m_webSocketHandle.Get(), WINHTTP_WEB_SOCKET_SUCCESS_CLOSE_STATUS, nullptr, 0);
+		WinHttpWebSocketClose(m_winHttpWebSocket.Get(), WINHTTP_WEB_SOCKET_SUCCESS_CLOSE_STATUS, nullptr, 0);
 		m_status = WebSocketStatus::Closed;
 	}
 }
