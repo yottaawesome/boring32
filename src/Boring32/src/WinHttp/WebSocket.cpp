@@ -176,7 +176,9 @@ namespace Boring32::WinHttp::WebSockets
 
 			bool success = WinHttpSendRequest(
 				requestHandle.Get(),
-				WINHTTP_NO_ADDITIONAL_HEADERS,
+				m_settings.ConnectionHeaders.size() > 0
+					? m_settings.ConnectionHeaders.c_str()
+					: WINHTTP_NO_ADDITIONAL_HEADERS,
 				0,
 				nullptr,
 				0,

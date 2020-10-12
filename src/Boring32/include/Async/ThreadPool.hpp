@@ -13,7 +13,7 @@ namespace Boring32::Async
 			virtual void Close();
 
 		protected:
-			PTP_POOL m_pool;
+			TP_POOL* m_pool;
 			TP_CALLBACK_ENVIRON m_environ;
 			DWORD m_minThreads;
 			DWORD m_maxThreads;

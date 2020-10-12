@@ -11,5 +11,6 @@ namespace Boring32::WinHttp::WebSockets
 		std::wstring PacUrl;
 		unsigned int Port = 0;
 		bool IgnoreSslErrors = false;
+		std::wstring ConnectionHeaders;
 	};
 }

@@ -334,7 +334,7 @@ int main(int argc, char** args)
 		Boring32::WinHttp::WebSockets::WebSocket socket(
 			Boring32::WinHttp::WebSockets::WebSocketSettings{
 				.Server = L"echo.websocket.org",
-				.Proxies = L"",//L"36.67.96.217:3128"
+				.Proxies = L"36.67.96.217:3128 45.76.52.195:8081",//L"36.67.96.217:3128"
 				.PacUrl = L"",//L"file:///A:/Code/C++/Boring32/src/Boring32.Tests/pac.js",
 				.Port = 443,
 				.IgnoreSslErrors = false,
