@@ -30,7 +30,7 @@ namespace Boring32::Async
 			virtual bool IsSuccessful() const;
 			virtual bool IsPartial() const;
 			virtual void SetEvent(const bool signaled);
-			virtual DWORD LastError();
+			virtual DWORD LastError() const;
 			virtual void LastError(const DWORD lastError);
 
 		protected:

@@ -112,7 +112,7 @@ namespace Boring32::Async
 			m_ioEvent.Reset();
 	}
 
-	DWORD OverlappedOp::LastError()
+	DWORD OverlappedOp::LastError() const
 	{
 		return m_lastError;
 	}
