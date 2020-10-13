@@ -103,12 +103,12 @@ namespace Boring32::WinHttp::WebSockets
 			// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpopen
 			m_winHttpSession = WinHttpOpen(
 				m_settings.UserAgent.empty()
-				? L"websocket-user-agent"
-				: m_settings.UserAgent.c_str(),
+					? L"websocket-user-agent"
+					: m_settings.UserAgent.c_str(),
 				accessType,
 				accessType == WINHTTP_ACCESS_TYPE_NAMED_PROXY
-				? m_settings.Proxies.c_str()
-				: WINHTTP_NO_PROXY_NAME,
+					? m_settings.Proxies.c_str()
+					: WINHTTP_NO_PROXY_NAME,
 				WINHTTP_NO_PROXY_BYPASS,
 				0
 			);

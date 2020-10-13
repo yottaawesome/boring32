@@ -30,7 +30,7 @@ namespace Boring32::WinHttp
 		m_handle = handle;
 	}
 
-	HINTERNET WinHttpHandle::Get()
+	HINTERNET WinHttpHandle::Get() const
 	{
 		return m_handle;
 	}

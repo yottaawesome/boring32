@@ -19,7 +19,7 @@ namespace Boring32::WinHttp
 
 			virtual void operator=(const HINTERNET& copy);
 			virtual bool operator==(const HINTERNET other);
-			virtual HINTERNET Get();
+			virtual HINTERNET Get() const;
 			virtual void Close();
 
 		private:

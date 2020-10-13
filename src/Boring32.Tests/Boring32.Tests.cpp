@@ -317,6 +317,7 @@ int main(int argc, char** args)
 		//Test proxy: L"185.20.224.239:3128"
 		//Test proxy: L"45.76.52.195:8081"
 		//Test proxy: L"36.67.96.217:3128"
+		//Test proxy: L"36.82.95.67:3128"
 		/*Boring32::WinHttp::HttpWebClient webClient(
 			L"test-ua", 
 			L"google.com", 
@@ -334,7 +335,7 @@ int main(int argc, char** args)
 		Boring32::WinHttp::WebSockets::WebSocket socket(
 			Boring32::WinHttp::WebSockets::WebSocketSettings{
 				.Server = L"echo.websocket.org",
-				.Proxies = L"36.67.96.217:3128 45.76.52.195:8081",//L"36.67.96.217:3128"
+				.Proxies = L"36.82.95.67:3128",//L"36.67.96.217:3128"
 				.PacUrl = L"",//L"file:///A:/Code/C++/Boring32/src/Boring32.Tests/pac.js",
 				.Port = 443,
 				.IgnoreSslErrors = false,
