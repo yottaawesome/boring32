@@ -121,4 +121,48 @@ namespace Boring32::Async
 		if (FlushFileBuffers(m_handle.GetHandle()) == false)
 			throw Error::Win32Error("NamedPipeClientBase::Flush() failed", GetLastError());
 	}
+
+	void NamedPipeClientBase::CancelCurrentThreadIo()
+	{
+		if (m_handle == nullptr)
+			throw std::runtime_error("OverlappedNamedPipeClient::CancelCurrentThreadIo(): pipe is nullptr");
+		if (CancelIo(m_handle.GetHandle()) == false)
+			throw Error::Win32Error("OverlappedNamedPipeClient::CancelCurrentThreadIo(): CancelIo failed", GetLastError());
+	}
+
+	bool NamedPipeClientBase::CancelCurrentThreadIo(std::nothrow_t) noexcept
+	{
+		try
+		{
+			CancelCurrentThreadIo();
+			return true;
+		}
+		catch (const std::exception& ex)
+		{
+			std::wcerr << L"OverlappedNamedPipeClient::CancelCurrentThreadIo(std::nothrow_t) failed: " << ex.what() << std::endl;
+			return false;
+		}
+	}
+
+	void NamedPipeClientBase::CancelCurrentProcessIo(OVERLAPPED* overlapped)
+	{
+		if (m_handle == nullptr)
+			throw std::runtime_error("OverlappedNamedPipeClient::CancelCurrentProcessIo(): pipe is nullptr");
+		if (CancelIoEx(m_handle.GetHandle(), overlapped) == false)
+			throw Error::Win32Error("OverlappedNamedPipeClient::CancelCurrentThreadIo(): CancelIo failed", GetLastError());
+	}
+
+	bool NamedPipeClientBase::CancelCurrentProcessIo(OVERLAPPED* overlapped, std::nothrow_t) noexcept
+	{
+		try
+		{
+			CancelCurrentProcessIo(overlapped);
+			return true;
+		}
+		catch (const std::exception& ex)
+		{
+			std::wcerr << L"NamedPipeServerBase::CancelCurrentProcessIo(OVERLAPPED*, std::nothrow_t) failed: " << ex.what() << std::endl;
+			return false;
+		}
+	}
 }

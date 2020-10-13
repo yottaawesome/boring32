@@ -199,7 +199,7 @@ namespace Boring32::Async
         return charactersRemaining;
     }
 
-    bool NamedPipeServerBase::UnreadCharactersRemaining(DWORD& charactersRemaining, std::nothrow_t) const
+    bool NamedPipeServerBase::UnreadCharactersRemaining(DWORD& charactersRemaining, std::nothrow_t) const noexcept
     {
         return InternalUnreadCharactersRemaining(charactersRemaining, false);
     }
@@ -234,5 +234,49 @@ namespace Boring32::Async
             throw std::runtime_error("No pipe to flush");
         if (FlushFileBuffers(m_pipe.GetHandle()) == false)
             throw Error::Win32Error("NamedPipeClientBase::Flush() failed", GetLastError());
+    }
+
+    void NamedPipeServerBase::CancelCurrentThreadIo()
+    {
+        if (m_pipe == nullptr)
+            throw std::runtime_error("NamedPipeServerBase::CancelCurrentThreadIo(): pipe is nullptr");
+        if (CancelIo(m_pipe.GetHandle()) == false)
+            throw Error::Win32Error("NamedPipeServerBase::CancelCurrentThreadIo(): CancelIo failed", GetLastError());
+    }
+
+    bool NamedPipeServerBase::CancelCurrentThreadIo(std::nothrow_t) noexcept
+    {
+        try
+        {
+            CancelCurrentThreadIo();
+            return true;
+        }
+        catch (const std::exception& ex)
+        {
+            std::wcerr << L"NamedPipeServerBase::CancelCurrentThreadIo(std::nothrow_t) failed: " << ex.what() << std::endl;
+            return false;
+        }
+    }
+
+    void NamedPipeServerBase::CancelCurrentProcessIo(OVERLAPPED* overlapped)
+    {
+        if (m_pipe == nullptr)
+            throw std::runtime_error("NamedPipeServerBase::CancelCurrentProcessIo(): pipe is nullptr");
+        if (CancelIoEx(m_pipe.GetHandle(), overlapped) == false)
+            throw Error::Win32Error("NamedPipeServerBase::CancelCurrentThreadIo(): CancelIo failed", GetLastError());
+    }
+
+    bool NamedPipeServerBase::CancelCurrentProcessIo(OVERLAPPED* overlapped, std::nothrow_t) noexcept
+    {
+        try
+        {
+            CancelCurrentProcessIo(overlapped);
+            return true;
+        }
+        catch (const std::exception& ex)
+        {
+            std::wcerr << L"NamedPipeServerBase::CancelCurrentProcessIo(OVERLAPPED*, std::nothrow_t) failed: " << ex.what() << std::endl;
+            return false;
+        }
     }
 }

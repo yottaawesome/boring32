@@ -24,6 +24,10 @@ namespace Boring32::Async
 			virtual void Close();
 			virtual DWORD UnreadCharactersRemaining() const;
 			virtual void Flush();
+			virtual void CancelCurrentThreadIo();
+			virtual bool CancelCurrentThreadIo(std::nothrow_t)  noexcept;
+			virtual void CancelCurrentProcessIo(OVERLAPPED* overlapped);
+			virtual bool CancelCurrentProcessIo(OVERLAPPED* overlapped, std::nothrow_t) noexcept;
 
 		protected:
 			virtual void Copy(const NamedPipeClientBase& other);

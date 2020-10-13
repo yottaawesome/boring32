@@ -45,7 +45,11 @@ namespace Boring32::Async
 			virtual DWORD GetPipeMode() const;
 			virtual DWORD GetOpenMode() const;
 			virtual DWORD UnreadCharactersRemaining() const;
-			virtual bool UnreadCharactersRemaining(DWORD& charactersRemaining, std::nothrow_t) const;
+			virtual bool UnreadCharactersRemaining(DWORD& charactersRemaining, std::nothrow_t) const noexcept;
+			virtual void CancelCurrentThreadIo();
+			virtual bool CancelCurrentThreadIo(std::nothrow_t) noexcept;
+			virtual void CancelCurrentProcessIo(OVERLAPPED* overlapped);
+			virtual bool CancelCurrentProcessIo(OVERLAPPED* overlapped, std::nothrow_t) noexcept;
 
 		protected:
 			virtual void InternalCreatePipe();
