@@ -33,12 +33,12 @@ namespace Boring32::WinHttp
 
 	HINTERNET Session::GetSession() const
 	{
-		return m_session.Get();
+		return m_session.get();
 	}
 
 	void Session::Close()
 	{
-		m_session.Close();
+		m_session = nullptr;
 	}
 
 	void Session::InternalCreate(
@@ -53,7 +53,7 @@ namespace Boring32::WinHttp
 		if (accessType == WINHTTP_ACCESS_TYPE_NAMED_PROXY && proxyName.empty())
 			throw std::invalid_argument("proxyName parameter is required when access type is named proxy");
 
-		m_session = WinHttpOpen(
+		HINTERNET handle = WinHttpOpen(
 			ua.c_str(),
 			accessType,
 			accessType == WINHTTP_ACCESS_TYPE_NAMED_PROXY ? proxyName.c_str() : WINHTTP_NO_PROXY_NAME,
@@ -62,5 +62,10 @@ namespace Boring32::WinHttp
 		);
 		if (m_session == nullptr)
 			throw Error::Win32Error("Session::Session(): WinHttpOpen() failed", GetLastError());
+		
+		m_session = std::shared_ptr<void>(
+			handle, 
+			[](void* handle) -> void { WinHttpCloseHandle(handle); }
+		);
 	}
 }
