@@ -10,15 +10,8 @@ namespace Boring32::Async
 	OverlappedOp::~OverlappedOp() { }
 
 	OverlappedOp::OverlappedOp()
-	:	m_ioOverlapped(nullptr),
+	:	m_ioOverlapped(std::make_shared<OVERLAPPED>()),
 		m_ioEvent(false, true, false, L""),
-		m_lastError(0)
-	{ }
-
-	OverlappedOp::OverlappedOp(const Raii::Win32Handle& handle)
-	:	m_ioHandle(handle),
-		m_ioEvent(false, true, false, L""),
-		m_ioOverlapped(std::make_shared<OVERLAPPED>()),
 		m_lastError(0)
 	{
 		m_ioOverlapped->hEvent = m_ioEvent.GetHandle();
@@ -119,28 +112,6 @@ namespace Boring32::Async
 			m_ioEvent.Reset();
 	}
 
-	void OverlappedOp::Cancel()
-	{
-		if (m_ioHandle == nullptr)
-			throw std::runtime_error("No IoHandle to cancel on");
-		if (m_ioOverlapped == nullptr)
-			throw std::runtime_error("IoOverlapped is null");
-		if (CancelIo(m_ioHandle.GetHandle()) == false)
-			throw Error::Win32Error("CancelIo failed", GetLastError());
-		m_ioHandle = nullptr;
-	}
-
-	bool OverlappedOp::Cancel(std::nothrow_t)
-	{
-		if (m_ioHandle == nullptr)
-			return false;
-		if (m_ioOverlapped == nullptr)
-			throw std::runtime_error("IoOverlapped is null");
-		const bool returnValue = CancelIo(m_ioHandle.GetHandle());
-		m_ioHandle = nullptr;
-		return returnValue;
-	}
-
 	DWORD OverlappedOp::LastError()
 	{
 		return m_lastError;
@@ -154,7 +125,6 @@ namespace Boring32::Async
 	void OverlappedOp::Move(OverlappedOp& other) noexcept
 	{
 		m_ioEvent = std::move(other.m_ioEvent);
-		m_ioHandle = std::move(other.m_ioHandle);
 		m_ioOverlapped = std::move(other.m_ioOverlapped);
 		m_lastError = other.m_lastError;
 	}
@@ -162,7 +132,6 @@ namespace Boring32::Async
 	void OverlappedOp::Share(const OverlappedOp& other)
 	{
 		m_ioEvent = other.m_ioEvent;
-		m_ioHandle = other.m_ioHandle;
 		m_ioOverlapped = other.m_ioOverlapped;
 		m_lastError = other.m_lastError;
 	}

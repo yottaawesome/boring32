@@ -11,7 +11,6 @@ namespace Boring32::Async
 		public:
 			virtual ~OverlappedOp();
 			OverlappedOp();
-			OverlappedOp(const Raii::Win32Handle& handle);
 			
 		// Shareable, moveable
 		public:
@@ -31,8 +30,6 @@ namespace Boring32::Async
 			virtual bool IsSuccessful() const;
 			virtual bool IsPartial() const;
 			virtual void SetEvent(const bool signaled);
-			virtual void Cancel();
-			virtual bool Cancel(std::nothrow_t);
 			virtual DWORD LastError();
 			virtual void LastError(const DWORD lastError);
 
@@ -42,7 +39,6 @@ namespace Boring32::Async
 
 		protected:
 			Event m_ioEvent;
-			Raii::Win32Handle m_ioHandle;
 			std::shared_ptr<OVERLAPPED> m_ioOverlapped;
 			DWORD m_lastError;
 	};

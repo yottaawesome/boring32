@@ -8,7 +8,6 @@ namespace Boring32::Async
 		public:
 			virtual ~OverlappedIo();
 			OverlappedIo();
-			OverlappedIo(const Raii::Win32Handle& handle);
 			OverlappedIo(OverlappedIo&& other) noexcept;
 			virtual OverlappedIo& operator=(OverlappedIo&& other) noexcept;
 

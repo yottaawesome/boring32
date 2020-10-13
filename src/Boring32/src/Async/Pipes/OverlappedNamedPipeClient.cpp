@@ -50,7 +50,7 @@ namespace Boring32::Async
 		if (m_handle == nullptr)
 			throw std::runtime_error("No pipe to write to");
 
-		OverlappedIo oio(m_handle);
+		OverlappedIo oio;
 		// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile
 		bool succeeded = WriteFile(
 			m_handle.GetHandle(),					// pipe handle 
@@ -80,7 +80,7 @@ namespace Boring32::Async
 		if (m_handle == nullptr)
 			throw std::runtime_error("No pipe to read from");
 
-		OverlappedIo oio(m_handle);
+		OverlappedIo oio;
 		oio.IoBuffer.resize(noOfCharacters);
 		// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile
 		bool succeeded = ReadFile(

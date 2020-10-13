@@ -7,11 +7,6 @@ namespace Boring32::Async
 	OverlappedIo::~OverlappedIo() { }
 
 	OverlappedIo::OverlappedIo()
-	:	OverlappedOp()
-	{ }
-
-	OverlappedIo::OverlappedIo(const Raii::Win32Handle& handle)
-	:	OverlappedOp(handle)
 	{ }
 
 	OverlappedIo::OverlappedIo(OverlappedIo&& other) noexcept
