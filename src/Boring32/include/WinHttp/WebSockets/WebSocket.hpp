@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include "../WinHttpHandle.hpp"
+#include "../Session.hpp"
 #include "WebSocketStatus.hpp"
 #include "WebSocketSettings.hpp"
 
@@ -37,7 +38,6 @@ namespace Boring32::WinHttp::WebSockets
 
 		protected:
 			WinHttpHandle m_winHttpConnection;
-			WinHttpHandle m_winHttpSession;
 			WinHttpHandle m_winHttpWebSocket;
 			WebSocketStatus m_status;
 			WebSocketSettings m_settings;

@@ -62,7 +62,7 @@ namespace Boring32::WinHttp
 		m_userAgent = other.m_userAgent;
 		m_namedProxy = other.m_namedProxy;
 		m_proxyBypass = other.m_proxyBypass;
-		InternalCreate();
+		m_session = other.m_session;
 		return *this;
 	}
 
@@ -132,7 +132,7 @@ namespace Boring32::WinHttp
 			m_proxyBypass.empty() ? WINHTTP_NO_PROXY_BYPASS : m_proxyBypass.c_str(),
 			0
 		);
-		if (m_session == nullptr)
+		if (handle == nullptr)
 			throw Error::Win32Error("Session::Session(): WinHttpOpen() failed", GetLastError());
 		
 		m_session = std::shared_ptr<void>(

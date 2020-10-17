@@ -36,21 +36,18 @@ namespace Boring32::WinHttp::WebSockets
 
 	WebSocket::WebSocket()
 	:	m_settings({}),
-		m_winHttpSession(nullptr),
 		m_winHttpConnection(nullptr),
 		m_status(WebSocketStatus::NotInitialised)
 	{ }
 
 	WebSocket::WebSocket(WebSocketSettings settings)
 	:	m_settings(std::move(settings)),
-		m_winHttpSession(nullptr),
 		m_winHttpConnection(nullptr),
 		m_status(WebSocketStatus::NotInitialised)
 	{ }
 
 	WebSocket::WebSocket(WebSocket&& other) noexcept
 	:	m_settings({}),
-		m_winHttpSession(nullptr),
 		m_winHttpConnection(nullptr),
 		m_status(WebSocketStatus::NotInitialised)
 	{
@@ -68,7 +65,6 @@ namespace Boring32::WinHttp::WebSockets
 		m_settings = std::move(other.m_settings);
 		m_status = other.m_status;
 		m_winHttpConnection = std::move(other.m_winHttpConnection);
-		m_winHttpSession = std::move(other.m_winHttpSession);
 		m_winHttpWebSocket = std::move(other.m_winHttpWebSocket);
 	}
 
@@ -94,38 +90,11 @@ namespace Boring32::WinHttp::WebSockets
 
 		try
 		{
-			DWORD accessType = WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY;
-			if (m_settings.PacUrl != L"")
-				accessType = WINHTTP_ACCESS_TYPE_NO_PROXY;
-			else if (m_settings.Proxies != L"")
-				accessType = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
-
-			// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpopen
-			m_winHttpSession = WinHttpOpen(
-				m_settings.UserAgent.empty()
-					? L"websocket-user-agent"
-					: m_settings.UserAgent.c_str(),
-				accessType,
-				accessType == WINHTTP_ACCESS_TYPE_NAMED_PROXY
-					? m_settings.Proxies.c_str()
-					: WINHTTP_NO_PROXY_NAME,
-				WINHTTP_NO_PROXY_BYPASS,
-				0
-			);
-			if (m_winHttpSession == nullptr)
-				throw Error::Win32Error("WebSocket::InternalConnect(): WinHttpOpen() failed", GetLastError());
-
-			if (m_settings.PacUrl != L"")
-			{
-				// Note that WinHttp does not support loading PAC files locally:
-				// https://docs.microsoft.com/en-us/troubleshoot/browsers/cannot-read-pac-file
-				ProxyInfo proxyInfo;
-				proxyInfo.SetAutoProxy(m_winHttpSession.Get(), m_settings.PacUrl, m_settings.Server + path);
-				proxyInfo.SetOnSession(m_winHttpSession.Get());
-			}
+			if (m_settings.WinHttpSession.GetSession() == nullptr)
+				throw std::runtime_error("WinHttp session cannot be null");
 
 			m_winHttpConnection = WinHttpConnect(
-				m_winHttpSession.Get(),
+				m_settings.WinHttpSession.GetSession(),
 				m_settings.Server.c_str(),
 				m_settings.Port,
 				0
@@ -148,7 +117,7 @@ namespace Boring32::WinHttp::WebSockets
 
 			if (m_settings.IgnoreSslErrors)
 			{
-				DWORD dwFlags =
+				DWORD optionFlags =
 					SECURITY_FLAG_IGNORE_UNKNOWN_CA |
 					SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE |
 					SECURITY_FLAG_IGNORE_CERT_CN_INVALID |
@@ -158,8 +127,8 @@ namespace Boring32::WinHttp::WebSockets
 				bool setSecurityOption = WinHttpSetOption(
 					requestHandle.Get(),
 					WINHTTP_OPTION_SECURITY_FLAGS,
-					&dwFlags,
-					sizeof(dwFlags)
+					&optionFlags,
+					sizeof(optionFlags)
 				);
 				if (setSecurityOption == false)
 					throw Error::Win32Error("WebSocket::InternalConnect(): WinHttpSetOption() failed", GetLastError());

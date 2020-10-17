@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "../Session.hpp"
 
 namespace Boring32::WinHttp::WebSockets
 {
@@ -7,10 +8,9 @@ namespace Boring32::WinHttp::WebSockets
 	{
 		std::wstring UserAgent;
 		std::wstring Server;
-		std::wstring Proxies;
-		std::wstring PacUrl;
 		unsigned int Port = 0;
 		bool IgnoreSslErrors = false;
 		std::wstring ConnectionHeaders;
+		Session WinHttpSession = Session(L"boring32-user-agent");
 	};
 }
