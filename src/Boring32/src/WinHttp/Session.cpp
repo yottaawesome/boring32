@@ -9,26 +9,83 @@ namespace Boring32::WinHttp
 		Close();
 	}
 
-	Session::Session(const std::wstring& userAgent)
+	Session::Session(std::wstring userAgent)
+	:	m_userAgent(std::move(userAgent)), 
+		m_proxyType(ProxyType::AutoProxy)
 	{
-		InternalCreate(userAgent, WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY, L"", L"");
+		InternalCreate();
 	}
 
-	Session::Session(const std::wstring& userAgent, const ProxyType proxyType)
+	Session::Session(std::wstring userAgent, const ProxyType proxyType)
+	:	m_userAgent(std::move(userAgent)),
+		m_proxyType(proxyType)
 	{
-		if (proxyType == ProxyType::NamedProxy)
+		if (m_proxyType == ProxyType::NamedProxy)
 			throw std::invalid_argument("Named proxy cannot be specified as an option for this constructor");
-		InternalCreate(userAgent, (DWORD)proxyType, L"", L"");
+		InternalCreate();
 	}
 
-	Session::Session(const std::wstring& userAgent, const std::wstring& namedProxy)
+	Session::Session(std::wstring userAgent, std::wstring namedProxy)
+	:	m_userAgent(std::move(userAgent)),
+		m_proxyType(ProxyType::NamedProxy),
+		m_namedProxy(std::move(namedProxy))
 	{
-		InternalCreate(userAgent, WINHTTP_ACCESS_TYPE_NAMED_PROXY, namedProxy, L"");
+		InternalCreate();
 	}
 
-	Session::Session(const std::wstring& userAgent, const std::wstring& namedProxy, const std::wstring& proxyBypass)
+	Session::Session(std::wstring userAgent, std::wstring namedProxy, std::wstring proxyBypass)
+	:	m_userAgent(std::move(userAgent)),
+		m_proxyType(ProxyType::NamedProxy),
+		m_namedProxy(std::move(namedProxy)),
+		m_proxyBypass(std::move(proxyBypass))
 	{
-		InternalCreate(userAgent, WINHTTP_ACCESS_TYPE_NAMED_PROXY, namedProxy, proxyBypass);
+		InternalCreate();
+	}
+
+	Session::Session(const Session& other)
+	{
+		Copy(other);
+	}
+
+	Session& Session::operator=(const Session& other)
+	{
+		Copy(other);
+		return *this;
+	}
+
+	Session& Session::Copy(const Session& other)
+	{
+		if (this == &other)
+			return *this;
+		Close();
+		m_proxyType = other.m_proxyType;
+		m_userAgent = other.m_userAgent;
+		m_namedProxy = other.m_namedProxy;
+		m_proxyBypass = other.m_proxyBypass;
+		InternalCreate();
+		return *this;
+	}
+
+	Session::Session(Session&& other) noexcept
+	{
+		Move(other);
+	}
+
+	Session& Session::operator=(Session&& other) noexcept
+	{
+		Move(other);
+		return *this;
+	}
+
+	Session& Session::Move(Session& other) noexcept
+	{
+		Close();
+		m_session = std::move(other.m_session);
+		m_proxyType = std::move(other.m_proxyType);
+		m_userAgent = std::move(other.m_userAgent);
+		m_namedProxy = std::move(other.m_namedProxy);
+		m_proxyBypass = std::move(other.m_proxyBypass);
+		return *this;
 	}
 
 	HINTERNET Session::GetSession() const
@@ -41,23 +98,38 @@ namespace Boring32::WinHttp
 		m_session = nullptr;
 	}
 
-	void Session::InternalCreate(
-		const std::wstring& ua,
-		const DWORD accessType,
-		const std::wstring& proxyName,
-		const std::wstring& proxyBypass
-	)
+	ProxyType Session::GetProxyType()
 	{
-		if (ua.empty())
+		return m_proxyType;
+	}
+
+	const std::wstring& Session::GetUserAgent()
+	{
+		return m_userAgent;
+	}
+	
+	const std::wstring& Session::GetNamedProxy()
+	{
+		return m_namedProxy;
+	}
+
+	const std::wstring& Session::GetProxyBypass()
+	{
+		return m_proxyBypass;
+	}
+
+	void Session::InternalCreate()
+	{
+		if (m_userAgent.empty())
 			throw std::invalid_argument("userAgent cannot be empty");
-		if (accessType == WINHTTP_ACCESS_TYPE_NAMED_PROXY && proxyName.empty())
+		if ((DWORD)m_proxyType == WINHTTP_ACCESS_TYPE_NAMED_PROXY && m_namedProxy.empty())
 			throw std::invalid_argument("proxyName parameter is required when access type is named proxy");
 
 		HINTERNET handle = WinHttpOpen(
-			ua.c_str(),
-			accessType,
-			accessType == WINHTTP_ACCESS_TYPE_NAMED_PROXY ? proxyName.c_str() : WINHTTP_NO_PROXY_NAME,
-			proxyBypass.empty() ? WINHTTP_NO_PROXY_BYPASS : proxyBypass.c_str(),
+			m_userAgent.c_str(),
+			(DWORD)m_proxyType,
+			(DWORD)m_proxyType == WINHTTP_ACCESS_TYPE_NAMED_PROXY ? m_namedProxy.c_str() : WINHTTP_NO_PROXY_NAME,
+			m_proxyBypass.empty() ? WINHTTP_NO_PROXY_BYPASS : m_proxyBypass.c_str(),
 			0
 		);
 		if (m_session == nullptr)

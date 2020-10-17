@@ -10,16 +10,15 @@ namespace Boring32::WinHttp
 	{
 		public:
 			virtual ~Session();
-			Session(const std::wstring& userAgent);
-			Session(const std::wstring& userAgent, const ProxyType proxyType);
-			Session(const std::wstring& userAgent, const std::wstring& namedProxy);
-			Session(const std::wstring& userAgent, const std::wstring& namedProxy, const std::wstring& proxyBypass);
+			Session(std::wstring userAgent);
+			Session(std::wstring userAgent, const ProxyType proxyType);
+			Session(std::wstring userAgent, std::wstring namedProxy);
+			Session(std::wstring userAgent, std::wstring namedProxy, std::wstring proxyBypass);
 
-			// Figure out if these sematics make sense later
-			Session(const Session& other) = delete;
-			virtual Session& operator=(const Session& other) = delete;
-			Session(Session&& other) noexcept = delete;
-			virtual Session& operator=(Session&& other) noexcept = delete;
+			Session(const Session& other);
+			virtual Session& operator=(const Session& other);
+			Session(Session&& other) noexcept;
+			virtual Session& operator=(Session&& other) noexcept;
 
 		public:
 			virtual HINTERNET GetSession() const;
@@ -32,15 +31,21 @@ namespace Boring32::WinHttp
 			/// </summary>
 			virtual void Close();
 
+			virtual ProxyType GetProxyType();
+			virtual const std::wstring& GetUserAgent();
+			virtual const std::wstring& GetNamedProxy();
+			virtual const std::wstring& GetProxyBypass();
+
 		protected:
-			virtual void InternalCreate(
-				const std::wstring& ua, 
-				const DWORD accessType, 
-				const std::wstring& proxyName, 
-				const std::wstring& proxyBypass
-			);
+			virtual void InternalCreate();
+			virtual Session& Copy(const Session& session);
+			virtual Session& Move(Session& session) noexcept;
 
 		protected:
 			std::shared_ptr<void> m_session;
+			ProxyType m_proxyType;
+			std::wstring m_userAgent;
+			std::wstring m_namedProxy; 
+			std::wstring m_proxyBypass;
 	};
 }
