@@ -2,10 +2,11 @@
 #include <Windows.h>
 #include <string>
 #include "../Raii/Raii.hpp"
+#include "Onyx32/Async/ISemaphore.hpp"
 
 namespace Boring32::Async
 {
-	class Semaphore
+	class Semaphore : public Onyx32::Core::Async::ISemaphore
 	{
 		public:
 			virtual ~Semaphore();
@@ -30,14 +31,15 @@ namespace Boring32::Async
 			virtual void operator=(Semaphore&& other) noexcept;
 
 		public:
-			virtual void Release();
-			virtual void Release(const int countToRelease);
-			virtual bool Acquire(const DWORD millisTimeout);
-			virtual bool Acquire(const int countToAcquire, const DWORD millisTimeout);
-			virtual const std::wstring& GetName() const;
-			virtual int GetCurrentCount() const;
-			virtual int GetMaxCount() const;
-			virtual HANDLE GetHandle() const;
+			virtual void Release() override;
+			virtual void Release(const int countToRelease) override;
+			virtual bool Acquire(const DWORD millisTimeout) override;
+			virtual bool Acquire(const int countToAcquire, const DWORD millisTimeout) override;
+			virtual const std::wstring& GetName() const override;
+			virtual int GetCurrentCount() const override;
+			virtual int GetMaxCount() const override;
+			virtual HANDLE GetHandle() const override;
+			virtual void Free() override;
 
 		protected:
 			virtual void Copy(const Semaphore& other);

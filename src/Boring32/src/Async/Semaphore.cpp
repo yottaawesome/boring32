@@ -3,6 +3,11 @@
 #include "include/Error/Win32Error.hpp"
 #include "include/Async/Semaphore.hpp"
 
+namespace Onyx32::Core::Async
+{
+	ISemaphore::~ISemaphore() = default;
+}
+
 namespace Boring32::Async
 {
 	Semaphore::~Semaphore()
@@ -175,5 +180,10 @@ namespace Boring32::Async
 	HANDLE Semaphore::GetHandle() const
 	{
 		return m_handle.GetHandle();
+	}
+
+	void Semaphore::Free()
+	{
+		delete this;
 	}
 }
