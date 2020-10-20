@@ -100,7 +100,6 @@ namespace Boring32::Async
 		m_isManualReset = other.m_isManualReset;
 		m_name = std::move(other.m_name);
 		m_event = std::move(other.m_event);
-		other.m_event = nullptr;
 	}
 
 	void Event::Reset()

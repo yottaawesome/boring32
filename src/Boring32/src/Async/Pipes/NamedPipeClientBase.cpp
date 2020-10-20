@@ -32,6 +32,7 @@ namespace Boring32::Async
 
 	void NamedPipeClientBase::Copy(const NamedPipeClientBase& other)
 	{
+		Close();
 		m_handle = other.m_handle;
 		m_pipeName = other.m_pipeName;
 		m_fileAttributes = other.m_fileAttributes;
@@ -49,6 +50,7 @@ namespace Boring32::Async
 
 	void NamedPipeClientBase::Move(NamedPipeClientBase& other) noexcept
 	{
+		Close();
 		m_handle = std::move(other.m_handle);
 		m_pipeName = std::move(other.m_pipeName);
 		m_fileAttributes = other.m_fileAttributes;
@@ -74,6 +76,23 @@ namespace Boring32::Async
 				throw Error::Win32Error("Failed to connect client pipe", GetLastError());
 			if (WaitNamedPipeW(m_pipeName.c_str(), timeout) == false)
 				throw Error::Win32Error("Failed to connect client pipe: timeout", GetLastError());
+		}
+	}
+
+	bool NamedPipeClientBase::Connect(const DWORD timeout, std::nothrow_t)
+	{
+		try
+		{
+			Connect(timeout);
+			return true;
+		}
+		catch (const std::exception& ex)
+		{
+			std::wcerr
+				<< L"NamedPipeClientBase::Connect(const DWORD timeout, std::nothrow_t): "
+				<< ex.what()
+				<< std::endl;
+			return false;
 		}
 	}
 

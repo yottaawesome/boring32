@@ -10,7 +10,6 @@ namespace Boring32::Async
 	{ }
 
 	OverlappedIo::OverlappedIo(OverlappedIo&& other) noexcept
-	:	OverlappedOp(std::move(other))
 	{
 		Move(other);
 	}
@@ -24,6 +23,7 @@ namespace Boring32::Async
 
 	void OverlappedIo::Move(OverlappedIo& other) noexcept
 	{
+		OverlappedOp::Move(other);
 		IoBuffer = std::move(other.IoBuffer);
 	}
 

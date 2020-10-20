@@ -21,6 +21,7 @@ namespace Boring32::Async
 		public:
 			virtual void SetMode(const DWORD pipeMode);
 			virtual void Connect(const DWORD timeout);
+			virtual bool Connect(const DWORD timeout, std::nothrow_t);
 			virtual void Close();
 			virtual DWORD UnreadCharactersRemaining() const;
 			virtual void Flush();

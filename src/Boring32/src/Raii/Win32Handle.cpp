@@ -14,11 +14,9 @@ namespace Boring32::Raii
 	void Win32Handle::InternalClose(const bool throwOnFailure)
 	{
 		if (m_handle != nullptr && m_handle != INVALID_HANDLE_VALUE)
-		{
 			if (CloseHandle(m_handle) == false && throwOnFailure)
 				throw Error::Win32Error("CloseHandle() failed", GetLastError());
-			m_handle = nullptr;
-		}
+		m_handle = nullptr;
 	}
 
 	void Win32Handle::Close()
