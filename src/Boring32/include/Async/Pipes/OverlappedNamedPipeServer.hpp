@@ -38,6 +38,7 @@ namespace Boring32::Async
 
 		public:
 			virtual OverlappedOp Connect();
+			virtual bool Connect(OverlappedOp& op, std::nothrow_t) noexcept;
 			virtual OverlappedIo Write(const std::wstring& msg);
 			virtual bool Write(const std::wstring& msg, OverlappedIo& op) noexcept;
 			virtual OverlappedIo Read(const DWORD noOfCharacters);

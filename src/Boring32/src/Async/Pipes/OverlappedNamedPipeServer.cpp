@@ -89,6 +89,20 @@ namespace Boring32::Async
         int i = 0;
     }
 
+    bool OverlappedNamedPipeServer::Connect(OverlappedOp& op, std::nothrow_t) noexcept
+    {
+        try
+        {
+            op = Connect();
+            return true;
+        }
+        catch (const std::exception& ex)
+        {
+            std::wcerr << L"OverlappedNamedPipeServer::Connect(OverlappedOp& op, std::nothrow_t): " << ex.what();
+            return false;
+        }
+    }
+
     OverlappedOp OverlappedNamedPipeServer::Connect()
     {
         if (m_pipe == nullptr)
