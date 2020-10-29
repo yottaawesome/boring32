@@ -20,13 +20,24 @@ namespace Boring32::Async
 		}
 	}
 
+	Thread::Thread()
+	:	m_destroyOnCompletion(false),
+		m_status(ThreadStatus::Ready),
+		m_threadParam(nullptr),
+		m_threadId(0),
+		m_threadHandle(nullptr),
+		m_returnCode(STILL_ACTIVE),
+		m_started(false, true, false, L"")
+	{ }
+
 	Thread::Thread(void* param, bool destroyOnCompletion)
-		: m_destroyOnCompletion(destroyOnCompletion),
+	:	m_destroyOnCompletion(destroyOnCompletion),
 		m_status(ThreadStatus::Ready),
 		m_threadParam(param),
 		m_threadId(0),
 		m_threadHandle(nullptr),
-		m_returnCode(STILL_ACTIVE)
+		m_returnCode(STILL_ACTIVE),
+		m_started(false, true, false, L"")
 	{ }
 
 	Thread::Thread(const Thread& other)
@@ -121,8 +132,14 @@ namespace Boring32::Async
 		);
 		if (m_threadHandle == nullptr)
 		{
-			m_status = ThreadStatus::Failure;
-			throw std::runtime_error("Failed to start thread");
+			int errorCode = 0;
+			std::string errorMessage = "Thread::Start(): _beginthreadex() failed";
+			// https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/get-errno?view=msvc-160
+			errorMessage += _get_errno(&errorCode) == 0
+				? "; error code: " + std::to_string(errorCode)
+				: ", but could not determine the error code";
+			
+			throw std::runtime_error(errorMessage);
 		}
 	}
 
@@ -192,23 +209,24 @@ namespace Boring32::Async
 	{
 		return m_threadHandle;
 	}
+	
+	bool Thread::WaitToStart(const DWORD millis)
+	{
+		return m_started.WaitOnEvent(millis, true);
+	}
 
 	UINT Thread::ThreadProc(void* param)
 	{
-		Thread* threadObj = (Thread*)param;
+		Thread* threadObj = static_cast<Thread*>(param);
+		if (threadObj == nullptr)
+			throw std::runtime_error("Thread::ThreadProc(): threadObj is unexpectedly nullptr");
 
 		UINT returnCode = 0;
 		threadObj->m_status = ThreadStatus::Running;
-		try
-		{
-			returnCode = threadObj->Run();
-			threadObj->m_status = ThreadStatus::Finished;
-		}
-		catch (const std::exception&)
-		{
-			returnCode = 1;
-			threadObj->m_status = ThreadStatus::FinishedWithError;
-		}
+		
+		threadObj->m_started.Signal();
+		returnCode = threadObj->Run();
+		threadObj->m_status = ThreadStatus::Finished;
 
 		threadObj->m_returnCode = returnCode;
 		if (threadObj->m_destroyOnCompletion)

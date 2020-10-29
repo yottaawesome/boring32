@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <functional>
 #include "../Raii/Win32Handle.hpp"
+#include "Event.hpp"
 #include "ThreadStatus.hpp"
 
 namespace Boring32::Async
@@ -12,6 +13,7 @@ namespace Boring32::Async
 			virtual void Close();
 			virtual ~Thread();
 
+			Thread();
 			Thread(void* param, bool destroyOnCompletion);
 			Thread(const Thread& other);
 			virtual Thread& operator=(const Thread& other);
@@ -36,6 +38,7 @@ namespace Boring32::Async
 			virtual ThreadStatus GetStatus();
 			virtual UINT GetExitCode();
 			virtual Raii::Win32Handle GetHandle();
+			virtual bool WaitToStart(const DWORD millis);
 
 		protected:
 			virtual UINT Run();
@@ -51,5 +54,6 @@ namespace Boring32::Async
 			bool m_destroyOnCompletion;
 			void* m_threadParam;
 			std::function<int()> m_func;
+			Event m_started;
 	};
 }
