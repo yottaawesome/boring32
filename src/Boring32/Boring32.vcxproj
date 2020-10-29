@@ -186,6 +186,7 @@
     <ClInclude Include="include\Async\ProcessInfo.hpp" />
     <ClInclude Include="include\Async\Semaphore.hpp" />
     <ClInclude Include="include\Async\SlimReadWriteLock.hpp" />
+    <ClInclude Include="include\Async\Mutev.hpp" />
     <ClInclude Include="include\Async\SynchronizationBarrier.hpp" />
     <ClInclude Include="include\Async\Thread.hpp" />
     <ClInclude Include="include\Async\ThreadPool.hpp" />
@@ -236,6 +237,7 @@
     <ClCompile Include="src\Async\CriticalSectionLock.cpp" />
     <ClCompile Include="src\Async\Event.cpp" />
     <ClCompile Include="src\Async\Job.cpp" />
+    <ClCompile Include="src\Async\Mutev.cpp" />
     <ClCompile Include="src\Async\OverlappedOp.cpp" />
     <ClCompile Include="src\Async\Pipes\BlockingNamedPipeClient.cpp" />
     <ClCompile Include="src\Async\Pipes\NamedPipeClientBase.cpp" />
