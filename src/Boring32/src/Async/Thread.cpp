@@ -13,11 +13,8 @@ namespace Boring32::Async
 
 	void Thread::Close()
 	{
-		if (m_threadHandle != nullptr)
-		{
-			m_threadHandle = nullptr;
-			m_threadId = 0;
-		}
+		m_threadHandle = nullptr;
+		m_threadId = 0;
 	}
 
 	Thread::Thread()
@@ -61,6 +58,7 @@ namespace Boring32::Async
 		m_threadHandle = other.m_threadHandle;
 		m_destroyOnCompletion = other.m_destroyOnCompletion;
 		m_threadParam = other.m_threadParam;
+		m_started = other.m_started;
 	}
 
 	Thread::Thread(Thread&& other) noexcept
@@ -76,52 +74,37 @@ namespace Boring32::Async
 
 	void Thread::Move(Thread& other) noexcept
 	{
-		try
-		{
-			Close();
-			m_func = std::move(other.m_func);
-			m_status = other.m_status;
-			m_returnCode = other.m_returnCode;
-			m_threadId = other.m_threadId;
-			m_threadHandle = std::move(other.m_threadHandle);
-			m_destroyOnCompletion = other.m_destroyOnCompletion;
-			m_threadParam = other.m_threadParam;
-		}
-		catch (const std::exception& ex)
-		{
-			std::wcerr << L"Thread::Move() failed: " << ex.what() << std::endl;
-		}
+		Close();
+		m_func = std::move(other.m_func);
+		m_status = other.m_status;
+		m_returnCode = other.m_returnCode;
+		m_threadId = other.m_threadId;
+		m_threadHandle = std::move(other.m_threadHandle);
+		m_destroyOnCompletion = other.m_destroyOnCompletion;
+		m_threadParam = other.m_threadParam;
+		m_started = std::move(other.m_started);
 	}
 
 	void Thread::Start()
 	{
-		m_threadHandle = (HANDLE)_beginthreadex(
-			0,
-			0,
-			Thread::ThreadProc,
-			this,
-			0,
-			&m_threadId
-		);
+		InternalStart();
 	}
 
 	void Thread::Start(int(*simpleFunc)())
 	{
 		m_func = simpleFunc;
-		// https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/beginthread-beginthreadex?view=vs-2019
-		m_threadHandle = (HANDLE)_beginthreadex(
-			0,
-			0,
-			Thread::ThreadProc,
-			this,
-			0,
-			&m_threadId
-		);
+		InternalStart();
 	}
 
 	void Thread::Start(const std::function<int()>& func)
 	{
 		m_func = func;
+		InternalStart();
+	}
+
+	void Thread::InternalStart()
+	{
+		// https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/beginthread-beginthreadex?view=vs-2019
 		m_threadHandle = (HANDLE)_beginthreadex(
 			0,
 			0,
@@ -138,12 +121,12 @@ namespace Boring32::Async
 			errorMessage += _get_errno(&errorCode) == 0
 				? "; error code: " + std::to_string(errorCode)
 				: ", but could not determine the error code";
-			
+
 			throw std::runtime_error(errorMessage);
 		}
 	}
 
-	ThreadStatus Thread::GetStatus()
+	ThreadStatus Thread::GetStatus() const noexcept
 	{
 		return m_status;
 	}
@@ -200,7 +183,7 @@ namespace Boring32::Async
 		return m_func();
 	}
 
-	UINT Thread::GetExitCode()
+	UINT Thread::GetExitCode() const noexcept
 	{
 		return m_returnCode;
 	}

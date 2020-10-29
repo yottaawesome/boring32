@@ -35,8 +35,8 @@ namespace Boring32::Async
 			virtual void Start();
 			virtual void Start(int(*simpleFunc)());
 			virtual void Start(const std::function<int()>& func);
-			virtual ThreadStatus GetStatus();
-			virtual UINT GetExitCode();
+			virtual ThreadStatus GetStatus() const noexcept;
+			virtual UINT GetExitCode() const noexcept;
 			virtual Raii::Win32Handle GetHandle();
 			virtual bool WaitToStart(const DWORD millis);
 
@@ -44,6 +44,7 @@ namespace Boring32::Async
 			virtual UINT Run();
 			virtual void Copy(const Thread& other);
 			virtual void Move(Thread& other) noexcept;
+			virtual void InternalStart();
 			static UINT WINAPI ThreadProc(void* param);
 
 		protected:
