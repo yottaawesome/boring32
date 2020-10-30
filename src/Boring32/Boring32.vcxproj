@@ -170,6 +170,7 @@
   <ItemGroup>
     <ClInclude Include="include\Async\CriticalSectionLock.hpp" />
     <ClInclude Include="include\Async\Event.hpp" />
+    <ClInclude Include="include\Async\EventLoop.hpp" />
     <ClInclude Include="include\Async\Job.hpp" />
     <ClInclude Include="include\Async\MemoryMappedFile.hpp" />
     <ClInclude Include="include\Async\Mutex.hpp" />
@@ -229,6 +230,7 @@
     <ClInclude Include="include\Com\ComThreadScope.hpp" />
     <ClInclude Include="include\Async\Pipes\Pipes.hpp" />
     <ClInclude Include="include\Wmi\Wmi.hpp" />
+    <ClInclude Include="src\Async\EventLoop.cpp" />
     <ClInclude Include="src\pch.hpp" />
     <ClInclude Include="include\Security\Security.hpp" />
     <ClInclude Include="src\targetver.hpp" />
