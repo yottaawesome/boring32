@@ -11,7 +11,7 @@ namespace Boring32::Async
 	
 	EventLoop::EventLoop() {}
 
-	EventLoop::EventLoop(std::map<HANDLE, std::function<void()>> mapOfEvents)
+	EventLoop::EventLoop(std::map<HANDLE, std::function<void(EventLoop&)>&> mapOfEvents)
 	:	m_mapOfEvents(std::move(mapOfEvents))
 	{ 
 		RebuildEvents();
@@ -41,7 +41,7 @@ namespace Boring32::Async
 			// all functions. This is because WaitForMultipleObjectsEx()
 			// returns only the zero index.
 			for (int i = 0; i < m_events.size(); i++)
-				m_mapOfEvents[m_events[i]]();
+				m_mapOfEvents[m_events[i]](*this);
 		}
 		else
 		{
@@ -50,19 +50,24 @@ namespace Boring32::Async
 			// other events that are active. This is because
 			// WaitForMultipleObjectsEx() only returns the lowest index of 
 			// the fire events, and there could be potentially more.
-			m_mapOfEvents[m_events[result]]();
+			m_mapOfEvents[m_events[result]](*this);
 			for (int i = result - WAIT_OBJECT_0; i < m_events.size(); i++)
 				if (WaitForSingleObject(m_events[i], 0) == (WAIT_OBJECT_0 - i))
-					m_mapOfEvents[m_events[i]]();
+					m_mapOfEvents[m_events[i]](*this);
 		}
 
 		return true;
 	}
 	
-	void EventLoop::Set(std::map<HANDLE, std::function<void()>> mapOfEvents)
+	void EventLoop::Set(std::map<HANDLE, std::function<void(EventLoop&)>&> mapOfEvents)
 	{
 		m_mapOfEvents = std::move(mapOfEvents);
 		RebuildEvents();
+	}
+
+	void EventLoop::Set(HANDLE handle, std::function<void(EventLoop&)>& function)
+	{
+		m_mapOfEvents[handle] = function;
 	}
 
 	void EventLoop::RebuildEvents()

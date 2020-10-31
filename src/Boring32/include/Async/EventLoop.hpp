@@ -11,18 +11,19 @@ namespace Boring32::Async
 		public:
 			virtual ~EventLoop();
 			EventLoop();
-			EventLoop(std::map<HANDLE, std::function<void()>> mapOfEvents);
+			EventLoop(std::map<HANDLE, std::function<void(EventLoop&)>&> mapOfEvents);
 
 		public:
 			virtual void Close();
 			virtual bool WaitOn(const DWORD millis, const bool waitAll);
-			virtual void Set(std::map<HANDLE, std::function<void()>> mapOfEvents);
+			virtual void Set(std::map<HANDLE, std::function<void(EventLoop&)>&> mapOfEvents);
+			virtual void Set(HANDLE handle, std::function<void(EventLoop&)>& function);
 
 		protected:
 			virtual void RebuildEvents();
 
 		protected:
-			std::map<HANDLE, std::function<void()>> m_mapOfEvents;
+			std::map<HANDLE, std::function<void(EventLoop&)>&> m_mapOfEvents;
 			std::vector<HANDLE> m_events;
 	};
 }
