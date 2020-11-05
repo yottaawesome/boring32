@@ -1,6 +1,7 @@
 #pragma once
 #include <functional>
 #include <vector>
+#include <algorithm>
 #include <Windows.h>
 #include "Event.hpp"
 #include "CriticalSectionLock.hpp"
@@ -134,7 +135,7 @@ namespace Boring32::Async
 			{
 				CriticalSectionLock cs(m_criticalSection);
 
-				int index = IndexOf(findFunc);
+				size_t index = IndexOf(findFunc);
 				if (index > -1)
 				{
 					RemoveAt(index);
@@ -147,7 +148,7 @@ namespace Boring32::Async
 			virtual void EraseMultiple(const std::function<bool(const T&)>& findFunc)
 			{
 				CriticalSectionLock cs(m_criticalSection);
-				int index = 0;
+				size_t index = 0;
 				while ((index = IndexOf(findFunc)) != -1)
 				{
 					RemoveAt(index);
@@ -159,7 +160,7 @@ namespace Boring32::Async
 			virtual bool FindAndErase(const std::function<bool(const T&)>& findFunc, T& itemToSet)
 			{
 				CriticalSectionLock cs(m_criticalSection);
-				int index = IndexOf(findFunc);
+				size_t index = IndexOf(findFunc);
 				if (index > -1)
 				{
 					itemToSet = m_collection.at(index);
@@ -173,27 +174,25 @@ namespace Boring32::Async
 
 			virtual void RemoveAt(const size_t index)
 			{
+				if (index >= m_collection.size())
+					return;
+
 				CriticalSectionLock cs(m_criticalSection);
-				if (index < m_collection.size())
-				{
-					m_collection.erase(m_collection.begin() + index);
-					if (m_collection.size() == 0)
-						m_hasMessages.Reset();
-				}
+				m_collection.erase(m_collection.begin() + index);
+				if (m_collection.size() == 0)
+					m_hasMessages.Reset();
 			}
 
-			virtual int IndexOf(const std::function<bool(const T&)>& func)
+			virtual size_t IndexOf(const std::function<bool(const T&)>& func)
 			{
 				CriticalSectionLock cs(m_criticalSection);
-				for (int i = 0; i < m_collection.size(); i++)
-				{
-					if (func(m_collection[i]))
-						return i;
-				}
-				return -1;
+				auto iter = std::find_if(m_collection.begin(), m_collection.end(), func);
+				if (iter == m_collection.end())
+					return -1;
+				return std::distance(m_collection.begin(), iter);
 			}
 
-			virtual HANDLE GetWaitableHandle()
+			virtual HANDLE GetWaitableHandle() noexcept
 			{
 				return m_hasMessages.GetHandle();
 			}
@@ -213,7 +212,7 @@ namespace Boring32::Async
 				std::vector<T> newCollection(indexesToKeep.size());
 				for (int index : indexesToKeep)
 					newCollection.push_back(m_collection[index]);
-				m_collection = newCollection;
+				m_collection = std::move(newCollection);
 				SignalOrReset();
 				return std::tuple(itemCountRemoved, originalCount);
 			}
