@@ -20,6 +20,9 @@ namespace Boring32::Async
 			Thread(Thread&& other) noexcept;
 			virtual Thread& operator=(Thread&& other) noexcept;
 
+			virtual bool operator==(const ThreadStatus status) const noexcept;
+
+		public:
 			/// <summary>
 			///		Terminates the thread. Be careful when using this
 			///		function, as it prevents proper clean up of the 
@@ -37,7 +40,7 @@ namespace Boring32::Async
 			virtual void Start(const std::function<int()>& func);
 			virtual ThreadStatus GetStatus() const noexcept;
 			virtual UINT GetExitCode() const noexcept;
-			virtual Raii::Win32Handle GetHandle();
+			virtual Raii::Win32Handle GetHandle() noexcept;
 			virtual bool WaitToStart(const DWORD millis);
 
 		protected:

@@ -85,6 +85,11 @@ namespace Boring32::Async
 		m_started = std::move(other.m_started);
 	}
 
+	bool Thread::operator==(const ThreadStatus status) const noexcept
+	{
+		return m_status == status;
+	}
+
 	void Thread::Start()
 	{
 		InternalStart();
@@ -188,7 +193,7 @@ namespace Boring32::Async
 		return m_returnCode;
 	}
 
-	Raii::Win32Handle Thread::GetHandle()
+	Raii::Win32Handle Thread::GetHandle() noexcept
 	{
 		return m_threadHandle;
 	}
