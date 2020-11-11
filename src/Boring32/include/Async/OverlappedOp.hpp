@@ -20,7 +20,7 @@ namespace Boring32::Async
 			virtual OverlappedOp& operator=(OverlappedOp&& other) noexcept;
 
 		public:
-			virtual void WaitForCompletion(const DWORD timeout);
+			virtual bool WaitForCompletion(const DWORD timeout);
 			virtual HANDLE GetWaitableHandle() const;
 			virtual OVERLAPPED* GetOverlapped();
 			virtual uint64_t GetStatus() const;
@@ -36,6 +36,7 @@ namespace Boring32::Async
 		protected:
 			virtual void Move(OverlappedOp& other) noexcept;
 			virtual void Share(const OverlappedOp& other);
+			virtual void OnSuccess();
 
 		protected:
 			Event m_ioEvent;

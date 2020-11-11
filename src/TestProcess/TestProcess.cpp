@@ -43,7 +43,6 @@ int MainOverlapped(int argc, char** args)
     p.SetMode(PIPE_READMODE_MESSAGE);
     auto oio = p.Read(1024);
     oio.WaitForCompletion(INFINITE);
-    oio.ResizeBuffer();
     std::wcout << oio.IoBuffer << std::endl;
     Sleep(1000);
     p.Write(L"Indeed!");

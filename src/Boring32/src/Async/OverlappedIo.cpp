@@ -35,4 +35,9 @@ namespace Boring32::Async
 		if (bytesTransferred > 0)
 			IoBuffer.resize(bytesTransferred / sizeof(wchar_t));
 	}
+
+	void OverlappedIo::OnSuccess()
+	{
+		ResizeBuffer();
+	}
 }

@@ -18,9 +18,10 @@ namespace Boring32::Async
 
 		public:
 			std::wstring IoBuffer;
-			virtual void ResizeBuffer();
 
 		protected:
 			virtual void Move(OverlappedIo& other) noexcept;
+			virtual void OnSuccess() override;
+			virtual void ResizeBuffer();
 	};
 }

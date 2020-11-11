@@ -40,11 +40,14 @@ namespace Boring32::Async
 		return *this;
 	}
 
-	void OverlappedOp::WaitForCompletion(const DWORD timeout)
+	bool OverlappedOp::WaitForCompletion(const DWORD timeout)
 	{
 		if (m_ioOverlapped == nullptr)
 			throw std::runtime_error("IoOverlapped is null");
-		m_ioEvent.WaitOnEvent(timeout, true);
+		bool successfulWait = m_ioEvent.WaitOnEvent(timeout, true);
+		if (successfulWait)
+			OnSuccess();
+		return successfulWait;
 	}
 
 	HANDLE OverlappedOp::GetWaitableHandle() const
@@ -135,4 +138,6 @@ namespace Boring32::Async
 		m_ioOverlapped = other.m_ioOverlapped;
 		m_lastError = other.m_lastError;
 	}
+
+	void OverlappedOp::OnSuccess() { }
 }
