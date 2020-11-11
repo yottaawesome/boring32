@@ -18,13 +18,13 @@ namespace Boring32::Async
 			virtual void operator=(OverlappedNamedPipeClient&& other) noexcept;
 
 		public:
-			virtual OverlappedIo Write(const std::wstring& msg);
-			virtual bool Write(const std::wstring& msg, OverlappedIo& op) noexcept;
-			virtual OverlappedIo Read(const DWORD noOfCharacters);
-			virtual bool Read(const DWORD noOfCharacters, OverlappedIo& op) noexcept;
+			virtual void Write(const std::wstring& msg, OverlappedIo& op);
+			virtual bool Write(const std::wstring& msg, OverlappedIo& op, std::nothrow_t) noexcept;
+			virtual void Read(const DWORD noOfCharacters, OverlappedIo& op);
+			virtual bool Read(const DWORD noOfCharacters, OverlappedIo& op, std::nothrow_t) noexcept;
 
 		protected:
-			virtual OverlappedIo InternalWrite(const std::wstring& msg);
-			virtual OverlappedIo InternalRead(const DWORD noOfCharacters);
+			virtual void InternalWrite(const std::wstring& msg, OverlappedIo& op);
+			virtual void InternalRead(const DWORD noOfCharacters, OverlappedIo& op);
 	};
 }

@@ -36,16 +36,16 @@ namespace Boring32::Async
 		Move(other);
 	}
 
-	OverlappedIo OverlappedNamedPipeClient::Write(const std::wstring& msg)
+	void OverlappedNamedPipeClient::Write(const std::wstring& msg, OverlappedIo& oio)
 	{
-		return InternalWrite(msg);
+		InternalWrite(msg, oio);
 	}
 
-	bool OverlappedNamedPipeClient::Write(const std::wstring& msg, OverlappedIo& op) noexcept
+	bool OverlappedNamedPipeClient::Write(const std::wstring& msg, OverlappedIo& op, std::nothrow_t) noexcept
 	{
 		try
 		{
-			op = InternalWrite(msg);
+			InternalWrite(msg, op);
 			return true;
 		}
 		catch (const std::exception& ex)
@@ -58,12 +58,12 @@ namespace Boring32::Async
 		}
 	}
 
-	OverlappedIo OverlappedNamedPipeClient::InternalWrite(const std::wstring& msg)
+	void OverlappedNamedPipeClient::InternalWrite(const std::wstring& msg, OverlappedIo& oio)
 	{
 		if (m_handle == nullptr)
 			throw std::runtime_error("OverlappedNamedPipeClient::InternalWrite(): No pipe to write to");
 
-		OverlappedIo oio;
+		oio = OverlappedIo();
 		// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile
 		bool succeeded = WriteFile(
 			m_handle.GetHandle(),					// pipe handle 
@@ -74,20 +74,18 @@ namespace Boring32::Async
 		oio.LastError(GetLastError());
 		if (succeeded == false && oio.LastError() != ERROR_IO_PENDING)
 			throw Error::Win32Error("OverlappedNamedPipeClient::InternalWrite(): WriteFile() failed", oio.LastError());
-
-		return oio;
 	}
 
-	OverlappedIo OverlappedNamedPipeClient::Read(const DWORD noOfCharacters)
+	void OverlappedNamedPipeClient::Read(const DWORD noOfCharacters, OverlappedIo& op)
 	{
-		return InternalRead(noOfCharacters);
+		return InternalRead(noOfCharacters, op);
 	}
 
-	bool OverlappedNamedPipeClient::Read(const DWORD noOfCharacters, OverlappedIo& op) noexcept
+	bool OverlappedNamedPipeClient::Read(const DWORD noOfCharacters, OverlappedIo& op, std::nothrow_t) noexcept
 	{
 		try
 		{
-			op = InternalRead(noOfCharacters);
+			InternalRead(noOfCharacters, op);
 			return true;
 		}
 		catch (const std::exception& ex)
@@ -100,12 +98,12 @@ namespace Boring32::Async
 		}
 	}
 
-	OverlappedIo OverlappedNamedPipeClient::InternalRead(const DWORD noOfCharacters)
+	void OverlappedNamedPipeClient::InternalRead(const DWORD noOfCharacters, OverlappedIo& oio)
 	{
 		if (m_handle == nullptr)
 			throw std::runtime_error("OverlappedNamedPipeClient::InternalRead(): No pipe to read from");
 
-		OverlappedIo oio;
+		oio = OverlappedIo();
 		oio.IoBuffer.resize(noOfCharacters);
 		// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile
 		bool succeeded = ReadFile(
@@ -123,7 +121,5 @@ namespace Boring32::Async
 		{
 			throw Error::Win32Error("OverlappedNamedPipeClient::InternalRead(): ReadFile() failed", oio.LastError());
 		}
-
-		return oio;
 	}
 }

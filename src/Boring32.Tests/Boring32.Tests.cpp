@@ -188,7 +188,8 @@ void TestProcessOverlappedNamedPipe()
 		false,
 		true
 	);
-	auto oio = serverPipe.Connect();
+	Boring32::Async::OverlappedOp oio;
+	serverPipe.Connect(oio);
 
 	Boring32::Async::Job job(false);
 	JOBOBJECT_EXTENDED_LIMIT_INFORMATION jeli{ 0 };
@@ -202,15 +203,19 @@ void TestProcessOverlappedNamedPipe()
 	job.AssignProcessToThisJob(testProcess.GetProcessHandle());
 
 	oio.WaitForCompletion(INFINITE);
-	oio = serverPipe.Write(L"HAHA!");
+	Boring32::Async::OverlappedIo writeOp;
+	serverPipe.Write(L"HAHA!", writeOp);
 	WaitForSingleObject(testProcess.GetProcessHandle(), INFINITE);
-	auto oio2 = serverPipe.Read(1024);
-	oio2.WaitForCompletion(INFINITE);
-	std::wcout << oio2.IoBuffer << std::endl;
-	oio2 = serverPipe.Read(1024);
-	oio2.WaitForCompletion(INFINITE);
-	std::wcout << oio2.IoBuffer << std::endl;
-	int i = 0;
+	
+	Boring32::Async::OverlappedIo writeOp2;
+	serverPipe.Read(1024, writeOp2);
+	
+	
+	writeOp2.WaitForCompletion(INFINITE);
+	std::wcout << writeOp2.IoBuffer << std::endl;
+	serverPipe.Read(1024, writeOp2);
+	writeOp2.WaitForCompletion(INFINITE);
+	std::wcout << writeOp2.IoBuffer << std::endl;
 }
 
 void TestProcessAnonPipe()

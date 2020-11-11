@@ -37,15 +37,15 @@ namespace Boring32::Async
 			virtual void operator=(OverlappedNamedPipeServer&& other) noexcept;
 
 		public:
-			virtual OverlappedOp Connect();
+			virtual void Connect(OverlappedOp& op);
 			virtual bool Connect(OverlappedOp& op, std::nothrow_t) noexcept;
-			virtual OverlappedIo Write(const std::wstring& msg);
-			virtual bool Write(const std::wstring& msg, OverlappedIo& op) noexcept;
-			virtual OverlappedIo Read(const DWORD noOfCharacters);
-			virtual bool Read(const DWORD noOfCharacters, OverlappedIo& op) noexcept;
+			virtual void Write(const std::wstring& msg, OverlappedIo& oio);
+			virtual bool Write(const std::wstring& msg, OverlappedIo& op, std::nothrow_t) noexcept;
+			virtual void Read(const DWORD noOfCharacters, OverlappedIo& oio);
+			virtual bool Read(const DWORD noOfCharacters, OverlappedIo& oio, std::nothrow_t) noexcept;
 
 		protected:
-			virtual OverlappedIo InternalWrite(const std::wstring& msg);
-			virtual OverlappedIo InternalRead(const DWORD noOfCharacters);
+			virtual void InternalWrite(const std::wstring& msg, OverlappedIo& oio);
+			virtual void InternalRead(const DWORD noOfCharacters, OverlappedIo& oio);
 	};
 }

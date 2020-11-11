@@ -41,12 +41,17 @@ int MainOverlapped(int argc, char** args)
     Boring32::Async::OverlappedNamedPipeClient p(L"\\\\.\\pipe\\mynamedpipe");
     p.Connect(0);
     p.SetMode(PIPE_READMODE_MESSAGE);
-    auto oio = p.Read(1024);
-    oio.WaitForCompletion(INFINITE);
-    std::wcout << oio.IoBuffer << std::endl;
+    Boring32::Async::OverlappedIo readOp;
+    p.Read(1024, readOp);
+    readOp.WaitForCompletion(INFINITE);
+    std::wcout << readOp.IoBuffer << std::endl;
     Sleep(1000);
-    p.Write(L"Indeed!");
-    p.Write(L"Indeed!");
+
+    Boring32::Async::OverlappedIo writeOp;
+    p.Write(L"Indeed!", writeOp);
+    writeOp.WaitForCompletion(INFINITE);
+    p.Write(L"Indeed!", writeOp);
+    writeOp.WaitForCompletion(INFINITE);
     //p.Close();;
 
     return 0;
