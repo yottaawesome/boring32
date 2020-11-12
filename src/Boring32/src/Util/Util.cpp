@@ -42,4 +42,19 @@ namespace Boring32::Util
         const auto rightNow = std::chrono::system_clock::now();
         return std::chrono::duration_cast<std::chrono::seconds>(rightNow.time_since_epoch()).count();
     }
+
+    DWORD GetMillisToMinuteBoundary(const SYSTEMTIME& time, const UINT boundary)
+    {
+        int minuteModResult = time.wSecond > 0
+            ? (time.wMinute + 1) % boundary
+            : time.wMinute % boundary;
+        DWORD millis = 0;
+        if (minuteModResult > 0)
+            millis += (boundary - minuteModResult) * 60000;
+        if (time.wSecond > 0)
+            millis += (60 - time.wSecond) * 1000;
+        if (time.wMilliseconds > 0)
+            millis -= 1000 - time.wMilliseconds;
+        return millis;
+    }
 }
