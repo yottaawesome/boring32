@@ -16,8 +16,8 @@ namespace Boring32::Async
 			Semaphore(
 				std::wstring name, 
 				const bool isInheritable, 
-				const long initialCount, 
-				const long maxCount);
+				const ULONG initialCount, 
+				const ULONG maxCount);
 			Semaphore(
 				std::wstring name,
 				const bool isInheritable,
@@ -48,7 +48,7 @@ namespace Boring32::Async
 		protected:
 			Raii::Win32Handle m_handle;
 			std::wstring m_name; 
-			int m_currentCount;
-			int m_maxCount;
+			long m_currentCount;
+			long m_maxCount;
 	};
 }
