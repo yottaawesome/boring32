@@ -1,4 +1,5 @@
 #pragma once
+#include <atomic>
 #include <objbase.h>
 
 namespace Boring32::Com
@@ -63,6 +64,12 @@ namespace Boring32::Com
 			virtual void Initialise();
 
 			/// <summary>
+			///		Initialises general COM security levels. This can only
+			///		be called once.
+			/// </summary>
+			virtual void InitialiseSecurity();
+
+			/// <summary>
 			///		Uninitialises COM. If this object does not currently have
 			///		an active COM scope, this function has no effect.
 			/// </summary>
@@ -97,6 +104,7 @@ namespace Boring32::Com
 
 		protected:
 			bool m_isInitialised;
+			static std::atomic<unsigned> m_isSecurityInitialised;
 			DWORD m_comInitialisedThreadId;
 			COINIT m_apartmentThreadingMode;
 	};

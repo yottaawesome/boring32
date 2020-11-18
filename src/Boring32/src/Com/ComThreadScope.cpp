@@ -1,9 +1,12 @@
 #include "pch.hpp"
 #include <stdexcept>
+#include "include/Error/ComError.hpp"
 #include "include/Com/ComThreadScope.hpp"
 
 namespace Boring32::Com
 {
+	std::atomic<unsigned> ComThreadScope::m_isSecurityInitialised(0);
+
 	ComThreadScope::~ComThreadScope()
 	{
 		Uninitialise();
@@ -75,10 +78,29 @@ namespace Boring32::Com
 		// Initialise COM for this thread
 		HRESULT hr = CoInitializeEx(nullptr, m_apartmentThreadingMode);
 		if (FAILED(hr))
-			throw std::runtime_error("CoInitializeEx() failed");
+			throw Error::ComError("CoInitializeEx() failed", hr);
 
-		// Set general COM security levels. This can only be set once per thread.
-		hr = CoInitializeSecurity(
+		m_isInitialised = true;
+		m_comInitialisedThreadId = GetCurrentThreadId();
+	}
+
+	void ComThreadScope::InitialiseSecurity()
+	{
+		m_isSecurityInitialised++;
+		if (m_isSecurityInitialised != 1)
+		{
+			std::wcerr 
+				<< L"ComThreadScope::InitialiseSecurity(): "
+				<< L"An attempt to initialise COM security more than once for this process occurred. "
+				<< L"COM security can only be set once for the whole process, and cannot be changed. "
+				<< L"Ignoring..."
+				<< std::endl;
+			return;
+		}
+
+		// Set general COM security levels. This can only be set once per process.
+		// https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-coinitializesecurity
+		HRESULT hr = CoInitializeSecurity(
 			nullptr,
 			-1,								// COM authentication
 			nullptr,                        // Authentication services
@@ -90,10 +112,7 @@ namespace Boring32::Com
 			nullptr                         // Reserved
 		);
 		if (FAILED(hr))
-			throw std::runtime_error("CoInitializeSecurity() failed");
-
-		m_isInitialised = true;
-		m_comInitialisedThreadId = GetCurrentThreadId();
+			throw Error::ComError("CoInitializeSecurity() failed", hr);
 	}
 
 	void ComThreadScope::Uninitialise()
