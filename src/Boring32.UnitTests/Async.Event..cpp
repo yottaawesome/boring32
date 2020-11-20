@@ -24,7 +24,7 @@ namespace Boring32::Async::UnitTests
 			TEST_METHOD(TestOpenNamedEvent)
 			{
 				Boring32::Async::Event testEvent1(false, true, false, L"TestEvent");
-				Boring32::Async::Event testEvent2(false, true, false, L"TestEvent");
+				Boring32::Async::Event testEvent2(true, false, L"TestEvent", SYNCHRONIZE);
 				Assert::IsNotNull(testEvent2.GetHandle());
 			}
 
