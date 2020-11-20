@@ -5,18 +5,38 @@
 
 namespace Boring32::Async
 {
+	/// <summary>
+	/// Encapsulates a Win32 Event synchronization object.
+	/// </summary>
 	class Event
 	{
 		// Constructors
 		public:
 			virtual ~Event();
 			Event();
+
+			/// <summary>
+			///		Constructor for an Event object.
+			/// </summary>
+			/// <param name="isInheritable">
+			///		Whether this Event is inheritable by any child processes.
+			/// </param>
+			/// <param name="manualReset">
+			///		Whether this is an auto-reset or manual reset Event.
+			/// </param>
+			/// <param name="isSignaled">
+			///		Whether this Event is initially signalled on creation.
+			/// </param>
+			/// <param name="name">
+			///		The name of this Event object. Pass an empty string to create an anonymous Event.
+			/// </param>
 			Event(
 				const bool isInheritable, 
 				const bool manualReset, 
 				const bool isSignaled, 
 				std::wstring name
 			);
+			
 			Event(
 				const bool isInheritable,
 				const bool manualReset,

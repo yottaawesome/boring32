@@ -39,3 +39,5 @@ Build/
 *.idb
 *.pdb
 Intermediate/
+/src/x64/Debug/*.exp
+/src/x64/Debug/*.ilk
