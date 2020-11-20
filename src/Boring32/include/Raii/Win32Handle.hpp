@@ -56,7 +56,7 @@ namespace Boring32::Raii
 			virtual HANDLE& GetHandleAddress();
 			virtual void Close();
 			virtual void SetInheritability(const bool isInheritable);
-			virtual HANDLE Detach();
+			virtual HANDLE Detach() noexcept;
 
 			/// <summary>
 			///		Returns whether the internal HANDLE's value is not 

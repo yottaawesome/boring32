@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include "include/Error/Win32Error.hpp"
 #include "include/Async/Event.hpp"
+#include "include/Error/Error.hpp"
 
 namespace Boring32::Async
 {
@@ -26,6 +27,19 @@ namespace Boring32::Async
 	Event::Event(
 		const bool isInheritable,
 		const bool manualReset,
+		const bool isSignaled
+	)
+	:	m_event(nullptr),
+		m_isManualReset(manualReset),
+		m_createEventOnTrue(true),
+		m_access(EVENT_ALL_ACCESS)
+	{
+		InternalCreate(isSignaled, isInheritable);
+	}
+
+	Event::Event(
+		const bool isInheritable,
+		const bool manualReset,
 		const bool isSignaled,
 		std::wstring name
 	)
@@ -35,16 +49,7 @@ namespace Boring32::Async
 		m_createEventOnTrue(true),
 		m_access(EVENT_ALL_ACCESS)
 	{
-		m_event = CreateEventW(
-			nullptr,			// security attributes
-			m_isManualReset,	// manual reset event
-			isSignaled,			// is initially signalled
-			m_name != L""		// name
-				? m_name.c_str()
-				: nullptr);
-		if (m_event == nullptr)
-			throw Error::Win32Error("Failed to create or open event", GetLastError());
-		m_event.SetInheritability(isInheritable);
+		InternalCreate(isSignaled, isInheritable);
 	}
 
 	Event::Event(
@@ -108,8 +113,13 @@ namespace Boring32::Async
 			if(ResetEvent(m_event.GetHandle()) == false)
 				throw Error::Win32Error("ResetEvent failed", GetLastError());
 	}
+
+	bool Event::Reset(std::nothrow_t) noexcept
+	{
+		return Error::TryCatchLogToWCerr([this]{ Reset(); }, L"Event::Reset(std::nothrow_t): ");
+	}
 	
-	HANDLE Event::GetHandle() const
+	HANDLE Event::GetHandle() const noexcept
 	{
 		return m_event.GetHandle();
 	}
@@ -142,8 +152,16 @@ namespace Boring32::Async
 			throw std::runtime_error("The wait was abandoned");
 		return false;
 	}
+
+	bool Event::WaitOnEvent(const DWORD millis, const bool alertable, std::nothrow_t) noexcept
+	{
+		return Error::TryCatchLogToWCerr(
+			[this] { WaitOnEvent(); }, 
+			L"Event::WaitOnEvent(const DWORD millis, const bool alertable, std::nothrow_t):"
+		);
+	}
 	
-	HANDLE Event::Detach()
+	HANDLE Event::Detach() noexcept
 	{
 		return m_event.Detach();
 	}
@@ -156,8 +174,27 @@ namespace Boring32::Async
 			throw Error::Win32Error("Failed to signal event", GetLastError());
 	}
 
-	const std::wstring& Event::GetName() const
+	bool Event::Signal(std::nothrow_t) noexcept
+	{
+		return Error::TryCatchLogToWCerr([this] { Signal(); }, L"Event::Signal(std::nothrow_t):");
+	}
+
+	const std::wstring& Event::GetName() const noexcept
 	{
 		return m_name;
+	}
+
+	void Event::InternalCreate(const bool isSignaled, const bool isInheritable)
+	{
+		m_event = CreateEventW(
+			nullptr,			// security attributes
+			m_isManualReset,	// manual reset event
+			isSignaled,			// is initially signalled
+			m_name != L""		// name
+			? m_name.c_str()
+			: nullptr);
+		if (m_event == nullptr)
+			throw Error::Win32Error("Failed to create or open event", GetLastError());
+		m_event.SetInheritability(isInheritable);
 	}
 }

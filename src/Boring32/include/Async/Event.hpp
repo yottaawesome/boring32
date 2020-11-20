@@ -16,7 +16,25 @@ namespace Boring32::Async
 			Event();
 
 			/// <summary>
-			///		Constructor for an Event object.
+			///		Constructor for an anonymous Event object.
+			/// </summary>
+			/// <param name="isInheritable">
+			///		Whether this Event is inheritable by any child processes.
+			/// </param>
+			/// <param name="manualReset">
+			///		Whether this is an auto-reset or manual reset Event.
+			/// </param>
+			/// <param name="isSignaled">
+			///		Whether this Event is initially signalled on creation.
+			/// </param>
+			Event(
+				const bool isInheritable,
+				const bool manualReset,
+				const bool isSignaled
+			);
+
+			/// <summary>
+			///		Constructor for a named or anonymous Event object.
 			/// </summary>
 			/// <param name="isInheritable">
 			///		Whether this Event is inheritable by any child processes.
@@ -29,6 +47,8 @@ namespace Boring32::Async
 			/// </param>
 			/// <param name="name">
 			///		The name of this Event object. Pass an empty string to create an anonymous Event.
+			///		If this parameter matches the name of an existing Event, the object attempts to
+			///		open this existing Event with the EVENT_ALL_ACCESS privilege.
 			/// </param>
 			Event(
 				const bool isInheritable, 
@@ -53,15 +73,19 @@ namespace Boring32::Async
 		// API
 		public:
 			virtual void Signal();
+			virtual bool Signal(std::nothrow_t) noexcept;
 			virtual void Reset();
+			virtual bool Reset(std::nothrow_t) noexcept;
 			virtual void WaitOnEvent();
 			virtual bool WaitOnEvent(const DWORD millis, const bool alertable);
-			virtual HANDLE Detach();
-			virtual HANDLE GetHandle() const;
+			virtual bool WaitOnEvent(const DWORD millis, const bool alertable, std::nothrow_t) noexcept;
+			virtual HANDLE Detach() noexcept;
+			virtual HANDLE GetHandle() const noexcept;
 			virtual void Close();
-			virtual const std::wstring& GetName() const;
+			virtual const std::wstring& GetName() const noexcept;
 
 		protected:
+			virtual void InternalCreate(const bool isSignaled, const bool isInheritable);
 			virtual void Copy(const Event& other);
 			virtual void Move(Event& other) noexcept;
 

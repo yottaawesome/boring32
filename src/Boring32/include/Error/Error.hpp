@@ -12,4 +12,29 @@ namespace Boring32::Error
 	std::string CreateErrorStringFromCode(const std::string msg, const DWORD errorCode);
 	std::wstring GetErrorFromHResult(const std::wstring& msg, const HRESULT hr);
 	std::string GetErrorFromHResult(const std::string& msg, const HRESULT hr);
+
+	template<typename T>
+	inline bool TryCatchLogToWCerr(const T& function, const wchar_t* string) noexcept
+	{
+		try
+		{
+			function();
+			return true;
+		}
+		catch (const std::exception& ex)
+		{
+			std::wcerr
+				<< string
+				<< L" "
+				<< ex.what()
+				<< std::endl;
+			return false;
+		}
+	}
+
+	template<typename T>
+	inline bool TryCatchLogToWCerr(const T& function, const std::wstring& string) noexcept
+	{
+		return TryCatchLogToWCerr(function, string.c_str());
+	}
 }

@@ -128,7 +128,7 @@ namespace Boring32::Raii
 			throw Error::Win32Error("SetHandleInformation() failed", GetLastError());
 	}
 
-	HANDLE Win32Handle::Detach()
+	HANDLE Win32Handle::Detach() noexcept
 	{
 		HANDLE temp = m_handle;
 		m_handle = nullptr;
