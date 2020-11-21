@@ -3,6 +3,8 @@
 #include <stdexcept>
 #include <Windows.h>
 
+#define colconc(str1,str2) #str1 ": " #str2
+
 namespace Boring32::Util
 {
 	std::wstring GetCurrentExecutableDirectory();

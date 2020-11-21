@@ -3,6 +3,7 @@
 #include "include/Error/Win32Error.hpp"
 #include "include/Async/Event.hpp"
 #include "include/Error/Error.hpp"
+#include "include/Util/Util.hpp"
 
 namespace Boring32::Async
 {
@@ -111,7 +112,7 @@ namespace Boring32::Async
 	{
 		if (m_isManualReset && m_event != nullptr)
 			if(ResetEvent(m_event.GetHandle()) == false)
-				throw Error::Win32Error("ResetEvent failed", GetLastError());
+				throw Error::Win32Error(__FUNCSIG__ ": ResetEvent() failed", GetLastError());
 	}
 
 	bool Event::Reset(std::nothrow_t) noexcept
@@ -127,13 +128,13 @@ namespace Boring32::Async
 	void Event::WaitOnEvent()
 	{
 		if (m_event == nullptr)
-			throw std::runtime_error("No Event to wait on");
+			throw std::runtime_error(__FUNCSIG__ ": No Event to wait on");
 
 		DWORD status = WaitForSingleObject(m_event.GetHandle(), INFINITE);
 		if (status == WAIT_FAILED)
-			throw Error::Win32Error("WaitForSingleObject failed", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__ ": WaitForSingleObject failed", GetLastError());
 		if (status == WAIT_ABANDONED)
-			throw std::runtime_error("The wait was abandoned");
+			throw std::runtime_error(__FUNCSIG__ ": The wait was abandoned");
 	}
 
 	bool Event::WaitOnEvent(const DWORD millis, const bool alertable)
