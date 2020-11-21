@@ -13,8 +13,8 @@ namespace Boring32::Error
 	std::wstring GetErrorFromHResult(const std::wstring& msg, const HRESULT hr);
 	std::string GetErrorFromHResult(const std::string& msg, const HRESULT hr);
 
-	template<typename T>
-	inline bool TryCatchLogToWCerr(const T& function, const wchar_t* string) noexcept
+	template<typename T, typename S>
+	inline bool TryCatchLogToWCerr(const T& function, const S* string) noexcept
 	{
 		try
 		{
@@ -32,8 +32,8 @@ namespace Boring32::Error
 		}
 	}
 
-	template<typename T>
-	inline bool TryCatchLogToWCerr(const T& function, const std::wstring& string) noexcept
+	template<typename T, typename S>
+	inline bool TryCatchLogToWCerr(const T& function, const S& string) noexcept
 	{
 		return TryCatchLogToWCerr(function, string.c_str());
 	}

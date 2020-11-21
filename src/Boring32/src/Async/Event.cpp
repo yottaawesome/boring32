@@ -116,7 +116,7 @@ namespace Boring32::Async
 
 	bool Event::Reset(std::nothrow_t) noexcept
 	{
-		return Error::TryCatchLogToWCerr([this]{ Reset(); }, L"Event::Reset(std::nothrow_t): ");
+		return Error::TryCatchLogToWCerr([this]{ Reset(); }, __FUNCSIG__);
 	}
 	
 	HANDLE Event::GetHandle() const noexcept
@@ -155,10 +155,8 @@ namespace Boring32::Async
 
 	bool Event::WaitOnEvent(const DWORD millis, const bool alertable, std::nothrow_t) noexcept
 	{
-		return Error::TryCatchLogToWCerr(
-			[this] { WaitOnEvent(); }, 
-			L"Event::WaitOnEvent(const DWORD millis, const bool alertable, std::nothrow_t):"
-		);
+		//https://codeyarns.com/tech/2018-08-22-how-to-get-function-name-in-c.html
+		return Error::TryCatchLogToWCerr([this]{ WaitOnEvent(); }, __FUNCSIG__);
 	}
 	
 	HANDLE Event::Detach() noexcept
@@ -176,7 +174,7 @@ namespace Boring32::Async
 
 	bool Event::Signal(std::nothrow_t) noexcept
 	{
-		return Error::TryCatchLogToWCerr([this] { Signal(); }, L"Event::Signal(std::nothrow_t):");
+		return Error::TryCatchLogToWCerr([this]{ Signal(); }, __FUNCSIG__);
 	}
 
 	const std::wstring& Event::GetName() const noexcept
