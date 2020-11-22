@@ -1,6 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Error/Win32Error.hpp"
+#include "include/Error/Error.hpp"
 #include "include/Async/Mutex.hpp"
 
 namespace Boring32::Async
@@ -136,14 +136,9 @@ namespace Boring32::Async
 		return m_locked;
 	}
 
-	bool Mutex::SafeLock(const DWORD waitTime, const DWORD sleepTime)
+	bool Mutex::Lock(const DWORD waitTime, std::nothrow_t) noexcept
 	{
-		if (waitTime == 0)
-			throw std::runtime_error("SafeLock() requires a positive timeout period");
-
-		while (Lock(waitTime) == false)
-			Sleep(sleepTime);
-		return true;
+		return Error::TryCatchLogToWCerr([this, &waitTime] { Lock(waitTime); }, __FUNCSIG__);
 	}
 
 	void Mutex::Unlock()
@@ -156,8 +151,18 @@ namespace Boring32::Async
 		m_locked = false;
 	}
 
+	bool Mutex::Unlock(std::nothrow_t) noexcept
+	{
+		return Error::TryCatchLogToWCerr([this] { Unlock(); }, __FUNCSIG__);
+	}
+
 	HANDLE Mutex::GetHandle() const noexcept
 	{
 		return m_mutex.GetHandle();
+	}
+
+	const std::wstring& Mutex::GetName() const noexcept
+	{
+		return m_name;
 	}
 }

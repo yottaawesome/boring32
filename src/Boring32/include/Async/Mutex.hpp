@@ -103,7 +103,8 @@ namespace Boring32::Async
 			/// </summary>
 			/// <param name="other">The mutex to move.</param>
 			virtual Mutex& operator=(Mutex&& other) noexcept;
-
+		
+		public:
 			/// <summary>
 			///		Blocks the current thread for a specified amount of time 
 			///		(or indefinitely) until the mutex is acquired.
@@ -123,19 +124,19 @@ namespace Boring32::Async
 			virtual bool Lock(const DWORD waitTime);
 
 			/// <summary>
-			///		Repeatedly tries to acquire a lock with a specified timeout.
-			///		This allows threads to lock, but not be blocked indefinitely
-			///		and unable to be forced to terminate.
+			///		Blocks the current thread for a specified amount of time 
+			///		(or indefinitely) until the mutex is acquired. Does not
+			///		throw exceptions on failure.
 			/// </summary>
+			/// <param name="waitTime">
+			///		The time in milliseconds to wait to acquire the mutex.
+			///		Pass INFINITE to wait indefinitely.
+			/// </param>
 			/// <returns>
 			///		Returns true if the mutex was successfully acquired,
-			///		or false if the timeout occurred.
+			///		or false if the timeout occurred, or if an error occurred.
 			/// </returns>
-			/// <exception cref="std::runtime_error">
-			///		Failed to acquire the mutex for reasons other than the
-			///		timeout was reached.
-			/// </exception>
-			virtual bool SafeLock(const DWORD waitTime, const DWORD sleepTime);
+			virtual bool Lock(const DWORD waitTime, std::nothrow_t) noexcept;
 
 			/// <summary>
 			///		Frees the mutex, allowing another process to acquire it.
@@ -146,11 +147,28 @@ namespace Boring32::Async
 			virtual void Unlock();
 
 			/// <summary>
+			///		Frees the mutex, allowing another process to acquire it.
+			///		Does not throw exceptions on failure.
+			/// </summary>
+			virtual bool Unlock(std::nothrow_t) noexcept;
+
+			/// <summary>
 			///		Invalidates and closes the thread handle.
 			/// </summary>
 			virtual void Close();
 
+			/// <summary>
+			///		Retrieves this Mutex's underlying handle.
+			/// </summary>
+			/// <returns>This Mutex's underlying handle</returns>
 			virtual HANDLE GetHandle() const noexcept;
+
+			/// <summary>
+			///		Retrieves this Mutex's name. This value is an empty string
+			///		if this is an anonymous Mutex.
+			/// </summary>
+			/// <returns>This Mutex's name.</returns>
+			virtual const std::wstring& GetName() const noexcept;
 
 		protected:
 			virtual void Move(Mutex& other) noexcept;
