@@ -77,5 +77,14 @@ namespace Boring32::Async::UnitTests
 				Assert::IsTrue(testEvent.GetName() == L"TestEvent");
 				Assert::IsTrue(testEvent.WaitOnEvent(0, true));
 			}
+
+			TEST_METHOD(TestWaitException)
+			{
+				Assert::ExpectException<std::exception>(
+					[]{
+						Boring32::Async::Event testEvent;
+						Assert::IsTrue(testEvent.WaitOnEvent(0, true));
+					});
+			}
 	};
 }

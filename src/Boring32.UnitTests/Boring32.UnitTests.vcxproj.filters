@@ -21,6 +21,9 @@
     <ClCompile Include="Async.Event..cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Async.Mutex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">

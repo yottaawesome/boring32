@@ -150,6 +150,8 @@ namespace Boring32::Async
 			/// </summary>
 			virtual void Close();
 
+			virtual HANDLE GetHandle() const noexcept;
+
 		protected:
 			virtual void Move(Mutex& other) noexcept;
 			virtual void Copy(const Mutex& other);

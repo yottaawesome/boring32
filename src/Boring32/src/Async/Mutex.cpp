@@ -155,4 +155,9 @@ namespace Boring32::Async
 
 		m_locked = false;
 	}
+
+	HANDLE Mutex::GetHandle() const noexcept
+	{
+		return m_mutex.GetHandle();
+	}
 }
