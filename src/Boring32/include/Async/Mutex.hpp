@@ -31,9 +31,9 @@ namespace Boring32::Async
 			///		Whether the handle can be inherited by child processes.
 			/// </param>
 			Mutex(
-				std::wstring name,
 				const bool acquireOnCreation,
-				const bool inheritable
+				const bool inheritable,
+				std::wstring name
 			);
 
 			/// <summary>
@@ -121,7 +121,7 @@ namespace Boring32::Async
 			///		Failed to acquire the mutex for reasons other than the
 			///		timeout was reached.
 			/// </exception>
-			virtual bool Lock(const DWORD waitTime);
+			virtual bool Lock(const DWORD waitTime, const bool isAlertable);
 
 			/// <summary>
 			///		Blocks the current thread for a specified amount of time 
@@ -136,7 +136,7 @@ namespace Boring32::Async
 			///		Returns true if the mutex was successfully acquired,
 			///		or false if the timeout occurred, or if an error occurred.
 			/// </returns>
-			virtual bool Lock(const DWORD waitTime, std::nothrow_t) noexcept;
+			virtual bool Lock(const DWORD waitTime, const bool isAlertable, std::nothrow_t) noexcept;
 
 			/// <summary>
 			///		Frees the mutex, allowing another process to acquire it.

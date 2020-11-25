@@ -28,9 +28,9 @@ namespace Boring32::Async
 	{ }
 
 	Mutex::Mutex(
-		std::wstring name,
 		const bool acquireOnCreation, 
-		const bool inheritable
+		const bool inheritable,
+		std::wstring name
 	)
 	:	m_name(std::move(name)),
 		m_created(true),
@@ -44,7 +44,7 @@ namespace Boring32::Async
 		);
 		m_mutex.SetInheritability(inheritable);
 		if (m_mutex == nullptr)
-			throw Error::Win32Error("Failed to create mutex", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__ ": failed to create mutex", GetLastError());
 
 		m_locked = acquireOnCreation;
 	}
@@ -60,10 +60,10 @@ namespace Boring32::Async
 		m_locked(false)
 	{
 		if(m_name == L"")
-			throw std::runtime_error("Cannot open mutex with empty name");
+			throw std::runtime_error(__FUNCSIG__ ": cannot open mutex with empty name");
 		m_mutex = OpenMutexW(desiredAccess, isInheritable, m_name.c_str());
 		if (m_mutex == nullptr)
-			throw Error::Win32Error("Failed to open mutex", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__ ": failed to open mutex", GetLastError());
 	}
 
 	Mutex::Mutex(const bool acquire, const bool inheritable)
@@ -79,7 +79,7 @@ namespace Boring32::Async
 		);
 		m_mutex.SetInheritability(inheritable);
 		if (m_mutex == nullptr)
-			throw Error::Win32Error("Failed to create mutex", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__ ": failed to create mutex", GetLastError());
 	}
 
 	Mutex::Mutex(const Mutex& other)
@@ -121,14 +121,14 @@ namespace Boring32::Async
 		m_mutex = std::move(other.m_mutex);
 	}
 
-	bool Mutex::Lock(const DWORD waitTime)
+	bool Mutex::Lock(const DWORD waitTime, const bool isAlertable)
 	{
 		if (m_mutex == nullptr)
-			throw std::runtime_error("Cannot wait on null mutex");
+			throw std::runtime_error(__FUNCSIG__ ": cannot wait on null mutex");
 
-		DWORD result = WaitForSingleObject(m_mutex.GetHandle(), waitTime);
+		DWORD result = WaitForSingleObjectEx(m_mutex.GetHandle(), waitTime, isAlertable);
 		if (result == WAIT_FAILED)
-			throw Error::Win32Error("Failed to acquire mutex", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__ ": failed to acquire mutex", GetLastError());
 		if (result == WAIT_OBJECT_0)
 			m_locked = true;
 		if (result == WAIT_TIMEOUT)
@@ -136,17 +136,20 @@ namespace Boring32::Async
 		return m_locked;
 	}
 
-	bool Mutex::Lock(const DWORD waitTime, std::nothrow_t) noexcept
+	bool Mutex::Lock(const DWORD waitTime, const bool isAlertable, std::nothrow_t) noexcept
 	{
-		return Error::TryCatchLogToWCerr([this, &waitTime] { Lock(waitTime); }, __FUNCSIG__);
+		return Error::TryCatchLogToWCerr(
+			[this, &waitTime, &isAlertable] { Lock(waitTime, isAlertable); }, 
+			__FUNCSIG__
+		);
 	}
 
 	void Mutex::Unlock()
 	{
 		if (m_mutex == nullptr)
-			throw std::runtime_error("Cannot wait on null mutex");
+			throw std::runtime_error(__FUNCSIG__ ": cannot wait on null mutex");
 		if (ReleaseMutex(m_mutex.GetHandle()) == false)
-			throw Error::Win32Error("Failed to release mutex", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__ ": failed to release mutex", GetLastError());
 
 		m_locked = false;
 	}

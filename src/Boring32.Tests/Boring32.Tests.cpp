@@ -64,7 +64,7 @@ void TestSemaphore()
 void TestMutex()
 {
 	Boring32::Async::Mutex m1(L"HelloMutex", false, false);
-	m1.Lock(1000);
+	m1.Lock(1000, true);
 	m1.Unlock();
 
 	Boring32::Async::Mutex m2(m1);

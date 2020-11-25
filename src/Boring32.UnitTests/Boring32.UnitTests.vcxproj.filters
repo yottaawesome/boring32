@@ -18,10 +18,10 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async.Event..cpp">
+    <ClCompile Include="Async\Mutex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async.Mutex.cpp">
+    <ClCompile Include="Async\Event..cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
