@@ -5,7 +5,7 @@
 
 namespace Boring32::Error
 {
-    void GetErrorCodeString(const DWORD errorCode, std::string& stringToHoldMessage)
+    void GetErrorCodeString(const DWORD errorCode, std::string& stringToHoldMessage) noexcept
     {
         stringToHoldMessage = "";
 
@@ -30,12 +30,19 @@ namespace Boring32::Error
             0,
             nullptr);
 
-        if(ptrMsgBuf != nullptr)
+        if (ptrMsgBuf != nullptr)
+        {
             stringToHoldMessage = (LPSTR)ptrMsgBuf;
-        LocalFree(ptrMsgBuf);
+            LocalFree(ptrMsgBuf);
+        }
+        else
+        {
+            stringToHoldMessage = __FUNCSIG__;
+            stringToHoldMessage += " failed to translate Win32 error code: " + std::to_string(errorCode);
+        }
     }
 
-	void GetErrorCodeString(const DWORD errorCode, std::wstring& stringToHoldMessage)
+	void GetErrorCodeString(const DWORD errorCode, std::wstring& stringToHoldMessage) noexcept
 	{
         stringToHoldMessage = L"";
         DWORD flags =
@@ -59,12 +66,23 @@ namespace Boring32::Error
             0,
             nullptr);
 
-        if(ptrMsgBuf != nullptr)
-            stringToHoldMessage = (LPTSTR)ptrMsgBuf;
-        LocalFree(ptrMsgBuf);
+        if (ptrMsgBuf != nullptr)
+        {
+            stringToHoldMessage = (LPWSTR)ptrMsgBuf;
+            LocalFree(ptrMsgBuf);
+        }
+        else
+        {
+            std::wstringstream wss;
+            wss 
+                << __FUNCSIG__ 
+                << L" failed to translate Win32 error code: " 
+                << std::to_wstring(errorCode);
+            stringToHoldMessage = wss.str();
+        }
 	}
 
-    std::wstring CreateErrorStringFromCode(const std::wstring msg, const DWORD errorCode)
+    std::wstring CreateErrorStringFromCode(const std::wstring msg, const DWORD errorCode) noexcept
     {
         std::wstring translatedErrorMessage;
         GetErrorCodeString(errorCode, translatedErrorMessage);
@@ -78,7 +96,7 @@ namespace Boring32::Error
         return wss.str();
     }
 
-    std::string CreateErrorStringFromCode(const std::string msg, const DWORD errorCode)
+    std::string CreateErrorStringFromCode(const std::string msg, const DWORD errorCode) noexcept
     {
         std::string translatedErrorMessage;
         GetErrorCodeString(errorCode, translatedErrorMessage);
@@ -92,7 +110,7 @@ namespace Boring32::Error
         return wss.str();
     }
 
-    std::wstring GetErrorFromHResult(const std::wstring& msg, const HRESULT hr)
+    std::wstring GetErrorFromHResult(const std::wstring& msg, const HRESULT hr) noexcept
     {
         std::wstringstream ss;
         _com_error ce(hr);
@@ -106,17 +124,25 @@ namespace Boring32::Error
         return ss.str();
     }
 
-    std::string GetErrorFromHResult(const std::string& msg, const HRESULT hr)
+    std::string GetErrorFromHResult(const std::string& msg, const HRESULT hr) noexcept
     {
-        std::stringstream ss;
-        _com_error ce(hr);
-        ss
-            << msg
-            << std::endl
-            << Strings::ConvertWStringToString(ce.ErrorMessage())
-            << " (HRESULT: "
-            << std::to_string(hr)
-            << ")";
-        return ss.str();
+        try
+        {
+            std::stringstream ss;
+            _com_error ce(hr);
+            ss
+                << msg
+                << std::endl
+                << Strings::ConvertWStringToString(ce.ErrorMessage())
+                << " (HRESULT: "
+                << std::to_string(hr)
+                << ")";
+            return ss.str();
+        }
+        catch (const std::exception& ex)
+        {
+            std::wcerr << __FUNCSIG__ << ": " << ex.what() << std::endl;
+            return "";
+        }
     }
 }

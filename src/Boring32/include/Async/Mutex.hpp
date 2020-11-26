@@ -153,7 +153,7 @@ namespace Boring32::Async
 			virtual bool Unlock(std::nothrow_t) noexcept;
 
 			/// <summary>
-			///		Invalidates and closes the thread handle.
+			///		Invalidates and closes the native Mutex handle.
 			/// </summary>
 			virtual void Close();
 

@@ -54,7 +54,7 @@ namespace Boring32::Raii
 			virtual HANDLE DuplicateCurrentHandle() const;
 			virtual bool IsInheritable() const;
 			virtual HANDLE& GetHandleAddress();
-			virtual void Close();
+			virtual void Close() noexcept;
 			virtual void SetInheritability(const bool isInheritable);
 			virtual HANDLE Detach() noexcept;
 
@@ -76,7 +76,6 @@ namespace Boring32::Raii
 		protected:
 			virtual void Copy(const Win32Handle& other);
 			virtual void Move(Win32Handle& other) noexcept;
-			virtual void InternalClose(const bool throwOnFailure);
 
 		protected:
 			HANDLE m_handle;

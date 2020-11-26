@@ -1,6 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Error/Win32Error.hpp"
+#include "include/Error/Error.hpp"
 #include "include/Async/WaitableTimer.hpp"
 
 //https://docs.microsoft.com/en-us/windows/win32/sync/using-a-waitable-timer-with-an-asynchronous-procedure-call
@@ -13,11 +13,7 @@ namespace Boring32::Async
 
 	void WaitableTimer::Close()
 	{
-		if (m_handle != nullptr)
-		{
-			CancelTimer();
-			m_handle = nullptr;
-		}
+		m_handle = nullptr;
 	}
 
 	WaitableTimer::WaitableTimer()
@@ -42,7 +38,7 @@ namespace Boring32::Async
 				: m_name.c_str()
 		);
 		if (m_handle == nullptr)
-			throw Error::Win32Error("WaitableTimer::WaitableTimer(): Failed to create waitable timer", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__ ": failed to create waitable timer", GetLastError());
 		m_handle.SetInheritability(isInheritable);
 	}
 
@@ -59,7 +55,7 @@ namespace Boring32::Async
 		//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-openwaitabletimerw
 		m_handle = OpenWaitableTimerW(desiredAccess, isInheritable, m_name.c_str());
 		if (m_handle == nullptr)
-			throw Error::Win32Error("WaitableTimer::WaitableTimer(): Failed to open waitable timer", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__ ": failed to open waitable timer", GetLastError());
 	}
 
 	// Copy constructor
@@ -108,8 +104,23 @@ namespace Boring32::Async
 	)
 	{
 		if (m_handle == nullptr)
-			throw std::runtime_error("WaitableTimer::SetTimerInNanos(): Timer handle is null");
+			throw std::runtime_error(__FUNCSIG__ ": timer handle is null");
 		InternalSetTimer(hundredNanosecondIntervals, period, callback, param);
+	}
+
+	bool WaitableTimer::SetTimerInNanos(
+		const int64_t hundedNsIntervals,
+		const UINT period,
+		const PTIMERAPCROUTINE callback,
+		void* param,
+		std::nothrow_t
+	) noexcept
+	{
+		return Error::TryCatchLogToWCerr(
+			[this, hundedNsIntervals, period, callback, param]
+				{ SetTimerInNanos(hundedNsIntervals, period, callback, param); },
+			__FUNCSIG__
+		);
 	}
 
 	void WaitableTimer::SetTimerInMillis(
@@ -120,8 +131,23 @@ namespace Boring32::Async
 	)
 	{
 		if (m_handle == nullptr)
-			throw std::runtime_error("WaitableTimer::SetTimerInMillis(): Timer handle is null");
+			throw std::runtime_error(__FUNCSIG__ ": timer handle is null");
 		InternalSetTimer(ms * 10000, period, callback, param);
+	}
+
+	bool WaitableTimer::SetTimerInMillis(
+		const int64_t milliseconds,
+		const UINT period,
+		const PTIMERAPCROUTINE callback,
+		void* param,
+		std::nothrow_t
+	) noexcept
+	{
+		return Error::TryCatchLogToWCerr(
+			[this, milliseconds, period, callback, param]
+				{ SetTimerInMillis(milliseconds, period, callback, param); },
+			__FUNCSIG__
+		);
 	}
 
 	void WaitableTimer::InternalSetTimer(
@@ -143,43 +169,58 @@ namespace Boring32::Async
 			false
 		);
 		if (succeeded == false)
-			throw Error::Win32Error("WaitableTimer::InternalSetTimer(): Failed to set timer", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__ ": failed to set timer", GetLastError());
 	}
 
 	bool WaitableTimer::WaitOnTimer(const DWORD millis)
 	{
 		if (m_handle == nullptr)
-			throw std::runtime_error("WaitableTimer::WaitOnTimer(): No timer to wait on");
+			throw std::runtime_error(__FUNCSIG__ ": no timer to wait on");
 		DWORD status = WaitForSingleObject(m_handle.GetHandle(), millis);
 		if (status == WAIT_OBJECT_0)
 			return true;
 		if (status == WAIT_TIMEOUT)
 			return false;
 		if (status == WAIT_FAILED)
-			throw std::runtime_error("WaitableTimer::WaitOnTimer(): WaitForSingleObject failed");
+			throw std::runtime_error(__FUNCSIG__ ": WaitForSingleObject failed");
 		if (status == WAIT_ABANDONED)
-			throw std::runtime_error("WaitableTimer::WaitOnTimer(): The wait was abandoned");
+			throw std::runtime_error(__FUNCSIG__ ": the wait was abandoned");
 		return false;
 	}
 
-	bool WaitableTimer::CancelTimer()
+	bool WaitableTimer::WaitOnTimer(const DWORD millis, std::nothrow_t) noexcept
 	{
-		if (m_handle == nullptr)
-			return false;
-		return CancelWaitableTimer(m_handle.GetHandle());
+		return Error::TryCatchLogToWCerr(
+			[this, millis] { WaitOnTimer(millis); },
+			__FUNCSIG__
+		);
 	}
 
-	bool WaitableTimer::IsManualReset() const
+	void WaitableTimer::CancelTimer()
+	{
+		if (m_handle == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": m_handle is nullptr");
+		bool succeeded = CancelWaitableTimer(m_handle.GetHandle());
+		if (succeeded == false)
+			throw Error::Win32Error(__FUNCSIG__, GetLastError());
+	}
+
+	bool WaitableTimer::CancelTimer(std::nothrow_t) noexcept
+	{
+		return Error::TryCatchLogToWCerr([this] { this->CancelTimer(); }, __FUNCSIG__);
+	}
+
+	bool WaitableTimer::IsManualReset() const noexcept
 	{
 		return m_isManualReset;
 	}
 
-	const std::wstring& WaitableTimer::GetName() const
+	const std::wstring& WaitableTimer::GetName() const noexcept
 	{
 		return m_name;
 	}
 
-	HANDLE WaitableTimer::GetHandle() const
+	HANDLE WaitableTimer::GetHandle() const noexcept
 	{
 		return m_handle.GetHandle();
 	}

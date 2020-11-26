@@ -53,23 +53,48 @@ namespace Boring32::Async
 				const PTIMERAPCROUTINE callback,
 				void* param
 			);
+
+			virtual bool SetTimerInNanos(
+				const int64_t hundredNanosecondIntervals,
+				const UINT period,
+				const PTIMERAPCROUTINE callback,
+				void* param,
+				std::nothrow_t
+			) noexcept;
+
 			virtual void SetTimerInMillis(
 				const int64_t milliseconds, 
 				const UINT period,
 				const PTIMERAPCROUTINE callback,
 				void* param
 			);
+
+			virtual bool SetTimerInMillis(
+				const int64_t milliseconds,
+				const UINT period,
+				const PTIMERAPCROUTINE callback,
+				void* param,
+				std::nothrow_t
+			) noexcept;
+
 			virtual bool WaitOnTimer(const DWORD millis);
-			virtual bool CancelTimer();
-			virtual bool IsManualReset() const;
-			virtual const std::wstring& GetName() const;
+
+			virtual bool WaitOnTimer(const DWORD millis, std::nothrow_t) noexcept;
+
+			virtual void CancelTimer();
+
+			virtual bool CancelTimer(std::nothrow_t) noexcept;
+
+			virtual bool IsManualReset() const noexcept;
+
+			virtual const std::wstring& GetName() const  noexcept;
 
 			/// <summary>
 			///		Returns the underlying HANDLE for this timer, or null
 			///		if no timer has been created.
 			/// </summary>
 			/// <returns></returns>
-			virtual HANDLE GetHandle() const;
+			virtual HANDLE GetHandle() const noexcept;
 
 			/// <summary>
 			///		Frees all native resources associated with this timer.

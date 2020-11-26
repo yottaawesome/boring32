@@ -1,6 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Error/Win32Error.hpp"
+#include "include/Error/Error.hpp"
 #include "include/Raii/Win32Handle.hpp"
 #include "include/Util/Util.hpp"
 
@@ -8,20 +8,22 @@ namespace Boring32::Raii
 {
 	Win32Handle::~Win32Handle()
 	{
-		InternalClose(false);
+		Close();
 	}
 
-	void Win32Handle::InternalClose(const bool throwOnFailure)
+	void Win32Handle::Close() noexcept
 	{
 		if (m_handle != nullptr && m_handle != INVALID_HANDLE_VALUE)
-			if (CloseHandle(m_handle) == false && throwOnFailure)
-				throw Error::Win32Error("CloseHandle() failed", GetLastError());
+			if (CloseHandle(m_handle) == false)
+			{
+				std::wcerr
+					<< __FUNCSIG__
+					<< ": failed to close handle due to a Win32 error: "
+					<< std::endl
+					<< Error::CreateErrorStringFromCode(L": failed to close handle due to Win32 error: ", GetLastError())
+					<< std::endl;
+			}
 		m_handle = nullptr;
-	}
-
-	void Win32Handle::Close()
-	{
-		InternalClose(true);
 	}
 
 	Win32Handle::Win32Handle()
