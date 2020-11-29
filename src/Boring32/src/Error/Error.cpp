@@ -2,6 +2,7 @@
 #include <winhttp.h>
 #include "include/Strings/Strings.hpp"
 #include "include/Error/Error.hpp"
+#include "Boring32/include/Library/Library.hpp"
 
 namespace Boring32::Error
 {
@@ -16,7 +17,8 @@ namespace Boring32::Error
         HMODULE handle = nullptr;
         if (errorCode >= WINHTTP_ERROR_BASE && errorCode <= WINHTTP_ERROR_LAST)
         {
-            GetModuleHandleEx(0, TEXT("winhttp.dll"), &handle);
+            //GetModuleHandleEx(0, TEXT("winhttp.dll"), &handle);
+            handle = GetModuleHandleW(L"winhttp.dll");
             flags |= FORMAT_MESSAGE_FROM_HMODULE;
         }
 
@@ -52,7 +54,8 @@ namespace Boring32::Error
         HMODULE handle = nullptr;
         if (errorCode >= WINHTTP_ERROR_BASE && errorCode <= WINHTTP_ERROR_LAST)
         {
-            GetModuleHandleEx(0, TEXT("winhttp.dll"), &handle);
+            //GetModuleHandleExW(0, L"winhttp.dll", &handle);
+            handle = LoadLibrary(L"winhttp.dll");
             flags |= FORMAT_MESSAGE_FROM_HMODULE;
         }
 
@@ -64,7 +67,10 @@ namespace Boring32::Error
             MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // TODO this is deprecated
             (LPTSTR)&ptrMsgBuf,
             0,
-            nullptr);
+            nullptr
+        );
+        if (handle)
+            FreeLibrary(handle);
 
         if (ptrMsgBuf != nullptr)
         {

@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <Windows.h>
+#include <iostream>
 #include "Win32Error.hpp"
 #include "ComError.hpp"
 
