@@ -157,18 +157,18 @@ namespace Boring32::Strings
 		}
 		else
 		{
-			while ((position = intermediateString.find(delimiter, position)) != std::string::npos)
+			while ((position = intermediateString.find(delimiter)) != std::string::npos)
 			{
 				// split and add to the results
-				std::wstring split = stringToTokenise.substr(0, position);
+				std::wstring split = intermediateString.substr(0, position);
 				results.push_back(split);
 
 				// move up our position
 				position += delimiter.length();
-				intermediateString = stringToTokenise.substr(position);
+				intermediateString = intermediateString.substr(position);
 
 				// On the last iteration, enter the remainder
-				if (intermediateString.find(delimiter, position) == std::string::npos)
+				if (intermediateString.find(delimiter) == std::string::npos)
 					results.push_back(intermediateString);
 			}
 		}
