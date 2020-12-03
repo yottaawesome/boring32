@@ -231,7 +231,6 @@
     <ClInclude Include="include\Com\ComThreadScope.hpp" />
     <ClInclude Include="include\Async\Pipes\Pipes.hpp" />
     <ClInclude Include="include\Wmi\Wmi.hpp" />
-    <ClInclude Include="src\Async\EventLoop.cpp" />
     <ClInclude Include="src\pch.hpp" />
     <ClInclude Include="include\Security\Security.hpp" />
     <ClInclude Include="src\targetver.hpp" />
@@ -239,6 +238,7 @@
   <ItemGroup>
     <ClCompile Include="src\Async\CriticalSectionLock.cpp" />
     <ClCompile Include="src\Async\Event.cpp" />
+    <ClCompile Include="src\Async\EventLoop.cpp" />
     <ClCompile Include="src\Async\Job.cpp" />
     <ClCompile Include="src\Async\Mutev.cpp" />
     <ClCompile Include="src\Async\OverlappedOp.cpp" />

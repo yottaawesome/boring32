@@ -27,6 +27,22 @@ namespace Boring32::Async
 		m_locked(false)
 	{ }
 
+	Mutex::Mutex(const bool acquire, const bool inheritable)
+	:	m_name(L""),
+		m_created(false),
+		m_locked(acquire),
+		m_mutex(nullptr)
+	{
+		m_mutex = CreateMutexW(
+			nullptr,
+			m_locked,
+			nullptr
+		);
+		m_mutex.SetInheritability(inheritable);
+		if (m_mutex == nullptr)
+			throw Error::Win32Error(__FUNCSIG__ ": failed to create mutex", GetLastError());
+	}
+
 	Mutex::Mutex(
 		const bool acquireOnCreation, 
 		const bool inheritable,
@@ -50,9 +66,10 @@ namespace Boring32::Async
 	}
 
 	Mutex::Mutex(
+		const bool acquireOnOpen,
+		const bool isInheritable,
 		std::wstring name,
-		const DWORD desiredAccess,
-		const bool isInheritable
+		const DWORD desiredAccess
 	)
 	:	m_name(name),
 		m_created(false),
@@ -64,22 +81,8 @@ namespace Boring32::Async
 		m_mutex = OpenMutexW(desiredAccess, isInheritable, m_name.c_str());
 		if (m_mutex == nullptr)
 			throw Error::Win32Error(__FUNCSIG__ ": failed to open mutex", GetLastError());
-	}
-
-	Mutex::Mutex(const bool acquire, const bool inheritable)
-	:	m_name(L""),
-		m_created(false),
-		m_locked(acquire),
-		m_mutex(nullptr)
-	{
-		m_mutex = CreateMutexW(
-			nullptr,
-			m_locked,
-			nullptr
-		);
-		m_mutex.SetInheritability(inheritable);
-		if (m_mutex == nullptr)
-			throw Error::Win32Error(__FUNCSIG__ ": failed to create mutex", GetLastError());
+		if(acquireOnOpen)
+			Lock(INFINITE, true);
 	}
 
 	Mutex::Mutex(const Mutex& other)

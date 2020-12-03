@@ -210,9 +210,6 @@
     <ClInclude Include="include\Async\EventLoop.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Async\EventLoop.cpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Registry\RegKey.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -357,6 +354,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Registry\RegKey.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Async\EventLoop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

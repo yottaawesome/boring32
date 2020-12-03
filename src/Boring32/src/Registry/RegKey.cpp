@@ -28,7 +28,7 @@ namespace Boring32::Registry
 	RegKey::RegKey(const HKEY key, const std::wstring& subkey, const std::nothrow_t&) noexcept
 	{
 		Error::TryCatchLogToWCerr(
-			[this, key = key, subkey = subkey] { InternalOpen(key, subkey); }, 
+			[this, key = key, &subkey = subkey] { InternalOpen(key, subkey); }, 
 			__FUNCSIG__
 		);
 	}

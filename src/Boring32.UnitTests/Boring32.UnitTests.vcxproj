@@ -160,6 +160,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Async\Event..cpp" />
+    <ClCompile Include="Async\EventLoop.cpp" />
     <ClCompile Include="Async\Mutex.cpp" />
     <ClCompile Include="Async\WaitableTimer.cpp" />
     <ClCompile Include="Error\Error.cpp" />

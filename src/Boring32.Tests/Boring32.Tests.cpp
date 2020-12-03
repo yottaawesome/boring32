@@ -63,7 +63,7 @@ void TestSemaphore()
 
 void TestMutex()
 {
-	Boring32::Async::Mutex m1(L"HelloMutex", false, false);
+	Boring32::Async::Mutex m1(false, false, L"HelloMutex");
 	m1.Lock(1000, true);
 	m1.Unlock();
 
@@ -71,7 +71,7 @@ void TestMutex()
 	Boring32::Async::Mutex m3(false, false);
 
 	m2 = m3;
-	m2 = Boring32::Async::Mutex(L"Assignment", false, false);
+	m2 = Boring32::Async::Mutex(false, false, L"Assignment");
 }
 
 void TestConversions()

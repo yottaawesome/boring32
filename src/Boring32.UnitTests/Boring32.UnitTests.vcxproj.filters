@@ -33,6 +33,9 @@
     <ClCompile Include="Strings\Strings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Async\EventLoop.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">

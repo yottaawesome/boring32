@@ -1,6 +1,8 @@
 #include "pch.hpp"
-#include "include/Async/EventLoop.hpp"
+#include <algorithm>
+#include "include/Async/CriticalSectionLock.hpp"
 #include "include/Error/Error.hpp"
+#include "include/Async/EventLoop.hpp"
 
 namespace Boring32::Async
 {
@@ -9,17 +11,16 @@ namespace Boring32::Async
 		Close(); 
 	}
 	
-	EventLoop::EventLoop() {}
-
-	EventLoop::EventLoop(std::map<HANDLE, std::function<void(EventLoop&)>&> mapOfEvents)
-	:	m_mapOfEvents(std::move(mapOfEvents))
-	{ 
-		RebuildEvents();
+	EventLoop::EventLoop() 
+	{
+		InitializeCriticalSection(&m_cs);
 	}
 
-	void EventLoop::Close() 
+	void EventLoop::Close()
 	{
-		m_mapOfEvents.clear();
+		m_handlers.clear();
+		m_events.clear();
+		DeleteCriticalSection(&m_cs);
 	}
 	
 	bool EventLoop::WaitOn(const DWORD millis, const bool waitAll)
@@ -27,7 +28,9 @@ namespace Boring32::Async
 		if (m_events.size() == 0)
 			throw std::runtime_error("EventLoop::WaitOn(): m_events is empty");
 
-		DWORD result = WaitForMultipleObjectsEx(m_events.size(), &m_events[0], waitAll, millis, true);
+		CriticalSectionLock cs(m_cs);
+
+		DWORD result = WaitForMultipleObjectsEx((DWORD)m_events.size(), &m_events[0], waitAll, millis, true);
 		if (result == WAIT_FAILED)
 			throw Error::Win32Error("EventLoop::WaitOn(): WaitForMultipleObjectsEx() failed", GetLastError());
 		if (result == WAIT_TIMEOUT)
@@ -40,40 +43,43 @@ namespace Boring32::Async
 			// If we waited for all events to fire, then we need to fire
 			// all functions. This is because WaitForMultipleObjectsEx()
 			// returns only the zero index.
-			for (int i = 0; i < m_events.size(); i++)
-				m_mapOfEvents[m_events[i]](*this);
+			for (auto& handler : m_handlers)
+				handler();
 		}
 		else
 		{
-			// If we didn't wait for all events to fire, then we need to 
-			// to fire the relevant event's function, in addition to any
-			// other events that are active. This is because
-			// WaitForMultipleObjectsEx() only returns the lowest index of 
-			// the fire events, and there could be potentially more.
-			m_mapOfEvents[m_events[result]](*this);
-			for (int i = result - WAIT_OBJECT_0; i < m_events.size(); i++)
-				if (WaitForSingleObject(m_events[i], 0) == (WAIT_OBJECT_0 - i))
-					m_mapOfEvents[m_events[i]](*this);
+			m_handlers.at(result)();
 		}
 
 		return true;
 	}
 	
-	void EventLoop::Set(std::map<HANDLE, std::function<void(EventLoop&)>&> mapOfEvents)
+	void EventLoop::On(HANDLE handle, std::function<void()> handler)
 	{
-		m_mapOfEvents = std::move(mapOfEvents);
-		RebuildEvents();
+		CriticalSectionLock cs(m_cs);
+		m_events.push_back(handle);
+		m_handlers.push_back(std::move(handler));
 	}
 
-	void EventLoop::Set(HANDLE handle, std::function<void(EventLoop&)>& function)
+	void EventLoop::Erase(HANDLE handle)
 	{
-		m_mapOfEvents[handle] = function;
+		CriticalSectionLock cs(m_cs);
+		std::vector<HANDLE>::iterator handlePosIterator = std::find_if(
+			m_events.begin(), 
+			m_events.end(), 
+			[handle](const auto& elem) { return elem == handle; }
+		);
+		if (handlePosIterator != m_events.end())
+		{
+			std::ptrdiff_t iteratorDist = std::distance(m_events.begin(), handlePosIterator);
+			m_events.erase(handlePosIterator);
+			m_handlers.erase(m_handlers.begin() + iteratorDist);
+		}
 	}
 
-	void EventLoop::RebuildEvents()
+	size_t EventLoop::Size() noexcept
 	{
-		m_events.clear();
-		for (const auto& [handle, function] : m_mapOfEvents)
-			m_events.push_back(handle);
+		CriticalSectionLock cs(m_cs);
+		return m_events.size();
 	}
 }

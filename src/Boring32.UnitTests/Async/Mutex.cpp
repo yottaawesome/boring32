@@ -25,7 +25,7 @@ namespace Boring32::Async::UnitTests
 			TEST_METHOD(TestOpenNamedMutex)
 			{
 				Boring32::Async::Mutex testMutex1(false, false, L"Mutex1");
-				Boring32::Async::Mutex testMutex2(L"Mutex1", MUTEX_ALL_ACCESS, false);
+				Boring32::Async::Mutex testMutex2(false, false, L"Mutex1", MUTEX_ALL_ACCESS);
 				Assert::IsNotNull(testMutex1.GetHandle());
 				Assert::IsNotNull(testMutex2.GetHandle());
 				Assert::IsTrue(testMutex2.GetName() == L"Mutex1");

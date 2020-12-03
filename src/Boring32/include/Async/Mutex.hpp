@@ -18,6 +18,20 @@ namespace Boring32::Async
 			Mutex();
 
 			/// <summary>
+			///		Creates an anonymous mutex.
+			/// </summary>
+			/// <param name="acquire">
+			///		Whether to request acquisition of the mutex.
+			/// </param>
+			/// <param name="inheritable">
+			///		Whether the mutex is inheritable to child processes.
+			/// </param>
+			/// <exception cref="std::runtime_error">
+			///		Thrown when mutex creation failed.
+			/// </exception>
+			Mutex(const bool acquire, const bool inheritable);
+
+			/// <summary>
 			///		Creates a new named or anonymous mutex.
 			/// </summary>
 			/// <param name="name">
@@ -49,24 +63,11 @@ namespace Boring32::Async
 			///		The desired access to open the mutex, e.g. SYNCHRONIZE.
 			/// </param>
 			Mutex(
+				const bool acquireOnOpen,
+				const bool inheritable,
 				std::wstring name,
-				const DWORD desiredAccess,
-				const bool isInheritable
+				const DWORD desiredAccess
 			);
-			
-			/// <summary>
-			///		Creates an anonymous mutex.
-			/// </summary>
-			/// <param name="acquire">
-			///		Whether to request acquisition of the mutex.
-			/// </param>
-			/// <param name="inheritable">
-			///		Whether the mutex is inheritable to child processes.
-			/// </param>
-			/// <exception cref="std::runtime_error">
-			///		Thrown when mutex creation failed.
-			/// </exception>
-			Mutex(const bool acquire, const bool inheritable);
 
 			/// <summary>
 			///		Clones a mutex.

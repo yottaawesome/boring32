@@ -1,8 +1,7 @@
 #pragma once
+#include <Windows.h>
 #include <vector>
-#include <map>
 #include <functional>
-#include "../Raii/Win32Handle.hpp"
 
 namespace Boring32::Async
 {
@@ -11,19 +10,17 @@ namespace Boring32::Async
 		public:
 			virtual ~EventLoop();
 			EventLoop();
-			EventLoop(std::map<HANDLE, std::function<void(EventLoop&)>&> mapOfEvents);
 
 		public:
 			virtual void Close();
 			virtual bool WaitOn(const DWORD millis, const bool waitAll);
-			virtual void Set(std::map<HANDLE, std::function<void(EventLoop&)>&> mapOfEvents);
-			virtual void Set(HANDLE handle, std::function<void(EventLoop&)>& function);
+			virtual void On(HANDLE handle, std::function<void()> handler);
+			virtual void Erase(HANDLE handle);
+			virtual size_t Size() noexcept;
 
 		protected:
-			virtual void RebuildEvents();
-
-		protected:
-			std::map<HANDLE, std::function<void(EventLoop&)>&> m_mapOfEvents;
+			std::vector<std::function<void()>> m_handlers;
 			std::vector<HANDLE> m_events;
+			CRITICAL_SECTION m_cs;
 	};
 }
