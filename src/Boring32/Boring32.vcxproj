@@ -274,6 +274,7 @@
     <ClCompile Include="src\Async\ProcessInfo.cpp" />
     <ClCompile Include="src\Raii\Sid.cpp" />
     <ClCompile Include="src\Raii\Win32Handle.cpp" />
+    <ClCompile Include="src\Registry\RegistryFuncs.cpp" />
     <ClCompile Include="src\Registry\RegKey.cpp" />
     <ClCompile Include="src\Security\PrivateNamespace.cpp" />
     <ClCompile Include="src\Strings\Win32Strings.cpp" />
