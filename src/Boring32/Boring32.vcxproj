@@ -168,6 +168,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Async\AsyncFuncs.hpp" />
     <ClInclude Include="include\Async\CriticalSectionLock.hpp" />
     <ClInclude Include="include\Async\Event.hpp" />
     <ClInclude Include="include\Async\EventLoop.hpp" />
@@ -236,6 +237,7 @@
     <ClInclude Include="src\targetver.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Async\AsyncFuncs.cpp" />
     <ClCompile Include="src\Async\CriticalSectionLock.cpp" />
     <ClCompile Include="src\Async\Event.cpp" />
     <ClCompile Include="src\Async\EventLoop.cpp" />
