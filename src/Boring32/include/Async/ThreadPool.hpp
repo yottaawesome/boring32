@@ -1,8 +1,24 @@
 #pragma once
+#include <functional>
 #include <Windows.h>
 
 namespace Boring32::Async
 {
+	// Doesn't work
+	/*
+	using ThreadPoolCallback = 
+		std::function<
+			 void(PTP_CALLBACK_INSTANCE instance, void* param, PTP_WORK work)
+		>;
+	*/
+
+	typedef void
+		(*ThreadPoolCallback)(
+			PTP_CALLBACK_INSTANCE Instance,
+			void*                 Parameter,
+			PTP_WORK              Work
+		);
+
 	class ThreadPool
 	{
 		public:
@@ -11,6 +27,10 @@ namespace Boring32::Async
 
 		public:
 			virtual void Close();
+			virtual PTP_WORK SubmitWork(
+				ThreadPoolCallback& callback,
+				void* param
+			);
 
 		protected:
 			TP_POOL* m_pool;
