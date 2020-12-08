@@ -4,7 +4,7 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace Boring32::Error::UnitTests
+namespace Error
 {
 	TEST_CLASS(Error)
 	{

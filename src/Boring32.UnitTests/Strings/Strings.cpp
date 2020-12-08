@@ -4,7 +4,7 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace Boring32::Strings::UnitTests
+namespace Strings
 {
 	TEST_CLASS(Strings)
 	{

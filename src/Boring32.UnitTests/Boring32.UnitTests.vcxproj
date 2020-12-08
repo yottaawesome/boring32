@@ -159,6 +159,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Async\AsyncFuncs.cpp" />
     <ClCompile Include="Async\Event..cpp" />
     <ClCompile Include="Async\EventLoop.cpp" />
     <ClCompile Include="Async\Mutex.cpp" />

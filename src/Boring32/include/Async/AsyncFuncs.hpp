@@ -15,13 +15,7 @@ namespace Boring32::Async
 		const bool waitForAll
 	);
 	
-	int64_t WaitFor(
-		const std::vector<HANDLE>& handles,
-		const bool waitForAll,
-		const DWORD timeout
-	);
-
-	int64_t WaitFor(
+	DWORD WaitFor(
 		const std::vector<HANDLE>& handles,
 		const bool waitForAll,
 		const DWORD timeout
@@ -42,14 +36,14 @@ namespace Boring32::Async
 	///		The period in milliseconds to wait, or INFINITE.
 	/// </param>
 	/// <param name="alertable">
-	///		Whether the thread enters an alertable sleep. If an APC routine is 
-	///		triggered and interrupts the wait, this function returns -1.
+	///		Whether the thread enters an alertable wait.
 	/// </param>
 	/// <returns>
-	///		-1 on timeouts or APC interruptions, 1 if waitForAll is true, and the 
-	///		index of the handle that was signaled otherwise.
+	///		WAIT_TIMEOUT or WAIT_IO_COMPLETION on timeouts or APC executions 
+	///		respectively, 0 if waitForAll is true, or the index of the 
+	///		handle that was signaled otherwise.
 	/// </returns>
-	int64_t WaitFor(
+	DWORD WaitFor(
 		const std::vector<HANDLE>& handles, 
 		const bool waitForAll,
 		const DWORD timeout,

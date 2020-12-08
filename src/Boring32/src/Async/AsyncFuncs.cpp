@@ -37,12 +37,10 @@ namespace Boring32::Async
 		const bool waitForAll
 	)
 	{
-		// Due to the parameters we pass in, we'll only be getting
-		// positive values
 		return (DWORD)WaitFor(handles, waitForAll, INFINITE, false);
 	}
 
-	int64_t WaitFor(
+	DWORD WaitFor(
 		const std::vector<HANDLE>& handles,
 		const bool waitForAll,
 		const DWORD timeout
@@ -51,7 +49,7 @@ namespace Boring32::Async
 		return WaitFor(handles, waitForAll, timeout, false);
 	}
 
-	int64_t WaitFor(
+	DWORD WaitFor(
 		const std::vector<HANDLE>& handles, 
 		const bool waitForAll,
 		const DWORD timeout,
@@ -78,11 +76,9 @@ namespace Boring32::Async
 			throw std::runtime_error(__FUNCSIG__ ": the wait was abandoned");
 		if (status == WAIT_FAILED)
 			throw Error::Win32Error(__FUNCSIG__ ": WaitForSingleObjectEx() failed", GetLastError());
-		if (status == WAIT_TIMEOUT)
-			return -1;
-		if (status == WAIT_IO_COMPLETION)
-			return -1;
+		if (status == WAIT_TIMEOUT || status == WAIT_IO_COMPLETION)
+			return status;
 
-		return waitForAll ? 1 : status - WAIT_OBJECT_0;
+		return waitForAll ? 0 : status - WAIT_OBJECT_0;
 	}
 }

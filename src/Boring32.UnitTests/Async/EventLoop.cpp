@@ -5,7 +5,7 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace Boring32::Async::UnitTests
+namespace Async
 {
 	TEST_CLASS(EventLoop)
 	{
