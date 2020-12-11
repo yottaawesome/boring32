@@ -201,10 +201,11 @@
     <ClInclude Include="include\Compression\CompressionType.hpp" />
     <ClInclude Include="include\Compression\Compressor.hpp" />
     <ClInclude Include="include\Compression\Decompressor.hpp" />
+    <ClInclude Include="include\Crypto\CertStore.hpp" />
     <ClInclude Include="include\Error\ComError.hpp" />
     <ClInclude Include="include\Registry\Registry.hpp" />
     <ClInclude Include="include\Registry\RegKey.hpp" />
-    <ClInclude Include="include\Security\Crypto\Crypto.hpp" />
+    <ClInclude Include="include\Crypto\Crypto.hpp" />
     <ClInclude Include="include\Error\Error.hpp" />
     <ClInclude Include="include\Error\Win32Error.hpp" />
     <ClInclude Include="include\Guid\Guid.hpp" />
@@ -263,6 +264,7 @@
     <ClCompile Include="src\Compression\Compressor.cpp" />
     <ClCompile Include="src\Compression\Decompressor.cpp" />
     <ClCompile Include="src\Com\ComThreadScope.cpp" />
+    <ClCompile Include="src\Crypto\CertStore.cpp" />
     <ClCompile Include="src\Error\ComError.cpp" />
     <ClCompile Include="src\Error\Error.cpp" />
     <ClCompile Include="src\Error\Win32Error.cpp" />

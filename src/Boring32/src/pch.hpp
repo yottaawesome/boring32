@@ -15,3 +15,4 @@
 #pragma comment(lib, "Pathcch.lib")
 #pragma comment(lib, "comsuppw.lib")
 #pragma comment(lib, "Cabinet.lib")
+#pragma comment(lib, "Crypt32.lib")

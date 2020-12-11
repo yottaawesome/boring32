@@ -147,9 +147,6 @@
     <ClInclude Include="include\Compression\Compression.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Security\Crypto\Crypto.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Error\Win32Error.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -214,6 +211,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Async\AsyncFuncs.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Crypto\Crypto.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Crypto\CertStore.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -366,6 +369,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Registry\RegistryFuncs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Crypto\CertStore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

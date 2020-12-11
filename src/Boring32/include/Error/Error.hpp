@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Win32Error.hpp"
 #include "ComError.hpp"
+#include <utility>
 
 namespace Boring32::Error
 {
@@ -42,5 +43,30 @@ namespace Boring32::Error
 	inline bool TryCatchLogToWCerr(const T& function, const S& string) noexcept
 	{
 		return TryCatchLogToWCerr(function, string.c_str());
+	}
+
+	template<typename S, typename...Args>
+	inline bool TryCatchLogToWCerr2(
+		const auto function, 
+		const auto type, 
+		const S& string, 
+		Args&&...args
+	) noexcept
+	{
+		try
+		{
+			//((*type).*function)(std::forward<Args>(args)...);
+			(type->*function)(std::forward<Args>(args)...);
+			return true;
+		}
+		catch (const std::exception& ex)
+		{
+			std::wcerr
+				<< string
+				<< L" "
+				<< ex.what()
+				<< std::endl;
+			return false;
+		}
 	}
 }
