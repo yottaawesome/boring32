@@ -46,7 +46,7 @@ namespace Boring32::Error
 	}
 
 	template<typename S, typename...Args>
-	inline bool TryCatchLogToWCerr2(
+	inline bool TryCatchLogToWCerr(
 		const auto function, 
 		const auto type, 
 		const S& string, 
