@@ -18,28 +18,31 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\Mutex.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Async\Event..cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Async\WaitableTimer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Error\Error.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Strings\Strings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\EventLoop.cpp">
+    <ClCompile Include="Async\Async\AsyncFuncs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\AsyncFuncs.cpp">
+    <ClCompile Include="Async\Async\Event..cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\Crypto.cpp">
+    <ClCompile Include="Async\Async\EventLoop.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Async\Async\Mutex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Async\Async\WaitableTimer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Async\Crypto\CertStore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Async\Crypto\Crypto.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -8,11 +8,11 @@ namespace Crypto
 {
 	TEST_CLASS(CertStore)
 	{
-	public:
-		TEST_METHOD(TestCreateCertStore)
-		{
-			Boring32::Crypto::CertStore store(L"MY");
-			Assert::IsNotNull(store.GetHandle());
-		}
+		public:
+			TEST_METHOD(TestCreateCertStore)
+			{
+				Boring32::Crypto::CertStore store(L"MY");
+				Assert::IsNotNull(store.GetHandle());
+			}
 	};
 }

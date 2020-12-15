@@ -159,12 +159,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Async\AsyncFuncs.cpp" />
-    <ClCompile Include="Async\Crypto.cpp" />
-    <ClCompile Include="Async\Event..cpp" />
-    <ClCompile Include="Async\EventLoop.cpp" />
-    <ClCompile Include="Async\Mutex.cpp" />
-    <ClCompile Include="Async\WaitableTimer.cpp" />
+    <ClCompile Include="Async\Async\AsyncFuncs.cpp" />
+    <ClCompile Include="Async\Crypto\CertStore.cpp" />
+    <ClCompile Include="Async\Async\Event..cpp" />
+    <ClCompile Include="Async\Async\EventLoop.cpp" />
+    <ClCompile Include="Async\Async\Mutex.cpp" />
+    <ClCompile Include="Async\Async\WaitableTimer.cpp" />
+    <ClCompile Include="Async\Crypto\Crypto.cpp" />
     <ClCompile Include="Error\Error.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
