@@ -5,6 +5,19 @@
 
 namespace Boring32::Crypto
 {
+	enum class EncryptOptions
+	{
+		LocalMachine = CRYPTPROTECT_LOCAL_MACHINE,
+		UiForbidden = CRYPTPROTECT_UI_FORBIDDEN,
+		Audit = CRYPTPROTECT_AUDIT
+	};
+
+	enum class DecryptOptions
+	{
+		UiForbidden = CRYPTPROTECT_UI_FORBIDDEN,
+		VerifyProtection = CRYPTPROTECT_VERIFY_PROTECTION
+	};
+
 	std::vector<std::byte> EncryptString(
 		const std::wstring& str,
 		const std::wstring& password,
