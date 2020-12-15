@@ -13,8 +13,9 @@ namespace Crypto
 			{
 				std::vector<std::byte> encryptedData =
 					Boring32::Crypto::EncryptString(
-						L"Basic description",
-						L"Hello, world!"
+						L"Hello, world!",
+						L"TestPassword",
+						L"Basic description"
 					);
 				Assert::IsFalse(encryptedData.empty());
 			}
@@ -22,18 +23,24 @@ namespace Crypto
 			TEST_METHOD(TestDecryptString)
 			{
 				std::wstring description = L"Basic description";
+				std::wstring password = L"TestPassword";
 				std::wstring data = L"Hello, world";
 
 				std::vector<std::byte> encryptedData =
 					Boring32::Crypto::EncryptString(
-						description,
-						data
+						data,
+						password,
+						description
 					);
 				Assert::IsFalse(encryptedData.empty());
 
 				std::wstring descriptionOut;
 				std::wstring decryptedString = 
-					Boring32::Crypto::DecryptString(encryptedData, descriptionOut);
+					Boring32::Crypto::DecryptString(
+						encryptedData,
+						password,
+						descriptionOut
+					);
 
 				Assert::IsTrue(descriptionOut == description);
 				Assert::IsTrue(decryptedString == data);
