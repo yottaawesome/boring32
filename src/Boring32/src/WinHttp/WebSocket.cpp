@@ -86,12 +86,12 @@ namespace Boring32::WinHttp::WebSockets
 	void WebSocket::InternalConnect(const std::wstring& path)
 	{
 		if (m_status != WebSocketStatus::NotInitialised)
-			throw std::runtime_error("WebSocket needs to be in NotInitialised state to connect");
+			throw std::runtime_error(__FUNCSIG__ ": WebSocket needs to be in NotInitialised state to connect");
 
 		try
 		{
 			if (m_settings.WinHttpSession.GetSession() == nullptr)
-				throw std::runtime_error("WinHttp session cannot be null");
+				throw std::runtime_error(__FUNCSIG__ ": WinHttp session cannot be null");
 
 			m_winHttpConnection = WinHttpConnect(
 				m_settings.WinHttpSession.GetSession(),
@@ -100,7 +100,7 @@ namespace Boring32::WinHttp::WebSockets
 				0
 			);
 			if (m_winHttpConnection == nullptr)
-				throw Error::Win32Error("WebSocket::InternalConnect(): WinHttpConnect() failed", GetLastError());
+				throw Error::Win32Error(__FUNCSIG__ ": WinHttpConnect() failed", GetLastError());
 
 			// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpopenrequest
 			WinHttpHandle requestHandle = WinHttpOpenRequest(
@@ -113,8 +113,9 @@ namespace Boring32::WinHttp::WebSockets
 				WINHTTP_FLAG_SECURE
 			);
 			if (requestHandle == nullptr)
-				throw Error::Win32Error("WebSocket::InternalConnect(): WinHttpOpenRequest() failed", GetLastError());
+				throw Error::Win32Error(__FUNCSIG__ ": WinHttpOpenRequest() failed", GetLastError());
 
+			bool success = false;
 			if (m_settings.IgnoreSslErrors)
 			{
 				DWORD optionFlags =
@@ -124,28 +125,29 @@ namespace Boring32::WinHttp::WebSockets
 					SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
 				// https://docs.microsoft.com/en-us/windows/win32/winhttp/option-flags
 				// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpsetoption
-				bool setSecurityOption = WinHttpSetOption(
+				success = WinHttpSetOption(
 					requestHandle.Get(),
 					WINHTTP_OPTION_SECURITY_FLAGS,
 					&optionFlags,
 					sizeof(optionFlags)
 				);
-				if (setSecurityOption == false)
-					throw Error::Win32Error("WebSocket::InternalConnect(): WinHttpSetOption() failed", GetLastError());
+				if (success == false)
+					throw Error::Win32Error(__FUNCSIG__ ": WinHttpSetOption() failed", GetLastError());
 			}
 
-			bool setWebsocketOption = WinHttpSetOption(
+			success = WinHttpSetOption(
 				requestHandle.Get(),
 				WINHTTP_OPTION_UPGRADE_TO_WEB_SOCKET,
 				nullptr,
 				0
 			);
-			if (setWebsocketOption == false)
-				throw Error::Win32Error("WebSocket::InternalConnect(): WinHttpSetOption() failed", GetLastError());
+			if (success == false)
+				throw Error::Win32Error(__FUNCSIG__ ": WinHttpSetOption() failed", GetLastError());
 
-			bool success = false;
 			bool retryConnectRequest = true;
-			while (retryConnectRequest)
+			USHORT retryConnectRequestCount = 0;
+			constexpr USHORT retryConnectRequestCountLimit = 5;
+			while (retryConnectRequest && retryConnectRequestCount < retryConnectRequestCountLimit)
 			{
 				const wchar_t* connectionHeaders = m_settings.ConnectionHeaders.empty()
 					? WINHTTP_NO_ADDITIONAL_HEADERS
@@ -186,7 +188,10 @@ namespace Boring32::WinHttp::WebSockets
 					if (setCertOption == false)
 						throw Error::Win32Error(__FUNCSIG__ ": WinHttpSetOption() failed for client certificate", GetLastError());
 				}
+				retryConnectRequestCount++;
 			}
+			if (retryConnectRequestCount == retryConnectRequestCountLimit)
+				throw std::runtime_error(__FUNCSIG__ ": failed to successfully send initial request under retry limit");
 
 			DWORD statusCode = 0;
 			DWORD statusCodeSize = sizeof(statusCode);
@@ -200,12 +205,13 @@ namespace Boring32::WinHttp::WebSockets
 				WINHTTP_NO_HEADER_INDEX
 			);
 			if (success == false)
-				throw Error::Win32Error("WebSocket::InternalConnect(): WinHttpQueryHeaders() failed", GetLastError());
+				throw Error::Win32Error(__FUNCSIG__ ": WinHttpQueryHeaders() failed", GetLastError());
 
 			if (statusCode != 101) // switching protocol
 			{
 				throw std::runtime_error(
-					"Received unexpected HTTP response code while upgrading to websocket: "
+					__FUNCSIG__
+					": Received unexpected HTTP response code while upgrading to websocket: "
 					+ std::to_string(statusCode)
 				);
 			}
@@ -213,7 +219,7 @@ namespace Boring32::WinHttp::WebSockets
 			// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpwebsocketcompleteupgrade
 			m_winHttpWebSocket = WinHttpWebSocketCompleteUpgrade(requestHandle.Get(), 0);
 			if (m_winHttpWebSocket == nullptr)
-				throw Error::Win32Error("WebSocket::InternalConnect(): WinHttpWebSocketCompleteUpgrade() failed", GetLastError());
+				throw Error::Win32Error(__FUNCSIG__ ": WinHttpWebSocketCompleteUpgrade() failed", GetLastError());
 
 			requestHandle = nullptr;
 			m_status = WebSocketStatus::Connected;
