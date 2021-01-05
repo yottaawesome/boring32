@@ -143,23 +143,50 @@ namespace Boring32::WinHttp::WebSockets
 			if (setWebsocketOption == false)
 				throw Error::Win32Error("WebSocket::InternalConnect(): WinHttpSetOption() failed", GetLastError());
 
-			bool success = WinHttpSendRequest(
-				requestHandle.Get(),
-				m_settings.ConnectionHeaders.size() > 0
-					? m_settings.ConnectionHeaders.c_str()
-					: WINHTTP_NO_ADDITIONAL_HEADERS,
-				0,
-				nullptr,
-				0,
-				0,
-				0
-			);
-			if (success == false)
-				throw Error::Win32Error("WebSocket::InternalConnect(): WinHttpSendRequest() failed", GetLastError());
+			bool success = false;
+			bool retryConnectRequest = true;
+			while (retryConnectRequest)
+			{
+				const wchar_t* connectionHeaders = m_settings.ConnectionHeaders.empty()
+					? WINHTTP_NO_ADDITIONAL_HEADERS
+					: m_settings.ConnectionHeaders.c_str();
+				success = WinHttpSendRequest(
+					requestHandle.Get(),
+					connectionHeaders,
+					0,
+					nullptr,
+					0,
+					0,
+					0
+				);
+				if (success == false)
+					throw Error::Win32Error(
+						__FUNCSIG__ ": WinHttpSendRequest() failed on initial request", 
+						GetLastError()
+					);
 
-			success = WinHttpReceiveResponse(requestHandle.Get(), 0);
-			if (success == false)
-				throw Error::Win32Error("WebSocket::InternalConnect(): WinHttpReceiveResponse() failed", GetLastError());
+				if (WinHttpReceiveResponse(requestHandle.Get(), 0))
+				{
+					retryConnectRequest = false;
+				}
+				else
+				{
+					// Check to see if the we need a client cert, and that we've been provided one.
+					const DWORD lastError = GetLastError();
+					if (lastError != ERROR_WINHTTP_CLIENT_AUTH_CERT_NEEDED || m_settings.ClientCert.GetCert() == nullptr)
+						throw Error::Win32Error(__FUNCSIG__ ": WinHttpReceiveResponse() failed on initial connection", lastError);
+
+					// If so, we need to set the certificate option, and retry the request.
+					const bool setCertOption = WinHttpSetOption(
+						requestHandle.Get(),
+						WINHTTP_OPTION_CLIENT_CERT_CONTEXT,
+						(void*)m_settings.ClientCert.GetCert(),
+						sizeof(CERT_CONTEXT)
+					);
+					if (setCertOption == false)
+						throw Error::Win32Error(__FUNCSIG__ ": WinHttpSetOption() failed for client certificate", GetLastError());
+				}
+			}
 
 			DWORD statusCode = 0;
 			DWORD statusCodeSize = sizeof(statusCode);

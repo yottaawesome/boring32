@@ -10,6 +10,7 @@ namespace Boring32::WinHttp
 	{
 		public:
 			virtual ~Session();
+			Session();
 			Session(std::wstring userAgent);
 			Session(std::wstring userAgent, const ProxyType proxyType);
 			Session(std::wstring userAgent, std::wstring namedProxy);
@@ -21,7 +22,7 @@ namespace Boring32::WinHttp
 			virtual Session& operator=(Session&& other) noexcept;
 
 		public:
-			virtual HINTERNET GetSession() const;
+			virtual HINTERNET GetSession() const noexcept;
 
 			/// <summary>
 			///		Releases this object's ownership of the underlying WinHttp session,
@@ -29,12 +30,12 @@ namespace Boring32::WinHttp
 			///		the session is destroyed. This method has no effect if no WinHttp
 			///		session is owned by this object.
 			/// </summary>
-			virtual void Close();
+			virtual void Close() noexcept;
 
-			virtual ProxyType GetProxyType();
-			virtual const std::wstring& GetUserAgent();
-			virtual const std::wstring& GetNamedProxy();
-			virtual const std::wstring& GetProxyBypass();
+			virtual ProxyType GetProxyType() const noexcept;
+			virtual const std::wstring& GetUserAgent() const noexcept;
+			virtual const std::wstring& GetNamedProxy() const noexcept;
+			virtual const std::wstring& GetProxyBypass() const noexcept;
 
 		protected:
 			virtual void InternalCreate();

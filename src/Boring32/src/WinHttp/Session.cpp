@@ -9,6 +9,11 @@ namespace Boring32::WinHttp
 		Close();
 	}
 
+	Session::Session()
+	:	m_userAgent(L""),
+		m_proxyType(ProxyType::AutoProxy)
+	{ }
+
 	Session::Session(std::wstring userAgent)
 	:	m_userAgent(std::move(userAgent)), 
 		m_proxyType(ProxyType::AutoProxy)
@@ -88,32 +93,32 @@ namespace Boring32::WinHttp
 		return *this;
 	}
 
-	HINTERNET Session::GetSession() const
+	HINTERNET Session::GetSession() const noexcept
 	{
 		return m_session.get();
 	}
 
-	void Session::Close()
+	void Session::Close() noexcept
 	{
 		m_session = nullptr;
 	}
 
-	ProxyType Session::GetProxyType()
+	ProxyType Session::GetProxyType() const noexcept
 	{
 		return m_proxyType;
 	}
 
-	const std::wstring& Session::GetUserAgent()
+	const std::wstring& Session::GetUserAgent() const noexcept
 	{
 		return m_userAgent;
 	}
 	
-	const std::wstring& Session::GetNamedProxy()
+	const std::wstring& Session::GetNamedProxy() const noexcept
 	{
 		return m_namedProxy;
 	}
 
-	const std::wstring& Session::GetProxyBypass()
+	const std::wstring& Session::GetProxyBypass() const noexcept
 	{
 		return m_proxyBypass;
 	}
@@ -125,11 +130,17 @@ namespace Boring32::WinHttp
 		if ((DWORD)m_proxyType == WINHTTP_ACCESS_TYPE_NAMED_PROXY && m_namedProxy.empty())
 			throw std::invalid_argument("proxyName parameter is required when access type is named proxy");
 
+		const wchar_t* proxyType = (DWORD)m_proxyType == WINHTTP_ACCESS_TYPE_NAMED_PROXY
+			? m_namedProxy.c_str() 
+			: WINHTTP_NO_PROXY_NAME;
+		const wchar_t* proxyBypass = m_proxyBypass.empty()
+			? WINHTTP_NO_PROXY_BYPASS
+			: m_proxyBypass.c_str();
 		HINTERNET handle = WinHttpOpen(
 			m_userAgent.c_str(),
 			(DWORD)m_proxyType,
-			(DWORD)m_proxyType == WINHTTP_ACCESS_TYPE_NAMED_PROXY ? m_namedProxy.c_str() : WINHTTP_NO_PROXY_NAME,
-			m_proxyBypass.empty() ? WINHTTP_NO_PROXY_BYPASS : m_proxyBypass.c_str(),
+			proxyType,
+			proxyBypass,
 			0
 		);
 		if (handle == nullptr)

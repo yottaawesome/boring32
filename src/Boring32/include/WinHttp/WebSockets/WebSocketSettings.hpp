@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "../Session.hpp"
+#include "../../Crypto/Certificate.hpp"
 
 namespace Boring32::WinHttp::WebSockets
 {
@@ -11,6 +12,7 @@ namespace Boring32::WinHttp::WebSockets
 		unsigned int Port = 0;
 		bool IgnoreSslErrors = false;
 		std::wstring ConnectionHeaders;
-		Session WinHttpSession = Session(L"boring32-user-agent");
+		Session WinHttpSession;
+		Crypto::Certificate ClientCert;
 	};
 }
