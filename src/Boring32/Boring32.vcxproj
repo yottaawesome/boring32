@@ -201,6 +201,7 @@
     <ClInclude Include="include\Compression\CompressionType.hpp" />
     <ClInclude Include="include\Compression\Compressor.hpp" />
     <ClInclude Include="include\Compression\Decompressor.hpp" />
+    <ClInclude Include="include\Crypto\Certificate.hpp" />
     <ClInclude Include="include\Crypto\CertStore.hpp" />
     <ClInclude Include="include\Crypto\CryptoFuncs.hpp" />
     <ClInclude Include="include\Error\ComError.hpp" />
@@ -265,6 +266,7 @@
     <ClCompile Include="src\Compression\Compressor.cpp" />
     <ClCompile Include="src\Compression\Decompressor.cpp" />
     <ClCompile Include="src\Com\ComThreadScope.cpp" />
+    <ClCompile Include="src\Crypto\Certificate.cpp" />
     <ClCompile Include="src\Crypto\CertStore.cpp" />
     <ClCompile Include="src\Crypto\CryptoFuncs.cpp" />
     <ClCompile Include="src\Error\ComError.cpp" />

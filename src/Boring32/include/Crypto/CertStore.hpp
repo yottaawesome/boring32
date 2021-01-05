@@ -20,14 +20,23 @@ namespace Boring32::Crypto
 			CertStore(std::wstring storeName);
 			CertStore(std::wstring storeName, const CertStoreCloseOptions closeOptions);
 
+			CertStore(const CertStore& other);
+			virtual CertStore& operator=(const CertStore& other);
+
+			CertStore(CertStore&& other) noexcept;
+			virtual CertStore& operator=(CertStore&& other) noexcept;
+
 		public:
 			virtual void Close();
 			virtual void Close(const std::nothrow_t&) noexcept;
 			virtual HCERTSTORE GetHandle() const noexcept;
 			virtual const std::wstring& GetName() const noexcept;
+			virtual CERT_CONTEXT* GetCertBySubjectName(const std::wstring& subjectName);
 
 		protected:
 			virtual void InternalOpen();
+			virtual CertStore& Copy(const CertStore& other);
+			virtual CertStore& Move(CertStore& other) noexcept;
 
 		protected:
 			HCERTSTORE m_certStore;

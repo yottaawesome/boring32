@@ -10,29 +10,72 @@ namespace Boring32::Crypto
 	{
 		Close(std::nothrow);
 	}
-	
+
 	CertStore::CertStore()
-	:	m_certStore(nullptr),
+		: m_certStore(nullptr),
 		m_closeOptions(CertStoreCloseOptions::Default)
 	{ }
 
 	CertStore::CertStore(std::wstring storeName)
-	:	m_certStore(nullptr),
+		: m_certStore(nullptr),
 		m_storeName(std::move(storeName)),
 		m_closeOptions(CertStoreCloseOptions::Default)
 	{
 		InternalOpen();
 	}
-	
+
 	CertStore::CertStore(
 		std::wstring storeName,
 		const CertStoreCloseOptions closeOptions
 	)
-	:	m_certStore(nullptr),
+		: m_certStore(nullptr),
 		m_storeName(std::move(storeName)),
 		m_closeOptions(closeOptions)
 	{
 		InternalOpen();
+	}
+
+	CertStore::CertStore(const CertStore& other)
+	{
+		Copy(other);
+	}
+
+	CertStore& CertStore::operator=(const CertStore& other)
+	{
+		return Copy(other);
+	}
+
+	CertStore& CertStore::Copy(const CertStore& other)
+	{
+		Close(std::nothrow);
+		m_storeName = other.m_storeName;
+		m_closeOptions = other.m_closeOptions;
+		if (other.m_certStore)
+			m_certStore = CertDuplicateStore(other.m_certStore);
+		return *this;
+	}
+
+	CertStore::CertStore(CertStore&& other) noexcept
+	{
+		Move(other);
+	}
+
+	CertStore& CertStore::operator=(CertStore&& other) noexcept
+	{
+		return Move(other);
+	}
+	
+	CertStore& CertStore::Move(CertStore& other) noexcept
+	{
+		Close(std::nothrow);
+		m_storeName = std::move(other.m_storeName);
+		m_closeOptions = other.m_closeOptions;
+		if (other.m_certStore)
+		{
+			m_certStore = other.m_certStore;
+			other.m_certStore = nullptr;
+		}
+		return *this;
 	}
 
 	void CertStore::Close()
@@ -49,7 +92,19 @@ namespace Boring32::Crypto
 
 	void CertStore::Close(const std::nothrow_t&) noexcept
 	{
-		Error::TryCatchLogToWCerr([this] { Close(); }, __FUNCSIG__);
+		try
+		{
+			Close();
+		}
+		catch (const std::exception& ex)
+		{
+			std::wcerr 
+				<< __FUNCSIG__ 
+				<< ": "
+				<< "Close() failed"
+				<< ex.what()
+				<< std::endl;
+		}
 	}
 
 	void CertStore::InternalOpen()
@@ -60,7 +115,7 @@ namespace Boring32::Crypto
 		// common store names: CA, MY, ROOT, SPC
 		m_certStore = CertOpenSystemStoreW(0, m_storeName.c_str());
 		if (m_certStore == nullptr)
-			throw Boring32::Error::Win32Error(__FUNCSIG__ ": CertOpenSystemStoreW() failed", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__ ": CertOpenSystemStoreW() failed", GetLastError());
 	}
 
 	HCERTSTORE CertStore::GetHandle() const noexcept
@@ -71,5 +126,24 @@ namespace Boring32::Crypto
 	const std::wstring& CertStore::GetName() const noexcept
 	{
 		return m_storeName;
+	}
+
+	CERT_CONTEXT* CertStore::GetCertBySubjectName(const std::wstring& subjectName)
+	{
+		CERT_CONTEXT* certContext = (CERT_CONTEXT*)CertFindCertificateInStore(
+			m_certStore,
+			X509_ASN_ENCODING | PKCS_7_ASN_ENCODING,
+			0,
+			CERT_FIND_SUBJECT_STR,
+			(void*)subjectName.c_str(), //Subject string in the certificate.
+			nullptr
+		);
+		if (certContext == nullptr)
+		{
+			const DWORD lastError = GetLastError();
+			if (lastError != CRYPT_E_NOT_FOUND)
+				throw Error::Win32Error(__FUNCSIG__ ": CertFindCertificateInStore() failed", lastError);
+		}
+		return certContext;
 	}
 }
