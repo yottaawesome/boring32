@@ -118,11 +118,7 @@ namespace Boring32::WinHttp::WebSockets
 			bool success = false;
 			if (m_settings.IgnoreSslErrors)
 			{
-				DWORD optionFlags =
-					SECURITY_FLAG_IGNORE_UNKNOWN_CA |
-					SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE |
-					SECURITY_FLAG_IGNORE_CERT_CN_INVALID |
-					SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
+				DWORD optionFlags = SECURITY_FLAG_IGNORE_ALL_CERT_ERRORS;
 				// https://docs.microsoft.com/en-us/windows/win32/winhttp/option-flags
 				// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpsetoption
 				success = WinHttpSetOption(
@@ -144,54 +140,39 @@ namespace Boring32::WinHttp::WebSockets
 			if (success == false)
 				throw Error::Win32Error(__FUNCSIG__ ": WinHttpSetOption() failed", GetLastError());
 
-			bool retryConnectRequest = true;
-			USHORT retryConnectRequestCount = 0;
-			constexpr USHORT retryConnectRequestCountLimit = 5;
-			while (retryConnectRequest && retryConnectRequestCount < retryConnectRequestCountLimit)
+			if (m_settings.ClientCert.GetCert())
 			{
-				const wchar_t* connectionHeaders = m_settings.ConnectionHeaders.empty()
-					? WINHTTP_NO_ADDITIONAL_HEADERS
-					: m_settings.ConnectionHeaders.c_str();
-				success = WinHttpSendRequest(
+				// If so, we need to set the certificate option, and retry the request.
+				const bool setCertOption = WinHttpSetOption(
 					requestHandle.Get(),
-					connectionHeaders,
-					0,
-					nullptr,
-					0,
-					0,
-					0
+					WINHTTP_OPTION_CLIENT_CERT_CONTEXT,
+					(void*)m_settings.ClientCert.GetCert(),
+					sizeof(CERT_CONTEXT)
 				);
-				if (success == false)
-					throw Error::Win32Error(
-						__FUNCSIG__ ": WinHttpSendRequest() failed on initial request", 
-						GetLastError()
-					);
-
-				if (WinHttpReceiveResponse(requestHandle.Get(), 0))
-				{
-					retryConnectRequest = false;
-				}
-				else
-				{
-					// Check to see if the we need a client cert, and that we've been provided one.
-					const DWORD lastError = GetLastError();
-					if (lastError != ERROR_WINHTTP_CLIENT_AUTH_CERT_NEEDED || m_settings.ClientCert.GetCert() == nullptr)
-						throw Error::Win32Error(__FUNCSIG__ ": WinHttpReceiveResponse() failed on initial connection", lastError);
-
-					// If so, we need to set the certificate option, and retry the request.
-					const bool setCertOption = WinHttpSetOption(
-						requestHandle.Get(),
-						WINHTTP_OPTION_CLIENT_CERT_CONTEXT,
-						(void*)m_settings.ClientCert.GetCert(),
-						sizeof(CERT_CONTEXT)
-					);
-					if (setCertOption == false)
-						throw Error::Win32Error(__FUNCSIG__ ": WinHttpSetOption() failed for client certificate", GetLastError());
-				}
-				retryConnectRequestCount++;
+				if (setCertOption == false)
+					throw Error::Win32Error(__FUNCSIG__ ": WinHttpSetOption() failed for client certificate", GetLastError());
 			}
-			if (retryConnectRequestCount == retryConnectRequestCountLimit)
-				throw std::runtime_error(__FUNCSIG__ ": failed to successfully send initial request under retry limit");
+			const wchar_t* connectionHeaders = m_settings.ConnectionHeaders.empty()
+				? WINHTTP_NO_ADDITIONAL_HEADERS
+				: m_settings.ConnectionHeaders.c_str();
+			success = WinHttpSendRequest(
+				requestHandle.Get(),
+				connectionHeaders,
+				-1L,
+				nullptr,
+				0,
+				0,
+				0
+			);
+			if (success == false)
+				throw Error::Win32Error(
+					__FUNCSIG__ ": WinHttpSendRequest() failed on initial request", 
+					GetLastError()
+				);
+
+			success = WinHttpReceiveResponse(requestHandle.Get(), 0);
+			if(success == false)
+				throw Error::Win32Error(__FUNCSIG__ ": WinHttpReceiveResponse() failed on initial connection", GetLastError());
 
 			DWORD statusCode = 0;
 			DWORD statusCodeSize = sizeof(statusCode);

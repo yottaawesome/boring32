@@ -17,7 +17,7 @@ namespace Boring32::Crypto
 	{ }
 
 	CertStore::CertStore(std::wstring storeName)
-		: m_certStore(nullptr),
+	:	m_certStore(nullptr),
 		m_storeName(std::move(storeName)),
 		m_closeOptions(CertStoreCloseOptions::Default)
 	{
@@ -28,7 +28,7 @@ namespace Boring32::Crypto
 		std::wstring storeName,
 		const CertStoreCloseOptions closeOptions
 	)
-		: m_certStore(nullptr),
+	:	m_certStore(nullptr),
 		m_storeName(std::move(storeName)),
 		m_closeOptions(closeOptions)
 	{
@@ -36,6 +36,7 @@ namespace Boring32::Crypto
 	}
 
 	CertStore::CertStore(const CertStore& other)
+	:	m_certStore(nullptr)
 	{
 		Copy(other);
 	}
@@ -56,6 +57,7 @@ namespace Boring32::Crypto
 	}
 
 	CertStore::CertStore(CertStore&& other) noexcept
+	:	m_certStore(nullptr)
 	{
 		Move(other);
 	}
@@ -114,6 +116,17 @@ namespace Boring32::Crypto
 		// See https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopensystemstorew
 		// common store names: CA, MY, ROOT, SPC
 		m_certStore = CertOpenSystemStoreW(0, m_storeName.c_str());
+
+		/*
+		HCERTSTORE CertOpenStore(
+			LPCSTR            lpszStoreProvider,
+			DWORD             dwEncodingType,
+			HCRYPTPROV_LEGACY hCryptProv,
+			DWORD             dwFlags,
+			const void* pvPara
+		);
+		*/
+
 		if (m_certStore == nullptr)
 			throw Error::Win32Error(__FUNCSIG__ ": CertOpenSystemStoreW() failed", GetLastError());
 	}
@@ -132,10 +145,29 @@ namespace Boring32::Crypto
 	{
 		CERT_CONTEXT* certContext = (CERT_CONTEXT*)CertFindCertificateInStore(
 			m_certStore,
-			X509_ASN_ENCODING | PKCS_7_ASN_ENCODING,
+			X509_ASN_ENCODING | PKCS_7_ASN_ENCODING | CERT_FIND_HAS_PRIVATE_KEY,
 			0,
 			CERT_FIND_SUBJECT_STR,
 			(void*)subjectName.c_str(), //Subject string in the certificate.
+			nullptr
+		);
+		if (certContext == nullptr)
+		{
+			const DWORD lastError = GetLastError();
+			if (lastError != CRYPT_E_NOT_FOUND)
+				throw Error::Win32Error(__FUNCSIG__ ": CertFindCertificateInStore() failed", lastError);
+		}
+		return certContext;
+	}
+
+	CERT_CONTEXT* CertStore::GetCertByIssuerName(const std::wstring& issuerName)
+	{
+		CERT_CONTEXT* certContext = (CERT_CONTEXT*)CertFindCertificateInStore(
+			m_certStore,
+			X509_ASN_ENCODING | PKCS_7_ASN_ENCODING | CERT_FIND_HAS_PRIVATE_KEY,
+			0,
+			CERT_FIND_ISSUER_STR,
+			(void*)issuerName.c_str(), //Issuer name
 			nullptr
 		);
 		if (certContext == nullptr)

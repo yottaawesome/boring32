@@ -32,6 +32,7 @@ namespace Boring32::Crypto
 			virtual HCERTSTORE GetHandle() const noexcept;
 			virtual const std::wstring& GetName() const noexcept;
 			virtual CERT_CONTEXT* GetCertBySubjectName(const std::wstring& subjectName);
+			virtual CERT_CONTEXT* GetCertByIssuerName(const std::wstring& issuerName);
 
 		protected:
 			virtual void InternalOpen();

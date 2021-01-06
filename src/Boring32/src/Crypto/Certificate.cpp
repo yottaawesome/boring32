@@ -9,14 +9,15 @@ namespace Boring32::Crypto
 	}
 
 	Certificate::Certificate()
-		: m_certContext(nullptr)
+	:	m_certContext(nullptr)
 	{ }
 
 	Certificate::Certificate(PCCERT_CONTEXT certContext)
-		: m_certContext(certContext)
+	:	m_certContext(certContext)
 	{ }
 
 	Certificate::Certificate(const Certificate& other)
+	:	m_certContext(nullptr)
 	{
 		Copy(other);
 	}
@@ -35,6 +36,7 @@ namespace Boring32::Crypto
 	}
 
 	Certificate::Certificate(Certificate&& other) noexcept
+	:	m_certContext(nullptr)
 	{
 		Move(other);
 	}

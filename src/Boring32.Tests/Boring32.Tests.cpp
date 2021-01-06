@@ -285,8 +285,66 @@ void TestTimerQueues()
 	std::wcout << L"Timer Queue test OK" << std::endl;
 }
 
+void WebSocket()
+{
+	try
+	{
+		// Check https://github.com/julie-ng/nodejs-certificate-auth
+		// Follow the instructions in https://gist.github.com/pcan/e384fcad2a83e3ce20f9a4c33f4a13ae
+		// to generate all required files
+		// Check https://security.stackexchange.com/questions/25996/how-to-import-a-private-key-in-windows
+		// to create a pkcs file that can imported into MMC Certificates snap in
+		// Use the command below
+		// (winpty if in bash) openssl pkcs12 -export -out cert.pfx -inkey client1-key.pem -in client1-crt.pem -certfile ca-crt.pem
+		// Check https://www.sonicwall.com/support/knowledge-base/how-can-i-import-certificates-into-the-ms-windows-local-machine-certificate-store/170504615105398/
+		// to import the CA cert into Trusted Root Certification Authorities
+		// and to import the cert.pfx file into Personal \ Certificates
+		// Note that you should import into the current user store, not system store
+		// All the cert files are in my personal cloud drive under Programming >
+		// ws-client-auth-certs and a node server file is in socket.js
+		// Basically, the process is create CA keys and cert, create server
+		// keys and cert, create client keys and cert, create pfc file, import
+		// root ca into Windows user Trusted Root Certification Authorities,
+		// import client pfx file into personal user store, load cert, set cert
+		// context for winhttp and then connect
+		
+
+		// ERROR_WINHTTP_CLIENT_CERT_NO_PRIVATE_KEY
+		Boring32::Crypto::CertStore certStore(L"MY");
+		CERT_CONTEXT* cc = certStore.GetCertBySubjectName(L"client.localhost");
+		if (cc == nullptr)
+		{
+			std::wcerr << L"Failed" << std::endl;
+			return;
+		}
+		Boring32::Crypto::Certificate clientCert(cc);
+
+		Boring32::WinHttp::WebSockets::WebSocket socket(
+			Boring32::WinHttp::WebSockets::WebSocketSettings{
+				.Server = L"127.0.0.1",
+				.Port = 8000,
+				.IgnoreSslErrors = true,
+				.WinHttpSession =
+					Boring32::WinHttp::Session(L"testUserAgent"),
+				.ClientCert = clientCert
+			}
+		);
+		socket.Connect();
+		std::vector<char> buffer;
+		socket.Receive(buffer);
+		std::cout << std::string(buffer.begin(), buffer.end()) << std::endl;
+	}
+	catch (const std::exception& ex)
+	{
+		std::wcerr << ex.what() << std::endl;
+	}
+}
+
 int main(int argc, char** args)
 {
+	WebSocket();
+	return 0;
+
 	/*try
 	{
 		Boring32::Async::OverlappedNamedPipeServer server(L"A", 512, 1, L"", false, true);
