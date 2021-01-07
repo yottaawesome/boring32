@@ -12,8 +12,18 @@ namespace Boring32::Crypto
 	}
 
 	CertStore::CertStore()
-		: m_certStore(nullptr),
+	:	m_certStore(nullptr),
 		m_closeOptions(CertStoreCloseOptions::Default)
+	{ }
+
+	CertStore::CertStore(HCERTSTORE certStore)
+	:	m_certStore(certStore),
+		m_closeOptions(CertStoreCloseOptions::Default)
+	{ }
+
+	CertStore::CertStore(HCERTSTORE certStore, const CertStoreCloseOptions closeOptions)
+	:	m_certStore(certStore),
+		m_closeOptions(closeOptions)
 	{ }
 
 	CertStore::CertStore(std::wstring storeName)

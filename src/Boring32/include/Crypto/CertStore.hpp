@@ -17,6 +17,8 @@ namespace Boring32::Crypto
 		public:
 			virtual ~CertStore();
 			CertStore();
+			CertStore(HCERTSTORE certStore);
+			CertStore(HCERTSTORE certStore, const CertStoreCloseOptions closeOptions);
 			CertStore(std::wstring storeName);
 			CertStore(std::wstring storeName, const CertStoreCloseOptions closeOptions);
 

@@ -340,9 +340,36 @@ void WebSocket()
 	}
 }
 
+void CertStoreOpen()
+{
+	HCERTSTORE store = CertOpenStore(
+		CERT_STORE_PROV_SYSTEM_REGISTRY_W,
+		PKCS_7_ASN_ENCODING | X509_ASN_ENCODING,
+		0,
+		CERT_STORE_OPEN_EXISTING_FLAG | CERT_SYSTEM_STORE_LOCAL_MACHINE,
+		L"MY"
+	);
+
+	if (store == nullptr)
+	{
+		std::wcout << "Failed to load store" << std::endl;
+		return;
+	}
+
+	Boring32::Crypto::CertStore certStore(store);
+	CERT_CONTEXT* cc = certStore.GetCertBySubjectName(L"NVIDIA GameStream Server");
+	if (cc == nullptr)
+	{
+		std::wcerr << L"Failed" << std::endl;
+		return;
+	}
+	Boring32::Crypto::Certificate clientCert(cc);
+}
+
 int main(int argc, char** args)
 {
-	WebSocket();
+	//WebSocket();
+	CertStoreOpen();
 	return 0;
 
 	/*try
