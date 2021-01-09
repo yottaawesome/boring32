@@ -17,8 +17,8 @@ namespace Boring32::Crypto
 		public:
 			virtual ~CertStore();
 			CertStore();
-			CertStore(HCERTSTORE certStore);
-			CertStore(HCERTSTORE certStore, const CertStoreCloseOptions closeOptions);
+			CertStore(const HCERTSTORE certStore);
+			CertStore(const HCERTSTORE certStore, const CertStoreCloseOptions closeOptions);
 			CertStore(std::wstring storeName);
 			CertStore(std::wstring storeName, const CertStoreCloseOptions closeOptions);
 
@@ -29,8 +29,7 @@ namespace Boring32::Crypto
 			virtual CertStore& operator=(CertStore&& other) noexcept;
 
 		public:
-			virtual void Close();
-			virtual void Close(const std::nothrow_t&) noexcept;
+			virtual void Close() noexcept;
 			virtual HCERTSTORE GetHandle() const noexcept;
 			virtual const std::wstring& GetName() const noexcept;
 			virtual CERT_CONTEXT* GetCertBySubjectName(const std::wstring& subjectName);
@@ -40,6 +39,7 @@ namespace Boring32::Crypto
 			virtual void InternalOpen();
 			virtual CertStore& Copy(const CertStore& other);
 			virtual CertStore& Move(CertStore& other) noexcept;
+			virtual CERT_CONTEXT* GetCertByString(const DWORD searchFlag, const std::wstring& arg);
 
 		protected:
 			HCERTSTORE m_certStore;

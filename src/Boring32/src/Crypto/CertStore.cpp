@@ -8,7 +8,7 @@ namespace Boring32::Crypto
 {
 	CertStore::~CertStore()
 	{
-		Close(std::nothrow);
+		Close();
 	}
 
 	CertStore::CertStore()
@@ -16,12 +16,12 @@ namespace Boring32::Crypto
 		m_closeOptions(CertStoreCloseOptions::Default)
 	{ }
 
-	CertStore::CertStore(HCERTSTORE certStore)
+	CertStore::CertStore(const HCERTSTORE certStore)
 	:	m_certStore(certStore),
 		m_closeOptions(CertStoreCloseOptions::Default)
 	{ }
 
-	CertStore::CertStore(HCERTSTORE certStore, const CertStoreCloseOptions closeOptions)
+	CertStore::CertStore(const HCERTSTORE certStore, const CertStoreCloseOptions closeOptions)
 	:	m_certStore(certStore),
 		m_closeOptions(closeOptions)
 	{ }
@@ -58,7 +58,7 @@ namespace Boring32::Crypto
 
 	CertStore& CertStore::Copy(const CertStore& other)
 	{
-		Close(std::nothrow);
+		Close();
 		m_storeName = other.m_storeName;
 		m_closeOptions = other.m_closeOptions;
 		if (other.m_certStore)
@@ -79,7 +79,7 @@ namespace Boring32::Crypto
 	
 	CertStore& CertStore::Move(CertStore& other) noexcept
 	{
-		Close(std::nothrow);
+		Close();
 		m_storeName = std::move(other.m_storeName);
 		m_closeOptions = other.m_closeOptions;
 		if (other.m_certStore)
@@ -90,32 +90,18 @@ namespace Boring32::Crypto
 		return *this;
 	}
 
-	void CertStore::Close()
+	void CertStore::Close() noexcept
 	{
 		if (m_certStore)
 		{
 			// See https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certclosestore
 			// for additional resource notes under remarks
 			if (CertCloseStore(m_certStore, (DWORD)m_closeOptions) == false)
-				throw Error::Win32Error(__FUNCSIG__ ": CertCloseStore() failed", GetLastError());
+			{
+				Error::Win32Error error(__FUNCSIG__ ": CertCloseStore() failed", GetLastError());
+				std::wcerr << error.what() << std::endl;
+			}
 			m_certStore = nullptr;
-		}
-	}
-
-	void CertStore::Close(const std::nothrow_t&) noexcept
-	{
-		try
-		{
-			Close();
-		}
-		catch (const std::exception& ex)
-		{
-			std::wcerr 
-				<< __FUNCSIG__ 
-				<< ": "
-				<< "Close() failed"
-				<< ex.what()
-				<< std::endl;
 		}
 	}
 
@@ -153,31 +139,22 @@ namespace Boring32::Crypto
 
 	CERT_CONTEXT* CertStore::GetCertBySubjectName(const std::wstring& subjectName)
 	{
-		CERT_CONTEXT* certContext = (CERT_CONTEXT*)CertFindCertificateInStore(
-			m_certStore,
-			X509_ASN_ENCODING | PKCS_7_ASN_ENCODING | CERT_FIND_HAS_PRIVATE_KEY,
-			0,
-			CERT_FIND_SUBJECT_STR,
-			(void*)subjectName.c_str(), //Subject string in the certificate.
-			nullptr
-		);
-		if (certContext == nullptr)
-		{
-			const DWORD lastError = GetLastError();
-			if (lastError != CRYPT_E_NOT_FOUND)
-				throw Error::Win32Error(__FUNCSIG__ ": CertFindCertificateInStore() failed", lastError);
-		}
-		return certContext;
+		return GetCertByString(CERT_FIND_SUBJECT_STR, subjectName);
 	}
 
 	CERT_CONTEXT* CertStore::GetCertByIssuerName(const std::wstring& issuerName)
 	{
-		CERT_CONTEXT* certContext = (CERT_CONTEXT*)CertFindCertificateInStore(
+		return GetCertByString(CERT_FIND_ISSUER_STR, issuerName);
+	}
+
+	CERT_CONTEXT* CertStore::GetCertByString(const DWORD searchFlag, const std::wstring& arg)
+	{
+		CERT_CONTEXT* const certContext = (CERT_CONTEXT*)CertFindCertificateInStore(
 			m_certStore,
 			X509_ASN_ENCODING | PKCS_7_ASN_ENCODING | CERT_FIND_HAS_PRIVATE_KEY,
 			0,
-			CERT_FIND_ISSUER_STR,
-			(void*)issuerName.c_str(), //Issuer name
+			searchFlag,
+			(void*)arg.c_str(),
 			nullptr
 		);
 		if (certContext == nullptr)
