@@ -12,15 +12,30 @@ namespace Boring32::Crypto
 		ForceFreeMemory = CERT_CLOSE_STORE_FORCE_FLAG
 	};
 
+	enum class CertStoreType
+	{
+		CurrentUser,
+		System
+	};
+
 	class CertStore
 	{
 		public:
 			virtual ~CertStore();
 			CertStore();
-			CertStore(const HCERTSTORE certStore);
-			CertStore(const HCERTSTORE certStore, const CertStoreCloseOptions closeOptions);
+			CertStore(const HCERTSTORE certStore, const CertStoreType storeType);
+			CertStore(
+				const HCERTSTORE certStore, 
+				const CertStoreType storeType, 
+				const CertStoreCloseOptions closeOptions
+			);
 			CertStore(std::wstring storeName);
-			CertStore(std::wstring storeName, const CertStoreCloseOptions closeOptions);
+			CertStore(std::wstring storeName, const CertStoreType storeType);
+			CertStore(
+				std::wstring storeName,
+				const CertStoreType storeType,
+				const CertStoreCloseOptions closeOptions
+			);
 
 			CertStore(const CertStore& other);
 			virtual CertStore& operator=(const CertStore& other);
@@ -34,6 +49,7 @@ namespace Boring32::Crypto
 			virtual const std::wstring& GetName() const noexcept;
 			virtual CERT_CONTEXT* GetCertBySubjectName(const std::wstring& subjectName);
 			virtual CERT_CONTEXT* GetCertByIssuerName(const std::wstring& issuerName);
+			virtual CertStoreType GetStoreType() const noexcept;
 
 		protected:
 			virtual void InternalOpen();
@@ -45,5 +61,6 @@ namespace Boring32::Crypto
 			HCERTSTORE m_certStore;
 			std::wstring m_storeName;
 			CertStoreCloseOptions m_closeOptions;
+			CertStoreType m_storeType;
 	};
 }

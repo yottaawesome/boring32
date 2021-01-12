@@ -13,34 +13,53 @@ namespace Boring32::Crypto
 
 	CertStore::CertStore()
 	:	m_certStore(nullptr),
-		m_closeOptions(CertStoreCloseOptions::Default)
+		m_closeOptions(CertStoreCloseOptions::Default),
+		m_storeType(CertStoreType::CurrentUser)
 	{ }
 
-	CertStore::CertStore(const HCERTSTORE certStore)
+	CertStore::CertStore(const HCERTSTORE certStore, const CertStoreType storeType)
 	:	m_certStore(certStore),
-		m_closeOptions(CertStoreCloseOptions::Default)
+		m_closeOptions(CertStoreCloseOptions::Default),
+		m_storeType(storeType)
 	{ }
 
-	CertStore::CertStore(const HCERTSTORE certStore, const CertStoreCloseOptions closeOptions)
+	CertStore::CertStore(
+		const HCERTSTORE certStore,
+		const CertStoreType storeType,
+		const CertStoreCloseOptions closeOptions
+	)
 	:	m_certStore(certStore),
-		m_closeOptions(closeOptions)
+		m_closeOptions(closeOptions),
+		m_storeType(storeType)
 	{ }
 
 	CertStore::CertStore(std::wstring storeName)
 	:	m_certStore(nullptr),
 		m_storeName(std::move(storeName)),
-		m_closeOptions(CertStoreCloseOptions::Default)
+		m_closeOptions(CertStoreCloseOptions::Default),
+		m_storeType(CertStoreType::CurrentUser)
+	{
+		InternalOpen();
+	}
+
+	CertStore::CertStore(std::wstring storeName, const CertStoreType storeType)
+	:	m_certStore(nullptr),
+		m_storeName(std::move(storeName)),
+		m_closeOptions(CertStoreCloseOptions::Default),
+		m_storeType(storeType)
 	{
 		InternalOpen();
 	}
 
 	CertStore::CertStore(
 		std::wstring storeName,
+		const CertStoreType storeType,
 		const CertStoreCloseOptions closeOptions
 	)
 	:	m_certStore(nullptr),
 		m_storeName(std::move(storeName)),
-		m_closeOptions(closeOptions)
+		m_closeOptions(closeOptions),
+		m_storeType(storeType)
 	{
 		InternalOpen();
 	}
@@ -61,6 +80,7 @@ namespace Boring32::Crypto
 		Close();
 		m_storeName = other.m_storeName;
 		m_closeOptions = other.m_closeOptions;
+		m_storeType = other.m_storeType;
 		if (other.m_certStore)
 			m_certStore = CertDuplicateStore(other.m_certStore);
 		return *this;
@@ -82,6 +102,7 @@ namespace Boring32::Crypto
 		Close();
 		m_storeName = std::move(other.m_storeName);
 		m_closeOptions = other.m_closeOptions;
+		m_storeType = other.m_storeType;
 		if (other.m_certStore)
 		{
 			m_certStore = other.m_certStore;
@@ -109,20 +130,27 @@ namespace Boring32::Crypto
 	{
 		if (m_storeName.empty())
 			throw std::invalid_argument(__FUNCSIG__ ": m_storeName is empty");
-		// See https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopensystemstorew
-		// common store names: CA, MY, ROOT, SPC
-		m_certStore = CertOpenSystemStoreW(0, m_storeName.c_str());
-
-		/*
-		HCERTSTORE CertOpenStore(
-			LPCSTR            lpszStoreProvider,
-			DWORD             dwEncodingType,
-			HCRYPTPROV_LEGACY hCryptProv,
-			DWORD             dwFlags,
-			const void* pvPara
-		);
-		*/
-
+		
+		switch (m_storeType)
+		{
+			case CertStoreType::CurrentUser:
+				// See https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopensystemstorew
+				// common store names: CA, MY, ROOT, SPC
+				m_certStore = CertOpenSystemStoreW(0, m_storeName.c_str());
+				break;
+			case CertStoreType::System:
+				m_certStore = CertOpenStore(
+					CERT_STORE_PROV_SYSTEM_REGISTRY_W,
+					PKCS_7_ASN_ENCODING | X509_ASN_ENCODING,
+					0,
+					CERT_STORE_OPEN_EXISTING_FLAG | CERT_SYSTEM_STORE_LOCAL_MACHINE,
+					m_storeName.c_str()
+				);
+				break;
+			default:
+				throw std::runtime_error(__FUNCSIG__ ": unknown m_storeType");
+		}
+		
 		if (m_certStore == nullptr)
 			throw Error::Win32Error(__FUNCSIG__ ": CertOpenSystemStoreW() failed", GetLastError());
 	}
@@ -164,5 +192,10 @@ namespace Boring32::Crypto
 				throw Error::Win32Error(__FUNCSIG__ ": CertFindCertificateInStore() failed", lastError);
 		}
 		return certContext;
+	}
+
+	CertStoreType CertStore::GetStoreType() const noexcept
+	{
+		return m_storeType;
 	}
 }

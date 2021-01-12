@@ -9,10 +9,22 @@ namespace Crypto
 	TEST_CLASS(CertStore)
 	{
 		public:
-			TEST_METHOD(TestCreateCertStore)
+			TEST_METHOD(TestCreateUserCertStore)
 			{
 				Boring32::Crypto::CertStore store(L"MY");
 				Assert::IsNotNull(store.GetHandle());
+				Assert::IsTrue(
+					Boring32::Crypto::CertStoreType::CurrentUser == store.GetStoreType()
+				);
+			}
+
+			TEST_METHOD(TestCreateSystemCertStore)
+			{
+				Boring32::Crypto::CertStore store(L"MY", Boring32::Crypto::CertStoreType::System);
+				Assert::IsNotNull(store.GetHandle());
+				Assert::IsTrue(
+					Boring32::Crypto::CertStoreType::System == store.GetStoreType()
+				);
 			}
 	};
 }

@@ -356,7 +356,7 @@ void CertStoreOpen()
 		return;
 	}
 
-	Boring32::Crypto::CertStore certStore(store);
+	Boring32::Crypto::CertStore certStore(store, Boring32::Crypto::CertStoreType::System);
 	CERT_CONTEXT* cc = certStore.GetCertBySubjectName(L"NVIDIA GameStream Server");
 	if (cc == nullptr)
 	{
