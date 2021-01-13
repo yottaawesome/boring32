@@ -138,6 +138,7 @@ namespace Boring32::Crypto
 				// common store names: CA, MY, ROOT, SPC
 				m_certStore = CertOpenSystemStoreW(0, m_storeName.c_str());
 				break;
+
 			case CertStoreType::System:
 				m_certStore = CertOpenStore(
 					CERT_STORE_PROV_SYSTEM_REGISTRY_W,
@@ -147,6 +148,7 @@ namespace Boring32::Crypto
 					m_storeName.c_str()
 				);
 				break;
+			
 			default:
 				throw std::runtime_error(__FUNCSIG__ ": unknown m_storeType");
 		}
