@@ -212,7 +212,7 @@ namespace Boring32::WinHttp::WebSockets
 		}
 	}
 
-	WebSocketStatus WebSocket::GetStatus()
+	WebSocketStatus WebSocket::GetStatus() const noexcept
 	{
 		return m_status;
 	}

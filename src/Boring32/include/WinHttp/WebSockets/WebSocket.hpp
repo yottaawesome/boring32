@@ -30,7 +30,7 @@ namespace Boring32::WinHttp::WebSockets
 			virtual void SendBuffer(const std::vector<char>& buffer);
 			virtual bool Receive(std::vector<char>& buffer);
 			virtual void Close();
-			virtual WebSocketStatus GetStatus();
+			virtual WebSocketStatus GetStatus() const noexcept;
 
 		protected:
 			virtual void InternalConnect(const std::wstring& path);
