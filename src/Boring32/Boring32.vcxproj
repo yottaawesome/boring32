@@ -201,10 +201,12 @@
     <ClInclude Include="include\Compression\CompressionType.hpp" />
     <ClInclude Include="include\Compression\Compressor.hpp" />
     <ClInclude Include="include\Compression\Decompressor.hpp" />
+    <ClInclude Include="include\Crypto\AesEncryption.hpp" />
     <ClInclude Include="include\Crypto\Certificate.hpp" />
     <ClInclude Include="include\Crypto\CertStore.hpp" />
     <ClInclude Include="include\Crypto\CryptoFuncs.hpp" />
     <ClInclude Include="include\Error\ComError.hpp" />
+    <ClInclude Include="include\Error\NtStatusError.hpp" />
     <ClInclude Include="include\Registry\Registry.hpp" />
     <ClInclude Include="include\Registry\RegKey.hpp" />
     <ClInclude Include="include\Crypto\Crypto.hpp" />
@@ -266,11 +268,13 @@
     <ClCompile Include="src\Compression\Compressor.cpp" />
     <ClCompile Include="src\Compression\Decompressor.cpp" />
     <ClCompile Include="src\Com\ComThreadScope.cpp" />
+    <ClCompile Include="src\Crypto\AesEncryption.cpp" />
     <ClCompile Include="src\Crypto\Certificate.cpp" />
     <ClCompile Include="src\Crypto\CertStore.cpp" />
     <ClCompile Include="src\Crypto\CryptoFuncs.cpp" />
     <ClCompile Include="src\Error\ComError.cpp" />
     <ClCompile Include="src\Error\Error.cpp" />
+    <ClCompile Include="src\Error\NtStatusError.cpp" />
     <ClCompile Include="src\Error\Win32Error.cpp" />
     <ClCompile Include="src\Guid\Guid.cpp" />
     <ClCompile Include="src\Async\MemoryMappedFile.cpp" />

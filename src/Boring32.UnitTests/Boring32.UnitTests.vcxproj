@@ -160,6 +160,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Async\Async\AsyncFuncs.cpp" />
+    <ClCompile Include="Async\Crypto\AesEncryption.cpp" />
     <ClCompile Include="Async\Crypto\CertStore.cpp" />
     <ClCompile Include="Async\Async\Event..cpp" />
     <ClCompile Include="Async\Async\EventLoop.cpp" />

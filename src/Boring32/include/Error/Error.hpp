@@ -3,16 +3,27 @@
 #include <Windows.h>
 #include <iostream>
 #include "Win32Error.hpp"
+#include "NtStatusError.hpp"
 #include "ComError.hpp"
 #include <utility>
 
 namespace Boring32::Error
 {
+	std::string GetNtStatusError(const std::string msg, const NTSTATUS errorCode);
+
+	void GetErrorCodeString(const DWORD errorCode, HMODULE moduleToReadFrom, std::wstring& stringToHoldMessage) noexcept;
+	
+	void GetErrorCodeString(const DWORD errorCode, HMODULE moduleToReadFrom, std::string& stringToHoldMessage) noexcept;
+
 	void GetErrorCodeString(const DWORD errorCode, std::string& stringToHoldMessage) noexcept;
 
 	void GetErrorCodeString(const DWORD errorCode, std::wstring& stringToHoldMessage) noexcept;
 
+	std::wstring CreateErrorStringFromCode(const std::wstring msg, HMODULE moduleToReadFrom, const DWORD errorCode) noexcept;
+
 	std::wstring CreateErrorStringFromCode(const std::wstring msg, const DWORD errorCode) noexcept;
+
+	std::string CreateErrorStringFromCode(const std::string msg, HMODULE moduleToReadFrom, const DWORD errorCode) noexcept;
 
 	std::string CreateErrorStringFromCode(const std::string msg, const DWORD errorCode) noexcept;
 
