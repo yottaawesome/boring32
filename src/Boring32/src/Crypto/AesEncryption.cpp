@@ -37,10 +37,13 @@ namespace Boring32::Crypto
 
 	DWORD AesEncryption::GetObjectByteSize()
 	{
+		if (m_algHandle == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": cipher algorithm not initialised");
+
 		DWORD cbKeyObject = 0;
 		DWORD cbData = 0;
 		// https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptgetproperty
-		NTSTATUS status = BCryptGetProperty(
+		const NTSTATUS status = BCryptGetProperty(
 			m_algHandle,
 			BCRYPT_OBJECT_LENGTH,
 			(PBYTE)&cbKeyObject,
@@ -49,8 +52,28 @@ namespace Boring32::Crypto
 			0
 		);
 		if (BCRYPT_SUCCESS(status) == false)
-			throw Error::NtStatusError(__FUNCSIG__ ": failed to AES key length", status);
+			throw Error::NtStatusError(__FUNCSIG__ ": failed to set AES key length", status);
 
 		return cbKeyObject;
+	}
+
+	void AesEncryption::SetChainingMode(const std::wstring& mode)
+	{
+		if (m_algHandle == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": cipher algorithm not initialised");
+		if (mode.empty())
+			throw std::invalid_argument(__FUNCSIG__ ": mode is not specified");
+		if (mode == BCRYPT_CHAIN_MODE_NA)
+			throw std::invalid_argument(__FUNCSIG__ ": AES requires a chaining mode");
+
+		const NTSTATUS status = BCryptSetProperty(
+			m_algHandle,
+			BCRYPT_CHAINING_MODE,
+			(PUCHAR)&mode[0],
+			(ULONG)mode.size()*sizeof(wchar_t),
+			0
+		);
+		if (BCRYPT_SUCCESS(status) == false)
+			throw Error::NtStatusError(__FUNCSIG__ ": failed to set chaining mode", status);
 	}
 }
