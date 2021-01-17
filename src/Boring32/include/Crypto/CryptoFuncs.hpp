@@ -18,7 +18,13 @@ namespace Boring32::Crypto
 		VerifyProtection = CRYPTPROTECT_VERIFY_PROTECTION
 	};
 
-	std::vector<std::byte> EncryptString(
+	std::vector<std::byte> Encrypt(
+		const std::vector<std::byte>& data,
+		const std::wstring& password,
+		const std::wstring& description
+	);
+
+	std::vector<std::byte> Encrypt(
 		const std::wstring& str,
 		const std::wstring& password,
 		const std::wstring& description

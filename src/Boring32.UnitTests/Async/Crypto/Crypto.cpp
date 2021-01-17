@@ -12,7 +12,7 @@ namespace Crypto
 			TEST_METHOD(TestEncryptString)
 			{
 				std::vector<std::byte> encryptedData =
-					Boring32::Crypto::EncryptString(
+					Boring32::Crypto::Encrypt(
 						L"Hello, world!",
 						L"TestPassword",
 						L"Basic description"
@@ -27,7 +27,7 @@ namespace Crypto
 				std::wstring data = L"Hello, world";
 
 				std::vector<std::byte> encryptedData =
-					Boring32::Crypto::EncryptString(
+					Boring32::Crypto::Encrypt(
 						data,
 						password,
 						description

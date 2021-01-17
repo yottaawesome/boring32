@@ -11,7 +11,8 @@ namespace Boring32::Crypto
 			AesEncryption();
 
 		public:
-			BCRYPT_ALG_HANDLE GetHandle() const noexcept;
+			virtual BCRYPT_ALG_HANDLE GetHandle() const noexcept;
+			virtual DWORD GetObjectByteSize();
 		
 		protected:
 			BCRYPT_ALG_HANDLE m_algHandle;

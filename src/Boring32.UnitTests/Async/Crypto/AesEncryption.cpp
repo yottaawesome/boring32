@@ -14,5 +14,11 @@ namespace Crypto
 				Boring32::Crypto::AesEncryption aes;
 				Assert::IsTrue(aes.GetHandle() != nullptr);
 			}
+
+			TEST_METHOD(TestObjectByteSize)
+			{
+				Boring32::Crypto::AesEncryption aes;
+				Assert::IsTrue(aes.GetObjectByteSize() > 0);
+			}
 	};
 }
