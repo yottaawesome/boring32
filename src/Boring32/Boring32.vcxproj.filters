@@ -231,6 +231,9 @@
     <ClInclude Include="include\Error\NtStatusError.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Crypto\CryptoKey.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\pch.cpp">
@@ -396,6 +399,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Error\NtStatusError.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Crypto\CryptoKey.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

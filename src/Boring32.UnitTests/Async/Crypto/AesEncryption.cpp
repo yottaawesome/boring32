@@ -30,5 +30,30 @@ namespace Crypto
 				aes.SetChainingMode(BCRYPT_CHAIN_MODE_ECB);
 				aes.SetChainingMode(BCRYPT_CHAIN_MODE_GCM);
 			}
+
+			TEST_METHOD(TestGenerateSymmetricKey)
+			{
+				Boring32::Crypto::AesEncryption aes;
+				static std::vector<std::byte> rgbAES128Key
+				{
+					std::byte{0x00},
+					std::byte{0x01},
+					std::byte{0x02},
+					std::byte{0x03},
+					std::byte{0x04},
+					std::byte{0x05},
+					std::byte{0x06},
+					std::byte{0x07},
+					std::byte{0x08},
+					std::byte{0x09},
+					std::byte{0x0A},
+					std::byte{0x0B},
+					std::byte{0x0C},
+					std::byte{0x0D},
+					std::byte{0x0E},
+					std::byte{0x0F}
+				};
+				Assert::IsNotNull(aes.GenerateSymmetricKey(rgbAES128Key).GetHandle());
+			}
 	};
 }

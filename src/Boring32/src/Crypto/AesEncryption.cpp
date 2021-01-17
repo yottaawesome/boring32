@@ -76,4 +76,25 @@ namespace Boring32::Crypto
 		if (BCRYPT_SUCCESS(status) == false)
 			throw Error::NtStatusError(__FUNCSIG__ ": failed to set chaining mode", status);
 	}
+
+	CryptoKey AesEncryption::GenerateSymmetricKey(const std::vector<std::byte>& rgbAES128Key)
+	{
+		BCRYPT_KEY_HANDLE hKey = nullptr;
+		DWORD cbKeyObject = GetObjectByteSize();
+		std::vector<std::byte> keyObject(cbKeyObject, static_cast<std::byte>(0));
+		const NTSTATUS status = BCryptGenerateSymmetricKey(
+			m_algHandle,
+			&hKey,
+			reinterpret_cast<PUCHAR>(&keyObject[0]),
+			cbKeyObject,
+			(PBYTE)&rgbAES128Key[0],
+			static_cast<ULONG>(rgbAES128Key.size()),
+			0
+		);
+		if (BCRYPT_SUCCESS(status) == false)
+			throw Error::NtStatusError(__FUNCSIG__ ": failed to set chaining mode", status);
+		
+		//BCryptDestroyKey(hKey);
+		return CryptoKey(hKey);
+	}
 }
