@@ -56,7 +56,7 @@ namespace Crypto
 				Assert::IsNotNull(aes.GenerateSymmetricKey(rgbAES128Key).GetHandle());
 			}
 
-			TEST_METHOD(TestEncrypt)
+			TEST_METHOD(TestEncryptDecrypt)
 			{
 				Boring32::Crypto::AesEncryption aes;
 				static std::vector<std::byte> rgbAES128Key
@@ -80,7 +80,7 @@ namespace Crypto
 				};
 				Boring32::Crypto::CryptoKey key = aes.GenerateSymmetricKey(rgbAES128Key);
 
-				static std::vector<std::byte> rgbIV =
+				std::vector<std::byte> rgbIV1 =
 				{
 					std::byte{0x00},
 					std::byte{0x01},
@@ -99,9 +99,17 @@ namespace Crypto
 					std::byte{0x0E},
 					std::byte{0x0F}
 				};
+				// Copy the IV as it's modified during encryption
+				std::vector<std::byte> rgbIV2 = rgbIV1;
 
 				std::wstring testString = L"Hello, world";
-				aes.Encrypt(key, rgbIV, testString);
+				std::vector<std::byte> encrypted = aes.Encrypt(key, rgbIV1, testString);
+				std::vector<std::byte> decrypted = aes.Decrypt(key, rgbIV2, encrypted);
+				std::wstring decryptedString(
+					(wchar_t*)&decrypted[0], 
+					decrypted.size() / sizeof(wchar_t)
+				);
+				Assert::IsTrue(testString == decryptedString);
 			}
 	};
 }

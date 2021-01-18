@@ -29,6 +29,18 @@ namespace Boring32::Crypto
 				const std::wstring& string
 			);
 
+			virtual std::vector<std::byte> Encrypt(
+				const CryptoKey& key,
+				const std::vector<std::byte>& iv,
+				const std::vector<std::byte>& data
+			);
+
+			virtual std::vector<std::byte> Decrypt(
+				const CryptoKey& key,
+				const std::vector<std::byte>& iv,
+				const std::vector<std::byte>& cypherText
+			);
+
 		protected:
 			BCRYPT_ALG_HANDLE m_algHandle;
 	}; 
