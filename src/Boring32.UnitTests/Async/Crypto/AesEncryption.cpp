@@ -24,11 +24,11 @@ namespace Crypto
 			TEST_METHOD(TestSetChainingMode)
 			{
 				Boring32::Crypto::AesEncryption aes;
-				aes.SetChainingMode(BCRYPT_CHAIN_MODE_CBC);
-				aes.SetChainingMode(BCRYPT_CHAIN_MODE_CCM);
-				aes.SetChainingMode(BCRYPT_CHAIN_MODE_CFB);
-				aes.SetChainingMode(BCRYPT_CHAIN_MODE_ECB);
-				aes.SetChainingMode(BCRYPT_CHAIN_MODE_GCM);
+				aes.SetChainingMode(Boring32::Crypto::ChainingMode::CipherBlockChaining);
+				aes.SetChainingMode(Boring32::Crypto::ChainingMode::CbcMac);
+				aes.SetChainingMode(Boring32::Crypto::ChainingMode::CipherFeedback);
+				aes.SetChainingMode(Boring32::Crypto::ChainingMode::ElectronicCodebook);
+				aes.SetChainingMode(Boring32::Crypto::ChainingMode::GaloisCounterMode);
 			}
 
 			TEST_METHOD(TestGenerateSymmetricKey)

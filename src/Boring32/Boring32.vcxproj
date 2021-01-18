@@ -204,6 +204,7 @@
     <ClInclude Include="include\Crypto\AesEncryption.hpp" />
     <ClInclude Include="include\Crypto\Certificate.hpp" />
     <ClInclude Include="include\Crypto\CertStore.hpp" />
+    <ClInclude Include="include\Crypto\ChainingMode.hpp" />
     <ClInclude Include="include\Crypto\CryptoFuncs.hpp" />
     <ClInclude Include="include\Crypto\CryptoKey.hpp" />
     <ClInclude Include="include\Error\ComError.hpp" />

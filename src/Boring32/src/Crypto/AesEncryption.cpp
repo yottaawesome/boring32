@@ -23,6 +23,7 @@ namespace Boring32::Crypto
 		);
 		if (BCRYPT_SUCCESS(status) == false)
 			throw Error::NtStatusError(__FUNCSIG__ ": failed to create AES algorithm", status);
+		SetChainingMode(ChainingMode::CipherBlockChaining);
 	}
 
 	void AesEncryption::Close() noexcept
@@ -84,20 +85,17 @@ namespace Boring32::Crypto
 		return cbKeyObject;
 	}
 
-	void AesEncryption::SetChainingMode(const std::wstring& mode)
+	void AesEncryption::SetChainingMode(const ChainingMode cm)
 	{
 		if (m_algHandle == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": cipher algorithm not initialised");
-		if (mode.empty())
-			throw std::invalid_argument(__FUNCSIG__ ": mode is not specified");
-		if (mode == BCRYPT_CHAIN_MODE_NA)
-			throw std::invalid_argument(__FUNCSIG__ ": AES requires a chaining mode");
-
+		
+		const std::wstring& mode = ChainingModeString.at(cm);
 		const NTSTATUS status = BCryptSetProperty(
 			m_algHandle,
 			BCRYPT_CHAINING_MODE,
 			(PUCHAR)&mode[0],
-			(ULONG)mode.size()*sizeof(wchar_t),
+			(ULONG)mode.size() * sizeof(wchar_t),
 			0
 		);
 		if (BCRYPT_SUCCESS(status) == false)
@@ -146,7 +144,7 @@ namespace Boring32::Crypto
 		if (iv.empty() == false)
 		{
 			if (iv.size() != GetBlockByteLength())
-				throw std::invalid_argument("IV must be the same size as the AES block lenth");
+				throw std::invalid_argument(__FUNCSIG__ ": IV must be the same size as the AES block lenth");
 			pIV = (PUCHAR)&iv[0];
 			ivSize = (ULONG)iv.size();
 		}
