@@ -12,7 +12,7 @@ namespace Boring32::Crypto
 		public:
 			virtual ~CryptoKey();
 			CryptoKey();
-			CryptoKey(BCRYPT_KEY_HANDLE const keyHandle);
+			CryptoKey(BCRYPT_KEY_HANDLE const keyHandle, std::vector<std::byte>&& keyObject);
 			
 			CryptoKey(const CryptoKey&) = delete;
 			virtual CryptoKey& operator=(const CryptoKey&) = delete;
@@ -30,5 +30,6 @@ namespace Boring32::Crypto
 		protected:
 			// We can duplicate this key, but for now, just share it
 			BCRYPT_KEY_HANDLE m_keyHandle;
+			std::vector<std::byte> m_keyObject;
 	};
 }

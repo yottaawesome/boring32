@@ -8,12 +8,7 @@ namespace Boring32::Crypto
 {
 	AesEncryption::~AesEncryption()
 	{
-		if (m_algHandle)
-		{
-			//https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptclosealgorithmprovider
-			BCryptCloseAlgorithmProvider(m_algHandle, 0);
-			m_algHandle = nullptr;
-		}
+		Close();
 	}
 
 	AesEncryption::AesEncryption()
@@ -30,12 +25,22 @@ namespace Boring32::Crypto
 			throw Error::NtStatusError(__FUNCSIG__ ": failed to create AES algorithm", status);
 	}
 
+	void AesEncryption::Close() noexcept
+	{
+		if (m_algHandle)
+		{
+			//https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptclosealgorithmprovider
+			BCryptCloseAlgorithmProvider(m_algHandle, 0);
+			m_algHandle = nullptr;
+		}
+	}
+
 	BCRYPT_ALG_HANDLE AesEncryption::GetHandle() const noexcept
 	{
 		return m_algHandle;
 	}
 
-	DWORD AesEncryption::GetObjectByteSize()
+	DWORD AesEncryption::GetObjectByteSize() const
 	{
 		if (m_algHandle == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": cipher algorithm not initialised");
@@ -46,6 +51,28 @@ namespace Boring32::Crypto
 		const NTSTATUS status = BCryptGetProperty(
 			m_algHandle,
 			BCRYPT_OBJECT_LENGTH,
+			(PBYTE)&cbKeyObject,
+			sizeof(DWORD),
+			&cbData,
+			0
+		);
+		if (BCRYPT_SUCCESS(status) == false)
+			throw Error::NtStatusError(__FUNCSIG__ ": failed to set AES key length", status);
+
+		return cbKeyObject;
+	}
+
+	DWORD AesEncryption::GetBlockByteLength() const
+	{
+		if (m_algHandle == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": cipher algorithm not initialised");
+
+		DWORD cbKeyObject = 0;
+		DWORD cbData = 0;
+		// https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptgetproperty
+		const NTSTATUS status = BCryptGetProperty(
+			m_algHandle,
+			BCRYPT_BLOCK_LENGTH,
 			(PBYTE)&cbKeyObject,
 			sizeof(DWORD),
 			&cbData,
@@ -79,22 +106,86 @@ namespace Boring32::Crypto
 
 	CryptoKey AesEncryption::GenerateSymmetricKey(const std::vector<std::byte>& rgbAES128Key)
 	{
+		if (m_algHandle == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": cipher algorithm not initialised");
+		if (rgbAES128Key.empty())
+			throw std::invalid_argument(__FUNCSIG__ ": rgbAES128Key is empty");
+
 		BCRYPT_KEY_HANDLE hKey = nullptr;
 		DWORD cbKeyObject = GetObjectByteSize();
 		std::vector<std::byte> keyObject(cbKeyObject, static_cast<std::byte>(0));
 		const NTSTATUS status = BCryptGenerateSymmetricKey(
 			m_algHandle,
 			&hKey,
-			reinterpret_cast<PUCHAR>(&keyObject[0]),
+			(PUCHAR)&keyObject[0],
 			cbKeyObject,
 			(PBYTE)&rgbAES128Key[0],
-			static_cast<ULONG>(rgbAES128Key.size()),
+			(ULONG)rgbAES128Key.size(),
 			0
 		);
 		if (BCRYPT_SUCCESS(status) == false)
 			throw Error::NtStatusError(__FUNCSIG__ ": failed to set chaining mode", status);
 		
-		//BCryptDestroyKey(hKey);
-		return CryptoKey(hKey);
+		return CryptoKey(hKey, std::move(keyObject));
+	}
+
+	std::vector<std::byte> AesEncryption::Encrypt(
+		const CryptoKey& key,
+		const std::vector<std::byte>& iv,
+		const std::wstring& string
+	)
+	{
+		if (m_algHandle == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": cipher algorithm not initialised");
+		if (key.GetHandle() == nullptr)
+			throw std::invalid_argument(__FUNCSIG__ ": key is null");
+
+		// IV is optional
+		PUCHAR pIV = nullptr;
+		ULONG ivSize = 0;
+		if (iv.empty() == false)
+		{
+			if (iv.size() != GetBlockByteLength())
+				throw std::invalid_argument("IV must be the same size as the AES block lenth");
+			pIV = (PUCHAR)&iv[0];
+			ivSize = (ULONG)iv.size();
+		}
+
+		// Determine the byte size of the encrypted data
+		DWORD cbData = 0;
+		// https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptencrypt
+		NTSTATUS status = BCryptEncrypt(
+			key.GetHandle(),
+			(PUCHAR)&string[0],
+			(ULONG)string.size() * sizeof(wchar_t),
+			nullptr,
+			pIV,
+			ivSize,
+			nullptr,
+			0,
+			&cbData,
+			BCRYPT_BLOCK_PADDING
+		);
+		if (BCRYPT_SUCCESS(status) == false)
+			throw Error::NtStatusError(__FUNCSIG__ ": BCryptEncrypt() failed to count bytes", status);
+
+		// Actually do the encryption
+		std::vector<std::byte> cypherText(cbData, std::byte{ 0 });
+		status = BCryptEncrypt(
+			key.GetHandle(),
+			(PUCHAR)&string[0],
+			(ULONG)string.size() * sizeof(wchar_t),
+			nullptr,
+			pIV,
+			ivSize,
+			(PUCHAR)&cypherText[0],
+			(ULONG)cypherText.size(),
+			&cbData,
+			BCRYPT_BLOCK_PADDING
+		);
+		if (BCRYPT_SUCCESS(status) == false)
+			throw Error::NtStatusError(__FUNCSIG__ ": BCryptEncrypt() failed to encrypt", status);
+
+		return cypherText;
 	}
 }

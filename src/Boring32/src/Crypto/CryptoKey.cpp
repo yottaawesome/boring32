@@ -32,8 +32,9 @@ namespace Boring32::Crypto
 	:	m_keyHandle(nullptr)
 	{ }
 
-	CryptoKey::CryptoKey(BCRYPT_KEY_HANDLE const keyHandle)
-		: m_keyHandle(keyHandle)
+	CryptoKey::CryptoKey(BCRYPT_KEY_HANDLE const keyHandle, std::vector<std::byte>&& keyObject)
+	:	m_keyHandle(keyHandle),
+		m_keyObject(std::move(keyObject))
 	{ }
 
 	CryptoKey::CryptoKey(CryptoKey&& other) noexcept
@@ -51,7 +52,8 @@ namespace Boring32::Crypto
 	{
 		Close();
 		m_keyHandle = other.m_keyHandle;
-		m_keyHandle = nullptr;
+		other.m_keyHandle = nullptr;
+		m_keyObject = std::move(other.m_keyObject);
 		return *this;
 	}
 
