@@ -10,6 +10,11 @@ namespace Boring32::DataStructures
 		public:
 			virtual ~CappedStack() {}
 
+			CappedStack()
+			:	m_maxSize(0),
+				m_uniqueOnly(false)
+			{ }
+
 			CappedStack(const size_t maxSize, const bool uniqueOnly)
 			:	m_maxSize(maxSize),
 				m_uniqueOnly(uniqueOnly)
@@ -53,6 +58,20 @@ namespace Boring32::DataStructures
 				return true;
 			}
 
+			virtual void PopLeaveNotEmpty()
+			{
+				if (m_stack.size() < 2)
+					return;
+				Pop();
+			}
+
+			virtual bool PopLeaveNotEmpty(T& value) noexcept
+			{
+				if (m_stack.size() < 2)
+					return false;
+				return Pop(value);
+			}
+
 			virtual T GetFirst()
 			{
 				if (m_stack.empty())
@@ -84,6 +103,13 @@ namespace Boring32::DataStructures
 				return Push(val);
 			}
 
+			virtual T operator[](const size_t index) const
+			{
+				if (m_stack.empty())
+					throw std::runtime_error(__FUNCSIG__ ": stack is empty");
+				return m_stack[index];
+			}
+
 			virtual size_t GetMaxSize() const noexcept
 			{
 				return m_maxSize;
@@ -97,6 +123,11 @@ namespace Boring32::DataStructures
 			virtual size_t IsEmpty() const noexcept
 			{
 				return m_stack.empty();
+			}
+
+			virtual bool AddsUniqueOnly() const noexcept
+			{
+				return m_uniqueOnly;
 			}
 
 		protected:

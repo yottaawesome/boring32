@@ -167,6 +167,7 @@
     <ClCompile Include="Async\Async\Mutex.cpp" />
     <ClCompile Include="Async\Async\WaitableTimer.cpp" />
     <ClCompile Include="Async\Crypto\Crypto.cpp" />
+    <ClCompile Include="DataStructures\CappedStack.cpp" />
     <ClCompile Include="Error\Error.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
