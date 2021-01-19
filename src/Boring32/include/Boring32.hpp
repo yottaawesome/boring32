@@ -11,3 +11,4 @@
 #include "Util/Util.hpp"
 #include "Compression/Compression.hpp"
 #include "Crypto/Crypto.hpp"
+#include "DataStructures/CappedStack.hpp"

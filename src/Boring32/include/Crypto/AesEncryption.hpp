@@ -14,6 +14,12 @@ namespace Boring32::Crypto
 			virtual ~AesEncryption();
 			AesEncryption();
 
+			AesEncryption(const AesEncryption& other);
+			virtual AesEncryption& operator=(const AesEncryption& other);
+
+			AesEncryption(AesEncryption&& other) noexcept;
+			virtual AesEncryption& operator=(AesEncryption&& other) noexcept;
+
 		public:
 			virtual void Close() noexcept;
 			virtual BCRYPT_ALG_HANDLE GetHandle() const noexcept;
@@ -42,6 +48,13 @@ namespace Boring32::Crypto
 			);
 
 		protected:
+			virtual AesEncryption& Copy(const AesEncryption& other);
+			virtual AesEncryption& Move(AesEncryption& other) noexcept;
+			virtual void Create();
+			virtual DWORD GetEncryptDecryptFlags() const;
+
+		protected:
 			BCRYPT_ALG_HANDLE m_algHandle;
+			ChainingMode m_chainingMode;
 	}; 
 }

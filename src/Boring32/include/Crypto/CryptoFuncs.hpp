@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 #include <Windows.h>
+#include <bcrypt.h>
+#include "CryptoKey.hpp"
 
 namespace Boring32::Crypto
 {
@@ -34,5 +36,21 @@ namespace Boring32::Crypto
 		const std::vector<std::byte>& encryptedData,
 		const std::wstring& password,
 		std::wstring& outDescription
+	);
+
+	std::vector<std::byte> Decrypt(
+		const DWORD blockByteLength,
+		const CryptoKey& key,
+		const std::vector<std::byte>& iv,
+		const std::vector<std::byte>& cypherText,
+		const DWORD flags
+	);
+
+	std::vector<std::byte> Encrypt(
+		const DWORD blockByteLength,
+		const CryptoKey& key,
+		const std::vector<std::byte>& iv,
+		const std::vector<std::byte>& plainText,
+		const DWORD flags
 	);
 }

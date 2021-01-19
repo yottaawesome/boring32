@@ -237,6 +237,9 @@
     <ClInclude Include="include\Crypto\ChainingMode.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\DataStructures\CappedStack.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\pch.cpp">

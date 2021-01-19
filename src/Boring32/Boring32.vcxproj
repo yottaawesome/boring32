@@ -207,6 +207,7 @@
     <ClInclude Include="include\Crypto\ChainingMode.hpp" />
     <ClInclude Include="include\Crypto\CryptoFuncs.hpp" />
     <ClInclude Include="include\Crypto\CryptoKey.hpp" />
+    <ClInclude Include="include\DataStructures\CappedStack.hpp" />
     <ClInclude Include="include\Error\ComError.hpp" />
     <ClInclude Include="include\Error\NtStatusError.hpp" />
     <ClInclude Include="include\Registry\Registry.hpp" />

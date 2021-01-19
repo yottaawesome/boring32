@@ -7,6 +7,7 @@ namespace Boring32::Crypto
 {
 	enum class ChainingMode
 	{
+		NotSet,
 		CipherBlockChaining,
 		CbcMac,
 		CipherFeedback,

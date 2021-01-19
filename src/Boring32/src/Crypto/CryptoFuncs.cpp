@@ -2,7 +2,9 @@
 #include <Windows.h>
 #include <Wincrypt.h>
 #include "include/Error/Win32Error.hpp"
+#include "include/Error/NtStatusError.hpp"
 #include "include/Crypto/CryptoFuncs.hpp"
+#include "include/Crypto/CryptoKey.hpp"
 
 namespace Boring32::Crypto
 {
@@ -125,5 +127,127 @@ namespace Boring32::Crypto
 			LocalFree(decryptedBlob.pbData);
 
 		return returnValue;
+	}
+
+	std::vector<std::byte> Encrypt(
+		const DWORD blockByteLength,
+		const CryptoKey& key,
+		const std::vector<std::byte>& iv,
+		const std::vector<std::byte>& plainText,
+		const DWORD flags
+	)
+	{
+		if (key.GetHandle() == nullptr)
+			throw std::invalid_argument(__FUNCSIG__ ": key is null");
+
+		// IV is optional
+		PUCHAR pIV = nullptr;
+		ULONG ivSize = 0;
+		if (iv.empty() == false)
+		{
+			if (iv.size() != blockByteLength)
+				throw std::invalid_argument(__FUNCSIG__ ": IV must be the same size as the AES block lenth");
+			pIV = (PUCHAR)&iv[0];
+			ivSize = (ULONG)iv.size();
+		}
+
+		// Determine the byte size of the encrypted data
+		DWORD cbData = 0;
+		// https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptencrypt
+		NTSTATUS status = BCryptEncrypt(
+			key.GetHandle(),
+			(PUCHAR)&plainText[0],
+			(ULONG)plainText.size(),
+			nullptr,
+			pIV,
+			ivSize,
+			nullptr,
+			0,
+			&cbData,
+			flags
+		);
+		if (BCRYPT_SUCCESS(status) == false)
+			throw Error::NtStatusError(__FUNCSIG__ ": BCryptEncrypt() failed to count bytes", status);
+
+		// Actually do the encryption
+		std::vector<std::byte> cypherText(cbData, std::byte{ 0 });
+		status = BCryptEncrypt(
+			key.GetHandle(),
+			(PUCHAR)&plainText[0],
+			(ULONG)plainText.size(),
+			nullptr,
+			pIV,
+			ivSize,
+			(PUCHAR)&cypherText[0],
+			(ULONG)cypherText.size(),
+			&cbData,
+			flags
+		);
+		if (BCRYPT_SUCCESS(status) == false)
+			throw Error::NtStatusError(__FUNCSIG__ ": BCryptEncrypt() failed to encrypt", status);
+
+		return cypherText;
+	}
+
+	std::vector<std::byte> Decrypt(
+		const DWORD blockByteLength,
+		const CryptoKey& key,
+		const std::vector<std::byte>& iv,
+		const std::vector<std::byte>& cypherText,
+		const DWORD flags
+	)
+	{
+		if (key.GetHandle() == nullptr)
+			throw std::invalid_argument(__FUNCSIG__ ": key is null");
+
+		// IV is optional
+		PUCHAR pIV = nullptr;
+		ULONG ivSize = 0;
+		if (iv.empty() == false)
+		{
+			// Do all cipher algs require this?
+			if (iv.size() != blockByteLength)
+				throw std::invalid_argument(__FUNCSIG__ ": IV must be the same size as the AES block lenth");
+			pIV = (PUCHAR)&iv[0];
+			ivSize = (ULONG)iv.size();
+		}
+
+		// Determine the byte size of the decrypted data
+		DWORD cbData = 0;
+		// https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptdecrypt
+		NTSTATUS status = BCryptDecrypt(
+			key.GetHandle(),
+			(PUCHAR)&cypherText[0],
+			(ULONG)cypherText.size(),
+			nullptr,
+			pIV,
+			ivSize,
+			nullptr,
+			0,
+			&cbData,
+			flags
+		);
+		if (BCRYPT_SUCCESS(status) == false)
+			throw Error::NtStatusError(__FUNCSIG__ ": BCryptDecrypt() failed to count bytes", status);
+
+		// Actually do the decryption
+		std::vector<std::byte> plainText(cbData, std::byte{ 0 });
+		status = BCryptDecrypt(
+			key.GetHandle(),
+			(PUCHAR)&cypherText[0],
+			(ULONG)cypherText.size(),
+			nullptr,
+			pIV,
+			ivSize,
+			(PUCHAR)&plainText[0],
+			(ULONG)plainText.size(),
+			&cbData,
+			flags
+		);
+		if (BCRYPT_SUCCESS(status) == false)
+			throw Error::NtStatusError(__FUNCSIG__ ": BCryptDecrypt() failed to decrypt", status);
+
+		plainText.resize(cbData);
+		return plainText;
 	}
 }
