@@ -53,8 +53,7 @@ namespace Boring32::DataStructures
 			{
 				if (m_stack.empty())
 					return false;
-				value = m_stack.back();
-				m_stack.pop_back();
+				value = Pop();
 				return true;
 			}
 
