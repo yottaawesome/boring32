@@ -371,12 +371,12 @@ void CertStoreOpen()
 
 int main(int argc, char** args)
 {
-	Boring32::DataStructures::CappedStack<int> i(2);
+	Boring32::DataStructures::CappedStack<int> i(2, true);
 	i.Push(1);
-	i.Push(2);
-	i.Push(3);
-	i.Push(4);
-	std::wcout << "Popped: " << i.Pop() << std::endl;
+	i.Push(1);
+	//i.Push(3);
+	//i.Push(4);
+	//std::wcout << "Popped: " << i.Pop() << std::endl;
 	for (const int c : i.GetContainer())
 	{
 		std::wcout << c << std::endl;
