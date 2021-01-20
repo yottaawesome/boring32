@@ -11,14 +11,14 @@ namespace Boring32::Error
 		: std::runtime_error(msg),
 		m_errorCode(errorCode)
 	{
-		m_errorString = Boring32::Error::GetNtStatusError(msg, errorCode);
+		m_errorString = Boring32::Error::CreateErrorStringFromNtStatus(msg, errorCode);
 	}
 
 	NtStatusError::NtStatusError(const std::string& msg, const LONG errorCode)
 		: std::runtime_error(msg),
 		m_errorCode(errorCode)
 	{
-		m_errorString = Boring32::Error::GetNtStatusError(msg, errorCode);
+		m_errorString = Boring32::Error::CreateErrorStringFromNtStatus(msg, errorCode);
 	}
 
 	LONG NtStatusError::GetErrorCode() const noexcept

@@ -53,6 +53,16 @@ namespace Boring32::Error
 		const DWORD errorCode
 	) noexcept;
 
+	std::wstring CreateErrorStringFromNtStatus(
+		const std::wstring msg,
+		const DWORD errorCode
+	) noexcept;
+
+	std::string CreateErrorStringFromNtStatus(
+		const std::string msg,
+		const DWORD errorCode
+	) noexcept;
+
 	std::wstring CreateErrorStringFromCode(
 		const std::wstring msg, 
 		const DWORD errorCode

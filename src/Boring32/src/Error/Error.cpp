@@ -46,12 +46,6 @@ namespace Boring32::Error
         // See the caveats for NTSTATUS with FormatMessage here
         // https://stackoverflow.com/questions/7915215/how-do-i-convert-a-win32-exception-code-to-a-string
         std::string stringToHoldMessage = "";
-
-        DWORD flags =
-            FORMAT_MESSAGE_ALLOCATE_BUFFER |
-            FORMAT_MESSAGE_FROM_SYSTEM |
-            FORMAT_MESSAGE_IGNORE_INSERTS |
-            FORMAT_MESSAGE_FROM_HMODULE;
         HMODULE handle = LoadLibraryW(L"ntdll.dll");
         if (handle == nullptr)
             return "Could not load ntdll.dll";
@@ -166,6 +160,50 @@ namespace Boring32::Error
             << L" (win32/ntstatus code: "
             << std::to_wstring(errorCode)
             << L")";
+        return wss.str();
+    }
+
+    std::wstring CreateErrorStringFromNtStatus(
+        const std::wstring msg,
+        const DWORD errorCode
+    ) noexcept
+    {
+        HMODULE handle = LoadLibraryW(L"ntdll.dll");
+        if (handle == nullptr)
+            return msg + L": could not load ntdll.dll";
+
+        std::wstring translatedErrorMessage;
+        GetErrorCodeString(errorCode, handle, translatedErrorMessage);
+        std::wstringstream wss;
+        wss << msg
+            << std::endl
+            << translatedErrorMessage
+            << L" (ntstatus code: "
+            << std::to_wstring(errorCode)
+            << L")";
+        FreeLibrary(handle);
+        return wss.str();
+    }
+
+    std::string CreateErrorStringFromNtStatus(
+        const std::string msg,
+        const DWORD errorCode
+    ) noexcept
+    {
+        HMODULE handle = LoadLibraryW(L"ntdll.dll");
+        if (handle == nullptr)
+            return msg + ": could not load ntdll.dll";
+
+        std::string translatedErrorMessage;
+        GetErrorCodeString(errorCode, handle, translatedErrorMessage);
+        std::stringstream wss;
+        wss << msg
+            << std::endl
+            << translatedErrorMessage
+            << " (ntstatus code: "
+            << std::to_string(errorCode)
+            << ")";
+        FreeLibrary(handle);
         return wss.str();
     }
 
