@@ -20,27 +20,64 @@ namespace Boring32::Error
 		std::wstringstream& ss
 	);
 
-	std::string GetNtStatusError(const std::string msg, const NTSTATUS errorCode);
+	std::string GetNtStatusError(
+		const std::string& 
+		msg, const NTSTATUS errorCode
+	);
 
-	void GetErrorCodeString(const DWORD errorCode, HMODULE moduleToReadFrom, std::wstring& stringToHoldMessage) noexcept;
+	void GetErrorCodeString(
+		const DWORD errorCode, 
+		HMODULE moduleToReadFrom, 
+		std::wstring& stringToHoldMessage
+	) noexcept;
 	
-	void GetErrorCodeString(const DWORD errorCode, HMODULE moduleToReadFrom, std::string& stringToHoldMessage) noexcept;
+	void GetErrorCodeString(
+		const DWORD errorCode, 
+		HMODULE moduleToReadFrom, 
+		std::string& stringToHoldMessage
+	) noexcept;
 
-	void GetErrorCodeString(const DWORD errorCode, std::string& stringToHoldMessage) noexcept;
+	void GetErrorCodeString(
+		const DWORD errorCode, 
+		std::string& stringToHoldMessage
+	) noexcept;
 
-	void GetErrorCodeString(const DWORD errorCode, std::wstring& stringToHoldMessage) noexcept;
+	void GetErrorCodeString(
+		const DWORD errorCode, 
+		std::wstring& stringToHoldMessage
+	) noexcept;
 
-	std::wstring CreateErrorStringFromCode(const std::wstring msg, HMODULE moduleToReadFrom, const DWORD errorCode) noexcept;
+	std::wstring CreateErrorStringFromCode(
+		const std::wstring msg, 
+		HMODULE moduleToReadFrom, 
+		const DWORD errorCode
+	) noexcept;
 
-	std::wstring CreateErrorStringFromCode(const std::wstring msg, const DWORD errorCode) noexcept;
+	std::wstring CreateErrorStringFromCode(
+		const std::wstring msg, 
+		const DWORD errorCode
+	) noexcept;
 
-	std::string CreateErrorStringFromCode(const std::string msg, HMODULE moduleToReadFrom, const DWORD errorCode) noexcept;
+	std::string CreateErrorStringFromCode(
+		const std::string msg, 
+		HMODULE moduleToReadFrom, 
+		const DWORD errorCode
+	) noexcept;
 
-	std::string CreateErrorStringFromCode(const std::string msg, const DWORD errorCode) noexcept;
+	std::string CreateErrorStringFromCode(
+		const std::string msg, 
+		const DWORD errorCode
+	) noexcept;
 
-	std::wstring GetErrorFromHResult(const std::wstring& msg, const HRESULT hr) noexcept;
+	std::wstring GetErrorFromHResult(
+		const std::wstring& msg, 
+		const HRESULT hr
+	) noexcept;
 
-	std::string GetErrorFromHResult(const std::string& msg, const HRESULT hr) noexcept;
+	std::string GetErrorFromHResult(
+		const std::string& msg, 
+		const HRESULT hr
+	) noexcept;
 
 	template<typename T, typename S>
 	inline bool TryCatchLogToWCerr(const T& function, const S* string) noexcept
