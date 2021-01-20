@@ -119,7 +119,7 @@ namespace Boring32::DataStructures
 				return m_stack.size();
 			}
 
-			virtual size_t IsEmpty() const noexcept
+			virtual bool IsEmpty() const noexcept
 			{
 				return m_stack.empty();
 			}
