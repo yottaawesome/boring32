@@ -9,7 +9,7 @@ namespace Boring32::Util
 {
     std::wstring GetCurrentExecutableDirectory()
     {
-        constexpr size_t blockSize = 5096;
+        constexpr size_t blockSize = 2048;
         std::wstring filePath(L"\0", 0);
         DWORD status = ERROR_INSUFFICIENT_BUFFER;
         while (status == ERROR_INSUFFICIENT_BUFFER)
@@ -17,12 +17,14 @@ namespace Boring32::Util
             filePath.resize(filePath.size() + blockSize);
             status = GetModuleFileNameW(nullptr, &filePath[0], (DWORD)filePath.size());
             if(status == 0)
-                throw Error::Win32Error("GetCurrentExecutableDirectory(): GetModuleFileNameW() failed", GetLastError());
+                throw Error::Win32Error(__FUNCSIG__ ": GetModuleFileNameW() failed", GetLastError());
         }
+
         HRESULT result = PathCchRemoveFileSpec(&filePath[0], filePath.size());
         if (result != S_OK && result != S_FALSE)
-            throw Error::ComError("GetCurrentExecutableDirectory(): PathCchRemoveFileSpec() failed", result);
+            throw Error::ComError(__FUNCSIG__ ": PathCchRemoveFileSpec() failed", result);
         filePath = filePath.c_str();
+        
         return filePath;
     }
 
@@ -33,7 +35,7 @@ namespace Boring32::Util
         ft.dwHighDateTime = li.HighPart;
         SYSTEMTIME st{ 0 };
         if (FileTimeToSystemTime(&ft, &st) == false)
-            throw Error::Win32Error("LargeIntegerTimeToSystemTime(): FileTimeToSystemTime() failed", GetLastError());
+            throw Error::Win32Error(__FUNCSIG__ ": FileTimeToSystemTime() failed", GetLastError());
         return st;
     }
 

@@ -16,5 +16,11 @@ namespace Util
 				for(int i = 0; i < bytes.size(); i++)
 					Assert::IsTrue(bytes[i] == (std::byte)i);
 			}
+
+			TEST_METHOD(TestGetCurrentExecutableDirectory)
+			{
+				std::wstring path = Boring32::Util::GetCurrentExecutableDirectory();
+				Assert::IsFalse(path.empty());
+			}
 	};
 }
