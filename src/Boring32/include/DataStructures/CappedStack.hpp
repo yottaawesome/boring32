@@ -57,14 +57,15 @@ namespace Boring32::DataStructures
 				return true;
 			}
 
-			virtual void PopLeaveNotEmpty()
+			virtual bool PopLeaveOne() noexcept
 			{
 				if (m_stack.size() < 2)
-					return;
+					return false;
 				Pop();
+				return true;
 			}
 
-			virtual bool PopLeaveNotEmpty(T& value) noexcept
+			virtual bool PopLeaveOne(T& value) noexcept
 			{
 				if (m_stack.size() < 2)
 					return false;
@@ -83,6 +84,15 @@ namespace Boring32::DataStructures
 				if (m_stack.empty())
 					throw std::runtime_error(__FUNCSIG__ ": Cannot get from empty stack");
 				return m_stack.back();
+			}
+
+			virtual T GetFromBack(const size_t backIndex)
+			{
+				if (m_stack.empty())
+					throw std::runtime_error(__FUNCSIG__ ": Cannot get from empty stack");
+				if((backIndex+1) >= m_stack.size())
+					throw std::runtime_error(__FUNCSIG__ ": invalid index");
+				return m_stack.at(m_stack.size()-1-backIndex);
 			}
 
 			virtual const std::deque<T>& GetContainer() const noexcept
