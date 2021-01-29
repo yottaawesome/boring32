@@ -168,14 +168,13 @@ namespace Boring32::WinHttp
 		const std::wstring& additionalHeaders
 	)
 	{
-		std::unique_ptr<LPCWSTR[]> acceptHeader = nullptr;
+		// acceptHeader must be a null terminated array
+		std::vector<LPCWSTR> acceptHeader;
 		if (m_acceptTypes.size() > 0)
 		{
-			// acceptHeader must be a null terminated array
-			acceptHeader = std::unique_ptr<LPCWSTR[]>(new LPCWSTR[m_acceptTypes.size()+1]);
+			acceptHeader.resize(m_acceptTypes.size() + 1);
 			for (int i = 0; i < m_acceptTypes.size(); i++)
 				acceptHeader[i] = m_acceptTypes.at(i).c_str();
-			acceptHeader[m_acceptTypes.size()] = nullptr;
 		}
 
 		WinHttpHandle hRequest = WinHttpOpenRequest(
@@ -184,9 +183,9 @@ namespace Boring32::WinHttp
 			path.c_str(),
 			nullptr,
 			WINHTTP_NO_REFERER,
-			acceptHeader != nullptr 
-				? acceptHeader.get() 
-				: WINHTTP_DEFAULT_ACCEPT_TYPES,
+			m_acceptTypes.empty() 
+				? WINHTTP_DEFAULT_ACCEPT_TYPES 
+				: &acceptHeader[0],
 			WINHTTP_FLAG_SECURE
 		);
 		if (hRequest == nullptr)

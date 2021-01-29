@@ -367,7 +367,19 @@ void CertStoreOpen()
 	Boring32::Crypto::Certificate clientCert(cc);
 }
 
+void CheckConcat(std::vector<std::wstring>& m_acceptTypes)
+{
+	std::unique_ptr<LPCWSTR[]> acceptHeader = nullptr;
+	acceptHeader = std::unique_ptr<LPCWSTR[]>(new LPCWSTR[m_acceptTypes.size() + 1]);
+	for (int i = 0; i < m_acceptTypes.size(); i++)
+		acceptHeader[i] = m_acceptTypes.at(i).c_str();
+	acceptHeader[m_acceptTypes.size()] = nullptr;
 
+	std::vector<LPCWSTR> acceptHeader2(m_acceptTypes.size() + 1);
+	for (int i = 0; i < m_acceptTypes.size(); i++)
+		acceptHeader2[i] = m_acceptTypes.at(i).c_str();
+	acceptHeader2.back() = nullptr;
+}
 
 int main(int argc, char** args)
 {
