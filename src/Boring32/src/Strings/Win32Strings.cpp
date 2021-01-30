@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
+#include <algorithm>
 #include "include/Error/Error.hpp"
 #include "include/Strings/Strings.hpp"
 
@@ -195,5 +196,11 @@ namespace Boring32::Strings
 		newString += source.substr(lastPos);
 
 		return newString;
+	}
+
+	std::wstring Erase(std::wstring source, const wchar_t what)
+	{
+		source.erase(std::remove(source.begin(), source.end(), what), source.end());
+		return source;
 	}
 }
