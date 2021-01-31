@@ -250,4 +250,63 @@ namespace Boring32::Crypto
 		plainText.resize(cbData);
 		return plainText;
 	}
+
+	std::string ToBase64String(const std::vector<std::byte>& bytes)
+	{
+		DWORD size = 0;
+		bool succeeded = CryptBinaryToStringA(
+			(BYTE*)&bytes[0],
+			(DWORD)bytes.size(),
+			CRYPT_STRING_BASE64 | CRYPT_STRING_NOCRLF,
+			nullptr,
+			&size
+		);
+		if (succeeded == false)
+			throw Error::Win32Error(__FUNCSIG__ ": CryptBinaryToStringA() failed when calculating size");
+		if (size == 0)
+			return "";
+
+		std::string returnVal(size, L'\0');
+		succeeded = CryptBinaryToStringA(
+			(BYTE*)&bytes[0],
+			(DWORD)bytes.size(),
+			CRYPT_STRING_BASE64 | CRYPT_STRING_NOCRLF,
+			(LPSTR)&returnVal[0],
+			&size
+		);
+		if (succeeded == false)
+			throw Error::Win32Error(__FUNCSIG__ ": CryptBinaryToStringA() failed when encoding");
+
+		return returnVal;
+	}
+
+	std::wstring ToBase64WString(const std::vector<std::byte>& bytes)
+	{
+		DWORD size = 0;
+		// https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptbinarytostringw
+		bool succeeded = CryptBinaryToStringW(
+			(BYTE*)&bytes[0],
+			(DWORD)bytes.size(),
+			CRYPT_STRING_BASE64 | CRYPT_STRING_NOCRLF,
+			nullptr,
+			&size
+		);
+		if (succeeded == false)
+			throw Error::Win32Error(__FUNCSIG__ ": CryptBinaryToStringW() failed when calculating size");
+		if (size == 0)
+			return L"";
+
+		std::wstring returnVal(size, L'\0');
+		succeeded = CryptBinaryToStringW(
+			(BYTE*)&bytes[0],
+			(DWORD)bytes.size(),
+			CRYPT_STRING_BASE64 | CRYPT_STRING_NOCRLF,
+			(LPWSTR)&returnVal[0],
+			&size
+		);
+		if (succeeded == false)
+			throw Error::Win32Error(__FUNCSIG__ ": CryptBinaryToStringW() failed when encoding");
+
+		return returnVal;
+	}
 }

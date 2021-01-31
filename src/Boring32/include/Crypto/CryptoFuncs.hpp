@@ -53,4 +53,7 @@ namespace Boring32::Crypto
 		const std::vector<std::byte>& plainText,
 		const DWORD flags
 	);
+
+	std::string ToBase64String(const std::vector<std::byte>& bytes);
+	std::wstring ToBase64WString(const std::vector<std::byte>& bytes);
 }

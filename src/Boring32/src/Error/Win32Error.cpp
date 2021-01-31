@@ -6,6 +6,14 @@ namespace Boring32::Error
 {
 	Win32Error::~Win32Error() {}
 
+	Win32Error::Win32Error(const char* msg)
+		: std::runtime_error(msg),
+		m_errorCode(0)
+	{
+		m_errorString = msg;
+		m_errorString += " (no win32 error code was provided)";
+	}
+
 	Win32Error::Win32Error(const char* msg, const DWORD errorCode)
 		: std::runtime_error(msg),
 		m_errorCode(errorCode)
