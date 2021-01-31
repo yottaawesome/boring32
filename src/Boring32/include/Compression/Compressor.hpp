@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <Windows.h>
 #include <compressapi.h>
 #include "CompressionType.hpp"
 
@@ -48,6 +49,8 @@ namespace Boring32::Compression
 			///		Releases all resources associated with this object.
 			/// </summary>
 			virtual void Close();
+
+			virtual COMPRESSOR_HANDLE GetHandle() const noexcept;
 
 		protected:
 			virtual void Create();

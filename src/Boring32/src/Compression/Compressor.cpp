@@ -83,21 +83,23 @@ namespace Boring32::Compression
 	size_t Compressor::GetCompressedSize(const std::vector<std::byte>& buffer) const
 	{
 		if (m_compressor == nullptr)
-			throw std::runtime_error("Compressor::GetCompressedSize(): compressor handle is null");
+			throw std::runtime_error(__FUNCSIG__ ": compressor handle is null");
 		if (buffer.size() == 0)
-			throw std::runtime_error("Compressor::GetCompressedSize(): buffer is empty");
+			throw std::runtime_error(__FUNCSIG__  ": buffer is empty");
 
 		size_t compressedBufferSize = 0;
 		// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-compress
-		bool succeeded = Compress(
+		const bool succeeded = Compress(
 			m_compressor,           //  Compressor Handle
 			&buffer[0],             //  Input buffer, Uncompressed data
 			buffer.size(),          //  Uncompressed data size
 			nullptr,                //  Compressed Buffer
 			0,                      //  Compressed Buffer size
-			&compressedBufferSize);	//  Compressed Data size
-		if (succeeded == false)
-			throw Error::Win32Error("Compressor::GetCompressedSize(): Compress() failed", GetLastError());
+			&compressedBufferSize	//  Compressed Data size
+		);	
+		const DWORD lastError = GetLastError();
+		if (succeeded == false && lastError != ERROR_INSUFFICIENT_BUFFER)
+			throw Error::Win32Error(__FUNCSIG__ ": Compress() failed", GetLastError());
 
 		return compressedBufferSize;
 	}
@@ -143,5 +145,10 @@ namespace Boring32::Compression
 			if (succeeded == false)
 				throw Error::Win32Error("Compressor::Create(): CreateCompressor() failed", GetLastError());
 		}
+	}
+
+	COMPRESSOR_HANDLE Compressor::GetHandle() const noexcept
+	{
+		return m_compressor;
 	}
 }

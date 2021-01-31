@@ -18,7 +18,7 @@ namespace Boring32::Library
 		if (m_libraryHandle != nullptr)
 		{
 			if (FreeLibrary(m_libraryHandle) == false)
-				std::wcout << __FUNCSIG__ << ": FreeLibrary() failed" << std::endl;
+				std::wcerr << __FUNCSIG__ << ": FreeLibrary() failed" << std::endl;
 			m_libraryHandle = nullptr;
 			m_path.clear();
 		}
