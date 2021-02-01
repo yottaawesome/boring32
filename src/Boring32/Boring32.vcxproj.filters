@@ -422,13 +422,13 @@
     <ClCompile Include="src\Crypto\CryptoKey.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\TaskScheduler\TaskScheduler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\TaskScheduler\TaskFolder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\TaskScheduler\RegisteredTask.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TaskScheduler\TaskService.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

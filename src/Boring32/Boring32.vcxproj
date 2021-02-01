@@ -300,7 +300,7 @@
     <ClCompile Include="src\Library\DynamicLinkLibrary.cpp" />
     <ClCompile Include="src\TaskScheduler\RegisteredTask.cpp" />
     <ClCompile Include="src\TaskScheduler\TaskFolder.cpp" />
-    <ClCompile Include="src\TaskScheduler\TaskScheduler.cpp" />
+    <ClCompile Include="src\TaskScheduler\TaskService.cpp" />
     <ClCompile Include="src\Time\Time.cpp" />
     <ClCompile Include="src\Util\Util.cpp" />
     <ClCompile Include="src\WinHttp\ProxyInfo.cpp" />

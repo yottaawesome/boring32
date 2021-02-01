@@ -60,4 +60,21 @@ namespace Boring32::TaskScheduler
 				return task;
 		return std::nullopt;
 	}
+
+	void TaskFolder::SaveOrUpdate(const RegisteredTask& task)
+	{
+		Microsoft::WRL::ComPtr<IRegisteredTask> pRegisteredTask;
+		HRESULT hr = m_taskFolder->RegisterTaskDefinition(
+			_bstr_t(task.GetName().c_str()),
+			task.GetTaskDefinition().Get(),
+			TASK_CREATE_OR_UPDATE,
+			_variant_t(),
+			_variant_t(),
+			TASK_LOGON_INTERACTIVE_TOKEN,
+			_variant_t(L""),
+			&pRegisteredTask
+		);
+		if (FAILED(hr))
+			throw Error::ComError(__FUNCSIG__ ": failed to save or update task", hr);
+	}
 }

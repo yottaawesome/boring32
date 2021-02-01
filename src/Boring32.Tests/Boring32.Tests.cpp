@@ -539,9 +539,13 @@ void TestTaskService()
 	taskService.Connect();
 	Boring32::TaskScheduler::TaskFolder rootFolder = taskService.GetFolder(L"\\");
 	std::optional<Boring32::TaskScheduler::RegisteredTask> tasks = 
-		rootFolder.GetTask(L"Git for Windows Updater");
+		rootFolder.GetTask(L"Time Trigger Test Task");
 	if (tasks)
+	{
 		std::wcout << L"Found!" << std::endl;
+		tasks.value().SetEnabled(true);
+		rootFolder.SaveOrUpdate(tasks.value());
+	}
 }
 
 int main(int argc, char** args)
