@@ -381,7 +381,7 @@ void CheckConcat(std::vector<std::wstring>& m_acceptTypes)
 	acceptHeader2.back() = nullptr;
 }
 
-int main(int argc, char** args)
+int OldJunk()
 {
 	Boring32::DataStructures::CappedStack<int> i(2, true);
 	i.Push(1);
@@ -437,10 +437,10 @@ int main(int argc, char** args)
 		//Test proxy: L"36.82.95.67:3128"
 		//Test proxy: 125.164.86.89:3128
 		/*Boring32::WinHttp::HttpWebClient webClient(
-			L"test-ua", 
-			L"google.com", 
-			L"36.90.12.80:8181", 
-			443, 
+			L"test-ua",
+			L"google.com",
+			L"36.90.12.80:8181",
+			443,
 			false,
 			{L"text/html"},
 			{L""}
@@ -455,10 +455,10 @@ int main(int argc, char** args)
 				.Server = L"echo.websocket.org",
 				.Port = 443,
 				.IgnoreSslErrors = false,
-				.WinHttpSession = 
+				.WinHttpSession =
 					Boring32::WinHttp::Session(L"testUserAgent")
-					// Uncomment to use named proxy
-					//Boring32::WinHttp::Session(L"testUserAgent", L"125.164.86.89:3128")
+			// Uncomment to use named proxy
+			//Boring32::WinHttp::Session(L"testUserAgent", L"125.164.86.89:3128")
 			}
 		);
 		socket.Connect();
@@ -515,7 +515,7 @@ int main(int argc, char** args)
 			std::wcout << ex.what() << std::endl;
 		}
 	}
-	
+
 	//Boring32::WinHttp::HttpWebClient client(
 	//	L"TestClientAgent", 
 	//	L"127.0.0.1", 
@@ -525,6 +525,28 @@ int main(int argc, char** args)
 	//	L"Content-Type: application/json"
 	//);
 	//client.Post(L"/some/object", "");
+
+	return 0;
+}
+
+void TestTaskService()
+{
+	Boring32::Com::ComThreadScope scope;
+	scope.Initialise();
+	scope.InitialiseSecurity();
+
+	Boring32::TaskScheduler::TaskService taskService;
+	taskService.Connect();
+	Boring32::TaskScheduler::TaskFolder rootFolder = taskService.GetFolder(L"\\");
+	std::optional<Boring32::TaskScheduler::RegisteredTask> tasks = 
+		rootFolder.GetTask(L"Git for Windows Updater");
+	if (tasks)
+		std::wcout << L"Found!" << std::endl;
+}
+
+int main(int argc, char** args)
+{
+	TestTaskService();
 
 	return 0;
 }

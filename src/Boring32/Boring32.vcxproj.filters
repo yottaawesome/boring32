@@ -240,6 +240,18 @@
     <ClInclude Include="include\DataStructures\CappedStack.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\TaskScheduler\TaskService.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TaskScheduler\TaskScheduler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TaskScheduler\TaskFolder.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TaskScheduler\RegisteredTask.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\pch.cpp">
@@ -408,6 +420,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Crypto\CryptoKey.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TaskScheduler\TaskScheduler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TaskScheduler\TaskFolder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TaskScheduler\RegisteredTask.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

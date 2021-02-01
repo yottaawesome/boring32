@@ -20,3 +20,4 @@
 #pragma comment(lib, "Cabinet.lib")
 #pragma comment(lib, "Crypt32.lib")
 #pragma comment(lib, "Bcrypt.lib")
+#pragma comment(lib, "taskschd.lib")

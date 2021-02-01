@@ -12,3 +12,5 @@
 #include "Compression/Compression.hpp"
 #include "Crypto/Crypto.hpp"
 #include "DataStructures/CappedStack.hpp"
+#include "TaskScheduler/TaskScheduler.hpp"
+#include "Com/ComThreadScope.hpp"
