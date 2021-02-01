@@ -78,7 +78,7 @@ namespace Boring32::Com
 		// Initialise COM for this thread
 		HRESULT hr = CoInitializeEx(nullptr, m_apartmentThreadingMode);
 		if (FAILED(hr))
-			throw Error::ComError("CoInitializeEx() failed", hr);
+			throw Error::ComError(__FUNCSIG__ ": CoInitializeEx() failed", hr);
 
 		m_isInitialised = true;
 		m_comInitialisedThreadId = GetCurrentThreadId();
@@ -90,7 +90,7 @@ namespace Boring32::Com
 		if (m_isSecurityInitialised != 1)
 		{
 			std::wcerr 
-				<< L"ComThreadScope::InitialiseSecurity(): "
+				<< L"__FUNCSIG__: "
 				<< L"An attempt to initialise COM security more than once for this process occurred. "
 				<< L"COM security can only be set once for the whole process, and cannot be changed. "
 				<< L"Ignoring..."
@@ -112,7 +112,7 @@ namespace Boring32::Com
 			nullptr                         // Reserved
 		);
 		if (FAILED(hr))
-			throw Error::ComError("CoInitializeSecurity() failed", hr);
+			throw Error::ComError(__FUNCSIG__ ": failed", hr);
 	}
 
 	void ComThreadScope::Uninitialise()
@@ -121,7 +121,7 @@ namespace Boring32::Com
 			return;
 
 		if (m_comInitialisedThreadId != GetCurrentThreadId())
-			throw std::runtime_error("Attempt to uninitialise COM by a thread different to initialising one.");
+			throw std::runtime_error(__FUNCSIG__ ": Attempt to uninitialise COM by a thread different to initialising one.");
 
 		CoUninitialize();
 		m_isInitialised = false;

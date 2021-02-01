@@ -253,6 +253,7 @@ namespace Boring32::Crypto
 
 	std::string ToBase64String(const std::vector<std::byte>& bytes)
 	{
+		// Determine the required size -- this includes the null terminator
 		DWORD size = 0;
 		bool succeeded = CryptBinaryToStringA(
 			(BYTE*)&bytes[0],
@@ -276,12 +277,16 @@ namespace Boring32::Crypto
 		);
 		if (succeeded == false)
 			throw Error::Win32Error(__FUNCSIG__ ": CryptBinaryToStringA() failed when encoding");
+		// Remove terminating null character
+		if (returnVal.empty() == false)
+			returnVal.pop_back();
 
 		return returnVal;
 	}
 
 	std::wstring ToBase64WString(const std::vector<std::byte>& bytes)
 	{
+		// Determine the required size -- this includes the null terminator
 		DWORD size = 0;
 		// https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptbinarytostringw
 		bool succeeded = CryptBinaryToStringW(
@@ -306,6 +311,9 @@ namespace Boring32::Crypto
 		);
 		if (succeeded == false)
 			throw Error::Win32Error(__FUNCSIG__ ": CryptBinaryToStringW() failed when encoding");
+		// Remove terminating null character
+		if (returnVal.empty() == false)
+			returnVal.pop_back();
 
 		return returnVal;
 	}

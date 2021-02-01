@@ -76,7 +76,7 @@ namespace Boring32::Strings
 			? str.length()
 			: str.length() + 1; // Needs to be one more to account for \0 added by wcsrtombs_s
 		std::string dest(reservedSize, 0);
-		mbstate_t mbs;
+		mbstate_t mbs{ 0 };
 		mbrlen(NULL, 0, &mbs);
 		const wchar_t* a = &str[0];
 		errno_t error = wcsrtombs_s(&charsConverted, &dest[0], reservedSize, &a, reservedSize, &mbs);
@@ -108,7 +108,7 @@ namespace Boring32::Strings
 			? str.length()
 			: str.length() + 1; // Needs to be one more to account for \0 added by wcsrtombs_s
 		std::wstring dest(reservedSize, 0);
-		mbstate_t mbs;
+		mbstate_t mbs{ 0 };
 		mbrlen(NULL, 0, &mbs);
 		const char* a = &str[0];
 		errno_t error = mbsrtowcs_s(&charsConverted, &dest[0], reservedSize, &a, reservedSize, &mbs);
