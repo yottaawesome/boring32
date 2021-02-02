@@ -21,6 +21,11 @@ namespace Boring32::TaskScheduler
 			virtual void SetEnabled(const bool isEnabled);
 			virtual Microsoft::WRL::ComPtr<IRegisteredTask> GetRegisteredTask() const;
 			virtual Microsoft::WRL::ComPtr<ITaskDefinition> GetTaskDefinition() const;
+			virtual void PrintInfo();
+			virtual void SetRepetitionInterval(const DWORD intervalMinutes);
+
+		protected:
+			virtual std::vector<Microsoft::WRL::ComPtr<ITrigger>> GetTriggers();
 
 		protected:
 			Microsoft::WRL::ComPtr<IRegisteredTask> m_registeredTask;

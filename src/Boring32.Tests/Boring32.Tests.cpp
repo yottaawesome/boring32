@@ -531,20 +531,29 @@ int OldJunk()
 
 void TestTaskService()
 {
-	Boring32::Com::ComThreadScope scope;
-	scope.Initialise();
-	scope.InitialiseSecurity();
-
-	Boring32::TaskScheduler::TaskService taskService;
-	taskService.Connect();
-	Boring32::TaskScheduler::TaskFolder rootFolder = taskService.GetFolder(L"\\");
-	std::optional<Boring32::TaskScheduler::RegisteredTask> tasks = 
-		rootFolder.GetTask(L"Time Trigger Test Task");
-	if (tasks)
+	try
 	{
-		std::wcout << L"Found!" << std::endl;
-		tasks.value().SetEnabled(true);
-		rootFolder.SaveOrUpdate(tasks.value());
+		Boring32::Com::ComThreadScope scope;
+		scope.Initialise();
+		scope.InitialiseSecurity();
+
+		Boring32::TaskScheduler::TaskService taskService;
+		taskService.Connect();
+		Boring32::TaskScheduler::TaskFolder rootFolder = taskService.GetFolder(L"\\");
+		std::optional<Boring32::TaskScheduler::RegisteredTask> tasks =
+			rootFolder.GetTask(L"Time Trigger Test Task");
+		if (tasks)
+		{
+			std::wcout << L"Found!" << std::endl;
+			tasks.value().SetRepetitionInterval(15);
+			tasks.value().SetEnabled(false);
+			rootFolder.SaveOrUpdate(tasks.value(), TASK_LOGON_TYPE::TASK_LOGON_NONE);
+			//tasks.value().SetEnabled(true);
+		}
+	}
+	catch (const std::exception& ex)
+	{
+		std::wcerr << ex.what() << std::endl;
 	}
 }
 

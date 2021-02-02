@@ -21,7 +21,10 @@ namespace Boring32::TaskScheduler
 			virtual void Close() noexcept;
 			virtual std::vector<RegisteredTask> GetTasks();
 			virtual std::optional<RegisteredTask> GetTask(const std::wstring& name);
-			virtual void SaveOrUpdate(const RegisteredTask& task);
+			virtual void SaveOrUpdate(
+				const RegisteredTask& task,
+				const TASK_LOGON_TYPE logonType
+			);
 
 		protected:
 			Microsoft::WRL::ComPtr<ITaskFolder> m_taskFolder;
