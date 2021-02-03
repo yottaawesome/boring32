@@ -54,7 +54,8 @@ namespace Boring32::TaskScheduler
 			/// <exception cref="ComError">
 			///		Thrown when a COM operation fails.
 			/// </exception>
-			virtual void SetRandomDelay(const DWORD minutes);
+			/// <returns>The number of triggers updated.</returns>
+			virtual UINT SetRandomDelay(const DWORD minutes);
 
 		protected:
 			virtual std::vector<Microsoft::WRL::ComPtr<ITrigger>> GetTriggers();

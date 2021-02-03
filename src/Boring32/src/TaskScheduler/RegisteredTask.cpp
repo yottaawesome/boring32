@@ -98,17 +98,19 @@ namespace Boring32::TaskScheduler
 			throw Error::ComError(__FUNCSIG__ ": failed to start task", hr);
 	}
 	
-	void RegisteredTask::SetRandomDelay(const DWORD minutes)
+	UINT RegisteredTask::SetRandomDelay(const DWORD minutes)
 	{
 		std::vector<ComPtr<ITrigger>> triggers = GetTriggers();
+		const std::wstring delay = L"PT" + std::to_wstring(minutes) + L"M";
+		UINT triggersUpdated = 0;
+
 		for (const auto& trigger : triggers)
 		{
 			TASK_TRIGGER_TYPE2 type = TASK_TRIGGER_TYPE2::TASK_TRIGGER_EVENT;
 			HRESULT hr = trigger->get_Type(&type);
 			if (FAILED(hr))
-				throw Error::ComError(__FUNCSIG__ ": failed to get ITrigger", hr);
+				throw Error::ComError(__FUNCSIG__ ": failed to get ITrigger type", hr);
 
-			std::wstring delay = L"PT" + std::to_wstring(minutes) + L"M";
 			// Some, but not all, triggers support random delays, so we only
 			// set the daily one for now, as that's the one of interest.
 			switch (type)
@@ -119,6 +121,7 @@ namespace Boring32::TaskScheduler
 					hr = dailyTrigger->put_RandomDelay(_bstr_t(delay.c_str()));
 					if (FAILED(hr))
 						throw Error::ComError(__FUNCSIG__ ": failed to set trigger random delay", hr);
+					triggersUpdated++;
 					break;
 				}
 
@@ -127,10 +130,11 @@ namespace Boring32::TaskScheduler
 					std::wcerr
 						<< L"Did not set random delay for a trigger as it's not supported"
 						<< std::endl;
-					break;
 				}
 			}
 		}
+
+		return triggersUpdated;
 	}
 
 	std::vector<ComPtr<ITrigger>> RegisteredTask::GetTriggers()
