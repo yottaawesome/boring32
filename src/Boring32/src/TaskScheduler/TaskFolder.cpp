@@ -4,12 +4,14 @@
 
 namespace Boring32::TaskScheduler
 {
+	using Microsoft::WRL::ComPtr;
+
 	TaskFolder::~TaskFolder()
 	{
 		Close();
 	}
 
-	TaskFolder::TaskFolder(Microsoft::WRL::ComPtr<ITaskFolder> taskFolder)
+	TaskFolder::TaskFolder(ComPtr<ITaskFolder> taskFolder)
 	:	m_taskFolder(std::move(taskFolder))
 	{ }
 
@@ -24,7 +26,7 @@ namespace Boring32::TaskScheduler
 		if (m_taskFolder == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": m_taskFolder is nullptr");
 
-		Microsoft::WRL::ComPtr<IRegisteredTaskCollection> collection;
+		ComPtr<IRegisteredTaskCollection> collection;
 		HRESULT hr = m_taskFolder->GetTasks(0, &collection);
 		if (FAILED(hr))
 			throw Error::ComError(__FUNCSIG__ ": failed to acquire tasks", hr);
@@ -41,7 +43,7 @@ namespace Boring32::TaskScheduler
 		// Collection counts are 1-indexed
 		for (LONG i = 1; i <= count; i++)
 		{
-			Microsoft::WRL::ComPtr<IRegisteredTask> task;
+			ComPtr<IRegisteredTask> task;
 			hr = collection->get_Item(_variant_t(i), &task);
 			if (FAILED(hr))
 				throw Error::ComError(__FUNCSIG__ ": failed to get task item", hr);
@@ -66,7 +68,10 @@ namespace Boring32::TaskScheduler
 		const TASK_LOGON_TYPE logonType
 	)
 	{
-		Microsoft::WRL::ComPtr<IRegisteredTask> pRegisteredTask;
+		if (m_taskFolder == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": m_taskFolder is null");
+
+		ComPtr<IRegisteredTask> registeredTask;
 		
 		HRESULT hr = m_taskFolder->RegisterTaskDefinition(
 			_bstr_t(task.GetName().c_str()),
@@ -76,7 +81,7 @@ namespace Boring32::TaskScheduler
 			_variant_t(),
 			logonType,
 			_variant_t(L""),
-			&pRegisteredTask
+			&registeredTask
 		);
 		if (FAILED(hr))
 			throw Error::ComError(__FUNCSIG__ ": failed to save or update task", hr);

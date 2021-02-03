@@ -546,8 +546,9 @@ void TestTaskService()
 		{
 			std::wcout << L"Found!" << std::endl;
 			tasks.value().SetRepetitionInterval(15);
-			tasks.value().SetEnabled(false);
-			rootFolder.SaveOrUpdate(tasks.value(), TASK_LOGON_TYPE::TASK_LOGON_NONE);
+			tasks.value().SetEnabled(true);
+			tasks.value().Run();
+			//rootFolder.SaveOrUpdate(tasks.value(), TASK_LOGON_TYPE::TASK_LOGON_NONE);
 			//tasks.value().SetEnabled(true);
 		}
 	}
