@@ -1,7 +1,10 @@
 #include "pch.hpp"
 #include <stdexcept>
+#include <TlHelp32.h>
+#include "include/Raii/Win32Handle.hpp"
 #include "include/Error/Win32Error.hpp"
 #include "include/Async/AsyncFuncs.hpp"
+#include "include/Strings/Strings.hpp"
 
 namespace Boring32::Async
 {
@@ -80,5 +83,64 @@ namespace Boring32::Async
 			return status;
 
 		return waitForAll ? 0 : status - WAIT_OBJECT_0;
+	}
+
+	bool GetProcessIdByName(
+		const std::wstring& processName,
+		const int sessionIdToMatch,
+		DWORD& outResult
+	)
+	{
+		PROCESSENTRY32W procEntry;
+
+		Raii::Win32Handle hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+		if (hSnap == INVALID_HANDLE_VALUE)
+		{
+			throw Error::Win32Error(
+				__FUNCSIG__ ": CreateToolhelp32Snapshot() failed",
+				GetLastError());
+		}
+
+		procEntry.dwSize = sizeof(PROCESSENTRY32W);
+
+		if (Process32FirstW(hSnap.GetHandle(), &procEntry) == false)
+		{
+			throw Error::Win32Error(
+				__FUNCSIG__ ": Process32First() failed",
+				GetLastError());
+		}
+
+		do
+		{
+			if (Strings::DoStringsMatchCaseInsensitive(procEntry.szExeFile, processName))
+			{
+				if (sessionIdToMatch < 0)
+				{
+					outResult = procEntry.th32ProcessID;
+					return true;
+				}
+				else
+				{
+					DWORD processSessionId = 0;
+					if (ProcessIdToSessionId(procEntry.th32ProcessID, &processSessionId))
+					{
+						if (processSessionId == sessionIdToMatch)
+						{
+							outResult = procEntry.th32ProcessID;
+							return true;
+						}
+					}
+					else
+					{
+						throw Error::Win32Error(
+							__FUNCSIG__ ": ProcessIdToSessionId() failed",
+							GetLastError()
+						);
+					}
+				}
+			}
+		} while (Process32NextW(hSnap.GetHandle(), &procEntry));
+
+		return false;
 	}
 }

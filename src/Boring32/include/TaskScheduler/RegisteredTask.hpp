@@ -38,11 +38,11 @@ namespace Boring32::TaskScheduler
 			virtual void Run();
 
 			/// <summary>
-			///		Set a random delay, in minutes to all triggers
-			///		associated with this task. This delay is added
-			///		to the start time of the trigger. Not all trigger
-			///		types support a random delay, in which case,
-			///		this function does not modify them.
+			///		Set a random delay, in minutes to all supporting
+			///		triggers associated with this task. This delay 
+			///		is added to the start time of the trigger. 
+			///		Not all trigger types support a random delay, in 
+			///		which case, this function does not modify them.
 			/// </summary>
 			/// <param name="minutes">
 			///		The upper bound of the delay in minutes.

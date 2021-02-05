@@ -86,5 +86,20 @@ namespace Async
 				std::vector<HANDLE> handles{ event1.GetHandle(), event2.GetHandle() };
 				Assert::IsTrue(Boring32::Async::WaitFor(handles, false, INFINITE, true) == WAIT_IO_COMPLETION);
 			}
+
+			TEST_METHOD(TestGetProcessIdByName)
+			{
+				DWORD result = 0;
+				bool found = Boring32::Async::GetProcessIdByName(
+					L"explorer.exe", -1, result 
+				);
+				Assert::IsTrue(found);
+
+				result = 0;
+				found = Boring32::Async::GetProcessIdByName(
+					L"explorer.exe", 1, result
+				);
+				Assert::IsTrue(found);
+			}
 	};
 }

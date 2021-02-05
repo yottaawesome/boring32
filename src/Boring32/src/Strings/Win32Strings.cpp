@@ -203,4 +203,21 @@ namespace Boring32::Strings
 		source.erase(std::remove(source.begin(), source.end(), what), source.end());
 		return source;
 	}
+
+	// Adapted from https://www.tutorialspoint.com/case-insensitive-string-comparison-in-cplusplus
+	bool DoStringsMatchCaseInsensitive(std::wstring str1, std::wstring str2)
+	{
+		//convert s1 and s2 into lower case strings
+		std::transform(str1.begin(), str1.end(), str1.begin(), ::tolower);
+		std::transform(str2.begin(), str2.end(), str2.begin(), ::tolower);
+		return str1 == str2;
+	}
+
+	bool DoStringsMatchCaseInsensitive(std::string str1, std::string str2)
+	{
+		//convert s1 and s2 into lower case strings
+		std::transform(str1.begin(), str1.end(), str1.begin(), ::tolower);
+		std::transform(str2.begin(), str2.end(), str2.begin(), ::tolower);
+		return str1 == str2;
+	}
 }

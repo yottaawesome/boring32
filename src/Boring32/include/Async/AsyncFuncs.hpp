@@ -49,4 +49,29 @@ namespace Boring32::Async
 		const DWORD timeout,
 		const bool alertable
 	);
+
+	/// <summary>
+	///		Find a process' ID by its name.
+	/// </summary>
+	/// <param name="processName">
+	///		The name of the process to search for.
+	/// </param>
+	/// <param name="sessionIdToMatch">
+	///		The session ID of the process to match.
+	///		Pass a negative value for this argument
+	///		to be ignored.
+	/// </param>
+	/// <param name="outResult">
+	///		Set to the value of the matching process
+	///		ID. Otherwise, this argument is not
+	///		modified
+	/// </param>
+	/// <returns>
+	///		True if a match is found false otherwise.
+	/// </returns>
+	bool GetProcessIdByName(
+		const std::wstring& processName,
+		const int sessionIdToMatch,
+		DWORD& outResult
+	);
 }
