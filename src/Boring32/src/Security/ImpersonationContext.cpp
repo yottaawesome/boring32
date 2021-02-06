@@ -6,6 +6,7 @@
 
 namespace Boring32::Security
 {
+	// https://docs.microsoft.com/en-us/windows/win32/secauthz/client-impersonation
 	ImpersonationContext::~ImpersonationContext()
 	{
 		Close();
@@ -16,6 +17,7 @@ namespace Boring32::Security
 	{
 		if (token == nullptr || token == INVALID_HANDLE_VALUE)
 			throw std::runtime_error(__FUNCSIG__ ": token is invalid");
+		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-impersonateloggedonuser
 		if (ImpersonateLoggedOnUser(token) == false)
 			throw Error::Win32Error(
 				__FUNCSIG__ ": ImpersonateLoggedOnUser() failed",
@@ -30,6 +32,7 @@ namespace Boring32::Security
 			RegCloseKey(m_registryHive);
 			m_registryHive = nullptr;
 		}
+		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-reverttoself
 		return RevertToSelf();
 	}
 
@@ -37,6 +40,7 @@ namespace Boring32::Security
 	{
 		if (m_registryHive == nullptr)
 		{
+			// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopencurrentuser
 			LSTATUS status = RegOpenCurrentUser(KEY_READ, &m_registryHive);
 			if (status != ERROR_SUCCESS)
 				throw Error::NtStatusError(
