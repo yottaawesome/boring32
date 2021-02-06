@@ -221,6 +221,7 @@
     <ClInclude Include="include\Raii\Raii.hpp" />
     <ClInclude Include="include\Raii\Sid.hpp" />
     <ClInclude Include="include\Raii\Win32Handle.hpp" />
+    <ClInclude Include="include\Security\ImpersonationContext.hpp" />
     <ClInclude Include="include\Security\PrivateNamespace.hpp" />
     <ClInclude Include="include\Strings\Strings.hpp" />
     <ClInclude Include="include\TaskScheduler\RegisteredTask.hpp" />
@@ -294,6 +295,7 @@
     <ClCompile Include="src\Raii\Win32Handle.cpp" />
     <ClCompile Include="src\Registry\RegistryFuncs.cpp" />
     <ClCompile Include="src\Registry\RegKey.cpp" />
+    <ClCompile Include="src\Security\ImpersonationContext.cpp" />
     <ClCompile Include="src\Security\PrivateNamespace.cpp" />
     <ClCompile Include="src\Strings\Win32Strings.cpp" />
     <ClCompile Include="src\pch.cpp" />

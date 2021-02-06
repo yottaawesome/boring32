@@ -67,7 +67,7 @@ namespace Boring32::Async
 	///		modified
 	/// </param>
 	/// <returns>
-	///		True if a match is found false otherwise.
+	///		True if a match is found, false otherwise.
 	/// </returns>
 	bool GetProcessIdByName(
 		const std::wstring& processName,

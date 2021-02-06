@@ -91,24 +91,19 @@ namespace Boring32::Async
 		DWORD& outResult
 	)
 	{
-		PROCESSENTRY32W procEntry;
-
-		Raii::Win32Handle hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-		if (hSnap == INVALID_HANDLE_VALUE)
-		{
+		Raii::Win32Handle processesSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+		if (processesSnapshot == INVALID_HANDLE_VALUE)
 			throw Error::Win32Error(
 				__FUNCSIG__ ": CreateToolhelp32Snapshot() failed",
-				GetLastError());
-		}
+				GetLastError()
+			);
 
-		procEntry.dwSize = sizeof(PROCESSENTRY32W);
-
-		if (Process32FirstW(hSnap.GetHandle(), &procEntry) == false)
-		{
+		PROCESSENTRY32W procEntry{ .dwSize = sizeof(PROCESSENTRY32W) };
+		if (Process32FirstW(processesSnapshot.GetHandle(), &procEntry) == false)
 			throw Error::Win32Error(
 				__FUNCSIG__ ": Process32First() failed",
-				GetLastError());
-		}
+				GetLastError()
+			);
 
 		do
 		{
@@ -139,7 +134,7 @@ namespace Boring32::Async
 					}
 				}
 			}
-		} while (Process32NextW(hSnap.GetHandle(), &procEntry));
+		} while (Process32NextW(processesSnapshot.GetHandle(), &procEntry));
 
 		return false;
 	}
