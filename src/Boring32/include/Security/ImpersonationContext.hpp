@@ -17,5 +17,9 @@ namespace Boring32::Security
 
 		public:
 			virtual bool Close();
+			virtual HKEY GetUserRegistry();
+
+		protected:
+			HKEY m_registryHive;
 	};
 }
