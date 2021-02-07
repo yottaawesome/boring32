@@ -10,19 +10,21 @@ namespace Boring32::WinHttp
 			virtual ~WinHttpHandle();
 			WinHttpHandle();
 			WinHttpHandle(HINTERNET handle);
-
 			WinHttpHandle(WinHttpHandle&& other) noexcept;
-			virtual void operator=(WinHttpHandle&& other) noexcept;
-
 			WinHttpHandle(const WinHttpHandle&) = delete;
-			virtual void operator=(const WinHttpHandle&) = delete;
 
+		public:
+			virtual void operator=(WinHttpHandle&& other) noexcept;
 			virtual void operator=(const HINTERNET& copy);
+			virtual void operator=(const WinHttpHandle&) = delete;
+			
 			virtual bool operator==(const HINTERNET other);
+
+		public:
 			virtual HINTERNET Get() const;
 			virtual void Close();
 
-		private:
+		protected:
 			HINTERNET m_handle;
 	};
 }

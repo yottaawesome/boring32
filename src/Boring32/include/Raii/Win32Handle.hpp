@@ -1,30 +1,24 @@
 #pragma once
 #include <Windows.h>
 #include <string>
+#include <memory>
 
 namespace Boring32::Raii
 {
 	class Win32Handle
 	{
+		// Constructors
 		public:
 			virtual ~Win32Handle();
 			Win32Handle();
 			Win32Handle(const HANDLE handle);
-
 			Win32Handle(const Win32Handle& otherHandle);
-			virtual void operator=(const Win32Handle& other);
-
 			Win32Handle(Win32Handle&& otherHandle) noexcept;
-			virtual Win32Handle& operator=(Win32Handle&& other) noexcept;
 
+		// Operators
 		public:
-			/// <summary>
-			///		Closes the current handle, if valid, and assumes
-			///		ownership of handle in the parameter.
-			/// </summary>
-			/// <param name="other">The handle to assume ownership of. This paremeter can be nullptr.</param>
-			virtual Win32Handle& operator=(const HANDLE other);
-			
+			virtual void operator=(const Win32Handle& other);
+			virtual Win32Handle& operator=(Win32Handle&& other) noexcept;
 			/// <summary>
 			///		Compares the current handle to the specified handle.
 			///		For the purposes of comparison, a nullptr handle is
@@ -35,6 +29,13 @@ namespace Boring32::Raii
 			virtual bool operator==(const HANDLE other) const;
 
 			/// <summary>
+			///		Closes the current handle, if valid, and assumes
+			///		ownership of handle in the parameter.
+			/// </summary>
+			/// <param name="other">The handle to assume ownership of. This paremeter can be nullptr.</param>
+			virtual Win32Handle& operator=(const HANDLE other);
+
+			/// <summary>
 			///		Compares the current handle to the specified handle.
 			///		For the purposes of comparison, a nullptr handle is
 			///		considered equivalent to INVALID_HANDLE_VALUE.
@@ -42,13 +43,18 @@ namespace Boring32::Raii
 			/// <param name="other">The handle to compare against.</param>
 			/// <returns>Whether the handles are equivalent.</returns>
 			virtual bool operator==(const Win32Handle& other) const;
-			
+
+			virtual operator bool() const;
+
 			/// <summary>
 			///		Returns the internal HANDLE address.
 			/// </summary>
 			/// <returns>The internal HANDLE's address.</returns>
 			virtual HANDLE* operator&();
 
+			virtual HANDLE operator*() const;
+		
+		// API
 		public:
 			virtual HANDLE GetHandle() const;
 			virtual HANDLE DuplicateCurrentHandle() const;

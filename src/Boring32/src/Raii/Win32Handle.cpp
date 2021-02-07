@@ -6,6 +6,12 @@
 
 namespace Boring32::Raii
 {
+	template<typename T>
+	std::shared_ptr<T> CreateClosableHandle(HANDLE handle)
+	{
+		return { handle, [](HANDLE handle) { CloseHandle(handle); } };
+	}
+
 	Win32Handle::~Win32Handle()
 	{
 		Close();
@@ -44,7 +50,11 @@ namespace Boring32::Raii
 	void Win32Handle::Copy(const Win32Handle& other)
 	{
 		Close();
-		m_handle = Win32Handle::DuplicatePassedHandle(other.GetHandle(), other.IsInheritable());
+		m_handle = 
+			Win32Handle::DuplicatePassedHandle(
+				other.GetHandle(), 
+				other.IsInheritable()
+			);
 	}
 
 	Win32Handle::Win32Handle(Win32Handle&& other) noexcept
@@ -95,6 +105,16 @@ namespace Boring32::Raii
 	HANDLE* Win32Handle::operator&()
 	{
 		return &m_handle;
+	}
+
+	HANDLE Win32Handle::operator*() const
+	{
+		return m_handle;
+	}
+
+	Win32Handle::operator bool() const
+	{
+		return IsValidValue();
 	}
 
 	bool Win32Handle::IsValidValue() const
