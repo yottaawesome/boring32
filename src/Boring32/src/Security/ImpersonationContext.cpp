@@ -25,6 +25,19 @@ namespace Boring32::Security
 			);
 	}
 
+	ImpersonationContext::ImpersonationContext(ImpersonationContext&& other) noexcept
+	:	m_registryHive(nullptr)
+	{
+		Move(other);
+	}
+
+	ImpersonationContext& ImpersonationContext::Move(ImpersonationContext& other) noexcept
+	{
+		m_registryHive = other.m_registryHive;
+		other.m_registryHive = nullptr;
+		return *this;
+	}
+
 	bool ImpersonationContext::Close()
 	{
 		if (m_registryHive)
