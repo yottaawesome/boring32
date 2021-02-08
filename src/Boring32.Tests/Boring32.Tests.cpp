@@ -312,7 +312,7 @@ void WebSocket()
 
 		// ERROR_WINHTTP_CLIENT_CERT_NO_PRIVATE_KEY
 		Boring32::Crypto::CertStore certStore(L"MY");
-		CERT_CONTEXT* cc = certStore.GetCertBySubjectName(L"client.localhost");
+		CERT_CONTEXT* cc = certStore.GetCertByExactSubjectName(L"CN = client.localhost");
 		if (cc == nullptr)
 		{
 			std::wcerr << L"Failed" << std::endl;
@@ -358,7 +358,7 @@ void CertStoreOpen()
 	}
 
 	Boring32::Crypto::CertStore certStore(store, Boring32::Crypto::CertStoreType::System);
-	CERT_CONTEXT* cc = certStore.GetCertBySubjectName(L"NVIDIA GameStream Server");
+	CERT_CONTEXT* cc = certStore.GetCertByExactSubjectName(L"CN = NVIDIA GameStream Server");
 	if (cc == nullptr)
 	{
 		std::wcerr << L"Failed" << std::endl;

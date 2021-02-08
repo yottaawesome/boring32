@@ -1,6 +1,7 @@
 #include "pch.hpp"
 #include <stdexcept>
 #include <iostream>
+#include <vector>
 #include "include/Error/Error.hpp"
 #include "include/Crypto/CertStore.hpp"
 
@@ -167,12 +168,61 @@ namespace Boring32::Crypto
 		return m_storeName;
 	}
 
-	CERT_CONTEXT* CertStore::GetCertBySubjectName(const std::wstring& subjectName)
+	CERT_CONTEXT* CertStore::GetCertByExactSubjectName(const std::wstring& subjectName)
+	{
+		DWORD encoded = 0;
+		bool succeeded = CertStrToNameW(
+			X509_ASN_ENCODING,
+			subjectName.c_str(),
+			CERT_OID_NAME_STR,
+			nullptr,
+			nullptr,
+			&encoded,
+			nullptr
+		);
+		if (succeeded == false)
+			throw Error::Win32Error(__FUNCSIG__, GetLastError());
+
+		std::vector<BYTE> byte(encoded, 0);
+		succeeded = CertStrToNameW(
+			X509_ASN_ENCODING,
+			subjectName.c_str(),
+			CERT_OID_NAME_STR,
+			nullptr,
+			&byte[0],
+			&encoded,
+			nullptr
+		);
+		if (succeeded == false)
+			throw Error::Win32Error(__FUNCSIG__, GetLastError());
+		
+		CERT_NAME_BLOB blob{
+			.cbData = (DWORD)byte.size(),
+			.pbData = &byte[0]
+		};
+		CERT_CONTEXT* const certContext = (CERT_CONTEXT*)CertFindCertificateInStore(
+			m_certStore,
+			X509_ASN_ENCODING | PKCS_7_ASN_ENCODING | CERT_FIND_HAS_PRIVATE_KEY,
+			0,
+			CERT_FIND_SUBJECT_NAME,
+			(void*)&blob,
+			nullptr
+		);
+		if (certContext == nullptr)
+		{
+			const DWORD lastError = GetLastError();
+			if (lastError != CRYPT_E_NOT_FOUND)
+				throw Error::Win32Error(__FUNCSIG__ ": CertFindCertificateInStore() failed", lastError);
+		}
+		return certContext;
+	}
+
+	CERT_CONTEXT* CertStore::GetCertBySubstringSubjectName(const std::wstring& subjectName)
 	{
 		return GetCertByString(CERT_FIND_SUBJECT_STR, subjectName);
 	}
 
-	CERT_CONTEXT* CertStore::GetCertByIssuerName(const std::wstring& issuerName)
+	CERT_CONTEXT* CertStore::GetCertBySubstringIssuerName(const std::wstring& issuerName)
 	{
 		return GetCertByString(CERT_FIND_ISSUER_STR, issuerName);
 	}
