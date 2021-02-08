@@ -46,6 +46,11 @@ namespace Boring32::Crypto
 		return Move(other);
 	}
 
+	bool Certificate::operator==(PCCERT_CONTEXT const other) const noexcept
+	{
+		return m_certContext == other;
+	}
+
 	Certificate& Certificate::Move(Certificate& other) noexcept
 	{
 		Close();

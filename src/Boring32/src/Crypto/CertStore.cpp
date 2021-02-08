@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <vector>
+#include <cryptuiapi.h>
 #include "include/Error/Error.hpp"
 #include "include/Crypto/CertStore.hpp"
 
@@ -168,7 +169,7 @@ namespace Boring32::Crypto
 		return m_storeName;
 	}
 
-	CERT_CONTEXT* CertStore::GetCertByExactSubjectName(const std::wstring& subjectName)
+	Certificate CertStore::GetCertByExactSubjectName(const std::wstring& subjectName)
 	{
 		DWORD encoded = 0;
 		bool succeeded = CertStrToNameW(
@@ -217,12 +218,12 @@ namespace Boring32::Crypto
 		return certContext;
 	}
 
-	CERT_CONTEXT* CertStore::GetCertBySubstringSubjectName(const std::wstring& subjectName)
+	Certificate CertStore::GetCertBySubstringSubjectName(const std::wstring& subjectName)
 	{
 		return GetCertByString(CERT_FIND_SUBJECT_STR, subjectName);
 	}
 
-	CERT_CONTEXT* CertStore::GetCertBySubstringIssuerName(const std::wstring& issuerName)
+	Certificate CertStore::GetCertBySubstringIssuerName(const std::wstring& issuerName)
 	{
 		return GetCertByString(CERT_FIND_ISSUER_STR, issuerName);
 	}
@@ -249,5 +250,49 @@ namespace Boring32::Crypto
 	CertStoreType CertStore::GetStoreType() const noexcept
 	{
 		return m_storeType;
+	}
+
+	void CertStore::DeleteCert(CERT_CONTEXT* cert)
+	{
+		if (cert == nullptr)
+			throw std::invalid_argument("cert is nullptr");
+		if (m_certStore == nullptr)
+			throw std::runtime_error("m_certStore is nullptr");
+
+		if (CertDeleteCertificateFromStore(cert) == false)
+			throw Error::Win32Error(
+				__FUNCSIG__ ": CertDeleteCertificateFromStore() failed",
+				GetLastError()
+			);
+	}
+
+	void CertStore::ImportCert(CERT_CONTEXT* cert)
+	{
+		if (cert == nullptr)
+			throw std::invalid_argument("cert is nullptr");
+		if (m_certStore == nullptr)
+			throw std::runtime_error("m_certStore is nullptr");
+
+		// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/ns-cryptuiapi-cryptui_wiz_import_src_info
+		CRYPTUI_WIZ_IMPORT_SRC_INFO info{
+			.dwSize = sizeof(info),
+			.dwSubjectChoice = CRYPTUI_WIZ_IMPORT_SUBJECT_CERT_CONTEXT,
+			.pCertContext = cert,
+			.dwFlags = 0,
+			.pwszPassword = L""
+		};
+		// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/nf-cryptuiapi-cryptuiwizimport
+		bool succeeded = CryptUIWizImport(
+			CRYPTUI_WIZ_NO_UI,
+			nullptr,
+			nullptr,
+			&info,
+			m_certStore
+		);
+		if(succeeded == false)
+			throw Error::Win32Error(
+				__FUNCSIG__ ": CryptUIWizImport() failed",
+				GetLastError()
+			);
 	}
 }

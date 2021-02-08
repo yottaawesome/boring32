@@ -312,13 +312,13 @@ void WebSocket()
 
 		// ERROR_WINHTTP_CLIENT_CERT_NO_PRIVATE_KEY
 		Boring32::Crypto::CertStore certStore(L"MY");
-		CERT_CONTEXT* cc = certStore.GetCertByExactSubjectName(L"CN = client.localhost");
-		if (cc == nullptr)
+		Boring32::Crypto::Certificate clientCert = 
+			certStore.GetCertByExactSubjectName(L"CN = client.localhost");
+		if (clientCert == nullptr)
 		{
 			std::wcerr << L"Failed" << std::endl;
 			return;
 		}
-		Boring32::Crypto::Certificate clientCert(cc);
 
 		Boring32::WinHttp::WebSockets::WebSocket socket(
 			Boring32::WinHttp::WebSockets::WebSocketSettings{
@@ -358,13 +358,12 @@ void CertStoreOpen()
 	}
 
 	Boring32::Crypto::CertStore certStore(store, Boring32::Crypto::CertStoreType::System);
-	CERT_CONTEXT* cc = certStore.GetCertByExactSubjectName(L"CN = NVIDIA GameStream Server");
-	if (cc == nullptr)
+	Boring32::Crypto::Certificate clientCert = certStore.GetCertByExactSubjectName(L"CN = NVIDIA GameStream Server");
+	if (clientCert == nullptr)
 	{
 		std::wcerr << L"Failed" << std::endl;
 		return;
 	}
-	Boring32::Crypto::Certificate clientCert(cc);
 }
 
 void CheckConcat(std::vector<std::wstring>& m_acceptTypes)

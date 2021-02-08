@@ -2,6 +2,7 @@
 #include <string>
 #include <Windows.h>
 #include <wincrypt.h>
+#include "Certificate.hpp"
 
 namespace Boring32::Crypto
 {
@@ -47,10 +48,12 @@ namespace Boring32::Crypto
 			virtual void Close() noexcept;
 			virtual HCERTSTORE GetHandle() const noexcept;
 			virtual const std::wstring& GetName() const noexcept;
-			virtual CERT_CONTEXT* GetCertBySubstringSubjectName(const std::wstring& subjectName);
-			virtual CERT_CONTEXT* GetCertByExactSubjectName(const std::wstring& subjectName);
-			virtual CERT_CONTEXT* GetCertBySubstringIssuerName(const std::wstring& issuerName);
+			virtual Certificate GetCertBySubstringSubjectName(const std::wstring& subjectName);
+			virtual Certificate GetCertByExactSubjectName(const std::wstring& subjectName);
+			virtual Certificate GetCertBySubstringIssuerName(const std::wstring& issuerName);
 			virtual CertStoreType GetStoreType() const noexcept;
+			virtual void DeleteCert(CERT_CONTEXT* cert);
+			virtual void ImportCert(CERT_CONTEXT* cert);
 
 		protected:
 			virtual void InternalOpen();

@@ -30,13 +30,21 @@ namespace Crypto
 			TEST_METHOD(TestReadUserCert)
 			{
 				Boring32::Crypto::CertStore store(L"MY", Boring32::Crypto::CertStoreType::CurrentUser);
-				Assert::IsNotNull(store.GetCertByExactSubjectName(L"CN = localhost"));
+				Assert::IsNotNull(
+					store
+						.GetCertByExactSubjectName(L"CN = localhost")
+						.GetCert()
+				);
 			}
 
 			TEST_METHOD(TestReadSystemCert)
 			{
 				Boring32::Crypto::CertStore store(L"MY", Boring32::Crypto::CertStoreType::System);
-				Assert::IsNotNull(store.GetCertByExactSubjectName(L"CN = localhost"));
+				Assert::IsNotNull(
+					store
+						.GetCertByExactSubjectName(L"CN = localhost")
+						.GetCert()
+				);
 			}
 	};
 }

@@ -17,6 +17,8 @@ namespace Boring32::Crypto
 			Certificate(Certificate&& other) noexcept;
 			virtual Certificate& operator=(Certificate&& other) noexcept;
 
+			virtual bool operator==(PCCERT_CONTEXT const other) const noexcept;
+
 		public:
 			virtual void Close() noexcept;
 			virtual PCCERT_CONTEXT GetCert() const noexcept;

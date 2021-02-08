@@ -21,3 +21,4 @@
 #pragma comment(lib, "Crypt32.lib")
 #pragma comment(lib, "Bcrypt.lib")
 #pragma comment(lib, "taskschd.lib")
+#pragma comment(lib, "Cryptui.lib")
