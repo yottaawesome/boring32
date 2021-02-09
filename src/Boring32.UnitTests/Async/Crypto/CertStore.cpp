@@ -30,9 +30,11 @@ namespace Crypto
 			TEST_METHOD(TestReadUserCert)
 			{
 				Boring32::Crypto::CertStore store(L"MY", Boring32::Crypto::CertStoreType::CurrentUser);
+				std::wstring subject = L"client.localhost";
+				//subject = L"CN = localhost";
 				Assert::IsNotNull(
 					store
-						.GetCertByExactSubjectName(L"CN = localhost")
+						.EnumerateAndFindBySubjectCn(subject)
 						.GetCert()
 				);
 			}

@@ -544,10 +544,11 @@ void TestTaskService()
 		if (tasks)
 		{
 			std::wcout << L"Found!" << std::endl;
-			tasks.value().SetRepetitionInterval(15);
-			tasks.value().SetEnabled(true);
-			tasks.value().Run();
-			//rootFolder.SaveOrUpdate(tasks.value(), TASK_LOGON_TYPE::TASK_LOGON_NONE);
+			tasks.value().SetRandomDelay(120);
+			//tasks.value().SetRepetitionInterval(15);
+			//tasks.value().SetEnabled(true);
+			//tasks.value().Run();
+			rootFolder.SaveOrUpdate(tasks.value(), TASK_LOGON_TYPE::TASK_LOGON_NONE);
 			//tasks.value().SetEnabled(true);
 		}
 	}
@@ -557,9 +558,32 @@ void TestTaskService()
 	}
 }
 
+void TestCertImport()
+{
+	Boring32::Crypto::CertStore personal(L"MY");
+	Boring32::Crypto::CertStore system(L"MY", 
+		Boring32::Crypto::CertStoreType::System);
+	auto cert = personal.GetCertBySubstringSubjectName(L"client.localhost");
+	system.ImportCert((CERT_CONTEXT*)cert.GetCert());
+}
+
+void TestCertName()
+{
+	Boring32::Crypto::CertStore personal(L"MY");
+	auto cert = personal.GetCertBySubstringSubjectName(L"client.localhost");
+	std::wcout << cert.GetFormattedSubjectName(CERT_X500_NAME_STR) << std::endl;
+}
+
 int main(int argc, char** args)
 {
-	TestTaskService();
+	try
+	{
+		TestTaskService();
+	}
+	catch (const std::exception& ex)
+	{
+		std::wcerr << ex.what() << std::endl;
+	}
 
 	return 0;
 }

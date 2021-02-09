@@ -51,6 +51,11 @@ namespace Boring32::Crypto
 		return m_certContext == other;
 	}
 
+	Certificate::operator bool() const noexcept
+	{
+		return m_certContext != nullptr;
+	}
+
 	Certificate& Certificate::Move(Certificate& other) noexcept
 	{
 		Close();
@@ -71,5 +76,45 @@ namespace Boring32::Crypto
 	PCCERT_CONTEXT Certificate::GetCert() const noexcept
 	{
 		return m_certContext;
+	}
+
+	std::wstring Certificate::GetFormattedSubjectName(const DWORD format) const
+	{
+		if (m_certContext == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": m_certContext is null");
+			
+		DWORD characterSize = CertNameToStrW(
+			X509_ASN_ENCODING,
+			&m_certContext->pCertInfo->Subject,
+			format,
+			nullptr,
+			0
+		);
+		if (characterSize == 0)
+			return L"";
+
+		std::wstring name(characterSize, '\0');
+		characterSize = CertNameToStrW(
+			X509_ASN_ENCODING,
+			&m_certContext->pCertInfo->Subject,
+			format,
+			&name[0],
+			(DWORD)name.size()
+		);
+		name.pop_back(); // remove excess null character
+		return name;
+	}
+
+	void Certificate::Attach(PCCERT_CONTEXT const attachTo)
+	{
+		Close();
+		m_certContext = attachTo;
+	}
+
+	PCCERT_CONTEXT Certificate::Detach() noexcept
+	{
+		PCCERT_CONTEXT temp = m_certContext;
+		m_certContext = nullptr;
+		return temp;
 	}
 }

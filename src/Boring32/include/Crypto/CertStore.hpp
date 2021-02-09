@@ -39,27 +39,34 @@ namespace Boring32::Crypto
 			);
 
 			CertStore(const CertStore& other);
-			virtual CertStore& operator=(const CertStore& other);
-
 			CertStore(CertStore&& other) noexcept;
+
+		public:
+			virtual CertStore& operator=(const CertStore& other);
 			virtual CertStore& operator=(CertStore&& other) noexcept;
+			virtual bool operator==(const CertStore& other) const noexcept;
+			virtual operator bool() const noexcept;
 
 		public:
 			virtual void Close() noexcept;
 			virtual HCERTSTORE GetHandle() const noexcept;
 			virtual const std::wstring& GetName() const noexcept;
+			virtual Certificate EnumerateAndFindBySubjectCn(const std::wstring& subjectCn);
 			virtual Certificate GetCertBySubstringSubjectName(const std::wstring& subjectName);
 			virtual Certificate GetCertByExactSubjectName(const std::wstring& subjectName);
 			virtual Certificate GetCertBySubstringIssuerName(const std::wstring& issuerName);
 			virtual CertStoreType GetStoreType() const noexcept;
-			virtual void DeleteCert(CERT_CONTEXT* cert);
-			virtual void ImportCert(CERT_CONTEXT* cert);
+			virtual void DeleteCert(const CERT_CONTEXT* cert);
+			virtual void ImportCert(const CERT_CONTEXT* cert);
 
 		protected:
 			virtual void InternalOpen();
 			virtual CertStore& Copy(const CertStore& other);
 			virtual CertStore& Move(CertStore& other) noexcept;
-			virtual CERT_CONTEXT* GetCertByString(const DWORD searchFlag, const std::wstring& arg);
+			virtual CERT_CONTEXT* GetCertByArg(
+				const DWORD searchFlag, 
+				const void* arg
+			);
 
 		protected:
 			HCERTSTORE m_certStore;

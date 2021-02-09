@@ -5,6 +5,7 @@
 #include <cryptuiapi.h>
 #include "include/Error/Error.hpp"
 #include "include/Crypto/CertStore.hpp"
+#include "include/Strings/Strings.hpp"
 
 namespace Boring32::Crypto
 {
@@ -98,6 +99,16 @@ namespace Boring32::Crypto
 	{
 		return Move(other);
 	}
+
+	bool CertStore::operator==(const CertStore& other) const noexcept
+	{
+		return m_certStore == other.m_certStore;
+	}
+
+	CertStore::operator bool() const noexcept
+	{
+		return m_certStore != nullptr;
+	}
 	
 	CertStore& CertStore::Move(CertStore& other) noexcept
 	{
@@ -136,12 +147,15 @@ namespace Boring32::Crypto
 		switch (m_storeType)
 		{
 			case CertStoreType::CurrentUser:
+			{
 				// See https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopensystemstorew
 				// common store names: CA, MY, ROOT, SPC
 				m_certStore = CertOpenSystemStoreW(0, m_storeName.c_str());
 				break;
+			}
 
 			case CertStoreType::System:
+			{
 				m_certStore = CertOpenStore(
 					CERT_STORE_PROV_SYSTEM_REGISTRY_W,
 					PKCS_7_ASN_ENCODING | X509_ASN_ENCODING,
@@ -150,7 +164,8 @@ namespace Boring32::Crypto
 					m_storeName.c_str()
 				);
 				break;
-			
+			}
+
 			default:
 				throw std::runtime_error(__FUNCSIG__ ": unknown m_storeType");
 		}
@@ -167,6 +182,36 @@ namespace Boring32::Crypto
 	const std::wstring& CertStore::GetName() const noexcept
 	{
 		return m_storeName;
+	}
+
+	Certificate CertStore::EnumerateAndFindBySubjectCn(const std::wstring& subjectCn)
+	{
+		PCCERT_CONTEXT currentCert = nullptr;
+		Certificate cert;
+		while (currentCert = CertEnumCertificatesInStore(m_certStore, currentCert))
+		{
+			cert.Attach(currentCert);
+			std::wstring name = cert.GetFormattedSubjectName(CERT_X500_NAME_STR);
+			std::vector<std::wstring> tokens = Strings::TokeniseString(name, L", ");
+			for (const std::wstring& token : tokens)
+			{
+				if (token.starts_with(L"CN="))
+				{
+					std::wstring cleanedName = Strings::Replace(token, L"CN=", L"");
+					if (subjectCn == cleanedName)
+						return cert;
+				}
+			}
+
+			// The cert is automatically freed by the next call to CertEnumCertificatesInStore
+			// We only use Certificate to provide us with exception-based clean up and to use
+			// GetFormattedSubjectName()
+			cert.Detach();
+		}
+		const DWORD lastError = GetLastError();
+		if (lastError != CRYPT_E_NOT_FOUND && lastError != ERROR_NO_MORE_FILES)
+			throw Error::Win32Error(__FUNCSIG__ ": CertEnumCertificatesInStore() failed", lastError);
+		return nullptr;
 	}
 
 	Certificate CertStore::GetCertByExactSubjectName(const std::wstring& subjectName)
@@ -201,41 +246,27 @@ namespace Boring32::Crypto
 			.cbData = (DWORD)byte.size(),
 			.pbData = &byte[0]
 		};
-		CERT_CONTEXT* const certContext = (CERT_CONTEXT*)CertFindCertificateInStore(
-			m_certStore,
-			X509_ASN_ENCODING | PKCS_7_ASN_ENCODING | CERT_FIND_HAS_PRIVATE_KEY,
-			0,
-			CERT_FIND_SUBJECT_NAME,
-			(void*)&blob,
-			nullptr
-		);
-		if (certContext == nullptr)
-		{
-			const DWORD lastError = GetLastError();
-			if (lastError != CRYPT_E_NOT_FOUND)
-				throw Error::Win32Error(__FUNCSIG__ ": CertFindCertificateInStore() failed", lastError);
-		}
-		return certContext;
+		return GetCertByArg(CERT_FIND_SUBJECT_NAME, &blob);
 	}
 
 	Certificate CertStore::GetCertBySubstringSubjectName(const std::wstring& subjectName)
 	{
-		return GetCertByString(CERT_FIND_SUBJECT_STR, subjectName);
+		return GetCertByArg(CERT_FIND_SUBJECT_STR, subjectName.c_str());
 	}
 
 	Certificate CertStore::GetCertBySubstringIssuerName(const std::wstring& issuerName)
 	{
-		return GetCertByString(CERT_FIND_ISSUER_STR, issuerName);
+		return GetCertByArg(CERT_FIND_ISSUER_STR, issuerName.c_str());
 	}
 
-	CERT_CONTEXT* CertStore::GetCertByString(const DWORD searchFlag, const std::wstring& arg)
+	CERT_CONTEXT* CertStore::GetCertByArg(const DWORD searchFlag, const void* arg)
 	{
 		CERT_CONTEXT* const certContext = (CERT_CONTEXT*)CertFindCertificateInStore(
 			m_certStore,
 			X509_ASN_ENCODING | PKCS_7_ASN_ENCODING | CERT_FIND_HAS_PRIVATE_KEY,
 			0,
 			searchFlag,
-			(void*)arg.c_str(),
+			(void*)arg,
 			nullptr
 		);
 		if (certContext == nullptr)
@@ -244,6 +275,7 @@ namespace Boring32::Crypto
 			if (lastError != CRYPT_E_NOT_FOUND)
 				throw Error::Win32Error(__FUNCSIG__ ": CertFindCertificateInStore() failed", lastError);
 		}
+
 		return certContext;
 	}
 
@@ -252,7 +284,7 @@ namespace Boring32::Crypto
 		return m_storeType;
 	}
 
-	void CertStore::DeleteCert(CERT_CONTEXT* cert)
+	void CertStore::DeleteCert(const CERT_CONTEXT* cert)
 	{
 		if (cert == nullptr)
 			throw std::invalid_argument("cert is nullptr");
@@ -266,7 +298,7 @@ namespace Boring32::Crypto
 			);
 	}
 
-	void CertStore::ImportCert(CERT_CONTEXT* cert)
+	void CertStore::ImportCert(const CERT_CONTEXT* cert)
 	{
 		if (cert == nullptr)
 			throw std::invalid_argument("cert is nullptr");
