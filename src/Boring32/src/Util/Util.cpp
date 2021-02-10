@@ -45,18 +45,21 @@ namespace Boring32::Util
         return std::chrono::duration_cast<std::chrono::seconds>(rightNow.time_since_epoch()).count();
     }
 
-    DWORD GetMillisToMinuteBoundary(const SYSTEMTIME& time, const UINT boundary)
+    DWORD GetMillisToMinuteBoundary(const SYSTEMTIME& time, const UINT minuteBoundary)
     {
-        int minuteModResult = time.wSecond > 0
-            ? (time.wMinute + 1) % boundary
-            : time.wMinute % boundary;
-        DWORD millis = 0;
-        if (minuteModResult > 0)
-            millis += (boundary - minuteModResult) * 60000;
-        if (time.wSecond > 0)
-            millis += (60 - time.wSecond) * 1000;
-        if (time.wMilliseconds > 0)
-            millis -= 1000 - time.wMilliseconds;
-        return millis;
+        DWORD minutesToMillis = time.wMinute * 60 * 1000;
+        minutesToMillis += time.wSecond * 1000;
+        minutesToMillis += time.wMilliseconds;
+
+        DWORD boundaryToMillis = minuteBoundary * 60 * 1000;
+        return boundaryToMillis - (minutesToMillis % boundaryToMillis);
+    }
+
+    DWORD GetMillisToSecondBoundary(const SYSTEMTIME& time, const UINT secondBoundary)
+    {
+        DWORD currentSecond = time.wSecond * 1000;
+        currentSecond += time.wMilliseconds;
+        DWORD boundaryMillis = secondBoundary * 1000;
+        return boundaryMillis - (currentSecond % boundaryMillis);
     }
 }
