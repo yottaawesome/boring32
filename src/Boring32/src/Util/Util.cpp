@@ -39,27 +39,26 @@ namespace Boring32::Util
         return st;
     }
 
-    size_t GetUnixTime()
+    size_t GetUnixTime() noexcept
     {
         const auto rightNow = std::chrono::system_clock::now();
         return std::chrono::duration_cast<std::chrono::seconds>(rightNow.time_since_epoch()).count();
     }
 
-    DWORD GetMillisToMinuteBoundary(const SYSTEMTIME& time, const UINT minuteBoundary)
+    size_t GetMillisToMinuteBoundary(const SYSTEMTIME& time, const size_t minuteBoundary) noexcept
     {
-        DWORD minutesToMillis = time.wMinute * 60 * 1000;
+        size_t minutesToMillis = time.wMinute * 60 * 1000;
         minutesToMillis += time.wSecond * 1000;
         minutesToMillis += time.wMilliseconds;
-
-        DWORD boundaryToMillis = minuteBoundary * 60 * 1000;
+        size_t boundaryToMillis = minuteBoundary * 60 * 1000;
         return boundaryToMillis - (minutesToMillis % boundaryToMillis);
     }
 
-    DWORD GetMillisToSecondBoundary(const SYSTEMTIME& time, const UINT secondBoundary)
+    size_t GetMillisToSecondBoundary(const SYSTEMTIME& time, const size_t secondBoundary) noexcept
     {
-        DWORD currentSecond = time.wSecond * 1000;
-        currentSecond += time.wMilliseconds;
-        DWORD boundaryMillis = secondBoundary * 1000;
-        return boundaryMillis - (currentSecond % boundaryMillis);
+        size_t currentSecondMillis = time.wSecond * 1000;
+        currentSecondMillis += time.wMilliseconds;
+        size_t boundaryMillis = secondBoundary * 1000;
+        return boundaryMillis - (currentSecondMillis % boundaryMillis);
     }
 }
