@@ -2,6 +2,7 @@
 #include <string>
 #include <Windows.h>
 #include <wincrypt.h>
+#include <cryptuiapi.h>
 #include "Certificate.hpp"
 
 namespace Boring32::Crypto
@@ -16,7 +17,8 @@ namespace Boring32::Crypto
 	enum class CertStoreType
 	{
 		CurrentUser,
-		System
+		System,
+		InMemory
 	};
 
 	class CertStore
@@ -24,14 +26,14 @@ namespace Boring32::Crypto
 		public:
 			virtual ~CertStore();
 			CertStore();
+			CertStore(std::wstring storeName);
 			CertStore(const HCERTSTORE certStore, const CertStoreType storeType);
+			CertStore(std::wstring storeName, const CertStoreType storeType);
 			CertStore(
 				const HCERTSTORE certStore, 
 				const CertStoreType storeType, 
 				const CertStoreCloseOptions closeOptions
 			);
-			CertStore(std::wstring storeName);
-			CertStore(std::wstring storeName, const CertStoreType storeType);
 			CertStore(
 				std::wstring storeName,
 				const CertStoreType storeType,
@@ -55,9 +57,14 @@ namespace Boring32::Crypto
 			virtual Certificate GetCertBySubstringSubjectName(const std::wstring& subjectName);
 			virtual Certificate GetCertByExactSubjectName(const std::wstring& subjectName);
 			virtual Certificate GetCertBySubstringIssuerName(const std::wstring& issuerName);
+			virtual Certificate GetCertByThumbprint(const std::wstring& thumbprint);
 			virtual CertStoreType GetStoreType() const noexcept;
 			virtual void DeleteCert(const CERT_CONTEXT* cert);
 			virtual void ImportCert(const CERT_CONTEXT* cert);
+			virtual void ImportCertsFromFile(
+				const std::wstring& path, 
+				const std::wstring& password
+			);
 
 		protected:
 			virtual void InternalOpen();
@@ -67,6 +74,7 @@ namespace Boring32::Crypto
 				const DWORD searchFlag, 
 				const void* arg
 			);
+			virtual void InternalImport(const CRYPTUI_WIZ_IMPORT_SRC_INFO& info);
 
 		protected:
 			HCERTSTORE m_certStore;

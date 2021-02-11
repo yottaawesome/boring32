@@ -3,6 +3,7 @@
 #include <vector>
 #include <Windows.h>
 #include <bcrypt.h>
+#include <dpapi.h>
 #include "CryptoKey.hpp"
 
 namespace Boring32::Crypto
@@ -56,4 +57,5 @@ namespace Boring32::Crypto
 
 	std::string ToBase64String(const std::vector<std::byte>& bytes);
 	std::wstring ToBase64WString(const std::vector<std::byte>& bytes);
+	std::vector<std::byte> ToBinary(const std::wstring& base64);
 }

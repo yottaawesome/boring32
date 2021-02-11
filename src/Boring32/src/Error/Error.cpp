@@ -118,7 +118,7 @@ namespace Boring32::Error
             moduleToReadFrom,
             errorCode,
             MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // TODO this is deprecated
-            (LPTSTR)&ptrMsgBuf,
+            (LPWSTR)&ptrMsgBuf,
             0,
             nullptr
         );

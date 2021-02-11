@@ -1,4 +1,7 @@
 #include "pch.hpp"
+#include "vector"
+#include "include/Error/Error.hpp"
+#include "include/Crypto/CryptoFuncs.hpp"
 #include "include/Crypto/Certificate.hpp"
 
 namespace Boring32::Crypto
@@ -104,6 +107,42 @@ namespace Boring32::Crypto
 		name.pop_back(); // remove excess null character
 		return name;
 	}
+
+	std::wstring Certificate::GetThumbprint() const
+	{
+		if (m_certContext == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": m_certContext is nullptr");
+
+		DWORD sizeInBytes = 0;
+		bool succeeded = CertGetCertificateContextProperty(
+			m_certContext,
+			CERT_SIGNATURE_HASH_PROP_ID,
+			nullptr,
+			&sizeInBytes
+		);
+		if (succeeded == false)
+			throw Error::Win32Error(
+				__FUNCSIG__ ": CertGetCertificateContextProperty() failed (1)",
+				GetLastError()
+			);
+
+		std::vector<std::byte> returnValue(sizeInBytes);
+		succeeded = CertGetCertificateContextProperty(
+			m_certContext,
+			CERT_SIGNATURE_HASH_PROP_ID,
+			&returnValue[0],
+			&sizeInBytes
+		);
+		if (succeeded == false)
+			throw Error::Win32Error(
+				__FUNCSIG__ ": CertGetCertificateContextProperty() failed (2)",
+				GetLastError()
+			);
+		returnValue.resize(sizeInBytes);
+
+		return ToBase64WString(returnValue);
+	}
+
 
 	void Certificate::Attach(PCCERT_CONTEXT const attachTo)
 	{

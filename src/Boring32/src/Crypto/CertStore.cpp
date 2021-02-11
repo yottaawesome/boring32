@@ -4,6 +4,7 @@
 #include <vector>
 #include <cryptuiapi.h>
 #include "include/Error/Error.hpp"
+#include "include/Crypto/CryptoFuncs.hpp"
 #include "include/Crypto/CertStore.hpp"
 #include "include/Strings/Strings.hpp"
 
@@ -141,8 +142,8 @@ namespace Boring32::Crypto
 
 	void CertStore::InternalOpen()
 	{
-		if (m_storeName.empty())
-			throw std::invalid_argument(__FUNCSIG__ ": m_storeName is empty");
+		if (m_storeType != CertStoreType::InMemory && m_storeName.empty())
+			throw std::invalid_argument(__FUNCSIG__ ": m_storeName is required for non-memory stores");
 		
 		switch (m_storeType)
 		{
@@ -162,6 +163,18 @@ namespace Boring32::Crypto
 					0,
 					CERT_STORE_OPEN_EXISTING_FLAG | CERT_SYSTEM_STORE_LOCAL_MACHINE,
 					m_storeName.c_str()
+				);
+				break;
+			}
+
+			case CertStoreType::InMemory:
+			{
+				m_certStore = CertOpenStore(
+					CERT_STORE_PROV_MEMORY,
+					PKCS_7_ASN_ENCODING | X509_ASN_ENCODING,
+					0,
+					CERT_SYSTEM_STORE_CURRENT_USER,
+					nullptr
 				);
 				break;
 			}
@@ -259,6 +272,16 @@ namespace Boring32::Crypto
 		return GetCertByArg(CERT_FIND_ISSUER_STR, issuerName.c_str());
 	}
 
+	Certificate CertStore::GetCertByThumbprint(const std::wstring& thumbprint)
+	{
+		std::vector<std::byte> bytes = ToBinary(thumbprint);
+		CRYPT_HASH_BLOB blob{
+			.cbData = (DWORD)bytes.size(),
+			.pbData = (BYTE*)&bytes[0]
+		};
+		return GetCertByArg(CERT_FIND_SIGNATURE_HASH, &blob);
+	}
+
 	CERT_CONTEXT* CertStore::GetCertByArg(const DWORD searchFlag, const void* arg)
 	{
 		CERT_CONTEXT* const certContext = (CERT_CONTEXT*)CertFindCertificateInStore(
@@ -301,9 +324,7 @@ namespace Boring32::Crypto
 	void CertStore::ImportCert(const CERT_CONTEXT* cert)
 	{
 		if (cert == nullptr)
-			throw std::invalid_argument("cert is nullptr");
-		if (m_certStore == nullptr)
-			throw std::runtime_error("m_certStore is nullptr");
+			throw std::invalid_argument(__FUNCSIG__ ": cert is nullptr");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/ns-cryptuiapi-cryptui_wiz_import_src_info
 		CRYPTUI_WIZ_IMPORT_SRC_INFO info{
@@ -313,6 +334,27 @@ namespace Boring32::Crypto
 			.dwFlags = 0,
 			.pwszPassword = L""
 		};
+		InternalImport(info);
+	}
+
+	void CertStore::ImportCertsFromFile(const std::wstring& path, const std::wstring& password)
+	{
+		// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/ns-cryptuiapi-cryptui_wiz_import_src_info
+		CRYPTUI_WIZ_IMPORT_SRC_INFO info{
+			.dwSize = sizeof(info),
+			.dwSubjectChoice = CRYPTUI_WIZ_IMPORT_SUBJECT_FILE,
+			.pwszFileName = path.c_str(),
+			.dwFlags = 0,
+			.pwszPassword = password.c_str()
+		};
+		InternalImport(info);
+	}
+
+	void CertStore::InternalImport(const CRYPTUI_WIZ_IMPORT_SRC_INFO& info)
+	{
+		if (m_certStore == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": m_certStore is nullptr");
+
 		// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/nf-cryptuiapi-cryptuiwizimport
 		bool succeeded = CryptUIWizImport(
 			CRYPTUI_WIZ_NO_UI,
@@ -321,7 +363,7 @@ namespace Boring32::Crypto
 			&info,
 			m_certStore
 		);
-		if(succeeded == false)
+		if (succeeded == false)
 			throw Error::Win32Error(
 				__FUNCSIG__ ": CryptUIWizImport() failed",
 				GetLastError()

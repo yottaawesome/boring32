@@ -23,6 +23,7 @@ namespace Boring32::Crypto
 			virtual void Close() noexcept;
 			virtual PCCERT_CONTEXT GetCert() const noexcept;
 			virtual std::wstring GetFormattedSubjectName(const DWORD format) const;
+			virtual std::wstring GetThumbprint() const;
 			virtual void Attach(PCCERT_CONTEXT const attachTo);
 			virtual PCCERT_CONTEXT Detach() noexcept;
 

@@ -574,11 +574,30 @@ void TestCertName()
 	std::wcout << cert.GetFormattedSubjectName(CERT_X500_NAME_STR) << std::endl;
 }
 
+void TestCertFileImport()
+{
+	Boring32::Crypto::CertStore personal(L"", Boring32::Crypto::CertStoreType::InMemory);
+	personal.ImportCertsFromFile(
+		L"C:\\Users\\Royal\\Desktop\\blah.pfx", 
+		L"blahblah"
+	);
+}
+
+void TestCertGetByThumbrpint()
+{
+	Boring32::Crypto::CertStore personal(L"MY");
+	auto x = personal.GetCertByThumbprint(L"base64thumbprint");
+	if (x)
+	{
+		std::wcout << x.GetThumbprint() << std::endl;
+	}
+}
+
 int main(int argc, char** args)
 {
 	try
 	{
-		TestTaskService();
+		TestCertGetByThumbrpint();
 	}
 	catch (const std::exception& ex)
 	{
