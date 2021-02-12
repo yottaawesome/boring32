@@ -168,6 +168,7 @@
     <ClCompile Include="Async\Async\WaitableTimer.cpp" />
     <ClCompile Include="Async\Crypto\Crypto.cpp" />
     <ClCompile Include="Compression\Compressor.cpp" />
+    <ClCompile Include="Crypto\SecureString.cpp" />
     <ClCompile Include="DataStructures\CappedStack.cpp" />
     <ClCompile Include="Error\Error.cpp" />
     <ClCompile Include="pch.cpp">

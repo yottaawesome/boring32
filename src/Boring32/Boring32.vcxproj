@@ -207,6 +207,7 @@
     <ClInclude Include="include\Crypto\ChainingMode.hpp" />
     <ClInclude Include="include\Crypto\CryptoFuncs.hpp" />
     <ClInclude Include="include\Crypto\CryptoKey.hpp" />
+    <ClInclude Include="include\Crypto\SecureString.hpp" />
     <ClInclude Include="include\DataStructures\CappedStack.hpp" />
     <ClInclude Include="include\Error\ComError.hpp" />
     <ClInclude Include="include\Error\NtStatusError.hpp" />
@@ -281,6 +282,7 @@
     <ClCompile Include="src\Crypto\CertStore.cpp" />
     <ClCompile Include="src\Crypto\CryptoFuncs.cpp" />
     <ClCompile Include="src\Crypto\CryptoKey.cpp" />
+    <ClCompile Include="src\Crypto\SecureString.cpp" />
     <ClCompile Include="src\Error\ComError.cpp" />
     <ClCompile Include="src\Error\Error.cpp" />
     <ClCompile Include="src\Error\NtStatusError.cpp" />
