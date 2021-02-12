@@ -321,7 +321,7 @@ namespace Boring32::Crypto
 	std::vector<std::byte> ToBinary(const std::wstring& base64)
 	{
 		DWORD byteSize = 0;
-		BOOL succeeded = CryptStringToBinaryW(
+		bool succeeded = CryptStringToBinaryW(
 			&base64[0],
 			0,
 			CRYPT_STRING_BASE64,
@@ -331,7 +331,7 @@ namespace Boring32::Crypto
 			nullptr
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__ ": CryptStringToBinaryW() failed when encoding");
+			throw Error::Win32Error(__FUNCSIG__ ": CryptStringToBinaryW() failed when calculating size");
 
 		std::vector<std::byte> returnVal(byteSize);
 		succeeded = CryptStringToBinaryW(
@@ -344,7 +344,8 @@ namespace Boring32::Crypto
 			nullptr
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__ ": CryptStringToBinaryW() failed when encoding");
+			throw Error::Win32Error(__FUNCSIG__ ": CryptStringToBinaryW() failed when decoding");
+
 		returnVal.resize(byteSize);
 		return returnVal;
 	}

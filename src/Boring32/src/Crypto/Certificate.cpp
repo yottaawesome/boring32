@@ -81,14 +81,28 @@ namespace Boring32::Crypto
 		return m_certContext;
 	}
 
-	std::wstring Certificate::GetFormattedSubjectName(const DWORD format) const
+	std::wstring Certificate::GetFormattedSubject(const DWORD format) const
+	{
+		return InternalGetFormattedName(m_certContext->pCertInfo->Subject, format);
+	}
+
+	std::wstring Certificate::GetFormattedIssuer(const DWORD format) const
+	{
+		return InternalGetFormattedName(m_certContext->pCertInfo->Issuer, format);
+	}
+
+	std::wstring Certificate::InternalGetFormattedName(
+		CERT_NAME_BLOB& certName,
+		const DWORD format
+	) const
 	{
 		if (m_certContext == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": m_certContext is null");
-			
+		
+		// https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certnametostrw
 		DWORD characterSize = CertNameToStrW(
 			X509_ASN_ENCODING,
-			&m_certContext->pCertInfo->Subject,
+			&certName,
 			format,
 			nullptr,
 			0
@@ -99,50 +113,27 @@ namespace Boring32::Crypto
 		std::wstring name(characterSize, '\0');
 		characterSize = CertNameToStrW(
 			X509_ASN_ENCODING,
-			&m_certContext->pCertInfo->Subject,
+			&certName,
 			format,
 			&name[0],
 			(DWORD)name.size()
 		);
 		name.pop_back(); // remove excess null character
+
 		return name;
 	}
 
-	std::wstring Certificate::GetThumbprint() const
+	std::wstring Certificate::GetSignature() const
 	{
-		if (m_certContext == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": m_certContext is nullptr");
-
-		DWORD sizeInBytes = 0;
-		bool succeeded = CertGetCertificateContextProperty(
-			m_certContext,
-			CERT_SIGNATURE_HASH_PROP_ID,
-			nullptr,
-			&sizeInBytes
-		);
-		if (succeeded == false)
-			throw Error::Win32Error(
-				__FUNCSIG__ ": CertGetCertificateContextProperty() failed (1)",
-				GetLastError()
-			);
-
-		std::vector<std::byte> returnValue(sizeInBytes);
-		succeeded = CertGetCertificateContextProperty(
-			m_certContext,
-			CERT_SIGNATURE_HASH_PROP_ID,
-			&returnValue[0],
-			&sizeInBytes
-		);
-		if (succeeded == false)
-			throw Error::Win32Error(
-				__FUNCSIG__ ": CertGetCertificateContextProperty() failed (2)",
-				GetLastError()
-			);
-		returnValue.resize(sizeInBytes);
-
-		return ToBase64WString(returnValue);
+		std::vector<std::byte> bytes = InternalCertGetProperty(CERT_SIGNATURE_HASH_PROP_ID);
+		return ToBase64WString(bytes);
 	}
-
+	
+	std::wstring Certificate::GetSignatureHashCngAlgorithm() const
+	{
+		std::vector<std::byte> bytes = InternalCertGetProperty(CERT_SIGN_HASH_CNG_ALG_PROP_ID);
+		return std::wstring((wchar_t*)&bytes[0], bytes.size() / sizeof(wchar_t));
+	}
 
 	void Certificate::Attach(PCCERT_CONTEXT const attachTo)
 	{
@@ -155,5 +146,39 @@ namespace Boring32::Crypto
 		PCCERT_CONTEXT temp = m_certContext;
 		m_certContext = nullptr;
 		return temp;
+	}
+
+	std::vector<std::byte> Certificate::InternalCertGetProperty(const DWORD property) const
+	{
+		if (m_certContext == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": m_certContext is nullptr");
+
+		DWORD sizeInBytes = 0;
+		bool succeeded = CertGetCertificateContextProperty(
+			m_certContext,
+			property,
+			nullptr,
+			&sizeInBytes
+		);
+		if (succeeded == false)
+			throw Error::Win32Error(
+				__FUNCSIG__ ": CertGetCertificateContextProperty() failed (1)",
+				GetLastError()
+			);
+
+		std::vector<std::byte> returnValue(sizeInBytes);
+		succeeded = CertGetCertificateContextProperty(
+			m_certContext,
+			property,
+			&returnValue[0],
+			&sizeInBytes
+		);
+		if (succeeded == false)
+			throw Error::Win32Error(
+				__FUNCSIG__ ": CertGetCertificateContextProperty() failed (2)",
+				GetLastError()
+			);
+		returnValue.resize(sizeInBytes);
+		return returnValue;
 	}
 }

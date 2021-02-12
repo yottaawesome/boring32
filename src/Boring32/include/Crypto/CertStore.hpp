@@ -57,7 +57,7 @@ namespace Boring32::Crypto
 			virtual Certificate GetCertBySubstringSubjectName(const std::wstring& subjectName);
 			virtual Certificate GetCertByExactSubjectName(const std::wstring& subjectName);
 			virtual Certificate GetCertBySubstringIssuerName(const std::wstring& issuerName);
-			virtual Certificate GetCertByThumbprint(const std::wstring& thumbprint);
+			virtual Certificate GetCertByByBase64Signature(const std::wstring& thumbprint);
 			virtual CertStoreType GetStoreType() const noexcept;
 			virtual void DeleteCert(const CERT_CONTEXT* cert);
 			virtual void ImportCert(const CERT_CONTEXT* cert);

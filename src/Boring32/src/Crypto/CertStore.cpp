@@ -204,17 +204,12 @@ namespace Boring32::Crypto
 		while (currentCert = CertEnumCertificatesInStore(m_certStore, currentCert))
 		{
 			cert.Attach(currentCert);
-			std::wstring name = cert.GetFormattedSubjectName(CERT_X500_NAME_STR);
+			std::wstring name = cert.GetFormattedSubject(CERT_X500_NAME_STR);
 			std::vector<std::wstring> tokens = Strings::TokeniseString(name, L", ");
 			for (const std::wstring& token : tokens)
-			{
 				if (token.starts_with(L"CN="))
-				{
-					std::wstring cleanedName = Strings::Replace(token, L"CN=", L"");
-					if (subjectCn == cleanedName)
+					if (subjectCn == Strings::Replace(token, L"CN=", L""))
 						return cert;
-				}
-			}
 
 			// The cert is automatically freed by the next call to CertEnumCertificatesInStore
 			// We only use Certificate to provide us with exception-based clean up and to use
@@ -224,6 +219,7 @@ namespace Boring32::Crypto
 		const DWORD lastError = GetLastError();
 		if (lastError != CRYPT_E_NOT_FOUND && lastError != ERROR_NO_MORE_FILES)
 			throw Error::Win32Error(__FUNCSIG__ ": CertEnumCertificatesInStore() failed", lastError);
+
 		return nullptr;
 	}
 
@@ -272,9 +268,9 @@ namespace Boring32::Crypto
 		return GetCertByArg(CERT_FIND_ISSUER_STR, issuerName.c_str());
 	}
 
-	Certificate CertStore::GetCertByThumbprint(const std::wstring& thumbprint)
+	Certificate CertStore::GetCertByByBase64Signature(const std::wstring& base64Signature)
 	{
-		std::vector<std::byte> bytes = ToBinary(thumbprint);
+		std::vector<std::byte> bytes = ToBinary(base64Signature);
 		CRYPT_HASH_BLOB blob{
 			.cbData = (DWORD)bytes.size(),
 			.pbData = (BYTE*)&bytes[0]
