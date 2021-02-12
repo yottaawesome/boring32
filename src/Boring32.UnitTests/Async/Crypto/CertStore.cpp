@@ -34,7 +34,7 @@ namespace Crypto
 				//subject = L"CN = localhost";
 				Assert::IsNotNull(
 					store
-						.EnumerateAndFindBySubjectCn(subject)
+						.FindBySubjectCn(subject)
 						.GetCert()
 				);
 			}
@@ -44,7 +44,7 @@ namespace Crypto
 				Boring32::Crypto::CertStore store(L"MY", Boring32::Crypto::CertStoreType::System);
 				Assert::IsNotNull(
 					store
-						.GetCertByExactSubjectName(L"CN = localhost")
+						.GetCertByExactSubject(L"CN = localhost")
 						.GetCert()
 				);
 			}

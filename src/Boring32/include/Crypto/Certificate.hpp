@@ -11,6 +11,7 @@ namespace Boring32::Crypto
 			virtual ~Certificate();
 			Certificate();
 			Certificate(PCCERT_CONTEXT m_certContext);
+			Certificate(PCCERT_CONTEXT m_certContext, const bool ownOrCopy);
 			Certificate(const Certificate& other);
 			Certificate(Certificate&& other) noexcept;
 

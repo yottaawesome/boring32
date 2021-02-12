@@ -313,7 +313,7 @@ void WebSocket()
 		// ERROR_WINHTTP_CLIENT_CERT_NO_PRIVATE_KEY
 		Boring32::Crypto::CertStore certStore(L"MY");
 		Boring32::Crypto::Certificate clientCert = 
-			certStore.GetCertByExactSubjectName(L"CN = client.localhost");
+			certStore.GetCertByExactSubject(L"CN = client.localhost");
 		if (clientCert == nullptr)
 		{
 			std::wcerr << L"Failed" << std::endl;
@@ -358,7 +358,7 @@ void CertStoreOpen()
 	}
 
 	Boring32::Crypto::CertStore certStore(store, Boring32::Crypto::CertStoreType::System);
-	Boring32::Crypto::Certificate clientCert = certStore.GetCertByExactSubjectName(L"CN = NVIDIA GameStream Server");
+	Boring32::Crypto::Certificate clientCert = certStore.GetCertByExactSubject(L"CN = NVIDIA GameStream Server");
 	if (clientCert == nullptr)
 	{
 		std::wcerr << L"Failed" << std::endl;
@@ -563,14 +563,14 @@ void TestCertImport()
 	Boring32::Crypto::CertStore personal(L"MY");
 	Boring32::Crypto::CertStore system(L"MY", 
 		Boring32::Crypto::CertStoreType::System);
-	auto cert = personal.GetCertBySubstringSubjectName(L"client.localhost");
+	auto cert = personal.GetCertBySubstringSubject(L"client.localhost");
 	system.ImportCert((CERT_CONTEXT*)cert.GetCert());
 }
 
 void TestCertName()
 {
 	Boring32::Crypto::CertStore personal(L"MY");
-	auto cert = personal.GetCertBySubstringSubjectName(L"client.localhost");
+	auto cert = personal.GetCertBySubstringSubject(L"client.localhost");
 	std::wcout << cert.GetFormattedSubject(CERT_X500_NAME_STR) << std::endl;
 }
 
@@ -586,7 +586,7 @@ void TestCertFileImport()
 void TestCertGetByThumbrpint()
 {
 	Boring32::Crypto::CertStore personal(L"MY");
-	auto x = personal.EnumerateAndFindBySubjectCn(L"client.localhost");
+	auto x = personal.FindBySubjectCn(L"client.localhost");
 	if (x)
 	{
 		std::wcout 

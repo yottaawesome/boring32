@@ -19,6 +19,15 @@ namespace Boring32::Crypto
 	:	m_certContext(certContext)
 	{ }
 
+	Certificate::Certificate(PCCERT_CONTEXT certContext, const bool ownOrCopy)
+	:	m_certContext(nullptr)
+	{
+		if (certContext)
+			m_certContext = ownOrCopy 
+				? certContext 
+				: CertDuplicateCertificateContext(certContext);
+	}
+
 	Certificate::Certificate(const Certificate& other)
 	:	m_certContext(nullptr)
 	{

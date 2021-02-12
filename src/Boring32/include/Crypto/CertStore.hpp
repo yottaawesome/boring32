@@ -53,9 +53,10 @@ namespace Boring32::Crypto
 			virtual void Close() noexcept;
 			virtual HCERTSTORE GetHandle() const noexcept;
 			virtual const std::wstring& GetName() const noexcept;
-			virtual Certificate EnumerateAndFindBySubjectCn(const std::wstring& subjectCn);
-			virtual Certificate GetCertBySubstringSubjectName(const std::wstring& subjectName);
-			virtual Certificate GetCertByExactSubjectName(const std::wstring& subjectName);
+			virtual std::vector<Certificate> GetAll();
+			virtual Certificate FindBySubjectCn(const std::wstring& subjectCn);
+			virtual Certificate GetCertBySubstringSubject(const std::wstring& subjectName);
+			virtual Certificate GetCertByExactSubject(const std::wstring& subjectName);
 			virtual Certificate GetCertBySubstringIssuerName(const std::wstring& issuerName);
 			virtual Certificate GetCertByByBase64Signature(const std::wstring& thumbprint);
 			virtual CertStoreType GetStoreType() const noexcept;

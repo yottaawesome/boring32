@@ -197,7 +197,22 @@ namespace Boring32::Crypto
 		return m_storeName;
 	}
 
-	Certificate CertStore::EnumerateAndFindBySubjectCn(const std::wstring& subjectCn)
+	std::vector<Certificate> CertStore::GetAll()
+	{
+		std::vector<Certificate> results;
+		PCCERT_CONTEXT currentCert = nullptr;
+		// The cert is automatically freed by the next call to CertEnumCertificatesInStore
+		while (currentCert = CertEnumCertificatesInStore(m_certStore, currentCert))
+			results.emplace_back(currentCert, false);
+		
+		const DWORD lastError = GetLastError();
+		if (lastError != CRYPT_E_NOT_FOUND && lastError != ERROR_NO_MORE_FILES)
+			throw Error::Win32Error(__FUNCSIG__ ": CertEnumCertificatesInStore() failed", lastError);
+
+		return results;
+	}
+
+	Certificate CertStore::FindBySubjectCn(const std::wstring& subjectCn)
 	{
 		PCCERT_CONTEXT currentCert = nullptr;
 		Certificate cert;
@@ -220,10 +235,10 @@ namespace Boring32::Crypto
 		if (lastError != CRYPT_E_NOT_FOUND && lastError != ERROR_NO_MORE_FILES)
 			throw Error::Win32Error(__FUNCSIG__ ": CertEnumCertificatesInStore() failed", lastError);
 
-		return nullptr;
+		return Certificate();
 	}
 
-	Certificate CertStore::GetCertByExactSubjectName(const std::wstring& subjectName)
+	Certificate CertStore::GetCertByExactSubject(const std::wstring& subjectName)
 	{
 		DWORD encoded = 0;
 		bool succeeded = CertStrToNameW(
@@ -258,7 +273,7 @@ namespace Boring32::Crypto
 		return GetCertByArg(CERT_FIND_SUBJECT_NAME, &blob);
 	}
 
-	Certificate CertStore::GetCertBySubstringSubjectName(const std::wstring& subjectName)
+	Certificate CertStore::GetCertBySubstringSubject(const std::wstring& subjectName)
 	{
 		return GetCertByArg(CERT_FIND_SUBJECT_STR, subjectName.c_str());
 	}
