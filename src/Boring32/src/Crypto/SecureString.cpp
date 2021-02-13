@@ -14,24 +14,38 @@ namespace Boring32::Crypto
 	
 	SecureString::SecureString()
 	:	m_characters(0),
-		m_encryptionType(EncryptionType::SameProcess)
+		m_encryptionType(EncryptionType::SameProcess),
+		m_isEncrypted(false)
 	{ }
 
 	SecureString::SecureString(const std::wstring& value)
 	:	m_characters(0),
-		m_encryptionType(EncryptionType::SameProcess)
+		m_encryptionType(EncryptionType::SameProcess),
+		m_isEncrypted(false)
 	{
-		SetValue(value);
+		SetValueAndEncrypt(value);
 	}
 
 	SecureString::SecureString(const std::wstring& value, const EncryptionType encryptionType)
 	:	m_characters(0),
-		m_encryptionType(encryptionType)
+		m_encryptionType(encryptionType),
+		m_isEncrypted(false)
 	{
-		SetValue(value);
+		SetValueAndEncrypt(value);
 	}
 
-	void SecureString::SetValue(const std::wstring& value)
+	SecureString::operator bool() const noexcept
+	{
+		return m_isEncrypted;
+	}
+
+	SecureString& SecureString::operator=(const std::wstring& newValue)
+	{
+		SetValueAndEncrypt(newValue);
+		return *this;
+	}
+
+	void SecureString::SetValueAndEncrypt(const std::wstring& value)
 	{
 		Clear();
 
@@ -50,62 +64,86 @@ namespace Boring32::Crypto
 
 		// Copy our plain data across to the buffer that will be
 		// encrypted in-place
-		const std::byte* buffer = (std::byte*)&value[0];
-		m_encryptedData = std::vector<std::byte>(buffer, buffer+bytesOfPlainData);
+		m_protectedString = value;
 		
 		// Resize to a multiple of the encryption block size if
 		// we need to
 		if (bytesOfEncryptedData > bytesOfPlainData)
-			m_encryptedData.resize(bytesOfEncryptedData);
+			m_protectedString.resize(bytesOfEncryptedData / sizeof(wchar_t));
 
 		// Actually perform the encryption now
 		// https://docs.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectmemory
-		const bool succeeded = CryptProtectMemory(
-			&m_encryptedData[0],
-			(DWORD)m_encryptedData.size(),
-			(DWORD)m_encryptionType
-		);
-		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__ ": CryptProtectMemory() failed", GetLastError());
+		Encrypt();
 	}
 
-	void SecureString::GetValue(std::wstring& value)
+	void SecureString::DecryptAndCopy(std::wstring& value)
 	{
-		if (m_encryptedData.empty())
-			throw std::runtime_error(__FUNCSIG__ ": nothing to decrypt");
-
 		// https://docs.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptunprotectmemory
 		// De-encrypt
-		bool succeeded = CryptUnprotectMemory(
-			&m_encryptedData[0],
-			(DWORD)m_encryptedData.size(),
-			(DWORD)m_encryptionType
-		);
-		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__ ": CryptUnprotectMemory() failed", GetLastError());
+		Decrypt();
 
 		// Set the out parameter
-		value = std::wstring((wchar_t*)&m_encryptedData[0], m_characters);
+		value = m_protectedString;
+		value.resize(m_characters);
 
 		// Re-encrypt
-		succeeded = CryptProtectMemory(
-			&m_encryptedData[0],
-			(DWORD)m_encryptedData.size(),
-			(DWORD)m_encryptionType
-		);
-		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__ ": CryptProtectMemory() failed", GetLastError());
+		Encrypt();
+	}
+
+	const std::wstring& SecureString::GetValue() const
+	{
+		return m_protectedString;
 	}
 
 	void SecureString::Clear()
 	{
-		std::fill(m_encryptedData.begin(), m_encryptedData.end(), (std::byte)0);
-		m_encryptedData.clear();
+		std::fill(m_protectedString.begin(), m_protectedString.end(), '\0');
+		m_protectedString.clear();
 		m_characters = 0;
+		m_isEncrypted = false;
 	}
 
 	bool SecureString::HasData() const noexcept
 	{
-		return m_encryptedData.empty() == false;
+		return m_protectedString.empty() == false;
+	}
+
+	void SecureString::Encrypt()
+	{
+		if (m_isEncrypted)
+			return;
+		if (m_protectedString.empty())
+			throw std::runtime_error(__FUNCSIG__ ": nothing to decrypt");
+
+		const bool succeeded = CryptProtectMemory(
+			(void*)&m_protectedString[0],
+			(DWORD)m_protectedString.size() * sizeof(wchar_t),
+			(DWORD)m_encryptionType
+		);
+		if (succeeded == false)
+			throw Error::Win32Error(__FUNCSIG__ ": CryptProtectMemory() failed", GetLastError());
+		m_isEncrypted = true;
+	}
+
+	void SecureString::Decrypt()
+	{
+		if (m_isEncrypted == false)
+			return;
+		if (m_protectedString.empty())
+			throw std::runtime_error(__FUNCSIG__ ": nothing to decrypt");
+
+		bool succeeded = CryptUnprotectMemory(
+			(void*)&m_protectedString[0],
+			(DWORD)m_protectedString.size() * sizeof(wchar_t),
+			(DWORD)m_encryptionType
+		);
+		if (succeeded == false)
+			throw Error::Win32Error(__FUNCSIG__ ": CryptUnprotectMemory() failed", GetLastError());
+		m_isEncrypted = false;
+	}
+
+	bool SecureString::IsCurrentlyEncrypted() const noexcept
+	{
+		return m_isEncrypted;
 	}
 }

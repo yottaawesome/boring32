@@ -21,14 +21,23 @@ namespace Boring32::Crypto
 			SecureString(const std::wstring& value, const EncryptionType encryptionType);
 
 		public:
-			virtual void SetValue(const std::wstring& value);
-			virtual void GetValue(std::wstring& value);
+			virtual operator bool() const noexcept;
+			virtual SecureString& operator=(const std::wstring& newValue);
+
+		public:
+			virtual void SetValueAndEncrypt(const std::wstring& value);
+			virtual void DecryptAndCopy(std::wstring& value);
+			virtual const std::wstring& GetValue() const;
 			virtual void Clear();
 			virtual bool HasData() const noexcept;
+			virtual void Encrypt();
+			virtual void Decrypt();
+			virtual bool IsCurrentlyEncrypted() const noexcept;
 
 		protected:
 			EncryptionType m_encryptionType;
 			DWORD m_characters;
-			std::vector<std::byte> m_encryptedData;
+			std::wstring m_protectedString;
+			bool m_isEncrypted;
 	};
 }

@@ -12,10 +12,10 @@ namespace Crypto
 			TEST_METHOD(TestSecureStringEncryptDecrypt)
 			{
 				Boring32::Crypto::SecureString secureString;
-				secureString.SetValue(L"TEST VALUE");
+				secureString.SetValueAndEncrypt(L"TEST VALUE");
 
 				std::wstring out;
-				secureString.GetValue(out);
+				secureString.DecryptAndCopy(out);
 				Assert::IsTrue(out == L"TEST VALUE");
 			}
 	};
