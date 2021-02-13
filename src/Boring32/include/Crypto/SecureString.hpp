@@ -22,6 +22,7 @@ namespace Boring32::Crypto
 
 		public:
 			virtual operator bool() const noexcept;
+			virtual explicit operator std::wstring();
 			virtual SecureString& operator=(const std::wstring& newValue);
 
 		public:

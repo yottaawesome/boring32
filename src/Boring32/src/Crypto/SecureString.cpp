@@ -38,6 +38,13 @@ namespace Boring32::Crypto
 	{
 		return m_isEncrypted;
 	}
+	
+	SecureString::operator std::wstring()
+	{
+		std::wstring out;
+		DecryptAndCopy(out);
+		return out;
+	}
 
 	SecureString& SecureString::operator=(const std::wstring& newValue)
 	{
@@ -132,7 +139,7 @@ namespace Boring32::Crypto
 		if (m_protectedString.empty())
 			throw std::runtime_error(__FUNCSIG__ ": nothing to decrypt");
 
-		bool succeeded = CryptUnprotectMemory(
+		const bool succeeded = CryptUnprotectMemory(
 			(void*)&m_protectedString[0],
 			(DWORD)m_protectedString.size() * sizeof(wchar_t),
 			(DWORD)m_encryptionType
