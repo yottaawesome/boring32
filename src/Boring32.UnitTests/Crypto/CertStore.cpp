@@ -48,5 +48,13 @@ namespace Crypto
 						.GetCert()
 				);
 			}
+
+			TEST_METHOD(TestGetAll)
+			{
+				Boring32::Crypto::CertStore store(L"MY");
+				std::vector<Boring32::Crypto::Certificate> certificates =
+					store.GetAll();
+				Assert::IsTrue(certificates.size());
+			}
 	};
 }
