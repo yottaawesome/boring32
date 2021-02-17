@@ -589,6 +589,7 @@ void TestCertGetByThumbrpint()
 	auto x = personal.GetCertBySubjectCn(L"client.localhost");
 	if (x)
 	{
+		auto vec = x.GetSubject();
 		std::wcout
 			<< x.GetSignature()
 			<< std::endl
@@ -601,11 +602,15 @@ void TestCertGetByThumbrpint()
 			<< x.GetFormattedIssuer(CERT_X500_NAME_STR)
 			<< std::endl
 			<< x.GetSignatureHashCngAlgorithm()
-			<< std::endl;
-		
+			<< std::endl
+			//<< std::string((char*)&vec[0], vec.size()).c_str()
+			//<< std::endl
+			//<< vec.size()
+			;
+
 		auto y =
-			//personal.GetCertByExactSubject(x.GetFormattedSubject(CERT_X500_NAME_STR));
-			personal.GetCertByFormattedSubject(x.GetFormattedSubject(CERT_X500_NAME_STR));
+			personal.GetCertByExactSubject(x.GetFormattedSubject(CERT_X500_NAME_STR));
+			//personal.GetCertByFormattedSubject(x.GetFormattedSubject(CERT_X500_NAME_STR));
 		if (y)
 		{
 			std::wcout

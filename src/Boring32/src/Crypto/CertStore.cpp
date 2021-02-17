@@ -328,8 +328,11 @@ namespace Boring32::Crypto
 	Certificate CertStore::GetCertByExactSubject(const std::wstring& subjectName)
 	{
 		DWORD encoded = 0;
-		DWORD flags = CERT_X500_NAME_STR;
-
+		// CERT_NAME_STR_FORCE_UTF8_DIR_STR_FLAG is required or the encoding
+		// produces subtle differences in the encoded bytes (DC3 vs FF in 
+		// original buffer), which causes the match to fail
+		// See https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certstrtonamew
+		const DWORD flags = CERT_X500_NAME_STR | CERT_NAME_STR_FORCE_UTF8_DIR_STR_FLAG;
 		bool succeeded = CertStrToNameW(
 			X509_ASN_ENCODING,
 			subjectName.c_str(),
