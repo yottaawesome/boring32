@@ -586,18 +586,32 @@ void TestCertFileImport()
 void TestCertGetByThumbrpint()
 {
 	Boring32::Crypto::CertStore personal(L"MY");
-	auto x = personal.FindBySubjectCn(L"client.localhost");
+	auto x = personal.GetCertBySubjectCn(L"client.localhost");
 	if (x)
 	{
-		std::wcout 
-			<< x.GetSignature() 
+		std::wcout
+			<< x.GetSignature()
 			<< std::endl
 			<< x.GetFormattedSubject(CERT_X500_NAME_STR)
+			<< std::endl
+			<< x.GetFormattedSubject(CERT_SIMPLE_NAME_STR)
+			<< std::endl
+			<< x._GetSubjectName()
 			<< std::endl
 			<< x.GetFormattedIssuer(CERT_X500_NAME_STR)
 			<< std::endl
 			<< x.GetSignatureHashCngAlgorithm()
 			<< std::endl;
+		
+		auto y =
+			//personal.GetCertByExactSubject(x.GetFormattedSubject(CERT_X500_NAME_STR));
+			personal.GetCertByFormattedSubject(x.GetFormattedSubject(CERT_X500_NAME_STR));
+		if (y)
+		{
+			std::wcout
+				<< "OK!!!!!!!!!!!!!!!!"
+				<< std::endl;
+		}
 	}
 }
 

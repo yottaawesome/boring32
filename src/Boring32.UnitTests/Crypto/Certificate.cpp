@@ -14,7 +14,7 @@ namespace Crypto
 			{
 				Boring32::Crypto::CertStore certStore(L"MY");
 				Boring32::Crypto::Certificate cert 
-					= certStore.FindBySubjectCn(L"client.localhost");
+					= certStore.GetCertBySubjectCn(L"client.localhost");
 				Assert::IsTrue(cert.GetSignatureHashCngAlgorithm() == L"RSA/SHA256");
 			}
 	};

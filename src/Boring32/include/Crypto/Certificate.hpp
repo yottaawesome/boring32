@@ -25,7 +25,10 @@ namespace Boring32::Crypto
 			virtual void Close() noexcept;
 			virtual PCCERT_CONTEXT GetCert() const noexcept;
 			virtual std::wstring GetFormattedSubject(const DWORD format) const;
+			virtual std::wstring _GetSubjectName() const;
 			virtual std::wstring GetFormattedIssuer(const DWORD format) const;
+			virtual std::vector<std::byte> GetIssuer() const;
+			virtual std::vector<std::byte> GetSubject() const;
 			virtual std::wstring GetSignature() const;
 			virtual std::wstring GetSignatureHashCngAlgorithm() const;
 			virtual void Attach(PCCERT_CONTEXT const attachTo);

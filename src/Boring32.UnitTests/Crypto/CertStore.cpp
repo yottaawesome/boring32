@@ -34,7 +34,7 @@ namespace Crypto
 				//subject = L"CN = localhost";
 				Assert::IsNotNull(
 					store
-						.FindBySubjectCn(subject)
+						.GetCertBySubjectCn(subject)
 						.GetCert()
 				);
 			}

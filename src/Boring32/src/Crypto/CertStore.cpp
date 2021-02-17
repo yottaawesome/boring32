@@ -212,7 +212,30 @@ namespace Boring32::Crypto
 		return results;
 	}
 
-	Certificate CertStore::FindBySubjectCn(const std::wstring& subjectCn)
+	Certificate CertStore::GetCertByFormattedSubject(const std::wstring& subjectRdn)
+	{
+		PCCERT_CONTEXT currentCert = nullptr;
+		Certificate cert;
+		while (currentCert = CertEnumCertificatesInStore(m_certStore, currentCert))
+		{
+			cert.Attach(currentCert);
+			std::wstring name = cert.GetFormattedSubject(CERT_X500_NAME_STR);
+			if (name == subjectRdn)
+				return cert;
+
+			// The cert is automatically freed by the next call to CertEnumCertificatesInStore
+			// We only use Certificate to provide us with exception-based clean up and to use
+			// GetFormattedSubjectName()
+			cert.Detach();
+		}
+		const DWORD lastError = GetLastError();
+		if (lastError != CRYPT_E_NOT_FOUND && lastError != ERROR_NO_MORE_FILES)
+			throw Error::Win32Error(__FUNCSIG__ ": CertEnumCertificatesInStore() failed", lastError);
+
+		return Certificate();
+	}
+
+	Certificate CertStore::GetCertBySubjectCn(const std::wstring& subjectCn)
 	{
 		PCCERT_CONTEXT currentCert = nullptr;
 		Certificate cert;
@@ -238,13 +261,79 @@ namespace Boring32::Crypto
 		return Certificate();
 	}
 
+	Certificate CertStore::GetCertByExactSubject(const std::vector<std::byte>& subjectName)
+	{
+		CERT_NAME_BLOB blob{
+			.cbData = (DWORD)subjectName.size(),
+			.pbData = (BYTE*)&subjectName[0]
+		};
+		return GetCertByArg(CERT_FIND_SUBJECT_NAME, &blob);
+	}
+
+	/*
+	Certificate CertStore::GetCertByExactSubjectRdn(const std::string& subjectName)
+	{
+		DWORD cbEncoded = 0;
+		CERT_RDN_ATTR rgNameAttr =
+		{
+		   (LPSTR)szOID_COMMON_NAME,                // the OID
+		   CERT_RDN_PRINTABLE_STRING,        // type of string
+		   (DWORD)subjectName.size() + 1,   // string length including
+											 // the terminating null 
+											 // character
+		   (BYTE*)subjectName.c_str()            // pointer to the string
+		};
+		CERT_RDN rgRDN[] =
+		{
+		   1,               // the number of elements in the array
+		   &rgNameAttr      // pointer to the array
+		};
+		CERT_NAME_INFO CertName =
+		{
+			1,          // number of elements in the CERT_RND's array
+			rgRDN
+		};
+
+		CryptEncodeObjectEx(
+			X509_ASN_ENCODING,        // the encoding/decoding type
+			X509_NAME,
+			&CertName,
+			0,
+			NULL,
+			NULL,
+			&cbEncoded
+		);
+
+		std::vector<std::byte> pbEncoded(cbEncoded);
+		pbEncoded.resize(cbEncoded);
+
+		CryptEncodeObjectEx(
+			X509_ASN_ENCODING,
+			X509_NAME,
+			&CertName,
+			0,
+			NULL,
+			(BYTE*)&pbEncoded[0],
+			&cbEncoded
+		);
+
+		CERT_NAME_BLOB blob{
+			.cbData = (DWORD)pbEncoded.size(),
+			.pbData = (BYTE*)&pbEncoded[0]
+		};
+		return GetCertByArg(CERT_FIND_SUBJECT_NAME, &blob);
+	}
+	*/
+	
 	Certificate CertStore::GetCertByExactSubject(const std::wstring& subjectName)
 	{
 		DWORD encoded = 0;
+		DWORD flags = CERT_X500_NAME_STR;
+
 		bool succeeded = CertStrToNameW(
 			X509_ASN_ENCODING,
 			subjectName.c_str(),
-			CERT_OID_NAME_STR,
+			flags,
 			nullptr,
 			nullptr,
 			&encoded,
@@ -257,7 +346,7 @@ namespace Boring32::Crypto
 		succeeded = CertStrToNameW(
 			X509_ASN_ENCODING,
 			subjectName.c_str(),
-			CERT_OID_NAME_STR,
+			flags,
 			nullptr,
 			&byte[0],
 			&encoded,
@@ -265,7 +354,8 @@ namespace Boring32::Crypto
 		);
 		if (succeeded == false)
 			throw Error::Win32Error(__FUNCSIG__, GetLastError());
-		
+		byte.resize(encoded);
+
 		CERT_NAME_BLOB blob{
 			.cbData = (DWORD)byte.size(),
 			.pbData = &byte[0]
