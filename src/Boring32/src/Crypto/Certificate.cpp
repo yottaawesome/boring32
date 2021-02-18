@@ -92,9 +92,15 @@ namespace Boring32::Crypto
 
 	std::wstring Certificate::GetFormattedSubject(const DWORD format) const
 	{
-		return InternalGetFormattedName(m_certContext->pCertInfo->Subject, format);
+		return FormatAsnNameBlob(m_certContext->pCertInfo->Subject, format);
 	}
 
+	std::wstring Certificate::GetFormattedIssuer(const DWORD format) const
+	{
+		return FormatAsnNameBlob(m_certContext->pCertInfo->Issuer, format);
+	}
+
+	/*
 	std::wstring Certificate::_GetSubjectName() const
 	{
 		DWORD type = CERT_X500_NAME_STR;
@@ -120,11 +126,7 @@ namespace Boring32::Crypto
 		name.pop_back();
 		return name;
 	}
-
-	std::wstring Certificate::GetFormattedIssuer(const DWORD format) const
-	{
-		return InternalGetFormattedName(m_certContext->pCertInfo->Issuer, format);
-	}
+	*/
 
 	std::vector<std::byte> Certificate::GetIssuer() const
 	{
@@ -142,38 +144,6 @@ namespace Boring32::Crypto
 			(std::byte*)blob->pbData,
 			(std::byte*)blob->pbData + blob->cbData
 		};
-	}
-
-	std::wstring Certificate::InternalGetFormattedName(
-		CERT_NAME_BLOB& certName,
-		const DWORD format
-	) const
-	{
-		if (m_certContext == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": m_certContext is null");
-
-		// https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certnametostrw
-		DWORD characterSize = CertNameToStrW(
-			X509_ASN_ENCODING,
-			&certName,
-			format,
-			nullptr,
-			0
-		);
-		if (characterSize == 0)
-			return L"";
-
-		std::wstring name(characterSize, '\0');
-		characterSize = CertNameToStrW(
-			X509_ASN_ENCODING,
-			&certName,
-			format,
-			&name[0],
-			(DWORD)name.size()
-		);
-		name.pop_back(); // remove excess null character
-
-		return name;
 	}
 
 	std::wstring Certificate::GetSignature() const

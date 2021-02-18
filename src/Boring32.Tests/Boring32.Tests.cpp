@@ -597,7 +597,7 @@ void TestCertGetByThumbrpint()
 			<< std::endl
 			<< x.GetFormattedSubject(CERT_SIMPLE_NAME_STR)
 			<< std::endl
-			<< x._GetSubjectName()
+			//<< x._GetSubjectName()
 			<< std::endl
 			<< x.GetFormattedIssuer(CERT_X500_NAME_STR)
 			<< std::endl

@@ -327,43 +327,22 @@ namespace Boring32::Crypto
 	
 	Certificate CertStore::GetCertByExactSubject(const std::wstring& subjectName)
 	{
-		DWORD encoded = 0;
-		// CERT_NAME_STR_FORCE_UTF8_DIR_STR_FLAG is required or the encoding
-		// produces subtle differences in the encoded bytes (DC3 vs FF in 
-		// original buffer), which causes the match to fail
-		// See https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certstrtonamew
-		const DWORD flags = CERT_X500_NAME_STR | CERT_NAME_STR_FORCE_UTF8_DIR_STR_FLAG;
-		bool succeeded = CertStrToNameW(
-			X509_ASN_ENCODING,
-			subjectName.c_str(),
-			flags,
-			nullptr,
-			nullptr,
-			&encoded,
-			nullptr
-		);
-		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__, GetLastError());
-
-		std::vector<BYTE> byte(encoded, 0);
-		succeeded = CertStrToNameW(
-			X509_ASN_ENCODING,
-			subjectName.c_str(),
-			flags,
-			nullptr,
-			&byte[0],
-			&encoded,
-			nullptr
-		);
-		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__, GetLastError());
-		byte.resize(encoded);
-
-		CERT_NAME_BLOB blob{
-			.cbData = (DWORD)byte.size(),
-			.pbData = &byte[0]
+		std::vector<std::byte> encodedBytes = EncodeAsnString(subjectName);
+		const CERT_NAME_BLOB blob{
+			.cbData = (DWORD)encodedBytes.size(),
+			.pbData = (BYTE*)&encodedBytes[0]
 		};
 		return GetCertByArg(CERT_FIND_SUBJECT_NAME, &blob);
+	}
+
+	Certificate CertStore::GetCertByExactIssuer(const std::wstring& subjectName)
+	{
+		std::vector<std::byte> encodedBytes = EncodeAsnString(subjectName);
+		const CERT_NAME_BLOB blob{
+			.cbData = (DWORD)encodedBytes.size(),
+			.pbData = (BYTE*)&encodedBytes[0]
+		};
+		return GetCertByArg(CERT_FIND_ISSUER_NAME, &blob);
 	}
 
 	Certificate CertStore::GetCertBySubstringSubject(const std::wstring& subjectName)
@@ -441,13 +420,13 @@ namespace Boring32::Crypto
 		InternalImport(info);
 	}
 
-	void CertStore::ImportCertsFromFile(const std::wstring& path, const std::wstring& password)
+	void CertStore::ImportCertsFromFile(const std::filesystem::path& path, const std::wstring& password)
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/ns-cryptuiapi-cryptui_wiz_import_src_info
 		CRYPTUI_WIZ_IMPORT_SRC_INFO info{
 			.dwSize = sizeof(info),
 			.dwSubjectChoice = CRYPTUI_WIZ_IMPORT_SUBJECT_FILE,
-			.pwszFileName = path.c_str(),
+			.pwszFileName = std::filesystem::absolute(path).c_str(),
 			.dwFlags = 0,
 			.pwszPassword = password.c_str()
 		};

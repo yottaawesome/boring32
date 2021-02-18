@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include <Windows.h>
+#include <filesystem>
+#include <Windows.h>
 #include <wincrypt.h>
 #include <cryptuiapi.h>
 #include "Certificate.hpp"
@@ -59,16 +61,19 @@ namespace Boring32::Crypto
 			virtual Certificate GetCertBySubstringSubject(const std::wstring& subjectName);
 			virtual Certificate GetCertByExactSubject(const std::wstring& subjectName);
 			virtual Certificate GetCertByExactSubject(const std::vector<std::byte>& subjectName);
-			//virtual Certificate GetCertByExactSubjectRdn(const std::string& subjectName);
+			virtual Certificate GetCertByExactIssuer(const std::wstring& subjectName);
 			virtual Certificate GetCertBySubstringIssuerName(const std::wstring& issuerName);
 			virtual Certificate GetCertByByBase64Signature(const std::wstring& thumbprint);
 			virtual CertStoreType GetStoreType() const noexcept;
 			virtual void DeleteCert(const CERT_CONTEXT* cert);
 			virtual void ImportCert(const CERT_CONTEXT* cert);
 			virtual void ImportCertsFromFile(
-				const std::wstring& path, 
+				const std::filesystem::path& path, 
 				const std::wstring& password
 			);
+
+		public:
+			//virtual Certificate GetCertByExactSubjectRdn(const std::string& subjectName);
 
 		protected:
 			virtual void InternalOpen();

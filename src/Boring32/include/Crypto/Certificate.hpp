@@ -25,7 +25,6 @@ namespace Boring32::Crypto
 			virtual void Close() noexcept;
 			virtual PCCERT_CONTEXT GetCert() const noexcept;
 			virtual std::wstring GetFormattedSubject(const DWORD format) const;
-			virtual std::wstring _GetSubjectName() const;
 			virtual std::wstring GetFormattedIssuer(const DWORD format) const;
 			virtual std::vector<std::byte> GetIssuer() const;
 			virtual std::vector<std::byte> GetSubject() const;
@@ -34,12 +33,11 @@ namespace Boring32::Crypto
 			virtual void Attach(PCCERT_CONTEXT const attachTo);
 			virtual PCCERT_CONTEXT Detach() noexcept;
 
+		public:
+			//virtual std::wstring _GetSubjectName() const;
+
 		protected:
 			virtual std::vector<std::byte> InternalCertGetProperty(const DWORD property) const;
-			virtual std::wstring InternalGetFormattedName(
-				CERT_NAME_BLOB& certName,
-				const DWORD format
-			) const;
 			virtual Certificate& Copy(const Certificate& other);
 			virtual Certificate& Move(Certificate& other) noexcept;
 

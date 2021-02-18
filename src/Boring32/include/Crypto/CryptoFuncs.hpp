@@ -58,4 +58,9 @@ namespace Boring32::Crypto
 	std::string ToBase64String(const std::vector<std::byte>& bytes);
 	std::wstring ToBase64WString(const std::vector<std::byte>& bytes);
 	std::vector<std::byte> ToBinary(const std::wstring& base64);
+	std::vector<std::byte> EncodeAsnString(const std::wstring& name);
+	std::wstring FormatAsnNameBlob(
+		const CERT_NAME_BLOB& certName,
+		const DWORD format
+	);
 }

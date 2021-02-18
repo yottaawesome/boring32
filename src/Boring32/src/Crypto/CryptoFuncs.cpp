@@ -349,4 +349,70 @@ namespace Boring32::Crypto
 		returnVal.resize(byteSize);
 		return returnVal;
 	}
+
+	std::vector<std::byte> EncodeAsnString(const std::wstring& name)
+	{
+		DWORD encoded = 0;
+		// CERT_NAME_STR_FORCE_UTF8_DIR_STR_FLAG is required or the encoding
+		// produces subtle differences in the encoded bytes (DC3 vs FF in 
+		// original buffer), which causes the match to fail
+		// See https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certstrtonamew
+		const DWORD flags = CERT_X500_NAME_STR | CERT_NAME_STR_FORCE_UTF8_DIR_STR_FLAG;
+		bool succeeded = CertStrToNameW(
+			X509_ASN_ENCODING,
+			name.c_str(),
+			flags,
+			nullptr,
+			nullptr,
+			&encoded,
+			nullptr
+		);
+		if (succeeded == false)
+			throw Error::Win32Error(__FUNCSIG__, GetLastError());
+
+		std::vector<std::byte> byte(encoded);
+		succeeded = CertStrToNameW(
+			X509_ASN_ENCODING,
+			name.c_str(),
+			flags,
+			nullptr,
+			(BYTE*)&byte[0],
+			&encoded,
+			nullptr
+		);
+		if (succeeded == false)
+			throw Error::Win32Error(__FUNCSIG__, GetLastError());
+		byte.resize(encoded);
+
+		return byte;
+	}
+
+	std::wstring FormatAsnNameBlob(
+		const CERT_NAME_BLOB& certName,
+		const DWORD format
+	)
+	{
+		// https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certnametostrw
+		DWORD characterSize = CertNameToStrW(
+			X509_ASN_ENCODING,
+			(CERT_NAME_BLOB*)&certName,
+			format,
+			nullptr,
+			0
+		);
+		if (characterSize == 0)
+			return L"";
+
+		std::wstring name(characterSize, '\0');
+		characterSize = CertNameToStrW(
+			X509_ASN_ENCODING,
+			(CERT_NAME_BLOB*)&certName,
+			format,
+			&name[0],
+			(DWORD)name.size()
+		);
+		name.pop_back(); // remove excess null character
+
+		return name;
+	}
 }
