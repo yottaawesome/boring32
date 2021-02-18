@@ -423,10 +423,11 @@ namespace Boring32::Crypto
 	void CertStore::ImportCertsFromFile(const std::filesystem::path& path, const std::wstring& password)
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/ns-cryptuiapi-cryptui_wiz_import_src_info
+		std::wstring resolvedAbsolutePath = std::filesystem::absolute(path);
 		CRYPTUI_WIZ_IMPORT_SRC_INFO info{
 			.dwSize = sizeof(info),
 			.dwSubjectChoice = CRYPTUI_WIZ_IMPORT_SUBJECT_FILE,
-			.pwszFileName = std::filesystem::absolute(path).c_str(),
+			.pwszFileName = resolvedAbsolutePath.c_str(),
 			.dwFlags = 0,
 			.pwszPassword = password.c_str()
 		};
