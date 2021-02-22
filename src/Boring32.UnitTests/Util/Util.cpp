@@ -27,14 +27,18 @@ namespace Util
 			{
 				std::string string = "hello, world";
 				std::vector<std::byte> byteVector = Boring32::Util::StringToByteVector(string);
-				Assert::IsTrue(string == Boring32::Util::ToString(byteVector));
+				std::string result;
+				Boring32::Util::ByteVectorToString(byteVector, result);
+				Assert::IsTrue(string == result);
 			}
 
 			TEST_METHOD(TestToByteVectorRoundtrip2)
 			{
 				std::wstring string = L"hello, world";
 				std::vector<std::byte> byteVector = Boring32::Util::StringToByteVector(string);
-				Assert::IsTrue(string == Boring32::Util::ToWString(byteVector));
+				std::wstring result;
+				Boring32::Util::ByteVectorToString(byteVector, result);
+				Assert::IsTrue(string == result);
 			}
 	};
 }

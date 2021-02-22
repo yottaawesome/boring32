@@ -62,14 +62,14 @@ namespace Boring32::Util
         return boundaryMillis - (currentSecondMillis % boundaryMillis);
     }
 
-    std::wstring ToWString(const std::vector<std::byte>& vector)
+    void ByteVectorToString(const std::vector<std::byte>& vector, std::wstring& result)
     {
-        return { (wchar_t*)&vector[0], vector.size() / sizeof(wchar_t) };
+        result = { (wchar_t*)&vector[0], vector.size() / sizeof(wchar_t) };
     }
 
-    std::string ToString(const std::vector<std::byte>& vector)
+    void ByteVectorToString(const std::vector<std::byte>& vector, std::string& result)
     {
-        return { (char*)&vector[0], vector.size() / sizeof(char) };
+        result = { (char*)&vector[0], vector.size() / sizeof(char) };
     }
 
     std::vector<std::byte> StringToByteVector(const std::wstring& str)

@@ -14,8 +14,8 @@ namespace Boring32::Util
 	size_t GetMillisToMinuteBoundary(const SYSTEMTIME& time, const size_t boundary) noexcept;
 	size_t GetMillisToSecondBoundary(const SYSTEMTIME& time, const size_t secondBoundary) noexcept;
 
-	std::wstring ToWString(const std::vector<std::byte>& vector);
-	std::string ToString(const std::vector<std::byte>& vector);
+	void ByteVectorToString(const std::vector<std::byte>& vector, std::wstring& result);
+	void ByteVectorToString(const std::vector<std::byte>& vector, std::string& result);
 	std::vector<std::byte> StringToByteVector(const std::wstring& str);
 	std::vector<std::byte> StringToByteVector(const std::string& str);
 
