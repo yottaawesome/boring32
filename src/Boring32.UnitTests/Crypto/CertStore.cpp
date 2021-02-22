@@ -44,7 +44,7 @@ namespace Crypto
 				Boring32::Crypto::CertStore store(L"MY", Boring32::Crypto::CertStoreType::System);
 				Assert::IsNotNull(
 					store
-						.GetCertByExactSubject(L"CN = localhost")
+						.GetCertBySubjectCn(L"localhost")
 						.GetCert()
 				);
 			}

@@ -22,5 +22,19 @@ namespace Util
 				std::wstring path = Boring32::Util::GetCurrentExecutableDirectory();
 				Assert::IsFalse(path.empty());
 			}
+
+			TEST_METHOD(TestToByteVectorRoundtrip1)
+			{
+				std::string string = "hello, world";
+				std::vector<std::byte> byteVector = Boring32::Util::StringToByteVector(string);
+				Assert::IsTrue(string == Boring32::Util::ToString(byteVector));
+			}
+
+			TEST_METHOD(TestToByteVectorRoundtrip2)
+			{
+				std::wstring string = L"hello, world";
+				std::vector<std::byte> byteVector = Boring32::Util::StringToByteVector(string);
+				Assert::IsTrue(string == Boring32::Util::ToWString(byteVector));
+			}
 	};
 }
