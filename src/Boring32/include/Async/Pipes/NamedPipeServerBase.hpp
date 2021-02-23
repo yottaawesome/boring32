@@ -7,6 +7,7 @@ namespace Boring32::Async
 {
 	class NamedPipeServerBase
 	{
+		// example of DACL/SID strings: "D:(A;;GA;;;BA)(A;;GR;;;BU)" and "D:(A;;GRGW;;;BU)"
 		public:
 			virtual ~NamedPipeServerBase();
 			NamedPipeServerBase();

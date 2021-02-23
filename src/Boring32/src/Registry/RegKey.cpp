@@ -76,6 +76,48 @@ namespace Boring32::Registry
 		return m_key.get();
 	}
 
+	std::wstring RegKey::GetString(const std::wstring& valueName)
+	{
+		DWORD sizeInBytes = 0;
+		LONG statusCode = RegGetValueW(
+			m_key.get(),
+			nullptr,
+			valueName.c_str(),
+			RRF_RT_REG_SZ,
+			nullptr,
+			nullptr,
+			&sizeInBytes
+		);
+		if (statusCode != ERROR_SUCCESS)
+			throw Error::Win32Error(
+				__FUNCSIG__ ": RegGetValueW() failed (1)",
+				statusCode
+			);
+
+		std::wstring data(sizeInBytes / sizeof(wchar_t), '\0');
+		statusCode = RegGetValueW(
+			m_key.get(),
+			nullptr,
+			valueName.c_str(),
+			RRF_RT_REG_SZ,
+			nullptr,
+			&data[0],
+			&sizeInBytes
+		);
+		if (statusCode != ERROR_SUCCESS)
+			throw Error::Win32Error(
+				__FUNCSIG__ ": RegGetValueW() failed (2)",
+				statusCode
+			);
+
+		data.resize(sizeInBytes / sizeof(wchar_t));
+		// Exclude terminating null
+		if (data.empty() == false)
+			data.pop_back();
+
+		return data;
+	}
+
 	void RegKey::InternalOpen(const HKEY key, const std::wstring& subkey)
 	{
 		HKEY hKey = nullptr;

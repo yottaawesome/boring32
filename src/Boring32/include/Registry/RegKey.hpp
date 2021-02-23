@@ -23,6 +23,7 @@ namespace Boring32::Registry
 
 		public:
 			virtual HKEY GetKey() const noexcept;
+			virtual std::wstring GetString(const std::wstring& valueName);
 
 		protected:
 			virtual RegKey& Copy(const RegKey& other);
