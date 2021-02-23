@@ -11,7 +11,22 @@ namespace Boring32::Registry
 			virtual ~RegKey();
 			RegKey();
 			RegKey(const HKEY key, const std::wstring& subkey);
-			RegKey(const HKEY key, const std::wstring& subkey, const std::nothrow_t&) noexcept;
+			RegKey(
+				const HKEY key, 
+				const std::wstring& subkey, 
+				const DWORD access
+			);
+			RegKey(
+				const HKEY key, 
+				const std::wstring& subkey, 
+				const std::nothrow_t&
+			) noexcept;
+			RegKey(
+				const HKEY key, 
+				const std::wstring& subkey, 
+				const DWORD access, 
+				const std::nothrow_t&
+			) noexcept;
 			RegKey(const HKEY key);
 			RegKey(const RegKey& other);
 			RegKey(RegKey&& other) noexcept;
@@ -23,6 +38,7 @@ namespace Boring32::Registry
 			virtual operator bool() const noexcept;
 
 		public:
+			virtual void Close() noexcept;
 			virtual HKEY GetKey() const noexcept;
 			virtual std::wstring GetString(const std::wstring& valueName);
 			virtual void WriteValue(
@@ -37,5 +53,6 @@ namespace Boring32::Registry
 
 		protected:
 			std::shared_ptr<HKEY__> m_key;
+			DWORD m_access;
 	};
 }

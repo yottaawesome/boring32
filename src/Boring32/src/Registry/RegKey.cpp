@@ -11,21 +11,48 @@ namespace Boring32::Registry
 
 	RegKey::~RegKey() 
 	{
-		m_key = nullptr;
+		Close();
 	}
 
-	RegKey::RegKey() {}
+	RegKey::RegKey() : m_access(0) {}
 
 	RegKey::RegKey(const HKEY key)
-		: m_key(CreateRegKeyPtr(key))
+	:	m_key(CreateRegKeyPtr(key)),
+		m_access(KEY_ALL_ACCESS)
 	{}
 
 	RegKey::RegKey(const HKEY key, const std::wstring& subkey)
+	:	m_access(KEY_ALL_ACCESS)
 	{
 		InternalOpen(key, subkey);
 	}
 
-	RegKey::RegKey(const HKEY key, const std::wstring& subkey, const std::nothrow_t&) noexcept
+	RegKey::RegKey(const HKEY key, const std::wstring& subkey, const DWORD access)
+	:	m_access(access)
+	{
+		InternalOpen(key, subkey);
+	}
+
+	RegKey::RegKey(
+		const HKEY key, 
+		const std::wstring& subkey, 
+		const std::nothrow_t&
+	) noexcept
+	:	m_access(KEY_ALL_ACCESS)
+	{
+		Error::TryCatchLogToWCerr(
+			[this, key = key, &subkey = subkey] { InternalOpen(key, subkey); }, 
+			__FUNCSIG__
+		);
+	}
+
+	RegKey::RegKey(
+		const HKEY key, 
+		const std::wstring& subkey, 
+		const DWORD access,
+		const std::nothrow_t&
+	) noexcept
+	:	m_access(access)
 	{
 		Error::TryCatchLogToWCerr(
 			[this, key = key, &subkey = subkey] { InternalOpen(key, subkey); }, 
@@ -34,6 +61,7 @@ namespace Boring32::Registry
 	}
 
 	RegKey::RegKey(const RegKey& other)
+	:	m_access(0)
 	{
 		Copy(other);
 	}
@@ -46,6 +74,7 @@ namespace Boring32::Registry
 	RegKey& RegKey::Copy(const RegKey& other)
 	{
 		m_key = other.m_key;
+		m_access = other.m_access;
 		return *this;
 	}
 
@@ -62,8 +91,7 @@ namespace Boring32::Registry
 
 	RegKey& RegKey::operator=(RegKey&& other) noexcept
 	{
-		m_key = std::move(other.m_key);
-		return *this;
+		return Move(other);
 	}
 	
 	RegKey::operator bool() const noexcept
@@ -73,7 +101,14 @@ namespace Boring32::Registry
 
 	RegKey& RegKey::Move(RegKey& other) noexcept
 	{
+		m_key = std::move(other.m_key);
+		m_access = other.m_access;
 		return *this;
+	}
+
+	void RegKey::Close() noexcept
+	{
+		m_key = nullptr;
 	}
 
 	HKEY RegKey::GetKey() const noexcept
@@ -136,7 +171,7 @@ namespace Boring32::Registry
 			throw std::runtime_error(__FUNCSIG__ ": m_key is null");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw
-		const DWORD status = RegSetValueExW(
+		const LSTATUS status = RegSetValueExW(
 			m_key.get(),
 			keyValueName.c_str(),
 			0,
@@ -148,18 +183,18 @@ namespace Boring32::Registry
 			throw Error::Win32Error(__FUNCSIG__ ": RegSetValueExW() failed", status);
 	}
 
-	void RegKey::InternalOpen(const HKEY key, const std::wstring& subkey)
+	void RegKey::InternalOpen(const HKEY superKey, const std::wstring& subkey)
 	{
-		HKEY hKey = nullptr;
-		LSTATUS status = RegOpenKeyExW(
-			key,
+		HKEY key = nullptr;
+		const LSTATUS status = RegOpenKeyExW(
+			superKey,
 			subkey.c_str(),
 			0,
-			KEY_READ,
-			&hKey
+			m_access,
+			&key
 		);
 		if (status != ERROR_SUCCESS)
 			throw Error::Win32Error(__FUNCSIG__ ": failed to open registry key", status);
-		m_key = CreateRegKeyPtr(hKey);
+		m_key = CreateRegKeyPtr(key);
 	}
 }

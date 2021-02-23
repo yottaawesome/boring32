@@ -13,7 +13,8 @@ namespace Registry
 			{
 				Boring32::Registry::RegKey reg(
 					HKEY_LOCAL_MACHINE,
-					L"SOFTWARE\\Microsoft\\.NETFramework"
+					L"SOFTWARE\\Microsoft\\.NETFramework",
+					KEY_READ
 				);
 				Assert::IsTrue(
 					reg.GetString(L"InstallRoot") == L"C:\\Windows\\Microsoft.NET\\Framework64\\"
