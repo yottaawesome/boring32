@@ -13,17 +13,22 @@ namespace Boring32::Registry
 			RegKey(const HKEY key, const std::wstring& subkey);
 			RegKey(const HKEY key, const std::wstring& subkey, const std::nothrow_t&) noexcept;
 			RegKey(const HKEY key);
-
 			RegKey(const RegKey& other);
+			RegKey(RegKey&& other) noexcept;
+
+		public:
 			virtual RegKey& operator=(const HKEY other);
 			virtual RegKey& operator=(const RegKey& other);
-
-			RegKey(RegKey&& other) noexcept;
 			virtual RegKey& operator=(RegKey&& other) noexcept;
+			virtual operator bool() const noexcept;
 
 		public:
 			virtual HKEY GetKey() const noexcept;
 			virtual std::wstring GetString(const std::wstring& valueName);
+			virtual void WriteValue(
+				const std::wstring& keyValueName,
+				const std::wstring& keyValueValue
+			);
 
 		protected:
 			virtual RegKey& Copy(const RegKey& other);

@@ -65,6 +65,11 @@ namespace Boring32::Registry
 		m_key = std::move(other.m_key);
 		return *this;
 	}
+	
+	RegKey::operator bool() const noexcept
+	{
+		return m_key != nullptr;
+	}
 
 	RegKey& RegKey::Move(RegKey& other) noexcept
 	{
@@ -78,7 +83,11 @@ namespace Boring32::Registry
 
 	std::wstring RegKey::GetString(const std::wstring& valueName)
 	{
+		if (m_key == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": m_key is null");
+
 		DWORD sizeInBytes = 0;
+		// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew
 		LONG statusCode = RegGetValueW(
 			m_key.get(),
 			nullptr,
@@ -116,6 +125,27 @@ namespace Boring32::Registry
 			data.pop_back();
 
 		return data;
+	}
+
+	void RegKey::WriteValue(
+		const std::wstring& keyValueName,
+		const std::wstring& keyValueValue
+	)
+	{
+		if (m_key == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": m_key is null");
+
+		// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw
+		const DWORD status = RegSetValueExW(
+			m_key.get(),
+			keyValueName.c_str(),
+			0,
+			REG_SZ,
+			(LPBYTE)keyValueValue.c_str(),
+			(DWORD)((keyValueValue.size() + 1) * sizeof(wchar_t))
+		);
+		if (status != ERROR_SUCCESS)
+			throw Error::Win32Error(__FUNCSIG__ ": RegSetValueExW() failed", status);
 	}
 
 	void RegKey::InternalOpen(const HKEY key, const std::wstring& subkey)
