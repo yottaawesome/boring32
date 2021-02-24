@@ -207,9 +207,6 @@
     <ClInclude Include="include\Async\EventLoop.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Registry\RegKey.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Async\AsyncFuncs.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -259,6 +256,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Crypto\SensitiveString.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Registry\RegistryFuncs.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Registry\RegistryKey.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -401,9 +404,6 @@
     <ClCompile Include="src\Async\Mutev.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Registry\RegKey.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Async\EventLoop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -447,6 +447,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Crypto\SensitiveString.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Registry\RegistryKey.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

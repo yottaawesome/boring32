@@ -1,5 +1,7 @@
 #include "pch.hpp"
-#include "include/Registry/RegKey.hpp"
+#include <utility>
+#include "include/Registry/RegistryFuncs.hpp"
+#include "include/Registry/RegistryKey.hpp"
 #include "include/Error/Error.hpp"
 
 namespace Boring32::Registry
@@ -9,31 +11,31 @@ namespace Boring32::Registry
 		return { key, [](const auto val) { RegCloseKey(val); } };
 	}
 
-	RegKey::~RegKey() 
+	RegistryKey::~RegistryKey() 
 	{
 		Close();
 	}
 
-	RegKey::RegKey() : m_access(0) {}
+	RegistryKey::RegistryKey() : m_access(0) {}
 
-	RegKey::RegKey(const HKEY key)
+	RegistryKey::RegistryKey(const HKEY key)
 	:	m_key(CreateRegKeyPtr(key)),
 		m_access(KEY_ALL_ACCESS)
 	{}
 
-	RegKey::RegKey(const HKEY key, const std::wstring& subkey)
+	RegistryKey::RegistryKey(const HKEY key, const std::wstring& subkey)
 	:	m_access(KEY_ALL_ACCESS)
 	{
 		InternalOpen(key, subkey);
 	}
 
-	RegKey::RegKey(const HKEY key, const std::wstring& subkey, const DWORD access)
+	RegistryKey::RegistryKey(const HKEY key, const std::wstring& subkey, const DWORD access)
 	:	m_access(access)
 	{
 		InternalOpen(key, subkey);
 	}
 
-	RegKey::RegKey(
+	RegistryKey::RegistryKey(
 		const HKEY key, 
 		const std::wstring& subkey, 
 		const std::nothrow_t&
@@ -46,7 +48,7 @@ namespace Boring32::Registry
 		);
 	}
 
-	RegKey::RegKey(
+	RegistryKey::RegistryKey(
 		const HKEY key, 
 		const std::wstring& subkey, 
 		const DWORD access,
@@ -60,63 +62,63 @@ namespace Boring32::Registry
 		);
 	}
 
-	RegKey::RegKey(const RegKey& other)
+	RegistryKey::RegistryKey(const RegistryKey& other)
 	:	m_access(0)
 	{
 		Copy(other);
 	}
 
-	RegKey& RegKey::operator=(const RegKey& other)
+	RegistryKey& RegistryKey::operator=(const RegistryKey& other)
 	{
 		return Copy(other);
 	}
 
-	RegKey& RegKey::Copy(const RegKey& other)
+	RegistryKey& RegistryKey::Copy(const RegistryKey& other)
 	{
 		m_key = other.m_key;
 		m_access = other.m_access;
 		return *this;
 	}
 
-	RegKey& RegKey::operator=(const HKEY other)
+	RegistryKey& RegistryKey::operator=(const HKEY other)
 	{
 		m_key = CreateRegKeyPtr(other);
 		return *this;
 	}
 
-	RegKey::RegKey(RegKey&& other) noexcept
+	RegistryKey::RegistryKey(RegistryKey&& other) noexcept
 	{
 		Move(other);
 	}
 
-	RegKey& RegKey::operator=(RegKey&& other) noexcept
+	RegistryKey& RegistryKey::operator=(RegistryKey&& other) noexcept
 	{
 		return Move(other);
 	}
 	
-	RegKey::operator bool() const noexcept
+	RegistryKey::operator bool() const noexcept
 	{
 		return m_key != nullptr;
 	}
 
-	RegKey& RegKey::Move(RegKey& other) noexcept
+	RegistryKey& RegistryKey::Move(RegistryKey& other) noexcept
 	{
 		m_key = std::move(other.m_key);
 		m_access = other.m_access;
 		return *this;
 	}
 
-	void RegKey::Close() noexcept
+	void RegistryKey::Close() noexcept
 	{
 		m_key = nullptr;
 	}
 
-	HKEY RegKey::GetKey() const noexcept
+	HKEY RegistryKey::GetKey() const noexcept
 	{
 		return m_key.get();
 	}
 
-	std::wstring RegKey::GetString(const std::wstring& valueName)
+	void RegistryKey::GetValue(const std::wstring& valueName, std::wstring& out)
 	{
 		if (m_key == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": m_key is null");
@@ -138,14 +140,14 @@ namespace Boring32::Registry
 				statusCode
 			);
 
-		std::wstring data(sizeInBytes / sizeof(wchar_t), '\0');
+		out.resize(sizeInBytes / sizeof(wchar_t), '\0');
 		statusCode = RegGetValueW(
 			m_key.get(),
 			nullptr,
 			valueName.c_str(),
 			RRF_RT_REG_SZ,
 			nullptr,
-			&data[0],
+			&out[0],
 			&sizeInBytes
 		);
 		if (statusCode != ERROR_SUCCESS)
@@ -154,17 +156,25 @@ namespace Boring32::Registry
 				statusCode
 			);
 
-		data.resize(sizeInBytes / sizeof(wchar_t));
+		out.resize(sizeInBytes / sizeof(wchar_t));
 		// Exclude terminating null
-		if (data.empty() == false)
-			data.pop_back();
-
-		return data;
+		if (out.empty() == false)
+			out.pop_back();
 	}
 
-	void RegKey::WriteValue(
-		const std::wstring& keyValueName,
-		const std::wstring& keyValueValue
+	void RegistryKey::GetValue(const std::wstring& valueName, DWORD& out)
+	{
+		Registry::GetValue(m_key.get(), valueName, RRF_RT_REG_DWORD, out);
+	}
+
+	void RegistryKey::GetValue(const std::wstring& valueName, size_t& out)
+	{
+		Registry::GetValue(m_key.get(), valueName, RRF_RT_REG_QWORD, out);
+	}
+
+	void RegistryKey::WriteValue(
+		const std::wstring& valueName,
+		const std::wstring& value
 	)
 	{
 		if (m_key == nullptr)
@@ -173,17 +183,33 @@ namespace Boring32::Registry
 		// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw
 		const LSTATUS status = RegSetValueExW(
 			m_key.get(),
-			keyValueName.c_str(),
+			valueName.c_str(),
 			0,
 			REG_SZ,
-			(LPBYTE)keyValueValue.c_str(),
-			(DWORD)((keyValueValue.size() + 1) * sizeof(wchar_t))
+			(BYTE*)value.c_str(),
+			(DWORD)((value.size() + 1) * sizeof(wchar_t))
 		);
 		if (status != ERROR_SUCCESS)
 			throw Error::Win32Error(__FUNCSIG__ ": RegSetValueExW() failed", status);
 	}
 
-	void RegKey::InternalOpen(const HKEY superKey, const std::wstring& subkey)
+	void RegistryKey::WriteValue(
+		const std::wstring& valueName,
+		const DWORD value
+	)
+	{
+		Registry::WriteValue(m_key.get(), valueName, REG_DWORD, value);
+	}
+
+	void RegistryKey::WriteValue(
+		const std::wstring& valueName,
+		const size_t value
+	)
+	{
+		Registry::WriteValue(m_key.get(), valueName, REG_QWORD, value);
+	}
+
+	void RegistryKey::InternalOpen(const HKEY superKey, const std::wstring& subkey)
 	{
 		HKEY key = nullptr;
 		const LSTATUS status = RegOpenKeyExW(

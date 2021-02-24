@@ -213,7 +213,8 @@
     <ClInclude Include="include\Error\ComError.hpp" />
     <ClInclude Include="include\Error\NtStatusError.hpp" />
     <ClInclude Include="include\Registry\Registry.hpp" />
-    <ClInclude Include="include\Registry\RegKey.hpp" />
+    <ClInclude Include="include\Registry\RegistryFuncs.hpp" />
+    <ClInclude Include="include\Registry\RegistryKey.hpp" />
     <ClInclude Include="include\Crypto\Crypto.hpp" />
     <ClInclude Include="include\Error\Error.hpp" />
     <ClInclude Include="include\Error\Win32Error.hpp" />
@@ -298,7 +299,7 @@
     <ClCompile Include="src\Raii\Sid.cpp" />
     <ClCompile Include="src\Raii\Win32Handle.cpp" />
     <ClCompile Include="src\Registry\RegistryFuncs.cpp" />
-    <ClCompile Include="src\Registry\RegKey.cpp" />
+    <ClCompile Include="src\Registry\RegistryKey.cpp" />
     <ClCompile Include="src\Security\ImpersonationContext.cpp" />
     <ClCompile Include="src\Security\PrivateNamespace.cpp" />
     <ClCompile Include="src\Strings\Win32Strings.cpp" />

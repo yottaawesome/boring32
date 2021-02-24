@@ -5,7 +5,7 @@
 
 namespace Boring32::WindowsRegistry
 {
-    // This should probably be integrated into RegKey to enable safety checks
+    // This should probably be integrated into RegistryKey to enable safety checks
     // against calling it multiple times causing resource leaks
     void WatchKey(const HKEY key, const Async::Event& eventToSignal)
     {
