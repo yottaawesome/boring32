@@ -71,6 +71,7 @@ namespace Boring32::Crypto
 				const std::filesystem::path& path, 
 				const std::wstring& password
 			);
+			virtual void AddCertificate(const CERT_CONTEXT* cert);
 
 		public:
 			//virtual Certificate GetCertByExactSubjectRdn(const std::string& subjectName);

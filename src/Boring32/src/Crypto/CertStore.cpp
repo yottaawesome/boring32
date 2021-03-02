@@ -434,14 +434,35 @@ namespace Boring32::Crypto
 		InternalImport(info);
 	}
 
+	void CertStore::AddCertificate(const CERT_CONTEXT* cert)
+	{
+		if (cert == nullptr)
+			throw std::invalid_argument(__FUNCSIG__ ": cert is null");
+		if (m_certStore == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": m_certStore is nullptr");
+		const bool succeeded = CertAddCertificateContextToStore(
+			m_certStore,
+			cert, 
+			CERT_STORE_ADD_REPLACE_EXISTING, 
+			nullptr
+		);
+		if (succeeded == false)
+			throw Error::Win32Error(
+				__FUNCSIG__ ": CertAddCertificateContextToStore()", 
+				GetLastError()
+			);
+	}
+
 	void CertStore::InternalImport(const CRYPTUI_WIZ_IMPORT_SRC_INFO& info)
 	{
 		if (m_certStore == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": m_certStore is nullptr");
 
+		const static DWORD CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS = 0x0002;
+
 		// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/nf-cryptuiapi-cryptuiwizimport
 		bool succeeded = CryptUIWizImport(
-			CRYPTUI_WIZ_NO_UI,
+			CRYPTUI_WIZ_NO_UI | CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS | CRYPTUI_WIZ_IMPORT_ALLOW_CERT,
 			nullptr,
 			nullptr,
 			&info,

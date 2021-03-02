@@ -578,12 +578,47 @@ void TestCertFileImport()
 {
 	Boring32::Crypto::CertStore personal(L"", Boring32::Crypto::CertStoreType::InMemory);
 	personal.ImportCertsFromFile(
-		L"C:\\Users\\Royal\\Desktop\\blah.pfx", 
-		L"blahblah"
+		L"blah\\blah.pfx", 
+		L"blah"
 	);
+	Boring32::Crypto::Certificate rootCa =
+		personal.GetCertBySubjectCn(L"blahblahblah");
+	if ((bool)rootCa == false)
+	{
+		std::wcout << L"Failed to find root CA" << std::endl;
+		return;
+	}
+
+	Boring32::Crypto::CertStore root(
+		L"ROOT", 
+		Boring32::Crypto::CertStoreType::CurrentUser
+	);
+	//root.ImportCert(rootCa.GetCert());
+	root.AddCertificate(rootCa.GetCert());
+	std::wcout << L"Finished successfully" << std::endl;
 }
 
-void TestCertGetByThumbrpint()
+void DeleteCert()
+{
+	Boring32::Crypto::CertStore personal(L"", Boring32::Crypto::CertStoreType::InMemory);
+	personal.ImportCertsFromFile(
+		L"blah\\blah.pfx",
+		L"blah"
+	);
+	Boring32::Crypto::Certificate rootCa =
+		personal.GetCertBySubjectCn(L"blahblahblah");
+
+	Boring32::Crypto::CertStore root(
+		L"MY",
+		Boring32::Crypto::CertStoreType::System
+	);
+	root.ImportCert(rootCa.GetCert());
+	rootCa =
+		root.GetCertBySubjectCn(L"blahblahblah");
+	root.DeleteCert(rootCa.GetCert());
+}
+
+void TestCertGetByThumbprint()
 {
 	Boring32::Crypto::CertStore personal(L"MY");
 	auto x = personal.GetCertBySubjectCn(L"client.localhost");
@@ -624,7 +659,7 @@ int main(int argc, char** args)
 {
 	try
 	{
-		TestCertGetByThumbrpint();
+		DeleteCert();
 	}
 	catch (const std::exception& ex)
 	{
