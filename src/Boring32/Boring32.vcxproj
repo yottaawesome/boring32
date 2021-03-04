@@ -203,6 +203,7 @@
     <ClInclude Include="include\Compression\Decompressor.hpp" />
     <ClInclude Include="include\Crypto\AesEncryption.hpp" />
     <ClInclude Include="include\Crypto\Certificate.hpp" />
+    <ClInclude Include="include\Crypto\CertificateChain.hpp" />
     <ClInclude Include="include\Crypto\CertStore.hpp" />
     <ClInclude Include="include\Crypto\ChainingMode.hpp" />
     <ClInclude Include="include\Crypto\CryptoFuncs.hpp" />
@@ -282,6 +283,7 @@
     <ClCompile Include="src\Com\ComThreadScope.cpp" />
     <ClCompile Include="src\Crypto\AesEncryption.cpp" />
     <ClCompile Include="src\Crypto\Certificate.cpp" />
+    <ClCompile Include="src\Crypto\CertificateChain.cpp" />
     <ClCompile Include="src\Crypto\CertStore.cpp" />
     <ClCompile Include="src\Crypto\CryptoFuncs.cpp" />
     <ClCompile Include="src\Crypto\CryptoKey.cpp" />
