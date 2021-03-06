@@ -39,7 +39,7 @@ namespace Boring32::Crypto
 	:	m_chainContext(nullptr)
 	{
 		GenerateFrom(
-			(CERT_CONTEXT*)contextToBuildFrom.GetCert(), 
+			contextToBuildFrom.GetCert(), 
 			nullptr
 		);
 	}
@@ -51,7 +51,7 @@ namespace Boring32::Crypto
 	:	m_chainContext(nullptr)
 	{
 		GenerateFrom(
-			(CERT_CONTEXT*)contextToBuildFrom.GetCert(), 
+			contextToBuildFrom.GetCert(), 
 			store.GetHandle()
 		);
 	}
