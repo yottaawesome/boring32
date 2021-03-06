@@ -31,7 +31,7 @@ namespace Boring32::Crypto
 	)
 	:	m_chainContext(chainContext)
 	{
-		if (makeCopy)
+		if (makeCopy && chainContext)
 			m_chainContext = CertDuplicateCertificateChain(chainContext);
 	}
 
@@ -77,6 +77,9 @@ namespace Boring32::Crypto
 	
 	void CertificateChain::Verify()
 	{
+		if (m_chainContext == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": m_chainContext is null");
+
 		CERT_CHAIN_POLICY_PARA para{
 			.cbSize = sizeof(para),
 			.dwFlags = 0,
@@ -107,7 +110,8 @@ namespace Boring32::Crypto
 			return *this;
 		
 		Close();
-		m_chainContext = CertDuplicateCertificateChain(other.m_chainContext);
+		if (other.m_chainContext)
+			m_chainContext = CertDuplicateCertificateChain(other.m_chainContext);
 
 		return *this;
 	}
@@ -126,6 +130,9 @@ namespace Boring32::Crypto
 		HCERTSTORE store
 	)
 	{
+		if (m_chainContext == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": m_chainContext is null");
+
 		CERT_ENHKEY_USAGE        EnhkeyUsage;
 		CERT_USAGE_MATCH         CertUsage;
 		EnhkeyUsage.cUsageIdentifier = 0;
@@ -141,13 +148,13 @@ namespace Boring32::Crypto
 		// https://docs.microsoft.com/en-us/windows/win32/seccrypto/example-c-program-creating-a-certificate-chain
 		bool succeeded = CertGetCertificateChain(
 			nullptr,
-			(PCCERT_CONTEXT)contextToBuildFrom,
+			contextToBuildFrom,
 			nullptr,
 			store,
 			&certChainParams,
 			CERT_CHAIN_REVOCATION_CHECK_CHAIN_EXCLUDE_ROOT,
 			nullptr,
-			(PCCERT_CHAIN_CONTEXT*)&m_chainContext
+			&m_chainContext
 		);
 		if (succeeded == false)
 			throw Error::Win32Error(
