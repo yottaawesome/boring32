@@ -11,6 +11,12 @@ namespace Boring32::Crypto
 		public:
 			virtual ~CertificateChain();
 			CertificateChain();
+			CertificateChain(const CertificateChain& other);
+			CertificateChain(CertificateChain&& other) noexcept;
+			CertificateChain(
+				PCCERT_CHAIN_CONTEXT m_chainContext, 
+				const bool makeCopy
+			);
 			CertificateChain(
 				const Certificate& contextToBuildFrom
 			);
@@ -20,16 +26,23 @@ namespace Boring32::Crypto
 			);
 
 		public:
-			virtual void Close();
+			virtual CertificateChain& operator=(const CertificateChain& other);
+			virtual CertificateChain& operator=(CertificateChain&& other) noexcept;
+
+		public:
+			virtual void Close() noexcept;
 			virtual void Verify();
+			virtual PCCERT_CHAIN_CONTEXT GetChain() const noexcept;
 
 		protected:
+			virtual CertificateChain& Copy(const CertificateChain& other);
+			virtual CertificateChain& Move(CertificateChain& other) noexcept;
 			virtual void GenerateFrom(
-				CERT_CONTEXT* contextToBuildFrom, 
+				PCCERT_CONTEXT contextToBuildFrom, 
 				HCERTSTORE store
 			);
 
 		protected:
-			CERT_CHAIN_CONTEXT* m_chainContext;
+			PCCERT_CHAIN_CONTEXT m_chainContext;
 	};
 }

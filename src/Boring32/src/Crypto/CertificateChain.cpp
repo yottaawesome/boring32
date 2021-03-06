@@ -11,9 +11,30 @@ namespace Boring32::Crypto
 
 	CertificateChain::CertificateChain()
 	:	m_chainContext(nullptr)
+	{ }
+
+	CertificateChain::CertificateChain(const CertificateChain& other)
+	:	m_chainContext(nullptr)
 	{
+		Copy(other);
+	}
+
+	CertificateChain::CertificateChain(CertificateChain&& other) noexcept
+	:	m_chainContext(nullptr)
+	{
+		Move(other);
 	}
 	
+	CertificateChain::CertificateChain(
+		PCCERT_CHAIN_CONTEXT chainContext,
+		const bool makeCopy
+	)
+	:	m_chainContext(chainContext)
+	{
+		if (makeCopy)
+			m_chainContext = CertDuplicateCertificateChain(chainContext);
+	}
+
 	CertificateChain::CertificateChain(const Certificate& contextToBuildFrom)
 	:	m_chainContext(nullptr)
 	{
@@ -35,7 +56,17 @@ namespace Boring32::Crypto
 		);
 	}
 
-	void CertificateChain::Close()
+	CertificateChain& CertificateChain::operator=(const CertificateChain& other)
+	{
+		return Copy(other);
+	}
+
+	CertificateChain& CertificateChain::operator=(CertificateChain&& other) noexcept
+	{
+		return Move(other);
+	}
+
+	void CertificateChain::Close() noexcept
 	{
 		if (m_chainContext)
 		{
@@ -54,18 +85,44 @@ namespace Boring32::Crypto
 		CERT_CHAIN_POLICY_STATUS status{
 			.cbSize = sizeof(status)
 		};
+		// https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certverifycertificatechainpolicy
 		bool succeeded = CertVerifyCertificateChainPolicy(
 			CERT_CHAIN_POLICY_SSL,
-			(PCCERT_CHAIN_CONTEXT)m_chainContext,
+			m_chainContext,
 			&para,
 			&status
 		);
 		if (succeeded == false)
 			throw Error::Win32Error(__FUNCSIG__ ": CertVerifyCertificateChainPolicy() failed");
 	}
+	
+	PCCERT_CHAIN_CONTEXT CertificateChain::GetChain() const noexcept
+	{
+		return m_chainContext;
+	}
+
+	CertificateChain& CertificateChain::Copy(const CertificateChain& other)
+	{
+		if (&other == this)
+			return *this;
+		
+		Close();
+		m_chainContext = CertDuplicateCertificateChain(other.m_chainContext);
+
+		return *this;
+	}
+
+	CertificateChain& CertificateChain::Move(CertificateChain& other) noexcept
+	{
+		Close();
+		m_chainContext = other.m_chainContext;
+		other.m_chainContext = nullptr;
+
+		return *this;
+	}
 
 	void CertificateChain::GenerateFrom(
-		CERT_CONTEXT* contextToBuildFrom,
+		PCCERT_CONTEXT contextToBuildFrom,
 		HCERTSTORE store
 	)
 	{
@@ -82,7 +139,6 @@ namespace Boring32::Crypto
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certgetcertificatechain
 		// https://docs.microsoft.com/en-us/windows/win32/seccrypto/example-c-program-creating-a-certificate-chain
-
 		bool succeeded = CertGetCertificateChain(
 			nullptr,
 			(PCCERT_CONTEXT)contextToBuildFrom,
