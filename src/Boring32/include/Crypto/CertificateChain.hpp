@@ -33,6 +33,7 @@ namespace Boring32::Crypto
 			virtual void Close() noexcept;
 			virtual void Verify();
 			virtual PCCERT_CHAIN_CONTEXT GetChain() const noexcept;
+			virtual std::vector<Certificate> GetChainAt(const DWORD chainIndex) const;
 
 		protected:
 			virtual CertificateChain& Copy(const CertificateChain& other);

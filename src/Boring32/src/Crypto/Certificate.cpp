@@ -15,15 +15,11 @@ namespace Boring32::Crypto
 	:	m_certContext(nullptr)
 	{ }
 
-	Certificate::Certificate(PCCERT_CONTEXT certContext)
-	:	m_certContext(certContext)
-	{ }
-
-	Certificate::Certificate(PCCERT_CONTEXT certContext, const bool ownOrCopy)
+	Certificate::Certificate(PCCERT_CONTEXT certContext, const bool ownedExclusively)
 	:	m_certContext(nullptr)
 	{
 		if (certContext)
-			m_certContext = ownOrCopy 
+			m_certContext = ownedExclusively
 				? certContext 
 				: CertDuplicateCertificateContext(certContext);
 	}
@@ -205,6 +201,7 @@ namespace Boring32::Crypto
 				GetLastError()
 			);
 		returnValue.resize(sizeInBytes);
+
 		return returnValue;
 	}
 }

@@ -104,6 +104,41 @@ namespace Boring32::Crypto
 		return m_chainContext;
 	}
 
+	std::vector<Certificate> CertificateChain::GetChainAt(const DWORD chainIndex) const
+	{
+		if (m_chainContext == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": m_chainContext is null");
+		if (chainIndex >= m_chainContext->cChain)
+			throw std::invalid_argument(
+				__FUNCSIG__ ": expected index to be less than "
+				+ std::to_string(m_chainContext->cChain)
+				+ ", but got an index of "
+				+ std::to_string(chainIndex)
+			);
+
+		std::vector<Certificate> certsInChain;
+		CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
+		// This probably should never happen, but guard just in case
+		if (simpleChain == nullptr)
+			throw std::runtime_error(
+				__FUNCSIG__ ": the simpleChain at "
+				+ std::to_string(chainIndex)
+				+ " was unexpectedly null"
+			);
+
+		for (
+			DWORD certIndexInChain = 0;
+			certIndexInChain < simpleChain->cElement;
+			certIndexInChain++
+		)
+			certsInChain.emplace_back(
+				simpleChain->rgpElement[certIndexInChain]->pCertContext,
+				false
+			);
+
+		return certsInChain;
+	}
+
 	CertificateChain& CertificateChain::Copy(const CertificateChain& other)
 	{
 		if (&other == this)

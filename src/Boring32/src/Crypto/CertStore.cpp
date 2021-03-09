@@ -238,27 +238,27 @@ namespace Boring32::Crypto
 	Certificate CertStore::GetCertBySubjectCn(const std::wstring& subjectCn)
 	{
 		PCCERT_CONTEXT currentCert = nullptr;
-		Certificate cert;
 		while (currentCert = CertEnumCertificatesInStore(m_certStore, currentCert))
 		{
-			cert.Attach(currentCert);
-			std::wstring name = cert.GetFormattedSubject(CERT_X500_NAME_STR);
-			std::vector<std::wstring> tokens = Strings::TokeniseString(name, L", ");
+			// The cert is automatically freed by the next call to CertEnumCertificatesInStore
+			// but Certificate also does its own cleanup, so signal that it needs to duplicate
+			// the handle
+			const Certificate cert(currentCert, false);
+			const std::wstring name = cert.GetFormattedSubject(CERT_X500_NAME_STR);
+			const std::vector<std::wstring> tokens = Strings::TokeniseString(name, L", ");
 			for (const std::wstring& token : tokens)
 				if (token.starts_with(L"CN="))
 					if (subjectCn == Strings::Replace(token, L"CN=", L""))
 						return cert;
-
-			// The cert is automatically freed by the next call to CertEnumCertificatesInStore
-			// We only use Certificate to provide us with exception-based clean up and to use
-			// GetFormattedSubjectName()
-			cert.Detach();
 		}
 		const DWORD lastError = GetLastError();
 		if (lastError != CRYPT_E_NOT_FOUND && lastError != ERROR_NO_MORE_FILES)
-			throw Error::Win32Error(__FUNCSIG__ ": CertEnumCertificatesInStore() failed", lastError);
+			throw Error::Win32Error(
+				__FUNCSIG__ ": CertEnumCertificatesInStore() failed", 
+				lastError
+			);
 
-		return Certificate();
+		return {};
 	}
 
 	Certificate CertStore::GetCertByExactSubject(const std::vector<std::byte>& subjectName)
@@ -267,7 +267,7 @@ namespace Boring32::Crypto
 			.cbData = (DWORD)subjectName.size(),
 			.pbData = (BYTE*)&subjectName[0]
 		};
-		return GetCertByArg(CERT_FIND_SUBJECT_NAME, &blob);
+		return { GetCertByArg(CERT_FIND_SUBJECT_NAME, &blob), true };
 	}
 
 	/*
@@ -332,7 +332,7 @@ namespace Boring32::Crypto
 			.cbData = (DWORD)encodedBytes.size(),
 			.pbData = (BYTE*)&encodedBytes[0]
 		};
-		return GetCertByArg(CERT_FIND_SUBJECT_NAME, &blob);
+		return { GetCertByArg(CERT_FIND_SUBJECT_NAME, &blob), true };
 	}
 
 	Certificate CertStore::GetCertByExactIssuer(const std::wstring& subjectName)
@@ -342,17 +342,17 @@ namespace Boring32::Crypto
 			.cbData = (DWORD)encodedBytes.size(),
 			.pbData = (BYTE*)&encodedBytes[0]
 		};
-		return GetCertByArg(CERT_FIND_ISSUER_NAME, &blob);
+		return { GetCertByArg(CERT_FIND_ISSUER_NAME, &blob), true };
 	}
 
 	Certificate CertStore::GetCertBySubstringSubject(const std::wstring& subjectName)
 	{
-		return GetCertByArg(CERT_FIND_SUBJECT_STR, subjectName.c_str());
+		return { GetCertByArg(CERT_FIND_SUBJECT_STR, subjectName.c_str()), true };
 	}
 
 	Certificate CertStore::GetCertBySubstringIssuerName(const std::wstring& issuerName)
 	{
-		return GetCertByArg(CERT_FIND_ISSUER_STR, issuerName.c_str());
+		return { GetCertByArg(CERT_FIND_ISSUER_STR, issuerName.c_str()), true };
 	}
 
 	Certificate CertStore::GetCertByByBase64Signature(const std::wstring& base64Signature)
@@ -362,7 +362,7 @@ namespace Boring32::Crypto
 			.cbData = (DWORD)bytes.size(),
 			.pbData = (BYTE*)&bytes[0]
 		};
-		return GetCertByArg(CERT_FIND_SIGNATURE_HASH, &blob);
+		return { GetCertByArg(CERT_FIND_SIGNATURE_HASH, &blob), true };
 	}
 
 	CERT_CONTEXT* CertStore::GetCertByArg(const DWORD searchFlag, const void* arg)

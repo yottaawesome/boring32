@@ -10,8 +10,7 @@ namespace Boring32::Crypto
 		public:
 			virtual ~Certificate();
 			Certificate();
-			Certificate(PCCERT_CONTEXT m_certContext);
-			Certificate(PCCERT_CONTEXT m_certContext, const bool ownOrCopy);
+			Certificate(PCCERT_CONTEXT m_certContext, const bool ownedExclusively);
 			Certificate(const Certificate& other);
 			Certificate(Certificate&& other) noexcept;
 
@@ -37,9 +36,11 @@ namespace Boring32::Crypto
 			//virtual std::wstring _GetSubjectName() const;
 
 		protected:
-			virtual std::vector<std::byte> InternalCertGetProperty(const DWORD property) const;
 			virtual Certificate& Copy(const Certificate& other);
 			virtual Certificate& Move(Certificate& other) noexcept;
+			virtual std::vector<std::byte> InternalCertGetProperty(
+				const DWORD property
+			) const;
 
 		protected:
 			PCCERT_CONTEXT m_certContext;
