@@ -27,12 +27,13 @@ namespace Boring32::Crypto
 	
 	CertificateChain::CertificateChain(
 		PCCERT_CHAIN_CONTEXT chainContext,
-		const bool makeCopy
+		const bool takeExclusiveOwnership
 	)
-	:	m_chainContext(chainContext)
+	:	m_chainContext(nullptr)
 	{
-		if (makeCopy && chainContext)
-			m_chainContext = CertDuplicateCertificateChain(chainContext);
+		m_chainContext = takeExclusiveOwnership
+			? chainContext
+			: CertDuplicateCertificateChain(chainContext);
 	}
 
 	CertificateChain::CertificateChain(const Certificate& contextToBuildFrom)
@@ -77,6 +78,7 @@ namespace Boring32::Crypto
 	
 	void CertificateChain::Verify()
 	{
+		// TODO: need to verify this actually works
 		if (m_chainContext == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": m_chainContext is null");
 
@@ -89,7 +91,7 @@ namespace Boring32::Crypto
 			.cbSize = sizeof(status)
 		};
 		// https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certverifycertificatechainpolicy
-		bool succeeded = CertVerifyCertificateChainPolicy(
+		const bool succeeded = CertVerifyCertificateChainPolicy(
 			CERT_CHAIN_POLICY_SSL,
 			m_chainContext,
 			&para,
@@ -99,12 +101,12 @@ namespace Boring32::Crypto
 			throw Error::Win32Error(__FUNCSIG__ ": CertVerifyCertificateChainPolicy() failed");
 	}
 	
-	PCCERT_CHAIN_CONTEXT CertificateChain::GetChain() const noexcept
+	PCCERT_CHAIN_CONTEXT CertificateChain::GetChainContext() const noexcept
 	{
 		return m_chainContext;
 	}
 
-	std::vector<Certificate> CertificateChain::GetChainAt(const DWORD chainIndex) const
+	std::vector<Certificate> CertificateChain::GetCertChainAt(const DWORD chainIndex) const
 	{
 		if (m_chainContext == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": m_chainContext is null");
