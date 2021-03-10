@@ -106,7 +106,9 @@ namespace Boring32::Crypto
 		return m_chainContext;
 	}
 
-	std::vector<Certificate> CertificateChain::GetCertChainAt(const DWORD chainIndex) const
+	std::vector<Certificate> CertificateChain::GetCertChainAt(
+		const DWORD chainIndex
+	) const
 	{
 		if (m_chainContext == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": m_chainContext is null");
@@ -141,6 +143,16 @@ namespace Boring32::Crypto
 		return certsInChain;
 	}
 
+	CertStore CertificateChain::ChainToStore(const DWORD chainIndex) const
+	{
+		std::vector<Certificate> certificatesInChain = GetCertChainAt(chainIndex);
+		CertStore temporaryStore(L"", CertStoreType::InMemory);
+		for (const Certificate& cert : certificatesInChain)
+			temporaryStore.ImportCert(cert.GetCert());
+		
+		return temporaryStore;
+	}
+
 	CertificateChain& CertificateChain::Copy(const CertificateChain& other)
 	{
 		if (&other == this)
@@ -167,7 +179,7 @@ namespace Boring32::Crypto
 		HCERTSTORE store
 	)
 	{
-		if (m_chainContext == nullptr)
+		if (contextToBuildFrom == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": m_chainContext is null");
 
 		CERT_ENHKEY_USAGE        EnhkeyUsage;

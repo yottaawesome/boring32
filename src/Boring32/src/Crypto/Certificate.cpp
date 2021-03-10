@@ -151,13 +151,16 @@ namespace Boring32::Crypto
 	std::wstring Certificate::GetSignatureHashCngAlgorithm() const
 	{
 		std::vector<std::byte> bytes = InternalCertGetProperty(CERT_SIGN_HASH_CNG_ALG_PROP_ID);
-		std::wstring result((wchar_t*)&bytes[0], bytes.size() / sizeof(wchar_t));
+		std::wstring result(
+			(wchar_t*)&bytes[0], 
+			bytes.size() / sizeof(wchar_t)
+		);
 		if (result.size())
 			result.pop_back(); // remove added terminal null
 		return result;
 	}
 
-	void Certificate::Attach(PCCERT_CONTEXT const attachTo)
+	void Certificate::Attach(PCCERT_CONTEXT attachTo)
 	{
 		Close();
 		m_certContext = attachTo;

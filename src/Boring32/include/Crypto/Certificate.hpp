@@ -10,9 +10,9 @@ namespace Boring32::Crypto
 		public:
 			virtual ~Certificate();
 			Certificate();
-			Certificate(PCCERT_CONTEXT m_certContext, const bool ownedExclusively);
 			Certificate(const Certificate& other);
 			Certificate(Certificate&& other) noexcept;
+			Certificate(PCCERT_CONTEXT m_certContext, const bool ownedExclusively);
 
 		public:
 			virtual Certificate& operator=(const Certificate& other);
@@ -29,7 +29,7 @@ namespace Boring32::Crypto
 			virtual std::vector<std::byte> GetSubject() const;
 			virtual std::wstring GetSignature() const;
 			virtual std::wstring GetSignatureHashCngAlgorithm() const;
-			virtual void Attach(PCCERT_CONTEXT const attachTo);
+			virtual void Attach(PCCERT_CONTEXT attachTo);
 			virtual PCCERT_CONTEXT Detach() noexcept;
 
 		public:

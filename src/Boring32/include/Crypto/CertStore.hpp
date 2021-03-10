@@ -5,6 +5,7 @@
 #include <Windows.h>
 #include <wincrypt.h>
 #include <cryptuiapi.h>
+#include <winnt.h>
 #include "Certificate.hpp"
 
 namespace Boring32::Crypto
@@ -15,6 +16,7 @@ namespace Boring32::Crypto
 		CheckNonFreedResources = CERT_CLOSE_STORE_CHECK_FLAG,
 		ForceFreeMemory = CERT_CLOSE_STORE_FORCE_FLAG
 	};
+	DEFINE_ENUM_FLAG_OPERATORS(CertStoreCloseOptions);
 
 	enum class CertStoreType
 	{
@@ -28,9 +30,18 @@ namespace Boring32::Crypto
 		public:
 			virtual ~CertStore();
 			CertStore();
+			CertStore(const CertStore& other);
+			CertStore(CertStore&& other) noexcept;
 			CertStore(std::wstring storeName);
-			CertStore(const HCERTSTORE certStore, const CertStoreType storeType);
-			CertStore(std::wstring storeName, const CertStoreType storeType);
+			CertStore(
+				std::wstring storeName, 
+				const CertStoreType storeType
+			);
+			CertStore(
+				const HCERTSTORE certStore, 
+				const CertStoreType storeType,
+				const bool ownedExclusively
+			);
 			CertStore(
 				const HCERTSTORE certStore, 
 				const CertStoreType storeType, 
@@ -41,9 +52,6 @@ namespace Boring32::Crypto
 				const CertStoreType storeType,
 				const CertStoreCloseOptions closeOptions
 			);
-
-			CertStore(const CertStore& other);
-			CertStore(CertStore&& other) noexcept;
 
 		public:
 			virtual CertStore& operator=(const CertStore& other);
@@ -77,9 +85,9 @@ namespace Boring32::Crypto
 			//virtual Certificate GetCertByExactSubjectRdn(const std::string& subjectName);
 
 		protected:
-			virtual void InternalOpen();
 			virtual CertStore& Copy(const CertStore& other);
 			virtual CertStore& Move(CertStore& other) noexcept;
+			virtual void InternalOpen();
 			virtual CERT_CONTEXT* GetCertByArg(
 				const DWORD searchFlag, 
 				const void* arg

@@ -21,11 +21,22 @@ namespace Boring32::Crypto
 		m_storeType(CertStoreType::CurrentUser)
 	{ }
 
-	CertStore::CertStore(const HCERTSTORE certStore, const CertStoreType storeType)
+	CertStore::CertStore(
+		const HCERTSTORE certStore, 
+		const CertStoreType storeType,
+		const bool ownedExclusively
+	)
 	:	m_certStore(certStore),
 		m_closeOptions(CertStoreCloseOptions::Default),
 		m_storeType(storeType)
-	{ }
+	{
+		if (certStore)
+		{
+			m_certStore = ownedExclusively
+				? certStore
+				: CertDuplicateStore(certStore);
+		}
+	}
 
 	CertStore::CertStore(
 		const HCERTSTORE certStore,

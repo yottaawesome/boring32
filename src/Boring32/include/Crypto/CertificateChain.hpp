@@ -34,6 +34,7 @@ namespace Boring32::Crypto
 			virtual void Verify();
 			virtual PCCERT_CHAIN_CONTEXT GetChainContext() const noexcept;
 			virtual std::vector<Certificate> GetCertChainAt(const DWORD chainIndex) const;
+			virtual CertStore ChainToStore(const DWORD chainIndex) const;
 
 		protected:
 			virtual CertificateChain& Copy(const CertificateChain& other);
