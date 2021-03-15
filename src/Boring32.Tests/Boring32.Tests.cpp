@@ -78,8 +78,8 @@ void TestMutex()
 void TestConversions()
 {
 	std::wstring wstrTest = L"Test1";
-	std::string strTest = Boring32::Strings::ConvertWStringToString(wstrTest);
-	std::wstring wstrTest2 = Boring32::Strings::ConvertStringToWString(strTest);
+	std::string strTest = Boring32::Strings::ToString(wstrTest);
+	std::wstring wstrTest2 = Boring32::Strings::ToWideString(strTest);
 
 	if (wstrTest != wstrTest2)
 		throw std::runtime_error("Strings do not match");

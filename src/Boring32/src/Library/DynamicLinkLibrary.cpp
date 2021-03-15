@@ -97,7 +97,7 @@ namespace Boring32::Library
 	{
 		if (m_libraryHandle == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": library handle is null");
-		void* ptr = GetProcAddress(m_libraryHandle, Strings::ConvertWStringToString(m_path.c_str()).c_str());
+		void* ptr = GetProcAddress(m_libraryHandle, Strings::ToString(m_path.c_str()).c_str());
 		if (ptr == nullptr)
 		{
 			std::wstringstream wss;
@@ -105,7 +105,7 @@ namespace Boring32::Library
 				<< __FUNCSIG__ ": failed to resolve symbol " 
 				<< symbolName.c_str()
 				<< std::endl;
-			throw std::runtime_error(Strings::ConvertWStringToString(wss.str()));
+			throw std::runtime_error(Strings::ToString(wss.str()));
 		}
 		return ptr;
 	}

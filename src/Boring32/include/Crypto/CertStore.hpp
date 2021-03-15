@@ -32,6 +32,8 @@ namespace Boring32::Crypto
 			CertStore();
 			CertStore(const CertStore& other);
 			CertStore(CertStore&& other) noexcept;
+		
+		public:
 			CertStore(std::wstring storeName);
 			CertStore(
 				std::wstring storeName, 
@@ -45,6 +47,7 @@ namespace Boring32::Crypto
 			CertStore(
 				const HCERTSTORE certStore, 
 				const CertStoreType storeType, 
+				const bool ownedExclusively,
 				const CertStoreCloseOptions closeOptions
 			);
 			CertStore(
@@ -64,14 +67,30 @@ namespace Boring32::Crypto
 			virtual HCERTSTORE GetHandle() const noexcept;
 			virtual const std::wstring& GetName() const noexcept;
 			virtual std::vector<Certificate> GetAll();
-			virtual Certificate GetCertByFormattedSubject(const std::wstring& subjectRdn);
-			virtual Certificate GetCertBySubjectCn(const std::wstring& subjectCn);
-			virtual Certificate GetCertBySubstringSubject(const std::wstring& subjectName);
-			virtual Certificate GetCertByExactSubject(const std::wstring& subjectName);
-			virtual Certificate GetCertByExactSubject(const std::vector<std::byte>& subjectName);
-			virtual Certificate GetCertByExactIssuer(const std::wstring& subjectName);
-			virtual Certificate GetCertBySubstringIssuerName(const std::wstring& issuerName);
-			virtual Certificate GetCertByByBase64Signature(const std::wstring& thumbprint);
+			virtual Certificate GetCertByFormattedSubject(
+				const std::wstring& subjectRdn
+			) const;
+			virtual Certificate GetCertBySubjectCn(
+				const std::wstring& subjectCn
+			) const;
+			virtual Certificate GetCertBySubstringSubject(
+				const std::wstring& subjectName
+			) const;
+			virtual Certificate GetCertByExactSubject(
+				const std::wstring& subjectName
+			) const;
+			virtual Certificate GetCertByExactSubject(
+				const std::vector<std::byte>& subjectName
+			) const;
+			virtual Certificate GetCertByExactIssuer(
+				const std::wstring& subjectName
+			) const;
+			virtual Certificate GetCertBySubstringIssuerName(
+				const std::wstring& issuerName
+			) const;
+			virtual Certificate GetCertByByBase64Signature(
+				const std::wstring& thumbprint
+			) const;
 			virtual CertStoreType GetStoreType() const noexcept;
 			virtual void DeleteCert(const CERT_CONTEXT* cert);
 			virtual void ImportCert(const CERT_CONTEXT* cert);
@@ -88,10 +107,10 @@ namespace Boring32::Crypto
 			virtual CertStore& Copy(const CertStore& other);
 			virtual CertStore& Move(CertStore& other) noexcept;
 			virtual void InternalOpen();
-			virtual CERT_CONTEXT* GetCertByArg(
+			virtual PCCERT_CONTEXT GetCertByArg(
 				const DWORD searchFlag, 
 				const void* arg
-			);
+			) const;
 			virtual void InternalImport(const CRYPTUI_WIZ_IMPORT_SRC_INFO& info);
 
 		protected:

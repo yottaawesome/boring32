@@ -41,12 +41,20 @@ namespace Boring32::Crypto
 	CertStore::CertStore(
 		const HCERTSTORE certStore,
 		const CertStoreType storeType,
+		const bool ownedExclusively,
 		const CertStoreCloseOptions closeOptions
 	)
 	:	m_certStore(certStore),
 		m_closeOptions(closeOptions),
 		m_storeType(storeType)
-	{ }
+	{
+		if (certStore)
+		{
+			m_certStore = ownedExclusively
+				? certStore
+				: CertDuplicateStore(certStore);
+		}
+	}
 
 	CertStore::CertStore(std::wstring storeName)
 	:	m_certStore(nullptr),
@@ -210,6 +218,9 @@ namespace Boring32::Crypto
 
 	std::vector<Certificate> CertStore::GetAll()
 	{
+		if (m_certStore == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": m_certStore is null");
+
 		std::vector<Certificate> results;
 		PCCERT_CONTEXT currentCert = nullptr;
 		// The cert is automatically freed by the next call to CertEnumCertificatesInStore
@@ -223,7 +234,7 @@ namespace Boring32::Crypto
 		return results;
 	}
 
-	Certificate CertStore::GetCertByFormattedSubject(const std::wstring& subjectRdn)
+	Certificate CertStore::GetCertByFormattedSubject(const std::wstring& subjectRdn) const
 	{
 		PCCERT_CONTEXT currentCert = nullptr;
 		Certificate cert;
@@ -246,7 +257,7 @@ namespace Boring32::Crypto
 		return Certificate();
 	}
 
-	Certificate CertStore::GetCertBySubjectCn(const std::wstring& subjectCn)
+	Certificate CertStore::GetCertBySubjectCn(const std::wstring& subjectCn) const
 	{
 		PCCERT_CONTEXT currentCert = nullptr;
 		while (currentCert = CertEnumCertificatesInStore(m_certStore, currentCert))
@@ -272,7 +283,7 @@ namespace Boring32::Crypto
 		return {};
 	}
 
-	Certificate CertStore::GetCertByExactSubject(const std::vector<std::byte>& subjectName)
+	Certificate CertStore::GetCertByExactSubject(const std::vector<std::byte>& subjectName) const
 	{
 		CERT_NAME_BLOB blob{
 			.cbData = (DWORD)subjectName.size(),
@@ -336,7 +347,7 @@ namespace Boring32::Crypto
 	}
 	*/
 	
-	Certificate CertStore::GetCertByExactSubject(const std::wstring& subjectName)
+	Certificate CertStore::GetCertByExactSubject(const std::wstring& subjectName) const
 	{
 		std::vector<std::byte> encodedBytes = EncodeAsnString(subjectName);
 		const CERT_NAME_BLOB blob{
@@ -346,7 +357,7 @@ namespace Boring32::Crypto
 		return { GetCertByArg(CERT_FIND_SUBJECT_NAME, &blob), true };
 	}
 
-	Certificate CertStore::GetCertByExactIssuer(const std::wstring& subjectName)
+	Certificate CertStore::GetCertByExactIssuer(const std::wstring& subjectName) const
 	{
 		std::vector<std::byte> encodedBytes = EncodeAsnString(subjectName);
 		const CERT_NAME_BLOB blob{
@@ -356,29 +367,29 @@ namespace Boring32::Crypto
 		return { GetCertByArg(CERT_FIND_ISSUER_NAME, &blob), true };
 	}
 
-	Certificate CertStore::GetCertBySubstringSubject(const std::wstring& subjectName)
+	Certificate CertStore::GetCertBySubstringSubject(const std::wstring& subjectName) const
 	{
 		return { GetCertByArg(CERT_FIND_SUBJECT_STR, subjectName.c_str()), true };
 	}
 
-	Certificate CertStore::GetCertBySubstringIssuerName(const std::wstring& issuerName)
+	Certificate CertStore::GetCertBySubstringIssuerName(const std::wstring& issuerName) const
 	{
 		return { GetCertByArg(CERT_FIND_ISSUER_STR, issuerName.c_str()), true };
 	}
 
-	Certificate CertStore::GetCertByByBase64Signature(const std::wstring& base64Signature)
+	Certificate CertStore::GetCertByByBase64Signature(const std::wstring& base64Signature) const
 	{
-		std::vector<std::byte> bytes = ToBinary(base64Signature);
-		CRYPT_HASH_BLOB blob{
+		const std::vector<std::byte> bytes = ToBinary(base64Signature);
+		const CRYPT_HASH_BLOB blob{
 			.cbData = (DWORD)bytes.size(),
 			.pbData = (BYTE*)&bytes[0]
 		};
 		return { GetCertByArg(CERT_FIND_SIGNATURE_HASH, &blob), true };
 	}
 
-	CERT_CONTEXT* CertStore::GetCertByArg(const DWORD searchFlag, const void* arg)
+	PCCERT_CONTEXT CertStore::GetCertByArg(const DWORD searchFlag, const void* arg) const
 	{
-		CERT_CONTEXT* const certContext = (CERT_CONTEXT*)CertFindCertificateInStore(
+		PCCERT_CONTEXT certContext = (CERT_CONTEXT*)CertFindCertificateInStore(
 			m_certStore,
 			X509_ASN_ENCODING | PKCS_7_ASN_ENCODING | CERT_FIND_HAS_PRIVATE_KEY,
 			0,

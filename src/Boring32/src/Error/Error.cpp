@@ -272,7 +272,7 @@ namespace Boring32::Error
             ss
                 << msg
                 << std::endl
-                << Strings::ConvertWStringToString(ce.ErrorMessage())
+                << Strings::ToString(ce.ErrorMessage())
                 << " (HRESULT: "
                 << std::to_string(hr)
                 << ")";

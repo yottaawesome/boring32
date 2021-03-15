@@ -13,6 +13,8 @@ namespace Boring32::Crypto
 			CertificateChain();
 			CertificateChain(const CertificateChain& other);
 			CertificateChain(CertificateChain&& other) noexcept;
+
+		public:
 			CertificateChain(
 				PCCERT_CHAIN_CONTEXT m_chainContext, 
 				const bool takeExclusiveOwnership
@@ -34,6 +36,16 @@ namespace Boring32::Crypto
 			virtual void Verify();
 			virtual PCCERT_CHAIN_CONTEXT GetChainContext() const noexcept;
 			virtual std::vector<Certificate> GetCertChainAt(const DWORD chainIndex) const;
+			virtual Certificate GetCertAt(
+				const DWORD chainIndex, 
+				const DWORD certIndex
+			) const;
+			virtual Certificate GetFirstCertAt(
+				const DWORD chainIndex
+			) const;
+			virtual Certificate GetLastCertAt(
+				const DWORD chainIndex
+			) const;
 			virtual CertStore ChainToStore(const DWORD chainIndex) const;
 
 		protected:

@@ -6,7 +6,7 @@
 
 namespace Boring32::Strings
 {
-	std::string ConvertWStringToString(const std::wstring& wstr)
+	std::string ToString(const std::wstring& wstr)
 	{
 		if (wstr.empty())
 			return "";
@@ -29,7 +29,7 @@ namespace Boring32::Strings
 		return strTo;
 	}
 
-	std::wstring ConvertStringToWString(const std::string& str)
+	std::wstring ToWideString(const std::string& str)
 	{
 		if (str.empty())
 			return L"";
@@ -205,7 +205,7 @@ namespace Boring32::Strings
 	}
 
 	// Adapted from https://www.tutorialspoint.com/case-insensitive-string-comparison-in-cplusplus
-	bool DoStringsMatchCaseInsensitive(std::wstring str1, std::wstring str2)
+	bool DoCaseInsensitiveMatch(std::wstring str1, std::wstring str2)
 	{
 		//convert s1 and s2 into lower case strings
 		std::transform(str1.begin(), str1.end(), str1.begin(), ::tolower);
@@ -213,7 +213,7 @@ namespace Boring32::Strings
 		return str1 == str2;
 	}
 
-	bool DoStringsMatchCaseInsensitive(std::string str1, std::string str2)
+	bool DoCaseInsensitiveMatch(std::string str1, std::string str2)
 	{
 		//convert s1 and s2 into lower case strings
 		std::transform(str1.begin(), str1.end(), str1.begin(), ::tolower);

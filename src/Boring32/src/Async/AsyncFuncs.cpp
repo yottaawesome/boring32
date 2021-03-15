@@ -107,7 +107,7 @@ namespace Boring32::Async
 
 		do
 		{
-			if (Strings::DoStringsMatchCaseInsensitive(procEntry.szExeFile, processName))
+			if (Strings::DoCaseInsensitiveMatch(procEntry.szExeFile, processName))
 			{
 				if (sessionIdToMatch < 0)
 				{

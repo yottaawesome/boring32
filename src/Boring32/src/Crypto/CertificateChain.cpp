@@ -143,6 +143,79 @@ namespace Boring32::Crypto
 		return certsInChain;
 	}
 
+	Certificate CertificateChain::GetCertAt(
+		const DWORD chainIndex,
+		const DWORD certIndex
+	) const
+	{
+		if (m_chainContext == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": m_chainContext is null");
+		if (chainIndex >= m_chainContext->cChain)
+			throw std::invalid_argument(
+				__FUNCSIG__ ": expected chainIndex to be less than "
+				+ std::to_string(m_chainContext->cChain)
+				+ ", but got an index of "
+				+ std::to_string(chainIndex)
+			);
+
+		CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
+		if (simpleChain == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": simpleChain is null");
+		if (certIndex >= simpleChain->cElement)
+			throw std::invalid_argument(
+				__FUNCSIG__ ": expected certIndex to be less than "
+				+ std::to_string(simpleChain->cElement)
+				+ ", but got an index of "
+				+ std::to_string(certIndex)
+			);
+		
+		return { simpleChain->rgpElement[certIndex]->pCertContext, false };
+	}
+
+	Certificate CertificateChain::GetFirstCertAt(
+		const DWORD chainIndex
+	) const
+	{
+		if (m_chainContext == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": m_chainContext is null");
+		if (chainIndex >= m_chainContext->cChain)
+			throw std::invalid_argument(
+				__FUNCSIG__ ": expected chainIndex to be less than "
+				+ std::to_string(m_chainContext->cChain)
+				+ ", but got an index of "
+				+ std::to_string(chainIndex)
+			);
+
+		CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
+		if (simpleChain == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": simpleChain is null");
+		if (simpleChain->cElement == 0)
+			return {};
+		return { simpleChain->rgpElement[0]->pCertContext, false };
+	}
+
+	Certificate CertificateChain::GetLastCertAt(
+		const DWORD chainIndex
+	) const
+	{
+		if (m_chainContext == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": m_chainContext is null");
+		if (chainIndex >= m_chainContext->cChain)
+			throw std::invalid_argument(
+				__FUNCSIG__ ": expected chainIndex to be less than "
+				+ std::to_string(m_chainContext->cChain)
+				+ ", but got an index of "
+				+ std::to_string(chainIndex)
+			);
+
+		CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
+		if (simpleChain == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": simpleChain is null");
+		if (simpleChain->cElement == 0)
+			return {};
+		return { simpleChain->rgpElement[simpleChain->cElement - 1]->pCertContext, false };
+	}
+
 	CertStore CertificateChain::ChainToStore(const DWORD chainIndex) const
 	{
 		std::vector<Certificate> certificatesInChain = GetCertChainAt(chainIndex);
