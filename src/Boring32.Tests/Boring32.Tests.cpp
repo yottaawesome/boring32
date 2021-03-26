@@ -366,7 +366,6 @@ void CertStoreOpen()
 	if (clientCert == nullptr)
 	{
 		std::wcerr << L"Failed" << std::endl;
-		return;
 	}
 }
 
