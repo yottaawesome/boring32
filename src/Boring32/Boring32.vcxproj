@@ -243,6 +243,8 @@
     <ClInclude Include="include\WinHttp\ProxyInfo.hpp" />
     <ClInclude Include="include\WinHttp\ProxyType.hpp" />
     <ClInclude Include="include\WinHttp\Session.hpp" />
+    <ClInclude Include="include\WinHttp\WebSockets\AsyncWebSocket.hpp" />
+    <ClInclude Include="include\WinHttp\WebSockets\AsyncWebSocketSettings.hpp" />
     <ClInclude Include="include\WinHttp\WebSockets\WebSocketSettings.hpp" />
     <ClInclude Include="include\WinHttp\WinHttp.hpp" />
     <ClInclude Include="include\WinHttp\WinHttpHandle.hpp" />
@@ -318,6 +320,7 @@
     <ClCompile Include="src\TaskScheduler\TaskService.cpp" />
     <ClCompile Include="src\Time\Time.cpp" />
     <ClCompile Include="src\Util\Util.cpp" />
+    <ClCompile Include="src\WinHttp\AsyncWebSocket.cpp" />
     <ClCompile Include="src\WinHttp\ProxyInfo.cpp" />
     <ClCompile Include="src\WinHttp\Session.cpp" />
     <ClCompile Include="src\WinHttp\WinHttpHandle.cpp" />

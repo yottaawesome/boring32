@@ -311,7 +311,17 @@ namespace Boring32::WinHttp::WebSockets
 
 	void WebSocket::Close()
 	{
-		WinHttpWebSocketClose(m_winHttpWebSocket.Get(), WINHTTP_WEB_SOCKET_SUCCESS_CLOSE_STATUS, nullptr, 0);
 		m_status = WebSocketStatus::Closed;
+		if (m_winHttpWebSocket != nullptr)
+		{
+			WinHttpWebSocketClose(
+				m_winHttpWebSocket.Get(),
+				WINHTTP_WEB_SOCKET_SUCCESS_CLOSE_STATUS,
+				nullptr,
+				0
+			);
+		}
+		m_winHttpWebSocket.Close();
+		m_winHttpConnection.Close();
 	}
 }

@@ -52,7 +52,7 @@ int MainOverlapped(int argc, char** args)
     writeOp.WaitForCompletion(INFINITE);
     p.Write(L"Indeed!", writeOp);
     writeOp.WaitForCompletion(INFINITE);
-    //p.Close();;
+    //p.CloseSocket();;
 
     return 0;
 }

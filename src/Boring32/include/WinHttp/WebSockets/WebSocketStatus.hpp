@@ -6,6 +6,7 @@ namespace Boring32::WinHttp::WebSockets
 	{
 		NotInitialised,
 		Connected,
+		Closing,
 		Closed,
 		Error
 	};

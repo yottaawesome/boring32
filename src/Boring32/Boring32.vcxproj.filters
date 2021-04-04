@@ -270,6 +270,12 @@
     <ClInclude Include="include\Crypto\CertificateChain.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\WinHttp\WebSockets\AsyncWebSocket.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\WinHttp\WebSockets\AsyncWebSocketSettings.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\pch.cpp">
@@ -462,6 +468,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Crypto\CertificateChain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WinHttp\AsyncWebSocket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

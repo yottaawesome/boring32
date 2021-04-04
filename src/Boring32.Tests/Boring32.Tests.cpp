@@ -2,6 +2,9 @@
 #include <iostream>
 #include <sstream>
 #include <dbghelp.h>
+#include <stdio.h>
+#include <windows.h>
+#include <tchar.h>
 
 #include "Boring32.Tests.h"
 #include "../Boring32/include/Boring32.hpp"
@@ -407,7 +410,7 @@ int OldJunk()
 		auto a = server.Connect();
 		Boring32::Async::OverlappedNamedPipeClient client(L"A");
 		client.Connect(0);
-		client.Close();
+		client.CloseSocket();
 		auto b = server.Read(0);
 		b.WaitForCompletion(INFINITE);
 		std::wcout << b.IsSuccessful() << std::endl;
@@ -658,11 +661,76 @@ void TestCertGetByThumbprint()
 	}
 }
 
+void ErrorDescription(HRESULT hr)
+{
+	if (FACILITY_WINDOWS == HRESULT_FACILITY(hr))
+		hr = HRESULT_CODE(hr);
+	TCHAR* szErrMsg;
+
+	if (FormatMessage(
+		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+		NULL, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		(LPTSTR)&szErrMsg, 0, NULL) != 0)
+	{
+		_tprintf(TEXT("%s"), szErrMsg);
+		LocalFree(szErrMsg);
+	}
+	else
+		_tprintf(TEXT("[Could not find a description for error # %#x.]\n"), hr);
+}
+
+void TestAsyncWebSocket()
+{
+	//Boring32::WinHttp::WebSockets::WebSocket socket1(
+	//	Boring32::WinHttp::WebSockets::WebSocketSettings{
+	//		.Server = L"echo.websocket.org",
+	//		.Port = 443,
+	//		.IgnoreSslErrors = false,
+	//		.WinHttpSession =
+	//			Boring32::WinHttp::Session(L"testUserAgent")
+	//	// Uncomment to use named proxy
+	//	//Boring32::WinHttp::Session(L"testUserAgent", L"125.164.86.89:3128")
+	//	}
+	//);
+	//socket1.Connect();
+	//std::vector<char> buffer;
+	//socket1.SendString("Hello!");
+	//socket1.Receive(buffer);
+	//std::string response(buffer.begin(), buffer.end());
+	//std::wcout << response.c_str() << std::endl;
+	{
+		Boring32::WinHttp::WebSockets::AsyncWebSocket socket(
+			Boring32::WinHttp::WebSockets::AsyncWebSocketSettings{
+				.UserAgent = L"Test-WinHttp-Client",
+				.Server = L"echo.websocket.org",
+				.Port = 443,
+				.IgnoreSslErrors = false
+				// Uncomment to use named proxy
+				//Boring32::WinHttp::Session(L"testUserAgent", L"125.164.86.89:3128")
+			}
+		);
+
+		socket.Connect();
+		while (socket.GetStatus() != Boring32::WinHttp::WebSockets::WebSocketStatus::Connected)
+			Sleep(1000);
+
+		std::wcout << L"Connected successfully" << std::endl;
+		socket.CloseSocket();
+		Sleep(5000);
+	}
+
+	/*std::vector<char> buffer;
+	socket.SendString("Hello!");
+	socket.Receive(buffer);
+	std::string response(buffer.begin(), buffer.end());
+	std::wcout << response.c_str() << std::endl;*/
+}
+
 int main(int argc, char** args)
 {
 	try
 	{
-		DeleteCert();
+		TestAsyncWebSocket();
 	}
 	catch (const std::exception& ex)
 	{
