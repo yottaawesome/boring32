@@ -7,10 +7,17 @@ namespace Boring32::WinHttp::WebSockets
 {
 	AsyncWebSocket::~AsyncWebSocket()
 	{
-		if (m_status == WebSocketStatus::Connected)
-			CloseSocket();
-		while (m_status == WebSocketStatus::Closing)
-			Sleep(100);
+		try
+		{
+			if (m_status == WebSocketStatus::Connected)
+				CloseSocket();
+			while (m_status == WebSocketStatus::Closing)
+				Sleep(100);
+		}
+		catch (const std::exception& ex)
+		{
+			std::wcerr << __FUNCSIG__ ": " << ex.what() << std::endl;
+		}
 	}
 
 	AsyncWebSocket::AsyncWebSocket(const AsyncWebSocketSettings& settings)
@@ -92,7 +99,10 @@ namespace Boring32::WinHttp::WebSockets
 		);
 		// If the server terminates the connection, 12030 will returned.
 		if (statusCode != ERROR_SUCCESS)
+		{
+			m_status = WebSocketStatus::Error;
 			throw Error::Win32Error("Connection error when receiving websocket data", statusCode);
+		}
 
 		return true;
 	}
@@ -106,8 +116,11 @@ namespace Boring32::WinHttp::WebSockets
 				nullptr,
 				0
 			);
-			//if (success != ERROR_SUCCESS)
-				//throw Error::Win32Error("WinHttpWebSocketClose() failed", success);
+			if (success != ERROR_SUCCESS)
+			{
+				m_status = WebSocketStatus::Error;
+				throw Error::Win32Error("WinHttpWebSocketClose() failed", success);
+			}
 			m_status = WebSocketStatus::Closing;
 		}
 	}

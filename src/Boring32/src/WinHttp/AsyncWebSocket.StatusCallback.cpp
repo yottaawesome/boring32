@@ -250,6 +250,37 @@ namespace Boring32::WinHttp::WebSockets
 			{
 				std::wcout << L"WINHTTP_CALLBACK_STATUS_REQUEST_ERROR" << std::endl;
 				Sleep(50);
+				WINHTTP_ASYNC_RESULT* requestError = (WINHTTP_ASYNC_RESULT*)lpvStatusInformation;
+				
+				Error::Win32Error err("", (DWORD)requestError->dwError);
+				switch (requestError->dwResult)
+				{
+
+					case API_RECEIVE_RESPONSE:
+						std::wcerr << "The error occurred during a call to WinHttpReceiveResponse: " << err.what() << std::endl;
+						break;
+
+					case API_QUERY_DATA_AVAILABLE:
+						std::wcerr << "The error occurred during a call to WinHttpQueryDataAvailable: " << err.what() << std::endl;
+						break;
+
+					case API_READ_DATA:
+						std::wcerr << "The error occurred during a call to WinHttpReadData: " << err.what() << std::endl;
+						break;
+
+					case API_WRITE_DATA:
+						std::wcerr << "The error occurred during a call to WinHttpWriteData: " << err.what() << std::endl;
+						break;
+
+					case API_SEND_REQUEST:
+						std::wcerr << "The error occurred during a call to WinHttpSendRequest: " << err.what() << std::endl;
+						break;
+
+					default:
+						std::wcerr << "Unknown error: " << err.what() << std::endl;
+						break;
+				}
+
 				break;
 			}
 

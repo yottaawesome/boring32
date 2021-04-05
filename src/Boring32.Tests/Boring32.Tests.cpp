@@ -698,32 +698,31 @@ void TestAsyncWebSocket()
 	//socket1.Receive(buffer);
 	//std::string response(buffer.begin(), buffer.end());
 	//std::wcout << response.c_str() << std::endl;
-	{
-		Boring32::WinHttp::WebSockets::AsyncWebSocket socket(
-			Boring32::WinHttp::WebSockets::AsyncWebSocketSettings{
-				.UserAgent = L"Test-WinHttp-Client",
-				.Server = L"echo.websocket.org",
-				.Port = 443,
-				.IgnoreSslErrors = false
-				// Uncomment to use named proxy
-				//Boring32::WinHttp::Session(L"testUserAgent", L"125.164.86.89:3128")
-			}
-		);
 
-		socket.Connect();
-		while (socket.GetStatus() != Boring32::WinHttp::WebSockets::WebSocketStatus::Connected)
-			Sleep(200);
+	Boring32::WinHttp::WebSockets::AsyncWebSocket socket(
+		Boring32::WinHttp::WebSockets::AsyncWebSocketSettings{
+			.UserAgent = L"Test-WinHttp-Client",
+			.Server = L"127.0.0.1",
+			.Port = 51935,
+			.IgnoreSslErrors = true
+			// Uncomment to use named proxy
+			//Boring32::WinHttp::Session(L"testUserAgent", L"125.164.86.89:3128")
+		}
+	);
 
-		std::wcout << L"Connected successfully" << std::endl;
-		socket.SendString("Hello!");
-		//socket.CloseSocket();
-		Sleep(2000);
-		std::vector<char> receiveBuffer;
-		socket.Receive(receiveBuffer);
-		std::wcout << receiveBuffer.size() << std::endl;
-		Sleep(2000);
-		int i = 0;
-	}
+	socket.Connect();
+	while (socket.GetStatus() != Boring32::WinHttp::WebSockets::WebSocketStatus::Connected)
+		Sleep(200);
+
+	std::wcout << L"Connected successfully" << std::endl;
+	socket.SendString("Hello!");
+	//socket.CloseSocket();
+	std::vector<char> receiveBuffer;
+	socket.Receive(receiveBuffer);
+	std::wcout << receiveBuffer.size() << std::endl;
+	//Sleep(10000);
+	int i = 0;
+	Sleep(5000);
 
 	/*std::vector<char> buffer;
 	socket.SendString("Hello!");

@@ -10,12 +10,6 @@ const options = {
 const server = https.createServer(options);
 const wss = new WebSocket.Server({ server });
 
-wss.on('message', 
-	function incoming(message) {
-		console.log(data);
-	}
-);
-
 function stringToUint8Array(str) {
 	let result = [];
 	for (let i = 0; i < str.length; i++) {
@@ -32,12 +26,18 @@ function binArrayToString(array) {
 	return result;
   }
 
+wss.on('message', 
+  function incoming(message) {
+	  console.log(data);
+  }
+);
+
 wss.on('connection', 
 	function connection(ws) {
 		console.log('Connection established');
 
 		ws.on('message', function incoming(message) {
-			ws.send('something');
+			//ws.send('something');
 		});
 	}
 );
