@@ -5,259 +5,6 @@
 
 namespace Boring32::WinHttp::WebSockets
 {
-	void AsyncWebSocket::StatusCallback(
-		HINTERNET hInternet,
-		DWORD_PTR dwContext,
-		DWORD dwInternetStatus,
-		LPVOID lpvStatusInformation,
-		DWORD dwStatusInformationLength
-	)
-	{
-		// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpsetstatuscallback
-		switch (dwInternetStatus)
-		{
-			case WINHTTP_CALLBACK_STATUS_RESOLVING_NAME:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_RESOLVING_NAME" << std::endl;
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_NAME_RESOLVED:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_NAME_RESOLVED" << std::endl;
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_CONNECTING_TO_SERVER:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_CONNECTING_TO_SERVER" << std::endl;
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_CONNECTED_TO_SERVER:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_CONNECTED_TO_SERVER" << std::endl;
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_SENDING_REQUEST:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_SENDING_REQUEST" << std::endl;
-				break;
-			}
-	
-			case WINHTTP_CALLBACK_STATUS_REQUEST_SENT:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_REQUEST_SENT" << std::endl;
-				bool success = WinHttpReceiveResponse(hInternet, 0);
-				if (success == false)
-				{
-					try
-					{
-						throw Error::Win32Error(
-							__FUNCSIG__ ": WinHttpReceiveResponse() failed on initial connection",
-							GetLastError()
-						);
-					}
-					catch (const std::exception& ex)
-					{
-						std::wcout << ex.what() << std::endl;
-					}
-				}
-					
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_RECEIVING_RESPONSE:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_RECEIVING_RESPONSE" << std::endl;
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_RESPONSE_RECEIVED:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_RESPONSE_RECEIVED" << std::endl;
-				
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_CLOSING_CONNECTION:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_CLOSING_CONNECTION" << std::endl;
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_CONNECTION_CLOSED:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_CONNECTION_CLOSED" << std::endl;
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_HANDLE_CREATED:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_HANDLE_CREATED" << std::endl;
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_HANDLE_CLOSING:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_HANDLE_CLOSING" << std::endl;
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_DETECTING_PROXY:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_DETECTING_PROXY" << std::endl;
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_REDIRECT:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_REDIRECT" << std::endl;
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_INTERMEDIATE_RESPONSE:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_INTERMEDIATE_RESPONSE" << std::endl;
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_SECURE_FAILURE:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_SECURE_FAILURE" << std::endl;
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_SENDREQUEST_COMPLETE:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_SENDREQUEST_COMPLETE" << std::endl;
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_HEADERS_AVAILABLE:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_HEADERS_AVAILABLE" << std::endl;
-				try
-				{
-					DWORD statusCode = 0;
-					DWORD statusCodeSize = sizeof(statusCode);
-					// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpqueryheaders
-					bool success = WinHttpQueryHeaders(
-						hInternet,
-						WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
-						WINHTTP_HEADER_NAME_BY_INDEX,
-						&statusCode,
-						&statusCodeSize,
-						WINHTTP_NO_HEADER_INDEX
-					);
-					if (success == false)
-						throw Error::Win32Error(__FUNCSIG__ ": WinHttpQueryHeaders() failed", GetLastError());
-
-					if (statusCode != 101) // switching protocol
-					{
-						throw std::runtime_error(
-							__FUNCSIG__
-							": Received unexpected HTTP response code while upgrading to websocket: "
-							+ std::to_string(statusCode)
-						);
-					}
-
-					AsyncWebSocket* socket = (AsyncWebSocket*)dwContext;
-					socket->m_winHttpWebSocket = WinHttpWebSocketCompleteUpgrade(
-						socket->m_requestHandle.Get(), 
-						0
-					);
-					if (socket->m_winHttpWebSocket == nullptr)
-						throw Error::Win32Error(
-							__FUNCSIG__ ": WinHttpWebSocketCompleteUpgrade() failed", 
-							GetLastError()
-						);
-
-					bool succeeded = WinHttpSetOption(
-						socket->m_winHttpWebSocket.Get(),
-						WINHTTP_OPTION_CONTEXT_VALUE,
-						(void*)&dwContext,
-						sizeof(DWORD_PTR)
-					);
-					if (succeeded == false)
-						throw Error::Win32Error(
-							__FUNCSIG__ ": WinHttpSetOption() failed when setting context value",
-							GetLastError()
-						);
-
-					socket->m_status = WebSocketStatus::Connected;
-					socket->m_requestHandle = nullptr;
-				}
-				catch (const std::exception& ex)
-				{
-					std::wcout << ex.what() << std::endl;
-				}
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_DATA_AVAILABLE:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_DATA_AVAILABLE" << std::endl;
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_READ_COMPLETE:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_READ_COMPLETE" << std::endl;
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_WRITE_COMPLETE:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_WRITE_COMPLETE" << std::endl;
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_REQUEST_ERROR:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_REQUEST_ERROR" << std::endl;
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_GETPROXYFORURL_COMPLETE:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_GETPROXYFORURL_COMPLETE" << std::endl;
-				break;
-			}
-			case WINHTTP_CALLBACK_STATUS_CLOSE_COMPLETE:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_CLOSE_COMPLETE" << std::endl;
-				AsyncWebSocket* socket = (AsyncWebSocket*)dwContext;
-				socket->Release();
-				socket->m_status = WebSocketStatus::Closed;
-
-				break;
-			}
-			case WINHTTP_CALLBACK_STATUS_SHUTDOWN_COMPLETE:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_SHUTDOWN_COMPLETE" << std::endl;
-				
-				break;
-			}
-			case WINHTTP_CALLBACK_STATUS_SETTINGS_WRITE_COMPLETE:
-			{
-				std::wcout << L"" << std::endl;
-				break;
-			}
-			case WINHTTP_CALLBACK_STATUS_SETTINGS_READ_COMPLETE:
-			{
-				std::wcout << L"" << std::endl;
-				break;
-			}
-
-			default:
-			{
-				std::wcout << L"Default" << std::endl;
-			}
-		}
-	}
-
 	AsyncWebSocket::~AsyncWebSocket()
 	{
 		if (m_status == WebSocketStatus::Connected)
@@ -288,16 +35,65 @@ namespace Boring32::WinHttp::WebSockets
 
 	void AsyncWebSocket::SendString(const std::string& msg)
 	{
+		if (m_status != WebSocketStatus::Connected)
+			throw std::runtime_error("WebSocket is not connected to send data");
 
+		DWORD statusCode = WinHttpWebSocketSend(
+			m_winHttpWebSocket.Get(),
+			WINHTTP_WEB_SOCKET_UTF8_MESSAGE_BUFFER_TYPE,
+			(PVOID)&msg[0],
+			(DWORD)(msg.size() * sizeof(char))
+		);
+		if (statusCode != ERROR_SUCCESS)
+		{
+			m_status = WebSocketStatus::Error;
+			throw Error::Win32Error("WebSocket::SendString(): WinHttpWebSocketSend() failed", statusCode);
+		}
 	}
 
 	void AsyncWebSocket::SendBuffer(const std::vector<char>& buffer)
 	{
+		if (m_status != WebSocketStatus::Connected)
+			throw std::runtime_error("WebSocket is not connected to send data");
 
+		DWORD statusCode = WinHttpWebSocketSend(
+			m_winHttpWebSocket.Get(),
+			WINHTTP_WEB_SOCKET_BINARY_MESSAGE_BUFFER_TYPE,
+			(PVOID)&buffer[0],
+			(DWORD)(buffer.size() * sizeof(char))
+		);
+		if (statusCode != ERROR_SUCCESS)
+		{
+			m_status = WebSocketStatus::Error;
+			throw Error::Win32Error("WebSocket::SendString(): WinHttpWebSocketSend() failed", statusCode);
+		}
 	}
 
-	bool AsyncWebSocket::Receive(std::vector<char>& buffer)
+	bool AsyncWebSocket::Receive(std::vector<char>& receiveBuffer)
 	{
+		if (m_status != WebSocketStatus::Connected)
+			throw std::runtime_error("WebSocket is not connected to receive data");
+
+		constexpr UINT bufferBlockSize = 2048;
+		receiveBuffer.clear();
+		receiveBuffer.resize(bufferBlockSize);
+		WINHTTP_WEB_SOCKET_BUFFER_TYPE bufferType;
+		DWORD bufferLength = (DWORD)(receiveBuffer.size() * sizeof(char));
+		DWORD totalBytesTransferred = 0;
+		char* currentBufferPointer = &receiveBuffer[0];
+
+		DWORD bytesTransferred = 0;
+		DWORD statusCode = WinHttpWebSocketReceive(
+			m_winHttpWebSocket.Get(),
+			currentBufferPointer,
+			bufferLength,
+			&bytesTransferred,
+			&bufferType
+		);
+		// If the server terminates the connection, 12030 will returned.
+		if (statusCode != ERROR_SUCCESS)
+			throw Error::Win32Error("Connection error when receiving websocket data", statusCode);
+
 		return true;
 	}
 	void AsyncWebSocket::CloseSocket()
@@ -404,8 +200,7 @@ namespace Boring32::WinHttp::WebSockets
 					GetLastError()
 				);
 
-			std::wcout << L"this: " << this <<std::endl;
-			DWORD_PTR _this = (DWORD_PTR)this;
+			const DWORD_PTR _this = (DWORD_PTR)this;
 			succeeded = WinHttpSetOption(
 				m_requestHandle.Get(),
 				WINHTTP_OPTION_CONTEXT_VALUE,

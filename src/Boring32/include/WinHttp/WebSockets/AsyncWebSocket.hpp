@@ -4,6 +4,11 @@
 
 namespace Boring32::WinHttp::WebSockets
 {
+	class WebSocketReadResult
+	{
+		std::string Data;	
+	};
+
 	class AsyncWebSocket
 	{
 		public:

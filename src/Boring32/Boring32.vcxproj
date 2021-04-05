@@ -321,6 +321,7 @@
     <ClCompile Include="src\Time\Time.cpp" />
     <ClCompile Include="src\Util\Util.cpp" />
     <ClCompile Include="src\WinHttp\AsyncWebSocket.cpp" />
+    <ClCompile Include="src\WinHttp\AsyncWebSocket.StatusCallback.cpp" />
     <ClCompile Include="src\WinHttp\ProxyInfo.cpp" />
     <ClCompile Include="src\WinHttp\Session.cpp" />
     <ClCompile Include="src\WinHttp\WinHttpHandle.cpp" />

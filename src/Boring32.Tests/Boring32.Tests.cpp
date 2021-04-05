@@ -712,11 +712,17 @@ void TestAsyncWebSocket()
 
 		socket.Connect();
 		while (socket.GetStatus() != Boring32::WinHttp::WebSockets::WebSocketStatus::Connected)
-			Sleep(1000);
+			Sleep(200);
 
 		std::wcout << L"Connected successfully" << std::endl;
-		socket.CloseSocket();
-		Sleep(5000);
+		socket.SendString("Hello!");
+		//socket.CloseSocket();
+		Sleep(2000);
+		std::vector<char> receiveBuffer;
+		socket.Receive(receiveBuffer);
+		std::wcout << receiveBuffer.size() << std::endl;
+		Sleep(2000);
+		int i = 0;
 	}
 
 	/*std::vector<char> buffer;

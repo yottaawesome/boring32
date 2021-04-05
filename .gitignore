@@ -43,3 +43,6 @@ Intermediate/
 /src/x64/Debug/*.ilk
 
 *.pfx
+
+node_modules/
+*.pem

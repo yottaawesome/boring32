@@ -1,0 +1,19 @@
+{
+  "name": "WinHttpLocalSocketsTest",
+  "version": "1.0.0",
+  "description": "A small test server for testing WinHttpWebSockets locally.",
+  "author": "Vasilios Magriplis",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon socket.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "websocket": "^1.0.33",
+    "ws": "^7.4.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
