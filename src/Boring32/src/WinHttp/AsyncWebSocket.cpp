@@ -1,10 +1,13 @@
 #include "pch.hpp"
+#include <algorithm>
 #include "include/Strings/Strings.hpp"
 #include "include/Error/Error.hpp"
 #include "include/WinHttp/WebSockets/AsyncWebSocket.hpp"
 
 namespace Boring32::WinHttp::WebSockets
 {
+	DWORD AsyncWebSocket::m_bufferBlockSize = 1024;
+
 	AsyncWebSocket::~AsyncWebSocket()
 	{
 		try
@@ -18,12 +21,15 @@ namespace Boring32::WinHttp::WebSockets
 		{
 			std::wcerr << __FUNCSIG__ ": " << ex.what() << std::endl;
 		}
+		DeleteCriticalSection(&m_cs);
 	}
 
 	AsyncWebSocket::AsyncWebSocket(const AsyncWebSocketSettings& settings)
 	:	m_settings(settings),
 		m_status(WebSocketStatus::NotInitialised)
-	{ }
+	{
+		InitializeCriticalSection(&m_cs);
+	}
 
 	const AsyncWebSocketSettings& AsyncWebSocket::GetSettings()
 	{
@@ -76,26 +82,79 @@ namespace Boring32::WinHttp::WebSockets
 		}
 	}
 
-	bool AsyncWebSocket::Receive(std::vector<char>& receiveBuffer)
+	WebSocketReadResult AsyncWebSocket::GetFirstFinished()
 	{
+		Async::CriticalSectionLock cs(m_cs);
+
+		WebSocketReadResult returnValue{};
+		auto iter = std::find_if(
+			m_readResults.begin(),
+			m_readResults.end(),
+			[](const WebSocketReadResult& result) -> bool {
+				return result.Status == WebSocketReadResultStatus::Finished;
+			}
+		);
+
+		if (iter != m_readResults.end())
+		{
+			returnValue = std::move(*iter);
+			m_readResults.erase(iter);
+		}
+
+		return returnValue;
+	}
+
+	WebSocketReadResult& AsyncWebSocket::Receive()
+	{
+		Async::CriticalSectionLock cs(m_cs);
+		if (m_status != WebSocketStatus::Connected)
+			throw std::runtime_error("WebSocket is not connected to receive data");
+		if (m_readResults.empty() == false && m_readResults.back().Status == WebSocketReadResultStatus::Initiated)
+			throw std::runtime_error("A read operation is already in progress");
+
+		try
+		{
+			m_readResults.push_back({
+				.Status = WebSocketReadResultStatus::Initiated
+			});
+			return Receive(m_readResults.back());
+		}
+		catch (const std::exception& ex)
+		{
+			m_readResults.pop_back();
+			throw ex;
+		}
+	}
+
+	WebSocketReadResult& AsyncWebSocket::Receive(WebSocketReadResult& receiveBuffer)
+	{
+		Async::CriticalSectionLock cs(m_cs);
 		if (m_status != WebSocketStatus::Connected)
 			throw std::runtime_error("WebSocket is not connected to receive data");
 
-		constexpr UINT bufferBlockSize = 2048;
-		receiveBuffer.clear();
-		receiveBuffer.resize(bufferBlockSize);
-		WINHTTP_WEB_SOCKET_BUFFER_TYPE bufferType;
-		DWORD bufferLength = (DWORD)(receiveBuffer.size() * sizeof(char));
-		DWORD totalBytesTransferred = 0;
-		char* currentBufferPointer = &receiveBuffer[0];
+		char* currentBufferPointer = nullptr;
+		if (receiveBuffer.Status == WebSocketReadResultStatus::PartialRead)
+		{
+			const size_t oldSize = receiveBuffer.Data.size();
+			receiveBuffer.Data.resize(receiveBuffer.Data.size()+m_bufferBlockSize);
+			currentBufferPointer = &receiveBuffer.Data[0] + oldSize;
+		}
+		else if (receiveBuffer.Status == WebSocketReadResultStatus::Initiated)
+		{
+			receiveBuffer.Data.resize(m_bufferBlockSize);
+			currentBufferPointer = &receiveBuffer.Data[0];
+		}
+		else
+		{
+			throw std::runtime_error(__FUNCSIG__ ": unknown status " + std::to_string((DWORD)receiveBuffer.Status));
+		}
 
-		DWORD bytesTransferred = 0;
-		DWORD statusCode = WinHttpWebSocketReceive(
+		const DWORD statusCode = WinHttpWebSocketReceive(
 			m_winHttpWebSocket.Get(),
 			currentBufferPointer,
-			bufferLength,
-			&bytesTransferred,
-			&bufferType
+			m_bufferBlockSize,
+			nullptr,
+			nullptr
 		);
 		// If the server terminates the connection, 12030 will returned.
 		if (statusCode != ERROR_SUCCESS)
@@ -103,8 +162,7 @@ namespace Boring32::WinHttp::WebSockets
 			m_status = WebSocketStatus::Error;
 			throw Error::Win32Error("Connection error when receiving websocket data", statusCode);
 		}
-
-		return true;
+		return receiveBuffer;
 	}
 	void AsyncWebSocket::CloseSocket()
 	{

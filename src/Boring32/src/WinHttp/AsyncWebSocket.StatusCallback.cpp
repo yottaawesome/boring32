@@ -1,8 +1,9 @@
 #include "pch.hpp"
+#include <future>
+#include <algorithm>
 #include "include/Strings/Strings.hpp"
 #include "include/Error/Error.hpp"
 #include "include/WinHttp/WebSockets/AsyncWebSocket.hpp"
-#include <future>
 
 namespace Boring32::WinHttp::WebSockets
 {
@@ -234,8 +235,59 @@ namespace Boring32::WinHttp::WebSockets
 			{
 				std::wcout << L"WINHTTP_CALLBACK_STATUS_READ_COMPLETE" << std::endl;
 				Sleep(50);
-				WINHTTP_WEB_SOCKET_STATUS* status = (WINHTTP_WEB_SOCKET_STATUS*)lpvStatusInformation;
-				std::wcout << status->dwBytesTransferred << std::endl;
+
+				try
+				{
+					AsyncWebSocket* socket = (AsyncWebSocket*)dwContext;
+					Async::CriticalSectionLock cs(socket->m_cs);
+
+					WINHTTP_WEB_SOCKET_STATUS* status = (WINHTTP_WEB_SOCKET_STATUS*)lpvStatusInformation;
+
+					if (socket->m_readResults.empty())
+					{
+						std::wcerr << L"m_readResults unexpectedly empty" << std::endl;
+						return;
+					}
+
+					WebSocketReadResult& read = socket->m_readResults.back();
+					if (read.Status != WebSocketReadResultStatus::Initiated 
+						&& read.Status != WebSocketReadResultStatus::PartialRead)
+					{
+						std::wcerr << L"read in an unexpected status" << std::endl;
+						return;
+					}
+
+					read.TotalBytesRead += status->dwBytesTransferred;
+					switch (status->eBufferType)
+					{
+						case WINHTTP_WEB_SOCKET_BINARY_FRAGMENT_BUFFER_TYPE:
+						case WINHTTP_WEB_SOCKET_UTF8_FRAGMENT_BUFFER_TYPE:
+							read.Status = WebSocketReadResultStatus::PartialRead;
+							socket->Receive(read);
+							break;
+
+						case WINHTTP_WEB_SOCKET_UTF8_MESSAGE_BUFFER_TYPE:
+						case WINHTTP_WEB_SOCKET_BINARY_MESSAGE_BUFFER_TYPE:
+							read.Status = WebSocketReadResultStatus::Finished;
+							read.Data.resize(read.TotalBytesRead);
+							read.Complete.Signal();
+							break;
+
+						case WINHTTP_WEB_SOCKET_CLOSE_BUFFER_TYPE:
+							read.Status = WebSocketReadResultStatus::Finished;
+							socket->m_status = WebSocketStatus::Closed;
+							read.Complete.Signal();
+							break;
+
+						default:
+							throw std::runtime_error("Unknown eBufferType");
+					}
+				}
+				catch (const std::exception& ex)
+				{
+					std::wcerr << ex.what() << std::endl;
+				}
+
 				break;
 			}
 
@@ -252,10 +304,11 @@ namespace Boring32::WinHttp::WebSockets
 				Sleep(50);
 				WINHTTP_ASYNC_RESULT* requestError = (WINHTTP_ASYNC_RESULT*)lpvStatusInformation;
 				
+				AsyncWebSocket* socket = (AsyncWebSocket*)dwContext;
+				socket->m_status = WebSocketStatus::Error;
 				Error::Win32Error err("", (DWORD)requestError->dwError);
 				switch (requestError->dwResult)
 				{
-
 					case API_RECEIVE_RESPONSE:
 						std::wcerr << "The error occurred during a call to WinHttpReceiveResponse: " << err.what() << std::endl;
 						break;
