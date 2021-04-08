@@ -717,11 +717,23 @@ void TestAsyncWebSocket()
 	std::wcout << L"Connected successfully" << std::endl;
 	socket.SendString("Hello!");
 	//socket.CloseSocket();
-	std::vector<char> receiveBuffer;
-	socket.Receive(receiveBuffer);
-	std::wcout << receiveBuffer.size() << std::endl;
-	//Sleep(10000);
-	int i = 0;
+	//Sleep(5000);
+	/*Boring32::WinHttp::WebSockets::WebSocketReadResult& result = socket.Receive();
+	result.Complete.WaitOnEvent(INFINITE, false);*/
+
+
+	auto result = socket.Receive2().get();
+	//auto result = socket.Receive3()->get_future().get();
+	std::string message(result.Data.begin(), result.Data.end());
+	std::wcout << message.size() << std::endl;
+	std::wcout << message.c_str() << std::endl;
+	
+	/*Boring32::WinHttp::WebSockets::WebSocketReadResult& result2 = socket.Receive();
+	result2.Complete.WaitOnEvent(INFINITE, false);
+	std::string message2(result2.Data.begin(), result2.Data.end());
+	std::wcout << message2.size() << std::endl;
+	std::wcout << message2.c_str() << std::endl;*/
+	
 	Sleep(5000);
 
 	/*std::vector<char> buffer;
@@ -739,6 +751,7 @@ int main(int argc, char** args)
 	}
 	catch (const std::exception& ex)
 	{
+		Sleep(2000);
 		std::wcerr << ex.what() << std::endl;
 	}
 

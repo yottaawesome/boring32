@@ -238,18 +238,13 @@ namespace Boring32::WinHttp::WebSockets
 
 				try
 				{
+					std::wcout << GetCurrentThreadId() << std::endl;
 					AsyncWebSocket* socket = (AsyncWebSocket*)dwContext;
 					Async::CriticalSectionLock cs(socket->m_cs);
 
 					WINHTTP_WEB_SOCKET_STATUS* status = (WINHTTP_WEB_SOCKET_STATUS*)lpvStatusInformation;
 
-					if (socket->m_readResults.empty())
-					{
-						std::wcerr << L"m_readResults unexpectedly empty" << std::endl;
-						return;
-					}
-
-					WebSocketReadResult& read = socket->m_readResults.back();
+					WebSocketReadResult& read = socket->m_currentResult;
 					if (read.Status != WebSocketReadResultStatus::Initiated 
 						&& read.Status != WebSocketReadResultStatus::PartialRead)
 					{

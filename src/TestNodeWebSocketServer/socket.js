@@ -37,8 +37,14 @@ wss.on('connection',
 		console.log('Connection established');
 
 		ws.on('message', function incoming(message) {
-			//ws.send('something');
+			setTimeout(() => {
+				ws.send('something1');
+			}, 1000);
+			setTimeout(() => {
+				ws.send('something2');
+			}, 1000);
 		});
+		
 	}
 );
 

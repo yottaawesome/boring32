@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#include <future>
+#include <memory>
 #include "../../Async/CriticalSectionLock.hpp"
 #include "../../Async/Event.hpp"
 #include "AsyncWebSocketSettings.hpp"
@@ -35,12 +37,13 @@ namespace Boring32::WinHttp::WebSockets
 			virtual void Connect(const std::wstring& path);
 			virtual void SendString(const std::string& msg);
 			virtual void SendBuffer(const std::vector<char>& buffer);
+			virtual std::shared_future<WebSocketReadResult> Receive2();
 			virtual WebSocketReadResult& Receive();
 			virtual WebSocketReadResult& Receive(WebSocketReadResult& receiveBuffer);
 			virtual void CloseSocket();
 			virtual void Release();
 			virtual WebSocketStatus GetStatus() const noexcept;
-			virtual WebSocketReadResult GetFirstFinished();
+			virtual const WebSocketReadResult& GetCurrentRead();
 
 		protected:
 			virtual void InternalConnect(const std::wstring& path);
@@ -52,6 +55,9 @@ namespace Boring32::WinHttp::WebSockets
 				LPVOID lpvStatusInformation,
 				DWORD dwStatusInformationLength
 			);
+			static WebSocketReadResult AsyncReceive(
+				AsyncWebSocket* socket
+			);
 
 		protected:
 			AsyncWebSocketSettings m_settings;
@@ -62,6 +68,6 @@ namespace Boring32::WinHttp::WebSockets
 			WinHttpHandle m_requestHandle;
 			CRITICAL_SECTION m_cs;
 			static DWORD m_bufferBlockSize;
-			std::vector<WebSocketReadResult> m_readResults;
+			WebSocketReadResult m_currentResult;
 	};
 }
