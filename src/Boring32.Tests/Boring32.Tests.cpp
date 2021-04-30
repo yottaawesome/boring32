@@ -747,7 +747,19 @@ int main(int argc, char** args)
 {
 	try
 	{
-		TestAsyncWebSocket();
+		Boring32::Security::Sid sid(
+			SECURITY_NT_AUTHORITY, 
+			2, 
+			SECURITY_BUILTIN_DOMAIN_RID, 
+			DOMAIN_ALIAS_RID_ADMINS,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0
+		);
+		//TestAsyncWebSocket();
 	}
 	catch (const std::exception& ex)
 	{

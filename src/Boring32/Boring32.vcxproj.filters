@@ -51,7 +51,7 @@
     <ClInclude Include="include\Raii\Win32Handle.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Raii\Sid.hpp">
+    <ClInclude Include="include\Security\Sid.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Util\Util.hpp">
@@ -296,7 +296,7 @@
     <ClCompile Include="src\Raii\Win32Handle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Raii\Sid.cpp">
+    <ClCompile Include="src\Security\Sid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Async\MemoryMappedFile.cpp">

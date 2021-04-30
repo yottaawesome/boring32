@@ -1,13 +1,16 @@
 #pragma once
+#include <vector>
 #include <Windows.h>
 
-namespace Boring32::Raii
+namespace Boring32::Security
 {
 	class Sid
 	{
 		public:
+			virtual ~Sid();
+			Sid();
 			Sid(
-				SID_IDENTIFIER_AUTHORITY& pIdentifierAuthority,
+				const SID_IDENTIFIER_AUTHORITY& pIdentifierAuthority,
 				BYTE                      nSubAuthorityCount,
 				DWORD                     nSubAuthority0,
 				DWORD                     nSubAuthority1,
@@ -18,20 +21,25 @@ namespace Boring32::Raii
 				DWORD                     nSubAuthority6,
 				DWORD                     nSubAuthority7
 			);
-			virtual ~Sid();
-			virtual PSID GetSid();
 
-			Sid(const Sid&) = delete;
-			void operator=(const Sid&) = delete;
-			Sid(Sid&&) = delete;
-			void operator=(Sid&&) = delete;
+			Sid(const Sid& other);
+			Sid(Sid&& other) noexcept;
+
+		public:
+			void operator=(const Sid& other);
+			void operator=(Sid&& other) noexcept;
+
+		public:
+			virtual void Close();
+			virtual PSID GetSid();
 
 		protected:
 			virtual void Copy(const Sid& other);
-			virtual void Move(Sid&& other) noexcept;
+			virtual void Move(Sid& other) noexcept;
+			virtual void Create();
 
 		protected:
-			BYTE m_sidBuffer[256];
+			PSID m_sid;
 			SID_IDENTIFIER_AUTHORITY m_pIdentifierAuthority;
 			BYTE                      m_nSubAuthorityCount;
 			DWORD                     m_nSubAuthority0;

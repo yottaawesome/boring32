@@ -228,7 +228,7 @@
     <ClInclude Include="include\Async\Async.hpp" />
     <ClInclude Include="include\Library\Library.hpp" />
     <ClInclude Include="include\Raii\Raii.hpp" />
-    <ClInclude Include="include\Raii\Sid.hpp" />
+    <ClInclude Include="include\Security\Sid.hpp" />
     <ClInclude Include="include\Raii\Win32Handle.hpp" />
     <ClInclude Include="include\Security\ImpersonationContext.hpp" />
     <ClInclude Include="include\Security\PrivateNamespace.hpp" />
@@ -306,7 +306,7 @@
     <ClCompile Include="src\Async\Pipes\AnonymousPipe.cpp" />
     <ClCompile Include="src\Async\Process.cpp" />
     <ClCompile Include="src\Async\ProcessInfo.cpp" />
-    <ClCompile Include="src\Raii\Sid.cpp" />
+    <ClCompile Include="src\Security\Sid.cpp" />
     <ClCompile Include="src\Raii\Win32Handle.cpp" />
     <ClCompile Include="src\Registry\RegistryFuncs.cpp" />
     <ClCompile Include="src\Registry\RegistryKey.cpp" />
