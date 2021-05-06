@@ -36,6 +36,9 @@ namespace Boring32::Security
 		if (succeeded == false)
 			throw Error::Win32Error(__FUNCSIG__ ": LookupPrivilegeValueW() failed");
 
+		// See https://cpp.hotexamples.com/examples/-/-/AdjustTokenPrivileges/cpp-adjusttokenprivileges-function-examples.html
+		// and https://stackoverflow.com/questions/9195889/what-is-the-purpose-of-anysize-array-in-winnt-h
+		// and https://web.archive.org/web/20120209061713/http://blogs.msdn.com/b/oldnewthing/archive/2004/08/26/220873.aspx
 		TOKEN_PRIVILEGES tp;
 		tp.PrivilegeCount = 1;
 		tp.Privileges[0].Luid = luidPrivilege;

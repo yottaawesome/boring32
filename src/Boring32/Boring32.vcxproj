@@ -228,6 +228,7 @@
     <ClInclude Include="include\Async\Async.hpp" />
     <ClInclude Include="include\Library\Library.hpp" />
     <ClInclude Include="include\Raii\Raii.hpp" />
+    <ClInclude Include="include\Security\Constants.hpp" />
     <ClInclude Include="include\Security\SecurityFunctions.hpp" />
     <ClInclude Include="include\Security\Sid.hpp" />
     <ClInclude Include="include\Raii\Win32Handle.hpp" />

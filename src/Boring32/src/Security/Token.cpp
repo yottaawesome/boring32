@@ -57,10 +57,11 @@ namespace Boring32::Security
 		Security::AdjustPrivileges(m_token.GetHandle(), privilege, enabled);
 	}
 
-	void Token::SetIntegrity(const GroupIntegrity integrity)
+	void Token::SetIntegrity(const Constants::GroupIntegrity integrity)
 	{
-		const std::wstring& integritySid = Integrities.at(integrity);
+		const std::wstring& integritySid = Constants::Integrities.at(integrity);
 		PSID pIntegritySid = nullptr;
+		// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw
 		bool succeeded = ConvertStringSidToSidW(integritySid.c_str(), &pIntegritySid);
 		if (succeeded == false)
 			throw Error::Win32Error(__FUNCSIG__": ConvertStringSidToSidW() failed", GetLastError());
@@ -68,6 +69,7 @@ namespace Boring32::Security
 		TOKEN_MANDATORY_LABEL tml = { 0 };
 		tml.Label.Attributes = SE_GROUP_INTEGRITY;
 		tml.Label.Sid = pIntegritySid;
+		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-settokeninformation
 		succeeded = SetTokenInformation(
 			m_token.GetHandle(),
 			TokenIntegrityLevel,
