@@ -747,17 +747,13 @@ int main(int argc, char** args)
 {
 	try
 	{
+		const std::vector<DWORD> subauths{
+			SECURITY_BUILTIN_DOMAIN_RID,
+			DOMAIN_ALIAS_RID_ADMINS
+		};
 		Boring32::Security::Sid sid(
 			SECURITY_NT_AUTHORITY, 
-			2, 
-			SECURITY_BUILTIN_DOMAIN_RID, 
-			DOMAIN_ALIAS_RID_ADMINS,
-			0,
-			0,
-			0,
-			0,
-			0,
-			0
+			subauths
 		);
 		//TestAsyncWebSocket();
 	}

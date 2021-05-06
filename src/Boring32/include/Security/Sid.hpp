@@ -11,15 +11,7 @@ namespace Boring32::Security
 			Sid();
 			Sid(
 				const SID_IDENTIFIER_AUTHORITY& pIdentifierAuthority,
-				BYTE                      nSubAuthorityCount,
-				DWORD                     nSubAuthority0,
-				DWORD                     nSubAuthority1,
-				DWORD                     nSubAuthority2,
-				DWORD                     nSubAuthority3,
-				DWORD                     nSubAuthority4,
-				DWORD                     nSubAuthority5,
-				DWORD                     nSubAuthority6,
-				DWORD                     nSubAuthority7
+				const std::vector<DWORD>& subAuthorities
 			);
 
 			Sid(const Sid& other);
@@ -32,6 +24,7 @@ namespace Boring32::Security
 		public:
 			virtual void Close();
 			virtual PSID GetSid();
+			virtual BYTE GetSubAuthorityCount() const;
 
 		protected:
 			virtual void Copy(const Sid& other);
@@ -41,14 +34,6 @@ namespace Boring32::Security
 		protected:
 			PSID m_sid;
 			SID_IDENTIFIER_AUTHORITY m_pIdentifierAuthority;
-			BYTE                      m_nSubAuthorityCount;
-			DWORD                     m_nSubAuthority0;
-			DWORD                     m_nSubAuthority1;
-			DWORD                     m_nSubAuthority2;
-			DWORD                     m_nSubAuthority3;
-			DWORD                     m_nSubAuthority4;
-			DWORD                     m_nSubAuthority5;
-			DWORD                     m_nSubAuthority6;
-			DWORD                     m_nSubAuthority7;
+			std::vector<DWORD> m_subAuthorities;
 	};
 }

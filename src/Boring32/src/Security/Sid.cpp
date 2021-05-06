@@ -11,73 +11,30 @@ namespace Boring32::Security
 
 	Sid::Sid()
 	:	m_sid(nullptr),
-		m_pIdentifierAuthority{},
-		m_nSubAuthorityCount(0),
-		m_nSubAuthority0(0),
-		m_nSubAuthority1(0),
-		m_nSubAuthority2(0),
-		m_nSubAuthority3(0),
-		m_nSubAuthority4(0),
-		m_nSubAuthority5(0),
-		m_nSubAuthority6(0),
-		m_nSubAuthority7(0)
+		m_pIdentifierAuthority{}
 	{ }
 
 	Sid::Sid(const Sid& other)
 	:	m_sid(nullptr),
-		m_pIdentifierAuthority{},
-		m_nSubAuthorityCount(0),
-		m_nSubAuthority0(0),
-		m_nSubAuthority1(0),
-		m_nSubAuthority2(0),
-		m_nSubAuthority3(0),
-		m_nSubAuthority4(0),
-		m_nSubAuthority5(0),
-		m_nSubAuthority6(0),
-		m_nSubAuthority7(0)
+		m_pIdentifierAuthority{}
 	{
 		Copy(other);
 	}
 
 	Sid::Sid(Sid&& other) noexcept
 	:	m_sid(nullptr),
-		m_pIdentifierAuthority{},
-		m_nSubAuthorityCount(0),
-		m_nSubAuthority0(0),
-		m_nSubAuthority1(0),
-		m_nSubAuthority2(0),
-		m_nSubAuthority3(0),
-		m_nSubAuthority4(0),
-		m_nSubAuthority5(0),
-		m_nSubAuthority6(0),
-		m_nSubAuthority7(0)
+		m_pIdentifierAuthority{}
 	{
 		Move(other);
 	}
 
 	Sid::Sid(
 		const SID_IDENTIFIER_AUTHORITY& pIdentifierAuthority,
-		BYTE                      nSubAuthorityCount,
-		DWORD                     nSubAuthority0,
-		DWORD                     nSubAuthority1,
-		DWORD                     nSubAuthority2,
-		DWORD                     nSubAuthority3,
-		DWORD                     nSubAuthority4,
-		DWORD                     nSubAuthority5,
-		DWORD                     nSubAuthority6,
-		DWORD                     nSubAuthority7
+		const std::vector<DWORD>& subAuthorities
 	)
 	:	m_sid(nullptr),
 		m_pIdentifierAuthority(pIdentifierAuthority),
-		m_nSubAuthorityCount(nSubAuthorityCount),
-		m_nSubAuthority0(nSubAuthority0),
-		m_nSubAuthority1(nSubAuthority1),
-		m_nSubAuthority2(nSubAuthority2),
-		m_nSubAuthority3(nSubAuthority3),
-		m_nSubAuthority4(nSubAuthority4),
-		m_nSubAuthority5(nSubAuthority5),
-		m_nSubAuthority6(nSubAuthority6),
-		m_nSubAuthority7(nSubAuthority7)
+		m_subAuthorities(subAuthorities)
 	{
 		Create();
 	}
@@ -89,21 +46,24 @@ namespace Boring32::Security
 			if (FreeSid(m_sid) != nullptr)
 				std::wcerr << L"Failed to release SID" << std::endl;
 			m_sid = nullptr;
-			m_nSubAuthorityCount = 0;
-			m_nSubAuthority0 = 0;
-			m_nSubAuthority1 = 0;
-			m_nSubAuthority2 = 0;
-			m_nSubAuthority3 = 0;
-			m_nSubAuthority4 = 0;
-			m_nSubAuthority5 = 0;
-			m_nSubAuthority6 = 0;
-			m_nSubAuthority7 = 0;
+			m_subAuthorities.clear();
 		}
 	}
 
 	PSID Sid::GetSid()
 	{
 		return m_sid;
+	}
+	
+	BYTE Sid::GetSubAuthorityCount() const
+	{
+		if (m_sid == nullptr)
+			return 0;
+		if (IsValidSid(m_sid) == false)
+			throw std::runtime_error(__FUNCSIG__ ": invalid SID");
+
+		PUCHAR authorityCount = GetSidSubAuthorityCount(m_sid);
+		return (BYTE)*authorityCount;
 	}
 
 	void Sid::operator=(const Sid& other)
@@ -126,15 +86,7 @@ namespace Boring32::Security
 			return;
 
 		m_pIdentifierAuthority = other.m_pIdentifierAuthority;
-		m_nSubAuthorityCount = other.m_nSubAuthorityCount;
-		m_nSubAuthority0 = other.m_nSubAuthority0;
-		m_nSubAuthority1 = other.m_nSubAuthority1;
-		m_nSubAuthority2 = other.m_nSubAuthority2;
-		m_nSubAuthority3 = other.m_nSubAuthority3;
-		m_nSubAuthority4 = other.m_nSubAuthority4;
-		m_nSubAuthority5 = other.m_nSubAuthority5;
-		m_nSubAuthority6 = other.m_nSubAuthority6;
-		m_nSubAuthority7 = other.m_nSubAuthority7;
+		m_subAuthorities = other.m_subAuthorities;
 
 		Create();
 	}
@@ -146,30 +98,27 @@ namespace Boring32::Security
 			return;
 
 		m_sid = other.m_sid;
-		m_nSubAuthorityCount = other.m_nSubAuthorityCount;
-		m_nSubAuthority0 = other.m_nSubAuthority0;
-		m_nSubAuthority1 = other.m_nSubAuthority1;
-		m_nSubAuthority2 = other.m_nSubAuthority2;
-		m_nSubAuthority3 = other.m_nSubAuthority3;
-		m_nSubAuthority4 = other.m_nSubAuthority4;
-		m_nSubAuthority5 = other.m_nSubAuthority5;
-		m_nSubAuthority6 = other.m_nSubAuthority6;
-		m_nSubAuthority7 = other.m_nSubAuthority7;
+		m_subAuthorities = other.m_subAuthorities;
 	}
 
 	void Sid::Create()
 	{
+		std::vector<DWORD> subAuthorities2
+			= m_subAuthorities;
+		if (subAuthorities2.size() != 8)
+			subAuthorities2.resize(8);
+
 		const bool isInitialized = AllocateAndInitializeSid(
 			&m_pIdentifierAuthority,
-			m_nSubAuthorityCount,
-			m_nSubAuthority0,
-			m_nSubAuthority1,
-			m_nSubAuthority2,
-			m_nSubAuthority3,
-			m_nSubAuthority4,
-			m_nSubAuthority5,
-			m_nSubAuthority6,
-			m_nSubAuthority7,
+			(BYTE)m_subAuthorities.size(),
+			subAuthorities2[0],
+			subAuthorities2[1],
+			subAuthorities2[2],
+			subAuthorities2[3],
+			subAuthorities2[4],
+			subAuthorities2[5],
+			subAuthorities2[6],
+			subAuthorities2[7],
 			(PSID*)&m_sid
 		);
 		if (isInitialized == false)
