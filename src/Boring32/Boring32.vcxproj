@@ -228,10 +228,12 @@
     <ClInclude Include="include\Async\Async.hpp" />
     <ClInclude Include="include\Library\Library.hpp" />
     <ClInclude Include="include\Raii\Raii.hpp" />
+    <ClInclude Include="include\Security\SecurityFunctions.hpp" />
     <ClInclude Include="include\Security\Sid.hpp" />
     <ClInclude Include="include\Raii\Win32Handle.hpp" />
     <ClInclude Include="include\Security\ImpersonationContext.hpp" />
     <ClInclude Include="include\Security\PrivateNamespace.hpp" />
+    <ClInclude Include="include\Security\Token.hpp" />
     <ClInclude Include="include\Strings\Strings.hpp" />
     <ClInclude Include="include\TaskScheduler\RegisteredTask.hpp" />
     <ClInclude Include="include\TaskScheduler\TaskFolder.hpp" />
@@ -306,12 +308,14 @@
     <ClCompile Include="src\Async\Pipes\AnonymousPipe.cpp" />
     <ClCompile Include="src\Async\Process.cpp" />
     <ClCompile Include="src\Async\ProcessInfo.cpp" />
+    <ClCompile Include="src\Security\SecurityFunctions.cpp" />
     <ClCompile Include="src\Security\Sid.cpp" />
     <ClCompile Include="src\Raii\Win32Handle.cpp" />
     <ClCompile Include="src\Registry\RegistryFuncs.cpp" />
     <ClCompile Include="src\Registry\RegistryKey.cpp" />
     <ClCompile Include="src\Security\ImpersonationContext.cpp" />
     <ClCompile Include="src\Security\PrivateNamespace.cpp" />
+    <ClCompile Include="src\Security\Token.cpp" />
     <ClCompile Include="src\Strings\Win32Strings.cpp" />
     <ClCompile Include="src\pch.cpp" />
     <ClCompile Include="src\Library\DynamicLinkLibrary.cpp" />

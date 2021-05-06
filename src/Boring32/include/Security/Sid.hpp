@@ -26,8 +26,8 @@ namespace Boring32::Security
 			Sid(Sid&& other) noexcept;
 
 		public:
-			void operator=(const Sid& other);
-			void operator=(Sid&& other) noexcept;
+			virtual void operator=(const Sid& other);
+			virtual void operator=(Sid&& other) noexcept;
 
 		public:
 			virtual void Close();

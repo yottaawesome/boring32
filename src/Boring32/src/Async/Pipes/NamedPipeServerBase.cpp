@@ -34,7 +34,7 @@ namespace Boring32::Async
         const bool isInheritable,
         const bool isLocalPipe
     )
-        : m_pipeName(pipeName),
+    :   m_pipeName(pipeName),
         m_size(size),
         m_maxInstances(maxInstances),
         m_sid(sid),
@@ -63,15 +63,14 @@ namespace Boring32::Async
         const DWORD openMode,
         const DWORD pipeMode
     )
-        : m_pipeName(pipeName),
+    :   m_pipeName(pipeName),
         m_size(size),
         m_maxInstances(maxInstances),
         m_sid(sid),
         m_isInheritable(isInheritable),
         m_openMode(openMode),
         m_pipeMode(pipeMode)
-    {
-    }
+    { }
 
     void NamedPipeServerBase::InternalCreatePipe()
     {
@@ -110,7 +109,7 @@ namespace Boring32::Async
     }
 
     NamedPipeServerBase::NamedPipeServerBase(const NamedPipeServerBase& other)
-        : m_size(0)
+    :   NamedPipeServerBase()
     {
         Copy(other);
     }
@@ -133,7 +132,7 @@ namespace Boring32::Async
     }
 
     NamedPipeServerBase::NamedPipeServerBase(NamedPipeServerBase&& other) noexcept
-        : m_size(0)
+    :   NamedPipeServerBase()
     {
         Move(other);
     }
@@ -253,7 +252,10 @@ namespace Boring32::Async
         }
         catch (const std::exception& ex)
         {
-            std::wcerr << L"NamedPipeServerBase::CancelCurrentThreadIo(std::nothrow_t) failed: " << ex.what() << std::endl;
+            std::wcerr 
+                << L"NamedPipeServerBase::CancelCurrentThreadIo(std::nothrow_t) failed: " 
+                << ex.what() 
+                << std::endl;
             return false;
         }
     }
@@ -275,7 +277,11 @@ namespace Boring32::Async
         }
         catch (const std::exception& ex)
         {
-            std::wcerr << L"NamedPipeServerBase::CancelCurrentProcessIo(OVERLAPPED*, std::nothrow_t) failed: " << ex.what() << std::endl;
+            std::wcerr 
+                << __FUNCSIG__ 
+                << L": CancelCurrentProcessIo() failed: " 
+                << ex.what() 
+                << std::endl;
             return false;
         }
     }
