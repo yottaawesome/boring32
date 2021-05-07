@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include "../Raii/Win32Handle.hpp"
+#include "Constants.hpp"
 
 namespace Boring32::Security
 {
