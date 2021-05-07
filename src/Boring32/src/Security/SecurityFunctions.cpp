@@ -1,13 +1,15 @@
 #include "pch.hpp"
 #include <stdexcept>
+#include <sddl.h>
 #include "include/Error/Win32Error.hpp"
 #include "include/Security/SecurityFunctions.hpp"
+#include "include/Security/Constants.hpp"
 
 namespace Boring32::Security
 {
 	Raii::Win32Handle GetProcessToken(const HANDLE processHandle, const DWORD desiredAccess)
 	{
-		if (processHandle == nullptr)
+		if (processHandle == nullptr || processHandle == INVALID_HANDLE_VALUE)
 			throw std::invalid_argument(__FUNCSIG__ ": processHandle cannot be null");
 
 		Raii::Win32Handle handle;
@@ -26,7 +28,7 @@ namespace Boring32::Security
 	void AdjustPrivileges(HANDLE token, const std::wstring& privilege, const bool enabled)
 	{
 		// See also: https://docs.microsoft.com/en-us/windows/win32/secauthz/enabling-and-disabling-privileges-in-c--
-		if (token == nullptr)
+		if (token == nullptr || token == INVALID_HANDLE_VALUE)
 			throw std::invalid_argument(__FUNCSIG__ ": token cannot be null");
 
 		// https://docs.microsoft.com/en-us/windows/win32/secauthz/privilege-constants
@@ -63,5 +65,35 @@ namespace Boring32::Security
 				__FUNCSIG__ ": AdjustTokenPrivileges() could not adjust all privileges",
 				GetLastError()
 			);
+	}
+
+	void SetIntegrity(
+		HANDLE token,
+		const Constants::GroupIntegrity integrity
+	)
+	{
+		if (token == nullptr || token == INVALID_HANDLE_VALUE)
+			throw std::invalid_argument(__FUNCSIG__ ": token cannot be null");
+
+		const std::wstring& integritySid = Constants::Integrities.at(integrity);
+		PSID pIntegritySid = nullptr;
+		// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw
+		bool succeeded = ConvertStringSidToSidW(integritySid.c_str(), &pIntegritySid);
+		if (succeeded == false)
+			throw Error::Win32Error(__FUNCSIG__": ConvertStringSidToSidW() failed", GetLastError());
+
+		TOKEN_MANDATORY_LABEL tml = { 0 };
+		tml.Label.Attributes = SE_GROUP_INTEGRITY;
+		tml.Label.Sid = pIntegritySid;
+		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-settokeninformation
+		succeeded = SetTokenInformation(
+			token,
+			TokenIntegrityLevel,
+			&tml,
+			sizeof(TOKEN_MANDATORY_LABEL) + GetLengthSid(pIntegritySid)
+		);
+		LocalFree(pIntegritySid);
+		if (succeeded == false)
+			throw Error::Win32Error(__FUNCSIG__": SetTokenInformation() failed", GetLastError());
 	}
 }

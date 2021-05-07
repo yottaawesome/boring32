@@ -8,17 +8,29 @@ namespace Boring32::Security
 {
 	Token::~Token()
 	{
-		m_token = nullptr;
+		Close();
 	}
 
 	Token::Token() { }
+
+	Token::Token(const Token& other)
+		: Token()
+	{
+		Copy(other);
+	}
+
+	Token::Token(Token&& other) noexcept
+		: Token()
+	{
+		Move(other);
+	}
 
 	Token::Token(const DWORD desiredAccess)
 	{
 		m_token = GetProcessToken(GetCurrentProcess(), desiredAccess);
 	}
 
-	Token::Token(HANDLE processHandle, const DWORD desiredAccess)
+	Token::Token(const HANDLE processHandle, const DWORD desiredAccess)
 	{
 		m_token = GetProcessToken(processHandle, desiredAccess);
 	}
@@ -47,6 +59,21 @@ namespace Boring32::Security
 			throw Error::Win32Error(__FUNCSIG__ ": DuplicateTokenEx() failed");
 	}
 
+	Token& Token::operator=(const Token& other)
+	{
+		return Copy(other);
+	}
+
+	Token& Token::operator=(Token&& other) noexcept
+	{
+		return Move(other);
+	}
+
+	void Token::Close()
+	{
+		m_token = nullptr;
+	}
+
 	Raii::Win32Handle Token::GetToken() const noexcept
 	{
 		return m_token;
@@ -59,25 +86,40 @@ namespace Boring32::Security
 
 	void Token::SetIntegrity(const Constants::GroupIntegrity integrity)
 	{
-		const std::wstring& integritySid = Constants::Integrities.at(integrity);
-		PSID pIntegritySid = nullptr;
-		// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw
-		bool succeeded = ConvertStringSidToSidW(integritySid.c_str(), &pIntegritySid);
-		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__": ConvertStringSidToSidW() failed", GetLastError());
+		Security::SetIntegrity(m_token.GetHandle(), integrity);
+	}
 
-		TOKEN_MANDATORY_LABEL tml = { 0 };
-		tml.Label.Attributes = SE_GROUP_INTEGRITY;
-		tml.Label.Sid = pIntegritySid;
-		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-settokeninformation
-		succeeded = SetTokenInformation(
-			m_token.GetHandle(),
-			TokenIntegrityLevel,
-			&tml,
-			sizeof(TOKEN_MANDATORY_LABEL) + GetLengthSid(pIntegritySid)
-		);
-		LocalFree(pIntegritySid);
-		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__": SetTokenInformation() failed", GetLastError());
+	Token& Token::Copy(const Token& other)
+	{
+		if (&other == this)
+			return *this;
+		
+		Close();
+		if (other.m_token != nullptr)
+		{
+			const bool succeeded = DuplicateTokenEx(
+				other.m_token.GetHandle(),
+				0,
+				nullptr,
+				SecurityImpersonation,
+				TokenPrimary,
+				&m_token
+			);
+			if (succeeded == false)
+				throw Error::Win32Error(__FUNCSIG__ ": DuplicateTokenEx() failed", GetLastError());
+		}
+
+		return *this;
+	}
+
+	Token& Token::Move(Token& other) noexcept
+	{
+		if (&other == this)
+			return *this;
+
+		Close();
+		m_token = std::move(other.m_token);
+		
+		return *this;
 	}
 }

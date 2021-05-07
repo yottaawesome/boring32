@@ -10,11 +10,18 @@ namespace Boring32::Security
 		public:
 			virtual ~Token();
 			Token();
+			Token(const Token& other);
+			Token(Token&& other) noexcept;
 			Token(const DWORD desiredAccess);
-			Token(HANDLE processHandle, const DWORD desiredAccess);
+			Token(const HANDLE processHandle, const DWORD desiredAccess);
 			Token(const HANDLE token, const bool ownOrDuplicate);
 
 		public:
+			virtual Token& operator=(const Token& other);
+			virtual Token& operator=(Token&& other) noexcept;
+
+		public:
+			virtual void Close();
 			virtual Raii::Win32Handle GetToken() const noexcept;
 			/// <summary>
 			/// https://docs.microsoft.com/en-us/windows/win32/secauthz/privilege-constants
@@ -23,6 +30,8 @@ namespace Boring32::Security
 			virtual void SetIntegrity(const Constants::GroupIntegrity integrity);
 
 		protected:
+			virtual Token& Copy(const Token& other);
+			virtual Token& Move(Token& other) noexcept;
 
 		protected:
 			Raii::Win32Handle m_token;

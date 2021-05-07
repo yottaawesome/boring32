@@ -13,4 +13,8 @@ namespace Boring32::Security
 		const std::wstring& privilege,
 		const bool enabled
 	);
+	void SetIntegrity(
+		HANDLE token, 
+		const Constants::GroupIntegrity integrity
+	);
 }
