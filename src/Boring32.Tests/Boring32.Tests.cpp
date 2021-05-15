@@ -743,23 +743,44 @@ void TestAsyncWebSocket()
 	std::wcout << response.c_str() << std::endl;*/
 }
 
+void Subauths()
+{
+	const std::vector<DWORD> subauths{
+			SECURITY_BUILTIN_DOMAIN_RID,
+			DOMAIN_ALIAS_RID_ADMINS
+	};
+	Boring32::Security::Sid sid(
+		SECURITY_NT_AUTHORITY,
+		subauths
+	);
+	//TestAsyncWebSocket();
+}
+
+void SingleList()
+{
+	struct A
+	{
+		A(int x):X(x) {}
+		int X;
+	};
+
+	Boring32::DataStructures::SinglyLinkedList<A> test;
+	test.Add(7);
+	test.Add(12);
+	//auto i = test.GetAt(1);
+	//std::wcout << i->X << std::endl;
+	std::wcout << test.Pop()->X << std::endl;
+	std::wcout << test.Pop()->X << std::endl;
+}
+
 int main(int argc, char** args)
 {
 	try
 	{
-		const std::vector<DWORD> subauths{
-			SECURITY_BUILTIN_DOMAIN_RID,
-			DOMAIN_ALIAS_RID_ADMINS
-		};
-		Boring32::Security::Sid sid(
-			SECURITY_NT_AUTHORITY, 
-			subauths
-		);
-		//TestAsyncWebSocket();
+		SingleList();
 	}
 	catch (const std::exception& ex)
 	{
-		Sleep(2000);
 		std::wcerr << ex.what() << std::endl;
 	}
 

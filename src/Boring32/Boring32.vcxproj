@@ -216,6 +216,7 @@
     <ClInclude Include="include\Crypto\SensitiveString.hpp" />
     <ClInclude Include="include\Crypto\TempCertImport.hpp" />
     <ClInclude Include="include\DataStructures\CappedStack.hpp" />
+    <ClInclude Include="include\DataStructures\SinglyLinkedList.hpp" />
     <ClInclude Include="include\Error\ComError.hpp" />
     <ClInclude Include="include\Error\NtStatusError.hpp" />
     <ClInclude Include="include\Registry\Registry.hpp" />
