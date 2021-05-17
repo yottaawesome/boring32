@@ -63,6 +63,13 @@ namespace Boring32::DataStructures
 				new(&newEntry->Item) std::shared_ptr<T>(new T(std::forward<Args>(args)...));
 			}
 
+			virtual USHORT GetDepth()
+			{
+				if (listHeader == nullptr)
+					return 0;
+				return QueryDepthSList(listHeader);
+			}
+
 			virtual void Add(std::shared_ptr<T> newVal)
 			{
 				ListElement<T>* newEntry = InternalAdd();
