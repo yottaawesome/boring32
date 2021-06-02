@@ -56,4 +56,7 @@ namespace Boring32::Registry
 		if (status != ERROR_SUCCESS)
 			throw Error::Win32Error(__FUNCSIG__ ": RegSetValueExW() failed", status);
 	}
+
+	void DeleteKeyAndSubkey(const HKEY parent, const std::wstring& subkey);
+	void DeleteSubkeys(const HKEY parent, const std::wstring& subkey);
 }

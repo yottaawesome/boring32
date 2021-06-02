@@ -25,4 +25,32 @@ namespace Boring32::WindowsRegistry
         if (status != ERROR_SUCCESS)
             throw Error::Win32Error(__FUNCSIG__ ": failed to watch registry key for changes", status);
     }
+
+    void DeleteKeyAndSubkey(const HKEY parent, const std::wstring& subkey)
+    {
+        if (parent == nullptr)
+            throw std::invalid_argument(__FUNCSIG__ ": parent cannot be nullptr");
+
+        // https://docs.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-shdeletekeyw
+        const LSTATUS status = SHDeleteKeyW(
+            parent,
+            subkey.c_str()
+        );
+        if (status != ERROR_SUCCESS)
+            throw Error::Win32Error(__FUNCSIG__ ": SHDeleteKeyW() failed", GetLastError());
+    }
+
+    void DeleteSubkeys(const HKEY parent, const std::wstring& subkey)
+    {
+        if (parent == nullptr)
+            throw std::invalid_argument(__FUNCSIG__ ": parent cannot be nullptr");
+
+        // https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletetreew
+        const LSTATUS status = RegDeleteTreeW(
+            parent,
+            subkey.c_str()
+        );
+        if (status != ERROR_SUCCESS)
+            throw Error::Win32Error(__FUNCSIG__ ": RegDeleteTreeW() failed", GetLastError());
+    }
 }

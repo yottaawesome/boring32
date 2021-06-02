@@ -13,6 +13,7 @@
 #include <comdef.h>
 #include <compressapi.h>
 #include <Bcrypt.h>
+#include <shlwapi.h>
 
 #pragma comment(lib, "winhttp.lib")
 #pragma comment(lib, "Pathcch.lib")
@@ -22,3 +23,4 @@
 #pragma comment(lib, "Bcrypt.lib")
 #pragma comment(lib, "taskschd.lib")
 #pragma comment(lib, "Cryptui.lib")
+#pragma comment(lib, "Shlwapi.lib")
