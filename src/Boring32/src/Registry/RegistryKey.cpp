@@ -123,53 +123,17 @@ namespace Boring32::Registry
 		if (m_key == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": m_key is null");
 
-		DWORD sizeInBytes = 0;
-		// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew
-		LONG statusCode = RegGetValueW(
-			m_key.get(),
-			nullptr,
-			valueName.c_str(),
-			RRF_RT_REG_SZ,
-			nullptr,
-			nullptr,
-			&sizeInBytes
-		);
-		if (statusCode != ERROR_SUCCESS)
-			throw Error::Win32Error(
-				__FUNCSIG__ ": RegGetValueW() failed (1)",
-				statusCode
-			);
-
-		out.resize(sizeInBytes / sizeof(wchar_t), '\0');
-		statusCode = RegGetValueW(
-			m_key.get(),
-			nullptr,
-			valueName.c_str(),
-			RRF_RT_REG_SZ,
-			nullptr,
-			&out[0],
-			&sizeInBytes
-		);
-		if (statusCode != ERROR_SUCCESS)
-			throw Error::Win32Error(
-				__FUNCSIG__ ": RegGetValueW() failed (2)",
-				statusCode
-			);
-
-		out.resize(sizeInBytes / sizeof(wchar_t));
-		// Exclude terminating null
-		if (out.empty() == false)
-			out.pop_back();
+		Registry::GetValue(m_key.get(), valueName, out);
 	}
 
 	void RegistryKey::GetValue(const std::wstring& valueName, DWORD& out)
 	{
-		Registry::GetValue(m_key.get(), valueName, RRF_RT_REG_DWORD, out);
+		Registry::GetValue(m_key.get(), valueName, out);
 	}
 
 	void RegistryKey::GetValue(const std::wstring& valueName, size_t& out)
 	{
-		Registry::GetValue(m_key.get(), valueName, RRF_RT_REG_QWORD, out);
+		Registry::GetValue(m_key.get(), valueName, out);
 	}
 
 	void RegistryKey::WriteValue(

@@ -777,6 +777,8 @@ int main(int argc, char** args)
 {
 	try
 	{
+		DWORD dumb = 0;
+		Boring32::Registry::GetValue(HKEY_LOCAL_MACHINE, L"", dumb);
 		SingleList();
 	}
 	catch (const std::exception& ex)

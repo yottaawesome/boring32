@@ -1,10 +1,87 @@
 #include "pch.hpp"
 #include "include/Async/Event.hpp"
 #include "include/Error/Win32Error.hpp"
-#include "include/Registry/Registry.hpp"
+#include "include/Registry/RegistryFuncs.hpp"
 
-namespace Boring32::WindowsRegistry
+namespace Boring32::Registry
 {
+    template<>
+    std::wstring GetValue<std::wstring, RRF_RT_REG_SZ>(
+        const HKEY key,
+        const std::wstring& valueName
+        )
+    {
+        if (key == nullptr)
+            throw std::runtime_error(__FUNCSIG__ ": m_key is null");
+
+        std::wstring out;
+        DWORD sizeInBytes = 0;
+        // https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew
+        LONG statusCode = RegGetValueW(
+            key,
+            nullptr,
+            valueName.c_str(),
+            RRF_RT_REG_SZ,
+            nullptr,
+            nullptr,
+            &sizeInBytes
+        );
+        if (statusCode != ERROR_SUCCESS)
+            throw Error::Win32Error(
+                __FUNCSIG__ ": RegGetValueW() failed (1)",
+                statusCode
+            );
+
+        out.resize(sizeInBytes / sizeof(wchar_t), '\0');
+        statusCode = RegGetValueW(
+            key,
+            nullptr,
+            valueName.c_str(),
+            RRF_RT_REG_SZ,
+            nullptr,
+            &out[0],
+            &sizeInBytes
+        );
+        if (statusCode != ERROR_SUCCESS)
+            throw Error::Win32Error(
+                __FUNCSIG__ ": RegGetValueW() failed (2)",
+                statusCode
+            );
+
+        out.resize(sizeInBytes / sizeof(wchar_t));
+        // Exclude terminating null
+        if (out.empty() == false)
+            out.pop_back();
+        return out;
+    }
+
+    void GetValue(
+        const HKEY key,
+        const std::wstring& valueName,
+        std::wstring& out
+    )
+    {
+        GetValue<std::wstring, RRF_RT_REG_SZ>(key, valueName);
+    }
+
+    void GetValue(
+        const HKEY key,
+        const std::wstring& valueName,
+        DWORD& out
+    )
+    {
+        GetValue<DWORD, RRF_RT_REG_DWORD>(key, valueName);
+    }
+
+    void GetValue(
+        const HKEY key,
+        const std::wstring& valueName,
+        size_t& out
+    )
+    {
+        GetValue<DWORD, RRF_RT_REG_QWORD>(key, valueName);
+    }
+
     // This should probably be integrated into RegistryKey to enable safety checks
     // against calling it multiple times causing resource leaks
     void WatchKey(const HKEY key, const Async::Event& eventToSignal)

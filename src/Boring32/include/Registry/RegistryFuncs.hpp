@@ -2,27 +2,26 @@
 #include <string>
 #include <stdexcept>
 #include <Windows.h>
-#include "include/Error/Win32Error.hpp"
+#include "../Error/Win32Error.hpp"
 
 namespace Boring32::Registry
 {
-	template<typename T>
-	void GetValue(
+	template<typename T, DWORD dataType>
+	T GetValue(
 		const HKEY key,
-		const std::wstring& valueName,
-		const DWORD type,
-		T& out
+		const std::wstring& valueName
 	)
 	{
 		if (key == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": key is nullptr");
 
+		T out;
 		DWORD sizeInBytes = sizeof(out);
 		const LSTATUS status = RegGetValueW(
 			key,
 			nullptr,
 			valueName.c_str(),
-			type,
+			dataType,
 			nullptr,
 			&out,
 			&sizeInBytes
@@ -32,7 +31,32 @@ namespace Boring32::Registry
 				__FUNCSIG__ ": RegGetValueW() failed",
 				status
 			);
+		return out;
 	}
+
+	template<>
+	std::wstring GetValue<std::wstring, RRF_RT_REG_SZ>(
+		const HKEY key,
+		const std::wstring& valueName
+	);
+
+	void GetValue(
+		const HKEY key,
+		const std::wstring& valueName,
+		std::wstring& out
+	);
+
+	void GetValue(
+		const HKEY key,
+		const std::wstring& valueName,
+		DWORD& out
+	);
+
+	void GetValue(
+		const HKEY key,
+		const std::wstring& valueName,
+		size_t& out
+	);
 
 	template<typename T>
 	void WriteValue(

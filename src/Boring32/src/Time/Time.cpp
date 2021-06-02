@@ -1,6 +1,6 @@
 #include "pch.hpp"
 #include <sstream>
-#include "include/Boring32.hpp"
+#include "include/Time/Time.hpp"
 
 namespace Boring32::Time
 {
