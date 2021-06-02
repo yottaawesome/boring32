@@ -61,7 +61,7 @@ namespace Boring32::Registry
         std::wstring& out
     )
     {
-        GetValue<std::wstring, RRF_RT_REG_SZ>(key, valueName);
+        out = GetValue<std::wstring, RRF_RT_REG_SZ>(key, valueName);
     }
 
     void GetValue(
@@ -70,7 +70,7 @@ namespace Boring32::Registry
         DWORD& out
     )
     {
-        GetValue<DWORD, RRF_RT_REG_DWORD>(key, valueName);
+        out = GetValue<DWORD, RRF_RT_REG_DWORD>(key, valueName);
     }
 
     void GetValue(
@@ -79,7 +79,7 @@ namespace Boring32::Registry
         size_t& out
     )
     {
-        GetValue<DWORD, RRF_RT_REG_QWORD>(key, valueName);
+        out = GetValue<DWORD, RRF_RT_REG_QWORD>(key, valueName);
     }
 
     // This should probably be integrated into RegistryKey to enable safety checks

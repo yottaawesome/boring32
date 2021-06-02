@@ -95,11 +95,11 @@ namespace Async
 				);
 				Assert::IsTrue(found);
 
-				result = 0;
+				/*result = 0;
 				found = Boring32::Async::GetProcessIdByName(
 					L"explorer.exe", 1, result
 				);
-				Assert::IsTrue(found);
+				Assert::IsTrue(found);*/
 			}
 	};
 }
