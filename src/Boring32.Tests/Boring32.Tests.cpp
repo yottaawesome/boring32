@@ -777,6 +777,8 @@ int main(int argc, char** args)
 {
 	try
 	{
+
+		QueueUserAPC([](ULONG_PTR ptr) {}, nullptr, 0);
 		DWORD dumb = 0;
 		Boring32::Registry::GetValue(HKEY_LOCAL_MACHINE, L"", dumb);
 		SingleList();

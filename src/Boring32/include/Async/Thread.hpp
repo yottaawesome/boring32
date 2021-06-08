@@ -10,16 +10,16 @@ namespace Boring32::Async
 	class Thread
 	{
 		public:
-			virtual void Close();
 			virtual ~Thread();
 
 			Thread();
-			Thread(void* param, bool destroyOnCompletion);
+			Thread(void* param);
 			Thread(const Thread& other);
-			virtual Thread& operator=(const Thread& other);
 			Thread(Thread&& other) noexcept;
+		
+		public:
+			virtual Thread& operator=(const Thread& other);
 			virtual Thread& operator=(Thread&& other) noexcept;
-
 			virtual bool operator==(const ThreadStatus status) const noexcept;
 
 		public:
@@ -31,15 +31,16 @@ namespace Boring32::Async
 			///		is waiting on a kernel object, it will not be 
 			///		terminated until the wait is finished.
 			/// </summary>
-			virtual void Terminate();
+			virtual void Terminate(const DWORD exitCode);
 			virtual void Suspend();
 			virtual void Resume();
 			virtual bool Join(const DWORD waitTime);
+			virtual void Close();
 			virtual void Start();
-			virtual void Start(int(*simpleFunc)());
-			virtual void Start(const std::function<int()>& func);
+			virtual void Start(int(*simpleFunc)(void*));
+			virtual void Start(const std::function<int(void*)>& func);
 			virtual ThreadStatus GetStatus() const noexcept;
-			virtual UINT GetExitCode() const noexcept;
+			virtual UINT GetExitCode() const;
 			virtual Raii::Win32Handle GetHandle() noexcept;
 			virtual bool WaitToStart(const DWORD millis);
 
@@ -52,12 +53,9 @@ namespace Boring32::Async
 
 		protected:
 			ThreadStatus m_status;
-			UINT m_returnCode;
-			UINT m_threadId;
 			Raii::Win32Handle m_threadHandle;
-			bool m_destroyOnCompletion;
 			void* m_threadParam;
-			std::function<int()> m_func;
+			std::function<int(void*)> m_func;
 			Event m_started;
 	};
 }
