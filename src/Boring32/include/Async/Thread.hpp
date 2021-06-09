@@ -9,16 +9,17 @@ namespace Boring32::Async
 {
 	class Thread
 	{
+		// Default constructible, movable, not copyable
 		public:
 			virtual ~Thread();
 
 			Thread();
 			Thread(void* param);
-			Thread(const Thread& other);
 			Thread(Thread&& other) noexcept;
-		
+			Thread(const Thread&) = delete;
+
 		public:
-			virtual Thread& operator=(const Thread& other);
+			virtual Thread& operator=(const Thread&) = delete;
 			virtual Thread& operator=(Thread&& other) noexcept;
 			virtual bool operator==(const ThreadStatus status) const noexcept;
 

@@ -160,7 +160,7 @@ namespace Boring32::Async
 		LARGE_INTEGER liDueTime;
 		liDueTime.QuadPart = time;
 		//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-setwaitabletimer
-		bool succeeded = SetWaitableTimer(
+		const bool succeeded = SetWaitableTimer(
 			m_handle.GetHandle(),
 			&liDueTime,
 			period,
@@ -176,15 +176,23 @@ namespace Boring32::Async
 	{
 		if (m_handle == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": no timer to wait on");
-		DWORD status = WaitForSingleObject(m_handle.GetHandle(), millis);
-		if (status == WAIT_OBJECT_0)
-			return true;
-		if (status == WAIT_TIMEOUT)
-			return false;
-		if (status == WAIT_FAILED)
-			throw std::runtime_error(__FUNCSIG__ ": WaitForSingleObject failed");
-		if (status == WAIT_ABANDONED)
-			throw std::runtime_error(__FUNCSIG__ ": the wait was abandoned");
+
+		const DWORD status = WaitForSingleObject(m_handle.GetHandle(), millis);
+		switch (status)
+		{
+			case WAIT_OBJECT_0:
+				return true;
+
+			case WAIT_TIMEOUT:
+				return false;
+
+			case WAIT_FAILED:
+				throw std::runtime_error(__FUNCSIG__ ": WaitForSingleObject() failed");
+
+			case WAIT_ABANDONED:
+				throw std::runtime_error(__FUNCSIG__ ": the wait was abandoned");
+		}
+
 		return false;
 	}
 
@@ -200,6 +208,7 @@ namespace Boring32::Async
 	{
 		if (m_handle == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": m_handle is nullptr");
+
 		bool succeeded = CancelWaitableTimer(m_handle.GetHandle());
 		if (succeeded == false)
 			throw Error::Win32Error(__FUNCSIG__, GetLastError());

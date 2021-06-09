@@ -30,17 +30,6 @@ namespace Boring32::Async
 		m_threadParam = param;
 	}
 
-	Thread::Thread(const Thread& other)
-	{
-		Copy(other);
-	}
-
-	Thread& Thread::operator=(const Thread& other)
-	{
-		Copy(other);
-		return *this;
-	}
-
 	void Thread::Copy(const Thread& other)
 	{
 		Close();
