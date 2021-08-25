@@ -14,6 +14,8 @@
 #include <compressapi.h>
 #include <Bcrypt.h>
 #include <shlwapi.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
 
 #pragma comment(lib, "winhttp.lib")
 #pragma comment(lib, "Pathcch.lib")
@@ -24,3 +26,4 @@
 #pragma comment(lib, "taskschd.lib")
 #pragma comment(lib, "Cryptui.lib")
 #pragma comment(lib, "Shlwapi.lib")
+#pragma comment(lib, "Ws2_32.lib")

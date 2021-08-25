@@ -1,4 +1,6 @@
-﻿#include <Windows.h>
+﻿#define WIN32_LEAN_AND_MEAN
+
+#include <Windows.h>
 #include <iostream>
 #include <sstream>
 #include <dbghelp.h>
@@ -9,6 +11,7 @@
 #include "Boring32.Tests.h"
 #include "../Boring32/include/Boring32.hpp"
 
+import boring32.winsock;
 #include "pathcch.h"
 #pragma comment(lib, "Pathcch.lib")
 
@@ -773,15 +776,19 @@ void SingleList()
 	std::wcout << test.Pop()->X << std::endl;
 }
 
+void UserApc()
+{
+	QueueUserAPC([](ULONG_PTR ptr) {}, nullptr, 0);
+	DWORD dumb = 0;
+	Boring32::Registry::GetValue(HKEY_LOCAL_MACHINE, L"", dumb);
+	SingleList();
+}
+
 int main(int argc, char** args)
 {
 	try
 	{
-
-		QueueUserAPC([](ULONG_PTR ptr) {}, nullptr, 0);
-		DWORD dumb = 0;
-		Boring32::Registry::GetValue(HKEY_LOCAL_MACHINE, L"", dumb);
-		SingleList();
+		Boring32::WinSock::WinSockInit init;
 	}
 	catch (const std::exception& ex)
 	{

@@ -494,6 +494,13 @@
     <ClCompile Include="src\Security\SecurityFunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="include\WinSock\boring32.winsock.ixx" />
+    <ClCompile Include="src\Networking\NetworkingFuncs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Networking\WinSockInit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

@@ -110,7 +110,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
@@ -150,7 +150,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -265,6 +265,7 @@
     <ClInclude Include="src\targetver.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\WinSock\boring32.winsock.ixx" />
     <ClCompile Include="src\Async\AsyncFuncs.cpp" />
     <ClCompile Include="src\Async\CriticalSectionLock.cpp" />
     <ClCompile Include="src\Async\Event.cpp" />
@@ -310,6 +311,8 @@
     <ClCompile Include="src\Async\Pipes\AnonymousPipe.cpp" />
     <ClCompile Include="src\Async\Process.cpp" />
     <ClCompile Include="src\Async\ProcessInfo.cpp" />
+    <ClCompile Include="src\Networking\NetworkingFuncs.cpp" />
+    <ClCompile Include="src\Networking\WinSockInit.cpp" />
     <ClCompile Include="src\Security\SecurityFunctions.cpp" />
     <ClCompile Include="src\Security\Sid.cpp" />
     <ClCompile Include="src\Raii\Win32Handle.cpp" />
