@@ -89,6 +89,11 @@ namespace Boring32::Error
 		const HRESULT hr
 	) noexcept;
 
+	void TranslateErrorCode(const DWORD errorCode, std::wstring& out) noexcept;
+	void TranslateErrorCode(const HMODULE moduleToReadFrom, const DWORD errorCode, std::wstring& out) noexcept;
+	void TranslateErrorCode(const DWORD errorCode, std::string& out) noexcept;
+	void TranslateErrorCode(const HMODULE moduleToReadFrom, const DWORD errorCode, std::string& out) noexcept;
+
 	template<typename T, typename S>
 	inline bool TryCatchLogToWCerr(const T& function, const S* string) noexcept
 	{

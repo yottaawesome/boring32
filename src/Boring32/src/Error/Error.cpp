@@ -284,4 +284,76 @@ namespace Boring32::Error
             return "";
         }
     }
+
+    void TranslateErrorCode(const DWORD errorCode, std::wstring& out) noexcept
+    {
+        TranslateErrorCode(nullptr, errorCode, out);
+    }
+
+    void TranslateErrorCode(const HMODULE moduleToReadFrom, const DWORD errorCode, std::wstring& out) noexcept
+    {
+        void* ptrMsgBuf = nullptr;
+        DWORD flags =
+            FORMAT_MESSAGE_ALLOCATE_BUFFER |
+            FORMAT_MESSAGE_FROM_SYSTEM |
+            FORMAT_MESSAGE_IGNORE_INSERTS;
+        if (moduleToReadFrom)
+            flags |= FORMAT_MESSAGE_FROM_HMODULE;
+
+        // See https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew
+        FormatMessageW(
+            flags,              // dwFlags
+            moduleToReadFrom,   // lpSource
+            errorCode,          // dwMessageId
+            LANG_USER_DEFAULT,  // dwLanguageId
+            (LPWSTR)&ptrMsgBuf, // lpBuffer
+            0,                  // nSize
+            nullptr             // Arguments
+        );
+        if (ptrMsgBuf == nullptr)
+        {
+            out = L"Failed to translate Win32 error code: " + std::to_wstring(errorCode);
+            return;
+        }
+
+        out = (LPWSTR)ptrMsgBuf;
+        out += L" (error code: " + std::to_wstring(errorCode) + L")";
+        LocalFree(ptrMsgBuf);
+    }
+
+    void TranslateErrorCode(const DWORD errorCode, std::string& out) noexcept
+    {
+        TranslateErrorCode(nullptr, errorCode, out);
+    }
+
+    void TranslateErrorCode(const HMODULE moduleToReadFrom, const DWORD errorCode, std::string& out) noexcept
+    {
+        void* ptrMsgBuf = nullptr;
+        DWORD flags =
+            FORMAT_MESSAGE_ALLOCATE_BUFFER |
+            FORMAT_MESSAGE_FROM_SYSTEM |
+            FORMAT_MESSAGE_IGNORE_INSERTS;
+        if (moduleToReadFrom)
+            flags |= FORMAT_MESSAGE_FROM_HMODULE;
+
+        // See https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew
+        FormatMessageA(
+            flags,              // dwFlags
+            moduleToReadFrom,   // lpSource
+            errorCode,          // dwMessageId
+            LANG_USER_DEFAULT,  // dwLanguageId
+            (LPSTR)&ptrMsgBuf, // lpBuffer
+            0,                  // nSize
+            nullptr             // Arguments
+        );
+        if (ptrMsgBuf == nullptr)
+        {
+            out = "Failed to translate Win32 error code: " + std::to_string(errorCode);
+            return;
+        }
+
+        out = (LPSTR)ptrMsgBuf;
+        out += " (error code: " + std::to_string(errorCode) + ")";
+        LocalFree(ptrMsgBuf);
+    }
 }

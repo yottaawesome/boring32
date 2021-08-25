@@ -789,6 +789,7 @@ int main(int argc, char** args)
 	try
 	{
 		Boring32::WinSock::WinSockInit init;
+		throw Boring32::WinSock::WinSockError(995);
 	}
 	catch (const std::exception& ex)
 	{

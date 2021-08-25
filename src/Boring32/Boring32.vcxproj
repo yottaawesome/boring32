@@ -311,8 +311,9 @@
     <ClCompile Include="src\Async\Pipes\AnonymousPipe.cpp" />
     <ClCompile Include="src\Async\Process.cpp" />
     <ClCompile Include="src\Async\ProcessInfo.cpp" />
-    <ClCompile Include="src\Networking\NetworkingFuncs.cpp" />
-    <ClCompile Include="src\Networking\WinSockInit.cpp" />
+    <ClCompile Include="src\WinSock\WinSockError.cpp" />
+    <ClCompile Include="src\WinSock\WinSockFuncs.cpp" />
+    <ClCompile Include="src\WinSock\WinSockInit.cpp" />
     <ClCompile Include="src\Security\SecurityFunctions.cpp" />
     <ClCompile Include="src\Security\Sid.cpp" />
     <ClCompile Include="src\Raii\Win32Handle.cpp" />

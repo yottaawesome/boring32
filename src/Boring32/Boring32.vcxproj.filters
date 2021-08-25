@@ -495,10 +495,13 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="include\WinSock\boring32.winsock.ixx" />
-    <ClCompile Include="src\Networking\NetworkingFuncs.cpp">
+    <ClCompile Include="src\WinSock\WinSockFuncs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Networking\WinSockInit.cpp">
+    <ClCompile Include="src\WinSock\WinSockInit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WinSock\WinSockError.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
