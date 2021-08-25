@@ -789,7 +789,11 @@ int main(int argc, char** args)
 	try
 	{
 		Boring32::WinSock::WinSockInit init;
-		throw Boring32::WinSock::WinSockError(995);
+		std::vector<Boring32::WinSock::NetworkingAddress> names = Boring32::WinSock::Resolve(L"www.google.com");
+		for (const Boring32::WinSock::NetworkingAddress& x : names)
+		{
+			std::cout << x << std::endl;
+		}
 	}
 	catch (const std::exception& ex)
 	{

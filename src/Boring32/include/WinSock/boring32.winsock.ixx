@@ -1,6 +1,7 @@
 module;
 
 #include "pch.hpp"
+#include <iostream>
 #include <vector>
 #include <string>
 #include <stdexcept>
@@ -14,6 +15,7 @@ export namespace Boring32::WinSock
 		public:
 			virtual ~WinSockError();
 			WinSockError(const DWORD errorCode);
+			WinSockError(const std::string& message, const DWORD errorCode);
 
 			virtual DWORD GetErrorCode() const noexcept;
 			virtual const char* what() const noexcept override;
@@ -40,10 +42,20 @@ export namespace Boring32::WinSock
 			WSAData m_wsaData;
 	};
 
-	struct ResolvedNames
+	enum class AddressFamily : uint32_t
 	{
-		std::vector<std::wstring> Names;
+		Unknown,
+		IPv4 = 1,
+		IPv6
 	};
 
-	ResolvedNames Resolve(const std::wstring& name);
+	struct NetworkingAddress
+	{
+		AddressFamily Family = AddressFamily::Unknown;
+		std::string Value;
+	};
+
+	std::vector<NetworkingAddress> Resolve(const std::wstring& name);
+
+	std::ostream& operator<<(std::ostream& os, const NetworkingAddress& addr);
 }
