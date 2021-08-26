@@ -56,6 +56,8 @@ export namespace Boring32::WinSock
 	};
 
 	std::vector<NetworkingAddress> Resolve(const std::wstring& name);
+	std::vector<NetworkingAddress> Resolve2(const std::wstring& name);
+	std::vector<NetworkingAddress> Resolve3(const std::wstring& name);
 
 	std::ostream& operator<<(std::ostream& os, const NetworkingAddress& addr);
 }

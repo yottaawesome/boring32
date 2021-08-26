@@ -11,7 +11,9 @@
 #include "Boring32.Tests.h"
 #include "../Boring32/include/Boring32.hpp"
 
-import boring32.winsock;
+import boring32.winsock;
+
+
 #include "pathcch.h"
 #pragma comment(lib, "Pathcch.lib")
 
@@ -789,7 +791,14 @@ int main(int argc, char** args)
 	try
 	{
 		Boring32::WinSock::WinSockInit init;
-		std::vector<Boring32::WinSock::NetworkingAddress> names = Boring32::WinSock::Resolve(L"www.google.com");
+		/*std::vector<Boring32::WinSock::NetworkingAddress> names = Boring32::WinSock::Resolve(L"www.googledfsdf.com");
+		for (const Boring32::WinSock::NetworkingAddress& x : names)
+		{
+			std::cout << x << std::endl;
+		}*/
+
+		std::vector<Boring32::WinSock::NetworkingAddress> names = 
+			Boring32::WinSock::Resolve3(L"www.google.com");
 		for (const Boring32::WinSock::NetworkingAddress& x : names)
 		{
 			std::cout << x << std::endl;
