@@ -67,7 +67,7 @@ namespace Boring32::Async
 	{
 		m_event = OpenEventW(m_access, isInheritable, m_name.c_str());
 		if (m_event == nullptr)
-			throw Error::Win32Error("Failed to create or open event", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__ ": Failed to create or open event", GetLastError());
 	}
 
 	Event::Event(const Event& other) 
@@ -130,7 +130,7 @@ namespace Boring32::Async
 		if (m_event == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": No Event to wait on");
 
-		DWORD status = WaitForSingleObject(m_event.GetHandle(), INFINITE);
+		const DWORD status = WaitForSingleObject(m_event.GetHandle(), INFINITE);
 		if (status == WAIT_FAILED)
 			throw Error::Win32Error(__FUNCSIG__ ": WaitForSingleObject failed", GetLastError());
 		if (status == WAIT_ABANDONED)
@@ -140,17 +140,17 @@ namespace Boring32::Async
 	bool Event::WaitOnEvent(const DWORD millis, const bool alertable)
 	{
 		if (m_event == nullptr)
-			throw std::runtime_error("No Event to wait on");
+			throw std::runtime_error(__FUNCSIG__ ": No Event to wait on");
 
-		DWORD status = WaitForSingleObject(m_event.GetHandle(), millis);
+		const DWORD status = WaitForSingleObjectEx(m_event.GetHandle(), millis, alertable);
 		if (status == WAIT_OBJECT_0)
 			return true;
 		if (status == WAIT_TIMEOUT)
 			return false;
 		if (status == WAIT_FAILED)
-			throw Error::Win32Error("WaitForSingleObject failed", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__ ": WaitForSingleObject() failed", GetLastError());
 		if (status == WAIT_ABANDONED)
-			throw std::runtime_error("The wait was abandoned");
+			throw std::runtime_error(__FUNCSIG__ ": The wait was abandoned");
 		return false;
 	}
 
@@ -168,9 +168,9 @@ namespace Boring32::Async
 	void Event::Signal()
 	{
 		if (m_event == nullptr)
-			throw std::runtime_error("No Event to signal");
+			throw std::runtime_error(__FUNCSIG__ ": No Event to signal");
 		if (SetEvent(m_event.GetHandle()) == false)
-			throw Error::Win32Error("Failed to signal event", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__ ": Failed to signal event", GetLastError());
 	}
 
 	bool Event::Signal(std::nothrow_t) noexcept
@@ -189,11 +189,10 @@ namespace Boring32::Async
 			nullptr,			// security attributes
 			m_isManualReset,	// manual reset event
 			isSignaled,			// is initially signalled
-			m_name != L""		// name
-			? m_name.c_str()
-			: nullptr);
+			m_name != L"" ? m_name.c_str() : nullptr // name
+		);
 		if (m_event == nullptr)
-			throw Error::Win32Error("Failed to create or open event", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__ ": Failed to create or open event", GetLastError());
 		m_event.SetInheritability(isInheritable);
 	}
 }

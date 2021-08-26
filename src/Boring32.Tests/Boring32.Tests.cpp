@@ -798,7 +798,7 @@ int main(int argc, char** args)
 		}*/
 
 		std::vector<Boring32::WinSock::NetworkingAddress> names = 
-			Boring32::WinSock::Resolve3(L"www.google.com");
+			Boring32::WinSock::Resolve2(L"www.google.com");
 		for (const Boring32::WinSock::NetworkingAddress& x : names)
 		{
 			std::cout << x << std::endl;
