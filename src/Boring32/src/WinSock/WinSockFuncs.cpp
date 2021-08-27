@@ -1,5 +1,6 @@
 module;
 
+#include "pch.hpp"
 #include <string>
 #include <vector>
 #include <stdexcept>
@@ -93,8 +94,8 @@ namespace Boring32::WinSock
 		HANDLE  cancelHandle = nullptr;
 		PADDRINFOEXW queryResults = nullptr;
 		timeval t{
-			.tv_sec = 1,         /* seconds */
-			.tv_usec = 0        /* and microseconds */
+			.tv_sec = 0,         /* seconds */
+			.tv_usec = 10        /* and microseconds */
 		};
 
 		Async::Event e(false, true, false);
@@ -104,7 +105,7 @@ namespace Boring32::WinSock
 		const int error = GetAddrInfoExW(
 			name.c_str(),
 			nullptr,
-			NS_DNS,
+			NS_ALL,
 			nullptr,
 			&hints,
 			&queryResults,

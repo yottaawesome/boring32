@@ -786,10 +786,51 @@ void UserApc()
 	SingleList();
 }
 
+// see https://en.cppreference.com/w/cpp/types/enable_if
+template<typename X>
+struct T {
+	enum { int_t, float_t } type;
+	template <typename Integer, std::enable_if_t<std::is_integral<Integer>::value, bool> = true>
+	T(Integer) : type(int_t) {}
+
+	template <typename Floating, std::enable_if_t<std::is_floating_point<Floating>::value, bool> = true>
+	T(Floating) : type(float_t) {}
+
+	template <typename Stuff, std::enable_if_t<std::is_class<Stuff>::value, bool> = true>
+	void Blah(Stuff* s)
+	{
+	}
+
+	template <typename Stuff, std::enable_if_t<std::is_integral<Stuff>::value, bool> = true>
+	void Blah(Stuff s)
+	{
+	}
+
+	template <typename A = X, std::enable_if<std::is_integral<A>::value, bool>::type = true>
+	int Blah2()
+	{
+		return 1;
+	}
+
+	template <typename M = X, std::enable_if<std::is_class<M>::value, bool>::type = true>
+	void Blah2()
+	{
+		
+	}
+};
+class V {};
 int main(int argc, char** args)
 {
 	try
 	{
+		T<int> s(5);
+		s.Blah(&s);
+		s.Blah(1);
+		s.Blah2();
+
+		T<V> f(5);
+		f.Blah2();
+
 		Boring32::WinSock::WinSockInit init;
 		/*std::vector<Boring32::WinSock::NetworkingAddress> names = Boring32::WinSock::Resolve(L"www.googledfsdf.com");
 		for (const Boring32::WinSock::NetworkingAddress& x : names)
