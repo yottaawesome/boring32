@@ -1,10 +1,12 @@
 #include "pch.hpp"
+#include <format>
+#include <algorithm>
 #include <winhttp.h>
 #include "include/Strings/Strings.hpp"
 #include "include/Error/Error.hpp"
 #include "Boring32/include/Library/Library.hpp"
 
-// TODO: clean up
+// TODO: clean up, replace stringstream formatting with std::format
 namespace Boring32::Error
 {
     std::stringstream& PrintExceptionToStringStream(
@@ -85,21 +87,18 @@ namespace Boring32::Error
             0,
             nullptr
         );
+        if (ptrMsgBuf == nullptr)
+        {
+            stringToHoldMessage = std::format(
+                "{} [{}]: failed to translate Win32 error code: {}", 
+                __FUNCSIG__, __LINE__, errorCode);
+            return;
+        }
 
-        if (ptrMsgBuf != nullptr)
-        {
-            stringToHoldMessage = (LPSTR)ptrMsgBuf;
-            LocalFree(ptrMsgBuf);
-        }
-        else
-        {
-            std::stringstream wss;
-            wss
-                << __FUNCSIG__
-                << " failed to translate Win32 error code: "
-                << std::to_string(errorCode);
-            stringToHoldMessage = wss.str();
-        }
+        stringToHoldMessage = (LPSTR)ptrMsgBuf;
+        LocalFree(ptrMsgBuf);
+        while (stringToHoldMessage.back() == '\n' || stringToHoldMessage.back() == '\r')
+            stringToHoldMessage.pop_back();
     }
 
     void GetErrorCodeString(const DWORD errorCode, HMODULE moduleToReadFrom, std::wstring& stringToHoldMessage) noexcept
@@ -111,7 +110,7 @@ namespace Boring32::Error
             FORMAT_MESSAGE_IGNORE_INSERTS;
         if (moduleToReadFrom)
             flags |= FORMAT_MESSAGE_FROM_HMODULE;
-        
+
         void* ptrMsgBuf = nullptr;
         FormatMessageW(
             flags,
@@ -122,21 +121,18 @@ namespace Boring32::Error
             0,
             nullptr
         );
+        if (ptrMsgBuf == nullptr)
+        {
+            stringToHoldMessage = std::format(
+                L"{} [{}]: failed to translate Win32 error code: {}", 
+                TEXT(__FUNCSIG__), __LINE__, errorCode);
+            return;
+        }
 
-        if (ptrMsgBuf != nullptr)
-        {
-            stringToHoldMessage = (LPWSTR)ptrMsgBuf;
-            LocalFree(ptrMsgBuf);
-        }
-        else
-        {
-            std::wstringstream wss;
-            wss
-                << __FUNCSIG__
-                << L" failed to translate Win32 error code: "
-                << std::to_wstring(errorCode);
-            stringToHoldMessage = wss.str();
-        }
+        stringToHoldMessage = (LPWSTR)ptrMsgBuf;
+        LocalFree(ptrMsgBuf);
+        while (stringToHoldMessage.back() == '\n' || stringToHoldMessage.back() == '\r')
+            stringToHoldMessage.pop_back();
     }
 
 	void GetErrorCodeString(const DWORD errorCode, std::wstring& stringToHoldMessage) noexcept
