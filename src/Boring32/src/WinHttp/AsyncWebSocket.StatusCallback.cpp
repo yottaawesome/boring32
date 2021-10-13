@@ -57,6 +57,10 @@ namespace Boring32::WinHttp::WebSockets
 			{
 				std::wcout << L"WINHTTP_CALLBACK_STATUS_REQUEST_SENT" << std::endl;
 				
+				AsyncWebSocket* socket = (AsyncWebSocket*)dwContext;
+				if(socket)
+					std::wcout << L"WINHTTP_CALLBACK_STATUS_REQUEST_SENT: socket available" << std::endl;
+
 
 				const bool success = WinHttpReceiveResponse(hInternet, 0);
 				if (success == false)
@@ -235,10 +239,8 @@ namespace Boring32::WinHttp::WebSockets
 			{
 				std::wcout << L"WINHTTP_CALLBACK_STATUS_READ_COMPLETE" << std::endl;
 				
-
 				try
 				{
-					std::wcout << GetCurrentThreadId() << std::endl;
 					AsyncWebSocket* socket = (AsyncWebSocket*)dwContext;
 
 					WINHTTP_WEB_SOCKET_STATUS* status = (WINHTTP_WEB_SOCKET_STATUS*)lpvStatusInformation;

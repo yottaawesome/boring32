@@ -100,8 +100,6 @@ namespace Boring32::WinHttp::WebSockets
 
 	std::shared_future<WebSocketReadResult> AsyncWebSocket::Receive2()
 	{
-		std::wcout << GetCurrentThreadId() << std::endl;
-
 		if (m_status != WebSocketStatus::Connected)
 			throw std::runtime_error("WebSocket is not connected to receive data");
 

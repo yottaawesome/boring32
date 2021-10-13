@@ -850,7 +850,8 @@ int main(int argc, char** args)
 {
 	try
 	{
-		throw Boring32::Error::Win32Error("Oh no", ERROR_ACCESS_DENIED);
+		TestAsyncWebSocket();
+		//throw Boring32::Error::Win32Error("Oh no", ERROR_ACCESS_DENIED);
 	}
 	catch (const std::exception& ex)
 	{
