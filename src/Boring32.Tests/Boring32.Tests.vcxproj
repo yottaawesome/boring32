@@ -174,9 +174,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Boring32.Tests.h" />
+    <ClInclude Include="Experiments1Main.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Boring32.Tests.cpp" />
+    <ClCompile Include="Experiments1.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Boring32\Boring32.vcxproj">

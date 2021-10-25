@@ -18,9 +18,15 @@
     <ClCompile Include="Boring32.Tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Experiments1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Boring32.Tests.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Experiments1Main.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

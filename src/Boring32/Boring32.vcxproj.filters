@@ -504,6 +504,10 @@
     <ClCompile Include="src\WinSock\WinSockError.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Strings\strings.ixx" />
+    <ClCompile Include="src\Strings\Utf16String.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

@@ -311,6 +311,8 @@
     <ClCompile Include="src\Async\Pipes\AnonymousPipe.cpp" />
     <ClCompile Include="src\Async\Process.cpp" />
     <ClCompile Include="src\Async\ProcessInfo.cpp" />
+    <ClCompile Include="src\Strings\strings.ixx" />
+    <ClCompile Include="src\Strings\Utf16String.cpp" />
     <ClCompile Include="src\WinSock\WinSockError.cpp" />
     <ClCompile Include="src\WinSock\WinSockFuncs.cpp" />
     <ClCompile Include="src\WinSock\WinSockInit.cpp" />
