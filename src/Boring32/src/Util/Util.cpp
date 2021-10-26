@@ -64,21 +64,27 @@ namespace Boring32::Util
 
     void ByteVectorToString(const std::vector<std::byte>& vector, std::wstring& result)
     {
-        result = { (wchar_t*)&vector[0], vector.size() / sizeof(wchar_t) };
+        result = { reinterpret_cast<const wchar_t*>(&vector[0]), vector.size() / sizeof(wchar_t) };
     }
 
     void ByteVectorToString(const std::vector<std::byte>& vector, std::string& result)
     {
-        result = { (char*)&vector[0], vector.size() / sizeof(char) };
+        result = { reinterpret_cast<const char*>(&vector[0]), vector.size() / sizeof(char) };
     }
 
     std::vector<std::byte> StringToByteVector(const std::wstring& str)
     {
-        return { (std::byte*)&str[0], (std::byte*)&str[0] + str.size() * sizeof(wchar_t) };
+        return { 
+            reinterpret_cast<const std::byte*>(&str[0]), 
+            reinterpret_cast<const std::byte*>(&str[0]) + str.size() * sizeof(wchar_t) 
+        };
     }
 
     std::vector<std::byte> StringToByteVector(const std::string& str)
     {
-        return { (std::byte*)&str[0], (std::byte*)&str[0] + str.size() * sizeof(char) };
+        return { 
+            reinterpret_cast<const std::byte*>(&str[0]), 
+            reinterpret_cast<const std::byte*>(&str[0]) + str.size() * sizeof(char)
+        };
     }
 }
