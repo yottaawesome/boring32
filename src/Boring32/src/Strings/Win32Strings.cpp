@@ -55,6 +55,8 @@ namespace Boring32::Strings
 			nullptr,									// lpWideCharStr
 			0											// cchWideChar
 		);
+		if (bytesRequired == 0)
+			throw Error::Win32Error("ConvertStringToWString(): MultiByteToWideChar() [1] failed", GetLastError());
 
 		std::wstring wstrTo(bytesRequired / sizeof(wchar_t), '\0');
 		// https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar
@@ -67,7 +69,7 @@ namespace Boring32::Strings
 			static_cast<int>(wstrTo.size())				// cchWideChar
 		);
 		if (status == 0)
-			throw Error::Win32Error("ConvertStringToWString(): MultiByteToWideChar() failed", GetLastError());
+			throw Error::Win32Error("ConvertStringToWString(): MultiByteToWideChar() [2] failed", GetLastError());
 
 		return wstrTo;
 	}
