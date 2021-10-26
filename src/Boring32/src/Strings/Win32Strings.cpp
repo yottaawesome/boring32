@@ -13,15 +13,15 @@ namespace Boring32::Strings
 
 		std::string strTo(wstr.size(), '\0');
 		// https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-widechartomultibyte
-		DWORD status = WideCharToMultiByte(
-			CP_UTF8,			// CodePage
-			0,					// dwFlags 
-			wstr.c_str(),		// lpWideCharStr
-			(int)wstr.size(),	// cchWideChar 
-			&strTo[0],			// lpMultiByteStr
-			(int)strTo.size(),	// cbMultiByte
-			nullptr,			// lpDefaultChar
-			nullptr				// lpUsedDefaultChar
+		const DWORD status = WideCharToMultiByte(
+			CP_UTF8,										// CodePage
+			0,												// dwFlags 
+			wstr.c_str(),									// lpWideCharStr
+			static_cast<int>(wstr.size()),					// cchWideChar 
+			&strTo[0],										// lpMultiByteStr
+			static_cast<int>(strTo.size()*sizeof(char)),	// cbMultiByte
+			nullptr,										// lpDefaultChar
+			nullptr											// lpUsedDefaultChar
 		);
 		if (status == 0)
 			throw Error::Win32Error("ConvertWStringToString(): WideCharToMultiByte() failed", GetLastError());
@@ -36,13 +36,13 @@ namespace Boring32::Strings
 
 		std::wstring wstrTo(str.size(), '\0');
 		// https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar
-		DWORD status = MultiByteToWideChar(
-			CP_UTF8,			// CodePage
-			0,					// dwFlags
-			&str[0],			// lpMultiByteStr
-			(int)str.size(),	// cbMultiByte
-			&wstrTo[0],			// lpWideCharStr
-			(int)wstrTo.size()	// cchWideChar
+		const DWORD status = MultiByteToWideChar(
+			CP_UTF8,									// CodePage
+			0,											// dwFlags
+			&str[0],									// lpMultiByteStr
+			static_cast<int>(str.size()*sizeof(char)),	// cbMultiByte
+			&wstrTo[0],									// lpWideCharStr
+			static_cast<int>(wstrTo.size())				// cchWideChar
 		);
 		if (status == 0)
 			throw Error::Win32Error("ConvertStringToWString(): MultiByteToWideChar() failed", GetLastError());
