@@ -13,7 +13,7 @@ namespace Boring32::Strings
 
 		const DWORD bytesRequired = WideCharToMultiByte(
 			CP_UTF8,										// CodePage
-			0,												// dwFlags 
+			WC_NO_BEST_FIT_CHARS,							// dwFlags 
 			&wstr[0],										// lpWideCharStr
 			static_cast<int>(wstr.size()),					// cchWideChar 
 			nullptr,										// lpMultiByteStr
@@ -28,8 +28,8 @@ namespace Boring32::Strings
 		// https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-widechartomultibyte
 		const DWORD status = WideCharToMultiByte(
 			CP_UTF8,										// CodePage
-			0,												// dwFlags 
-			wstr.c_str(),									// lpWideCharStr
+			WC_NO_BEST_FIT_CHARS,							// dwFlags 
+			&wstr[0],										// lpWideCharStr
 			static_cast<int>(wstr.size()),					// cchWideChar 
 			&strTo[0],										// lpMultiByteStr
 			static_cast<int>(strTo.size()*sizeof(char)),	// cbMultiByte
@@ -49,7 +49,7 @@ namespace Boring32::Strings
 
 		const DWORD bytesRequired = MultiByteToWideChar(
 			CP_UTF8,									// CodePage
-			0,											// dwFlags
+			WC_NO_BEST_FIT_CHARS,						// dwFlags
 			&str[0],									// lpMultiByteStr
 			static_cast<int>(str.size() * sizeof(char)),// cbMultiByte
 			nullptr,									// lpWideCharStr
@@ -60,7 +60,7 @@ namespace Boring32::Strings
 		// https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar
 		const DWORD status = MultiByteToWideChar(
 			CP_UTF8,									// CodePage
-			0,											// dwFlags
+			WC_NO_BEST_FIT_CHARS,						// dwFlags
 			&str[0],									// lpMultiByteStr
 			static_cast<int>(str.size()*sizeof(char)),	// cbMultiByte
 			&wstrTo[0],									// lpWideCharStr
