@@ -16,11 +16,11 @@ namespace Boring32::Util
         {
             filePath.resize(filePath.size() + blockSize);
             status = GetModuleFileNameW(nullptr, &filePath[0], (DWORD)filePath.size());
-            if(status == 0)
+            if(!status)
                 throw Error::Win32Error(__FUNCSIG__ ": GetModuleFileNameW() failed", GetLastError());
         }
 
-        HRESULT result = PathCchRemoveFileSpec(&filePath[0], filePath.size());
+        const HRESULT result = PathCchRemoveFileSpec(&filePath[0], filePath.size());
         if (result != S_OK && result != S_FALSE)
             throw Error::ComError(__FUNCSIG__ ": PathCchRemoveFileSpec() failed", result);
         filePath = filePath.c_str();
@@ -47,8 +47,8 @@ namespace Boring32::Util
 
     size_t GetMillisToMinuteBoundary(const SYSTEMTIME& time, const size_t minuteBoundary) noexcept
     {
-        size_t minutesToMillis = time.wMinute * 60 * 1000;
-        minutesToMillis += time.wSecond * 1000;
+        size_t minutesToMillis = static_cast<size_t>(time.wMinute) * 60 * 1000;
+        minutesToMillis += static_cast<size_t>(time.wSecond) * 1000;
         minutesToMillis += time.wMilliseconds;
         size_t boundaryToMillis = minuteBoundary * 60 * 1000;
         return boundaryToMillis - (minutesToMillis % boundaryToMillis);
@@ -56,23 +56,15 @@ namespace Boring32::Util
 
     size_t GetMillisToSecondBoundary(const SYSTEMTIME& time, const size_t secondBoundary) noexcept
     {
-        size_t currentSecondMillis = time.wSecond * 1000;
+        size_t currentSecondMillis = static_cast<size_t>(time.wSecond) * 1000;
         currentSecondMillis += time.wMilliseconds;
         size_t boundaryMillis = secondBoundary * 1000;
         return boundaryMillis - (currentSecondMillis % boundaryMillis);
     }
 
-    void ByteVectorToString(const std::vector<std::byte>& vector, std::wstring& result)
-    {
-        result = { reinterpret_cast<const wchar_t*>(&vector[0]), vector.size() / sizeof(wchar_t) };
-    }
+    
 
-    void ByteVectorToString(const std::vector<std::byte>& vector, std::string& result)
-    {
-        result = { reinterpret_cast<const char*>(&vector[0]), vector.size() / sizeof(char) };
-    }
-
-    std::vector<std::byte> StringToByteVector(const std::wstring& str)
+    std::vector<std::byte> StringToByteVector(const std::wstring_view str)
     {
         return { 
             reinterpret_cast<const std::byte*>(&str[0]), 
@@ -80,11 +72,24 @@ namespace Boring32::Util
         };
     }
 
-    std::vector<std::byte> StringToByteVector(const std::string& str)
+    std::vector<std::byte> StringToByteVector(const std::string_view str)
     {
         return { 
             reinterpret_cast<const std::byte*>(&str[0]), 
             reinterpret_cast<const std::byte*>(&str[0]) + str.size() * sizeof(char)
         };
+    }
+
+    template<>
+    std::wstring ByteVectorToString(const std::vector<std::byte>& vector)
+    {
+        return { reinterpret_cast<const wchar_t*>(&vector[0]), vector.size() / sizeof(wchar_t) };
+    }
+
+    template<>
+    std::string ByteVectorToString(const std::vector<std::byte>& vector)
+    {
+        x d = ByteVectorToString<std::string>;
+        return { reinterpret_cast<const char*>(&vector[0]), vector.size() / sizeof(char) };
     }
 }

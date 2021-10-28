@@ -14,10 +14,8 @@ namespace Boring32::Util
 	size_t GetMillisToMinuteBoundary(const SYSTEMTIME& time, const size_t boundary) noexcept;
 	size_t GetMillisToSecondBoundary(const SYSTEMTIME& time, const size_t secondBoundary) noexcept;
 
-	void ByteVectorToString(const std::vector<std::byte>& vector, std::wstring& result);
-	void ByteVectorToString(const std::vector<std::byte>& vector, std::string& result);
-	std::vector<std::byte> StringToByteVector(const std::wstring& str);
-	std::vector<std::byte> StringToByteVector(const std::string& str);
+	std::vector<std::byte> StringToByteVector(const std::wstring_view str);
+	std::vector<std::byte> StringToByteVector(const std::string_view str);
 
 	// based on https://stackoverflow.com/questions/45172052/correct-way-to-initialize-a-container-of-stdbyte
 	template<typename... Ts>
@@ -25,4 +23,21 @@ namespace Boring32::Util
 	{
 		return{ std::byte(std::forward<Ts>(args))... };
 	}
+
+	template<typename T>
+	T ByteVectorToString(const std::vector<std::byte>& vector)
+	{
+		static_assert(false, "Cannot use this template");
+	}
+
+	template<>
+	std::wstring ByteVectorToString(const std::vector<std::byte>& vector);
+
+	template<>
+	std::string ByteVectorToString(const std::vector<std::byte>& vector);
+
+	typedef std::string (*blah)(const std::vector<std::byte>& vector);// = ByteVectorToString<std::string>;
+	static blah m = ByteVectorToString<std::string>;
+
+	using x = std::string(*)(const std::vector<std::byte>& vector);
 }

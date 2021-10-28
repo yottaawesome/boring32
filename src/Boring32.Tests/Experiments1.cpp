@@ -149,7 +149,7 @@ void TestProcessBlockingNamedPipe()
 {
 	std::wstring directory;
 	directory.resize(2048);
-	GetModuleFileName(nullptr, &directory[0], directory.size());
+	GetModuleFileNameW(nullptr, &directory[0], directory.size());
 	PathCchRemoveFileSpec(&directory[0], directory.size());
 	directory.erase(std::find(directory.begin(), directory.end(), '\0'), directory.end());
 	std::wstring filePath = directory + L"\\TestProcess.exe";
