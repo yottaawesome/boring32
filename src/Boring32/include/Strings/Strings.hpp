@@ -4,8 +4,8 @@
 
 namespace Boring32::Strings
 {
-	std::string ToString(const std::wstring& wstr);
-	std::wstring ToWideString(const std::string& str);
+	std::string ConvertString(const std::wstring_view wstr);
+	std::wstring ConvertString(const std::string_view str);
 	std::vector<std::wstring> TokeniseString(
 		const std::wstring& stringToTokenise, 
 		const std::wstring& delimiter

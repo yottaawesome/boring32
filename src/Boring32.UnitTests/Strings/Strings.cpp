@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CppUnitTest.h"
 #include "Boring32/include/Strings/Strings.hpp"
 
@@ -21,6 +21,20 @@ namespace Strings
 				std::wstring test = L"";
 				std::vector<std::wstring> strings = Boring32::Strings::TokeniseString(test, L",");
 				Assert::IsTrue(strings.size() == 1);
+			}
+			
+			TEST_METHOD(TestConvertWString)
+			{
+				const std::wstring test = L"blah";
+				const std::string converted = Boring32::Strings::ConvertString(test);
+				Assert::IsTrue(converted == "blah");
+			}
+
+			TEST_METHOD(TestConvertString)
+			{
+				const std::string test = "blah";
+				const std::wstring converted = Boring32::Strings::ConvertString(test);
+				Assert::IsTrue(converted == L"blah");
 			}
 	};
 }

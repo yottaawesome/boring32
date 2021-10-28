@@ -12,50 +12,50 @@ namespace Boring32::Strings
 	Utf16String::Utf16String(const std::string& str)
 		: m_string(str)
 	{
-		m_wstring = Strings::ToWideString(str);
+		m_wstring = Strings::ConvertString(str);
 	}
 	Utf16String::Utf16String(const std::wstring& str)
 		: m_wstring(str)
 	{
-		m_string = Strings::ToString(str);
+		m_string = Strings::ConvertString(str);
 
 	}
 	Utf16String::Utf16String(const char* str)
 		: m_string(str)
 	{
-		m_wstring = Strings::ToWideString(str);
+		m_wstring = Strings::ConvertString(str);
 	}
 	Utf16String::Utf16String(const wchar_t* str)
 		: m_wstring(str)
 	{
-		m_string = Strings::ToString(str);
+		m_string = Strings::ConvertString(str);
 	}
 
 	Utf16String& Utf16String::operator=(const std::string& str)
 	{
 		m_string = str;
-		m_wstring = Strings::ToWideString(str);
+		m_wstring = Strings::ConvertString(str);
 		return *this;
 	}
 
 	Utf16String& Utf16String::operator=(const std::wstring& str)
 	{
 		m_wstring = str;
-		m_string = Strings::ToString(str);
+		m_string = Strings::ConvertString(str);
 		return *this;
 	}
 
 	Utf16String& Utf16String::operator=(const char* str)
 	{
 		m_string = str;
-		m_wstring = Strings::ToWideString(str);
+		m_wstring = Strings::ConvertString(str);
 		return *this;
 	}
 
 	Utf16String& Utf16String::operator=(const wchar_t* str)
 	{
 		m_wstring = str;
-		m_string = Strings::ToString(str);
+		m_string = Strings::ConvertString(str);
 		return *this;
 	}
 

@@ -6,12 +6,14 @@
 
 namespace Boring32::Strings
 {
-	std::string ToString(const std::wstring& wstr)
+	std::string ConvertString(const std::wstring_view wstr)
 	{
 		if (wstr.empty())
 			return "";
 
-		const DWORD bytesRequired = WideCharToMultiByte(
+		// https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-widechartomultibyte
+		// Returns the size in bytes, this differs from MultiByteToWideChar, which returns the size in characters
+		const int sizeInBytes = WideCharToMultiByte(
 			CP_UTF8,										// CodePage
 			WC_NO_BEST_FIT_CHARS,							// dwFlags 
 			&wstr[0],										// lpWideCharStr
@@ -21,12 +23,11 @@ namespace Boring32::Strings
 			nullptr,										// lpDefaultChar
 			nullptr											// lpUsedDefaultChar
 		);
-		if (bytesRequired == 0)
-			throw Error::Win32Error("ConvertWStringToString(): WideCharToMultiByte() [1] failed", GetLastError());
+		if (sizeInBytes == 0)
+			throw Error::Win32Error(__FUNCSIG__ ": WideCharToMultiByte() [1] failed", GetLastError());
 
-		std::string strTo(bytesRequired / sizeof(char), '\0');
-		// https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-widechartomultibyte
-		const DWORD status = WideCharToMultiByte(
+		std::string strTo(sizeInBytes / sizeof(char), '\0');
+		const int status = WideCharToMultiByte(
 			CP_UTF8,										// CodePage
 			WC_NO_BEST_FIT_CHARS,							// dwFlags 
 			&wstr[0],										// lpWideCharStr
@@ -37,39 +38,40 @@ namespace Boring32::Strings
 			nullptr											// lpUsedDefaultChar
 		);
 		if (status == 0)
-			throw Error::Win32Error("ConvertWStringToString(): WideCharToMultiByte() [2] failed", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__ ": WideCharToMultiByte() [2] failed", GetLastError());
 
 		return strTo;
 	}
 
-	std::wstring ToWideString(const std::string& str)
+	std::wstring ConvertString(const std::string_view str)
 	{
 		if (str.empty())
 			return L"";
 
-		const DWORD bytesRequired = MultiByteToWideChar(
+		// https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar
+		// Returns the size in characters, this differs from WideCharToMultiByte, which returns the size in bytes
+		const int sizeInCharacters = MultiByteToWideChar(
 			CP_UTF8,									// CodePage
-			WC_NO_BEST_FIT_CHARS,						// dwFlags
+			0,											// dwFlags
 			&str[0],									// lpMultiByteStr
 			static_cast<int>(str.size() * sizeof(char)),// cbMultiByte
 			nullptr,									// lpWideCharStr
 			0											// cchWideChar
 		);
-		if (bytesRequired == 0)
-			throw Error::Win32Error("ConvertStringToWString(): MultiByteToWideChar() [1] failed", GetLastError());
+		if (sizeInCharacters == 0)
+			throw Error::Win32Error(__FUNCSIG__ ": MultiByteToWideChar() [1] failed", GetLastError());
 
-		std::wstring wstrTo(bytesRequired / sizeof(wchar_t), '\0');
-		// https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar
-		const DWORD status = MultiByteToWideChar(
+		std::wstring wstrTo(sizeInCharacters, '\0');
+		const int status = MultiByteToWideChar(
 			CP_UTF8,									// CodePage
-			WC_NO_BEST_FIT_CHARS,						// dwFlags
+			0,											// dwFlags
 			&str[0],									// lpMultiByteStr
 			static_cast<int>(str.size()*sizeof(char)),	// cbMultiByte
 			&wstrTo[0],									// lpWideCharStr
 			static_cast<int>(wstrTo.size())				// cchWideChar
 		);
 		if (status == 0)
-			throw Error::Win32Error("ConvertStringToWString(): MultiByteToWideChar() [2] failed", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__ ": MultiByteToWideChar() [2] failed", GetLastError());
 
 		return wstrTo;
 	}

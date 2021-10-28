@@ -21,8 +21,8 @@ namespace Boring32::Library
 
 		public:
 			virtual void Close() noexcept;
-			virtual void* Resolve(const std::wstring& symbolName);
-			virtual void* Resolve(const std::wstring& symbolName, const std::nothrow_t& noThrow) noexcept;
+			virtual void* Resolve(const std::string& symbolName);
+			virtual void* Resolve(const std::string& symbolName, const std::nothrow_t& noThrow) noexcept;
 			virtual const std::wstring& GetPath() const noexcept;
 			virtual HMODULE GetHandle() const noexcept;
 			virtual bool IsLoaded() const noexcept;

@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <iostream>
+#include <format>
 #include "include/Library/Library.hpp"
 #include "include/Strings/Strings.hpp"
 #include "include/Error/Error.hpp"
@@ -35,6 +36,7 @@ namespace Boring32::Library
 	}
 
 	DynamicLinkLibrary::DynamicLinkLibrary(const std::wstring& path, const std::nothrow_t& noThrow) noexcept
+		: m_path(path)
 	{
 		InternalLoad(std::nothrow);
 	}
@@ -93,28 +95,26 @@ namespace Boring32::Library
 		return m_libraryHandle != nullptr;
 	}
 
-	void* DynamicLinkLibrary::Resolve(const std::wstring& symbolName)
+	void* DynamicLinkLibrary::Resolve(const std::string& symbolName)
 	{
 		if (m_libraryHandle == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": library handle is null");
-		void* ptr = GetProcAddress(m_libraryHandle, Strings::ToString(m_path.c_str()).c_str());
-		if (ptr == nullptr)
-		{
-			std::wstringstream wss;
-			wss 
-				<< __FUNCSIG__ ": failed to resolve symbol " 
-				<< symbolName.c_str()
-				<< std::endl;
-			throw std::runtime_error(Strings::ToString(wss.str()));
-		}
-		return ptr;
+		
+		void* ptr = GetProcAddress(m_libraryHandle, symbolName.c_str());
+		if (ptr != nullptr)
+			return ptr;
+
+		throw Error::Win32Error(
+			std::format("{}: failed to resolve symbol: {}", __FUNCSIG__, symbolName),
+			GetLastError()
+		);
 	}
 	
-	void* DynamicLinkLibrary::Resolve(const std::wstring& symbolName, const std::nothrow_t& noThrow) noexcept
+	void* DynamicLinkLibrary::Resolve(const std::string& symbolName, const std::nothrow_t& noThrow) noexcept
 	{
-		void* out = nullptr;
-		Error::TryCatchLogToWCerr([this, &symbolName, out = &out] { *out = Resolve(symbolName); }, __FUNCSIG__);
-		return out;
+		if (m_libraryHandle == nullptr)
+			return nullptr;
+		return GetProcAddress(m_libraryHandle, symbolName.c_str());
 	}
 
 	void DynamicLinkLibrary::InternalLoad()
