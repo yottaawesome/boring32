@@ -89,7 +89,6 @@ namespace Boring32::Util
     template<>
     std::string ByteVectorToString(const std::vector<std::byte>& vector)
     {
-        x d = ByteVectorToString<std::string>;
         return { reinterpret_cast<const char*>(&vector[0]), vector.size() / sizeof(char) };
     }
 }

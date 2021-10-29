@@ -55,6 +55,7 @@ namespace Boring32::Registry
 				const std::wstring& valueName,
 				const size_t value
 			);
+			virtual void Export(const std::wstring& path, const DWORD flags);
 
 		protected:
 			virtual RegistryKey& Copy(const RegistryKey& other);

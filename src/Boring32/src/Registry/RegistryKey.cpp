@@ -187,4 +187,19 @@ namespace Boring32::Registry
 			throw Error::Win32Error(__FUNCSIG__ ": failed to open registry key", status);
 		m_key = CreateRegKeyPtr(key);
 	}
+
+	void RegistryKey::Export(const std::wstring& path, const DWORD flags)
+	{
+		if (m_key == nullptr)
+			throw std::runtime_error(__FUNCSIG__ ": m_key is null");
+
+		const LSTATUS status = RegSaveKeyExW(
+			m_key.get(),
+			path.c_str(),
+			nullptr,
+			REG_LATEST_FORMAT
+		);
+		if (status != ERROR_SUCCESS)
+			throw Error::Win32Error(__FUNCSIG__ ": RegSaveKeyExW() failed", status);
+	}
 }
