@@ -26,16 +26,17 @@ namespace Boring32::WinHttp::WebSockets
 		}
 
 		// Release any waiting threads
-		m_connectionResult.Complete.Signal(std::nothrow);
-		m_currentReadResult.Complete.Signal(std::nothrow);
-		m_writeResult.Complete.Signal(std::nothrow);
+		m_connectionResult->Complete.Signal(std::nothrow);
+		m_readResult->Complete.Signal(std::nothrow);
+		m_writeResult->Complete.Signal(std::nothrow);
 	}
 
 	AsyncWebSocket::AsyncWebSocket(const AsyncWebSocketSettings& settings)
 	:	m_settings(settings),
 		m_status(WebSocketStatus::NotInitialised),
-		m_writeResult{},
-		m_currentReadResult{}
+		m_writeResult(new WriteResult{}),
+		m_readResult(new AsyncReadResult{}),
+		m_connectionResult(new ConnectionResult{})
 	{ }
 
 	const AsyncWebSocketSettings& AsyncWebSocket::GetSettings()
@@ -43,30 +44,30 @@ namespace Boring32::WinHttp::WebSockets
 		return m_settings;
 	}
 
-	const ConnectionResult& AsyncWebSocket::Connect(const std::wstring& path)
+	std::shared_ptr<const ConnectionResult> AsyncWebSocket::Connect(const std::wstring& path)
 	{
 		return InternalConnect(path);
 	}
 
-	const ConnectionResult& AsyncWebSocket::Connect()
+	std::shared_ptr<const ConnectionResult> AsyncWebSocket::Connect()
 	{
 		return InternalConnect(L"");
 	}
 
-	const ConnectionResult& AsyncWebSocket::GetConnectionStatus() const
+	std::shared_ptr<const ConnectionResult> AsyncWebSocket::GetConnectionStatus() const
 	{
 		return m_connectionResult;
 	}
 
-	const WriteResult& AsyncWebSocket::SendString(const std::string& msg)
+	std::shared_ptr<const WriteResult> AsyncWebSocket::SendString(const std::string& msg)
 	{
 		if (m_status != WebSocketStatus::Connected)
 			throw std::runtime_error("WebSocket is not connected to send data");
-		if (m_writeResult.Status != WriteResultStatus::NotInitiated && m_writeResult.Status != WriteResultStatus::Finished)
+		if (m_writeResult->Status != WriteResultStatus::NotInitiated && m_writeResult->Status != WriteResultStatus::Finished)
 			throw std::runtime_error(__FUNCSIG__": a write result is either pending or in error");
 
-		m_writeResult.Status = WriteResultStatus::Initiated;
-		m_writeResult.Complete.Reset();
+		m_writeResult->Status = WriteResultStatus::Initiated;
+		m_writeResult->Complete.Reset();
 		const DWORD statusCode = WinHttpWebSocketSend(
 			m_winHttpWebSocket.Get(),
 			WINHTTP_WEB_SOCKET_UTF8_MESSAGE_BUFFER_TYPE,
@@ -81,32 +82,32 @@ namespace Boring32::WinHttp::WebSockets
 		return m_writeResult;
 	}
 
-	const WriteResult& AsyncWebSocket::SendBuffer(const std::vector<std::byte>& buffer)
+	std::shared_ptr<const WriteResult> AsyncWebSocket::SendBuffer(const std::vector<std::byte>& buffer)
 	{
 		if (m_status != WebSocketStatus::Connected)
 			throw std::runtime_error("WebSocket is not connected to send data");
 
-		m_writeResult.Status = WriteResultStatus::Initiated;
-		m_writeResult.Complete.Reset();
+		m_writeResult->Status = WriteResultStatus::Initiated;
+		m_writeResult->Complete.Reset();
 		const DWORD statusCode = WinHttpWebSocketSend(
 			m_winHttpWebSocket.Get(),
 			WINHTTP_WEB_SOCKET_BINARY_MESSAGE_BUFFER_TYPE,
 			reinterpret_cast<PVOID>(const_cast<std::byte*>(&buffer[0])),
 			static_cast<DWORD>(buffer.size() * sizeof(char))
 		);
-		m_writeResult.Status = WriteResultStatus::Initiated;
+		m_writeResult->Status = WriteResultStatus::Initiated;
 		if (statusCode != ERROR_SUCCESS)
 		{
 			m_status = WebSocketStatus::Error;
-			m_writeResult.Status = WriteResultStatus::Error;
+			m_writeResult->Status = WriteResultStatus::Error;
 			throw Error::Win32Error("WebSocket::SendString(): WinHttpWebSocketSend() failed", statusCode);
 		}
 		return m_writeResult;
 	}
 
-	const AsyncReadResult& AsyncWebSocket::GetCurrentRead()
+	std::shared_ptr<const AsyncReadResult> AsyncWebSocket::GetCurrentRead()
 	{
-		return m_currentReadResult;
+		return m_readResult;
 	}
 
 	/*WebSocketReadResult AsyncWebSocket::AsyncReceive(AsyncWebSocket* socket)
@@ -135,19 +136,20 @@ namespace Boring32::WinHttp::WebSockets
 	//	return std::async(std::launch::async, AsyncReceive, this);
 	//}
 
-	const AsyncReadResult& AsyncWebSocket::Receive()
+	std::shared_ptr<const AsyncReadResult> AsyncWebSocket::Receive()
 	{
 		//Async::CriticalSectionLock cs(m_cs);
 		if (m_status != WebSocketStatus::Connected)
 			throw std::runtime_error("WebSocket is not connected to receive data");
-		if (m_currentReadResult.Status == WebSocketReadResultStatus::Initiated)
+		if (m_readResult->Status == WebSocketReadResultStatus::Initiated)
 			throw std::runtime_error("A read operation is already in progress");
 
-		m_currentReadResult.Status = WebSocketReadResultStatus::Initiated;
-		m_currentReadResult.Data.clear();
-		m_currentReadResult.TotalBytesRead = 0;
-		m_currentReadResult.Complete.Reset();
-		return Receive(m_currentReadResult);
+		m_readResult->Status = WebSocketReadResultStatus::Initiated;
+		m_readResult->Data.clear();
+		m_readResult->TotalBytesRead = 0;
+		m_readResult->Complete.Reset();
+		Receive(*m_readResult);
+		return m_readResult;
 	}
 
 	const AsyncReadResult& AsyncWebSocket::Receive(AsyncReadResult& receiveBuffer)
@@ -222,7 +224,7 @@ namespace Boring32::WinHttp::WebSockets
 		return m_status;
 	}
 
-	const ConnectionResult& AsyncWebSocket::InternalConnect(const std::wstring& path)
+	std::shared_ptr<const ConnectionResult> AsyncWebSocket::InternalConnect(const std::wstring& path)
 	{
 		if (m_status != WebSocketStatus::NotInitialised)
 			throw std::runtime_error(__FUNCSIG__ ": WebSocket needs to be in NotInitialised state to connect");
@@ -407,8 +409,8 @@ namespace Boring32::WinHttp::WebSockets
 			);
 
 		m_status = WebSocketStatus::Connected;
-		m_connectionResult.IsConnected = true;
-		m_connectionResult.Complete.Signal();
+		m_connectionResult->IsConnected = true;
+		m_connectionResult->Complete.Signal();
 		m_requestHandle = nullptr;
 	}
 }
