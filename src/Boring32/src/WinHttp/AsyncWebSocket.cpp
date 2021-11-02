@@ -25,15 +25,18 @@ namespace Boring32::WinHttp::WebSockets
 			std::wcerr << __FUNCSIG__ ": " << ex.what() << std::endl;
 		}
 
+		// Release any waiting threads
+		m_connectionResult.Complete.Signal(std::nothrow);
+		m_currentReadResult.Complete.Signal(std::nothrow);
+		m_writeResult.Complete.Signal(std::nothrow);
 	}
 
 	AsyncWebSocket::AsyncWebSocket(const AsyncWebSocketSettings& settings)
 	:	m_settings(settings),
 		m_status(WebSocketStatus::NotInitialised),
-		m_writeResult{}
-	{
-
-	}
+		m_writeResult{},
+		m_currentReadResult{}
+	{ }
 
 	const AsyncWebSocketSettings& AsyncWebSocket::GetSettings()
 	{
@@ -101,7 +104,7 @@ namespace Boring32::WinHttp::WebSockets
 		return m_writeResult;
 	}
 
-	const WebSocketReadResult& AsyncWebSocket::GetCurrentRead()
+	const AsyncReadResult& AsyncWebSocket::GetCurrentRead()
 	{
 		return m_currentReadResult;
 	}
@@ -132,7 +135,7 @@ namespace Boring32::WinHttp::WebSockets
 	//	return std::async(std::launch::async, AsyncReceive, this);
 	//}
 
-	const WebSocketReadResult& AsyncWebSocket::Receive()
+	const AsyncReadResult& AsyncWebSocket::Receive()
 	{
 		//Async::CriticalSectionLock cs(m_cs);
 		if (m_status != WebSocketStatus::Connected)
@@ -147,7 +150,7 @@ namespace Boring32::WinHttp::WebSockets
 		return Receive(m_currentReadResult);
 	}
 
-	const WebSocketReadResult& AsyncWebSocket::Receive(WebSocketReadResult& receiveBuffer)
+	const AsyncReadResult& AsyncWebSocket::Receive(AsyncReadResult& receiveBuffer)
 	{
 		//Async::CriticalSectionLock cs(m_cs);
 		if (m_status != WebSocketStatus::Connected)
@@ -376,5 +379,36 @@ namespace Boring32::WinHttp::WebSockets
 	void AsyncWebSocket::Move(AsyncWebSocketSettings& other) noexcept
 	{
 
+	}
+
+	void AsyncWebSocket::CompleteUpgrade()
+	{
+		if (m_requestHandle == nullptr)
+			throw std::runtime_error(__FUNCSIG__": m_requestHandle is nullptr");
+
+		m_winHttpWebSocket = WinHttpWebSocketCompleteUpgrade(m_requestHandle.Get() ,0);
+		if (m_winHttpWebSocket == nullptr)
+			throw Error::Win32Error(
+				__FUNCSIG__ ": WinHttpWebSocketCompleteUpgrade() failed",
+				GetLastError()
+			);
+
+		DWORD_PTR dwThis = reinterpret_cast<DWORD_PTR>(this);
+		const bool succeeded = WinHttpSetOption(
+			m_winHttpWebSocket.Get(),
+			WINHTTP_OPTION_CONTEXT_VALUE,
+			reinterpret_cast<void*>(&dwThis),
+			sizeof(DWORD_PTR)
+		);
+		if (succeeded == false)
+			throw Error::Win32Error(
+				__FUNCSIG__ ": WinHttpSetOption() failed when setting context value",
+				GetLastError()
+			);
+
+		m_status = WebSocketStatus::Connected;
+		m_connectionResult.IsConnected = true;
+		m_connectionResult.Complete.Signal();
+		m_requestHandle = nullptr;
 	}
 }

@@ -117,32 +117,7 @@ namespace Boring32::WinHttp::WebSockets
 					}
 
 					AsyncWebSocket* socket = (AsyncWebSocket*)dwContext;
-					socket->m_winHttpWebSocket = WinHttpWebSocketCompleteUpgrade(
-						socket->m_requestHandle.Get(),
-						0
-					);
-					if (socket->m_winHttpWebSocket == nullptr)
-						throw Error::Win32Error(
-							__FUNCSIG__ ": WinHttpWebSocketCompleteUpgrade() failed",
-							GetLastError()
-						);
-
-					bool succeeded = WinHttpSetOption(
-						socket->m_winHttpWebSocket.Get(),
-						WINHTTP_OPTION_CONTEXT_VALUE,
-						(void*)&dwContext,
-						sizeof(DWORD_PTR)
-					);
-					if (succeeded == false)
-						throw Error::Win32Error(
-							__FUNCSIG__ ": WinHttpSetOption() failed when setting context value",
-							GetLastError()
-						);
-
-					socket->m_status = WebSocketStatus::Connected;
-					socket->m_connectionResult.IsConnected = true;
-					socket->m_connectionResult.Complete.Signal();
-					socket->m_requestHandle = nullptr;
+					socket->CompleteUpgrade();
 				}
 				catch (const std::exception& ex)
 				{
@@ -160,7 +135,7 @@ namespace Boring32::WinHttp::WebSockets
 					std::wcerr << L"No socket found\n";
 					return;
 				}
-				WebSocketReadResult& read = socket->m_currentReadResult;
+				AsyncReadResult& read = socket->m_currentReadResult;
 
 				try
 				{

@@ -17,14 +17,8 @@ namespace Boring32::WinHttp::WebSockets
 		Finished
 	};
 
-	struct WebSocketReadResult
+	struct AsyncReadResult
 	{
-		WebSocketReadResult() 
-			: Status(WebSocketReadResultStatus::NotInitiated),
-			TotalBytesRead(0),
-			Complete(false,true,false)
-		{}
-
 		WebSocketReadResultStatus Status = WebSocketReadResultStatus::NotInitiated;
 		DWORD TotalBytesRead = 0;
 		std::vector<char> Data;
@@ -47,9 +41,8 @@ namespace Boring32::WinHttp::WebSockets
 
 	struct ConnectionResult
 	{
-		ConnectionResult() : IsConnected(false), Complete(false, true, false) {}
-		bool IsConnected;
-		Async::Event Complete;
+		bool IsConnected=false;
+		Async::Event Complete{ false, true, false };
 	};
 
 	class AsyncWebSocket
@@ -65,17 +58,18 @@ namespace Boring32::WinHttp::WebSockets
 			virtual const ConnectionResult& GetConnectionStatus() const;
 			virtual const WriteResult& SendString(const std::string& msg);
 			virtual const WriteResult& SendBuffer(const std::vector<std::byte>& buffer);
-			virtual const WebSocketReadResult& Receive();
+			virtual const AsyncReadResult& Receive();
 			virtual void CloseSocket();
 			virtual void Release();
 			virtual WebSocketStatus GetStatus() const noexcept;
-			virtual const WebSocketReadResult& GetCurrentRead();
+			virtual const AsyncReadResult& GetCurrentRead();
 			//virtual std::shared_future<WebSocketReadResult> Receive2();
 
 		protected:
 			virtual const ConnectionResult& InternalConnect(const std::wstring& path);
-			virtual const WebSocketReadResult& Receive(WebSocketReadResult& receiveBuffer);
+			virtual const AsyncReadResult& Receive(AsyncReadResult& receiveBuffer);
 			virtual void Move(AsyncWebSocketSettings& other) noexcept;
+			virtual void CompleteUpgrade();
 			static void StatusCallback(
 				HINTERNET hInternet,
 				DWORD_PTR dwContext,
@@ -94,7 +88,10 @@ namespace Boring32::WinHttp::WebSockets
 			WinHttpHandle m_requestHandle;
 			//CRITICAL_SECTION m_cs;
 			static DWORD m_bufferBlockSize;
-			WebSocketReadResult m_currentReadResult;
+			// FIX: these should be returned as shared_ptrs to avoid tying
+			// them to this object when it goes out of scope and threads
+			// are still waiting for the signal
+			AsyncReadResult m_currentReadResult;
 			ConnectionResult m_connectionResult;
 			WriteResult m_writeResult;
 	};
