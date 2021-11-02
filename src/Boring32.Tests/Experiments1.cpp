@@ -727,11 +727,11 @@ void TestAsyncWebSocket()
 	socket.SendString("Hello!");
 	//socket.CloseSocket();
 	//Sleep(5000);
-	/*Boring32::WinHttp::WebSockets::WebSocketReadResult& result = socket.Receive();
-	result.Complete.WaitOnEvent(INFINITE, false);*/
+	auto& result = socket.Receive();
+	result.Complete.WaitOnEvent(INFINITE, false);
 
 
-	auto result = socket.Receive2().get();
+	//auto result = socket.Receive2().get();
 	//auto result = socket.Receive3()->get_future().get();
 	std::string message(result.Data.begin(), result.Data.end());
 	std::wcout << message.size() << std::endl;

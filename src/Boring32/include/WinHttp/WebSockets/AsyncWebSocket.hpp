@@ -19,6 +19,12 @@ namespace Boring32::WinHttp::WebSockets
 
 	struct WebSocketReadResult
 	{
+		WebSocketReadResult() 
+			: Status(WebSocketReadResultStatus::NotInitiated),
+			TotalBytesRead(0),
+			Complete(false,true,false)
+		{}
+
 		WebSocketReadResultStatus Status = WebSocketReadResultStatus::NotInitiated;
 		DWORD TotalBytesRead = 0;
 		std::vector<char> Data;
@@ -41,12 +47,9 @@ namespace Boring32::WinHttp::WebSockets
 
 	struct ConnectionResult
 	{
-		ConnectionResult(const ConnectionResult& other) = delete;
-		void operator=(const ConnectionResult& other) = delete;
-		ConnectionResult() {}
-
-		bool IsConnected = false;
-		Async::Event Complete{ false,true,false };
+		ConnectionResult() : IsConnected(false), Complete(false, true, false) {}
+		bool IsConnected;
+		Async::Event Complete;
 	};
 
 	class AsyncWebSocket
@@ -60,18 +63,18 @@ namespace Boring32::WinHttp::WebSockets
 			virtual const ConnectionResult& Connect();
 			virtual const ConnectionResult& Connect(const std::wstring& path);
 			virtual const ConnectionResult& GetConnectionStatus() const;
-			virtual void SendString(const std::string& msg);
-			virtual void SendBuffer(const std::vector<std::byte>& buffer);
-			virtual std::shared_future<WebSocketReadResult> Receive2();
-			virtual WebSocketReadResult& Receive();
-			virtual WebSocketReadResult& Receive(WebSocketReadResult& receiveBuffer);
+			virtual const WriteResult& SendString(const std::string& msg);
+			virtual const WriteResult& SendBuffer(const std::vector<std::byte>& buffer);
+			virtual const WebSocketReadResult& Receive();
 			virtual void CloseSocket();
 			virtual void Release();
 			virtual WebSocketStatus GetStatus() const noexcept;
 			virtual const WebSocketReadResult& GetCurrentRead();
+			//virtual std::shared_future<WebSocketReadResult> Receive2();
 
 		protected:
 			virtual const ConnectionResult& InternalConnect(const std::wstring& path);
+			virtual const WebSocketReadResult& Receive(WebSocketReadResult& receiveBuffer);
 			virtual void Move(AsyncWebSocketSettings& other) noexcept;
 			static void StatusCallback(
 				HINTERNET hInternet,
@@ -80,9 +83,7 @@ namespace Boring32::WinHttp::WebSockets
 				LPVOID lpvStatusInformation,
 				DWORD dwStatusInformationLength
 			);
-			static WebSocketReadResult AsyncReceive(
-				AsyncWebSocket* socket
-			);
+			//static WebSocketReadResult AsyncReceive(AsyncWebSocket* socket);
 
 		protected:
 			AsyncWebSocketSettings m_settings;
@@ -91,9 +92,10 @@ namespace Boring32::WinHttp::WebSockets
 			WinHttpHandle m_winHttpWebSocket;
 			std::atomic<WebSocketStatus> m_status;
 			WinHttpHandle m_requestHandle;
-			CRITICAL_SECTION m_cs;
+			//CRITICAL_SECTION m_cs;
 			static DWORD m_bufferBlockSize;
-			WebSocketReadResult m_currentResult;
+			WebSocketReadResult m_currentReadResult;
 			ConnectionResult m_connectionResult;
+			WriteResult m_writeResult;
 	};
 }

@@ -1,12 +1,43 @@
 #include "pch.hpp"
 #include <future>
 #include <algorithm>
+#include <map>
 #include "include/Strings/Strings.hpp"
 #include "include/Error/Error.hpp"
 #include "include/WinHttp/WebSockets/AsyncWebSocket.hpp"
 
 namespace Boring32::WinHttp::WebSockets
 {
+	static const std::map<DWORD, std::wstring> InternetStatus = {
+		{WINHTTP_CALLBACK_STATUS_RESOLVING_NAME, L"WINHTTP_CALLBACK_STATUS_RESOLVING_NAME"},
+		{WINHTTP_CALLBACK_STATUS_NAME_RESOLVED, L"WINHTTP_CALLBACK_STATUS_NAME_RESOLVED" },
+		{WINHTTP_CALLBACK_STATUS_CONNECTING_TO_SERVER, L"WINHTTP_CALLBACK_STATUS_CONNECTING_TO_SERVER"},
+		{WINHTTP_CALLBACK_STATUS_CONNECTED_TO_SERVER, L"WINHTTP_CALLBACK_STATUS_CONNECTED_TO_SERVER"},
+		{WINHTTP_CALLBACK_STATUS_SENDING_REQUEST, L"WINHTTP_CALLBACK_STATUS_SENDING_REQUEST"},
+		{WINHTTP_CALLBACK_STATUS_REQUEST_SENT, L"WINHTTP_CALLBACK_STATUS_REQUEST_SENT"},
+		{WINHTTP_CALLBACK_STATUS_RECEIVING_RESPONSE, L"WINHTTP_CALLBACK_STATUS_RECEIVING_RESPONSE"},
+		{WINHTTP_CALLBACK_STATUS_RESPONSE_RECEIVED, L"WINHTTP_CALLBACK_STATUS_RESPONSE_RECEIVED"},
+		{WINHTTP_CALLBACK_STATUS_CLOSING_CONNECTION, L"WINHTTP_CALLBACK_STATUS_CLOSING_CONNECTION"},
+		{WINHTTP_CALLBACK_STATUS_CONNECTION_CLOSED, L"WINHTTP_CALLBACK_STATUS_CONNECTION_CLOSED"},
+		{WINHTTP_CALLBACK_STATUS_HANDLE_CREATED, L"WINHTTP_CALLBACK_STATUS_HANDLE_CREATED"},
+		{WINHTTP_CALLBACK_STATUS_HANDLE_CLOSING, L"WINHTTP_CALLBACK_STATUS_HANDLE_CLOSING"},
+		{WINHTTP_CALLBACK_STATUS_DETECTING_PROXY, L"WINHTTP_CALLBACK_STATUS_DETECTING_PROXY"},
+		{WINHTTP_CALLBACK_STATUS_REDIRECT, L"WINHTTP_CALLBACK_STATUS_REDIRECT"},
+		{WINHTTP_CALLBACK_STATUS_INTERMEDIATE_RESPONSE, L"WINHTTP_CALLBACK_STATUS_INTERMEDIATE_RESPONSE"},
+		{WINHTTP_CALLBACK_STATUS_SECURE_FAILURE, L"WINHTTP_CALLBACK_STATUS_SECURE_FAILURE"},
+		{WINHTTP_CALLBACK_STATUS_SENDREQUEST_COMPLETE, L"WINHTTP_CALLBACK_STATUS_SENDREQUEST_COMPLETE"},
+		{WINHTTP_CALLBACK_STATUS_HEADERS_AVAILABLE, L"WINHTTP_CALLBACK_STATUS_HEADERS_AVAILABLE"},
+		{WINHTTP_CALLBACK_STATUS_DATA_AVAILABLE, L"WINHTTP_CALLBACK_STATUS_DATA_AVAILABLE"},
+		{WINHTTP_CALLBACK_STATUS_READ_COMPLETE, L"WINHTTP_CALLBACK_STATUS_READ_COMPLETE"},
+		{WINHTTP_CALLBACK_STATUS_WRITE_COMPLETE, L"WINHTTP_CALLBACK_STATUS_WRITE_COMPLETE"},
+		{WINHTTP_CALLBACK_STATUS_REQUEST_ERROR, L"WINHTTP_CALLBACK_STATUS_REQUEST_ERROR"},
+		{WINHTTP_CALLBACK_STATUS_GETPROXYFORURL_COMPLETE, L"WINHTTP_CALLBACK_STATUS_GETPROXYFORURL_COMPLETE"},
+		{WINHTTP_CALLBACK_STATUS_CLOSE_COMPLETE, L"WINHTTP_CALLBACK_STATUS_CLOSE_COMPLETE"},
+		{WINHTTP_CALLBACK_STATUS_SHUTDOWN_COMPLETE, L"WINHTTP_CALLBACK_STATUS_SHUTDOWN_COMPLETE"},
+		{WINHTTP_CALLBACK_STATUS_SETTINGS_WRITE_COMPLETE, L"WINHTTP_CALLBACK_STATUS_SETTINGS_WRITE_COMPLETE"},
+		{WINHTTP_CALLBACK_STATUS_SETTINGS_READ_COMPLETE, L"WINHTTP_CALLBACK_STATUS_SETTINGS_READ_COMPLETE"}
+	};
+
 	void AsyncWebSocket::StatusCallback(
 		HINTERNET hInternet,
 		DWORD_PTR dwContext,
@@ -15,44 +46,12 @@ namespace Boring32::WinHttp::WebSockets
 		DWORD dwStatusInformationLength
 	)
 	{
+		//if (InternetStatus.contains(dwInternetStatus))
+		//	std::wcout << InternetStatus.at(dwInternetStatus) << std::endl;
 		// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpsetstatuscallback
+		// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nc-winhttp-winhttp_status_callback
 		switch (dwInternetStatus)
 		{
-			case WINHTTP_CALLBACK_STATUS_RESOLVING_NAME:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_RESOLVING_NAME" << std::endl;
-				
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_NAME_RESOLVED:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_NAME_RESOLVED" << std::endl;
-				
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_CONNECTING_TO_SERVER:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_CONNECTING_TO_SERVER" << std::endl;
-				
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_CONNECTED_TO_SERVER:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_CONNECTED_TO_SERVER" << std::endl;
-				
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_SENDING_REQUEST:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_SENDING_REQUEST" << std::endl;
-				
-				break;
-			}
-
 			case WINHTTP_CALLBACK_STATUS_REQUEST_SENT:
 			{
 				std::wcout << L"WINHTTP_CALLBACK_STATUS_REQUEST_SENT" << std::endl;
@@ -73,84 +72,6 @@ namespace Boring32::WinHttp::WebSockets
 					std::wcout << ex.what() << std::endl;
 				}
 
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_RECEIVING_RESPONSE:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_RECEIVING_RESPONSE" << std::endl;
-				
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_RESPONSE_RECEIVED:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_RESPONSE_RECEIVED" << std::endl;
-				
-
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_CLOSING_CONNECTION:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_CLOSING_CONNECTION" << std::endl;
-				
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_CONNECTION_CLOSED:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_CONNECTION_CLOSED" << std::endl;
-				
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_HANDLE_CREATED:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_HANDLE_CREATED" << std::endl;
-				
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_HANDLE_CLOSING:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_HANDLE_CLOSING" << std::endl;
-				
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_DETECTING_PROXY:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_DETECTING_PROXY" << std::endl;
-				
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_REDIRECT:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_REDIRECT" << std::endl;
-				
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_INTERMEDIATE_RESPONSE:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_INTERMEDIATE_RESPONSE" << std::endl;
-				
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_SECURE_FAILURE:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_SECURE_FAILURE" << std::endl;
-				
-				break;
-			}
-
-			case WINHTTP_CALLBACK_STATUS_SENDREQUEST_COMPLETE:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_SENDREQUEST_COMPLETE" << std::endl;
-				
 				break;
 			}
 
@@ -219,6 +140,8 @@ namespace Boring32::WinHttp::WebSockets
 						);
 
 					socket->m_status = WebSocketStatus::Connected;
+					socket->m_connectionResult.IsConnected = true;
+					socket->m_connectionResult.Complete.Signal();
 					socket->m_requestHandle = nullptr;
 				}
 				catch (const std::exception& ex)
@@ -228,22 +151,19 @@ namespace Boring32::WinHttp::WebSockets
 				break;
 			}
 
-			case WINHTTP_CALLBACK_STATUS_DATA_AVAILABLE:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_DATA_AVAILABLE" << std::endl;
-				
-				break;
-			}
-
 			case WINHTTP_CALLBACK_STATUS_READ_COMPLETE:
 			{
 				std::wcout << L"WINHTTP_CALLBACK_STATUS_READ_COMPLETE" << std::endl;
-				
+				AsyncWebSocket* socket = reinterpret_cast<AsyncWebSocket*>(dwContext);
+				if (socket == nullptr)
+				{
+					std::wcerr << L"No socket found\n";
+					return;
+				}
+				WebSocketReadResult& read = socket->m_currentReadResult;
+
 				try
 				{
-					AsyncWebSocket* socket = reinterpret_cast<AsyncWebSocket*>(dwContext);
-
-					WebSocketReadResult& read = socket->m_currentResult;
 					if (read.Status != WebSocketReadResultStatus::Initiated 
 						&& read.Status != WebSocketReadResultStatus::PartialRead)
 					{
@@ -280,6 +200,8 @@ namespace Boring32::WinHttp::WebSockets
 				}
 				catch (const std::exception& ex)
 				{
+					socket->m_status = WebSocketStatus::Error;
+					read.Complete.Signal(std::nothrow);
 					std::wcerr << ex.what() << std::endl;
 				}
 
@@ -289,7 +211,9 @@ namespace Boring32::WinHttp::WebSockets
 			case WINHTTP_CALLBACK_STATUS_WRITE_COMPLETE:
 			{
 				std::wcout << L"WINHTTP_CALLBACK_STATUS_WRITE_COMPLETE" << std::endl;
-				
+				AsyncWebSocket* socket = reinterpret_cast<AsyncWebSocket*>(dwContext);
+				socket->m_writeResult.Status = WriteResultStatus::Finished;
+
 				break;
 			}
 
@@ -332,15 +256,8 @@ namespace Boring32::WinHttp::WebSockets
 				break;
 			}
 
-			case WINHTTP_CALLBACK_STATUS_GETPROXYFORURL_COMPLETE:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_GETPROXYFORURL_COMPLETE" << std::endl;
-				
-				break;
-			}
 			case WINHTTP_CALLBACK_STATUS_CLOSE_COMPLETE:
 			{
-				
 				std::wcout << L"WINHTTP_CALLBACK_STATUS_CLOSE_COMPLETE" << std::endl;
 				AsyncWebSocket* socket = (AsyncWebSocket*)dwContext;
 				socket->Release();
@@ -348,31 +265,6 @@ namespace Boring32::WinHttp::WebSockets
 
 				break;
 			}
-			case WINHTTP_CALLBACK_STATUS_SHUTDOWN_COMPLETE:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_SHUTDOWN_COMPLETE" << std::endl;
-				
-
-				break;
-			}
-			case WINHTTP_CALLBACK_STATUS_SETTINGS_WRITE_COMPLETE:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_SETTINGS_WRITE_COMPLETE" << std::endl;
-				
-				break;
-			}
-			case WINHTTP_CALLBACK_STATUS_SETTINGS_READ_COMPLETE:
-			{
-				std::wcout << L"WINHTTP_CALLBACK_STATUS_SETTINGS_READ_COMPLETE" << std::endl;
-				
-				break;
-			}
-
-			default:
-			{
-				std::wcout << L"Default" << std::endl;
-			}
 		}
 	}
-
 }
