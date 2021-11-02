@@ -684,6 +684,24 @@ void ErrorDescription(HRESULT hr)
 		_tprintf(TEXT("[Could not find a description for error # %#x.]\n"), hr);
 }
 
+void TestSyncWebSocket()
+{
+	Boring32::WinHttp::WebSockets::WebSocket socket(
+		Boring32::WinHttp::WebSockets::WebSocketSettings{
+			.UserAgent = L"Test-WinHttp-Client",
+			.Server = L"127.0.0.1",
+			.Port = 51935,
+			.IgnoreSslErrors = true,
+			.WinHttpSession = Boring32::WinHttp::Session(L"testUserAgent")
+		}
+	);
+	socket.Connect();
+	auto x = socket.AsyncReceive();
+	x->Done.WaitOnEvent(INFINITE, true);
+	std::string message(x->Buffer.begin(), x->Buffer.end());
+	std::wcout << message.c_str() << std::endl;
+}
+
 void TestAsyncWebSocket()
 {
 	//Boring32::WinHttp::WebSockets::WebSocket socket1(
@@ -854,7 +872,8 @@ int Experiments1Main()
 {
 	try
 	{
-		TestAsyncWebSocket();
+		TestSyncWebSocket();
+		//TestAsyncWebSocket();
 		//throw Boring32::Error::Win32Error("Oh no", ERROR_ACCESS_DENIED);
 	}
 	catch (const std::exception& ex)

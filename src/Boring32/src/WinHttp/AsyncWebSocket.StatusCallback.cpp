@@ -160,8 +160,8 @@ namespace Boring32::WinHttp::WebSockets
 
 				try
 				{
-					if (read.Status != WebSocketReadResultStatus::Initiated 
-						&& read.Status != WebSocketReadResultStatus::PartialRead)
+					if (read.Status != ReadResultStatus::Initiated 
+						&& read.Status != ReadResultStatus::PartialRead)
 					{
 						std::wcerr << L"read in an unexpected status" << std::endl;
 						return;
@@ -173,19 +173,19 @@ namespace Boring32::WinHttp::WebSockets
 					{
 						case WINHTTP_WEB_SOCKET_BINARY_FRAGMENT_BUFFER_TYPE:
 						case WINHTTP_WEB_SOCKET_UTF8_FRAGMENT_BUFFER_TYPE:
-							read.Status = WebSocketReadResultStatus::PartialRead;
+							read.Status = ReadResultStatus::PartialRead;
 							socket->Receive(read);
 							break;
 
 						case WINHTTP_WEB_SOCKET_UTF8_MESSAGE_BUFFER_TYPE:
 						case WINHTTP_WEB_SOCKET_BINARY_MESSAGE_BUFFER_TYPE:
-							read.Status = WebSocketReadResultStatus::Finished;
+							read.Status = ReadResultStatus::Finished;
 							read.Data.resize(read.TotalBytesRead);
 							read.Complete.Signal();
 							break;
 
 						case WINHTTP_WEB_SOCKET_CLOSE_BUFFER_TYPE:
-							read.Status = WebSocketReadResultStatus::Finished;
+							read.Status = ReadResultStatus::Finished;
 							socket->m_status = WebSocketStatus::Closed;
 							read.Complete.Signal();
 							break;
@@ -245,10 +245,16 @@ namespace Boring32::WinHttp::WebSockets
 						break;
 
 					default:
-						std::wcerr << "Unknown error: " << err.what() << std::endl;
+						std::wcerr << "Unknown error: " << requestError->dwResult << " " << err.what() << std::endl;
 						break;
 				}
+				// Might be better to consolidate this into a single error event on the websocket level
+				socket->m_connectionResult.IsConnected = false;
+				socket->m_readResult.Status = ReadResultStatus::Error;
+				socket->m_writeResult.Status = WriteResultStatus::Error;
 				socket->m_connectionResult.Complete.Signal();
+				socket->m_readResult.Complete.Signal();
+				socket->m_writeResult.Complete.Signal();
 				break;
 			}
 

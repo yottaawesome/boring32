@@ -9,7 +9,7 @@
 
 namespace Boring32::WinHttp::WebSockets
 {
-	enum class WebSocketReadResultStatus : DWORD
+	enum class ReadResultStatus : DWORD
 	{
 		NotInitiated,
 		Initiated,
@@ -23,8 +23,16 @@ namespace Boring32::WinHttp::WebSockets
 		AsyncReadResult() {};
 		AsyncReadResult(const AsyncReadResult&) = delete;
 		AsyncReadResult& operator=(const AsyncReadResult&) = delete;
+		virtual AsyncReadResult& operator=(AsyncReadResult&& other) noexcept
+		{
+			Status = other.Status;
+			TotalBytesRead = other.TotalBytesRead;
+			Data = std::move(other.Data);
+			Complete = std::move(other.Complete);
+			return *this;
+		};
 
-		WebSocketReadResultStatus Status = WebSocketReadResultStatus::NotInitiated;
+		ReadResultStatus Status = ReadResultStatus::NotInitiated;
 		DWORD TotalBytesRead = 0;
 		std::vector<char> Data;
 		Async::Event Complete{ false,true,false };
@@ -42,7 +50,13 @@ namespace Boring32::WinHttp::WebSockets
 	{
 		WriteResult() {};
 		WriteResult(const WriteResult&) = delete;
-		WriteResult& operator=(const WriteResult&) = delete;
+		virtual WriteResult& operator=(const WriteResult&) = delete;
+		virtual WriteResult& operator=(WriteResult&& other) noexcept
+		{ 
+			Status = other.Status; 
+			Complete = std::move(other.Complete);
+			return *this;
+		};
 
 		WriteResultStatus Status = WriteResultStatus::NotInitiated;
 		Async::Event Complete{ false,true,false };
@@ -53,6 +67,12 @@ namespace Boring32::WinHttp::WebSockets
 		ConnectionResult() {};
 		ConnectionResult(const ConnectionResult&) = delete;
 		ConnectionResult& operator=(const ConnectionResult&) = delete;
+		virtual ConnectionResult& operator=(ConnectionResult&& other) noexcept
+		{
+			IsConnected = other.IsConnected;
+			Complete = std::move(other.Complete);
+			return *this;
+		};
 
 		bool IsConnected=false;
 		Async::Event Complete{ false, true, false };
@@ -81,7 +101,7 @@ namespace Boring32::WinHttp::WebSockets
 		protected:
 			virtual const ConnectionResult& InternalConnect(const std::wstring& path);
 			virtual const AsyncReadResult& Receive(AsyncReadResult& receiveBuffer);
-			virtual void Move(AsyncWebSocketSettings& other) noexcept;
+			virtual void Move(AsyncWebSocket& other) noexcept;
 			virtual void CompleteUpgrade();
 			static void StatusCallback(
 				HINTERNET hInternet,
@@ -97,7 +117,7 @@ namespace Boring32::WinHttp::WebSockets
 			WinHttpHandle m_winHttpConnection;
 			WinHttpHandle m_winHttpSession;
 			WinHttpHandle m_winHttpWebSocket;
-			std::atomic<WebSocketStatus> m_status;
+			WebSocketStatus m_status;
 			WinHttpHandle m_requestHandle;
 			//CRITICAL_SECTION m_cs;
 			static DWORD m_bufferBlockSize;

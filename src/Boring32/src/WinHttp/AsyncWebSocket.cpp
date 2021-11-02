@@ -143,10 +143,10 @@ namespace Boring32::WinHttp::WebSockets
 		//Async::CriticalSectionLock cs(m_cs);
 		if (m_status != WebSocketStatus::Connected)
 			throw std::runtime_error("WebSocket is not connected to receive data");
-		if (m_readResult.Status == WebSocketReadResultStatus::Initiated)
+		if (m_readResult.Status == ReadResultStatus::Initiated)
 			throw std::runtime_error("A read operation is already in progress");
 
-		m_readResult.Status = WebSocketReadResultStatus::Initiated;
+		m_readResult.Status = ReadResultStatus::Initiated;
 		m_readResult.Data.clear();
 		m_readResult.TotalBytesRead = 0;
 		m_readResult.Complete.Reset();
@@ -161,13 +161,13 @@ namespace Boring32::WinHttp::WebSockets
 			throw std::runtime_error("WebSocket is not connected to receive data");
 
 		char* currentBufferPointer = nullptr;
-		if (receiveBuffer.Status == WebSocketReadResultStatus::PartialRead)
+		if (receiveBuffer.Status == ReadResultStatus::PartialRead)
 		{
 			const size_t oldSize = receiveBuffer.Data.size();
 			receiveBuffer.Data.resize(receiveBuffer.Data.size()+m_bufferBlockSize);
 			currentBufferPointer = &receiveBuffer.Data[0] + oldSize;
 		}
-		else if (receiveBuffer.Status == WebSocketReadResultStatus::Initiated)
+		else if (receiveBuffer.Status == ReadResultStatus::Initiated)
 		{
 			receiveBuffer.Data.resize(m_bufferBlockSize);
 			currentBufferPointer = &receiveBuffer.Data[0];
@@ -190,7 +190,7 @@ namespace Boring32::WinHttp::WebSockets
 		{
 			m_status = WebSocketStatus::Error;
 			m_readResult.Complete.Signal();
-			m_readResult.Status = WebSocketReadResultStatus::Error;
+			m_readResult.Status = ReadResultStatus::Error;
 			throw Error::Win32Error("Connection error when receiving websocket data", statusCode);
 		}
 
@@ -385,9 +385,20 @@ namespace Boring32::WinHttp::WebSockets
 		}
 	}
 
-	void AsyncWebSocket::Move(AsyncWebSocketSettings& other) noexcept
+	void AsyncWebSocket::Move(AsyncWebSocket& other) noexcept
 	{
-
+		CloseSocket();
+		m_settings = std::move(other.m_settings);
+		m_winHttpConnection = std::move(other.m_winHttpConnection);
+		m_winHttpSession = std::move(other.m_winHttpSession);
+		m_winHttpWebSocket = std::move(other.m_winHttpWebSocket);
+		m_status = other.m_status;
+		m_requestHandle = std::move(other.m_requestHandle);
+		//CRITICAL_SECTION m_cs;
+		m_bufferBlockSize = std::move(other.m_bufferBlockSize);
+		m_readResult = std::move(other.m_readResult);
+		m_connectionResult = std::move(other.m_connectionResult);
+		m_writeResult = std::move(other.m_writeResult);
 	}
 
 	void AsyncWebSocket::CompleteUpgrade()

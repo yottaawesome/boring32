@@ -1,6 +1,7 @@
 #include "pch.hpp"
 #include <stdexcept>
 #include <vector>
+#include <future>
 #include <sstream>
 #include "include/WinHttp/WebSockets/WebSocket.hpp"
 #include "include/WinHttp/ProxyInfo.hpp"
@@ -251,6 +252,28 @@ namespace Boring32::WinHttp::WebSockets
 			m_status = WebSocketStatus::Error;
 			throw Error::Win32Error("WebSocket::SendString(): WinHttpWebSocketSend() failed", statusCode);
 		}
+	}
+	
+	std::shared_ptr<WebSocket::ReadResult> WebSocket::AsyncReceive()
+	{
+		auto result = std::make_shared<WebSocket::ReadResult>();
+		auto future = std::async(
+			std::launch::async, 
+			[this, result] 
+			{
+				try
+				{
+					this->Receive(result->Buffer);
+					result->Succeeded = true;
+				}
+				catch (const std::exception& ex)
+				{
+					std::wcerr << ex.what() << std::endl;
+				}
+				result->Done.Signal(std::nothrow);
+			});
+
+		return result;
 	}
 
 	bool WebSocket::Receive(std::vector<char>& receiveBuffer)
