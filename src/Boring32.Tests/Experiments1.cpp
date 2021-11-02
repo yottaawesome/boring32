@@ -695,11 +695,22 @@ void TestSyncWebSocket()
 			.WinHttpSession = Boring32::WinHttp::Session(L"testUserAgent")
 		}
 	);
+
+	using WsrrPtr = std::shared_ptr<Boring32::WinHttp::WebSockets::WebSocket::ReadResult>;
+
 	socket.Connect();
-	auto x = socket.AsyncReceive();
-	x->Done.WaitOnEvent(INFINITE, true);
-	std::string message(x->Buffer.begin(), x->Buffer.end());
-	std::wcout << message.c_str() << std::endl;
+	WsrrPtr readResult = socket.AsyncReceive();
+	socket.SendString("abort");
+	readResult->Done.WaitOnEvent(INFINITE, true);
+	if (readResult->Succeeded)
+	{
+		std::string message(readResult->Buffer.begin(), readResult->Buffer.end());
+		std::wcout << message.c_str() << std::endl;
+	}
+	else
+	{
+		std::wcout << "The read operation failed" << std::endl;
+	}
 }
 
 void TestAsyncWebSocket()

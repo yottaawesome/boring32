@@ -1,6 +1,7 @@
 const https = require('https');
 const fs = require('fs');
 const WebSocket = require('ws');
+const { abort } = require('process');
 
 const options = {
 	key: fs.readFileSync('key.pem'),
@@ -40,13 +41,19 @@ wss.on('connection',
 		//setTimeout(() => ws.close(), 5000);
 
 		ws.on('message', function incoming(message) {
-			// setTimeout(() => {
+			if (message == "abort")
+				abort();
+			if (message == "echo")
+			  	ws.send(message);
+			if (message == "close")
+			  	ws.close();
+				// setTimeout(() => {
 			//  	ws.send('something1');
 			// }, 1000);
 			// setTimeout(() => {
 			// 	ws.send('something2');
 			// }, 1000);
-			setTimeout(() => ws.close(), 5000);
+			//setTimeout(() => ws.close(), 5000);
 		});
 		
 	}

@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <future>
 #include "../WinHttpHandle.hpp"
 #include "../Session.hpp"
 #include "../../Async/Event.hpp"
@@ -19,6 +20,7 @@ namespace Boring32::WinHttp::WebSockets
 				std::vector<char> Buffer;
 				bool Succeeded = false;
 				Async::Event Done{ false, true, false };
+				std::future<void> Future;
 			};
 		public:
 			virtual ~WebSocket();
