@@ -38,6 +38,20 @@ namespace Boring32::WinHttp::WebSockets
 		{WINHTTP_CALLBACK_STATUS_SETTINGS_READ_COMPLETE, L"WINHTTP_CALLBACK_STATUS_SETTINGS_READ_COMPLETE"}
 	};
 
+	void Print(const DWORD dwInternetStatus)
+	{
+		// Not sure why this fails
+		/*static bool firstTime = true;
+		static CRITICAL_SECTION cs;
+		if (firstTime)
+		{
+			InitializeCriticalSection(&cs);
+			firstTime = false;
+		}
+		Async::CriticalSectionLock csl(cs);
+		std::wcout << InternetStatus.at(dwInternetStatus) << std::endl;*/
+	}
+
 	void AsyncWebSocket::StatusCallback(
 		HINTERNET hInternet,
 		DWORD_PTR dwContext,
@@ -46,8 +60,8 @@ namespace Boring32::WinHttp::WebSockets
 		DWORD dwStatusInformationLength
 	)
 	{
-		//if (InternetStatus.contains(dwInternetStatus))
-		//	std::wcout << InternetStatus.at(dwInternetStatus) << std::endl;
+		//std::wcout << L"AA " << GetCurrentThreadId() << std::endl;
+		Print(dwInternetStatus);
 		// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpsetstatuscallback
 		// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nc-winhttp-winhttp_status_callback
 		switch (dwInternetStatus)
