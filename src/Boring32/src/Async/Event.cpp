@@ -125,7 +125,7 @@ namespace Boring32::Async
 		return m_event.GetHandle();
 	}
 
-	void Event::WaitOnEvent()
+	void Event::WaitOnEvent() const
 	{
 		if (m_event == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": No Event to wait on");
@@ -137,7 +137,7 @@ namespace Boring32::Async
 			throw std::runtime_error(__FUNCSIG__ ": The wait was abandoned");
 	}
 
-	bool Event::WaitOnEvent(const DWORD millis, const bool alertable)
+	bool Event::WaitOnEvent(const DWORD millis, const bool alertable) const
 	{
 		if (m_event == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": No Event to wait on");
@@ -154,7 +154,7 @@ namespace Boring32::Async
 		return false;
 	}
 
-	bool Event::WaitOnEvent(const DWORD millis, const bool alertable, std::nothrow_t) noexcept
+	bool Event::WaitOnEvent(const DWORD millis, const bool alertable, std::nothrow_t) const noexcept
 	{
 		//https://codeyarns.com/tech/2018-08-22-how-to-get-function-name-in-c.html
 		return Error::TryCatchLogToWCerr([this]{ WaitOnEvent(); }, __FUNCSIG__);

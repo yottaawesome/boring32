@@ -221,12 +221,12 @@ namespace Boring32::WinHttp::WebSockets
 	{
 		if (m_status != WebSocketStatus::Connected)
 			throw std::runtime_error("WebSocket is not connected to send data");
-
-		DWORD statusCode = WinHttpWebSocketSend(
+		const void* a = reinterpret_cast<const void*>(&msg[0]);
+		const DWORD statusCode = WinHttpWebSocketSend(
 			m_winHttpWebSocket.Get(),
 			WINHTTP_WEB_SOCKET_UTF8_MESSAGE_BUFFER_TYPE,
-			(PVOID)&msg[0],
-			(DWORD)(msg.size() * sizeof(char))
+			reinterpret_cast<PVOID>(const_cast<char*>(&msg[0])),
+			static_cast<DWORD>(msg.size() * sizeof(char))
 		);
 		if (statusCode != ERROR_SUCCESS)
 		{
@@ -235,16 +235,16 @@ namespace Boring32::WinHttp::WebSockets
 		}
 	}
 
-	void WebSocket::SendBuffer(const std::vector<char>& buffer)
+	void WebSocket::SendBuffer(const std::vector<std::byte>& buffer)
 	{
 		if (m_status != WebSocketStatus::Connected)
 			throw std::runtime_error("WebSocket is not connected to send data");
 
-		DWORD statusCode = WinHttpWebSocketSend(
+		const DWORD statusCode = WinHttpWebSocketSend(
 			m_winHttpWebSocket.Get(),
 			WINHTTP_WEB_SOCKET_BINARY_MESSAGE_BUFFER_TYPE,
-			(PVOID)&buffer[0],
-			(DWORD)(buffer.size() * sizeof(char))
+			reinterpret_cast<PVOID>(const_cast<std::byte*>(&buffer[0])),
+			static_cast<DWORD>(buffer.size() * sizeof(std::byte))
 		);
 		if (statusCode != ERROR_SUCCESS)
 		{
@@ -258,18 +258,17 @@ namespace Boring32::WinHttp::WebSockets
 		if (m_status != WebSocketStatus::Connected)
 			throw std::runtime_error("WebSocket is not connected to receive data");
 
-		constexpr UINT bufferBlockSize = 2048;
 		receiveBuffer.clear();
-		receiveBuffer.resize(bufferBlockSize);
+		receiveBuffer.resize(m_settings.BufferBlockSize);
 		WINHTTP_WEB_SOCKET_BUFFER_TYPE bufferType;
-		DWORD bufferLength = (DWORD)(receiveBuffer.size() * sizeof(char));
+		DWORD bufferLength = static_cast<DWORD>(receiveBuffer.size() * sizeof(char));
 		DWORD totalBytesTransferred = 0;
 		char* currentBufferPointer = &receiveBuffer[0];
 		
 		while (true)
 		{
 			DWORD bytesTransferred = 0;
-			DWORD statusCode = WinHttpWebSocketReceive(
+			const DWORD statusCode = WinHttpWebSocketReceive(
 				m_winHttpWebSocket.Get(),
 				currentBufferPointer,
 				bufferLength,
@@ -302,8 +301,8 @@ namespace Boring32::WinHttp::WebSockets
 
 			if (bufferLength == 0)
 			{
-				receiveBuffer.resize(receiveBuffer.size() + bufferBlockSize);
-				bufferLength = (DWORD)receiveBuffer.size() * sizeof(char);
+				receiveBuffer.resize(receiveBuffer.size() + m_settings.BufferBlockSize);
+				bufferLength = static_cast<DWORD>(receiveBuffer.size() * sizeof(char));
 				currentBufferPointer = &receiveBuffer[0] + totalBytesTransferred;
 			}
 		}

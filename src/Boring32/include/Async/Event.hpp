@@ -76,9 +76,9 @@ namespace Boring32::Async
 			virtual bool Signal(std::nothrow_t) noexcept;
 			virtual void Reset();
 			virtual bool Reset(std::nothrow_t) noexcept;
-			virtual void WaitOnEvent();
-			virtual bool WaitOnEvent(const DWORD millis, const bool alertable);
-			virtual bool WaitOnEvent(const DWORD millis, const bool alertable, std::nothrow_t) noexcept;
+			virtual void WaitOnEvent() const;
+			virtual bool WaitOnEvent(const DWORD millis, const bool alertable) const;
+			virtual bool WaitOnEvent(const DWORD millis, const bool alertable, std::nothrow_t) const noexcept;
 			virtual HANDLE Detach() noexcept;
 			virtual HANDLE GetHandle() const noexcept;
 			virtual void Close();

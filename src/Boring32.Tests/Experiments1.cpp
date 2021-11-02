@@ -715,9 +715,13 @@ void TestAsyncWebSocket()
 		}
 	);
 
-	socket.Connect();
-	while (socket.GetStatus() != Boring32::WinHttp::WebSockets::WebSocketStatus::Connected)
-		Sleep(200);
+	auto& connectionStatus = socket.Connect();
+	socket.GetConnectionStatus().Complete.WaitOnEvent();
+	if (!connectionStatus.IsConnected)
+	{
+		std::wcerr << L"Failed to connect\n";
+		return;
+	}
 
 	std::wcout << L"Connected successfully" << std::endl;
 	socket.SendString("Hello!");

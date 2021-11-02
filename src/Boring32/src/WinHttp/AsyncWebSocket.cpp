@@ -10,12 +10,15 @@ namespace Boring32::WinHttp::WebSockets
 
 	AsyncWebSocket::~AsyncWebSocket()
 	{
-		try
+		if (m_status == WebSocketStatus::Connected) try
 		{
-			if (m_status == WebSocketStatus::Connected)
-				CloseSocket();
-			while (m_status == WebSocketStatus::Closing)
+			CloseSocket();
+			int i = 0;
+			while (i < 5 && m_status == WebSocketStatus::Closing)
+			{
 				Sleep(100);
+				i++;
+			}
 		}
 		catch (const std::exception& ex)
 		{
@@ -27,7 +30,8 @@ namespace Boring32::WinHttp::WebSockets
 	AsyncWebSocket::AsyncWebSocket(const AsyncWebSocketSettings& settings)
 	:	m_settings(settings),
 		m_status(WebSocketStatus::NotInitialised),
-		m_currentResult{}
+		m_currentResult{}, 
+		m_connectionResult{}
 	{
 		InitializeCriticalSection(&m_cs);
 	}
@@ -37,14 +41,19 @@ namespace Boring32::WinHttp::WebSockets
 		return m_settings;
 	}
 
-	void AsyncWebSocket::Connect(const std::wstring& path)
+	const ConnectionResult& AsyncWebSocket::Connect(const std::wstring& path)
 	{
-		InternalConnect(path);
+		return InternalConnect(path);
 	}
 
-	void AsyncWebSocket::Connect()
+	const ConnectionResult& AsyncWebSocket::Connect()
 	{
-		InternalConnect(L"");
+		return InternalConnect(L"");
+	}
+
+	const ConnectionResult& AsyncWebSocket::GetConnectionStatus() const
+	{
+		return m_connectionResult;
 	}
 
 	void AsyncWebSocket::SendString(const std::string& msg)
@@ -52,11 +61,11 @@ namespace Boring32::WinHttp::WebSockets
 		if (m_status != WebSocketStatus::Connected)
 			throw std::runtime_error("WebSocket is not connected to send data");
 
-		DWORD statusCode = WinHttpWebSocketSend(
+		const DWORD statusCode = WinHttpWebSocketSend(
 			m_winHttpWebSocket.Get(),
 			WINHTTP_WEB_SOCKET_UTF8_MESSAGE_BUFFER_TYPE,
-			(PVOID)&msg[0],
-			(DWORD)(msg.size() * sizeof(char))
+			reinterpret_cast<void*>(const_cast<char*>(&msg[0])),
+			static_cast<DWORD>(msg.size() * sizeof(char))
 		);
 		if (statusCode != ERROR_SUCCESS)
 		{
@@ -65,16 +74,16 @@ namespace Boring32::WinHttp::WebSockets
 		}
 	}
 
-	void AsyncWebSocket::SendBuffer(const std::vector<char>& buffer)
+	void AsyncWebSocket::SendBuffer(const std::vector<std::byte>& buffer)
 	{
 		if (m_status != WebSocketStatus::Connected)
 			throw std::runtime_error("WebSocket is not connected to send data");
 
-		DWORD statusCode = WinHttpWebSocketSend(
+		const DWORD statusCode = WinHttpWebSocketSend(
 			m_winHttpWebSocket.Get(),
 			WINHTTP_WEB_SOCKET_BINARY_MESSAGE_BUFFER_TYPE,
-			(PVOID)&buffer[0],
-			(DWORD)(buffer.size() * sizeof(char))
+			reinterpret_cast<PVOID>(const_cast<std::byte*>(&buffer[0])),
+			static_cast<DWORD>(buffer.size() * sizeof(char))
 		);
 		if (statusCode != ERROR_SUCCESS)
 		{
@@ -201,7 +210,7 @@ namespace Boring32::WinHttp::WebSockets
 		return m_status;
 	}
 
-	void AsyncWebSocket::InternalConnect(const std::wstring& path)
+	const ConnectionResult& AsyncWebSocket::InternalConnect(const std::wstring& path)
 	{
 		if (m_status != WebSocketStatus::NotInitialised)
 			throw std::runtime_error(__FUNCSIG__ ": WebSocket needs to be in NotInitialised state to connect");
@@ -345,6 +354,7 @@ namespace Boring32::WinHttp::WebSockets
 					__FUNCSIG__ ": WinHttpSendRequest() failed on initial request",
 					GetLastError()
 				);
+			return m_connectionResult;
 		}
 		catch (const std::exception&)
 		{

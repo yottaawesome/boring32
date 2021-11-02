@@ -27,7 +27,7 @@ namespace Boring32::WinHttp::WebSockets
 			virtual void Connect();
 			virtual void Connect(const std::wstring& path);
 			virtual void SendString(const std::string& msg);
-			virtual void SendBuffer(const std::vector<char>& buffer);
+			virtual void SendBuffer(const std::vector<std::byte>& buffer);
 			virtual bool Receive(std::vector<char>& buffer);
 			virtual void Close();
 			virtual WebSocketStatus GetStatus() const noexcept;

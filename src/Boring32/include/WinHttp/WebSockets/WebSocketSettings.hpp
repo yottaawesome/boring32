@@ -14,5 +14,6 @@ namespace Boring32::WinHttp::WebSockets
 		std::wstring ConnectionHeaders;
 		Session WinHttpSession;
 		Crypto::Certificate ClientCert;
+		UINT BufferBlockSize = 2048;
 	};
 }

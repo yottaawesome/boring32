@@ -57,7 +57,7 @@ namespace Boring32::WinHttp::WebSockets
 			{
 				std::wcout << L"WINHTTP_CALLBACK_STATUS_REQUEST_SENT" << std::endl;
 				
-				AsyncWebSocket* socket = (AsyncWebSocket*)dwContext;
+				auto socket = reinterpret_cast<AsyncWebSocket*>(dwContext);
 				if(socket)
 					std::wcout << L"WINHTTP_CALLBACK_STATUS_REQUEST_SENT: socket available" << std::endl;
 
@@ -241,9 +241,7 @@ namespace Boring32::WinHttp::WebSockets
 				
 				try
 				{
-					AsyncWebSocket* socket = (AsyncWebSocket*)dwContext;
-
-					WINHTTP_WEB_SOCKET_STATUS* status = (WINHTTP_WEB_SOCKET_STATUS*)lpvStatusInformation;
+					AsyncWebSocket* socket = reinterpret_cast<AsyncWebSocket*>(dwContext);
 
 					WebSocketReadResult& read = socket->m_currentResult;
 					if (read.Status != WebSocketReadResultStatus::Initiated 
@@ -253,6 +251,7 @@ namespace Boring32::WinHttp::WebSockets
 						return;
 					}
 
+					auto status = static_cast<WINHTTP_WEB_SOCKET_STATUS*>(lpvStatusInformation);
 					read.TotalBytesRead += status->dwBytesTransferred;
 					switch (status->eBufferType)
 					{
@@ -329,7 +328,7 @@ namespace Boring32::WinHttp::WebSockets
 						std::wcerr << "Unknown error: " << err.what() << std::endl;
 						break;
 				}
-
+				socket->m_connectionResult.Complete.Signal();
 				break;
 			}
 
