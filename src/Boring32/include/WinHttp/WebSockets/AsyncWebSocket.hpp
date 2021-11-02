@@ -14,7 +14,8 @@ namespace Boring32::WinHttp::WebSockets
 		NotInitiated,
 		Initiated,
 		PartialRead,
-		Finished
+		Finished,
+		Error
 	};
 
 	struct AsyncReadResult

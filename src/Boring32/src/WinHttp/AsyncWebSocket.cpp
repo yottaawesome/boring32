@@ -189,7 +189,8 @@ namespace Boring32::WinHttp::WebSockets
 		if (statusCode != ERROR_SUCCESS)
 		{
 			m_status = WebSocketStatus::Error;
-			
+			m_readResult.Complete.Signal();
+			m_readResult.Status = WebSocketReadResultStatus::Error;
 			throw Error::Win32Error("Connection error when receiving websocket data", statusCode);
 		}
 
@@ -211,6 +212,10 @@ namespace Boring32::WinHttp::WebSockets
 				throw Error::Win32Error("WinHttpWebSocketClose() failed", success);
 			}
 			m_status = WebSocketStatus::Closing;
+		}
+		else
+		{
+			m_status = WebSocketStatus::Closed;
 		}
 	}
 
