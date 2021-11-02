@@ -19,6 +19,10 @@ namespace Boring32::WinHttp::WebSockets
 
 	struct AsyncReadResult
 	{
+		AsyncReadResult() {};
+		AsyncReadResult(const AsyncReadResult&) = delete;
+		AsyncReadResult& operator=(const AsyncReadResult&) = delete;
+
 		WebSocketReadResultStatus Status = WebSocketReadResultStatus::NotInitiated;
 		DWORD TotalBytesRead = 0;
 		std::vector<char> Data;
@@ -35,12 +39,20 @@ namespace Boring32::WinHttp::WebSockets
 
 	struct WriteResult
 	{
+		WriteResult() {};
+		WriteResult(const WriteResult&) = delete;
+		WriteResult& operator=(const WriteResult&) = delete;
+
 		WriteResultStatus Status = WriteResultStatus::NotInitiated;
 		Async::Event Complete{ false,true,false };
 	};
 
 	struct ConnectionResult
 	{
+		ConnectionResult() {};
+		ConnectionResult(const ConnectionResult&) = delete;
+		ConnectionResult& operator=(const ConnectionResult&) = delete;
+
 		bool IsConnected=false;
 		Async::Event Complete{ false, true, false };
 	};
@@ -53,20 +65,20 @@ namespace Boring32::WinHttp::WebSockets
 		
 		public:
 			virtual const AsyncWebSocketSettings& GetSettings();
-			virtual std::shared_ptr<const ConnectionResult> Connect();
-			virtual std::shared_ptr<const ConnectionResult> Connect(const std::wstring& path);
-			virtual std::shared_ptr<const ConnectionResult> GetConnectionStatus() const;
-			virtual std::shared_ptr<const WriteResult> SendString(const std::string& msg);
-			virtual std::shared_ptr<const WriteResult> SendBuffer(const std::vector<std::byte>& buffer);
-			virtual std::shared_ptr<const AsyncReadResult> Receive();
+			virtual const ConnectionResult& Connect();
+			virtual const ConnectionResult& Connect(const std::wstring& path);
+			virtual const ConnectionResult& GetConnectionStatus() const;
+			virtual const WriteResult& SendString(const std::string& msg);
+			virtual const WriteResult& SendBuffer(const std::vector<std::byte>& buffer);
+			virtual const AsyncReadResult& Receive();
 			virtual void CloseSocket();
 			virtual void Release();
 			virtual WebSocketStatus GetStatus() const noexcept;
-			virtual std::shared_ptr<const AsyncReadResult> GetCurrentRead();
+			virtual const AsyncReadResult& GetCurrentRead();
 			//virtual std::shared_future<WebSocketReadResult> Receive2();
 
 		protected:
-			virtual std::shared_ptr<const ConnectionResult> InternalConnect(const std::wstring& path);
+			virtual const ConnectionResult& InternalConnect(const std::wstring& path);
 			virtual const AsyncReadResult& Receive(AsyncReadResult& receiveBuffer);
 			virtual void Move(AsyncWebSocketSettings& other) noexcept;
 			virtual void CompleteUpgrade();
@@ -88,11 +100,8 @@ namespace Boring32::WinHttp::WebSockets
 			WinHttpHandle m_requestHandle;
 			//CRITICAL_SECTION m_cs;
 			static DWORD m_bufferBlockSize;
-			// FIX: these should be returned as shared_ptrs to avoid tying
-			// them to this object when it goes out of scope and threads
-			// are still waiting for the signal
-			std::shared_ptr<AsyncReadResult> m_readResult;
-			std::shared_ptr<ConnectionResult> m_connectionResult;
-			std::shared_ptr<WriteResult> m_writeResult;
+			AsyncReadResult m_readResult;
+			ConnectionResult m_connectionResult;
+			WriteResult m_writeResult;
 	};
 }

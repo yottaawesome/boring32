@@ -715,9 +715,9 @@ void TestAsyncWebSocket()
 		}
 	);
 
-	auto connectionStatus = socket.Connect();
-	socket.GetConnectionStatus()->Complete.WaitOnEvent();
-	if (!connectionStatus->IsConnected)
+	auto& connectionStatus = socket.Connect();
+	socket.GetConnectionStatus().Complete.WaitOnEvent();
+	if (!connectionStatus.IsConnected)
 	{
 		std::wcerr << L"Failed to connect\n";
 		return;
@@ -727,13 +727,13 @@ void TestAsyncWebSocket()
 	socket.SendString("Hello!");
 	//socket.CloseSocket();
 	//Sleep(5000);
-	auto result = socket.Receive();
-	result->Complete.WaitOnEvent(INFINITE, false);
+	auto& result = socket.Receive();
+	result.Complete.WaitOnEvent(INFINITE, false);
 
 
 	//auto result = socket.Receive2().get();
 	//auto result = socket.Receive3()->get_future().get();
-	std::string message(result->Data.begin(), result->Data.end());
+	std::string message(result.Data.begin(), result.Data.end());
 	std::wcout << message.size() << std::endl;
 	std::wcout << message.c_str() << std::endl;
 

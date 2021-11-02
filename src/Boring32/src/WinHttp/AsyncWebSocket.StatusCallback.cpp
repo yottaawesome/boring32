@@ -135,7 +135,7 @@ namespace Boring32::WinHttp::WebSockets
 					std::wcerr << L"No socket found\n";
 					return;
 				}
-				AsyncReadResult& read = *socket->m_readResult;
+				AsyncReadResult& read = socket->m_readResult;
 
 				try
 				{
@@ -187,7 +187,7 @@ namespace Boring32::WinHttp::WebSockets
 			{
 				std::wcout << L"WINHTTP_CALLBACK_STATUS_WRITE_COMPLETE" << std::endl;
 				AsyncWebSocket* socket = reinterpret_cast<AsyncWebSocket*>(dwContext);
-				socket->m_writeResult->Status = WriteResultStatus::Finished;
+				socket->m_writeResult.Status = WriteResultStatus::Finished;
 
 				break;
 			}
@@ -227,7 +227,7 @@ namespace Boring32::WinHttp::WebSockets
 						std::wcerr << "Unknown error: " << err.what() << std::endl;
 						break;
 				}
-				socket->m_connectionResult->Complete.Signal();
+				socket->m_connectionResult.Complete.Signal();
 				break;
 			}
 
