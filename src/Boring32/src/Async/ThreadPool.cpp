@@ -47,14 +47,14 @@ namespace Boring32::Async
 		SetThreadpoolCallbackPool(&m_environ, m_pool.get());
 	}
 
-	DWORD ThreadPool::GetMinThread() const
+	DWORD ThreadPool::GetMinThread() const noexcept
 	{
 		if (m_pool == nullptr)
 			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
 		return m_minThreads;
 	}
 
-	DWORD ThreadPool::GetMaxThread() const
+	DWORD ThreadPool::GetMaxThread() const noexcept
 	{
 		if (m_pool == nullptr)
 			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
@@ -142,7 +142,7 @@ namespace Boring32::Async
 
 	PTP_WORK ThreadPool::CreateWork(
 		ThreadPoolCallback& callback,
-		const void* param
+		void* param
 	)
 	{
 		if (m_pool == nullptr)
@@ -155,7 +155,7 @@ namespace Boring32::Async
 		// https://docs.microsoft.com/en-us/archive/msdn-magazine/2011/august/windows-with-c-the-windows-thread-pool-and-work
 		const PTP_WORK item = CreateThreadpoolWork(
 			callback,
-			const_cast<void*>(param),
+			param,
 			&m_environ
 		);
 		if (item == nullptr)
@@ -176,5 +176,10 @@ namespace Boring32::Async
 	{
 		//https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setthreadpoolcallbackrunslong
 		SetThreadpoolCallbackRunsLong(&m_environ);
+	}
+
+	std::shared_ptr<TP_POOL> ThreadPool::GetPoolHandle() const noexcept
+	{
+		return m_pool;
 	}
 }

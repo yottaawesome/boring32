@@ -30,8 +30,8 @@ namespace Boring32::Async
 			ThreadPool(const DWORD minThreads, const DWORD maxThreads);
 
 		public:
-			virtual DWORD GetMinThread() const final;
-			virtual DWORD GetMaxThread() const final;
+			virtual DWORD GetMinThread() const noexcept final;
+			virtual DWORD GetMaxThread() const noexcept final;
 
 		public:
 			virtual void SetMinAndMaxThreads(const DWORD min, const DWORD max);
@@ -40,7 +40,7 @@ namespace Boring32::Async
 			virtual void Close();
 			virtual PTP_WORK CreateWork(
 				ThreadPoolCallback& callback,
-				const void* param
+				void* param
 			);
 			virtual PTP_WORK CreateWork(
 				LambdaCallback& callback,
@@ -48,6 +48,7 @@ namespace Boring32::Async
 			);
 			virtual void SubmitWork(PTP_WORK workItem);
 			virtual void SetCallbackRunsLong();
+			virtual std::shared_ptr<TP_POOL> GetPoolHandle() const noexcept final;
 
 		protected:
 			static void InternalCallback(
