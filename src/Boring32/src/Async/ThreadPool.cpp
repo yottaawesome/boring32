@@ -49,15 +49,11 @@ namespace Boring32::Async
 
 	DWORD ThreadPool::GetMinThread() const noexcept
 	{
-		if (m_pool == nullptr)
-			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
 		return m_minThreads;
 	}
 
 	DWORD ThreadPool::GetMaxThread() const noexcept
 	{
-		if (m_pool == nullptr)
-			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
 		return m_maxThreads;
 	}
 
