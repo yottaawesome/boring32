@@ -1,6 +1,7 @@
 #pragma once
 #include <functional>
 #include <Windows.h>
+#include <memory>
 
 namespace Boring32::Async
 {
@@ -38,9 +39,10 @@ namespace Boring32::Async
 				ThreadPoolCallback& callback,
 				void* param
 			);
+			virtual void SetCallbackRunsLong();
 
 		protected:
-			TP_POOL* m_pool;
+			std::shared_ptr<TP_POOL> m_pool;
 			TP_CALLBACK_ENVIRON m_environ;
 			DWORD m_minThreads;
 			DWORD m_maxThreads;

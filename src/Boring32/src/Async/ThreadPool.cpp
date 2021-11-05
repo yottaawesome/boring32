@@ -14,8 +14,6 @@ namespace Boring32::Async
 	{
 		if (m_pool)
 		{
-			// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-closethreadpool
-			CloseThreadpool(m_pool);
 			m_pool = nullptr;
 			// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-destroythreadpoolenvironment
 			DestroyThreadpoolEnvironment(&m_environ);
@@ -29,17 +27,19 @@ namespace Boring32::Async
 		m_maxThreads(maxThreads)
 	{
 		if (m_minThreads < 1 || m_maxThreads < m_minThreads)
-			throw std::invalid_argument("Invalid minThreads or maxThreads specified");
+			throw std::invalid_argument(__FUNCSIG__": invalid minThreads or maxThreads specified");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-createthreadpool
-		m_pool = CreateThreadpool(nullptr);
+		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-closethreadpool
+		m_pool = std::shared_ptr<TP_POOL>(CreateThreadpool(nullptr), CloseThreadpool);
 		if (m_pool == nullptr)
-			throw Error::Win32Error("ThreadPool::ThreadPool(): CreateThreadPool() failed", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__": CreateThreadPool() failed", GetLastError());
 		
+		SetMinAndMaxThreads(minThreads, maxThreads);
 		// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-initializethreadpoolenvironment
 		InitializeThreadpoolEnvironment(&m_environ);
 		// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setthreadpoolcallbackpool
-		SetThreadpoolCallbackPool(&m_environ, m_pool);
+		SetThreadpoolCallbackPool(&m_environ, m_pool.get());
 	}
 
 	DWORD ThreadPool::GetMinThread()
@@ -69,7 +69,7 @@ namespace Boring32::Async
 		if (m_pool == nullptr)
 			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
 		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-setthreadpoolthreadminimum
-		if (!SetThreadpoolThreadMinimum(m_pool, m_minThreads))
+		if (!SetThreadpoolThreadMinimum(m_pool.get(), m_minThreads))
 			throw Error::Win32Error(__FUNCSIG__": SetThreadpoolThreadMinimum() failed");
 	}
 	void ThreadPool::SetMinThreads(const DWORD value)
@@ -77,7 +77,7 @@ namespace Boring32::Async
 		if (m_pool == nullptr)
 			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
 		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-setthreadpoolthreadmaximum
-		SetThreadpoolThreadMaximum(m_pool, m_maxThreads);
+		SetThreadpoolThreadMaximum(m_pool.get(), m_maxThreads);
 	}
 
 	PTP_WORK ThreadPool::SubmitWork(
@@ -85,6 +85,9 @@ namespace Boring32::Async
 		void* param
 	)
 	{
+		if (m_pool == nullptr)
+			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
+
 		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-createthreadpoolwork
 		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-submitthreadpoolwork
 		// https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms687396(v=vs.85)
@@ -98,5 +101,11 @@ namespace Boring32::Async
 		if(item == nullptr)
 			throw Error::Win32Error("ThreadPool::ThreadPool(): CreateThreadPool() failed", GetLastError());
 		return item;
+	}
+	
+	void ThreadPool::SetCallbackRunsLong()
+	{
+		//https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setthreadpoolcallbackrunslong
+		SetThreadpoolCallbackRunsLong(&m_environ);
 	}
 }
