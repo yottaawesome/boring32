@@ -26,8 +26,12 @@ namespace Boring32::Async
 		m_minThreads(minThreads),
 		m_maxThreads(maxThreads)
 	{
-		if (m_minThreads < 1 || m_maxThreads < m_minThreads)
-			throw std::invalid_argument(__FUNCSIG__": invalid minThreads or maxThreads specified");
+		if (m_minThreads < 1)
+			throw std::invalid_argument(__FUNCSIG__": minThreads cannot be less than 1");
+		if (m_maxThreads < 1)
+			throw std::invalid_argument(__FUNCSIG__": maxThreads cannot be less than 1");
+		if (m_maxThreads < m_minThreads)
+			throw std::invalid_argument(__FUNCSIG__": maxThreads cannot be less than minThreads");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-createthreadpool
 		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-closethreadpool
@@ -64,25 +68,65 @@ namespace Boring32::Async
 		SetMaxThreads(max);
 	}
 
-	void ThreadPool::SetMaxThreads(const DWORD value)
-	{
-		if (m_pool == nullptr)
-			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
-		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-setthreadpoolthreadminimum
-		if (!SetThreadpoolThreadMinimum(m_pool.get(), m_minThreads))
-			throw Error::Win32Error(__FUNCSIG__": SetThreadpoolThreadMinimum() failed");
-	}
 	void ThreadPool::SetMinThreads(const DWORD value)
 	{
 		if (m_pool == nullptr)
 			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
+		if (value < 1)
+			throw std::invalid_argument(__FUNCSIG__": value cannot be less than 1");
+		if (value > m_maxThreads)
+			throw std::invalid_argument(__FUNCSIG__": value cannot be less than minThreads");
+		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-setthreadpoolthreadminimum
+		if (!SetThreadpoolThreadMinimum(m_pool.get(), value))
+			throw Error::Win32Error(__FUNCSIG__": SetThreadpoolThreadMinimum() failed");
+		m_minThreads = value;
+	}
+
+	void ThreadPool::SetMaxThreads(const DWORD value)
+	{
+		if (m_pool == nullptr)
+			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
+		if (value < 1)
+			throw std::invalid_argument(__FUNCSIG__": value cannot be less than 1");
+		if (value < m_minThreads)
+			throw std::invalid_argument(__FUNCSIG__": value cannot be less than minThreads");
 		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-setthreadpoolthreadmaximum
+		m_maxThreads = value;
 		SetThreadpoolThreadMaximum(m_pool.get(), m_maxThreads);
 	}
 
-	PTP_WORK ThreadPool::SubmitWork(
+	void InternalCallback(
+		PTP_CALLBACK_INSTANCE Instance,
+		void* Parameter,
+		PTP_WORK Work
+	)
+	{
+		std::function<void(PTP_CALLBACK_INSTANCE Instance, void*, PTP_WORK)>* unwrappedCallback =
+			reinterpret_cast<std::function<void(PTP_CALLBACK_INSTANCE Instance, void*, PTP_WORK)>*>(Parameter);
+		unwrappedCallback->operator()(Instance, nullptr, Work);
+	}
+
+	PTP_WORK ThreadPool::CreateWork(
+		std::function<void(PTP_CALLBACK_INSTANCE Instance, void*, PTP_WORK)>& callback,
+		const void* param
+	)
+	{
+		if (m_pool == nullptr)
+			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
+		const PTP_WORK item = CreateThreadpoolWork(
+			InternalCallback,
+			&callback,
+			&m_environ
+		);
+		if (item == nullptr)
+			throw Error::Win32Error(__FUNCSIG__": CreateThreadpoolWork() failed", GetLastError());
+
+		return item;
+	}
+
+	PTP_WORK ThreadPool::CreateWork(
 		ThreadPoolCallback& callback,
-		void* param
+		const void* param
 	)
 	{
 		if (m_pool == nullptr)
@@ -93,14 +137,23 @@ namespace Boring32::Async
 		// https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms687396(v=vs.85)
 		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-closethreadpoolwork
 		// https://docs.microsoft.com/en-us/archive/msdn-magazine/2011/august/windows-with-c-the-windows-thread-pool-and-work
-		PTP_WORK item = CreateThreadpoolWork(
+		const PTP_WORK item = CreateThreadpoolWork(
 			callback,
-			param,
+			const_cast<void*>(param),
 			&m_environ
 		);
-		if(item == nullptr)
-			throw Error::Win32Error("ThreadPool::ThreadPool(): CreateThreadPool() failed", GetLastError());
+		if (item == nullptr)
+			throw Error::Win32Error(__FUNCSIG__": CreateThreadPool() failed", GetLastError());
 		return item;
+	}
+
+	void ThreadPool::SubmitWork(PTP_WORK workItem)
+	{
+		if (m_pool == nullptr)
+			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
+		if(workItem == nullptr)
+			throw std::runtime_error(__FUNCSIG__": workItem is nullptr");
+		SubmitThreadpoolWork(workItem);
 	}
 	
 	void ThreadPool::SetCallbackRunsLong()

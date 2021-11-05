@@ -35,10 +35,15 @@ namespace Boring32::Async
 			virtual void SetMaxThreads(const DWORD value);
 			virtual void SetMinThreads(const DWORD value);
 			virtual void Close();
-			virtual PTP_WORK SubmitWork(
+			virtual PTP_WORK CreateWork(
 				ThreadPoolCallback& callback,
-				void* param
+				const void* param
 			);
+			virtual PTP_WORK CreateWork(
+				std::function<void(PTP_CALLBACK_INSTANCE Instance, void*, PTP_WORK)>& callback,
+				const void* param
+			);
+			virtual void SubmitWork(PTP_WORK workItem);
 			virtual void SetCallbackRunsLong();
 
 		protected:
