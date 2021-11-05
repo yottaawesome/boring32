@@ -20,11 +20,18 @@ namespace Boring32::Async
 			PTP_WORK              Work
 		);
 
+
 	class ThreadPool
 	{
 		public:
 			using LambdaCallback = std::function<void(PTP_CALLBACK_INSTANCE Instance, void*, PTP_WORK)>;
 			using WorkParamTuple = std::tuple<LambdaCallback&, void*>;
+			struct WorkItem
+			{
+				LambdaCallback* Callback;
+				void* Parameter = nullptr;
+				PTP_WORK Item = nullptr;
+			};
 
 			virtual ~ThreadPool();
 			ThreadPool(const DWORD minThreads, const DWORD maxThreads);
@@ -42,7 +49,9 @@ namespace Boring32::Async
 				ThreadPoolCallback& callback,
 				void* param
 			);
-			virtual PTP_WORK CreateWork(
+
+			[[nodiscard("Return value should remain live until callback is fully completed")]]
+			virtual std::shared_ptr<WorkItem> CreateWork(
 				LambdaCallback& callback,
 				void* param
 			);
@@ -56,6 +65,7 @@ namespace Boring32::Async
 				void* Parameter,
 				PTP_WORK Work
 			);
+			static void ValidateArgs(const DWORD minThreads, const DWORD maxThreads);
 
 		protected:
 			std::shared_ptr<TP_POOL> m_pool;

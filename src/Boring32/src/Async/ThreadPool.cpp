@@ -27,12 +27,7 @@ namespace Boring32::Async
 		m_minThreads(minThreads),
 		m_maxThreads(maxThreads)
 	{
-		if (m_minThreads < 1)
-			throw std::invalid_argument(__FUNCSIG__": minThreads cannot be less than 1");
-		if (m_maxThreads < 1)
-			throw std::invalid_argument(__FUNCSIG__": maxThreads cannot be less than 1");
-		if (m_maxThreads < m_minThreads)
-			throw std::invalid_argument(__FUNCSIG__": maxThreads cannot be less than minThreads");
+		ValidateArgs(minThreads, maxThreads);
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-createthreadpool
 		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-closethreadpool
@@ -61,6 +56,7 @@ namespace Boring32::Async
 	{
 		if (m_pool == nullptr)
 			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
+		ValidateArgs(min, max);
 		SetMinThreads(min);
 		SetMaxThreads(max);
 	}
@@ -69,10 +65,8 @@ namespace Boring32::Async
 	{
 		if (m_pool == nullptr)
 			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
-		if (value < 1)
-			throw std::invalid_argument(__FUNCSIG__": value cannot be less than 1");
-		if (value > m_maxThreads)
-			throw std::invalid_argument(__FUNCSIG__": value cannot be less than minThreads");
+		ValidateArgs(value, m_maxThreads);
+
 		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-setthreadpoolthreadminimum
 		if (!SetThreadpoolThreadMinimum(m_pool.get(), value))
 			throw Error::Win32Error(__FUNCSIG__": SetThreadpoolThreadMinimum() failed");
@@ -83,10 +77,8 @@ namespace Boring32::Async
 	{
 		if (m_pool == nullptr)
 			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
-		if (value < 1)
-			throw std::invalid_argument(__FUNCSIG__": value cannot be less than 1");
-		if (value < m_minThreads)
-			throw std::invalid_argument(__FUNCSIG__": value cannot be less than minThreads");
+		ValidateArgs(m_minThreads, value);
+
 		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-setthreadpoolthreadmaximum
 		m_maxThreads = value;
 		SetThreadpoolThreadMaximum(m_pool.get(), m_maxThreads);
@@ -98,14 +90,9 @@ namespace Boring32::Async
 		PTP_WORK Work
 	)
 	{
-		if (Parameter == nullptr)
-			return;
-
-		std::unique_ptr<WorkParamTuple> tuple(reinterpret_cast<WorkParamTuple*>(Parameter));
-		try
+		if (auto workItem = reinterpret_cast<ThreadPool::WorkItem*>(Parameter)) try
 		{
-			auto [unwrappedCallback, param] = *tuple;
-			unwrappedCallback(Instance, param, Work);
+			workItem->Callback->operator()(Instance, workItem->Parameter, Work);
 		}
 		catch (const std::exception& ex)
 		{
@@ -113,7 +100,7 @@ namespace Boring32::Async
 		}
 	}
 
-	PTP_WORK ThreadPool::CreateWork(
+	std::shared_ptr<ThreadPool::WorkItem> ThreadPool::CreateWork(
 		LambdaCallback& callback,
 		void* param
 	)
@@ -121,19 +108,12 @@ namespace Boring32::Async
 		if (m_pool == nullptr)
 			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
 
-		auto tuple = new WorkParamTuple(callback, param);
-		const PTP_WORK item = CreateThreadpoolWork(
-			InternalCallback,
-			tuple,
-			&m_environ
-		);
-		if (item == nullptr)
-		{
-			delete tuple;
+		auto workItem = std::make_shared<ThreadPool::WorkItem>(&callback, param);
+		workItem->Item = CreateThreadpoolWork(InternalCallback, workItem.get(), &m_environ);
+		if (workItem->Item == nullptr)
 			throw Error::Win32Error(__FUNCSIG__": CreateThreadpoolWork() failed", GetLastError());
-		}
 
-		return item;
+		return workItem;
 	}
 
 	PTP_WORK ThreadPool::CreateWork(
@@ -177,5 +157,15 @@ namespace Boring32::Async
 	std::shared_ptr<TP_POOL> ThreadPool::GetPoolHandle() const noexcept
 	{
 		return m_pool;
+	}
+
+	void ThreadPool::ValidateArgs(const DWORD minThreads, const DWORD maxThreads)
+	{
+		if (minThreads < 1)
+			throw std::invalid_argument(__FUNCSIG__": minThreads cannot be less than 1");
+		if (maxThreads < 1)
+			throw std::invalid_argument(__FUNCSIG__": maxThreads cannot be less than 1");
+		if (maxThreads < minThreads)
+			throw std::invalid_argument(__FUNCSIG__": maxThreads cannot be less than minThreads");
 	}
 }

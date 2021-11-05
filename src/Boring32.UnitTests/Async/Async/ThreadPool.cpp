@@ -35,8 +35,34 @@ namespace Async
 					e.Signal();
 				};
 			auto task = pool.CreateWork(lambda, nullptr);
-			pool.SubmitWork(task);
+			pool.SubmitWork(task->Item);
 			Assert::IsTrue(e.WaitOnEvent(3000, true));
+		}
+
+		TEST_METHOD(TestCreateSubmitWorkMultipleTimes)
+		{
+			std::atomic<uint32_t> counter = 0;
+			Boring32::Async::ThreadPool pool(1, 10);
+			Boring32::Async::ThreadPool::LambdaCallback lambda =
+				[&counter](PTP_CALLBACK_INSTANCE instance, void* parameter, PTP_WORK work)
+			{
+				counter++;
+			};
+			auto task = pool.CreateWork(lambda, nullptr);
+
+			// Fails, because it gets deleted
+			pool.SubmitWork(task->Item);
+			pool.SubmitWork(task->Item);
+			pool.SubmitWork(task->Item);
+			
+			for (int loop = 0; counter < 3; loop++)
+			{
+				Sleep(100);
+				if (loop > 5)
+					throw std::runtime_error("Exceeded wait time");
+			}
+
+			Assert::IsTrue(counter == 3);
 		}
 	};
 }
