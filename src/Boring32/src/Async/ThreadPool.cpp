@@ -124,15 +124,18 @@ namespace Boring32::Async
 	{
 		if (m_pool == nullptr)
 			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
-		auto tuple = new WorkParamTuple(callback, param);
 
+		auto tuple = new WorkParamTuple(callback, param);
 		const PTP_WORK item = CreateThreadpoolWork(
 			InternalCallback,
 			tuple,
 			&m_environ
 		);
 		if (item == nullptr)
+		{
+			delete tuple;
 			throw Error::Win32Error(__FUNCSIG__": CreateThreadpoolWork() failed", GetLastError());
+		}
 
 		return item;
 	}
