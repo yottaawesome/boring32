@@ -21,6 +21,8 @@ namespace Boring32::Async
 		);
 
 
+	struct out {};
+
 	class ThreadPool
 	{
 		public:
@@ -28,7 +30,7 @@ namespace Boring32::Async
 			using WorkParamTuple = std::tuple<LambdaCallback&, void*>;
 			struct WorkItem
 			{
-				LambdaCallback* Callback;
+				LambdaCallback Callback;
 				void* Parameter = nullptr;
 				PTP_WORK Item = nullptr;
 			};
@@ -45,16 +47,16 @@ namespace Boring32::Async
 			virtual void SetMaxThreads(const DWORD value);
 			virtual void SetMinThreads(const DWORD value);
 			virtual void Close();
+
+			[[nodiscard("Return value should remain live until callback is fully completed")]]
 			virtual PTP_WORK CreateWork(
 				ThreadPoolCallback& callback,
 				void* param
 			);
 
-			[[nodiscard("Return value should remain live until callback is fully completed")]]
-			virtual std::shared_ptr<WorkItem> CreateWork(
-				LambdaCallback& callback,
-				void* param
-			);
+			virtual void CreateWork(WorkItem& outWorkItem);
+			virtual void CreateWork(WorkItem&& workItem) = delete;
+
 			virtual void SubmitWork(PTP_WORK workItem);
 			virtual void SetCallbackRunsLong();
 			virtual std::shared_ptr<TP_POOL> GetPoolHandle() const noexcept final;

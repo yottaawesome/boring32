@@ -85,14 +85,14 @@ namespace Boring32::Async
 	}
 
 	void ThreadPool::InternalCallback(
-		PTP_CALLBACK_INSTANCE Instance,
-		void* Parameter,
-		PTP_WORK Work
+		PTP_CALLBACK_INSTANCE instance,
+		void* parameter,
+		PTP_WORK work
 	)
 	{
-		if (auto workItem = reinterpret_cast<ThreadPool::WorkItem*>(Parameter)) try
+		if (auto workItem = reinterpret_cast<WorkItem*>(parameter)) try
 		{
-			workItem->Callback->operator()(Instance, workItem->Parameter, Work);
+			workItem->Callback(instance, workItem->Parameter, work);
 		}
 		catch (const std::exception& ex)
 		{
@@ -100,20 +100,14 @@ namespace Boring32::Async
 		}
 	}
 
-	std::shared_ptr<ThreadPool::WorkItem> ThreadPool::CreateWork(
-		LambdaCallback& callback,
-		void* param
-	)
+	void ThreadPool::CreateWork(WorkItem& workItem)
 	{
 		if (m_pool == nullptr)
 			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
 
-		auto workItem = std::make_shared<ThreadPool::WorkItem>(&callback, param);
-		workItem->Item = CreateThreadpoolWork(InternalCallback, workItem.get(), &m_environ);
-		if (workItem->Item == nullptr)
+		workItem.Item = CreateThreadpoolWork(InternalCallback, &workItem, &m_environ);
+		if (workItem.Item == nullptr)
 			throw Error::Win32Error(__FUNCSIG__": CreateThreadpoolWork() failed", GetLastError());
-
-		return workItem;
 	}
 
 	PTP_WORK ThreadPool::CreateWork(

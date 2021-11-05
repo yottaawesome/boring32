@@ -29,13 +29,17 @@ namespace Async
 		{
 			Boring32::Async::Event e(false, true, false);
 			Boring32::Async::ThreadPool pool(1, 10);
-			Boring32::Async::ThreadPool::LambdaCallback lambda =
-				[&e](PTP_CALLBACK_INSTANCE instance, void* parameter, PTP_WORK work)
+				
+
+			Boring32::Async::ThreadPool::WorkItem workItem{
+				.Callback = [&e](PTP_CALLBACK_INSTANCE instance, void* parameter, PTP_WORK work)
 				{
 					e.Signal();
-				};
-			auto task = pool.CreateWork(lambda, nullptr);
-			pool.SubmitWork(task->Item);
+				},
+				.Parameter = nullptr
+			};
+			pool.CreateWork(workItem);
+			pool.SubmitWork(workItem.Item);
 			Assert::IsTrue(e.WaitOnEvent(3000, true));
 		}
 
@@ -43,17 +47,18 @@ namespace Async
 		{
 			std::atomic<uint32_t> counter = 0;
 			Boring32::Async::ThreadPool pool(1, 10);
-			Boring32::Async::ThreadPool::LambdaCallback lambda =
-				[&counter](PTP_CALLBACK_INSTANCE instance, void* parameter, PTP_WORK work)
-			{
-				counter++;
+			Boring32::Async::ThreadPool::WorkItem workItem{
+				.Callback = [&counter](PTP_CALLBACK_INSTANCE instance, void* parameter, PTP_WORK work)
+				{
+					counter++;
+				},
+				.Parameter = nullptr
 			};
-			auto task = pool.CreateWork(lambda, nullptr);
-
-			// Fails, because it gets deleted
-			pool.SubmitWork(task->Item);
-			pool.SubmitWork(task->Item);
-			pool.SubmitWork(task->Item);
+			pool.CreateWork(workItem);
+			
+			pool.SubmitWork(workItem.Item);
+			pool.SubmitWork(workItem.Item);
+			pool.SubmitWork(workItem.Item);
 			
 			for (int loop = 0; counter < 3; loop++)
 			{
