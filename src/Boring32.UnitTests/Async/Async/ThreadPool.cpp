@@ -29,7 +29,7 @@ namespace Async
 		{
 			Boring32::Async::Event e(false, true, false);
 			Boring32::Async::ThreadPool pool(1, 10);
-			std::function<void(PTP_CALLBACK_INSTANCE, void*, PTP_WORK)> lambda = 
+			Boring32::Async::ThreadPool::LambdaCallback lambda =
 				[&e](PTP_CALLBACK_INSTANCE instance, void* parameter, PTP_WORK work)
 				{
 					e.Signal();

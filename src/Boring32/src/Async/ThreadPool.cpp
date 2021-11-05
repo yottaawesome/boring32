@@ -5,9 +5,6 @@
 
 namespace Boring32::Async
 {
-	using funcType = std::function<void(PTP_CALLBACK_INSTANCE Instance, void*, PTP_WORK)>;
-	using WorkParamTuple = std::tuple<funcType&, void*>;
-
 	// https://docs.microsoft.com/en-us/windows/win32/procthread/using-the-thread-pool-functions
 	ThreadPool::~ThreadPool()
 	{
@@ -99,7 +96,7 @@ namespace Boring32::Async
 		SetThreadpoolThreadMaximum(m_pool.get(), m_maxThreads);
 	}
 
-	void InternalCallback(
+	void ThreadPool::InternalCallback(
 		PTP_CALLBACK_INSTANCE Instance,
 		void* Parameter,
 		PTP_WORK Work
@@ -121,7 +118,7 @@ namespace Boring32::Async
 	}
 
 	PTP_WORK ThreadPool::CreateWork(
-		std::function<void(PTP_CALLBACK_INSTANCE Instance, void*, PTP_WORK)>& callback,
+		LambdaCallback& callback,
 		void* param
 	)
 	{

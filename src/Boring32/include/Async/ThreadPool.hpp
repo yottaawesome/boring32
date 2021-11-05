@@ -23,6 +23,9 @@ namespace Boring32::Async
 	class ThreadPool
 	{
 		public:
+			using LambdaCallback = std::function<void(PTP_CALLBACK_INSTANCE Instance, void*, PTP_WORK)>;
+			using WorkParamTuple = std::tuple<LambdaCallback&, void*>;
+
 			virtual ~ThreadPool();
 			ThreadPool(const DWORD minThreads, const DWORD maxThreads);
 
@@ -40,11 +43,18 @@ namespace Boring32::Async
 				const void* param
 			);
 			virtual PTP_WORK CreateWork(
-				std::function<void(PTP_CALLBACK_INSTANCE Instance, void*, PTP_WORK)>& callback,
+				LambdaCallback& callback,
 				void* param
 			);
 			virtual void SubmitWork(PTP_WORK workItem);
 			virtual void SetCallbackRunsLong();
+
+		protected:
+			static void InternalCallback(
+				PTP_CALLBACK_INSTANCE Instance,
+				void* Parameter,
+				PTP_WORK Work
+			);
 
 		protected:
 			std::shared_ptr<TP_POOL> m_pool;
