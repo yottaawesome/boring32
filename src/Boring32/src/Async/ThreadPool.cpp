@@ -14,9 +14,9 @@ namespace Boring32::Async
 	{
 		if (m_pool)
 		{
-			m_pool = nullptr;
 			// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-destroythreadpoolenvironment
 			DestroyThreadpoolEnvironment(&m_environ);
+			m_pool = nullptr;
 		}
 	}
 
@@ -42,14 +42,14 @@ namespace Boring32::Async
 		SetThreadpoolCallbackPool(&m_environ, m_pool.get());
 	}
 
-	DWORD ThreadPool::GetMinThread()
+	DWORD ThreadPool::GetMinThread() const
 	{
 		if (m_pool == nullptr)
 			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
 		return m_minThreads;
 	}
 
-	DWORD ThreadPool::GetMaxThread()
+	DWORD ThreadPool::GetMaxThread() const
 	{
 		if (m_pool == nullptr)
 			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");

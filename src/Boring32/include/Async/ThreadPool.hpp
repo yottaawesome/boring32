@@ -27,8 +27,8 @@ namespace Boring32::Async
 			ThreadPool(const DWORD minThreads, const DWORD maxThreads);
 
 		public:
-			virtual DWORD GetMinThread() final;
-			virtual DWORD GetMaxThread() final;
+			virtual DWORD GetMinThread() const final;
+			virtual DWORD GetMaxThread() const final;
 
 		public:
 			virtual void SetMinAndMaxThreads(const DWORD min, const DWORD max);
