@@ -713,6 +713,25 @@ void TestSyncWebSocket()
 	}
 }
 
+void X(PTP_CALLBACK_INSTANCE Instance,
+	PVOID                 Context,
+	PTP_WORK              Work)
+{
+	std::wcout << L"Hello" << std::endl;
+}
+
+void Threadpool()
+{
+	if (PTP_WORK work = CreateThreadpoolWork(X, nullptr, nullptr)) 
+	{
+		SubmitThreadpoolWork(work);
+	}
+	else
+	{
+		std::wcout << L"CreateThreadpoolWork() failed" << std::endl;
+	}
+}
+
 void TestAsyncWebSocket()
 {
 	//Boring32::WinHttp::WebSockets::WebSocket socket1(
@@ -883,9 +902,11 @@ int Experiments1Main()
 {
 	try
 	{
-		TestSyncWebSocket();
+		Threadpool();
+		//TestSyncWebSocket();
 		//TestAsyncWebSocket();
 		//throw Boring32::Error::Win32Error("Oh no", ERROR_ACCESS_DENIED);
+		Sleep(2000);
 	}
 	catch (const std::exception& ex)
 	{

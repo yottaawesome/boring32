@@ -22,6 +22,7 @@ namespace Boring32::WinHttp::WebSockets
 				Async::Event Done{ false, true, false };
 				std::future<void> Future;
 			};
+
 		public:
 			virtual ~WebSocket();
 			WebSocket();

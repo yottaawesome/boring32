@@ -26,6 +26,13 @@ namespace Boring32::Async
 			ThreadPool(const DWORD minThreads, const DWORD maxThreads);
 
 		public:
+			virtual DWORD GetMinThread() final;
+			virtual DWORD GetMaxThread() final;
+
+		public:
+			virtual void SetMinAndMaxThreads(const DWORD min, const DWORD max);
+			virtual void SetMaxThreads(const DWORD value);
+			virtual void SetMinThreads(const DWORD value);
 			virtual void Close();
 			virtual PTP_WORK SubmitWork(
 				ThreadPoolCallback& callback,
