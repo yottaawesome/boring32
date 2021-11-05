@@ -77,7 +77,7 @@ namespace Boring32::Async
 		if (m_pool == nullptr)
 			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
 		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-setthreadpoolthreadmaximum
-		SetThreadpoolThreadMaximum(m_pool, m_maxThreads)
+		SetThreadpoolThreadMaximum(m_pool, m_maxThreads);
 	}
 
 	PTP_WORK ThreadPool::SubmitWork(
