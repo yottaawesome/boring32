@@ -41,7 +41,7 @@ namespace Boring32::Async
 			);
 			virtual PTP_WORK CreateWork(
 				std::function<void(PTP_CALLBACK_INSTANCE Instance, void*, PTP_WORK)>& callback,
-				const void* param
+				void* param
 			);
 			virtual void SubmitWork(PTP_WORK workItem);
 			virtual void SetCallbackRunsLong();

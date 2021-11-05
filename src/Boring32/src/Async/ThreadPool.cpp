@@ -1,9 +1,13 @@
 #include "pch.hpp"
+#include <tuple>
 #include "include/Error/Win32Error.hpp"
 #include "include/Async/ThreadPool.hpp"
 
 namespace Boring32::Async
 {
+	using funcType = std::function<void(PTP_CALLBACK_INSTANCE Instance, void*, PTP_WORK)>;
+	using WorkParamTuple = std::tuple<funcType&, void*>;
+
 	// https://docs.microsoft.com/en-us/windows/win32/procthread/using-the-thread-pool-functions
 	ThreadPool::~ThreadPool()
 	{
@@ -101,21 +105,33 @@ namespace Boring32::Async
 		PTP_WORK Work
 	)
 	{
-		std::function<void(PTP_CALLBACK_INSTANCE Instance, void*, PTP_WORK)>* unwrappedCallback =
-			reinterpret_cast<std::function<void(PTP_CALLBACK_INSTANCE Instance, void*, PTP_WORK)>*>(Parameter);
-		unwrappedCallback->operator()(Instance, nullptr, Work);
+		if (Parameter == nullptr)
+			return;
+
+		std::unique_ptr<WorkParamTuple> tuple(reinterpret_cast<WorkParamTuple*>(Parameter));
+		try
+		{
+			auto [unwrappedCallback, param] = *tuple;
+			unwrappedCallback(Instance, param, Work);
+		}
+		catch (const std::exception& ex)
+		{
+			std::wcerr << ex.what() << std::endl;
+		}
 	}
 
 	PTP_WORK ThreadPool::CreateWork(
 		std::function<void(PTP_CALLBACK_INSTANCE Instance, void*, PTP_WORK)>& callback,
-		const void* param
+		void* param
 	)
 	{
 		if (m_pool == nullptr)
 			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
+		auto tuple = new WorkParamTuple(callback, param);
+
 		const PTP_WORK item = CreateThreadpoolWork(
 			InternalCallback,
-			&callback,
+			tuple,
 			&m_environ
 		);
 		if (item == nullptr)
