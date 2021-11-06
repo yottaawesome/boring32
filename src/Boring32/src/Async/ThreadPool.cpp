@@ -1,6 +1,5 @@
 #include "pch.hpp"
 #include <tuple>
-#include "include/Error/Win32Error.hpp"
 #include "include/Async/ThreadPool.hpp"
 
 namespace Boring32::Async
@@ -84,15 +83,15 @@ namespace Boring32::Async
 		SetThreadpoolThreadMaximum(m_pool.get(), m_maxThreads);
 	}
 
-	void ThreadPool::InternalCallback(
-		PTP_CALLBACK_INSTANCE instance,
-		void* parameter,
-		PTP_WORK work
-	)
+	void ThreadPool::InternalCallback(PTP_CALLBACK_INSTANCE instance, void* parameter, PTP_WORK work)
 	{
-		if (auto workItem = reinterpret_cast<WorkItem*>(parameter)) try
+		// We cast this to a void, but the callback will know the correct type
+		// This works because void* is 64 bits/8 bytes long, so it can encompass
+		// all types, and we can avoid having to worry about passing and casting
+		// void pointers around
+		if (auto callback = reinterpret_cast<WorkItem<void*>*>(parameter)) try
 		{
-			workItem->Callback(instance, workItem->Parameter, work);
+			callback->Callback(instance, callback->Parameter, work);
 		}
 		catch (const std::exception& ex)
 		{
@@ -100,20 +99,7 @@ namespace Boring32::Async
 		}
 	}
 
-	void ThreadPool::CreateWork(WorkItem& workItem)
-	{
-		if (m_pool == nullptr)
-			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
-
-		workItem.Item = CreateThreadpoolWork(InternalCallback, &workItem, &m_environ);
-		if (workItem.Item == nullptr)
-			throw Error::Win32Error(__FUNCSIG__": CreateThreadpoolWork() failed", GetLastError());
-	}
-
-	PTP_WORK ThreadPool::CreateWork(
-		ThreadPoolCallback& callback,
-		void* param
-	)
+	PTP_WORK ThreadPool::CreateWork(ThreadPoolCallback& callback, void* param)
 	{
 		if (m_pool == nullptr)
 			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
@@ -137,7 +123,7 @@ namespace Boring32::Async
 	{
 		if (m_pool == nullptr)
 			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
-		if(workItem == nullptr)
+		if (workItem == nullptr)
 			throw std::runtime_error(__FUNCSIG__": workItem is nullptr");
 		SubmitThreadpoolWork(workItem);
 	}

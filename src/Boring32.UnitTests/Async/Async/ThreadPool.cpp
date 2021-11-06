@@ -31,7 +31,7 @@ namespace Async
 			Boring32::Async::ThreadPool pool(1, 10);
 				
 
-			Boring32::Async::ThreadPool::WorkItem workItem{
+			Boring32::Async::ThreadPool::WorkItem<void*> workItem{
 				.Callback = [&e](PTP_CALLBACK_INSTANCE instance, void* parameter, PTP_WORK work)
 				{
 					e.Signal();
@@ -45,21 +45,21 @@ namespace Async
 
 		TEST_METHOD(TestCreateSubmitWorkMultipleTimes)
 		{
-			std::atomic<uint32_t> counter = 0;
+			std::atomic<size_t> counter = 0;
 			Boring32::Async::ThreadPool pool(1, 10);
-			Boring32::Async::ThreadPool::WorkItem workItem{
-				.Callback = [&counter](PTP_CALLBACK_INSTANCE instance, void* parameter, PTP_WORK work)
+			Boring32::Async::ThreadPool::WorkItem<size_t> workItem{
+				.Callback = [&counter](PTP_CALLBACK_INSTANCE instance, size_t parameter, PTP_WORK work)
 				{
-					counter++;
+					counter += parameter;
 				},
-				.Parameter = nullptr
+				.Parameter = 1
 			};
 			pool.CreateWork(workItem);
 			
 			pool.SubmitWork(workItem.Item);
 			pool.SubmitWork(workItem.Item);
 			pool.SubmitWork(workItem.Item);
-			
+
 			for (int loop = 0; counter < 3; loop++)
 			{
 				Sleep(100);

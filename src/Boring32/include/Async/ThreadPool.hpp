@@ -1,7 +1,9 @@
 #pragma once
 #include <functional>
+#include <iostream>
 #include <Windows.h>
 #include <memory>
+#include "../Error/Win32Error.hpp"
 
 namespace Boring32::Async
 {
@@ -20,18 +22,18 @@ namespace Boring32::Async
 			PTP_WORK              Work
 		);
 
-
-	struct out {};
-
 	class ThreadPool
 	{
 		public:
 			using LambdaCallback = std::function<void(PTP_CALLBACK_INSTANCE Instance, void*, PTP_WORK)>;
 			using WorkParamTuple = std::tuple<LambdaCallback&, void*>;
+
+			template<typename T>
 			struct WorkItem
 			{
-				LambdaCallback Callback;
-				void* Parameter = nullptr;
+				using Lambda = std::function<void(PTP_CALLBACK_INSTANCE Instance, T, PTP_WORK)>;
+				Lambda Callback;
+				T Parameter = nullptr;
 				PTP_WORK Item = nullptr;
 			};
 
@@ -48,25 +50,33 @@ namespace Boring32::Async
 			virtual void SetMinThreads(const DWORD value);
 			virtual void Close();
 
+
 			[[nodiscard("Return value should remain live until callback is fully completed")]]
 			virtual PTP_WORK CreateWork(
 				ThreadPoolCallback& callback,
 				void* param
 			);
 
-			virtual void CreateWork(WorkItem& outWorkItem);
-			virtual void CreateWork(WorkItem&& workItem) = delete;
+			template<typename T>
+			void CreateWork(WorkItem<T>& outWorkItem)
+			{
+				if (m_pool == nullptr)
+					throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
+
+				outWorkItem.Item = CreateThreadpoolWork(InternalCallback, &outWorkItem, &m_environ);
+				if (outWorkItem.Item == nullptr)
+					throw Error::Win32Error(__FUNCSIG__": CreateThreadpoolWork() failed", GetLastError());
+			}
+
+			template<typename T>
+			void CreateWork(WorkItem<T>&& workItem) = delete;
 
 			virtual void SubmitWork(PTP_WORK workItem);
 			virtual void SetCallbackRunsLong();
 			virtual std::shared_ptr<TP_POOL> GetPoolHandle() const noexcept final;
 
 		protected:
-			static void InternalCallback(
-				PTP_CALLBACK_INSTANCE Instance,
-				void* Parameter,
-				PTP_WORK Work
-			);
+			static void InternalCallback(PTP_CALLBACK_INSTANCE instance, void* parameter, PTP_WORK work);
 			static void ValidateArgs(const DWORD minThreads, const DWORD maxThreads);
 
 		protected:
