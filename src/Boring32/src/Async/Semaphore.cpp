@@ -3,20 +3,15 @@
 #include "include/Error/Win32Error.hpp"
 #include "include/Async/Semaphore.hpp"
 
-namespace Onyx32::Core::Async
-{
-	ISemaphore::~ISemaphore() = default;
-}
-
 namespace Boring32::Async
 {
 	Semaphore::~Semaphore()
 	{
 		Close();
 	}
+
 	void Semaphore::Close()
 	{
-		m_handle.Close();
 		m_handle = nullptr;
 	}
 
@@ -37,7 +32,7 @@ namespace Boring32::Async
 		m_maxCount(maxCount)
 	{
 		if (initialCount > maxCount)
-			throw std::invalid_argument("Initial count exceeds maximum count");
+			throw std::invalid_argument(__FUNCSIG__": initial count exceeds maximum count");
 		m_handle = CreateSemaphoreW(
 			nullptr,
 			initialCount,
@@ -45,7 +40,8 @@ namespace Boring32::Async
 			m_name == L"" ? nullptr : m_name.c_str()
 		);
 		if (m_handle == nullptr)
-			throw Error::Win32Error("Failed to open semaphore", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__": failed to open semaphore", GetLastError());
+
 		m_handle.SetInheritability(isInheritable);
 	}
 
@@ -61,13 +57,13 @@ namespace Boring32::Async
 		m_maxCount(maxCount)
 	{
 		if (initialCount > maxCount)
-			throw std::invalid_argument("Initial count exceeds maximum count");
+			throw std::invalid_argument(__FUNCSIG__": initial count exceeds maximum count");
 		if (m_name == L"")
-			throw std::runtime_error("Cannot open mutex with empty string");
+			throw std::runtime_error(__FUNCSIG__": cannot open mutex with empty string");
 		//SEMAPHORE_ALL_ACCESS
 		m_handle = OpenSemaphoreW(desiredAccess, isInheritable, m_name.c_str());
 		if (m_handle == nullptr)
-			throw Error::Win32Error("Failed to open semaphore", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__": failed to open semaphore", GetLastError());
 	}
 
 	Semaphore::Semaphore(const Semaphore& other)
@@ -87,7 +83,7 @@ namespace Boring32::Async
 		Close();
 		m_handle = other.m_handle;
 		m_name = other.m_name;
-		m_currentCount = other.m_currentCount;
+		m_currentCount = other.m_currentCount.load();
 		m_maxCount = other.m_maxCount;
 	}
 
@@ -108,33 +104,33 @@ namespace Boring32::Async
 		Close();
 		m_handle = std::move(other.m_handle);
 		m_name = std::move(other.m_name);
-		m_currentCount = other.m_currentCount;
+		m_currentCount = other.m_currentCount.load();
 		m_maxCount = other.m_maxCount;
 	}
 
 	void Semaphore::Release()
 	{
 		if (m_handle == nullptr)
-			throw std::runtime_error("Semaphore::Release(): m_handle is nullptr");
+			throw std::runtime_error(__FUNCSIG__": m_handle is nullptr");
 		if (ReleaseSemaphore(m_handle.GetHandle(), 1, 0) == false)
-			throw Error::Win32Error("Failed to release semaphore", GetLastError());
-		InterlockedIncrement(&m_currentCount);
+			throw Error::Win32Error(__FUNCSIG__": failed to release semaphore", GetLastError());
+		m_currentCount++;
 	}
 
 	void Semaphore::Release(const int countToRelease)
 	{
 		if (m_handle == nullptr)
-			throw std::runtime_error("Semaphore::Release(): m_handle is nullptr");
+			throw std::runtime_error(__FUNCSIG__": m_handle is nullptr");
 		if (ReleaseSemaphore(m_handle.GetHandle(), 1, 0) == false)
-			throw Error::Win32Error("Failed to release semaphore", GetLastError());
-		InterlockedAdd(&m_currentCount, countToRelease);
+			throw Error::Win32Error(__FUNCSIG__": failed to release semaphore", GetLastError());
+		m_currentCount -= countToRelease;
 	}
 
 	bool Semaphore::Acquire(const DWORD millisTimeout)
 	{
 		if (m_handle == nullptr)
-			throw std::runtime_error("Semaphore::Acquire(): m_handle is nullptr");
-		DWORD status = WaitForSingleObject(m_handle.GetHandle(), millisTimeout);
+			throw std::runtime_error(__FUNCSIG__": m_handle is nullptr");
+		const DWORD status = WaitForSingleObject(m_handle.GetHandle(), millisTimeout);
 		if (status == WAIT_OBJECT_0)
 		{
 			m_currentCount--;
@@ -143,23 +139,23 @@ namespace Boring32::Async
 		if (status == WAIT_TIMEOUT)
 			return false;
 		if (status == WAIT_ABANDONED)
-			throw std::runtime_error("The wait was abandoned");
+			throw std::runtime_error(__FUNCSIG__": the wait was abandoned");
 		if (status == WAIT_FAILED)
-			throw Error::Win32Error("Semaphore::Acquire(): WaitForSingleObject() failed", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__": WaitForSingleObject() failed", GetLastError());
 		return false;
 	}
 
 	bool Semaphore::Acquire(const int countToAcquire, const DWORD millisTimeout)
 	{
 		if (m_handle == nullptr)
-			throw std::runtime_error("Semaphore::Acquire(): m_handle is nullptr");
+			throw std::runtime_error(__FUNCSIG__": m_handle is nullptr");
 		if (countToAcquire > m_maxCount)
-			throw std::runtime_error("Semaphore::Acquire(): Cannot acquire more than the maximum of the semaphore");
+			throw std::runtime_error(__FUNCSIG__": cannot acquire more than the maximum of the semaphore");
 		
 		int actualAcquired = 0;
 		while (actualAcquired < countToAcquire)
 		{
-			if (Acquire(millisTimeout) == false)
+			if (!Acquire(millisTimeout))
 			{
 				if (actualAcquired > 0)
 					Release(actualAcquired);
@@ -170,28 +166,23 @@ namespace Boring32::Async
 		return true;
 	}
 
-	const std::wstring& Semaphore::GetName() const
+	const std::wstring& Semaphore::GetName() const noexcept
 	{
 		return m_name;
 	}
 
-	int Semaphore::GetCurrentCount() const
+	int Semaphore::GetCurrentCount() const noexcept
 	{
 		return m_currentCount;
 	}
 
-	int Semaphore::GetMaxCount() const
+	int Semaphore::GetMaxCount() const noexcept
 	{
 		return m_maxCount;
 	}
 
-	HANDLE Semaphore::GetHandle() const
+	HANDLE Semaphore::GetHandle() const noexcept
 	{
 		return m_handle.GetHandle();
-	}
-
-	void Semaphore::Free()
-	{
-		delete this;
 	}
 }
