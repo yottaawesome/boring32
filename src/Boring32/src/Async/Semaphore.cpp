@@ -22,6 +22,17 @@ namespace Boring32::Async
 	{ }
 
 	Semaphore::Semaphore(
+		const bool isInheritable,
+		const ULONG initialCount,
+		const ULONG maxCount
+	)
+	:	m_currentCount(initialCount),
+		m_maxCount(maxCount)
+	{
+		InternalCreate(m_name, initialCount, maxCount, isInheritable);
+	}
+
+	Semaphore::Semaphore(
 		std::wstring name, 
 		const bool isInheritable, 
 		const ULONG initialCount,
@@ -31,18 +42,7 @@ namespace Boring32::Async
 		m_currentCount(initialCount),
 		m_maxCount(maxCount)
 	{
-		if (initialCount > maxCount)
-			throw std::invalid_argument(__FUNCSIG__": initial count exceeds maximum count");
-		m_handle = CreateSemaphoreW(
-			nullptr,
-			initialCount,
-			maxCount,
-			m_name.empty() ? nullptr : m_name.c_str()
-		);
-		if (m_handle == nullptr)
-			throw Error::Win32Error(__FUNCSIG__": failed to open semaphore", GetLastError());
-
-		m_handle.SetInheritability(isInheritable);
+		InternalCreate(name, initialCount, maxCount, isInheritable);
 	}
 
 	Semaphore::Semaphore(
@@ -71,6 +71,27 @@ namespace Boring32::Async
 		m_maxCount(0)
 	{
 		Copy(other);
+	}
+
+	void Semaphore::InternalCreate(
+		const std::wstring& name,
+		const ULONG initialCount,
+		const ULONG maxCount,
+		const bool isInheritable
+	)
+	{
+		if (initialCount > maxCount)
+			throw std::invalid_argument(__FUNCSIG__": initial count exceeds maximum count");
+		m_handle = CreateSemaphoreW(
+			nullptr,
+			initialCount,
+			maxCount,
+			name.empty() ? nullptr : name.c_str()
+		);
+		if (m_handle == nullptr)
+			throw Error::Win32Error(__FUNCSIG__": failed to open semaphore", GetLastError());
+
+		m_handle.SetInheritability(isInheritable);
 	}
 
 	void Semaphore::operator=(const Semaphore& other)

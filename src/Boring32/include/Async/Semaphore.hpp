@@ -11,6 +11,10 @@ namespace Boring32::Async
 			virtual ~Semaphore();
 			Semaphore();
 			Semaphore(
+				const bool isInheritable,
+				const ULONG initialCount,
+				const ULONG maxCount);
+			Semaphore(
 				std::wstring name, 
 				const bool isInheritable, 
 				const ULONG initialCount, 
@@ -29,6 +33,12 @@ namespace Boring32::Async
 			virtual void operator=(Semaphore&& other) noexcept;
 
 		public:
+			virtual void InternalCreate(
+				const std::wstring& name,
+				const ULONG initialCount,
+				const ULONG maxCount,
+				const bool isInheritable
+			);
 			virtual void Close();
 			virtual long Release();
 			virtual long Release(const long countToRelease);
