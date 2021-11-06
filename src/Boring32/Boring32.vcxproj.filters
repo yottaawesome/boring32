@@ -93,9 +93,6 @@
     <ClInclude Include="include\Async\WaitableTimer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Async\Semaphore.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Async\SlimReadWriteLock.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -506,6 +503,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Async\boring32.async.threadpools.ixx" />
+    <ClCompile Include="src\Async\Semaphore.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

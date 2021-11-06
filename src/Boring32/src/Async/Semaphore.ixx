@@ -1,9 +1,12 @@
-#pragma once
+module;
+
 #include <Windows.h>
 #include <string>
-#include "../Raii/Raii.hpp"
+#include "include/Raii/Raii.hpp"
 
-namespace Boring32::Async
+export module boring32.async.semaphore;
+
+export namespace Boring32::Async
 {
 	class Semaphore
 	{
@@ -15,9 +18,9 @@ namespace Boring32::Async
 				const ULONG initialCount,
 				const ULONG maxCount);
 			Semaphore(
-				std::wstring name, 
-				const bool isInheritable, 
-				const ULONG initialCount, 
+				std::wstring name,
+				const bool isInheritable,
+				const ULONG initialCount,
 				const ULONG maxCount);
 			Semaphore(
 				std::wstring name,
@@ -55,7 +58,7 @@ namespace Boring32::Async
 
 		protected:
 			Raii::Win32Handle m_handle;
-			std::wstring m_name; 
+			std::wstring m_name;
 			std::atomic<long> m_currentCount;
 			long m_maxCount;
 	};

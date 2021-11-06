@@ -1,7 +1,11 @@
+module;
+
 #include "pch.hpp"
 #include <stdexcept>
+#include <string>
 #include "include/Error/Win32Error.hpp"
-#include "include/Async/Semaphore.hpp"
+
+module boring32.async.semaphore;
 
 namespace Boring32::Async
 {
@@ -42,6 +46,8 @@ namespace Boring32::Async
 		m_currentCount(initialCount),
 		m_maxCount(maxCount)
 	{
+		if (m_name.empty())
+			throw std::invalid_argument(__FUNCSIG__": cannot create named semaphore with empty string");
 		InternalCreate(name, initialCount, maxCount, isInheritable);
 	}
 
@@ -59,7 +65,9 @@ namespace Boring32::Async
 		if (initialCount > maxCount)
 			throw std::invalid_argument(__FUNCSIG__": initial count exceeds maximum count");
 		if (m_name.empty())
-			throw std::runtime_error(__FUNCSIG__": cannot open mutex with empty string");
+			throw std::invalid_argument(__FUNCSIG__": cannot open semaphore with empty string");
+		if (maxCount == 0)
+			throw std::invalid_argument(__FUNCSIG__": maxCount cannot be 0");
 		//SEMAPHORE_ALL_ACCESS
 		m_handle = OpenSemaphoreW(desiredAccess, isInheritable, m_name.c_str());
 		if (m_handle == nullptr)
@@ -82,6 +90,8 @@ namespace Boring32::Async
 	{
 		if (initialCount > maxCount)
 			throw std::invalid_argument(__FUNCSIG__": initial count exceeds maximum count");
+		if (maxCount == 0)
+			throw std::invalid_argument(__FUNCSIG__": maxCount cannot be 0");
 		m_handle = CreateSemaphoreW(
 			nullptr,
 			initialCount,
@@ -89,7 +99,7 @@ namespace Boring32::Async
 			name.empty() ? nullptr : name.c_str()
 		);
 		if (m_handle == nullptr)
-			throw Error::Win32Error(__FUNCSIG__": failed to open semaphore", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__": failed to create or open semaphore", GetLastError());
 
 		m_handle.SetInheritability(isInheritable);
 	}
