@@ -20,7 +20,7 @@ namespace Boring32::Async
 
 	bool SlimReadWriteLock::TryAcquireExclusiveLock()
 	{
-		DWORD currentThreadId = GetCurrentThreadId();
+		const DWORD currentThreadId = GetCurrentThreadId();
 		if (m_threadOwningExclusiveLock == currentThreadId)
 			return true;
 		if (TryAcquireSRWLockExclusive(&m_srwLock))
@@ -38,8 +38,7 @@ namespace Boring32::Async
 
 	void SlimReadWriteLock::AcquireExclusiveLock()
 	{
-		DWORD currentThreadId = GetCurrentThreadId();
-		if (m_threadOwningExclusiveLock != currentThreadId)
+		if (const DWORD currentThreadId = GetCurrentThreadId(); m_threadOwningExclusiveLock != currentThreadId)
 		{
 			AcquireSRWLockExclusive(&m_srwLock);
 			m_threadOwningExclusiveLock = currentThreadId;
@@ -53,8 +52,7 @@ namespace Boring32::Async
 
 	void SlimReadWriteLock::ReleaseExclusiveLock()
 	{
-		DWORD currentThreadId = GetCurrentThreadId();
-		if (m_threadOwningExclusiveLock == currentThreadId)
+		if (const DWORD currentThreadId = GetCurrentThreadId(); m_threadOwningExclusiveLock == currentThreadId)
 		{
 			ReleaseSRWLockExclusive(&m_srwLock);
 			m_threadOwningExclusiveLock = 0;
