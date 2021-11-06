@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
+#include <format>
 #include "include/Error/Error.hpp"
 #include "include/Raii/Win32Handle.hpp"
 #include "include/Util/Util.hpp"
@@ -19,16 +20,12 @@ namespace Boring32::Raii
 
 	void Win32Handle::Close() noexcept
 	{
-		if (m_handle != nullptr && m_handle != INVALID_HANDLE_VALUE)
-			if (CloseHandle(m_handle) == false)
-			{
-				std::wcerr
-					<< __FUNCSIG__
-					<< ": failed to close handle due to a Win32 error: "
-					<< std::endl
-					<< Error::CreateErrorStringFromCode(L": failed to close handle due to Win32 error: ", GetLastError())
-					<< std::endl;
-			}
+		if (m_handle != nullptr && m_handle != INVALID_HANDLE_VALUE && !CloseHandle(m_handle))
+			std::wcerr << std::format(
+				L"{}: failed to close handle due to a Win32 error: {}",
+				TEXT(__FUNCSIG__),
+				Error::CreateErrorStringFromCode(L"", GetLastError())
+			);
 		m_handle = nullptr;
 	}
 
@@ -145,9 +142,9 @@ namespace Boring32::Raii
 	void Win32Handle::SetInheritability(const bool isInheritable)
 	{
 		if (m_handle == nullptr || m_handle == INVALID_HANDLE_VALUE)
-			throw std::runtime_error("Handle is null or invalid.");
+			throw std::runtime_error(__FUNCSIG__": handle is null or invalid.");
 		if (SetHandleInformation(m_handle, HANDLE_FLAG_INHERIT, isInheritable) == false)
-			throw Error::Win32Error("SetHandleInformation() failed", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__": SetHandleInformation() failed", GetLastError());
 	}
 
 	HANDLE Win32Handle::Detach() noexcept
@@ -164,7 +161,7 @@ namespace Boring32::Raii
 
 		DWORD flags = 0;
 		if (GetHandleInformation(handle, &flags) == false)
-			throw Error::Win32Error("GetHandleInformation() failed", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__": GetHandleInformation() failed", GetLastError());
 		return flags & HANDLE_FLAG_INHERIT;
 	}
 
@@ -186,7 +183,7 @@ namespace Boring32::Raii
 			DUPLICATE_SAME_ACCESS
 		);
 		if (succeeded == false)
-			throw Error::Win32Error("DuplicateHandle() failed", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__": DuplicateHandle() failed", GetLastError());
 
 		return duplicateHandle;
 	}

@@ -52,10 +52,10 @@ namespace Boring32::Async
 
 	void SlimReadWriteLock::ReleaseExclusiveLock()
 	{
-		if (const DWORD currentThreadId = GetCurrentThreadId(); m_threadOwningExclusiveLock == currentThreadId)
-		{
-			ReleaseSRWLockExclusive(&m_srwLock);
-			m_threadOwningExclusiveLock = 0;
-		}
+		if (m_threadOwningExclusiveLock != GetCurrentThreadId())
+			return;
+
+		ReleaseSRWLockExclusive(&m_srwLock);
+		m_threadOwningExclusiveLock = 0;
 	}
 }
