@@ -43,7 +43,7 @@ namespace Async
 			std::atomic<size_t> counter = 0;
 			TestNs::ThreadPool pool(1, 10);
 			TestNs::ThreadPool::WorkItem<size_t> workItem{
-				.Callback = [&counter](PTP_CALLBACK_INSTANCE instance, size_t parameter, PTP_WORK work)
+				.Callback = [&counter](PTP_CALLBACK_INSTANCE, size_t parameter, PTP_WORK)
 				{
 					counter += parameter;
 				},
@@ -58,8 +58,7 @@ namespace Async
 			for (int loop = 0; counter < 3; loop++)
 			{
 				Sleep(100);
-				if (loop > 5)
-					throw std::runtime_error("Exceeded wait time");
+				if (loop > 5) throw std::runtime_error("Exceeded wait time");
 			}
 
 			Assert::IsTrue(counter == 3);
