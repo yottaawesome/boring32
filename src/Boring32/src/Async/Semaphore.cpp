@@ -37,7 +37,7 @@ namespace Boring32::Async
 			nullptr,
 			initialCount,
 			maxCount,
-			m_name == L"" ? nullptr : m_name.c_str()
+			m_name.empty() ? nullptr : m_name.c_str()
 		);
 		if (m_handle == nullptr)
 			throw Error::Win32Error(__FUNCSIG__": failed to open semaphore", GetLastError());
@@ -58,7 +58,7 @@ namespace Boring32::Async
 	{
 		if (initialCount > maxCount)
 			throw std::invalid_argument(__FUNCSIG__": initial count exceeds maximum count");
-		if (m_name == L"")
+		if (m_name.empty())
 			throw std::runtime_error(__FUNCSIG__": cannot open mutex with empty string");
 		//SEMAPHORE_ALL_ACCESS
 		m_handle = OpenSemaphoreW(desiredAccess, isInheritable, m_name.c_str());
@@ -108,22 +108,20 @@ namespace Boring32::Async
 		m_maxCount = other.m_maxCount;
 	}
 
-	void Semaphore::Release()
+	long Semaphore::Release()
 	{
-		if (m_handle == nullptr)
-			throw std::runtime_error(__FUNCSIG__": m_handle is nullptr");
-		if (ReleaseSemaphore(m_handle.GetHandle(), 1, 0) == false)
-			throw Error::Win32Error(__FUNCSIG__": failed to release semaphore", GetLastError());
-		m_currentCount++;
+		return Release(1);
 	}
 
-	void Semaphore::Release(const int countToRelease)
+	long Semaphore::Release(const long countToRelease)
 	{
 		if (m_handle == nullptr)
 			throw std::runtime_error(__FUNCSIG__": m_handle is nullptr");
-		if (ReleaseSemaphore(m_handle.GetHandle(), 1, 0) == false)
+		long previousCount;
+		if (!ReleaseSemaphore(m_handle.GetHandle(), countToRelease, &previousCount))
 			throw Error::Win32Error(__FUNCSIG__": failed to release semaphore", GetLastError());
-		m_currentCount -= countToRelease;
+		m_currentCount += countToRelease;
+		return previousCount;
 	}
 
 	bool Semaphore::Acquire(const DWORD millisTimeout)
@@ -145,7 +143,7 @@ namespace Boring32::Async
 		return false;
 	}
 
-	bool Semaphore::Acquire(const int countToAcquire, const DWORD millisTimeout)
+	bool Semaphore::Acquire(const long countToAcquire, const DWORD millisTimeout)
 	{
 		if (m_handle == nullptr)
 			throw std::runtime_error(__FUNCSIG__": m_handle is nullptr");
@@ -171,12 +169,12 @@ namespace Boring32::Async
 		return m_name;
 	}
 
-	int Semaphore::GetCurrentCount() const noexcept
+	long Semaphore::GetCurrentCount() const noexcept
 	{
 		return m_currentCount;
 	}
 
-	int Semaphore::GetMaxCount() const noexcept
+	long Semaphore::GetMaxCount() const noexcept
 	{
 		return m_maxCount;
 	}

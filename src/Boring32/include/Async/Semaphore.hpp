@@ -9,7 +9,6 @@ namespace Boring32::Async
 	{
 		public:
 			virtual ~Semaphore();
-
 			Semaphore();
 			Semaphore(
 				std::wstring name, 
@@ -22,21 +21,22 @@ namespace Boring32::Async
 				const long initialCount,
 				const long maxCount,
 				const DWORD desiredAccess);
-
 			Semaphore(const Semaphore& other);
-			virtual void operator=(const Semaphore& other);
 			Semaphore(Semaphore&& other) noexcept;
+
+		public:
+			virtual void operator=(const Semaphore& other);
 			virtual void operator=(Semaphore&& other) noexcept;
 
 		public:
 			virtual void Close();
-			virtual void Release();
-			virtual void Release(const int countToRelease);
+			virtual long Release();
+			virtual long Release(const long countToRelease);
 			virtual bool Acquire(const DWORD millisTimeout);
-			virtual bool Acquire(const int countToAcquire, const DWORD millisTimeout);
+			virtual bool Acquire(const long countToAcquire, const DWORD millisTimeout);
 			virtual const std::wstring& GetName() const noexcept final;
-			virtual int GetCurrentCount() const noexcept final;
-			virtual int GetMaxCount() const noexcept final;
+			virtual long GetCurrentCount() const noexcept final;
+			virtual long GetMaxCount() const noexcept final;
 			virtual HANDLE GetHandle() const noexcept final;
 
 		protected:
