@@ -4,7 +4,7 @@ module;
 #include <tuple>
 #include "include/Error/Win32Error.hpp"
 
-module boring32.threadpools;
+module boring32.async.threadpools;
 namespace Boring32::Async::ThreadPools
 {
 	// https://docs.microsoft.com/en-us/windows/win32/procthread/using-the-thread-pool-functions

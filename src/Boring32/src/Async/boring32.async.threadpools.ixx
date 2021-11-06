@@ -6,7 +6,7 @@ module;
 #include <memory>
 #include "include/Error/Win32Error.hpp"
 
-export module boring32.threadpools;
+export module boring32.async.threadpools;
 
 export namespace Boring32::Async::ThreadPools
 {

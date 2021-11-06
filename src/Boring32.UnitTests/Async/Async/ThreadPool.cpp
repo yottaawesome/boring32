@@ -3,7 +3,7 @@
 #include "Boring32/include/Async/Event.hpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-import boring32.threadpools;
+import boring32.async.threadpools;
 namespace Async
 {
 	namespace TestNs = Boring32::Async::ThreadPools;

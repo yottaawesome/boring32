@@ -505,7 +505,7 @@
     <ClCompile Include="src\Strings\Utf16String.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Async\boring32.threadpools.ixx" />
+    <ClCompile Include="src\Async\boring32.async.threadpools.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

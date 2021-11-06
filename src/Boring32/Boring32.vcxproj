@@ -264,7 +264,7 @@
     <ClInclude Include="src\targetver.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Async\boring32.threadpools.ixx" />
+    <ClCompile Include="src\Async\boring32.async.threadpools.ixx" />
     <ClCompile Include="include\WinSock\boring32.winsock.ixx" />
     <ClCompile Include="src\Async\AsyncFuncs.cpp" />
     <ClCompile Include="src\Async\CriticalSectionLock.cpp" />

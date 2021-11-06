@@ -12,8 +12,7 @@
 #include "../Boring32/include/Boring32.hpp"
 
 import boring32.winsock;
-import boring32.threadpools;
-
+import boring32.async.threadpools;
 
 #include "pathcch.h"
 #pragma comment(lib, "Pathcch.lib")
