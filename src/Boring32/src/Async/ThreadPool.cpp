@@ -69,6 +69,7 @@ namespace Boring32::Async
 		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-setthreadpoolthreadminimum
 		if (!SetThreadpoolThreadMinimum(m_pool.get(), value))
 			throw Error::Win32Error(__FUNCSIG__": SetThreadpoolThreadMinimum() failed");
+
 		m_minThreads = value;
 	}
 
@@ -116,6 +117,7 @@ namespace Boring32::Async
 		);
 		if (item == nullptr)
 			throw Error::Win32Error(__FUNCSIG__": CreateThreadPool() failed", GetLastError());
+
 		return item;
 	}
 

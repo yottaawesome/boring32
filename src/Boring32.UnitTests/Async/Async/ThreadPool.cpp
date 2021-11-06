@@ -7,47 +7,42 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace Async
 {
+	namespace TestNs = Boring32::Async;
+
 	TEST_CLASS(ThreadPool)
 	{
 	public:
 		TEST_METHOD(TestCreateThreadPool)
 		{
-			Boring32::Async::ThreadPool pool(1, 10);
+			TestNs::ThreadPool pool(1, 10);
 		}
 
 		TEST_METHOD(TestCreateThreadPoolInvalidArgs)
 		{
-			Assert::ExpectException<std::exception>(
-				[]() 
-				{
-					Boring32::Async::ThreadPool pool(10, 1);
-				}
-			);
+			Assert::ExpectException<std::exception>([]() { Boring32::Async::ThreadPool pool(10, 1); });
 		}
 
 		TEST_METHOD(TestCreateSubmitWork)
 		{
-			Boring32::Async::Event e(false, true, false);
-			Boring32::Async::ThreadPool pool(1, 10);
-				
-
-			Boring32::Async::ThreadPool::WorkItem<void*> workItem{
-				.Callback = [&e](PTP_CALLBACK_INSTANCE instance, void* parameter, PTP_WORK work)
+			TestNs::Event event(false, true, false);
+			TestNs::ThreadPool pool(1, 10);
+			TestNs::ThreadPool::WorkItem<void*> workItem{
+				.Callback = [&event](PTP_CALLBACK_INSTANCE, void*, PTP_WORK)
 				{
-					e.Signal();
+					event.Signal();
 				},
 				.Parameter = nullptr
 			};
 			pool.CreateWork(workItem);
 			pool.SubmitWork(workItem.Item);
-			Assert::IsTrue(e.WaitOnEvent(3000, true));
+			Assert::IsTrue(event.WaitOnEvent(3000, true));
 		}
 
 		TEST_METHOD(TestCreateSubmitWorkMultipleTimes)
 		{
 			std::atomic<size_t> counter = 0;
-			Boring32::Async::ThreadPool pool(1, 10);
-			Boring32::Async::ThreadPool::WorkItem<size_t> workItem{
+			TestNs::ThreadPool pool(1, 10);
+			TestNs::ThreadPool::WorkItem<size_t> workItem{
 				.Callback = [&counter](PTP_CALLBACK_INSTANCE instance, size_t parameter, PTP_WORK work)
 				{
 					counter += parameter;
