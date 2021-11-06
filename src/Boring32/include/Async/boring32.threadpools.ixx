@@ -1,24 +1,19 @@
-#pragma once
+module;
+
 #include <functional>
 #include <iostream>
 #include <Windows.h>
 #include <memory>
 #include "../Error/Win32Error.hpp"
 
-namespace Boring32::Async
-{
-	// Doesn't work
-	/*
-	using ThreadPoolCallback = 
-		std::function<
-			 void(PTP_CALLBACK_INSTANCE instance, void* param, PTP_WORK work)
-		>;
-	*/
+export module boring32.threadpools;
 
+export namespace Boring32::Async::ThreadPools
+{
 	typedef void
 		(*ThreadPoolCallback)(
 			PTP_CALLBACK_INSTANCE Instance,
-			void*                 Parameter,
+			void* Parameter,
 			PTP_WORK              Work
 		);
 

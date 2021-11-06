@@ -1,8 +1,11 @@
+module;
+
 #include "pch.hpp"
 #include <tuple>
-#include "include/Async/ThreadPool.hpp"
+#include "include/Error/Win32Error.hpp"
 
-namespace Boring32::Async
+module boring32.threadpools;
+namespace Boring32::Async::ThreadPools
 {
 	// https://docs.microsoft.com/en-us/windows/win32/procthread/using-the-thread-pool-functions
 	ThreadPool::~ThreadPool()

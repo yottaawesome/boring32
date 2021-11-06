@@ -192,9 +192,6 @@
     <ClInclude Include="include\WinHttp\WebSockets\WebSocketStatus.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Async\ThreadPool.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\WinHttp\Session.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -508,6 +505,7 @@
     <ClCompile Include="src\Strings\Utf16String.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="include\Async\boring32.threadpools.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

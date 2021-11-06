@@ -195,7 +195,6 @@
     <ClInclude Include="include\Async\Mutev.hpp" />
     <ClInclude Include="include\Async\SynchronizationBarrier.hpp" />
     <ClInclude Include="include\Async\Thread.hpp" />
-    <ClInclude Include="include\Async\ThreadPool.hpp" />
     <ClInclude Include="include\Async\ThreadSafeVector.hpp" />
     <ClInclude Include="include\Async\TimerQueue.hpp" />
     <ClInclude Include="include\Async\TimerQueueTimer.hpp" />
@@ -265,6 +264,7 @@
     <ClInclude Include="src\targetver.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\Async\boring32.threadpools.ixx" />
     <ClCompile Include="include\WinSock\boring32.winsock.ixx" />
     <ClCompile Include="src\Async\AsyncFuncs.cpp" />
     <ClCompile Include="src\Async\CriticalSectionLock.cpp" />

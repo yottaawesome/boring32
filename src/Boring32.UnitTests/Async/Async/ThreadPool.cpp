@@ -1,13 +1,13 @@
 #include "pch.h"
 #include "CppUnitTest.h"
-#include "Boring32/include/Async/ThreadPool.hpp"
 #include "Boring32/include/Async/Event.hpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-
+import boring32.threadpools;
 namespace Async
 {
-	namespace TestNs = Boring32::Async;
+	namespace TestNs = Boring32::Async::ThreadPools;
+	namespace TestAns = Boring32::Async;
 
 	TEST_CLASS(ThreadPool)
 	{
@@ -19,12 +19,12 @@ namespace Async
 
 		TEST_METHOD(TestCreateThreadPoolInvalidArgs)
 		{
-			Assert::ExpectException<std::exception>([]() { Boring32::Async::ThreadPool pool(10, 1); });
+			Assert::ExpectException<std::exception>([]() { TestNs::ThreadPool pool(10, 1); });
 		}
 
 		TEST_METHOD(TestCreateSubmitWork)
 		{
-			TestNs::Event event(false, true, false);
+			TestAns::Event event(false, true, false);
 			TestNs::ThreadPool pool(1, 10);
 			TestNs::ThreadPool::WorkItem<void*> workItem{
 				.Callback = [&event](PTP_CALLBACK_INSTANCE, void*, PTP_WORK)

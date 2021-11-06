@@ -17,6 +17,5 @@
 #include "TimerQueueTimer.hpp"
 #include "TimerQueueTimerCallback.hpp"
 #include "SynchronizationBarrier.hpp"
-#include "ThreadPool.hpp"
 #include "EventLoop.hpp"
 #include "AsyncFuncs.hpp"

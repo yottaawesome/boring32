@@ -12,6 +12,7 @@
 #include "../Boring32/include/Boring32.hpp"
 
 import boring32.winsock;
+import boring32.threadpools;
 
 
 #include "pathcch.h"
@@ -438,7 +439,7 @@ int OldJunk()
 
 	try
 	{
-		Boring32::Async::ThreadPool tp1(1, 10);
+		Boring32::Async::ThreadPools::ThreadPool tp1(1, 10);
 
 		// https://spys.one/en/https-ssl-proxy/
 		//Test proxy: L"185.20.224.239:3128"
