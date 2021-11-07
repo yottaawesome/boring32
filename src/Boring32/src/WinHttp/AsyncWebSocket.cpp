@@ -279,11 +279,12 @@ namespace Boring32::WinHttp::WebSockets
 					GetLastError()
 				);
 
+			DWORD_PTR _this = reinterpret_cast<DWORD_PTR>(this);
 			bool succeeded = WinHttpSetOption(
 				m_winHttpConnection.Get(),
 				WINHTTP_OPTION_CONTEXT_VALUE,
-				this,
-				sizeof(this)
+				reinterpret_cast<void*>(&_this),
+				sizeof(DWORD_PTR)
 			);
 			if (succeeded == false)
 				throw Error::Win32Error(
@@ -307,11 +308,10 @@ namespace Boring32::WinHttp::WebSockets
 					GetLastError()
 				);
 
-			const DWORD_PTR _this = (DWORD_PTR)this;
 			succeeded = WinHttpSetOption(
 				m_requestHandle.Get(),
 				WINHTTP_OPTION_CONTEXT_VALUE,
-				(void*)&_this,
+				reinterpret_cast<void*>(&_this),
 				sizeof(DWORD_PTR)
 			);
 			if (succeeded == false)
@@ -320,29 +320,28 @@ namespace Boring32::WinHttp::WebSockets
 					GetLastError()
 				);
 
-			bool success = false;
 			if (m_settings.IgnoreSslErrors)
 			{
 				DWORD optionFlags = SECURITY_FLAG_IGNORE_ALL_CERT_ERRORS;
 				// https://docs.microsoft.com/en-us/windows/win32/winhttp/option-flags
 				// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpsetoption
-				success = WinHttpSetOption(
+				succeeded = WinHttpSetOption(
 					m_requestHandle.Get(),
 					WINHTTP_OPTION_SECURITY_FLAGS,
 					&optionFlags,
 					sizeof(optionFlags)
 				);
-				if (success == false)
+				if (succeeded == false)
 					throw Error::Win32Error(__FUNCSIG__ ": WinHttpSetOption() failed", GetLastError());
 			}
 
-			success = WinHttpSetOption(
+			succeeded = WinHttpSetOption(
 				m_requestHandle.Get(),
 				WINHTTP_OPTION_UPGRADE_TO_WEB_SOCKET,
 				nullptr,
 				0
 			);
-			if (success == false)
+			if (succeeded == false)
 				throw Error::Win32Error(__FUNCSIG__ ": WinHttpSetOption() failed", GetLastError());
 
 			if (m_settings.ClientCert.GetCert())
@@ -361,7 +360,7 @@ namespace Boring32::WinHttp::WebSockets
 			const wchar_t* connectionHeaders = m_settings.ConnectionHeaders.empty()
 				? WINHTTP_NO_ADDITIONAL_HEADERS
 				: m_settings.ConnectionHeaders.c_str();
-			success = WinHttpSendRequest(
+			succeeded = WinHttpSendRequest(
 				m_requestHandle.Get(),
 				connectionHeaders,
 				-1L,
@@ -370,7 +369,7 @@ namespace Boring32::WinHttp::WebSockets
 				0,
 				0
 			);
-			if (success == false)
+			if (succeeded == false)
 				throw Error::Win32Error(
 					__FUNCSIG__ ": WinHttpSendRequest() failed on initial request",
 					GetLastError()

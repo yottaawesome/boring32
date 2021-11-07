@@ -7,10 +7,9 @@
 
 namespace Boring32::Raii
 {
-	template<typename T>
-	std::shared_ptr<T> CreateClosableHandle(HANDLE handle)
+	std::shared_ptr<void> CreateClosableHandle(HANDLE handle)
 	{
-		return { handle, [](HANDLE handle) { CloseHandle(handle); } };
+		return { handle, CloseHandle };
 	}
 
 	Win32Handle::~Win32Handle()

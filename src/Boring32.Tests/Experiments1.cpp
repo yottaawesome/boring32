@@ -60,17 +60,6 @@ void TestWaitableTime(int64_t relativeMillis)
 	timer1.CancelTimer();
 }
 
-void TestSemaphore()
-{
-	Boring32::Async::Semaphore semaphore(L"Sem", false, 10, 10);
-	semaphore.Acquire(2, INFINITE);
-	if (semaphore.GetCurrentCount() != 8)
-		throw std::runtime_error("Invalid error count");
-	semaphore.Release(2);
-	if (semaphore.GetCurrentCount() != 10)
-		throw std::runtime_error("Invalid error count");
-}
-
 void TestMutex()
 {
 	Boring32::Async::Mutex m1(false, false, L"HelloMutex");
@@ -500,8 +489,6 @@ int OldJunk()
 				TestException();
 			if (i == 3)
 				TestWaitableTime(2000);
-			if (i == 4)
-				TestSemaphore();
 			if (i == 5)
 				TestMutex();
 			if (i == 6)

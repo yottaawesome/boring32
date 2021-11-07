@@ -36,25 +36,28 @@ export namespace Boring32::Async
 			virtual void operator=(Semaphore&& other) noexcept;
 
 		public:
+			virtual void Close();
+			virtual long Release();
+			virtual long Release(const long countToRelease);
+			virtual bool Acquire(const DWORD millisTimeout);
+			virtual bool AcquireMany(const long countToAcquire, const DWORD millisTimeout);
+			virtual bool Acquire(const DWORD millisTimeout, const bool isAlertable);
+
+		public:
+			virtual const std::wstring& GetName()	const noexcept final;
+			virtual long GetCurrentCount()			const noexcept final;
+			virtual long GetMaxCount()				const noexcept final;
+			virtual HANDLE GetHandle()				const noexcept final;
+
+		protected:
+			virtual void Copy(const Semaphore& other);
+			virtual void Move(Semaphore& other) noexcept;
 			virtual void InternalCreate(
 				const std::wstring& name,
 				const ULONG initialCount,
 				const ULONG maxCount,
 				const bool isInheritable
 			);
-			virtual void Close();
-			virtual long Release();
-			virtual long Release(const long countToRelease);
-			virtual bool Acquire(const DWORD millisTimeout);
-			virtual bool Acquire(const long countToAcquire, const DWORD millisTimeout);
-			virtual const std::wstring& GetName() const noexcept final;
-			virtual long GetCurrentCount() const noexcept final;
-			virtual long GetMaxCount() const noexcept final;
-			virtual HANDLE GetHandle() const noexcept final;
-
-		protected:
-			virtual void Copy(const Semaphore& other);
-			virtual void Move(Semaphore& other) noexcept;
 
 		protected:
 			Raii::Win32Handle m_handle;

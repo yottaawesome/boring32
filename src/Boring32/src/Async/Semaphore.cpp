@@ -3,6 +3,7 @@ module;
 #include "pch.hpp"
 #include <stdexcept>
 #include <string>
+#include <format>
 #include "include/Error/Win32Error.hpp"
 
 module boring32.async.semaphore;
@@ -146,52 +147,65 @@ namespace Boring32::Async
 
 	long Semaphore::Release(const long countToRelease)
 	{
+		if (countToRelease == 0)
+			return m_currentCount;
 		if (m_handle == nullptr)
 			throw std::runtime_error(__FUNCSIG__": m_handle is nullptr");
+
 		long previousCount;
 		if (!ReleaseSemaphore(m_handle.GetHandle(), countToRelease, &previousCount))
 			throw Error::Win32Error(__FUNCSIG__": failed to release semaphore", GetLastError());
 		m_currentCount += countToRelease;
+
 		return previousCount;
 	}
 
 	bool Semaphore::Acquire(const DWORD millisTimeout)
 	{
+		return Acquire(millisTimeout, false);
+	}
+	
+	bool Semaphore::Acquire(const DWORD millisTimeout, const bool isAlertable)
+	{
 		if (m_handle == nullptr)
 			throw std::runtime_error(__FUNCSIG__": m_handle is nullptr");
-		const DWORD status = WaitForSingleObject(m_handle.GetHandle(), millisTimeout);
-		if (status == WAIT_OBJECT_0)
+
+		switch (const DWORD status = WaitForSingleObjectEx(*m_handle, millisTimeout, isAlertable))
 		{
-			m_currentCount--;
-			return true;
+			case WAIT_OBJECT_0:
+				m_currentCount--;
+				return true;
+
+			case WAIT_TIMEOUT:
+				return false;
+
+			case WAIT_ABANDONED:
+				throw std::runtime_error(__FUNCSIG__": the wait was abandoned");
+
+			case WAIT_FAILED:
+				throw Error::Win32Error(__FUNCSIG__": WaitForSingleObject() failed", GetLastError());
+
+			default:
+				throw std::logic_error(std::format(__FUNCSIG__": unknown WaitForSingleObjectEx() value {}", status));
 		}
-		if (status == WAIT_TIMEOUT)
-			return false;
-		if (status == WAIT_ABANDONED)
-			throw std::runtime_error(__FUNCSIG__": the wait was abandoned");
-		if (status == WAIT_FAILED)
-			throw Error::Win32Error(__FUNCSIG__": WaitForSingleObject() failed", GetLastError());
-		return false;
 	}
 
-	bool Semaphore::Acquire(const long countToAcquire, const DWORD millisTimeout)
+	bool Semaphore::AcquireMany(const long countToAcquire, const DWORD millisTimeout)
 	{
 		if (m_handle == nullptr)
 			throw std::runtime_error(__FUNCSIG__": m_handle is nullptr");
 		if (countToAcquire > m_maxCount)
 			throw std::runtime_error(__FUNCSIG__": cannot acquire more than the maximum of the semaphore");
-		
-		int actualAcquired = 0;
-		while (actualAcquired < countToAcquire)
+	
+		for (int actualAcquired = 0; actualAcquired < countToAcquire; actualAcquired++)
 		{
 			if (!Acquire(millisTimeout))
 			{
-				if (actualAcquired > 0)
-					Release(actualAcquired);
+				Release(actualAcquired);
 				return false;
 			}
-			actualAcquired++;
 		}
+
 		return true;
 	}
 
