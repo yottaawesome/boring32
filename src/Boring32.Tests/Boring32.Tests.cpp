@@ -13,9 +13,10 @@ int main(int argc, char** args)
 
 	Boring32::Raii::Win32Handle m_readHandle;
 	Boring32::Raii::Win32Handle m_writeHandle;
-	bool succeeded = CreatePipe(&m_readHandle, &m_writeHandle, nullptr, 512);
-	if (succeeded == false)
+	if (!CreatePipe(&m_readHandle, &m_writeHandle, nullptr, 512))
 		throw std::runtime_error("Failed to create anonymous pipe");
+
+	m_readHandle = m_writeHandle;
 
 	return 0;
 }

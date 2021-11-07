@@ -73,7 +73,7 @@ namespace Boring32::Raii
 	void Win32Handle::Move(Win32Handle& other) noexcept
 	{
 		Close();
-		m_handle = other.m_handle;
+		m_handle = std::move(other.m_handle);
 		other.m_handle = nullptr;
 	}
 
@@ -110,7 +110,7 @@ namespace Boring32::Raii
 		return m_handle.get();
 	}
 
-	HANDLE Win32Handle::operator*() const
+	HANDLE Win32Handle::operator*() const noexcept
 	{
 		if (m_handle == nullptr)
 			return nullptr;
@@ -128,7 +128,7 @@ namespace Boring32::Raii
 		return m_handle && *m_handle && *m_handle != INVALID_HANDLE_VALUE;
 	}
 
-	HANDLE Win32Handle::GetHandle() const
+	HANDLE Win32Handle::GetHandle() const noexcept
 	{
 		if (!m_handle)
 			return nullptr;

@@ -44,7 +44,7 @@ namespace Boring32::Raii
 			/// <returns>Whether the handles are equivalent.</returns>
 			virtual bool operator==(const Win32Handle& other) const;
 
-			virtual operator bool() const;
+			virtual operator bool() const noexcept;
 
 			/// <summary>
 			///		Returns the internal HANDLE address.
@@ -52,11 +52,11 @@ namespace Boring32::Raii
 			/// <returns>The internal HANDLE's address.</returns>
 			virtual HANDLE* operator&();
 
-			virtual HANDLE operator*() const;
+			virtual HANDLE operator*() const noexcept;
 		
 		// API
 		public:
-			virtual HANDLE GetHandle() const;
+			virtual HANDLE GetHandle() const noexcept;
 			virtual HANDLE DuplicateCurrentHandle() const;
 			virtual bool IsInheritable() const;
 			virtual void Close() noexcept;
@@ -72,7 +72,7 @@ namespace Boring32::Raii
 			///		True if the internal HANDLE is not nullptr and 
 			///		INVALID_HANDLE_VALUE, false otherwise.
 			/// </returns>
-			virtual bool IsValidValue() const;
+			virtual bool IsValidValue() const noexcept;
 
 		public:
 			static bool HandleIsInheritable(const HANDLE handle);
