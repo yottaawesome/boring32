@@ -1,26 +1,36 @@
 #include "pch.hpp"
 #include <stdexcept>
 #include <format>
+#include <functional>
 #include "include/Error/Error.hpp"
 #include "include/Raii/Win32Handle.hpp"
 #include "include/Util/Util.hpp"
 
 namespace Boring32::Raii
 {
-	void CloseHandleAndFreeMemory(HANDLE* pHandle)
+	void Win32Handle::InternalCloseHandle(HANDLE handle)
+	{
+		if (!handle)
+			return;
+		if (handle == INVALID_HANDLE_VALUE)
+			return;
+		if (!CloseHandle(handle))
+			std::wcerr << "Failed to close handle\n";
+	}
+
+	void Win32Handle::CloseHandleAndFreeMemory(HANDLE* pHandle)
 	{
 		std::wcout << L"Deleting handle\n";
 		if (!pHandle)
 			return;
-		if (*pHandle && !CloseHandle(*pHandle))
-			std::wcerr << "Failed to close handle\n";
+		InternalCloseHandle(*pHandle);
 		delete pHandle;
 		std::wcout << L"Deleted handle\n";
 	}
 
-	std::shared_ptr<HANDLE> CreateClosableHandle(HANDLE handle)
+	std::shared_ptr<HANDLE> Win32Handle::CreateClosableHandle(HANDLE handle)
 	{
-		return { new void* (handle), CloseHandleAndFreeMemory };
+		return { new void* (handle), std::bind(&Win32Handle::CloseHandleAndFreeMemory, this, std::placeholders::_1) };
 	}
 
 	Win32Handle::~Win32Handle()

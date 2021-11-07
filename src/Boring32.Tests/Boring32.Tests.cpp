@@ -7,9 +7,22 @@
 
 import boring32.strings;
 
+struct Test
+{
+	static void DoIt() { std::wcout << L"OK\n"; }
+};
+
+template<typename T>
+void X()
+{
+	T::DoIt();
+}
+
+
 int main(int argc, char** args)
 {
 	//Experiments1Main();
+	X<Test>();
 
 	Boring32::Raii::Win32Handle m_readHandle;
 	Boring32::Raii::Win32Handle m_writeHandle;
