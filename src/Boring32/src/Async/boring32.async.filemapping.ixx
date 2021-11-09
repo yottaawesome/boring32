@@ -11,6 +11,7 @@ export namespace Boring32::Async
 	{
 		public:
 			virtual ~FileMapping();
+			FileMapping();
 			FileMapping(const bool isInheritable, const size_t maxSizeLow);
 			FileMapping(
 				const bool isInheritable, 
@@ -23,6 +24,12 @@ export namespace Boring32::Async
 				const size_t maxSize,
 				const DWORD desiredAccess
 			);
+			FileMapping(const FileMapping& other);
+			FileMapping(FileMapping&& other) noexcept;
+
+		public:
+			virtual FileMapping& operator=(const FileMapping& other);
+			virtual FileMapping& operator=(FileMapping&& other) noexcept;
 
 		public:
 			virtual void Close();
@@ -37,6 +44,8 @@ export namespace Boring32::Async
 				const DWORD desiredAccess,
 				const bool isInheritable
 			);
+			virtual FileMapping& Copy(const FileMapping& other);
+			virtual FileMapping& Move(FileMapping& other) noexcept;
 
 		protected:
 			Raii::Win32Handle m_mapFile;

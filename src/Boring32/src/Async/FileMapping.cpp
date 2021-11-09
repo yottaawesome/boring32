@@ -15,6 +15,10 @@ namespace Boring32::Async
 		Close();
 	}
 
+	FileMapping::FileMapping()
+		: m_maxSize(0)
+	{}
+
 	FileMapping::FileMapping(const bool isInheritable, const size_t maxSize)
 		: m_maxSize(maxSize)
 	{
@@ -36,6 +40,9 @@ namespace Boring32::Async
 		CreateOrOpen(true, PAGE_READWRITE, isInheritable);
 	}
 
+	FileMapping::FileMapping(const FileMapping& other) : FileMapping() { Copy(other); }
+	FileMapping::FileMapping(FileMapping&& other) noexcept : FileMapping() { Move(other); }
+
 	FileMapping::FileMapping(
 		const bool isInheritable, 
 		const std::wstring name, 
@@ -52,9 +59,12 @@ namespace Boring32::Async
 		CreateOrOpen(false, desiredAccess, isInheritable);
 	}
 
+	FileMapping& FileMapping::operator=(const FileMapping& other) { return Copy(other); }
+	FileMapping& FileMapping::operator=(FileMapping&& other) noexcept { return Move(other); }
+
 	void FileMapping::Close()
 	{
-		m_mapFile = nullptr;
+		*this = FileMapping();
 	}
 
 	const std::wstring FileMapping::GetName() const noexcept
@@ -116,5 +126,23 @@ namespace Boring32::Async
 			if (!m_mapFile)
 				throw Error::Win32Error(__FUNCSIG__": OpenFileMappingW() failed", GetLastError());
 		}
+	}
+
+	FileMapping& FileMapping::Copy(const FileMapping& other)
+	{
+		Close();
+		m_mapFile = other.m_mapFile;
+		m_name = other.m_name;
+		m_maxSize = other.m_maxSize;
+		return *this;
+	}
+
+	FileMapping& FileMapping::Move(FileMapping& other) noexcept
+	{
+		Close();
+		m_mapFile = std::move(other.m_mapFile);
+		m_name = std::move(other.m_name);
+		m_maxSize = other.m_maxSize;
+		return *this;
 	}
 }
