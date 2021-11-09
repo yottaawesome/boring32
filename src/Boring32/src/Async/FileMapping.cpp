@@ -89,7 +89,7 @@ namespace Boring32::Async
 		if (create)
 		{
 			LARGE_INTEGER li{ .QuadPart = static_cast<long long>(m_maxSize) };
-
+			const wchar_t* name = m_name.empty() ? nullptr : m_name.c_str();
 			// https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw
 			m_mapFile = CreateFileMappingW(
 				INVALID_HANDLE_VALUE,	// use paging file
@@ -97,7 +97,7 @@ namespace Boring32::Async
 				PAGE_READWRITE,			// read/write access
 				li.HighPart,			// maximum object size (high-order DWORD)
 				li.LowPart,				// maximum object size (low-order DWORD)
-				m_name.c_str()			// m_name of mapping object
+				name					// m_name of mapping object
 			);
 			if (!m_mapFile)
 				throw Error::Win32Error(__FUNCSIG__": CreateFileMappingW() failed", GetLastError());
