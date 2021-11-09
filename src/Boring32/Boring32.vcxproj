@@ -263,12 +263,14 @@
     <ClInclude Include="src\targetver.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Async\boring32.async.filemapping.ixx" />
     <ClCompile Include="src\Async\boring32.async.threadpools.ixx" />
     <ClCompile Include="include\WinSock\boring32.winsock.ixx" />
     <ClCompile Include="src\Async\AsyncFuncs.cpp" />
     <ClCompile Include="src\Async\CriticalSectionLock.cpp" />
     <ClCompile Include="src\Async\Event.cpp" />
     <ClCompile Include="src\Async\EventLoop.cpp" />
+    <ClCompile Include="src\Async\FileMapping.cpp" />
     <ClCompile Include="src\Async\Job.cpp" />
     <ClCompile Include="src\Async\Mutev.cpp" />
     <ClCompile Include="src\Async\OverlappedOp.cpp" />

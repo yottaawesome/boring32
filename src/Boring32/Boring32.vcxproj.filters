@@ -504,6 +504,10 @@
     </ClCompile>
     <ClCompile Include="src\Async\boring32.async.threadpools.ixx" />
     <ClCompile Include="src\Async\boring32.async.semaphore.ixx" />
+    <ClCompile Include="src\Async\boring32.async.filemapping.ixx" />
+    <ClCompile Include="src\Async\FileMapping.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />
