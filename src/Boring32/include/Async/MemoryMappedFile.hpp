@@ -97,28 +97,32 @@ namespace Boring32::Async
 			///		Gets the view pointer of the memory mapped file.
 			/// </summary>
 			/// <returns>The view object.</returns>
-			virtual void* GetViewPointer();
+			virtual void* GetViewPointer() const noexcept final;
 
 			/// <summary>
 			///		Get the name of this MemoryMappedFile.
 			/// </summary>
 			/// <returns>The name of this MemoryMappedFile.</returns>
-			virtual const std::wstring& GetName() const;
+			virtual const std::wstring& GetName() const noexcept final;
 
 			/// <summary>
 			///		Get whether this MemoryMappedFile can be inherited
 			///		by child processes.
 			/// </summary>
 			/// <returns></returns>
-			virtual bool IsInheritable() const;
+			virtual bool IsInheritable() const final;
 
-		protected:
 			/// <summary>
-			///		Unlocks the mutex if it is currently owned, releases the 
-			///		mutex handle, and clears the underlying pointer.
+			///		Releases all resources owned by this object.
 			/// </summary>
 			virtual void Close();
 
+			/// <summary>
+			///		Releases all resources owned by this object.
+			/// </summary>
+			virtual void Close(const std::nothrow_t&);
+
+		protected:
 			/// <summary>
 			///		Moves the MemoryMappedFile on the RHS into this object.
 			/// </summary>

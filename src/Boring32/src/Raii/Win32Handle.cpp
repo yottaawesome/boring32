@@ -182,7 +182,7 @@ namespace Boring32::Raii
 			return false;
 
 		DWORD flags = 0;
-		if (GetHandleInformation(handle, &flags) == false)
+		if (!GetHandleInformation(handle, &flags))
 			throw Error::Win32Error(__FUNCSIG__": GetHandleInformation() failed", GetLastError());
 		return flags & HANDLE_FLAG_INHERIT;
 	}
