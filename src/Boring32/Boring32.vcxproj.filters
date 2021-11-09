@@ -503,7 +503,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Async\boring32.async.threadpools.ixx" />
-    <ClCompile Include="src\Async\Semaphore.ixx" />
+    <ClCompile Include="src\Async\boring32.async.semaphore.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

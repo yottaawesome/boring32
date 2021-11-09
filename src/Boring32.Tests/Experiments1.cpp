@@ -278,7 +278,7 @@ void TestTimerQueues()
 			eventObj->Signal();
 		},
 		&eventToWaitOn
-			);
+	);
 
 	eventToWaitOn.WaitOnEvent(INFINITE, true);
 	std::wcout << L"Timer Queue test OK" << std::endl;
@@ -858,6 +858,12 @@ struct T
 	{
 
 	}
+
+	template <typename M = X, std::enable_if<true, bool>::type = true>
+	void BoolType()
+	{
+
+	}
 };
 class V {};
 
@@ -867,6 +873,7 @@ void Stuff()
 	s.Blah(&s);
 	s.Blah(1);
 	s.Blah2();
+	s.BoolType();
 
 	T<V> f(5);
 	f.Blah2();
