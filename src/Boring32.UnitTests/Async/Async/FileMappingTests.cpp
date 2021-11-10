@@ -1,5 +1,6 @@
 #include "pch.h"
 #include <thread>
+#include <windows.h>
 #include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -15,18 +16,18 @@ namespace Async
 		public:
 			TEST_METHOD(TestCreateFileMapping1)
 			{
-				FileMapping fm(false, 256);
+				FileMapping fm(false, 256, PAGE_READWRITE);
 			}
 
 			TEST_METHOD(TestGetFileSize)
 			{
-				FileMapping fm(false, 256);
+				FileMapping fm(false, 256, PAGE_READWRITE);
 				Assert::AreEqual(fm.GetFileSize(), 256ull);
 			}
 
 			TEST_METHOD(TestClose)
 			{
-				FileMapping fm(false, L"DummyName", 256);
+				FileMapping fm(false, L"DummyName", 256, PAGE_READWRITE);
 				fm.Close();
 				Assert::IsNull(fm.GetNativeHandle());
 				Assert::AreEqual(fm.GetFileSize(), 0ull);
@@ -36,19 +37,18 @@ namespace Async
 			TEST_METHOD(TestCopy)
 			{
 				FileMapping fm1;
-				FileMapping fm2(false, L"DummyName", 256);
+				FileMapping fm2(false, L"DummyName", 256, PAGE_READWRITE);
 				fm1 = std::move(fm2);
 
 				Assert::IsNotNull(fm1.GetNativeHandle());
 				Assert::AreEqual(fm1.GetFileSize(), 256ull);
 				Assert::IsFalse(fm1.GetName().empty());
-
 			}
 
 			TEST_METHOD(TestMove)
 			{
 				FileMapping fm1;
-				FileMapping fm2(false, L"DummyName", 256);
+				FileMapping fm2(false, L"DummyName", 256, PAGE_READWRITE);
 				fm1 = std::move(fm2);
 
 				Assert::IsNotNull(fm1.GetNativeHandle());
