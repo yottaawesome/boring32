@@ -143,10 +143,17 @@ namespace Boring32::Async
 	FileMapping& FileMapping::Copy(const FileMapping& other)
 	{
 		Close();
-		m_fileMapping = other.m_fileMapping;
 		m_name = other.m_name;
 		m_maxSize = other.m_maxSize;
 		m_pageProtection = other.m_pageProtection;
+		// This...?
+		m_fileMapping = other.m_fileMapping;
+		// Or this...?
+		/*if (other.m_fileMapping)
+			CreateOrOpen(false, FileMapAccess::All, other.m_fileMapping.IsInheritable());*/
+		// Or perhaps we shouldn't allow sharing? The problem with sharing is if the 
+		// object stores some aspect of the handle but the handle is changed via another
+		// object, then the first object doesn't know about it.
 		return *this;
 	}
 
