@@ -2,9 +2,9 @@ module;
 
 #include <Windows.h>
 #include <string>
-#include "include/Raii/Raii.hpp"
 
 export module boring32.async.semaphore;
+import boring32.raii.win32handle;
 
 export namespace Boring32::Async
 {

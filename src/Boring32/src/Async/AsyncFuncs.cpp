@@ -1,10 +1,11 @@
 #include "pch.hpp"
 #include <stdexcept>
 #include <TlHelp32.h>
-#include "include/Raii/Win32Handle.hpp"
 #include "include/Error/Win32Error.hpp"
 #include "include/Async/AsyncFuncs.hpp"
 #include "include/Strings/Strings.hpp"
+
+import boring32.raii.win32handle;
 
 namespace Boring32::Async
 {

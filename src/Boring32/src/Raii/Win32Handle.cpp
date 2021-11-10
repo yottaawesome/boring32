@@ -1,10 +1,13 @@
+module;
+
 #include "pch.hpp"
 #include <stdexcept>
 #include <format>
 #include <functional>
 #include "include/Error/Error.hpp"
-#include "include/Raii/Win32Handle.hpp"
 #include "include/Util/Util.hpp"
+
+module boring32.raii.win32handle;
 
 namespace Boring32::Raii
 {

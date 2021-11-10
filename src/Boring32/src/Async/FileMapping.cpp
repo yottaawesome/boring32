@@ -3,7 +3,6 @@ module;
 #include <string>
 #include <stdexcept>
 #include <Windows.h>
-#include "include/Raii/Win32Handle.hpp"
 #include "include/Error/Win32Error.hpp"
 
 module boring32.async.filemapping;

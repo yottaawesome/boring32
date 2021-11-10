@@ -1,7 +1,8 @@
 #pragma once
 #include <Windows.h>
 #include <string>
-#include "../Raii/Win32Handle.hpp"
+
+import boring32.raii.win32handle;
 
 namespace Boring32::Async
 {

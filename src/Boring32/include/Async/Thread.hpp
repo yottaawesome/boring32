@@ -1,9 +1,10 @@
 #pragma once
 #include <Windows.h>
 #include <functional>
-#include "../Raii/Win32Handle.hpp"
 #include "Event.hpp"
 #include "ThreadStatus.hpp"
+
+import boring32.raii.win32handle;
 
 namespace Boring32::Async
 {

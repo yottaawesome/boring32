@@ -1,9 +1,9 @@
 module;
 
 #include <string>
-#include "include/Raii/Win32Handle.hpp"
 
 export module boring32.filesystem.file;
+import boring32.raii.win32handle;
 
 export namespace Boring32::FileSystem
 {

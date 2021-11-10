@@ -9,9 +9,9 @@ module;
 #include <iostream>
 #include "include/Async/Event.hpp"
 #include "include/Error/Win32Error.hpp"
-#include "include/Raii/Win32Handle.hpp"
 
 module boring32.winsock;
+import boring32.raii.win32handle;
 
 namespace Boring32::WinSock
 {

@@ -1,8 +1,11 @@
-#pragma once
+module;
+
 #include <Windows.h>
 #include <memory>
 
-namespace Boring32::Raii
+export module boring32.raii.win32handle;
+
+export namespace Boring32::Raii
 {
 	class Win32Handle
 	{
@@ -14,7 +17,7 @@ namespace Boring32::Raii
 			Win32Handle(const Win32Handle& otherHandle);
 			Win32Handle(Win32Handle&& otherHandle) noexcept;
 
-		// Operators
+			// Operators
 		public:
 			virtual void operator=(const Win32Handle& other);
 			virtual Win32Handle& operator=(Win32Handle&& other) noexcept;
@@ -52,8 +55,8 @@ namespace Boring32::Raii
 			virtual HANDLE* operator&();
 
 			virtual HANDLE operator*() const noexcept;
-		
-		// API
+
+			// API
 		public:
 			virtual HANDLE GetHandle() const noexcept;
 			virtual HANDLE DuplicateCurrentHandle() const;

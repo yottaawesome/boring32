@@ -1,9 +1,10 @@
 ﻿#include <format>
 #include <iostream>
 #include <windows.h>
-#include "Boring32/include/Raii/Win32Handle.hpp"
-
 #include "Experiments1Main.hpp"
+
+import boring32.raii.win32handle;
+
 
 import boring32.strings;
 

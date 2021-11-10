@@ -45,12 +45,6 @@
     <ClInclude Include="include\Async\Job.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Raii\Raii.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Raii\Win32Handle.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Security\Sid.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -508,10 +502,11 @@
     <ClCompile Include="src\Async\FileMapping.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\FileSystem\File.ixx" />
+    <ClCompile Include="src\FileSystem\boring32.filesystem.file.ixx" />
     <ClCompile Include="src\FileSystem\File.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Raii\boring32.raii.win32handle.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

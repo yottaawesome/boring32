@@ -2,9 +2,9 @@ module;
 
 #include <string>
 #include <Windows.h>
-#include "include/Raii/Win32Handle.hpp"
 
 export module boring32.async.filemapping;
+import boring32.raii.win32handle;
 
 export namespace Boring32::Async
 {

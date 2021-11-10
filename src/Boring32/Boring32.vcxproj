@@ -226,11 +226,9 @@
     <ClInclude Include="include\Guid\Guid.hpp" />
     <ClInclude Include="include\Async\Async.hpp" />
     <ClInclude Include="include\Library\Library.hpp" />
-    <ClInclude Include="include\Raii\Raii.hpp" />
     <ClInclude Include="include\Security\Constants.hpp" />
     <ClInclude Include="include\Security\SecurityFunctions.hpp" />
     <ClInclude Include="include\Security\Sid.hpp" />
-    <ClInclude Include="include\Raii\Win32Handle.hpp" />
     <ClInclude Include="include\Security\ImpersonationContext.hpp" />
     <ClInclude Include="include\Security\PrivateNamespace.hpp" />
     <ClInclude Include="include\Security\Token.hpp" />
@@ -308,13 +306,14 @@
     <ClCompile Include="src\Error\NtStatusError.cpp" />
     <ClCompile Include="src\Error\Win32Error.cpp" />
     <ClCompile Include="src\FileSystem\File.cpp" />
-    <ClCompile Include="src\FileSystem\File.ixx" />
+    <ClCompile Include="src\FileSystem\boring32.filesystem.file.ixx" />
     <ClCompile Include="src\Guid\Guid.cpp" />
     <ClCompile Include="src\Async\MemoryMappedFile.cpp" />
     <ClCompile Include="src\Async\Mutex.cpp" />
     <ClCompile Include="src\Async\Pipes\AnonymousPipe.cpp" />
     <ClCompile Include="src\Async\Process.cpp" />
     <ClCompile Include="src\Async\ProcessInfo.cpp" />
+    <ClCompile Include="src\Raii\boring32.raii.win32handle.ixx" />
     <ClCompile Include="src\Strings\strings.ixx" />
     <ClCompile Include="src\Strings\Utf16String.cpp" />
     <ClCompile Include="src\WinSock\WinSockError.cpp" />

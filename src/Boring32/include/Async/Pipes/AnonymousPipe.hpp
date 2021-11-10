@@ -2,7 +2,8 @@
 #include <Windows.h>
 #include <string>
 #include <vector>
-#include "../../Raii/Raii.hpp"
+
+import boring32.raii.win32handle;
 
 namespace Boring32::Async
 {
