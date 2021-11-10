@@ -508,6 +508,10 @@
     <ClCompile Include="src\Async\FileMapping.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\FileSystem\File.ixx" />
+    <ClCompile Include="src\FileSystem\File.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

@@ -307,6 +307,8 @@
     <ClCompile Include="src\Error\Error.cpp" />
     <ClCompile Include="src\Error\NtStatusError.cpp" />
     <ClCompile Include="src\Error\Win32Error.cpp" />
+    <ClCompile Include="src\FileSystem\File.cpp" />
+    <ClCompile Include="src\FileSystem\File.ixx" />
     <ClCompile Include="src\Guid\Guid.cpp" />
     <ClCompile Include="src\Async\MemoryMappedFile.cpp" />
     <ClCompile Include="src\Async\Mutex.cpp" />
