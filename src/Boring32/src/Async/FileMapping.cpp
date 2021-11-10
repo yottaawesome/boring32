@@ -64,7 +64,9 @@ namespace Boring32::Async
 
 	void FileMapping::Close()
 	{
-		*this = FileMapping();
+		m_mapFile = nullptr;
+		m_maxSize = 0;
+		m_name.clear();
 	}
 
 	const std::wstring FileMapping::GetName() const noexcept
@@ -143,6 +145,7 @@ namespace Boring32::Async
 		m_mapFile = std::move(other.m_mapFile);
 		m_name = std::move(other.m_name);
 		m_maxSize = other.m_maxSize;
+		other.Close();
 		return *this;
 	}
 }

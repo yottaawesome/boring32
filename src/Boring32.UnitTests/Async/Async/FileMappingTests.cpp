@@ -15,22 +15,49 @@ namespace Async
 		public:
 			TEST_METHOD(TestCreateFileMapping1)
 			{
-				FileMapping fs(false, 256);
+				FileMapping fm(false, 256);
 			}
 
 			TEST_METHOD(TestGetFileSize)
 			{
-				FileMapping fs(false, 256);
-				Assert::AreEqual(fs.GetFileSize(), 256ull);
+				FileMapping fm(false, 256);
+				Assert::AreEqual(fm.GetFileSize(), 256ull);
 			}
 
 			TEST_METHOD(TestClose)
 			{
-				FileMapping fs(false, L"DummyName", 256);
-				fs.Close();
-				Assert::IsNull(fs.GetNativeHandle());
-				Assert::AreEqual(fs.GetFileSize(), 0ull);
-				Assert::IsTrue(fs.GetName().empty());
+				FileMapping fm(false, L"DummyName", 256);
+				fm.Close();
+				Assert::IsNull(fm.GetNativeHandle());
+				Assert::AreEqual(fm.GetFileSize(), 0ull);
+				Assert::IsTrue(fm.GetName().empty());
+			}
+
+			TEST_METHOD(TestCopy)
+			{
+				FileMapping fm1;
+				FileMapping fm2(false, L"DummyName", 256);
+				fm1 = std::move(fm2);
+
+				Assert::IsNotNull(fm1.GetNativeHandle());
+				Assert::AreEqual(fm1.GetFileSize(), 256ull);
+				Assert::IsFalse(fm1.GetName().empty());
+
+			}
+
+			TEST_METHOD(TestMove)
+			{
+				FileMapping fm1;
+				FileMapping fm2(false, L"DummyName", 256);
+				fm1 = std::move(fm2);
+
+				Assert::IsNotNull(fm1.GetNativeHandle());
+				Assert::AreEqual(fm1.GetFileSize(), 256ull);
+				Assert::IsFalse(fm1.GetName().empty());
+
+				Assert::IsNull(fm2.GetNativeHandle());
+				Assert::AreEqual(fm2.GetFileSize(), 0ull);
+				Assert::IsTrue(fm2.GetName().empty());
 			}
 	};
 }

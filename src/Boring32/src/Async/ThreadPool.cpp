@@ -22,28 +22,44 @@ namespace Boring32::Async::ThreadPools
 			DestroyThreadpoolEnvironment(&m_environ);
 			m_pool = nullptr;
 		}
+		m_environ = {0};
+		m_minThreads = 0;
+		m_maxThreads = 0;
 	}
 
+	ThreadPool::ThreadPool()
+		: m_pool(nullptr),
+		m_environ({ 0 }),
+		m_minThreads(0),
+		m_maxThreads(0)
+	{};
+
 	ThreadPool::ThreadPool(const DWORD minThreads, const DWORD maxThreads)
-	:	m_pool(nullptr),
-		m_environ({0}),
+		: m_pool(nullptr),
+		m_environ({ 0 }),
 		m_minThreads(minThreads),
 		m_maxThreads(maxThreads)
 	{
-		ValidateArgs(minThreads, maxThreads);
+		InternalCreate();
+	}
+
+	void ThreadPool::InternalCreate()
+	{
+		ValidateArgs(m_minThreads, m_maxThreads);
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-createthreadpool
 		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-closethreadpool
 		m_pool = std::shared_ptr<TP_POOL>(CreateThreadpool(nullptr), CloseThreadpool);
 		if (m_pool == nullptr)
 			throw Error::Win32Error(__FUNCSIG__": CreateThreadPool() failed", GetLastError());
-		
-		SetMinAndMaxThreads(minThreads, maxThreads);
+
+		SetMinAndMaxThreads(m_minThreads, m_maxThreads);
 		// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-initializethreadpoolenvironment
 		InitializeThreadpoolEnvironment(&m_environ);
 		// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setthreadpoolcallbackpool
 		SetThreadpoolCallbackPool(&m_environ, m_pool.get());
 	}
+
 
 	DWORD ThreadPool::GetMinThread() const noexcept
 	{
@@ -153,5 +169,26 @@ namespace Boring32::Async::ThreadPools
 			throw std::invalid_argument(__FUNCSIG__": maxThreads cannot be less than 1");
 		if (maxThreads < minThreads)
 			throw std::invalid_argument(__FUNCSIG__": maxThreads cannot be less than minThreads");
+	}
+
+	ThreadPool& ThreadPool::Copy(const ThreadPool& other)
+	{
+		Close();
+		m_environ = other.m_environ;
+		m_minThreads = other.m_minThreads;
+		m_maxThreads = other.m_maxThreads;
+		if (other.m_pool)
+			InternalCreate();
+		return *this;
+	}
+
+	ThreadPool& ThreadPool::Move(ThreadPool& other) noexcept
+	{
+		Close();
+		m_environ = other.m_environ;
+		m_minThreads = other.m_minThreads;
+		m_maxThreads = other.m_maxThreads;
+		m_pool = std::move(other.m_pool);
+		return *this;
 	}
 }

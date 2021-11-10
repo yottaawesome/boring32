@@ -33,6 +33,7 @@ export namespace Boring32::Async::ThreadPools
 			};
 
 			virtual ~ThreadPool();
+			ThreadPool();
 			ThreadPool(const DWORD minThreads, const DWORD maxThreads);
 
 		public:
@@ -73,6 +74,10 @@ export namespace Boring32::Async::ThreadPools
 		protected:
 			static void InternalCallback(PTP_CALLBACK_INSTANCE instance, void* parameter, PTP_WORK work);
 			static void ValidateArgs(const DWORD minThreads, const DWORD maxThreads);
+
+			virtual ThreadPool& Copy(const ThreadPool& other);
+			virtual ThreadPool& Move(ThreadPool& other) noexcept;
+			virtual void InternalCreate();
 
 		protected:
 			std::shared_ptr<TP_POOL> m_pool;
