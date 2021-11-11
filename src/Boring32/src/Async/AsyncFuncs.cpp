@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
+#include <format>
 #include <TlHelp32.h>
 #include "include/Error/Win32Error.hpp"
 #include "include/Async/AsyncFuncs.hpp"
@@ -21,27 +22,23 @@ namespace Boring32::Async
 
 	bool WaitFor(const HANDLE handle, const DWORD timeout, const bool alertable)
 	{
-		if (handle == nullptr)
+		if (!handle)
 			throw std::invalid_argument(__FUNCSIG__ ": handle is nullptr");
 		
-		DWORD status = WaitForSingleObjectEx(handle, timeout, alertable);
-		if (status == WAIT_ABANDONED)
-			throw std::runtime_error(__FUNCSIG__ ": the wait was abandoned");
-		if (status == WAIT_FAILED)
-			throw Error::Win32Error(__FUNCSIG__ ": WaitForSingleObjectEx() failed", GetLastError());
-		if (status == WAIT_TIMEOUT)
-			return false;
-		if (status == WAIT_IO_COMPLETION)
-			return false;
-		return true;
+		switch (const DWORD status = WaitForSingleObjectEx(handle, timeout, alertable))
+		{
+			case WAIT_OBJECT_0: return true;
+			case WAIT_ABANDONED: throw std::runtime_error(__FUNCSIG__ ": the wait was abandoned");
+			case WAIT_FAILED: throw Error::Win32Error(__FUNCSIG__ ": WaitForSingleObjectEx() failed", GetLastError());
+			case WAIT_TIMEOUT: return false;
+			case WAIT_IO_COMPLETION: return false;
+			default: throw std::runtime_error(std::format(__FUNCSIG__": unknown wait status: {}", status));
+		}
 	}
 
-	DWORD WaitFor(
-		const std::vector<HANDLE>& handles,
-		const bool waitForAll
-	)
+	DWORD WaitFor(const std::vector<HANDLE>& handles, const bool waitForAll)
 	{
-		return (DWORD)WaitFor(handles, waitForAll, INFINITE, false);
+		return WaitFor(handles, waitForAll, INFINITE, false);
 	}
 
 	DWORD WaitFor(

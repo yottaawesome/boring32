@@ -19,7 +19,12 @@ export namespace Boring32::Raii
 
 			// Operators
 		public:
+			/// <summary>
+			/// 
+			/// </summary>
+			/// <param name="other"></param>
 			virtual void operator=(const Win32Handle& other);
+			
 			virtual Win32Handle& operator=(Win32Handle&& other) noexcept;
 			/// <summary>
 			///		Compares the current handle to the specified handle.
@@ -28,7 +33,7 @@ export namespace Boring32::Raii
 			/// </summary>
 			/// <param name="other">The handle to compare against.</param>
 			/// <returns>Whether the handles are equivalent.</returns>
-			virtual bool operator==(const HANDLE other) const;
+			virtual bool operator==(const HANDLE other) const noexcept;
 
 			/// <summary>
 			///		Closes the current handle, if valid, and assumes
@@ -46,6 +51,10 @@ export namespace Boring32::Raii
 			/// <returns>Whether the handles are equivalent.</returns>
 			virtual bool operator==(const Win32Handle& other) const;
 
+			/// <summary>
+			///		Tests whether this handle is null or INVALID_HANDLE_VALUE.
+			/// </summary>
+			/// <returns>True if the handle is null or INVALID_HANDLE_VALUE, false otherwise.</returns>
 			virtual operator bool() const noexcept;
 
 			/// <summary>
@@ -54,6 +63,10 @@ export namespace Boring32::Raii
 			/// <returns>The internal HANDLE's address.</returns>
 			virtual HANDLE* operator&();
 
+			/// <summary>
+			///		Returns the underlying native handle, which may be null.
+			/// </summary>
+			/// <returns>The underlying native handle</returns>
 			virtual HANDLE operator*() const noexcept;
 
 			// API
@@ -75,6 +88,8 @@ export namespace Boring32::Raii
 			///		INVALID_HANDLE_VALUE, false otherwise.
 			/// </returns>
 			virtual bool IsValidValue() const noexcept;
+			virtual bool IsValidValue(const std::shared_ptr<HANDLE>& handle) const noexcept;
+			virtual bool IsValidValue(HANDLE handle) const noexcept;
 
 		public:
 			static bool HandleIsInheritable(const HANDLE handle);

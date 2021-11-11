@@ -101,18 +101,18 @@ namespace Boring32::Raii
 		return *this;
 	}
 
-	bool Win32Handle::operator==(const HANDLE other) const
+	bool Win32Handle::operator==(const HANDLE other) const noexcept
 	{
-		if (other == nullptr || *m_handle == INVALID_HANDLE_VALUE)
-			return m_handle == nullptr || *m_handle == INVALID_HANDLE_VALUE;
-		return *m_handle == other;
+		if (!IsValidValue(other))
+			return !IsValidValue(m_handle);
+		return m_handle && *m_handle == other;
 	}
 
 	bool Win32Handle::operator==(const Win32Handle& other) const
 	{
 		// https://devblogs.microsoft.com/oldnewthing/20040302-00/?p=40443
-		if (other.m_handle == nullptr || *other.m_handle == INVALID_HANDLE_VALUE)
-			return m_handle == nullptr || *m_handle == INVALID_HANDLE_VALUE;
+		if (!IsValidValue(other.m_handle))
+			return !IsValidValue(m_handle);
 		return m_handle == other.m_handle;
 	}
 
@@ -125,10 +125,7 @@ namespace Boring32::Raii
 
 	HANDLE Win32Handle::operator*() const noexcept
 	{
-		if (m_handle == nullptr)
-			return nullptr;
-
-		return *m_handle;
+		return m_handle ? *m_handle : nullptr;
 	}
 
 	Win32Handle::operator bool() const noexcept
@@ -138,21 +135,29 @@ namespace Boring32::Raii
 
 	bool Win32Handle::IsValidValue() const noexcept
 	{
-		return m_handle && *m_handle && *m_handle != INVALID_HANDLE_VALUE;
+		return m_handle && IsValidValue(*m_handle);
+	}
+	
+	bool Win32Handle::IsValidValue(const std::shared_ptr<HANDLE>& handle) const noexcept
+	{
+		return handle && IsValidValue(*handle);
+	}
+
+	bool Win32Handle::IsValidValue(HANDLE handle) const noexcept
+	{
+		return handle && handle != INVALID_HANDLE_VALUE;
 	}
 
 	HANDLE Win32Handle::GetHandle() const noexcept
 	{
-		if (!m_handle)
-			return nullptr;
-		return *m_handle;
+		return m_handle ? *m_handle : nullptr;
 	}
 
 	HANDLE Win32Handle::DuplicateCurrentHandle() const
 	{
-		if (!m_handle || *m_handle == nullptr)
-			return nullptr;
-		return Win32Handle::DuplicatePassedHandle(*m_handle, IsInheritable());
+		return IsValidValue(m_handle) 
+			? Win32Handle::DuplicatePassedHandle(*m_handle, IsInheritable())
+			: nullptr;
 	}
 
 	bool Win32Handle::IsInheritable() const
