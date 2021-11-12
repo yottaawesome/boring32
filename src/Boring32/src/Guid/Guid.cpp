@@ -1,17 +1,21 @@
+module;
+
 #include "pch.hpp"
 #include "Objbase.h"
 #include "include/Error/Error.hpp"
-#include "include/Guid/Guid.hpp"
+
+module boring32.guid;
 
 namespace Boring32::Guid
 {
 	// Adapted from https://stackoverflow.com/a/19941516/7448661
 	std::wstring GetGuidAsWString(const GUID& guid)
 	{
-		wchar_t rawGuid[64] = { 0 };
-		HRESULT result = StringFromGUID2(guid, rawGuid, 64);
-		if (StringFromGUID2(guid, rawGuid, 64) == 0)
-			throw std::runtime_error("GetGuidAsWString(): StringFromGUID2() failed");
+		std::wstring rawGuid(64, '\0');
+		int numberOfChars = StringFromGUID2(guid, &rawGuid[0], 64);
+		if (numberOfChars == 0)
+			throw std::runtime_error(__FUNCSIG__": StringFromGUID2() failed");
+		rawGuid.resize(numberOfChars-1); // remove null terminator
 		return rawGuid;
 	}
 
@@ -20,7 +24,7 @@ namespace Boring32::Guid
 		GUID guidReference;
 		HRESULT result = CoCreateGuid(&guidReference);
 		if (FAILED(result))
-			throw Error::ComError("GetGuidAsWString(): CoCreateGuid() failed", result);
+			throw Error::ComError(__FUNCSIG__": CoCreateGuid() failed", result);
 		return GetGuidAsWString(guidReference);
 	}
 }
