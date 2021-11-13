@@ -1,7 +1,10 @@
+module;
+
 #include "pch.hpp"
 #include <stdexcept>
 #include "include/Error/ComError.hpp"
-#include "include/Com/ComThreadScope.hpp"
+
+module boring32.com.comthreadscope;
 
 namespace Boring32::Com
 {

@@ -12,4 +12,3 @@
 #include "DataStructures/CappedStack.hpp"
 #include "DataStructures/SinglyLinkedList.hpp"
 #include "TaskScheduler/TaskScheduler.hpp"
-#include "Com/ComThreadScope.hpp"

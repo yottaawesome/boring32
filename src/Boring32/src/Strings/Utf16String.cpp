@@ -1,7 +1,6 @@
 module;
 
 #include <string>
-#include "include/Strings/Strings.hpp"
 
 module boring32.strings;
 

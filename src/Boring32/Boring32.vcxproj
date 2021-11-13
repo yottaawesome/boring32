@@ -251,7 +251,6 @@
     <ClInclude Include="include\WinHttp\WebSockets\WebSocket.hpp" />
     <ClInclude Include="include\WinHttp\WebSockets\WebSocketStatus.hpp" />
     <ClInclude Include="include\Async\ThreadStatus.hpp" />
-    <ClInclude Include="include\Com\ComThreadScope.hpp" />
     <ClInclude Include="include\Async\Pipes\Pipes.hpp" />
     <ClInclude Include="include\Wmi\Wmi.hpp" />
     <ClInclude Include="src\pch.hpp" />
@@ -289,6 +288,7 @@
     <ClCompile Include="src\Async\WaitableTimer.cpp" />
     <ClCompile Include="src\Compression\Compressor.cpp" />
     <ClCompile Include="src\Compression\Decompressor.cpp" />
+    <ClCompile Include="src\Com\boring32.com.comthreadscope.ixx" />
     <ClCompile Include="src\Com\ComThreadScope.cpp" />
     <ClCompile Include="src\Crypto\AesEncryption.cpp" />
     <ClCompile Include="src\Crypto\Certificate.cpp" />

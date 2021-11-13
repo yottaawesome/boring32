@@ -1,8 +1,11 @@
-#pragma once
+module;
+
 #include <atomic>
 #include <objbase.h>
 
-namespace Boring32::Com
+export module boring32.com.comthreadscope;
+
+export namespace Boring32::Com
 {
 	/// <summary>
 	///		Represents a COM library lifetime scope for a thread.

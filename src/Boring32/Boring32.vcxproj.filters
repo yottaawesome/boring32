@@ -84,9 +84,6 @@
     <ClInclude Include="include\Async\SlimReadWriteLock.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Com\ComThreadScope.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Async\ThreadSafeVector.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -502,6 +499,7 @@
     </ClCompile>
     <ClCompile Include="src\Raii\boring32.raii.win32handle.ixx" />
     <ClCompile Include="src\Guid\boring32.guid.ixx" />
+    <ClCompile Include="src\Com\boring32.com.comthreadscope.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />
