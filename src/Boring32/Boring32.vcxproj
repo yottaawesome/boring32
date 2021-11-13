@@ -223,7 +223,6 @@
     <ClInclude Include="include\Crypto\Crypto.hpp" />
     <ClInclude Include="include\Error\Error.hpp" />
     <ClInclude Include="include\Error\Win32Error.hpp" />
-    <ClInclude Include="include\Guid\Guid.hpp" />
     <ClInclude Include="include\Async\Async.hpp" />
     <ClInclude Include="include\Library\Library.hpp" />
     <ClInclude Include="include\Security\Constants.hpp" />
@@ -307,6 +306,7 @@
     <ClCompile Include="src\Error\Win32Error.cpp" />
     <ClCompile Include="src\FileSystem\File.cpp" />
     <ClCompile Include="src\FileSystem\boring32.filesystem.file.ixx" />
+    <ClCompile Include="src\Guid\boring32.guid.ixx" />
     <ClCompile Include="src\Guid\Guid.cpp" />
     <ClCompile Include="src\Async\MemoryMappedFile.cpp" />
     <ClCompile Include="src\Async\Mutex.cpp" />
