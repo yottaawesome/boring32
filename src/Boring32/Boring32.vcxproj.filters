@@ -63,9 +63,6 @@
     <ClInclude Include="include\Error\Error.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Strings\Strings.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Library\Library.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -489,7 +486,7 @@
     <ClCompile Include="src\WinSock\WinSockError.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Strings\strings.ixx" />
+    <ClCompile Include="src\Strings\boring32.strings.ixx" />
     <ClCompile Include="src\Strings\Utf16String.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -6,7 +6,8 @@
 #include "include/Error/Error.hpp"
 #include "include/Crypto/CryptoFuncs.hpp"
 #include "include/Crypto/CertStore.hpp"
-#include "include/Strings/Strings.hpp"
+
+import boring32.strings;
 
 namespace Boring32::Crypto
 {

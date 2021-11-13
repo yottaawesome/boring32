@@ -2,9 +2,10 @@
 #include <format>
 #include <algorithm>
 #include <winhttp.h>
-#include "include/Strings/Strings.hpp"
 #include "include/Error/Error.hpp"
 #include "Boring32/include/Library/Library.hpp"
+
+import boring32.strings;
 
 // TODO: clean up, replace stringstream formatting with std::format
 namespace Boring32::Error

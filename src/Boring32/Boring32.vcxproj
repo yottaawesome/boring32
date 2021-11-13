@@ -231,7 +231,6 @@
     <ClInclude Include="include\Security\ImpersonationContext.hpp" />
     <ClInclude Include="include\Security\PrivateNamespace.hpp" />
     <ClInclude Include="include\Security\Token.hpp" />
-    <ClInclude Include="include\Strings\Strings.hpp" />
     <ClInclude Include="include\TaskScheduler\RegisteredTask.hpp" />
     <ClInclude Include="include\TaskScheduler\TaskFolder.hpp" />
     <ClInclude Include="include\TaskScheduler\TaskScheduler.hpp" />
@@ -314,7 +313,7 @@
     <ClCompile Include="src\Async\Process.cpp" />
     <ClCompile Include="src\Async\ProcessInfo.cpp" />
     <ClCompile Include="src\Raii\boring32.raii.win32handle.ixx" />
-    <ClCompile Include="src\Strings\strings.ixx" />
+    <ClCompile Include="src\Strings\boring32.strings.ixx" />
     <ClCompile Include="src\Strings\Utf16String.cpp" />
     <ClCompile Include="src\WinSock\WinSockError.cpp" />
     <ClCompile Include="src\WinSock\WinSockFuncs.cpp" />

@@ -1,6 +1,5 @@
 #pragma once
 #include "Library/Library.hpp"
-#include "Strings/Strings.hpp"
 #include "Time/Time.hpp"
 #include "Async/Async.hpp"
 #include "WinHttp/WinHttp.hpp"

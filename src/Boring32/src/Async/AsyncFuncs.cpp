@@ -4,9 +4,9 @@
 #include <TlHelp32.h>
 #include "include/Error/Win32Error.hpp"
 #include "include/Async/AsyncFuncs.hpp"
-#include "include/Strings/Strings.hpp"
 
 import boring32.raii.win32handle;
+import boring32.strings;
 
 namespace Boring32::Async
 {

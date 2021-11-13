@@ -14,6 +14,7 @@
 import boring32.winsock;
 import boring32.async.threadpools;
 import boring32.async.semaphore;
+import boring32.strings;
 
 #include "pathcch.h"
 #pragma comment(lib, "Pathcch.lib")

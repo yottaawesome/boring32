@@ -1,8 +1,12 @@
+module;
+
 #include "pch.hpp"
 #include <stdexcept>
 #include <algorithm>
+#include <vector>
 #include "include/Error/Error.hpp"
-#include "include/Strings/Strings.hpp"
+
+module boring32.strings;
 
 namespace Boring32::Strings
 {

@@ -1,7 +1,9 @@
 ﻿#include "pch.h"
+#include <vector>
+#include <string>
 #include "CppUnitTest.h"
-#include "Boring32/include/Strings/Strings.hpp"
 
+import boring32.strings;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace Strings
