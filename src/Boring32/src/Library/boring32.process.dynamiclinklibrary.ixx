@@ -1,9 +1,12 @@
-#pragma once
+module;
+
 #include <Windows.h>
 #include <string>
 #include <stdexcept>
 
-namespace Boring32::Library
+export module boring32.process.dynamiclinklibrary;
+
+export namespace Boring32::Process
 {
 	class DynamicLinkLibrary
 	{
@@ -11,7 +14,7 @@ namespace Boring32::Library
 			virtual ~DynamicLinkLibrary();
 			DynamicLinkLibrary();
 			DynamicLinkLibrary(const std::wstring& path);
-			DynamicLinkLibrary(const std::wstring& path, const std::nothrow_t& noThrow) noexcept;
+			DynamicLinkLibrary(const std::wstring& path, const std::nothrow_t&) noexcept;
 
 			DynamicLinkLibrary(const DynamicLinkLibrary& other);
 			virtual DynamicLinkLibrary& operator=(const DynamicLinkLibrary& other);
@@ -22,7 +25,7 @@ namespace Boring32::Library
 		public:
 			virtual void Close() noexcept;
 			virtual void* Resolve(const std::string& symbolName);
-			virtual void* Resolve(const std::string& symbolName, const std::nothrow_t& noThrow) noexcept;
+			virtual void* Resolve(const std::string& symbolName, const std::nothrow_t&) noexcept;
 			virtual const std::wstring& GetPath() const noexcept;
 			virtual HMODULE GetHandle() const noexcept;
 			virtual bool IsLoaded() const noexcept;

@@ -17,6 +17,7 @@ import boring32.async.semaphore;
 import boring32.strings;
 import boring32.com.comthreadscope;
 import boring32.compression;
+import boring32.process.dynamiclinklibrary;
 
 #include "pathcch.h"
 #pragma comment(lib, "Pathcch.lib")
@@ -96,7 +97,7 @@ void TestMemoryMappedFile()
 
 void TestLibraryLoad()
 {
-	Boring32::Library::DynamicLinkLibrary d(L"wlanapi.dll");
+	Boring32::Process::DynamicLinkLibrary d(L"wlanapi.dll");
 	//void* mainFunc = d.Resolve(L"GetMainInterface");
 	//if (mainFunc == nullptr)
 	//	throw new std::runtime_error("Could not resolve function");

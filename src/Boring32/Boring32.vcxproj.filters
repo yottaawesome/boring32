@@ -63,9 +63,6 @@
     <ClInclude Include="include\Error\Error.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Library\Library.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\WinHttp\HttpWebClient.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -487,6 +484,7 @@
     <ClCompile Include="src\Compression\boring32.compression.decompressor.ixx" />
     <ClCompile Include="src\Compression\boring32.compression.compressiontype.ixx" />
     <ClCompile Include="src\Time\boring32.time.ixx" />
+    <ClCompile Include="src\Library\boring32.process.dynamiclinklibrary.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

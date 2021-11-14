@@ -1,12 +1,15 @@
+module;
+
 #include "pch.hpp"
 #include <stdexcept>
 #include <sstream>
 #include <iostream>
 #include <format>
-#include "include/Library/Library.hpp"
 #include "include/Error/Error.hpp"
 
-namespace Boring32::Library
+module boring32.process.dynamiclinklibrary;
+
+namespace Boring32::Process
 {
 	DynamicLinkLibrary::~DynamicLinkLibrary()
 	{
@@ -34,7 +37,7 @@ namespace Boring32::Library
 		InternalLoad();
 	}
 
-	DynamicLinkLibrary::DynamicLinkLibrary(const std::wstring& path, const std::nothrow_t& noThrow) noexcept
+	DynamicLinkLibrary::DynamicLinkLibrary(const std::wstring& path, const std::nothrow_t&) noexcept
 		: m_path(path)
 	{
 		InternalLoad(std::nothrow);
@@ -109,7 +112,7 @@ namespace Boring32::Library
 		);
 	}
 	
-	void* DynamicLinkLibrary::Resolve(const std::string& symbolName, const std::nothrow_t& noThrow) noexcept
+	void* DynamicLinkLibrary::Resolve(const std::string& symbolName, const std::nothrow_t&) noexcept
 	{
 		if (m_libraryHandle == nullptr)
 			return nullptr;
