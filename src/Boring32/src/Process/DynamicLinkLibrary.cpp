@@ -1,9 +1,5 @@
 module;
 
-#include "pch.hpp"
-#include <stdexcept>
-#include <sstream>
-#include <iostream>
 #include <format>
 #include "include/Error/Error.hpp"
 
@@ -18,13 +14,12 @@ namespace Boring32::Process
 
 	void DynamicLinkLibrary::Close() noexcept
 	{
-		if (m_libraryHandle != nullptr)
-		{
-			if (FreeLibrary(m_libraryHandle) == false)
-				std::wcerr << __FUNCSIG__ << ": FreeLibrary() failed" << std::endl;
-			m_libraryHandle = nullptr;
-			m_path.clear();
-		}
+		if (!m_libraryHandle)
+			return;
+		if (!FreeLibrary(m_libraryHandle))
+			std::wcerr << std::format(L"{}: FreeLibrary() failed: {}", TEXT(__FUNCSIG__), GetLastError());
+		m_libraryHandle = nullptr;
+		m_path.clear();
 	}
 
 	DynamicLinkLibrary::DynamicLinkLibrary()

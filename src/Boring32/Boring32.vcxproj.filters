@@ -257,7 +257,7 @@
     <ClCompile Include="src\Time\Time.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Library\DynamicLinkLibrary.cpp">
+    <ClCompile Include="src\Process\DynamicLinkLibrary.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\WinHttp\WinHttpHandle.cpp">
@@ -484,7 +484,7 @@
     <ClCompile Include="src\Compression\boring32.compression.decompressor.ixx" />
     <ClCompile Include="src\Compression\boring32.compression.compressiontype.ixx" />
     <ClCompile Include="src\Time\boring32.time.ixx" />
-    <ClCompile Include="src\Library\boring32.process.dynamiclinklibrary.ixx" />
+    <ClCompile Include="src\Process\boring32.process.dynamiclinklibrary.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

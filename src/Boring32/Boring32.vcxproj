@@ -253,7 +253,7 @@
   <ItemGroup>
     <ClCompile Include="src\Async\boring32.async.filemapping.ixx" />
     <ClCompile Include="src\Async\boring32.async.threadpools.ixx" />
-    <ClCompile Include="src\Library\boring32.process.dynamiclinklibrary.ixx" />
+    <ClCompile Include="src\Process\boring32.process.dynamiclinklibrary.ixx" />
     <ClCompile Include="src\Time\boring32.time.ixx" />
     <ClCompile Include="src\WinSock\boring32.winsock.ixx" />
     <ClCompile Include="src\Async\AsyncFuncs.cpp" />
@@ -327,7 +327,7 @@
     <ClCompile Include="src\Security\Token.cpp" />
     <ClCompile Include="src\Strings\Win32Strings.cpp" />
     <ClCompile Include="src\pch.cpp" />
-    <ClCompile Include="src\Library\DynamicLinkLibrary.cpp" />
+    <ClCompile Include="src\Process\DynamicLinkLibrary.cpp" />
     <ClCompile Include="src\TaskScheduler\RegisteredTask.cpp" />
     <ClCompile Include="src\TaskScheduler\TaskFolder.cpp" />
     <ClCompile Include="src\TaskScheduler\TaskService.cpp" />
