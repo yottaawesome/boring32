@@ -66,9 +66,6 @@
     <ClInclude Include="include\Library\Library.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Time\Time.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\WinHttp\HttpWebClient.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -142,9 +139,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Async\TimerQueueTimerCallback.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Wmi\Wmi.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Registry\Registry.hpp">
@@ -461,7 +455,7 @@
     <ClCompile Include="src\Security\SecurityFunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\WinSock\boring32.winsock.ixx" />
+    <ClCompile Include="src\WinSock\boring32.winsock.ixx" />
     <ClCompile Include="src\WinSock\WinSockFuncs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -492,6 +486,7 @@
     <ClCompile Include="src\Compression\boring32.compression.compressor.ixx" />
     <ClCompile Include="src\Compression\boring32.compression.decompressor.ixx" />
     <ClCompile Include="src\Compression\boring32.compression.compressiontype.ixx" />
+    <ClCompile Include="src\Time\boring32.time.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

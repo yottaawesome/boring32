@@ -1,6 +1,9 @@
+module;
+
 #include "pch.hpp"
 #include <sstream>
-#include "include/Time/Time.hpp"
+
+module boring32.time;
 
 namespace Boring32::Time
 {
