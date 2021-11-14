@@ -1,8 +1,9 @@
 #include "pch.hpp"
 #include <stdexcept>
 #include "include/Async/Pipes/AnonymousPipe.hpp"
-#include "include/Strings/Strings.hpp"
 #include <iostream>
+
+import boring32.strings;
 
 namespace Boring32::Async
 {

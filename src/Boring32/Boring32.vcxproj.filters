@@ -126,22 +126,10 @@
     <ClInclude Include="include\Security\Security.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Compression\Compression.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Error\Win32Error.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Error\ComError.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Compression\CompressionType.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Compression\Compressor.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Compression\Decompressor.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Async\TimerQueue.hpp">
@@ -500,6 +488,10 @@
     <ClCompile Include="src\Raii\boring32.raii.win32handle.ixx" />
     <ClCompile Include="src\Guid\boring32.guid.ixx" />
     <ClCompile Include="src\Com\boring32.com.comthreadscope.ixx" />
+    <ClCompile Include="src\Compression\boring32.compression.ixx" />
+    <ClCompile Include="src\Compression\boring32.compression.compressor.ixx" />
+    <ClCompile Include="src\Compression\boring32.compression.decompressor.ixx" />
+    <ClCompile Include="src\Compression\boring32.compression.compressiontype.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

@@ -1,13 +1,16 @@
-#pragma once
+module;
+
 #include <vector>
 #include <Windows.h>
 #include <compressapi.h>
-#include "CompressionType.hpp"
+
+export module boring32.compression.compressor;
+import boring32.compression.compressiontype;
 
 /// <summary>
 /// For reference of the Compression API, see: https://docs.microsoft.com/en-us/windows/win32/cmpapi/using-the-compression-api
 /// </summary>
-namespace Boring32::Compression
+export namespace Boring32::Compression
 {
 	class Compressor
 	{

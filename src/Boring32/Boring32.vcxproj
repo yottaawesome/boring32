@@ -199,10 +199,6 @@
     <ClInclude Include="include\Async\TimerQueueTimer.hpp" />
     <ClInclude Include="include\Async\TimerQueueTimerCallback.hpp" />
     <ClInclude Include="include\Async\WaitableTimer.hpp" />
-    <ClInclude Include="include\Compression\Compression.hpp" />
-    <ClInclude Include="include\Compression\CompressionType.hpp" />
-    <ClInclude Include="include\Compression\Compressor.hpp" />
-    <ClInclude Include="include\Compression\Decompressor.hpp" />
     <ClInclude Include="include\Crypto\AesEncryption.hpp" />
     <ClInclude Include="include\Crypto\Certificate.hpp" />
     <ClInclude Include="include\Crypto\CertificateChain.hpp" />
@@ -286,6 +282,10 @@
     <ClCompile Include="src\Async\TimerQueueTimer.cpp" />
     <ClCompile Include="src\Async\TimerQueueTimerCallback.cpp" />
     <ClCompile Include="src\Async\WaitableTimer.cpp" />
+    <ClCompile Include="src\Compression\boring32.compression.compressor.ixx" />
+    <ClCompile Include="src\Compression\boring32.compression.decompressor.ixx" />
+    <ClCompile Include="src\Compression\boring32.compression.ixx" />
+    <ClCompile Include="src\Compression\boring32.compression.compressiontype.ixx" />
     <ClCompile Include="src\Compression\Compressor.cpp" />
     <ClCompile Include="src\Compression\Decompressor.cpp" />
     <ClCompile Include="src\Com\boring32.com.comthreadscope.ixx" />

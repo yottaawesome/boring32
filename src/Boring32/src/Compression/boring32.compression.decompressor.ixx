@@ -1,9 +1,13 @@
-#pragma once
-#include <vector>
-#include <compressapi.h>
-#include "CompressionType.hpp"
+module;
 
-namespace Boring32::Compression
+#include <vector>
+#include <Windows.h>
+#include <compressapi.h>
+
+export module boring32.compression.decompressor;
+import boring32.compression.compressiontype;
+
+export namespace Boring32::Compression
 {
 	class Decompressor
 	{

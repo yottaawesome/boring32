@@ -16,6 +16,7 @@ import boring32.async.threadpools;
 import boring32.async.semaphore;
 import boring32.strings;
 import boring32.com.comthreadscope;
+import boring32.compression;
 
 #include "pathcch.h"
 #pragma comment(lib, "Pathcch.lib")
