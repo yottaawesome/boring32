@@ -1,8 +1,10 @@
 #include "pch.h"
+#include <vector>
 #include "CppUnitTest.h"
-#include "Boring32/include/Util/Util.hpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+
+import boring32.util;
 
 namespace Util
 {

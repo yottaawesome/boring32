@@ -1,6 +1,5 @@
 #include "pch.hpp"
 #include "include/Async/Async.hpp"
-#include "include/Util/Util.hpp"
 
 namespace Boring32::Async
 {

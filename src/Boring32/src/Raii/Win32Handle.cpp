@@ -5,7 +5,6 @@ module;
 #include <format>
 #include <functional>
 #include "include/Error/Error.hpp"
-#include "include/Util/Util.hpp"
 
 module boring32.raii.win32handle;
 

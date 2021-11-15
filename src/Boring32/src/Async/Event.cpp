@@ -3,7 +3,6 @@
 #include "include/Error/Win32Error.hpp"
 #include "include/Async/Event.hpp"
 #include "include/Error/Error.hpp"
-#include "include/Util/Util.hpp"
 
 namespace Boring32::Async
 {

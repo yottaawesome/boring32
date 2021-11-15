@@ -3,7 +3,6 @@
 #include "WinHttp/WinHttp.hpp"
 #include "Error/Error.hpp"
 #include "Security/Security.hpp"
-#include "Util/Util.hpp"
 #include "Crypto/Crypto.hpp"
 #include "Registry/Registry.hpp"
 #include "DataStructures/CappedStack.hpp"

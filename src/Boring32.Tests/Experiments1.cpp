@@ -18,6 +18,7 @@ import boring32.strings;
 import boring32.com.comthreadscope;
 import boring32.compression;
 import boring32.process.dynamiclinklibrary;
+import boring32.util;
 
 #include "pathcch.h"
 #pragma comment(lib, "Pathcch.lib")

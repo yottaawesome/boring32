@@ -230,7 +230,6 @@
     <ClInclude Include="include\TaskScheduler\TaskFolder.hpp" />
     <ClInclude Include="include\TaskScheduler\TaskScheduler.hpp" />
     <ClInclude Include="include\TaskScheduler\TaskService.hpp" />
-    <ClInclude Include="include\Util\Util.hpp" />
     <ClInclude Include="include\Boring32.hpp" />
     <ClInclude Include="include\WinHttp\ProxyInfo.hpp" />
     <ClInclude Include="include\WinHttp\ProxyType.hpp" />
@@ -255,6 +254,7 @@
     <ClCompile Include="src\Async\boring32.async.threadpools.ixx" />
     <ClCompile Include="src\Process\boring32.process.dynamiclinklibrary.ixx" />
     <ClCompile Include="src\Time\boring32.time.ixx" />
+    <ClCompile Include="src\Util\boring32.util.ixx" />
     <ClCompile Include="src\WinSock\boring32.winsock.ixx" />
     <ClCompile Include="src\Async\AsyncFuncs.cpp" />
     <ClCompile Include="src\Async\CriticalSectionLock.cpp" />

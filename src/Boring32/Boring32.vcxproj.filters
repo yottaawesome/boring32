@@ -48,9 +48,6 @@
     <ClInclude Include="include\Security\Sid.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Util\Util.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Boring32.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -485,6 +482,7 @@
     <ClCompile Include="src\Compression\boring32.compression.compressiontype.ixx" />
     <ClCompile Include="src\Time\boring32.time.ixx" />
     <ClCompile Include="src\Process\boring32.process.dynamiclinklibrary.ixx" />
+    <ClCompile Include="src\Util\boring32.util.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

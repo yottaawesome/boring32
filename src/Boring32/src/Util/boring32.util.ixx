@@ -1,12 +1,15 @@
-#pragma once
+module;
+
 #include <string>
 #include <stdexcept>
 #include <vector>
 #include <Windows.h>
 
-#define colconc(str1,str2) #str1 ": " #str2
+export module boring32.util;
 
-namespace Boring32::Util
+//#define colconc(str1,str2) #str1 ": " #str2
+
+export namespace Boring32::Util
 {
 	std::wstring GetCurrentExecutableDirectory();
 	SYSTEMTIME LargeIntegerTimeToSystemTime(const LARGE_INTEGER& li);
@@ -19,7 +22,7 @@ namespace Boring32::Util
 
 	// based on https://stackoverflow.com/questions/45172052/correct-way-to-initialize-a-container-of-stdbyte
 	template<typename... Ts>
-	std::vector<std::byte> ToByteVector(Ts&&... args) noexcept 
+	std::vector<std::byte> ToByteVector(Ts&&... args) noexcept
 	{
 		return{ std::byte(std::forward<Ts>(args))... };
 	}
@@ -36,8 +39,8 @@ namespace Boring32::Util
 	template<>
 	std::string ByteVectorToString(const std::vector<std::byte>& vector);
 
-	typedef std::string (*blah)(const std::vector<std::byte>& vector);// = ByteVectorToString<std::string>;
-	static blah m = ByteVectorToString<std::string>;
+	typedef std::string(*blah)(const std::vector<std::byte>& vector);// = ByteVectorToString<std::string>;
+	//static blah m = ByteVectorToString<std::string>;
 
 	using x = std::string(*)(const std::vector<std::byte>& vector);
 }

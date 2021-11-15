@@ -97,14 +97,12 @@ namespace Boring32::Process
 		if (m_libraryHandle == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": library handle is null");
 		
-		void* ptr = GetProcAddress(m_libraryHandle, symbolName.c_str());
-		if (ptr != nullptr)
+		if (void* ptr = GetProcAddress(m_libraryHandle, symbolName.c_str()))
 			return ptr;
 
 		throw Error::Win32Error(
-			std::format("{}: failed to resolve symbol: {}", __FUNCSIG__, symbolName),
-			GetLastError()
-		);
+			std::format("{}: failed to resolve symbol: {}", __FUNCSIG__, symbolName), 
+			GetLastError());
 	}
 	
 	void* DynamicLinkLibrary::Resolve(const std::string& symbolName, const std::nothrow_t&) noexcept

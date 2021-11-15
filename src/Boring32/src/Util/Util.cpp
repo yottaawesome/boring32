@@ -1,9 +1,12 @@
+module;
+
 #include "pch.hpp"
 #include <stdexcept>
 #include <chrono>
 #include "include/Error/Win32Error.hpp"
 #include "include/Error/ComError.hpp"
-#include "include/Util/Util.hpp"
+
+module boring32.util;
 
 namespace Boring32::Util
 {
@@ -91,4 +94,11 @@ namespace Boring32::Util
     {
         return { reinterpret_cast<const char*>(&vector[0]), vector.size() / sizeof(char) };
     }
+
+    /*template<typename X>
+    X Blah()
+    {
+        return X();
+    }*/
+
 }
