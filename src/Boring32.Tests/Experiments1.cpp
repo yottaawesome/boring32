@@ -19,6 +19,8 @@ import boring32.com.comthreadscope;
 import boring32.compression;
 import boring32.process.dynamiclinklibrary;
 import boring32.util;
+import boring32.datastructures.singlylinkedlist;
+import boring32.datastructures.cappedstack;
 
 #include "pathcch.h"
 #pragma comment(lib, "Pathcch.lib")

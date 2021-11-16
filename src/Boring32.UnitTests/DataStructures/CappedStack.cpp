@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "CppUnitTest.h"
-#include "Boring32/include/DataStructures/CappedStack.hpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+import boring32.datastructures.cappedstack;
 
 namespace DataStructures
 {

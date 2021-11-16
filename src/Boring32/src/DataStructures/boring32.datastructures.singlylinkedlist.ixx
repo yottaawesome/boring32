@@ -1,11 +1,14 @@
-#pragma once
+module;
+
 #include <stdexcept>
 #include <utility>
 #include <memory>
 #include <windows.h>
 #include <malloc.h>
 
-namespace Boring32::DataStructures
+export module boring32.datastructures.singlylinkedlist;
+
+export namespace Boring32::DataStructures
 {
 	template<typename T>
 	struct ListElement 

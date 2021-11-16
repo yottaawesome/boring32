@@ -1,8 +1,12 @@
-#pragma once
+module;
+
 #include <deque>
 #include <algorithm>
+#include <stdexcept>
 
-namespace Boring32::DataStructures
+export module boring32.datastructures.cappedstack;
+
+export namespace Boring32::DataStructures
 {
 	template<typename T>
 	class CappedStack
