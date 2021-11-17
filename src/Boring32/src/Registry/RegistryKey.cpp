@@ -1,8 +1,11 @@
+module;
+
 #include "pch.hpp"
 #include <utility>
 #include "include/Registry/RegistryFuncs.hpp"
-#include "include/Registry/RegistryKey.hpp"
 #include "include/Error/Error.hpp"
+
+module boring32.registry.key;
 
 namespace Boring32::Registry
 {

@@ -1,9 +1,12 @@
-#pragma once
+module;
+
 #include <stdexcept>
 #include <memory>
 #include <Windows.h>
 
-namespace Boring32::Registry
+export module boring32.registry.key;
+
+export namespace Boring32::Registry
 {
 	class RegistryKey
 	{
