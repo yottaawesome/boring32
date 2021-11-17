@@ -211,8 +211,6 @@
     <ClInclude Include="include\Crypto\TempCertImport.hpp" />
     <ClInclude Include="include\Error\ComError.hpp" />
     <ClInclude Include="include\Error\NtStatusError.hpp" />
-    <ClInclude Include="include\Registry\Registry.hpp" />
-    <ClInclude Include="include\Registry\RegistryFuncs.hpp" />
     <ClInclude Include="include\Crypto\Crypto.hpp" />
     <ClInclude Include="include\Error\Error.hpp" />
     <ClInclude Include="include\Error\Win32Error.hpp" />
@@ -253,6 +251,8 @@
     <ClCompile Include="src\DataStructures\boring32.datastructures.ixx" />
     <ClCompile Include="src\DataStructures\boring32.datastructures.singlylinkedlist.ixx" />
     <ClCompile Include="src\Process\boring32.process.dynamiclinklibrary.ixx" />
+    <ClCompile Include="src\Registry\boring32.registry.functions.ixx" />
+    <ClCompile Include="src\Registry\boring32.registry.ixx" />
     <ClCompile Include="src\Registry\boring32.registry.key.ixx" />
     <ClCompile Include="src\Time\boring32.time.ixx" />
     <ClCompile Include="src\Util\boring32.util.ixx" />

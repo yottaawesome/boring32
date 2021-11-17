@@ -11,7 +11,7 @@ namespace Registry
 		public:
 			TEST_METHOD(TestGetString)
 			{
-				Boring32::Registry::RegistryKey reg(
+				Boring32::Registry::Key reg(
 					HKEY_LOCAL_MACHINE,
 					L"SOFTWARE\\Microsoft\\.NETFramework",
 					KEY_READ

@@ -1,7 +1,10 @@
+module;
+
 #include "pch.hpp"
 #include "include/Async/Event.hpp"
 #include "include/Error/Win32Error.hpp"
-#include "include/Registry/RegistryFuncs.hpp"
+
+module boring32.registry.functions;
 
 namespace Boring32::Registry
 {

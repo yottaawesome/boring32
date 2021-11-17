@@ -1,10 +1,13 @@
-#pragma once
+module;
+
 #include <string>
 #include <stdexcept>
 #include <Windows.h>
-#include "../Error/Win32Error.hpp"
+#include "include/Error/Win32Error.hpp"
 
-namespace Boring32::Registry
+export module boring32.registry.functions;
+
+export namespace Boring32::Registry
 {
 	template<typename T, DWORD dataType>
 	T GetValue(
@@ -38,7 +41,7 @@ namespace Boring32::Registry
 	std::wstring GetValue<std::wstring, RRF_RT_REG_SZ>(
 		const HKEY key,
 		const std::wstring& valueName
-	);
+		);
 
 	void GetValue(
 		const HKEY key,

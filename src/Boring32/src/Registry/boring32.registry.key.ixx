@@ -8,36 +8,36 @@ export module boring32.registry.key;
 
 export namespace Boring32::Registry
 {
-	class RegistryKey
+	class Key
 	{
 		public:
-			virtual ~RegistryKey();
-			RegistryKey();
-			RegistryKey(const HKEY key, const std::wstring& subkey);
-			RegistryKey(
+			virtual ~Key();
+			Key();
+			Key(const HKEY key, const std::wstring& subkey);
+			Key(
 				const HKEY key, 
 				const std::wstring& subkey, 
 				const DWORD access
 			);
-			RegistryKey(
+			Key(
 				const HKEY key, 
 				const std::wstring& subkey, 
 				const std::nothrow_t&
 			) noexcept;
-			RegistryKey(
+			Key(
 				const HKEY key, 
 				const std::wstring& subkey, 
 				const DWORD access, 
 				const std::nothrow_t&
 			) noexcept;
-			RegistryKey(const HKEY key);
-			RegistryKey(const RegistryKey& other);
-			RegistryKey(RegistryKey&& other) noexcept;
+			Key(const HKEY key);
+			Key(const Key& other);
+			Key(Key&& other) noexcept;
 
 		public:
-			virtual RegistryKey& operator=(const HKEY other);
-			virtual RegistryKey& operator=(const RegistryKey& other);
-			virtual RegistryKey& operator=(RegistryKey&& other) noexcept;
+			virtual Key& operator=(const HKEY other);
+			virtual Key& operator=(const Key& other);
+			virtual Key& operator=(Key&& other) noexcept;
 			virtual operator bool() const noexcept;
 
 		public:
@@ -61,8 +61,8 @@ export namespace Boring32::Registry
 			virtual void Export(const std::wstring& path, const DWORD flags);
 
 		protected:
-			virtual RegistryKey& Copy(const RegistryKey& other);
-			virtual RegistryKey& Move(RegistryKey& other) noexcept;
+			virtual Key& Copy(const Key& other);
+			virtual Key& Move(Key& other) noexcept;
 			virtual void InternalOpen(const HKEY key, const std::wstring& subkey);
 
 		protected:

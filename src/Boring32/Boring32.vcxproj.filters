@@ -135,9 +135,6 @@
     <ClInclude Include="include\Async\TimerQueueTimerCallback.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Registry\Registry.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\WinHttp\ProxyInfo.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -208,9 +205,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Crypto\SensitiveString.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Registry\RegistryFuncs.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Crypto\TempCertImport.hpp">
@@ -478,6 +472,8 @@
     <ClCompile Include="src\DataStructures\boring32.datastructures.singlylinkedlist.ixx" />
     <ClCompile Include="src\DataStructures\boring32.datastructures.ixx" />
     <ClCompile Include="src\Registry\boring32.registry.key.ixx" />
+    <ClCompile Include="src\Registry\boring32.registry.functions.ixx" />
+    <ClCompile Include="src\Registry\boring32.registry.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />
