@@ -30,36 +30,16 @@ export namespace Boring32::Registry
 			&sizeInBytes
 		);
 		if (status != ERROR_SUCCESS)
-			throw Error::Win32Error(
-				__FUNCSIG__ ": RegGetValueW() failed",
-				status
-			);
+			throw Error::Win32Error(__FUNCSIG__ ": RegGetValueW() failed", status);
 		return out;
 	}
 
 	template<>
-	std::wstring GetValue<std::wstring, RRF_RT_REG_SZ>(
-		const HKEY key,
-		const std::wstring& valueName
-		);
+	std::wstring GetValue<std::wstring, RRF_RT_REG_SZ>(const HKEY key, const std::wstring& valueName);
 
-	void GetValue(
-		const HKEY key,
-		const std::wstring& valueName,
-		std::wstring& out
-	);
-
-	void GetValue(
-		const HKEY key,
-		const std::wstring& valueName,
-		DWORD& out
-	);
-
-	void GetValue(
-		const HKEY key,
-		const std::wstring& valueName,
-		size_t& out
-	);
+	void GetValue(const HKEY key, const std::wstring& valueName, std::wstring& out);
+	void GetValue(const HKEY key, const std::wstring& valueName, DWORD& out);
+	void GetValue(const HKEY key, const std::wstring& valueName, size_t& out);
 
 	template<typename T>
 	void WriteValue(
@@ -77,7 +57,7 @@ export namespace Boring32::Registry
 			valueName.c_str(),
 			0,
 			type,
-			(BYTE*)&value,
+			reinterpret_cast<BYTE*>(const_cast<T*>(&value)),
 			sizeof(value)
 		);
 		if (status != ERROR_SUCCESS)
