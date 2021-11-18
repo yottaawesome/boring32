@@ -10,10 +10,7 @@ export module boring32.registry.functions;
 export namespace Boring32::Registry
 {
 	template<typename T, DWORD dataType>
-	T GetValue(
-		const HKEY key,
-		const std::wstring& valueName
-	)
+	T GetValue(const HKEY key, const std::wstring& valueName)
 	{
 		if (key == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": key is nullptr");
