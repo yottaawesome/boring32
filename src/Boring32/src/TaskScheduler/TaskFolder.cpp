@@ -1,6 +1,5 @@
 module;
 
-//#include "pch.hpp"
 #include <string>
 #include <vector>
 #include <optional>
@@ -37,13 +36,11 @@ namespace Boring32::TaskScheduler
 			throw std::runtime_error(__FUNCSIG__ ": m_taskFolder is nullptr");
 
 		ComPtr<IRegisteredTaskCollection> collection;
-		HRESULT hr = m_taskFolder->GetTasks(0, &collection);
-		if (FAILED(hr))
+		if (HRESULT hr = m_taskFolder->GetTasks(0, &collection); FAILED(hr))
 			throw Error::ComError(__FUNCSIG__ ": failed to acquire tasks", hr);
 
 		LONG count = 0;
-		collection->get_Count(&count);
-		if (FAILED(hr))
+		if (HRESULT hr = collection->get_Count(&count); FAILED(hr))
 			throw Error::ComError(__FUNCSIG__ ": failed to acquire task count", hr);
 
 		if (count == 0)
@@ -54,8 +51,7 @@ namespace Boring32::TaskScheduler
 		for (LONG i = 1; i <= count; i++)
 		{
 			ComPtr<IRegisteredTask> task;
-			hr = collection->get_Item(_variant_t(i), &task);
-			if (FAILED(hr))
+			if (HRESULT hr = collection->get_Item(_variant_t(i), &task); FAILED(hr))
 				throw Error::ComError(__FUNCSIG__ ": failed to get task item", hr);
 
 			results.push_back(task);
@@ -82,8 +78,7 @@ namespace Boring32::TaskScheduler
 			throw std::runtime_error(__FUNCSIG__ ": m_taskFolder is null");
 
 		ComPtr<IRegisteredTask> registeredTask;
-		
-		HRESULT hr = m_taskFolder->RegisterTaskDefinition(
+		const HRESULT hr = m_taskFolder->RegisterTaskDefinition(
 			_bstr_t(task.GetName().c_str()),
 			task.GetTaskDefinition().Get(),
 			TASK_CREATE_OR_UPDATE,

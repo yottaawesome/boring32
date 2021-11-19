@@ -4,7 +4,6 @@ module;
 #include <vector>
 #include <optional>
 #include <windows.h>
-#include <comdef.h>
 #include <taskschd.h>
 #include <wrl/client.h>
 
