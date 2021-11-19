@@ -1,6 +1,16 @@
+module;
+
 #include "pch.hpp"
+#include <string>
+#include <vector>
+#include <optional>
+#include <windows.h>
+#include <comdef.h>
+#include <taskschd.h>
+#include <wrl/client.h>
 #include "include/Error/Error.hpp"
-#include "include/TaskScheduler/TaskFolder.hpp"
+
+module boring32.taskscheduler.taskfolder;
 
 namespace Boring32::TaskScheduler
 {

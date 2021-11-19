@@ -221,10 +221,6 @@
     <ClInclude Include="include\Security\ImpersonationContext.hpp" />
     <ClInclude Include="include\Security\PrivateNamespace.hpp" />
     <ClInclude Include="include\Security\Token.hpp" />
-    <ClInclude Include="include\TaskScheduler\RegisteredTask.hpp" />
-    <ClInclude Include="include\TaskScheduler\TaskFolder.hpp" />
-    <ClInclude Include="include\TaskScheduler\TaskScheduler.hpp" />
-    <ClInclude Include="include\TaskScheduler\TaskService.hpp" />
     <ClInclude Include="include\Boring32.hpp" />
     <ClInclude Include="include\WinHttp\ProxyInfo.hpp" />
     <ClInclude Include="include\WinHttp\ProxyType.hpp" />
@@ -254,6 +250,10 @@
     <ClCompile Include="src\Registry\boring32.registry.functions.ixx" />
     <ClCompile Include="src\Registry\boring32.registry.ixx" />
     <ClCompile Include="src\Registry\boring32.registry.key.ixx" />
+    <ClCompile Include="src\TaskScheduler\boring32.taskscheduler.ixx" />
+    <ClCompile Include="src\TaskScheduler\boring32.taskscheduler.registeredtask.ixx" />
+    <ClCompile Include="src\TaskScheduler\boring32.taskscheduler.taskfolder.ixx" />
+    <ClCompile Include="src\TaskScheduler\boring32.taskscheduler.taskservice.ixx" />
     <ClCompile Include="src\Time\boring32.time.ixx" />
     <ClCompile Include="src\Util\boring32.util.ixx" />
     <ClCompile Include="src\WinSock\boring32.winsock.ixx" />

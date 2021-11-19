@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <windows.h>
 #include <tchar.h>
+#include <taskschd.h>
 
 #include "Boring32.Tests.h"
 #include "../Boring32/include/Boring32.hpp"
@@ -22,6 +23,7 @@ import boring32.util;
 import boring32.datastructures.singlylinkedlist;
 import boring32.datastructures.cappedstack;
 import boring32.registry;
+import boring32.taskscheduler;
 
 #include "pathcch.h"
 #pragma comment(lib, "Pathcch.lib")

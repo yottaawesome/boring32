@@ -186,18 +186,6 @@
     <ClInclude Include="include\Crypto\ChainingMode.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\TaskScheduler\TaskService.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TaskScheduler\TaskScheduler.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TaskScheduler\TaskFolder.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TaskScheduler\RegisteredTask.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Security\ImpersonationContext.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -474,6 +462,10 @@
     <ClCompile Include="src\Registry\boring32.registry.key.ixx" />
     <ClCompile Include="src\Registry\boring32.registry.functions.ixx" />
     <ClCompile Include="src\Registry\boring32.registry.ixx" />
+    <ClCompile Include="src\TaskScheduler\boring32.taskscheduler.registeredtask.ixx" />
+    <ClCompile Include="src\TaskScheduler\boring32.taskscheduler.taskfolder.ixx" />
+    <ClCompile Include="src\TaskScheduler\boring32.taskscheduler.taskservice.ixx" />
+    <ClCompile Include="src\TaskScheduler\boring32.taskscheduler.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />
