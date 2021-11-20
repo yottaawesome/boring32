@@ -33,31 +33,28 @@ wss.on('message',
   }
 );
 
-wss.on('connection', 
-	function connection(ws) {
-		console.log('Connection established');
-		// ws.send('something1');
-		// console.log('Sent');
-		//setTimeout(() => ws.close(), 5000);
+wss.on('connection', function connection(ws) {
+	console.log('Connection established');
+	// ws.send('something1');
+	// console.log('Sent');
+	//setTimeout(() => ws.close(), 5000);
 
-		ws.on('message', function incoming(message) {
-			if (message == "abort")
-				abort();
-			if (message == "echo")
-			  	ws.send(message);
-			if (message == "close")
-			  	ws.close();
-				// setTimeout(() => {
-			//  	ws.send('something1');
-			// }, 1000);
+	ws.on('message', function incoming(message) {
+		if (message == "abort")
+			abort();
+		if (message == "echo")
+			ws.send(message);
+		if (message == "close")
+			ws.close();
 			// setTimeout(() => {
-			// 	ws.send('something2');
-			// }, 1000);
-			//setTimeout(() => ws.close(), 5000);
-		});
-		
-	}
-);
+		//  	ws.send('something1');
+		// }, 1000);
+		// setTimeout(() => {
+		// 	ws.send('something2');
+		// }, 1000);
+		//setTimeout(() => ws.close(), 5000);
+	});
+});
 
 const port = 51935;
 server.listen(
