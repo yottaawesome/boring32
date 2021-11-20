@@ -22,8 +22,8 @@ export namespace Boring32::TaskScheduler
 			virtual void Close() noexcept;
 			virtual std::wstring GetName() const;
 			virtual void SetEnabled(const bool isEnabled);
-			virtual Microsoft::WRL::ComPtr<IRegisteredTask> GetRegisteredTask() const;
-			virtual Microsoft::WRL::ComPtr<ITaskDefinition> GetTaskDefinition() const;
+			virtual Microsoft::WRL::ComPtr<IRegisteredTask> GetRegisteredTask() const noexcept final;
+			virtual Microsoft::WRL::ComPtr<ITaskDefinition> GetTaskDefinition() const noexcept final;
 			virtual void SetRepetitionInterval(const DWORD intervalMinutes);
 
 			/// <summary>

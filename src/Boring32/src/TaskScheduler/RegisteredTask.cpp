@@ -23,12 +23,9 @@ namespace Boring32::TaskScheduler
 	RegisteredTask::RegisteredTask(ComPtr<IRegisteredTask> registeredTask)
 	:	m_registeredTask(std::move(registeredTask))
 	{
-		if (m_registeredTask != nullptr)
-		{
-			HRESULT hr = m_registeredTask->get_Definition(&m_taskDefinition);
-			if (FAILED(hr))
+		if (m_registeredTask)
+			if (HRESULT hr = m_registeredTask->get_Definition(&m_taskDefinition); FAILED(hr))
 				throw Error::ComError(__FUNCSIG__ ": failed to get ITaskDefinition", hr);
-		}
 	}
 
 	void RegisteredTask::Close() noexcept
@@ -42,8 +39,7 @@ namespace Boring32::TaskScheduler
 		CheckIsValid();
 
 		bstr_t taskName;
-		HRESULT hr = m_registeredTask->get_Name(taskName.GetAddress());
-		if (FAILED(hr))
+		if (HRESULT hr = m_registeredTask->get_Name(taskName.GetAddress()); FAILED(hr))
 			throw Error::ComError(__FUNCSIG__ ": failed to get Task name", hr);
 
 		return std::wstring(taskName, taskName.length());
@@ -53,8 +49,7 @@ namespace Boring32::TaskScheduler
 	{
 		CheckIsValid();
 
-		HRESULT hr = m_registeredTask->put_Enabled(isEnabled ? VARIANT_TRUE : VARIANT_FALSE);
-		if (FAILED(hr))
+		if (HRESULT hr = m_registeredTask->put_Enabled(isEnabled ? VARIANT_TRUE : VARIANT_FALSE); FAILED(hr))
 			throw Error::ComError(__FUNCSIG__ ": failed to set task enabled property", hr);
 
 		/*std::vector<ComPtr<ITrigger>> triggers = GetTriggers();
@@ -66,12 +61,12 @@ namespace Boring32::TaskScheduler
 		}*/
 	}
 
-	Microsoft::WRL::ComPtr<IRegisteredTask> RegisteredTask::GetRegisteredTask() const
+	Microsoft::WRL::ComPtr<IRegisteredTask> RegisteredTask::GetRegisteredTask() const noexcept
 	{
 		return m_registeredTask;
 	}
 
-	Microsoft::WRL::ComPtr<ITaskDefinition> RegisteredTask::GetTaskDefinition() const
+	Microsoft::WRL::ComPtr<ITaskDefinition> RegisteredTask::GetTaskDefinition() const noexcept
 	{
 		return m_taskDefinition;
 	}
@@ -82,13 +77,11 @@ namespace Boring32::TaskScheduler
 		for (auto& trigger : triggers)
 		{
 			ComPtr<IRepetitionPattern> pattern;
-			HRESULT hr = trigger->get_Repetition(&pattern);
-			if (FAILED(hr))
+			if (HRESULT hr = trigger->get_Repetition(&pattern); FAILED(hr))
 				throw Error::ComError(__FUNCSIG__ ": failed to get task repetition pattern", hr);
 
 			std::wstring interval = L"PT" + std::to_wstring(intervalMinutes) + L"M";
-			hr = pattern->put_Interval(bstr_t(interval.c_str()));
-			if (FAILED(hr))
+			if (HRESULT hr = pattern->put_Interval(bstr_t(interval.c_str())); FAILED(hr))
 				throw Error::ComError(__FUNCSIG__ ": failed to set trigger repetition pattern interval", hr);
 		}
 	}
@@ -102,8 +95,7 @@ namespace Boring32::TaskScheduler
 		// conditions, but COM does it for us and the error is descriptive, so no 
 		// need to bother.
 		ComPtr<IRunningTask> runningTask;
-		HRESULT hr = m_registeredTask->Run(_variant_t(VT_NULL), &runningTask);
-		if (FAILED(hr))
+		if (HRESULT hr = m_registeredTask->Run(_variant_t(VT_NULL), &runningTask); FAILED(hr))
 			throw Error::ComError(__FUNCSIG__ ": failed to start task", hr);
 	}
 	
@@ -151,23 +143,19 @@ namespace Boring32::TaskScheduler
 		CheckIsValid();
 
 		ComPtr<ITriggerCollection> triggers;
-		HRESULT hr = m_taskDefinition->get_Triggers(&triggers);
-		if (FAILED(hr))
+		if (HRESULT hr = m_taskDefinition->get_Triggers(&triggers); FAILED(hr))
 			throw Error::ComError(__FUNCSIG__ ": failed to get trigger collection", hr);
 
 		long count = 0;
-		hr = triggers->get_Count(&count);
-		if (FAILED(hr))
+		if (HRESULT hr = triggers->get_Count(&count); FAILED(hr))
 			throw Error::ComError(__FUNCSIG__ ": failed to get trigger collection count", hr);
 
 		std::vector<ComPtr<ITrigger>> returnVal;
 		for (int i = 1; i <= count; i++) // Collections start at 1
 		{
 			ComPtr<ITrigger> trigger = nullptr;
-			hr = triggers->get_Item(i, &trigger);
-			if (FAILED(hr))
+			if (HRESULT hr = triggers->get_Item(i, &trigger); FAILED(hr))
 				throw Error::ComError(__FUNCSIG__ ": failed to get trigger", hr);
-
 			returnVal.push_back(std::move(trigger));
 		}
 		return returnVal;
@@ -175,9 +163,9 @@ namespace Boring32::TaskScheduler
 
 	void RegisteredTask::CheckIsValid() const
 	{
-		if (m_registeredTask == nullptr)
+		if (!m_registeredTask)
 			throw std::runtime_error(__FUNCSIG__ ": m_registeredTask is nullptr");
-		if (m_taskDefinition == nullptr)
+		if (!m_taskDefinition)
 			throw std::runtime_error(__FUNCSIG__ ": m_taskDefinition is nullptr");
 	}
 }
