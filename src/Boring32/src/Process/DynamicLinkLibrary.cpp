@@ -4,6 +4,7 @@ module;
 #include "include/Error/Error.hpp"
 
 module boring32.process.dynamiclinklibrary;
+import boring32.error.win32error;
 
 namespace Boring32::Process
 {

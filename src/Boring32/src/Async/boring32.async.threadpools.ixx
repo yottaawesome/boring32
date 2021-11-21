@@ -4,9 +4,9 @@ module;
 #include <iostream>
 #include <Windows.h>
 #include <memory>
-#include "include/Error/Win32Error.hpp"
 
 export module boring32.async.threadpools;
+import boring32.error.win32error;
 
 export namespace Boring32::Async::ThreadPools
 {

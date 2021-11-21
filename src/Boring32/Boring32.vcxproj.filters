@@ -117,9 +117,6 @@
     <ClInclude Include="include\Security\Security.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Error\Win32Error.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Error\ComError.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -470,6 +467,7 @@
     <ClCompile Include="src\Error\ErrorFunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Error\boring32.error.win32error.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

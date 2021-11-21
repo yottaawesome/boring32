@@ -3,6 +3,8 @@
 #include "include/Error/Error.hpp"
 #include "include/Async/Mutex.hpp"
 
+import boring32.error.win32error;
+
 namespace Boring32::Async
 {
 	Mutex::~Mutex()

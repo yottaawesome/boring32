@@ -4,6 +4,8 @@
 #include "include/Crypto/CryptoFuncs.hpp"
 #include "include/Crypto/Certificate.hpp"
 
+import boring32.error.win32error;
+
 namespace Boring32::Crypto
 {
 	Certificate::~Certificate()

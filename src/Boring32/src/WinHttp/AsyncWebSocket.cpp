@@ -3,6 +3,8 @@
 #include "include/Error/Error.hpp"
 #include "include/WinHttp/WebSockets/AsyncWebSocket.hpp"
 
+import boring32.error.win32error;
+
 namespace Boring32::WinHttp::WebSockets
 {
 	DWORD AsyncWebSocket::m_bufferBlockSize = 1024;

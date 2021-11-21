@@ -3,9 +3,9 @@ module;
 #include <string>
 #include <stdexcept>
 #include <Windows.h>
-#include "include/Error/Win32Error.hpp"
 
 export module boring32.registry.functions;
+import boring32.error.win32error;
 
 export namespace Boring32::Registry
 {

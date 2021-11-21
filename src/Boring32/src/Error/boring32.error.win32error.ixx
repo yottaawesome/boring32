@@ -1,9 +1,12 @@
-#pragma once
+module;
+
 #include <string>
 #include <stdexcept>
 #include <Windows.h>
 
-namespace Boring32::Error
+export module boring32.error.win32error;
+
+export namespace Boring32::Error
 {
 	class Win32Error : public std::runtime_error
 	{

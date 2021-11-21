@@ -41,7 +41,7 @@ export namespace Boring32::Error
                 moduleHandle,
                 errorCode,
                 MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // TODO this is deprecated
-                static_cast<char*>(&messageBuffer),
+                static_cast<char*>(messageBuffer),
                 0,
                 nullptr
             );
@@ -53,7 +53,7 @@ export namespace Boring32::Error
                 moduleHandle,
                 errorCode,
                 MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // TODO this is deprecated
-                static_cast<wchar_t*>(&messageBuffer),
+                static_cast<wchar_t*>(messageBuffer),
                 0,
                 nullptr
             );
@@ -62,7 +62,7 @@ export namespace Boring32::Error
         if (moduleHandle)
             FreeLibrary(moduleHandle);
         if (messageBuffer == nullptr)
-            return L"";
+            return STR_T();
 
         STR_T msg(static_cast<STR_V*>(messageBuffer));
         LocalFree(messageBuffer);
@@ -71,7 +71,7 @@ export namespace Boring32::Error
     }
 
     /// <summary>
-    ///     Translates a default Win32 error code.
+    ///     Translates a default Win32 or COM error code.
     /// </summary>
     /// <typeparam name="STR_T"></typeparam>
     /// <param name="errorCode">The error code to translate.</param>

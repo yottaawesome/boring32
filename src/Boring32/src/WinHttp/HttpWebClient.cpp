@@ -4,7 +4,8 @@
 #include <functional>
 #include <sstream>
 #include "include/WinHttp/HttpWebClient.hpp"
-#include "include/Error/Win32Error.hpp"
+
+import boring32.error.win32error;
 
 namespace Boring32::WinHttp
 {

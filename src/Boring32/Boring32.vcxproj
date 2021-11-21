@@ -213,7 +213,6 @@
     <ClInclude Include="include\Error\NtStatusError.hpp" />
     <ClInclude Include="include\Crypto\Crypto.hpp" />
     <ClInclude Include="include\Error\Error.hpp" />
-    <ClInclude Include="include\Error\Win32Error.hpp" />
     <ClInclude Include="include\Async\Async.hpp" />
     <ClInclude Include="include\Security\Constants.hpp" />
     <ClInclude Include="include\Security\SecurityFunctions.hpp" />
@@ -247,6 +246,7 @@
     <ClCompile Include="src\DataStructures\boring32.datastructures.ixx" />
     <ClCompile Include="src\DataStructures\boring32.datastructures.singlylinkedlist.ixx" />
     <ClCompile Include="src\Error\boring32.error.functions.ixx" />
+    <ClCompile Include="src\Error\boring32.error.win32error.ixx" />
     <ClCompile Include="src\Error\ErrorFunctions.cpp" />
     <ClCompile Include="src\Process\boring32.process.dynamiclinklibrary.ixx" />
     <ClCompile Include="src\Registry\boring32.registry.functions.ixx" />

@@ -7,6 +7,8 @@
 #include "include/WinHttp/ProxyInfo.hpp"
 #include "include/Error/Error.hpp"
 
+import boring32.error.win32error;
+
 namespace Boring32::WinHttp::WebSockets
 {
 	// Adapted from https://stackoverflow.com/a/29752943/7448661

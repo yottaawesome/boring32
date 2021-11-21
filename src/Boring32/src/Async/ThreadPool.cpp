@@ -2,9 +2,9 @@ module;
 
 #include "pch.hpp"
 #include <tuple>
-#include "include/Error/Win32Error.hpp"
 
 module boring32.async.threadpools;
+import boring32.error.win32error;
 
 namespace Boring32::Async::ThreadPools
 {

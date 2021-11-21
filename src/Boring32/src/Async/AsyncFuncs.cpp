@@ -2,11 +2,11 @@
 #include <stdexcept>
 #include <format>
 #include <TlHelp32.h>
-#include "include/Error/Win32Error.hpp"
 #include "include/Async/AsyncFuncs.hpp"
 
 import boring32.raii.win32handle;
 import boring32.strings;
+import boring32.error.win32error;
 
 namespace Boring32::Async
 {

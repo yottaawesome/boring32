@@ -1,6 +1,11 @@
-#include "pch.hpp"
+module;
+
+#include <stdexcept>
 #include <format>
-#include "include/Error/Error.hpp"
+#include "Windows.h"
+
+module boring32.error.win32error;
+import boring32.error.functions;
 
 namespace Boring32::Error
 {
@@ -17,7 +22,7 @@ namespace Boring32::Error
 		: std::runtime_error(msg),
 		m_errorCode(errorCode)
 	{
-		Boring32::Error::GetErrorCodeString(errorCode, m_errorString);
+		m_errorString = Boring32::Error::TranslateErrorCode<std::string>(errorCode);
 		m_errorString = std::format("{} (win32 code: {}, {:#X}): {}", msg, errorCode, errorCode, m_errorString);
 	}
 
@@ -25,7 +30,7 @@ namespace Boring32::Error
 		: std::runtime_error(msg),
 		m_errorCode(errorCode)
 	{
-		Boring32::Error::GetErrorCodeString(errorCode, m_errorString);
+		m_errorString = Boring32::Error::TranslateErrorCode<std::string>(errorCode);
 		m_errorString = std::format("{} (win32 code: {}, {:#X}): {}", msg, errorCode, errorCode, m_errorString);
 	}
 

@@ -7,6 +7,7 @@ module;
 #include "include/Error/Error.hpp"
 
 module boring32.raii.win32handle;
+import boring32.error.win32error;
 
 namespace Boring32::Raii
 {

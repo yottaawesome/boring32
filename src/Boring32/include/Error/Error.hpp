@@ -4,7 +4,6 @@
 #include <iostream>
 #include <sstream>
 #include <utility>
-#include "Win32Error.hpp"
 #include "NtStatusError.hpp"
 #include "ComError.hpp"
 
