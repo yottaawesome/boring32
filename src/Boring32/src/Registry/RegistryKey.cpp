@@ -6,6 +6,7 @@ module;
 
 module boring32.registry.key;
 import boring32.registry.functions;
+import boring32.error.functions;
 
 namespace Boring32::Registry
 {

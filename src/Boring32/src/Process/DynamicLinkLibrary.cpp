@@ -5,6 +5,7 @@ module;
 
 module boring32.process.dynamiclinklibrary;
 import boring32.error.win32error;
+import boring32.error.functions;
 
 namespace Boring32::Process
 {

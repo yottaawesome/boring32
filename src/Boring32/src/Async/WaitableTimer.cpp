@@ -4,6 +4,7 @@
 #include "include/Async/WaitableTimer.hpp"
 
 import boring32.error.win32error;
+import boring32.error.functions;
 
 //https://docs.microsoft.com/en-us/windows/win32/sync/using-a-waitable-timer-with-an-asynchronous-procedure-call
 namespace Boring32::Async

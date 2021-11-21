@@ -1,6 +1,7 @@
 module;
 
 #include <string>
+#include <iostream>
 #include <memory>
 #include <Windows.h>
 
@@ -8,6 +9,56 @@ export module boring32.error.functions;
 
 export namespace Boring32::Error
 {
+    template<typename T, typename S>
+    bool TryCatchLogToWCerr(const T& function, const S* string) noexcept
+    {
+        try
+        {
+            function();
+            return true;
+        }
+        catch (const std::exception& ex)
+        {
+            std::wcerr
+                << string
+                << L" "
+                << ex.what()
+                << std::endl;
+            return false;
+        }
+    }
+
+    template<typename T, typename S>
+    bool TryCatchLogToWCerr(const T& function, const S& string) noexcept
+    {
+        return TryCatchLogToWCerr(function, string.c_str());
+    }
+
+    template<typename S, typename...Args>
+    bool TryCatchLogToWCerr(
+        const auto function,
+        const auto type,
+        const S& string,
+        Args&&...args
+    ) noexcept
+    {
+        try
+        {
+            //((*type).*function)(std::forward<Args>(args)...);
+            (type->*function)(std::forward<Args>(args)...);
+            return true;
+        }
+        catch (const std::exception& ex)
+        {
+            std::wcerr
+                << string
+                << L" "
+                << ex.what()
+                << std::endl;
+            return false;
+        }
+    }
+
     /// <summary>
     ///     Translates Win32 errors, including COM errors, to human-readable error strings.
     ///     Some error codes are defined in specific modules; pass in the module as the 
