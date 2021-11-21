@@ -1,7 +1,7 @@
 module;
 
-#include "pch.hpp"
 #include <string>
+#include <Windows.h>
 
 module boring32.winsock;
 import boring32.error.functions;
