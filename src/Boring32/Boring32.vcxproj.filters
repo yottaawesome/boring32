@@ -466,6 +466,10 @@
     <ClCompile Include="src\TaskScheduler\boring32.taskscheduler.taskfolder.ixx" />
     <ClCompile Include="src\TaskScheduler\boring32.taskscheduler.taskservice.ixx" />
     <ClCompile Include="src\TaskScheduler\boring32.taskscheduler.ixx" />
+    <ClCompile Include="src\Error\boring32.error.functions.ixx" />
+    <ClCompile Include="src\Error\ErrorFunctions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />
