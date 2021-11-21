@@ -1,9 +1,9 @@
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Error/NtStatusError.hpp"
 #include "include/Security/ImpersonationContext.hpp"
 
 import boring32.error.win32error;
+import boring32.error.ntstatuserror;
 
 namespace Boring32::Security
 {

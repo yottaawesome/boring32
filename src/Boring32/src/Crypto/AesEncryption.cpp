@@ -1,7 +1,8 @@
 #include "pch.hpp"
-#include "include/Error/NtStatusError.hpp"
 //#include <ntstatus.h>
 #include "include/Crypto/AesEncryption.hpp"
+
+import boring32.error.ntstatuserror;
 
 // See: https://docs.microsoft.com/en-us/windows/win32/seccng/encrypting-data-with-cng
 namespace Boring32::Crypto

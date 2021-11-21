@@ -209,9 +209,7 @@
     <ClInclude Include="include\Crypto\SecureString.hpp" />
     <ClInclude Include="include\Crypto\SensitiveString.hpp" />
     <ClInclude Include="include\Crypto\TempCertImport.hpp" />
-    <ClInclude Include="include\Error\NtStatusError.hpp" />
     <ClInclude Include="include\Crypto\Crypto.hpp" />
-    <ClInclude Include="include\Error\Error.hpp" />
     <ClInclude Include="include\Async\Async.hpp" />
     <ClInclude Include="include\Security\Constants.hpp" />
     <ClInclude Include="include\Security\SecurityFunctions.hpp" />
@@ -247,6 +245,7 @@
     <ClCompile Include="src\Error\boring32.error.comerror.ixx" />
     <ClCompile Include="src\Error\boring32.error.functions.ixx" />
     <ClCompile Include="src\Error\boring32.error.ixx" />
+    <ClCompile Include="src\Error\boring32.error.ntstatuserror.ixx" />
     <ClCompile Include="src\Error\boring32.error.win32error.ixx" />
     <ClCompile Include="src\Error\ErrorFunctions.cpp" />
     <ClCompile Include="src\Process\boring32.process.dynamiclinklibrary.ixx" />

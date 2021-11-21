@@ -57,9 +57,6 @@
     <ClInclude Include="include\WinHttp\WinHttpHandle.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Error\Error.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\WinHttp\HttpWebClient.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -169,9 +166,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Crypto\AesEncryption.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Error\NtStatusError.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Crypto\CryptoKey.hpp">
@@ -467,6 +461,7 @@
     <ClCompile Include="src\Error\boring32.error.win32error.ixx" />
     <ClCompile Include="src\Error\boring32.error.ixx" />
     <ClCompile Include="src\Error\boring32.error.comerror.ixx" />
+    <ClCompile Include="src\Error\boring32.error.ntstatuserror.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

@@ -1,5 +1,11 @@
-#include "pch.hpp"
-#include "include/Error/Error.hpp"
+module;
+
+#include <string>
+#include <format>
+#include <Windows.h>
+
+module boring32.error.ntstatuserror;
+import boring32.error.functions;
 
 namespace Boring32::Error
 {
@@ -10,14 +16,16 @@ namespace Boring32::Error
 		: std::runtime_error(msg),
 		m_errorCode(errorCode)
 	{
-		m_errorString = Boring32::Error::CreateErrorStringFromNtStatus(msg, errorCode);
+		m_errorString = Boring32::Error::GetNtStatusCode<std::string>(errorCode);
+		m_errorString = std::format("{} (NTSTATUS code: {}, {:#X}): {}", msg, errorCode, errorCode, m_errorString);
 	}
 
 	NtStatusError::NtStatusError(const std::string& msg, const LONG errorCode)
 		: std::runtime_error(msg),
 		m_errorCode(errorCode)
 	{
-		m_errorString = Boring32::Error::CreateErrorStringFromNtStatus(msg, errorCode);
+		m_errorString = Boring32::Error::GetNtStatusCode<std::string>(errorCode);
+		m_errorString = std::format("{} (NTSTATUS code: {}, {:#X}): {}", msg, errorCode, errorCode, m_errorString);
 	}
 
 	LONG NtStatusError::GetErrorCode() const noexcept

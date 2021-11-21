@@ -5,7 +5,6 @@
 #include <sstream>
 #include "include/WinHttp/WebSockets/WebSocket.hpp"
 #include "include/WinHttp/ProxyInfo.hpp"
-#include "include/Error/Error.hpp"
 
 import boring32.error.win32error;
 

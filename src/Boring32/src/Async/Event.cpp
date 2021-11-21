@@ -1,7 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
 #include "include/Async/Event.hpp"
-#include "include/Error/Error.hpp"
 
 import boring32.error.win32error;
 import boring32.error.functions;

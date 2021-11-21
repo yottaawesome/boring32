@@ -3,7 +3,6 @@
 #include <iostream>
 #include <vector>
 #include <cryptuiapi.h>
-#include "include/Error/Error.hpp"
 #include "include/Crypto/CryptoFuncs.hpp"
 #include "include/Crypto/CertStore.hpp"
 

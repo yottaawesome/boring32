@@ -2,7 +2,6 @@
 #include <thread>
 #include "CppUnitTest.h"
 #include "Boring32/include/Async/Async.hpp"
-#include "Boring32/include/Error/Error.hpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 

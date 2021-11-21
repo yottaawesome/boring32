@@ -2,7 +2,6 @@
 #include <future>
 #include <algorithm>
 #include <map>
-#include "include/Error/Error.hpp"
 #include "include/WinHttp/WebSockets/AsyncWebSocket.hpp"
 
 import boring32.strings;

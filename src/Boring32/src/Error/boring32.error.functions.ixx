@@ -154,6 +154,16 @@ export namespace Boring32::Error
         LibPtr lib(LoadLibraryW(L"ntdll.dll"));*/
         return TranslateErrorCode<STR_T>(errorCode, L"ntdll.dll");
     }
+
+    std::stringstream& PrintExceptionToStringStream(
+        const std::exception& ex,
+        std::stringstream& ss
+    );
+
+    std::wstringstream& PrintExceptionToStringStream(
+        const std::exception& ex,
+        std::wstringstream& ss
+    );
 }
 
 module :private;
