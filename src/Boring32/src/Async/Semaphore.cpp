@@ -4,9 +4,9 @@ module;
 #include <stdexcept>
 #include <string>
 #include <format>
-#include "include/Error/Win32Error.hpp"
 
 module boring32.async.semaphore;
+import boring32.error.win32error;
 
 namespace Boring32::Async
 {

@@ -3,7 +3,8 @@
 //#include <winternl.h>
 //#include <ntstatus.h>
 #include "include/Async/OverlappedOp.hpp"
-#include "include/Error/Win32Error.hpp"
+
+import boring32.error.win32error;
 
 namespace Boring32::Async
 {

@@ -468,6 +468,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Error\boring32.error.win32error.ixx" />
+    <ClCompile Include="src\Error\boring32.error.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

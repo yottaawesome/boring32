@@ -246,6 +246,7 @@
     <ClCompile Include="src\DataStructures\boring32.datastructures.ixx" />
     <ClCompile Include="src\DataStructures\boring32.datastructures.singlylinkedlist.ixx" />
     <ClCompile Include="src\Error\boring32.error.functions.ixx" />
+    <ClCompile Include="src\Error\boring32.error.ixx" />
     <ClCompile Include="src\Error\boring32.error.win32error.ixx" />
     <ClCompile Include="src\Error\ErrorFunctions.cpp" />
     <ClCompile Include="src\Process\boring32.process.dynamiclinklibrary.ixx" />

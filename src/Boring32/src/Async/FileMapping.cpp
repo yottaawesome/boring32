@@ -3,9 +3,9 @@ module;
 #include <string>
 #include <stdexcept>
 #include <Windows.h>
-#include "include/Error/Win32Error.hpp"
 
 module boring32.async.filemapping;
+import boring32.error.win32error;
 
 namespace Boring32::Async
 {
