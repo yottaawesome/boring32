@@ -91,7 +91,7 @@ export namespace Boring32::Error
                 flags,
                 moduleHandle,
                 errorCode,
-                MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // TODO this is deprecated
+                0,
                 static_cast<char*>(messageBuffer),
                 0,
                 nullptr
@@ -103,7 +103,7 @@ export namespace Boring32::Error
                 flags,
                 moduleHandle,
                 errorCode,
-                MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // TODO this is deprecated
+                0,
                 static_cast<wchar_t*>(messageBuffer),
                 0,
                 nullptr
