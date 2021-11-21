@@ -115,7 +115,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -156,7 +156,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -209,7 +209,6 @@
     <ClInclude Include="include\Crypto\SecureString.hpp" />
     <ClInclude Include="include\Crypto\SensitiveString.hpp" />
     <ClInclude Include="include\Crypto\TempCertImport.hpp" />
-    <ClInclude Include="include\Error\ComError.hpp" />
     <ClInclude Include="include\Error\NtStatusError.hpp" />
     <ClInclude Include="include\Crypto\Crypto.hpp" />
     <ClInclude Include="include\Error\Error.hpp" />
@@ -245,6 +244,7 @@
     <ClCompile Include="src\DataStructures\boring32.datastructures.cappedstack.ixx" />
     <ClCompile Include="src\DataStructures\boring32.datastructures.ixx" />
     <ClCompile Include="src\DataStructures\boring32.datastructures.singlylinkedlist.ixx" />
+    <ClCompile Include="src\Error\boring32.error.comerror.ixx" />
     <ClCompile Include="src\Error\boring32.error.functions.ixx" />
     <ClCompile Include="src\Error\boring32.error.ixx" />
     <ClCompile Include="src\Error\boring32.error.win32error.ixx" />

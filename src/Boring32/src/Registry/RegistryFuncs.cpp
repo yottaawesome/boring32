@@ -2,9 +2,9 @@ module;
 
 #include "pch.hpp"
 #include "include/Async/Event.hpp"
-#include "include/Error/Win32Error.hpp"
 
 module boring32.registry.functions;
+import boring32.error.win32error;
 
 namespace Boring32::Registry
 {

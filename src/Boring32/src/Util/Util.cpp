@@ -1,12 +1,14 @@
 module;
 
-#include "pch.hpp"
 #include <stdexcept>
 #include <chrono>
-#include "include/Error/Win32Error.hpp"
-#include "include/Error/ComError.hpp"
+#include <Windows.h>
+#include <comdef.h>
+#include <pathcch.h>
 
 module boring32.util;
+import boring32.error.win32error;
+import boring32.error.comerror;
 
 namespace Boring32::Util
 {

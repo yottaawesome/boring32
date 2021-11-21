@@ -10,6 +10,7 @@ module;
 
 module boring32.taskscheduler.taskservice;
 import boring32.error.functions;
+import boring32.error.comerror;
 
 namespace Boring32::TaskScheduler
 {

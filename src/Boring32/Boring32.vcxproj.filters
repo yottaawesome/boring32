@@ -117,9 +117,6 @@
     <ClInclude Include="include\Security\Security.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Error\ComError.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Async\TimerQueue.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -469,6 +466,7 @@
     </ClCompile>
     <ClCompile Include="src\Error\boring32.error.win32error.ixx" />
     <ClCompile Include="src\Error\boring32.error.ixx" />
+    <ClCompile Include="src\Error\boring32.error.comerror.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

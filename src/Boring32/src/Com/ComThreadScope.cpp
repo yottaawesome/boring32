@@ -2,9 +2,9 @@ module;
 
 #include "pch.hpp"
 #include <stdexcept>
-#include "include/Error/ComError.hpp"
 
 module boring32.com.comthreadscope;
+import boring32.error.comerror;
 
 namespace Boring32::Com
 {

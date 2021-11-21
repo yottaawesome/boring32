@@ -10,6 +10,7 @@ module;
 #include "include/Error/Error.hpp"
 
 module boring32.taskscheduler.registeredtask;
+import boring32.error.comerror;
 
 namespace Boring32::TaskScheduler
 {

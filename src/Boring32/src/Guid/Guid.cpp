@@ -2,9 +2,9 @@ module;
 
 #include "pch.hpp"
 #include "Objbase.h"
-#include "include/Error/Error.hpp"
 
 module boring32.guid;
+import boring32.error.comerror;
 
 namespace Boring32::Guid
 {

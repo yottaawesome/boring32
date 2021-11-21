@@ -5,7 +5,6 @@
 #include <sstream>
 #include <utility>
 #include "NtStatusError.hpp"
-#include "ComError.hpp"
 
 namespace Boring32::Error
 {
