@@ -1,7 +1,8 @@
 #include "pch.hpp"
 #include <Sddl.h>          // for SID management
-#include "include/Error/Win32Error.hpp"
 #include "include/Security/PrivateNamespace.hpp"
+
+import boring32.error.win32error;
 
 namespace Boring32::Security
 {

@@ -1,10 +1,11 @@
 #include "pch.hpp"
 #include <Windows.h>
 #include <Wincrypt.h>
-#include "include/Error/Win32Error.hpp"
 #include "include/Error/NtStatusError.hpp"
 #include "include/Crypto/CryptoFuncs.hpp"
 #include "include/Crypto/CryptoKey.hpp"
+
+import boring32.error.win32error;
 
 namespace Boring32::Crypto
 {

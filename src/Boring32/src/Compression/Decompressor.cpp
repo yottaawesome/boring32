@@ -1,9 +1,9 @@
 module;
 
 #include "pch.hpp"
-#include "include/Error/Win32Error.hpp"
 
 module boring32.compression.decompressor;
+import boring32.error.win32error;
 
 namespace Boring32::Compression
 {

@@ -2,8 +2,9 @@
 #include <algorithm>
 #include <stdexcept>
 #include <dpapi.h>
-#include "include/Error/Win32Error.hpp"
 #include "include/Crypto/SecureString.hpp"
+
+import boring32.error.win32error;
 
 namespace Boring32::Crypto
 {

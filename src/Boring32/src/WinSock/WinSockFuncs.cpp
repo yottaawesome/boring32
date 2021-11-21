@@ -8,10 +8,10 @@ module;
 #include <ostream>
 #include <iostream>
 #include "include/Async/Event.hpp"
-#include "include/Error/Win32Error.hpp"
 
 module boring32.winsock;
 import boring32.raii.win32handle;
+import boring32.error.win32error;
 
 namespace Boring32::WinSock
 {

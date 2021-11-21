@@ -1,9 +1,9 @@
 module;
 
 #include "pch.hpp"
-#include "include/Error/Win32Error.hpp"
 
 module boring32.compression.compressor;
+import boring32.error.win32error;
 
 // For reference see: https://docs.microsoft.com/en-us/windows/win32/cmpapi/using-the-compression-api-in-block-mode
 namespace Boring32::Compression
