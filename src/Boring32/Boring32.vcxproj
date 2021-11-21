@@ -302,7 +302,6 @@
     <ClCompile Include="src\Crypto\SensitiveString.cpp" />
     <ClCompile Include="src\Crypto\TempCertImport.cpp" />
     <ClCompile Include="src\Error\ComError.cpp" />
-    <ClCompile Include="src\Error\Error.cpp" />
     <ClCompile Include="src\Error\NtStatusError.cpp" />
     <ClCompile Include="src\Error\Win32Error.cpp" />
     <ClCompile Include="src\FileSystem\File.cpp" />

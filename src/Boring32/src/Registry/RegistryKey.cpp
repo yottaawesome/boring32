@@ -2,7 +2,6 @@ module;
 
 #include "pch.hpp"
 #include <utility>
-#include "include/Error/Error.hpp"
 
 module boring32.registry.key;
 import boring32.registry.functions;

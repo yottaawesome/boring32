@@ -3,11 +3,11 @@ module;
 #include <string>
 #include <vector>
 #include <optional>
+#include <stdexcept>
 #include <windows.h>
 #include <comdef.h>
 #include <taskschd.h>
 #include <wrl/client.h>
-#include "include/Error/Error.hpp"
 
 module boring32.taskscheduler.taskfolder;
 import boring32.error.comerror;

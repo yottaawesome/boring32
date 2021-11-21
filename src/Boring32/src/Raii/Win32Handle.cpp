@@ -4,7 +4,6 @@ module;
 #include <stdexcept>
 #include <format>
 #include <functional>
-#include "include/Error/Error.hpp"
 
 module boring32.raii.win32handle;
 import boring32.error.win32error;

@@ -1,7 +1,8 @@
 module;
 
 #include <format>
-#include "include/Error/Error.hpp"
+#include <iostream>
+#include <Windows.h>
 
 module boring32.process.dynamiclinklibrary;
 import boring32.error.win32error;

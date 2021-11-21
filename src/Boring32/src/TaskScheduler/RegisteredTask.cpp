@@ -7,7 +7,6 @@ module;
 #include <comdef.h>
 #include <taskschd.h>
 #include <wrl/client.h>
-#include "include/Error/Error.hpp"
 
 module boring32.taskscheduler.registeredtask;
 import boring32.error.comerror;

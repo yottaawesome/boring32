@@ -4,7 +4,6 @@ module;
 #include <stdexcept>
 #include <algorithm>
 #include <vector>
-#include "include/Error/Error.hpp"
 
 module boring32.strings;
 import boring32.error.win32error;

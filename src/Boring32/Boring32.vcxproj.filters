@@ -251,9 +251,6 @@
     <ClCompile Include="src\Guid\Guid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Error\Error.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Util\Util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
