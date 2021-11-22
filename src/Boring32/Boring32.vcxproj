@@ -177,7 +177,6 @@
     <ClInclude Include="include\Async\Event.hpp" />
     <ClInclude Include="include\Async\EventLoop.hpp" />
     <ClInclude Include="include\Async\MemoryMappedFile.hpp" />
-    <ClInclude Include="include\Async\Mutex.hpp" />
     <ClInclude Include="include\Async\OverlappedOp.hpp" />
     <ClInclude Include="include\Async\Pipes\AnonymousPipe.hpp" />
     <ClInclude Include="include\Async\Pipes\BlockingNamedPipeClient.hpp" />
@@ -238,6 +237,7 @@
   <ItemGroup>
     <ClCompile Include="src\Async\boring32.async.filemapping.ixx" />
     <ClCompile Include="src\Async\boring32.async.job.ixx" />
+    <ClCompile Include="src\Async\boring32.async.mutex.ixx" />
     <ClCompile Include="src\Async\boring32.async.threadpools.ixx" />
     <ClCompile Include="src\DataStructures\boring32.datastructures.cappedstack.ixx" />
     <ClCompile Include="src\DataStructures\boring32.datastructures.ixx" />

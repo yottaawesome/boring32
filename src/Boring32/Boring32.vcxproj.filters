@@ -30,9 +30,6 @@
     <ClInclude Include="include\Async\MemoryMappedFile.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Async\Mutex.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Async\Event.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -457,6 +454,7 @@
     <ClCompile Include="src\Error\boring32.error.comerror.ixx" />
     <ClCompile Include="src\Error\boring32.error.ntstatuserror.ixx" />
     <ClCompile Include="src\Async\boring32.async.job.ixx" />
+    <ClCompile Include="src\Async\boring32.async.mutex.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

@@ -28,8 +28,14 @@ export namespace Boring32::Error
         }
     }
 
-    template<typename T, typename S>
-    bool TryCatchLogToWCerr(const T& function, const S& string) noexcept
+    template<typename T>
+    bool TryCatchLogToWCerr(const T& function, const std::string& string) noexcept
+    {
+        return TryCatchLogToWCerr(function, string.c_str());
+    }
+
+    template<typename T>
+    bool TryCatchLogToWCerr(const T& function, const std::wstring& string) noexcept
     {
         return TryCatchLogToWCerr(function, string.c_str());
     }

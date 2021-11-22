@@ -1,9 +1,13 @@
-#include "pch.hpp"
-#include <stdexcept>
-#include "include/Async/Mutex.hpp"
+module;
 
+#include <stdexcept>
+#include <string>
+#include <iostream>
+#include <format>
+#include <Windows.h>
+
+module boring32.async.mutex;
 import boring32.error.win32error;
-import boring32.error.functions;
 
 namespace Boring32::Async
 {
@@ -141,12 +145,19 @@ namespace Boring32::Async
 		return m_locked;
 	}
 
-	bool Mutex::Lock(const DWORD waitTime, const bool isAlertable, std::nothrow_t) noexcept
+	bool Mutex::Lock(const DWORD waitTime, const bool isAlertable, std::nothrow_t) noexcept try
 	{
-		return Error::TryCatchLogToWCerr(
+		return Lock(waitTime, isAlertable);
+		// causes multiply defined symbols error for some reason
+		/*return Error::TryCatchLogToWCerr(
 			[this, &waitTime, &isAlertable] { Lock(waitTime, isAlertable); }, 
 			__FUNCSIG__
-		);
+		);*/
+	}
+	catch (const std::exception& ex)
+	{
+		std::wcerr << std::format("{}: Lock() failed: {}\n", __FUNCSIG__, ex.what()).c_str();
+		return false;
 	}
 
 	void Mutex::Unlock()
@@ -159,9 +170,15 @@ namespace Boring32::Async
 		m_locked = false;
 	}
 
-	bool Mutex::Unlock(std::nothrow_t) noexcept
+	bool Mutex::Unlock(std::nothrow_t) noexcept try
 	{
-		return Error::TryCatchLogToWCerr([this] { Unlock(); }, __FUNCSIG__);
+		Unlock();
+		return true;
+	}
+	catch (const std::exception& ex)
+	{
+		std::wcerr << std::format("{}: Unlock() failed: {}\n", __FUNCSIG__, ex.what()).c_str();
+		return false;
 	}
 
 	HANDLE Mutex::GetHandle() const noexcept

@@ -8,6 +8,7 @@
 #include <windows.h>
 #include <tchar.h>
 #include <taskschd.h>
+#include "pathcch.h"
 
 #include "Boring32.Tests.h"
 #include "../Boring32/include/Boring32.hpp"
@@ -25,8 +26,8 @@ import boring32.datastructures.cappedstack;
 import boring32.registry;
 import boring32.taskscheduler;
 import boring32.async.job;
+import boring32.async.mutex;
 
-#include "pathcch.h"
 #pragma comment(lib, "Pathcch.lib")
 
 void print_exception_info(const std::exception& e)
