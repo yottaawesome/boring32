@@ -9,23 +9,21 @@ export module boring32.error.functions;
 
 export namespace Boring32::Error
 {
-    template<typename T, typename S>
-    bool TryCatchLogToWCerr(const T& function, const S* string) noexcept
+    template<typename T, typename S> 
+        requires std::is_same<S,char>::value || std::is_same<S, wchar_t>::value
+    bool TryCatchLogToWCerr(const T& function, const S* string) noexcept try
     {
-        try
-        {
-            function();
-            return true;
-        }
-        catch (const std::exception& ex)
-        {
-            std::wcerr
-                << string
-                << L" "
-                << ex.what()
-                << std::endl;
-            return false;
-        }
+        function();
+        return true;
+    }
+    catch (const std::exception& ex)
+    {
+        std::wcerr
+            << string
+            << L" "
+            << ex.what()
+            << std::endl;
+        return false;
     }
 
     template<typename T>
@@ -95,11 +93,8 @@ export namespace Boring32::Error
     /// <returns>The translated error string or a default error string if the function fails.</returns>
     template<typename STR_T>
     STR_T TranslateErrorCode(const DWORD errorCode, const std::wstring& moduleName)
+        requires std::is_same<std::string, STR_T>::value || std::is_same<std::wstring, STR_T>::value
     {
-        static_assert(
-            std::is_same<std::basic_string<char>, STR_T>::value || std::is_same<std::basic_string<wchar_t>, STR_T>::value, 
-            __FUNCTION__ "(): STR_T must be either a std::string or std::wstring");
-
         // Retrieve the system error message for the last-error code
         HMODULE moduleHandle = moduleName.empty() ? nullptr : LoadLibraryW(moduleName.c_str());
         const DWORD flags =

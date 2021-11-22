@@ -27,6 +27,7 @@ import boring32.registry;
 import boring32.taskscheduler;
 import boring32.async.job;
 import boring32.async.mutex;
+import boring32.error.functions;
 
 #pragma comment(lib, "Pathcch.lib")
 
