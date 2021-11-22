@@ -24,6 +24,7 @@ import boring32.datastructures.singlylinkedlist;
 import boring32.datastructures.cappedstack;
 import boring32.registry;
 import boring32.taskscheduler;
+import boring32.async.job;
 
 #include "pathcch.h"
 #pragma comment(lib, "Pathcch.lib")

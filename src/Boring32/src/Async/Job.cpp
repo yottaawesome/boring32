@@ -1,7 +1,10 @@
-#include "pch.hpp"
-#include <stdexcept>
-#include "include/Async/Job.hpp"
+module;
 
+#include <stdexcept>
+#include <Windows.h>
+#include <Jobapi2.h>
+
+module boring32.async.job;
 import boring32.error.win32error;
 
 namespace Boring32::Async

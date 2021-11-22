@@ -1,10 +1,12 @@
-#pragma once
+module;
+
 #include <Windows.h>
 #include <string>
 
+export module boring32.async.job;
 import boring32.raii.win32handle;
 
-namespace Boring32::Async
+export namespace Boring32::Async
 {
 	class Job
 	{

@@ -42,9 +42,6 @@
     <ClInclude Include="include\Async\Thread.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Async\Job.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Security\Sid.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -459,6 +456,7 @@
     <ClCompile Include="src\Error\boring32.error.ixx" />
     <ClCompile Include="src\Error\boring32.error.comerror.ixx" />
     <ClCompile Include="src\Error\boring32.error.ntstatuserror.ixx" />
+    <ClCompile Include="src\Async\boring32.async.job.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

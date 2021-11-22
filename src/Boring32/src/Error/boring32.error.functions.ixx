@@ -59,6 +59,24 @@ export namespace Boring32::Error
         }
     }
 
+    template<typename S>
+    struct ErrorFormatter
+    {
+        static S FormatCode(const DWORD errorCode, const DWORD flags, HMODULE moduleToSearch) { static_assert(false); }
+    };
+
+    template<>
+    struct ErrorFormatter<std::string>
+    {
+        static std::string FormatCode(const DWORD errorCode, const DWORD flags, HMODULE moduleToSearch);
+    };
+
+    template<>
+    struct ErrorFormatter<std::wstring>
+    {
+        static std::wstring FormatCode(const DWORD errorCode, const DWORD flags, HMODULE moduleToSearch);
+    };
+
     /// <summary>
     ///     Translates Win32 errors, including COM errors, to human-readable error strings.
     ///     Some error codes are defined in specific modules; pass in the module as the 
@@ -69,7 +87,7 @@ export namespace Boring32::Error
     /// <param name="errorCode">The error code to translate.</param>
     /// <param name="moduleName">Optional. The module name to translate from.</param>
     /// <returns>The translated error string or a default error string if the function fails.</returns>
-    template<typename STR_T, typename STR_V = STR_T::value_type>
+    template<typename STR_T>
     STR_T TranslateErrorCode(const DWORD errorCode, const std::wstring& moduleName)
     {
         static_assert(
@@ -77,48 +95,17 @@ export namespace Boring32::Error
             __FUNCTION__ "(): STR_T must be either a std::string or std::wstring");
 
         // Retrieve the system error message for the last-error code
-        void* messageBuffer = nullptr;
         HMODULE moduleHandle = moduleName.empty() ? nullptr : LoadLibraryW(moduleName.c_str());
         const DWORD flags =
             FORMAT_MESSAGE_ALLOCATE_BUFFER |
             FORMAT_MESSAGE_FROM_SYSTEM |
             FORMAT_MESSAGE_IGNORE_INSERTS |
             (moduleHandle ? FORMAT_MESSAGE_FROM_HMODULE : 0);
-
-        if (std::is_same<STR_V, char>::value)
-        {
-            FormatMessageA(
-                flags,
-                moduleHandle,
-                errorCode,
-                0,
-                static_cast<char*>(messageBuffer),
-                0,
-                nullptr
-            );
-        }
-        else
-        {
-            FormatMessageW(
-                flags,
-                moduleHandle,
-                errorCode,
-                0,
-                static_cast<wchar_t*>(messageBuffer),
-                0,
-                nullptr
-            );
-        }
-
+        const STR_T errorString = ErrorFormatter<STR_T>::FormatCode(errorCode, flags, moduleHandle);
         if (moduleHandle)
             FreeLibrary(moduleHandle);
-        if (messageBuffer == nullptr)
-            return STR_T();
 
-        STR_T msg(static_cast<STR_V*>(messageBuffer));
-        LocalFree(messageBuffer);
-
-        return msg;
+        return errorString;
     }
 
     /// <summary>
