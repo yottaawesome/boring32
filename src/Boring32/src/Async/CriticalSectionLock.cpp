@@ -1,6 +1,8 @@
-#include "pch.hpp"
-#include <stdexcept>
-#include "include/Async/CriticalSectionLock.hpp"
+module;
+
+#include <Windows.h>
+
+module boring32.async.criticalsectionlock;
 
 namespace Boring32::Async
 {

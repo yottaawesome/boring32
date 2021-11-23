@@ -4,7 +4,8 @@
 #include <algorithm>
 #include <Windows.h>
 #include "Event.hpp"
-#include "CriticalSectionLock.hpp"
+
+import boring32.async.criticalsectionlock;
 
 namespace Boring32::Async
 {

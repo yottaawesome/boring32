@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "CppUnitTest.h"
-#include "Boring32/include/Async/WaitableTimer.hpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+import boring32.async.waitabletimer;
 
 namespace Async
 {

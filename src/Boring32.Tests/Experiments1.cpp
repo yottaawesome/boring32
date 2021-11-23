@@ -28,6 +28,7 @@ import boring32.taskscheduler;
 import boring32.async.job;
 import boring32.async.mutex;
 import boring32.error.functions;
+import boring32.async.waitabletimer;
 
 #pragma comment(lib, "Pathcch.lib")
 

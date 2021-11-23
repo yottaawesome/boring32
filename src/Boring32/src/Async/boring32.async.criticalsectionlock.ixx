@@ -1,7 +1,10 @@
-#pragma once
+module;
+
 #include <windows.h>
 
-namespace Boring32::Async
+export module boring32.async.criticalsectionlock;
+
+export namespace Boring32::Async
 {
 	class CriticalSectionLock
 	{

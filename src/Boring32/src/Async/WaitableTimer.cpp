@@ -1,9 +1,14 @@
-#include "pch.hpp"
-#include <stdexcept>
-#include "include/Async/WaitableTimer.hpp"
+module;
 
+#include <stdexcept>
+#include <string>
+#include <iostream>
+#include <format>
+#include <Windows.h>
+
+module boring32.async.waitabletimer;
 import boring32.error.win32error;
-import boring32.error.functions;
+//import boring32.error.functions;
 
 //https://docs.microsoft.com/en-us/windows/win32/sync/using-a-waitable-timer-with-an-asynchronous-procedure-call
 namespace Boring32::Async
@@ -116,13 +121,20 @@ namespace Boring32::Async
 		const PTIMERAPCROUTINE callback,
 		void* param,
 		std::nothrow_t
-	) noexcept
+	) noexcept try
 	{
-		return Error::TryCatchLogToWCerr(
+		SetTimerInNanos(hundedNsIntervals, period, callback, param);
+		return true;
+		/*return Error::TryCatchLogToWCerr(
 			[this, hundedNsIntervals, period, callback, param]
 				{ SetTimerInNanos(hundedNsIntervals, period, callback, param); },
 			__FUNCSIG__
-		);
+		);*/
+	}
+	catch (const std::exception& ex)
+	{
+		std::wcerr << std::format("{}: SetTimerInNanos() failed: {}\n", __FUNCSIG__, ex.what()).c_str();
+		return false;
 	}
 
 	void WaitableTimer::SetTimerInMillis(
@@ -143,13 +155,20 @@ namespace Boring32::Async
 		const PTIMERAPCROUTINE callback,
 		void* param,
 		std::nothrow_t
-	) noexcept
+	) noexcept try
 	{
-		return Error::TryCatchLogToWCerr(
+		SetTimerInMillis(milliseconds, period, callback, param);
+		return true;
+		/*return Error::TryCatchLogToWCerr(
 			[this, milliseconds, period, callback, param]
 				{ SetTimerInMillis(milliseconds, period, callback, param); },
 			__FUNCSIG__
-		);
+		);*/
+	}
+	catch (const std::exception& ex)
+	{
+		std::wcerr << std::format("{}: SetTimerInMillis() failed: {}\n", __FUNCSIG__, ex.what()).c_str();
+		return false;
 	}
 
 	void WaitableTimer::InternalSetTimer(
@@ -198,12 +217,18 @@ namespace Boring32::Async
 		return false;
 	}
 
-	bool WaitableTimer::WaitOnTimer(const DWORD millis, std::nothrow_t) noexcept
+	bool WaitableTimer::WaitOnTimer(const DWORD millis, std::nothrow_t) noexcept try
 	{
-		return Error::TryCatchLogToWCerr(
-			[this, millis] { WaitOnTimer(millis); },
+		return WaitOnTimer(millis);
+		/*return Error::TryCatchLogToWCerr(
+			[this, millis] {  },
 			__FUNCSIG__
-		);
+		);*/
+	}
+	catch (const std::exception& ex)
+	{
+		std::wcerr << std::format("{}: WaitOnTimer() failed: {}\n", __FUNCSIG__, ex.what()).c_str();
+		return false;
 	}
 
 	void WaitableTimer::CancelTimer()
@@ -216,9 +241,16 @@ namespace Boring32::Async
 			throw Error::Win32Error(__FUNCSIG__, GetLastError());
 	}
 
-	bool WaitableTimer::CancelTimer(std::nothrow_t) noexcept
+	bool WaitableTimer::CancelTimer(std::nothrow_t) noexcept try
 	{
-		return Error::TryCatchLogToWCerr([this] { this->CancelTimer(); }, __FUNCSIG__);
+		this->CancelTimer();
+		//return Error::TryCatchLogToWCerr([this] { this->CancelTimer(); }, __FUNCSIG__);
+		return true;
+	}
+	catch (const std::exception& ex)
+	{
+		std::wcerr << std::format("{}: CancelTimer() failed: {}\n", __FUNCSIG__, ex.what()).c_str();
+		return false;
 	}
 
 	bool WaitableTimer::IsManualReset() const noexcept

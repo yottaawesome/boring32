@@ -58,7 +58,7 @@ namespace Boring32::Async
 			//https://docs.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-deletetimerqueueex
 			bool succeeded = DeleteTimerQueueEx(m_timer, m_completionEvent);
 			if (succeeded == false)
-				throw Error::Win32Error("TimerQueue::Close(): DeleteTimerQueueEx() failed", GetLastError());
+				throw Error::Win32Error(__FUNCSIG__": DeleteTimerQueueEx() failed", GetLastError());
 			m_timer = nullptr;
 		}
 	}
@@ -87,6 +87,6 @@ namespace Boring32::Async
 		//https://docs.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-createtimerqueue
 		m_timer = CreateTimerQueue();
 		if (m_timer == nullptr)
-			throw Error::Win32Error("TimerQueue::InternalCreate(): CreateTimerQueue() failed", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__": CreateTimerQueue() failed", GetLastError());
 	}
 }

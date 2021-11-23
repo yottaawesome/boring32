@@ -122,6 +122,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)src;%(AdditionalIncludeDirectories);$(SolutionDir)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <EnableModules>true</EnableModules>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -163,6 +164,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <EnableModules>true</EnableModules>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -173,7 +175,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Async\AsyncFuncs.hpp" />
-    <ClInclude Include="include\Async\CriticalSectionLock.hpp" />
     <ClInclude Include="include\Async\Event.hpp" />
     <ClInclude Include="include\Async\EventLoop.hpp" />
     <ClInclude Include="include\Async\MemoryMappedFile.hpp" />
@@ -195,7 +196,6 @@
     <ClInclude Include="include\Async\TimerQueue.hpp" />
     <ClInclude Include="include\Async\TimerQueueTimer.hpp" />
     <ClInclude Include="include\Async\TimerQueueTimerCallback.hpp" />
-    <ClInclude Include="include\Async\WaitableTimer.hpp" />
     <ClInclude Include="include\Crypto\AesEncryption.hpp" />
     <ClInclude Include="include\Crypto\Certificate.hpp" />
     <ClInclude Include="include\Crypto\CertificateChain.hpp" />
@@ -234,6 +234,8 @@
     <ClInclude Include="src\targetver.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Async\borin32.async.waitabletimert.ixx" />
+    <ClCompile Include="src\Async\boring32.async.criticalsectionlock.ixx" />
     <ClCompile Include="src\Async\boring32.async.filemapping.ixx" />
     <ClCompile Include="src\Async\boring32.async.job.ixx" />
     <ClCompile Include="src\Async\boring32.async.mutex.ixx" />

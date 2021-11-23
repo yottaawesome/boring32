@@ -2,10 +2,11 @@
 #include <vector>
 #include <future>
 #include <memory>
-#include "../../Async/CriticalSectionLock.hpp"
 #include "../../Async/Event.hpp"
 #include "AsyncWebSocketSettings.hpp"
 #include "WebSocketStatus.hpp"
+
+import boring32.async.criticalsectionlock;
 
 namespace Boring32::WinHttp::WebSockets
 {

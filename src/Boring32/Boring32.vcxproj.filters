@@ -60,16 +60,10 @@
     <ClInclude Include="include\Async\ThreadStatus.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Async\WaitableTimer.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Async\SlimReadWriteLock.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Async\ThreadSafeVector.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Async\CriticalSectionLock.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Async\OverlappedIo.hpp">
@@ -453,6 +447,8 @@
     <ClCompile Include="src\Async\boring32.async.job.ixx" />
     <ClCompile Include="src\Async\boring32.async.mutex.ixx" />
     <ClCompile Include="src\Async\boring32.async.synchronizationbarrier.ixx" />
+    <ClCompile Include="src\Async\boring32.async.criticalsectionlock.ixx" />
+    <ClCompile Include="src\Async\borin32.async.waitabletimert.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

@@ -1,9 +1,9 @@
 #include "pch.hpp"
 #include <algorithm>
-#include "include/Async/CriticalSectionLock.hpp"
 #include "include/Async/EventLoop.hpp"
 
 import boring32.error.win32error;
+import boring32.async.criticalsectionlock;
 
 namespace Boring32::Async
 {
