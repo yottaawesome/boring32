@@ -1,6 +1,10 @@
-#include "pch.hpp"
-#include "include/Async/SynchronizationBarrier.hpp"
+module;
 
+#include <Windows.h>
+#include <string>
+#include <stdexcept>
+
+module boring32.async.synchronizationbarrier;
 import boring32.error.win32error;
 
 namespace Boring32::Async
@@ -25,7 +29,7 @@ namespace Boring32::Async
 	{
 		//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-initializesynchronizationbarrier
 		if (InitializeSynchronizationBarrier(&m_barrier, m_totalThreads, m_spinCount) == false)
-			throw Error::Win32Error("SynchronizationBarrier::SynchronizationBarrier(): InitializeSynchronizationBarrier() failed", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__": InitializeSynchronizationBarrier() failed", GetLastError());
 		m_isInitialized = true;
 	}
 
@@ -41,8 +45,8 @@ namespace Boring32::Async
 
 	bool SynchronizationBarrier::Enter(const DWORD flags)
 	{
-		if (m_isInitialized == false)
-			throw std::runtime_error("SynchronizationBarrier::Enter(): Barrier is no initialised");
+		if (!m_isInitialized)
+			throw std::runtime_error(__FUNCSIG__": barrier is no initialised");
 		//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-entersynchronizationbarrier
 		return EnterSynchronizationBarrier(&m_barrier, flags);
 	}

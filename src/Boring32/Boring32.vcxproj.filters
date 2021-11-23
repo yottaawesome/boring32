@@ -114,9 +114,6 @@
     <ClInclude Include="include\Async\TimerQueueTimer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Async\SynchronizationBarrier.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Async\TimerQueueTimerCallback.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -455,6 +452,7 @@
     <ClCompile Include="src\Error\boring32.error.ntstatuserror.ixx" />
     <ClCompile Include="src\Async\boring32.async.job.ixx" />
     <ClCompile Include="src\Async\boring32.async.mutex.ixx" />
+    <ClCompile Include="src\Async\boring32.async.synchronizationbarrier.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />
