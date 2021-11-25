@@ -447,6 +447,7 @@
     <ClCompile Include="src\Async\boring32.async.criticalsectionlock.ixx" />
     <ClCompile Include="src\Async\borin32.async.waitabletimert.ixx" />
     <ClCompile Include="src\Async\boring32.async.event.ixx" />
+    <ClCompile Include="src\Raii\boring32.raii.uniqueptrs.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />
