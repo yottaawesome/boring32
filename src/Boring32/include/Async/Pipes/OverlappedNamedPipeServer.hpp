@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-#include "../Event.hpp"
 #include "../OverlappedIo.hpp"
 #include "NamedPipeServerBase.hpp"
 

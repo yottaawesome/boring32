@@ -1,9 +1,13 @@
-#include "pch.hpp"
-#include <stdexcept>
-#include "include/Async/Event.hpp"
+module;
 
+#include <stdexcept>
+#include <string>
+#include <iostream>
+#include <format>
+#include <Windows.h>
+
+module boring32.async.event;
 import boring32.error.win32error;
-import boring32.error.functions;
 
 namespace Boring32::Async
 {
@@ -115,11 +119,17 @@ namespace Boring32::Async
 				throw Error::Win32Error(__FUNCSIG__ ": ResetEvent() failed", GetLastError());
 	}
 
-	bool Event::Reset(std::nothrow_t) noexcept
+	bool Event::Reset(std::nothrow_t) noexcept try
 	{
-		return Error::TryCatchLogToWCerr([this]{ Reset(); }, __FUNCSIG__);
+		Reset();
+		return true;
 	}
-	
+	catch (const std::exception& ex)
+	{
+		std::wcerr << std::format("{}: Reset() failed: {}", __FUNCSIG__, ex.what()).c_str();
+		return false;
+	}
+
 	HANDLE Event::GetHandle() const noexcept
 	{
 		return m_event.GetHandle();
@@ -154,12 +164,18 @@ namespace Boring32::Async
 		return false;
 	}
 
-	bool Event::WaitOnEvent(const DWORD millis, const bool alertable, std::nothrow_t) const noexcept
+	bool Event::WaitOnEvent(const DWORD millis, const bool alertable, std::nothrow_t) const noexcept try
 	{
 		//https://codeyarns.com/tech/2018-08-22-how-to-get-function-name-in-c.html
-		return Error::TryCatchLogToWCerr([this]{ WaitOnEvent(); }, __FUNCSIG__);
+		WaitOnEvent();
+		return true;
 	}
-	
+	catch (const std::exception& ex)
+	{
+		std::wcerr << std::format("{}: WaitOnEvent() failed: {}", __FUNCSIG__, ex.what()).c_str();
+		return false;
+	}
+
 	HANDLE Event::Detach() noexcept
 	{
 		return m_event.Detach();
@@ -173,9 +189,15 @@ namespace Boring32::Async
 			throw Error::Win32Error(__FUNCSIG__ ": Failed to signal event", GetLastError());
 	}
 
-	bool Event::Signal(std::nothrow_t) noexcept
+	bool Event::Signal(std::nothrow_t) noexcept try
 	{
-		return Error::TryCatchLogToWCerr([this]{ Signal(); }, __FUNCSIG__);
+		Signal();
+		return true;
+	}
+	catch (const std::exception& ex)
+	{
+		std::wcerr << std::format("{}: Signal() failed: {}", __FUNCSIG__, ex.what()).c_str();
+		return false;
 	}
 
 	const std::wstring& Event::GetName() const noexcept

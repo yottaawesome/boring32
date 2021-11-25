@@ -11,7 +11,7 @@ export namespace Boring32::Error
 {
     template<typename T, typename S> 
         requires std::is_same<S,char>::value || std::is_same<S, wchar_t>::value
-    bool TryCatchLogToWCerr(const T& function, const S* string) noexcept try
+    bool TryCatchLog(const T& function, const S* string) noexcept try
     {
         function();
         return true;
@@ -29,13 +29,13 @@ export namespace Boring32::Error
     template<typename T>
     bool TryCatchLogToWCerr(const T& function, const std::string& string) noexcept
     {
-        return TryCatchLogToWCerr(function, string.c_str());
+        return TryCatchLog(function, string.c_str());
     }
 
     template<typename T>
     bool TryCatchLogToWCerr(const T& function, const std::wstring& string) noexcept
     {
-        return TryCatchLogToWCerr(function, string.c_str());
+        return TryCatchLog(function, string.c_str());
     }
 
     template<typename S, typename...Args>

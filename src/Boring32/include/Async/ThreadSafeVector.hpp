@@ -3,7 +3,6 @@
 #include <vector>
 #include <algorithm>
 #include <Windows.h>
-#include "Event.hpp"
 
 import boring32.async.criticalsectionlock;
 

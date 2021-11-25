@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "CppUnitTest.h"
-#include "Boring32/include/Async/Event.hpp"
 #include "Boring32/include/Async/EventLoop.hpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+import boring32.async.event;
 
 namespace Async
 {

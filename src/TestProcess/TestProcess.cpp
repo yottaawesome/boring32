@@ -3,6 +3,8 @@
 #include <string>
 #include "../Boring32/include/Boring32.hpp"
 
+import boring32.async.event;
+
 int MainAnon(int argc, char** args)
 {
     if (argc != 4)

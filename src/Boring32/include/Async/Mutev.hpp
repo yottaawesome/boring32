@@ -1,5 +1,6 @@
 #pragma once
-#include "Event.hpp"
+
+import boring32.async.event;
 
 namespace Boring32::Async
 {

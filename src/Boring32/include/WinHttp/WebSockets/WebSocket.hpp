@@ -6,9 +6,10 @@
 #include <future>
 #include "../WinHttpHandle.hpp"
 #include "../Session.hpp"
-#include "../../Async/Event.hpp"
 #include "WebSocketStatus.hpp"
 #include "WebSocketSettings.hpp"
+
+import boring32.async.event;
 
 namespace Boring32::WinHttp::WebSockets
 {

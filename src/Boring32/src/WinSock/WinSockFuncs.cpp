@@ -7,11 +7,11 @@ module;
 #include <ws2tcpip.h>
 #include <ostream>
 #include <iostream>
-#include "include/Async/Event.hpp"
 
 module boring32.winsock;
 import boring32.raii.win32handle;
 import boring32.error.win32error;
+import boring32.async.event;
 
 namespace Boring32::WinSock
 {
