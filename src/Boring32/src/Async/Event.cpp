@@ -105,7 +105,7 @@ namespace Boring32::Async
 		return *this;
 	}
 
-	Event::operator HANDLE() const
+	Event::operator HANDLE() const noexcept
 	{
 		return *m_event;
 	}

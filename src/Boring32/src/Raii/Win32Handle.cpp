@@ -127,6 +127,11 @@ namespace Boring32::Raii
 		return m_handle ? *m_handle : nullptr;
 	}
 
+	Win32Handle::operator HANDLE() const noexcept
+	{
+		return m_handle ? *m_handle : nullptr;
+	}
+
 	Win32Handle::operator bool() const noexcept
 	{
 		return IsValidValue();

@@ -69,6 +69,12 @@ export namespace Boring32::Raii
 			/// <returns>The underlying native handle</returns>
 			virtual HANDLE operator*() const noexcept;
 
+			/// <summary>
+			///		Cast to HANDLE operator.
+			/// </summary>
+			/// <returns>The underlying native handle or nullptr</returns>
+			virtual operator HANDLE() const noexcept;
+
 			// API
 		public:
 			virtual HANDLE GetHandle() const noexcept;
