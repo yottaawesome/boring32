@@ -105,6 +105,11 @@ namespace Boring32::Async
 		return *this;
 	}
 
+	Event::operator HANDLE() const
+	{
+		return *m_event;
+	}
+
 	void Event::Move(Event& other) noexcept
 	{
 		m_isManualReset = other.m_isManualReset;

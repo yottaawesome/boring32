@@ -72,6 +72,7 @@ export namespace Boring32::Async
 		public:
 			virtual Event& operator=(const Event& other);
 			virtual Event& operator=(Event&& other) noexcept;
+			virtual operator HANDLE() const;
 
 			// API
 		public:

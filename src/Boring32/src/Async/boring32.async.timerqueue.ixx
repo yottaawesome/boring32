@@ -4,6 +4,7 @@ module;
 #include <Windows.h>
 
 export module boring32.async.timerqueue;
+import boring32.async.event;
 
 export namespace Boring32::Async
 {
@@ -16,7 +17,7 @@ export namespace Boring32::Async
 			TimerQueue(TimerQueue&& other) noexcept;
 			TimerQueue(const TimerQueue& other) = delete;
 
-			TimerQueue(const HANDLE completionEvent);
+			TimerQueue(const Async::Event& completionEvent);
 			TimerQueue(const bool waitForAllCallbacks);
 			
 		public:
@@ -34,6 +35,7 @@ export namespace Boring32::Async
 
 		protected:
 			HANDLE m_timer;
-			HANDLE m_completionEvent;
+			Async::Event m_completionEvent;
+			bool m_waitForAllCallbacks;
 	};
 }

@@ -16,14 +16,15 @@ namespace Boring32::Async
 
 	TimerQueue::TimerQueue()
 	:	m_timer(nullptr),
-		m_completionEvent(INVALID_HANDLE_VALUE)
+		m_waitForAllCallbacks(true)
 	{
 		InternalCreate();
 	}
 
-	TimerQueue::TimerQueue(const HANDLE completionEvent)
+	TimerQueue::TimerQueue(const Async::Event& completionEvent)
 	:	m_timer(nullptr),
-		m_completionEvent(completionEvent)
+		m_completionEvent(completionEvent),
+		m_waitForAllCallbacks(true)
 	{
 		if (m_completionEvent == nullptr)
 			throw std::invalid_argument(__FUNCSIG__ ": completionEvent cannot be nullptr");
@@ -34,7 +35,7 @@ namespace Boring32::Async
 
 	TimerQueue::TimerQueue(const bool waitForAllCallbacks)
 	:	m_timer(nullptr),
-		m_completionEvent(waitForAllCallbacks ? INVALID_HANDLE_VALUE : nullptr)
+		m_waitForAllCallbacks(waitForAllCallbacks)
 	{
 		InternalCreate();
 	}
@@ -70,8 +71,14 @@ namespace Boring32::Async
 	{
 		if (m_timer)
 		{
+			HANDLE argValue = INVALID_HANDLE_VALUE; // waits for all callbacks on deletion
+			if (m_completionEvent)
+				argValue = m_completionEvent.GetHandle(); // waits for all callbacks on deletion and signals event
+			else if (!m_waitForAllCallbacks)
+				argValue = nullptr; // does not wait
+
 			//https://docs.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-deletetimerqueueex
-			if (!DeleteTimerQueueEx(m_timer, m_completionEvent))
+			if (!DeleteTimerQueueEx(m_timer, argValue))
 				throw Error::Win32Error(__FUNCSIG__": DeleteTimerQueueEx() failed", GetLastError());
 			m_timer = nullptr;
 		}
