@@ -1,6 +1,7 @@
 module;
 
 #include <iostream>
+#include <stdexcept>
 #include <Windows.h>
 
 module boring32.async.timerqueue;
@@ -24,8 +25,20 @@ namespace Boring32::Async
 	:	m_timer(nullptr),
 		m_completionEvent(completionEvent)
 	{
+		if (m_completionEvent == nullptr)
+			throw std::invalid_argument(__FUNCSIG__ ": completionEvent cannot be nullptr");
+		if (m_completionEvent == INVALID_HANDLE_VALUE)
+			throw std::invalid_argument(__FUNCSIG__ ": completionEvent cannot be INVALID_HANDLE_VALUE");
 		InternalCreate();
 	}
+
+	TimerQueue::TimerQueue(const bool waitForAllCallbacks)
+	:	m_timer(nullptr),
+		m_completionEvent(waitForAllCallbacks ? INVALID_HANDLE_VALUE : nullptr)
+	{
+		InternalCreate();
+	}
+
 
 	TimerQueue::TimerQueue(TimerQueue&& other) noexcept
 	{
@@ -78,7 +91,7 @@ namespace Boring32::Async
 		}
 	}
 
-	HANDLE TimerQueue::GetHandle() const
+	HANDLE TimerQueue::GetHandle() const noexcept
 	{
 		return m_timer;
 	}
