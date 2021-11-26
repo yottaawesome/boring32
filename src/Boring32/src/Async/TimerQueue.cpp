@@ -1,7 +1,9 @@
-#include "pch.hpp"
-#include <iostream>
-#include "include/Async/TimerQueue.hpp"
+module;
 
+#include <iostream>
+#include <Windows.h>
+
+module boring32.async.timerqueue;
 import boring32.error.win32error;
 
 namespace Boring32::Async
@@ -56,8 +58,7 @@ namespace Boring32::Async
 		if (m_timer)
 		{
 			//https://docs.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-deletetimerqueueex
-			bool succeeded = DeleteTimerQueueEx(m_timer, m_completionEvent);
-			if (succeeded == false)
+			if (!DeleteTimerQueueEx(m_timer, m_completionEvent))
 				throw Error::Win32Error(__FUNCSIG__": DeleteTimerQueueEx() failed", GetLastError());
 			m_timer = nullptr;
 		}

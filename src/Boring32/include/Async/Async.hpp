@@ -7,7 +7,6 @@
 #include "Thread.hpp"
 #include "SlimReadWriteLock.hpp"
 #include "ThreadSafeVector.hpp"
-#include "TimerQueue.hpp"
 #include "TimerQueueTimer.hpp"
 #include "TimerQueueTimerCallback.hpp"
 #include "EventLoop.hpp"

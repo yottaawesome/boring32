@@ -30,6 +30,7 @@ import boring32.async.mutex;
 import boring32.error.functions;
 import boring32.async.waitabletimer;
 import boring32.async.event;
+import boring32.async.timerqueue;
 
 #pragma comment(lib, "Pathcch.lib")
 

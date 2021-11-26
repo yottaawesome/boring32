@@ -1,8 +1,11 @@
-#pragma once
-#include <Windows.h>
-#include "TimerQueueTimer.hpp"
+module;
 
-namespace Boring32::Async
+#include <stdexcept>
+#include <Windows.h>
+
+export module boring32.async.timerqueue;
+
+export namespace Boring32::Async
 {
 	//https://docs.microsoft.com/en-us/windows/win32/sync/timer-queues
 	class TimerQueue
