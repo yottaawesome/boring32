@@ -10,12 +10,12 @@ export namespace Boring32::Crypto
 {
 	class TempCertImport
 	{
-	public:
-		virtual ~TempCertImport();
-		TempCertImport(CertStore& store, Certificate& toImport);
+		public:
+			virtual ~TempCertImport();
+			TempCertImport(CertStore& store, Certificate& toImport);
 
-	protected:
-		CertStore m_store;
-		std::wstring m_thumbprint;
+		protected:
+			CertStore m_store;
+			std::wstring m_thumbprint;
 	};
 }
