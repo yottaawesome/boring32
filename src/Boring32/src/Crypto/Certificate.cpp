@@ -129,8 +129,8 @@ namespace Boring32::Crypto
 	{
 		CERT_NAME_BLOB* blob = &m_certContext->pCertInfo->Issuer;
 		return { 
-			(std::byte*)blob->pbData,
-			(std::byte*)blob->pbData + blob->cbData
+			reinterpret_cast<std::byte*>(blob->pbData),
+			reinterpret_cast<std::byte*>(blob->pbData + blob->cbData)
 		};
 	}
 
@@ -138,22 +138,21 @@ namespace Boring32::Crypto
 	{
 		CERT_NAME_BLOB* blob = &m_certContext->pCertInfo->Subject;
 		return {
-			(std::byte*)blob->pbData,
-			(std::byte*)blob->pbData + blob->cbData
+			reinterpret_cast<std::byte*>(blob->pbData),
+			reinterpret_cast<std::byte*>(blob->pbData + blob->cbData)
 		};
 	}
 
 	std::wstring Certificate::GetSignature() const
 	{
-		std::vector<std::byte> bytes = InternalCertGetProperty(CERT_SIGNATURE_HASH_PROP_ID);
-		return ToBase64WString(bytes);
+		return ToBase64WString(InternalCertGetProperty(CERT_SIGNATURE_HASH_PROP_ID));
 	}
 	
 	std::wstring Certificate::GetSignatureHashCngAlgorithm() const
 	{
 		std::vector<std::byte> bytes = InternalCertGetProperty(CERT_SIGN_HASH_CNG_ALG_PROP_ID);
 		std::wstring result(
-			(wchar_t*)&bytes[0], 
+			reinterpret_cast<wchar_t*>(&bytes[0]),
 			bytes.size() / sizeof(wchar_t)
 		);
 		if (result.size())
@@ -176,7 +175,7 @@ namespace Boring32::Crypto
 
 	std::vector<std::byte> Certificate::InternalCertGetProperty(const DWORD property) const
 	{
-		if (m_certContext == nullptr)
+		if (!m_certContext)
 			throw std::runtime_error(__FUNCSIG__ ": m_certContext is nullptr");
 
 		DWORD sizeInBytes = 0;
@@ -186,7 +185,7 @@ namespace Boring32::Crypto
 			nullptr,
 			&sizeInBytes
 		);
-		if (succeeded == false)
+		if (!succeeded)
 			throw Error::Win32Error(
 				__FUNCSIG__ ": CertGetCertificateContextProperty() failed (1)",
 				GetLastError()
@@ -199,7 +198,7 @@ namespace Boring32::Crypto
 			&returnValue[0],
 			&sizeInBytes
 		);
-		if (succeeded == false)
+		if (!succeeded)
 			throw Error::Win32Error(
 				__FUNCSIG__ ": CertGetCertificateContextProperty() failed (2)",
 				GetLastError()
