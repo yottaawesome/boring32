@@ -123,9 +123,6 @@
     <ClInclude Include="include\WinHttp\ProxyType.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Async\Mutev.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Async\EventLoop.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -446,6 +443,7 @@
     <ClCompile Include="src\Async\boring32.async.event.ixx" />
     <ClCompile Include="src\Raii\boring32.raii.uniqueptrs.ixx" />
     <ClCompile Include="src\Async\boring32.async.timerqueue.ixx" />
+    <ClCompile Include="src\Async\boring32.async.mutev.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

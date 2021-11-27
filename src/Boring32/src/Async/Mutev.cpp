@@ -1,5 +1,11 @@
-#include "pch.hpp"
-#include "include/Async/Mutev.hpp"
+module;
+
+#include <stdexcept>
+#include <format>
+#include <string>
+#include <Windows.h>
+
+module boring32.async.mutev;
 
 namespace Boring32::Async
 {
@@ -90,7 +96,11 @@ namespace Boring32::Async
 				break;
 
 			default:
-				throw std::runtime_error("Mutev::Set(): Unknown Active value: " + std::to_string((unsigned)currentActive));
+				throw std::runtime_error(
+					std::format(
+						"{}: unknown active value {}", 
+						__FUNCSIG__, 
+						static_cast<unsigned>(currentActive)));
 		}
 
 		m_currentActive = currentActive;

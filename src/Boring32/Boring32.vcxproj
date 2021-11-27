@@ -189,7 +189,6 @@
     <ClInclude Include="include\Async\Process.hpp" />
     <ClInclude Include="include\Async\ProcessInfo.hpp" />
     <ClInclude Include="include\Async\SlimReadWriteLock.hpp" />
-    <ClInclude Include="include\Async\Mutev.hpp" />
     <ClInclude Include="include\Async\Thread.hpp" />
     <ClInclude Include="include\Async\ThreadSafeVector.hpp" />
     <ClInclude Include="include\Async\TimerQueueTimer.hpp" />
@@ -237,6 +236,7 @@
     <ClCompile Include="src\Async\boring32.async.event.ixx" />
     <ClCompile Include="src\Async\boring32.async.filemapping.ixx" />
     <ClCompile Include="src\Async\boring32.async.job.ixx" />
+    <ClCompile Include="src\Async\boring32.async.mutev.ixx" />
     <ClCompile Include="src\Async\boring32.async.mutex.ixx" />
     <ClCompile Include="src\Async\boring32.async.synchronizationbarrier.ixx" />
     <ClCompile Include="src\Async\boring32.async.threadpools.ixx" />

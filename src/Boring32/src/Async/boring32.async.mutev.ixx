@@ -1,8 +1,7 @@
-#pragma once
-
+export module boring32.async.mutev;
 import boring32.async.event;
 
-namespace Boring32::Async
+export namespace Boring32::Async
 {
 	class Mutev
 	{
