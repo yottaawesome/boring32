@@ -190,7 +190,6 @@
     <ClInclude Include="include\Async\ProcessInfo.hpp" />
     <ClInclude Include="include\Async\SlimReadWriteLock.hpp" />
     <ClInclude Include="include\Async\Thread.hpp" />
-    <ClInclude Include="include\Async\ThreadSafeVector.hpp" />
     <ClInclude Include="include\Async\TimerQueueTimer.hpp" />
     <ClInclude Include="include\Async\TimerQueueTimerCallback.hpp" />
     <ClInclude Include="include\Crypto\AesEncryption.hpp" />
@@ -241,6 +240,7 @@
     <ClCompile Include="src\Async\boring32.async.synchronizationbarrier.ixx" />
     <ClCompile Include="src\Async\boring32.async.threadpools.ixx" />
     <ClCompile Include="src\Async\boring32.async.timerqueue.ixx" />
+    <ClCompile Include="src\Async\boring32.async.threadsafevector.ixx" />
     <ClCompile Include="src\DataStructures\boring32.datastructures.cappedstack.ixx" />
     <ClCompile Include="src\DataStructures\boring32.datastructures.ixx" />
     <ClCompile Include="src\DataStructures\boring32.datastructures.singlylinkedlist.ixx" />

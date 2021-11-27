@@ -60,9 +60,6 @@
     <ClInclude Include="include\Async\SlimReadWriteLock.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Async\ThreadSafeVector.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Async\OverlappedIo.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -444,6 +441,7 @@
     <ClCompile Include="src\Raii\boring32.raii.uniqueptrs.ixx" />
     <ClCompile Include="src\Async\boring32.async.timerqueue.ixx" />
     <ClCompile Include="src\Async\boring32.async.mutev.ixx" />
+    <ClCompile Include="src\Async\boring32.async.threadsafevector.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

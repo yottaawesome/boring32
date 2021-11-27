@@ -1,12 +1,15 @@
-#pragma once
+module;
+
 #include <functional>
 #include <vector>
 #include <algorithm>
 #include <Windows.h>
 
+export module boring32.async.threadsafevector;
 import boring32.async.criticalsectionlock;
+import boring32.async.event;
 
-namespace Boring32::Async
+export namespace Boring32::Async
 {
 	template<typename T>
 	class ThreadSafeVector
