@@ -1,6 +1,12 @@
-#include "pch.hpp"
+module;
+
 #include <iostream>
-#include "include/Crypto/TempCertImport.hpp"
+#include <string>
+#include <Windows.h>
+#include "include/Crypto/Certificate.hpp"
+#include "include/Crypto/CertStore.hpp"
+
+module boring32.crypto.tempcertimport;
 
 namespace Boring32::Crypto
 {
