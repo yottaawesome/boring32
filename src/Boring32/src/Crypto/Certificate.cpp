@@ -1,9 +1,10 @@
 #include "pch.hpp"
 #include "vector"
-#include "include/Crypto/CryptoFuncs.hpp"
+#include <dpapi.h>
 #include "include/Crypto/Certificate.hpp"
 
 import boring32.error.win32error;
+import boring32.crypto.functions;
 
 namespace Boring32::Crypto
 {

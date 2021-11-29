@@ -132,16 +132,10 @@
     <ClInclude Include="include\Crypto\CertStore.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Crypto\CryptoFuncs.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Crypto\Certificate.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Crypto\AesEncryption.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Crypto\CryptoKey.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Crypto\ChainingMode.hpp">
@@ -440,6 +434,8 @@
     <ClCompile Include="src\Async\boring32.async.mutev.ixx" />
     <ClCompile Include="src\Async\boring32.async.threadsafevector.ixx" />
     <ClCompile Include="src\Crypto\boring32.crypto.tempcertimport.ixx" />
+    <ClCompile Include="src\Crypto\boring32.crypto.functions.ixx" />
+    <ClCompile Include="src\Crypto\boring32.crypto.cryptokey.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

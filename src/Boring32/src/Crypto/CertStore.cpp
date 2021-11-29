@@ -3,11 +3,11 @@
 #include <iostream>
 #include <vector>
 #include <cryptuiapi.h>
-#include "include/Crypto/CryptoFuncs.hpp"
 #include "include/Crypto/CertStore.hpp"
 
 import boring32.strings;
 import boring32.error.win32error;
+import boring32.crypto.functions;
 
 namespace Boring32::Crypto
 {

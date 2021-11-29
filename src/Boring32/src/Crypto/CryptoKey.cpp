@@ -1,6 +1,11 @@
+module;
+
 #include "pch.hpp"
+#include <memory>
+#include <vector>
 //#include <ntstatus.h>
-#include "include/Crypto/CryptoKey.hpp"
+
+module boring32.crypto.cryptokey;
 
 // See: https://docs.microsoft.com/en-us/windows/win32/seccng/encrypting-data-with-cng
 namespace Boring32::Crypto

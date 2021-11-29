@@ -1,9 +1,13 @@
-#include "pch.hpp"
-#include <Windows.h>
-#include <Wincrypt.h>
-#include "include/Crypto/CryptoFuncs.hpp"
-#include "include/Crypto/CryptoKey.hpp"
+module;
 
+#include <vector>
+#include <stdexcept>
+#include <string>
+#include <Windows.h>
+#include <dpapi.h> // not including this header causes symbol has already been defined error
+#include <Wincrypt.h>
+
+module boring32.crypto.functions;
 import boring32.error.win32error;
 import boring32.error.ntstatuserror;
 

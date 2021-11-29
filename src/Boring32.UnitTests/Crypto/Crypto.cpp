@@ -1,8 +1,10 @@
 #include "pch.h"
+#include <vector>
+#include <string>
 #include "CppUnitTest.h"
-#include "Boring32/include/Crypto/CryptoFuncs.hpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+import boring32.crypto.functions;
 
 namespace Crypto
 {

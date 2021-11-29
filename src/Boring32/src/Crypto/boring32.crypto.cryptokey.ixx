@@ -1,11 +1,14 @@
-#pragma once
+module;
+
 #include <string>
 #include <vector>
 #include <memory>
 #include <Windows.h>
 #include <bcrypt.h>
 
-namespace Boring32::Crypto
+export module boring32.crypto.cryptokey;
+
+export namespace Boring32::Crypto
 {
 	class CryptoKey
 	{
@@ -13,7 +16,7 @@ namespace Boring32::Crypto
 			virtual ~CryptoKey();
 			CryptoKey();
 			CryptoKey(BCRYPT_KEY_HANDLE const keyHandle, std::vector<std::byte>&& keyObject);
-			
+
 			CryptoKey(const CryptoKey&) = delete;
 			virtual CryptoKey& operator=(const CryptoKey&) = delete;
 

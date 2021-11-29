@@ -3,8 +3,9 @@
 #include <vector>
 #include <Windows.h>
 #include <bcrypt.h>
-#include "CryptoKey.hpp"
 #include "ChainingMode.hpp"
+
+import boring32.crypto.cryptokey;
 
 namespace Boring32::Crypto
 {

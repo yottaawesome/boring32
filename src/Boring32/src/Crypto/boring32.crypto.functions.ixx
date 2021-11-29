@@ -1,12 +1,15 @@
-#pragma once
+module;
+
 #include <string>
 #include <vector>
 #include <Windows.h>
-#include <bcrypt.h>
+//#include <bcrypt.h>
 #include <dpapi.h>
-#include "CryptoKey.hpp"
 
-namespace Boring32::Crypto
+export module boring32.crypto.functions;
+import boring32.crypto.cryptokey;
+
+export namespace Boring32::Crypto
 {
 	enum class EncryptOptions
 	{
