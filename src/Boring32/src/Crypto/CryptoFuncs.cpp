@@ -23,14 +23,14 @@ namespace Boring32::Crypto
 	)
 	{
 		DATA_BLOB dataIn;
-		dataIn.pbData = (BYTE*)&data[0];
-		dataIn.cbData = (DWORD)data.size();
+		dataIn.pbData = reinterpret_cast<BYTE*>(const_cast<std::byte*>(&data[0]));
+		dataIn.cbData = static_cast<DWORD>(data.size());
 
 		DATA_BLOB additionalEntropy{ 0 };
 		if (password.empty() == false)
 		{
-			additionalEntropy.pbData = (BYTE*)&password[0];
-			additionalEntropy.cbData = (DWORD)password.size()*sizeof(wchar_t);
+			additionalEntropy.pbData = reinterpret_cast<BYTE*>(const_cast<wchar_t*>(&password[0]));
+			additionalEntropy.cbData = static_cast<DWORD>(password.size()*sizeof(wchar_t));
 		}
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata
