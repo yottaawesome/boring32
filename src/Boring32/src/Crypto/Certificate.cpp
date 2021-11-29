@@ -19,10 +19,11 @@ namespace Boring32::Crypto
 	Certificate::Certificate(PCCERT_CONTEXT certContext, const bool ownedExclusively)
 	:	m_certContext(nullptr)
 	{
-		if (certContext)
-			m_certContext = ownedExclusively
-				? certContext 
-				: CertDuplicateCertificateContext(certContext);
+		if (!certContext)
+			return; 
+		m_certContext = ownedExclusively
+			? certContext 
+			: CertDuplicateCertificateContext(certContext);
 	}
 
 	Certificate::Certificate(const Certificate& other)
@@ -127,6 +128,10 @@ namespace Boring32::Crypto
 
 	std::vector<std::byte> Certificate::GetIssuer() const
 	{
+		if (!m_certContext)
+			throw std::runtime_error(__FUNCSIG__": m_certContext is nullptr");
+		if (!m_certContext->pCertInfo)
+			return {};
 		CERT_NAME_BLOB* blob = &m_certContext->pCertInfo->Issuer;
 		return { 
 			reinterpret_cast<std::byte*>(blob->pbData),
@@ -136,6 +141,10 @@ namespace Boring32::Crypto
 
 	std::vector<std::byte> Certificate::GetSubject() const
 	{
+		if (!m_certContext)
+			throw std::runtime_error(__FUNCSIG__": m_certContext is nullptr");
+		if (!m_certContext->pCertInfo)
+			return {};
 		CERT_NAME_BLOB* blob = &m_certContext->pCertInfo->Subject;
 		return {
 			reinterpret_cast<std::byte*>(blob->pbData),
