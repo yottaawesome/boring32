@@ -87,7 +87,7 @@ namespace Boring32::Async
 	void TimerQueueTimer::Update(const ULONG dueTime, const ULONG period)
 	{
 		if (m_timerQueueTimer == nullptr || m_timerQueueTimer == INVALID_HANDLE_VALUE)
-			throw std::runtime_error("TimerQueueTimer::Update(): m_timerQueueTimer is null");
+			throw std::runtime_error(__FUNCSIG__": m_timerQueueTimer is null");
 
 		bool success = ChangeTimerQueueTimer(
 			m_timerQueue,
@@ -96,7 +96,7 @@ namespace Boring32::Async
 			period
 		);
 		if (success == false)
-			throw Error::Win32Error("TimerQueueTimer::Update(): ChangeTimerQueueTimer() failed", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__": ChangeTimerQueueTimer() failed", GetLastError());
 	}
 
 	void TimerQueueTimer::Close()
@@ -109,7 +109,7 @@ namespace Boring32::Async
 				m_completionEvent
 			);
 			if (succeeded == false)
-				throw Error::Win32Error("TimerQueueTimer::Close(): DeleteTimerQueueTimer() failed", GetLastError());
+				throw Error::Win32Error(__FUNCSIG__": DeleteTimerQueueTimer() failed", GetLastError());
 			m_timerQueueTimer = nullptr;
 		}
 	}
@@ -147,7 +147,7 @@ namespace Boring32::Async
 	void TimerQueueTimer::InternalCreate()
 	{
 		if (m_timerQueue == nullptr || m_timerQueue == INVALID_HANDLE_VALUE)
-			throw std::runtime_error("TimerQueueTimer::InternalCreate(): m_timerQueue is null");
+			throw std::runtime_error(__FUNCSIG__": m_timerQueue is null");
 
 		//https://docs.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-createtimerqueuetimer
 		bool succeeded = CreateTimerQueueTimer(
@@ -160,6 +160,6 @@ namespace Boring32::Async
 			m_flags
 		);
 		if (succeeded == false)
-			throw Error::Win32Error("TimerQueueTimer::InternalCreate(): CreateTimerQueueTimer() failed", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__": CreateTimerQueueTimer() failed", GetLastError());
 	}
 }
