@@ -31,6 +31,7 @@ import boring32.error.functions;
 import boring32.async.waitabletimer;
 import boring32.async.event;
 import boring32.async.timerqueue;
+import boring32.async.timerqueuetimer;
 import boring32.async.threadsafevector;
 
 #pragma comment(lib, "Pathcch.lib")

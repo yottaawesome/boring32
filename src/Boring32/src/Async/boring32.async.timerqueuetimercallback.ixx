@@ -1,8 +1,11 @@
-#pragma once
+module;
 
+#include <Windows.h>
+
+export module boring32.async.timerqueuetimercallback;
 import boring32.async.timerqueuetimer;
 
-namespace Boring32::Async
+export namespace Boring32::Async
 {
 	class TimerQueueTimerCallback : public TimerQueueTimer
 	{

@@ -1,7 +1,9 @@
-#include "pch.hpp"
-#include <iostream>
-#include "include/Async/TimerQueueTimerCallback.hpp"
+module;
 
+#include <iostream>
+#include <Windows.h>
+
+module boring32.async.timerqueuetimercallback;
 import boring32.error.win32error;
 
 namespace Boring32::Async
