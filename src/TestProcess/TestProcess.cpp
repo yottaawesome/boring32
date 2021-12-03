@@ -6,6 +6,7 @@
 import boring32.async.event;
 import boring32.ipc.anonymouspipe;
 import boring32.ipc.overlappednamedpipeserver;
+import boring32.ipc.overlappednamedpipeclient;
 
 int MainAnon(int argc, char** args)
 {
@@ -42,7 +43,7 @@ int MainOverlapped(int argc, char** args)
 {
     Sleep(1000);
 
-    Boring32::Async::OverlappedNamedPipeClient p(L"\\\\.\\pipe\\mynamedpipe");
+    Boring32::IPC::OverlappedNamedPipeClient p(L"\\\\.\\pipe\\mynamedpipe");
     p.Connect(0);
     p.SetMode(PIPE_READMODE_MESSAGE);
     Boring32::Async::OverlappedIo readOp;
@@ -63,7 +64,7 @@ int MainOverlapped(int argc, char** args)
 
 int ConnectAndWriteToElevatedPipe()
 {
-    Boring32::Async::OverlappedNamedPipeClient p(L"\\\\.\\pipe\\mynamedpipe");
+    Boring32::IPC::OverlappedNamedPipeClient p(L"\\\\.\\pipe\\mynamedpipe");
     p.Connect(0);
     p.SetMode(PIPE_READMODE_MESSAGE);
     //auto r = p.Write(L"Hello!");
@@ -87,7 +88,7 @@ DWORD ConnectToPrivateNamespace()
         SYNCHRONIZE
     );
     agentNamespacePipeAvailable.WaitOnEvent();
-    Boring32::Async::OverlappedNamedPipeClient p(L"\\\\.\\pipe\\\\mynamedpipe");
+    Boring32::IPC::OverlappedNamedPipeClient p(L"\\\\.\\pipe\\\\mynamedpipe");
     p.Connect(0);
     p.SetMode(PIPE_READMODE_MESSAGE);
     return 0;
