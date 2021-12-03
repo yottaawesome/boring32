@@ -4,6 +4,7 @@
 #include "../Boring32/include/Boring32.hpp"
 
 import boring32.async.event;
+import boring32.ipc.anonymouspipe;
 
 int MainAnon(int argc, char** args)
 {
@@ -12,7 +13,7 @@ int MainAnon(int argc, char** args)
 
     int writeHandle = std::stoi(args[2]);
     int readHandle = std::stoi(args[3]);
-    Boring32::Async::AnonymousPipe pipe(2048, L"||", (HANDLE)readHandle, (HANDLE)writeHandle);
+    Boring32::IPC::AnonymousPipe pipe(2048, L"||", (HANDLE)readHandle, (HANDLE)writeHandle);
     std::wcout << pipe.Read() << std::endl;
     pipe.DelimitedWrite(L"Hello from child!");
 

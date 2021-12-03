@@ -236,7 +236,7 @@
     <ClCompile Include="src\Async\OverlappedIo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Async\Pipes\AnonymousPipe.cpp">
+    <ClCompile Include="src\IPC\AnonymousPipe.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Async\Pipes\BlockingNamedPipeClient.cpp">
@@ -432,6 +432,7 @@
     <ClCompile Include="src\Crypto\boring32.crypto.cryptokey.ixx" />
     <ClCompile Include="src\Async\boring32.async.timerqueuetimer.ixx" />
     <ClCompile Include="src\Async\boring32.async.timerqueuetimercallback.ixx" />
+    <ClCompile Include="src\IPC\boring32.ipc.anonymouspipe.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

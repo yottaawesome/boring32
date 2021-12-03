@@ -159,7 +159,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
@@ -250,6 +249,7 @@
     <ClCompile Include="src\Error\boring32.error.ntstatuserror.ixx" />
     <ClCompile Include="src\Error\boring32.error.win32error.ixx" />
     <ClCompile Include="src\Error\ErrorFunctions.cpp" />
+    <ClCompile Include="src\IPC\boring32.ipc.anonymouspipe.ixx" />
     <ClCompile Include="src\Process\boring32.process.dynamiclinklibrary.ixx" />
     <ClCompile Include="src\Raii\boring32.raii.uniqueptrs.ixx" />
     <ClCompile Include="src\Registry\boring32.registry.functions.ixx" />
@@ -313,7 +313,7 @@
     <ClCompile Include="src\Guid\Guid.cpp" />
     <ClCompile Include="src\Async\MemoryMappedFile.cpp" />
     <ClCompile Include="src\Async\Mutex.cpp" />
-    <ClCompile Include="src\Async\Pipes\AnonymousPipe.cpp" />
+    <ClCompile Include="src\IPC\AnonymousPipe.cpp" />
     <ClCompile Include="src\Async\Process.cpp" />
     <ClCompile Include="src\Async\ProcessInfo.cpp" />
     <ClCompile Include="src\Raii\boring32.raii.win32handle.ixx" />

@@ -1,11 +1,13 @@
-#include "pch.hpp"
-#include <stdexcept>
-#include "include/Async/Pipes/AnonymousPipe.hpp"
-#include <iostream>
+module;
 
+#include <stdexcept>
+#include <iostream>
+#include <Windows.h>
+
+module boring32.ipc.anonymouspipe;
 import boring32.strings;
 
-namespace Boring32::Async
+namespace Boring32::IPC
 {
 	AnonymousPipe::~AnonymousPipe()
 	{

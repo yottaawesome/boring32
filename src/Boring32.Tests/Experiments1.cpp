@@ -33,6 +33,7 @@ import boring32.async.event;
 import boring32.async.timerqueue;
 import boring32.async.timerqueuetimer;
 import boring32.async.threadsafevector;
+import boring32.ipc.anonymouspipe;
 
 #pragma comment(lib, "Pathcch.lib")
 
@@ -141,7 +142,7 @@ void TestAnonPipes()
 {
 	std::wstring msg1(L"message1");
 	std::wstring msg2(L"message2");
-	Boring32::Async::AnonymousPipe pipe(true, 512, L"||");
+	Boring32::IPC::AnonymousPipe pipe(true, 512, L"||");
 	pipe.DelimitedWrite(msg1);
 	pipe.DelimitedWrite(msg2);
 
@@ -245,10 +246,10 @@ void TestProcessAnonPipe()
 	std::wstring filePath = directory + L"\\TestProcess.exe";
 
 	Boring32::Async::Event evt(true, true, false, L"TestEvent");
-	Boring32::Async::AnonymousPipe childWrite;
-	Boring32::Async::AnonymousPipe childRead;
-	childRead = Boring32::Async::AnonymousPipe(true, 2048, L"||");
-	childWrite = Boring32::Async::AnonymousPipe(true, 2048, L"||");
+	Boring32::IPC::AnonymousPipe childWrite;
+	Boring32::IPC::AnonymousPipe childRead;
+	childRead = Boring32::IPC::AnonymousPipe(true, 2048, L"||");
+	childWrite = Boring32::IPC::AnonymousPipe(true, 2048, L"||");
 	std::wstringstream ss;
 	ss << "TestProcess.exe"
 		<< L" 3 "
