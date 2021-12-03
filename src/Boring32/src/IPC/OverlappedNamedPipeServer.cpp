@@ -1,10 +1,17 @@
-#include "pch.hpp"
-#include <stdexcept>
-#include "include/Async/Pipes/OverlappedNamedPipeServer.hpp"
+module;
 
+#include <stdexcept>
+#include <string>
+#include <iostream>
+#include <Windows.h>
+#include "include/Async/Pipes/NamedPipeServerBase.hpp"
+#include "include/Async/OverlappedOp.hpp"
+#include "include/Async/OverlappedIo.hpp"
+
+module boring32.ipc.overlappednamedpipeserver;
 import boring32.error.win32error;
 
-namespace Boring32::Async
+namespace Boring32::IPC
 {
     OverlappedNamedPipeServer::~OverlappedNamedPipeServer()
     {
@@ -90,7 +97,7 @@ namespace Boring32::Async
         int i = 0;
     }
 
-    bool OverlappedNamedPipeServer::Connect(OverlappedOp& op, std::nothrow_t) noexcept
+    bool OverlappedNamedPipeServer::Connect(Async::OverlappedOp& op, std::nothrow_t) noexcept
     {
         try
         {
@@ -99,16 +106,16 @@ namespace Boring32::Async
         }
         catch (const std::exception& ex)
         {
-            std::wcerr << L"OverlappedNamedPipeServer::Connect(OverlappedOp& op, std::nothrow_t): " << ex.what();
+            std::wcerr << L" TEXT(__FUNSIG__) " << ex.what();
             return false;
         }
     }
 
-    void OverlappedNamedPipeServer::Connect(OverlappedOp& oio)
+    void OverlappedNamedPipeServer::Connect(Async::OverlappedOp& oio)
     {
         if (m_pipe == nullptr)
             throw std::runtime_error("OverlappedNamedPipeServer::Connect(): No valid pipe handle to connect");
-        oio = OverlappedOp();
+        oio = Async::OverlappedOp();
         bool succeeded = ConnectNamedPipe(m_pipe.GetHandle(), oio.GetOverlapped());
         oio.LastError(GetLastError());
         if (succeeded == false && oio.LastError() != ERROR_IO_PENDING)
@@ -127,12 +134,12 @@ namespace Boring32::Async
         */
     }
 
-    void OverlappedNamedPipeServer::Write(const std::wstring& msg, OverlappedIo& oio)
+    void OverlappedNamedPipeServer::Write(const std::wstring& msg, Async::OverlappedIo& oio)
     {
         InternalWrite(msg, oio);
     }
 
-    bool OverlappedNamedPipeServer::Write(const std::wstring& msg, OverlappedIo& op, std::nothrow_t) noexcept
+    bool OverlappedNamedPipeServer::Write(const std::wstring& msg, Async::OverlappedIo& op, std::nothrow_t) noexcept
     {
         try
         {
@@ -149,12 +156,12 @@ namespace Boring32::Async
         }
     }
 
-    void OverlappedNamedPipeServer::InternalWrite(const std::wstring& msg, OverlappedIo& oio)
+    void OverlappedNamedPipeServer::InternalWrite(const std::wstring& msg, Async::OverlappedIo& oio)
     {
         if (m_pipe == nullptr)
             throw std::runtime_error("OverlappedNamedPipeServer::InternalWrite(): No pipe to write to");
 
-        oio = OverlappedIo();
+        oio = Async::OverlappedIo();
         bool succeeded = WriteFile(
             m_pipe.GetHandle(),     // handle to pipe 
             &msg[0],                // buffer to write from 
@@ -167,12 +174,12 @@ namespace Boring32::Async
             throw Error::Win32Error("OverlappedNamedPipeServer::Write(): WriteFile() failed", oio.LastError());
     }
 
-    void OverlappedNamedPipeServer::Read(const DWORD noOfCharacters, OverlappedIo& oio)
+    void OverlappedNamedPipeServer::Read(const DWORD noOfCharacters, Async::OverlappedIo& oio)
     {
         InternalRead(noOfCharacters, oio);
     }
 
-    bool OverlappedNamedPipeServer::Read(const DWORD noOfCharacters, OverlappedIo& op, std::nothrow_t) noexcept
+    bool OverlappedNamedPipeServer::Read(const DWORD noOfCharacters, Async::OverlappedIo& op, std::nothrow_t) noexcept
     {
         try
         {
@@ -189,12 +196,12 @@ namespace Boring32::Async
         }
     }
 
-    void OverlappedNamedPipeServer::InternalRead(const DWORD noOfCharacters, OverlappedIo& oio)
+    void OverlappedNamedPipeServer::InternalRead(const DWORD noOfCharacters, Async::OverlappedIo& oio)
     {
         if (m_pipe == nullptr)
             throw std::runtime_error("OverlappedNamedPipeServer::InternalRead(): No pipe to read from");
 
-        oio = OverlappedIo();
+        oio = Async::OverlappedIo();
         oio.IoBuffer.resize(noOfCharacters);
 
         bool succeeded = ReadFile(

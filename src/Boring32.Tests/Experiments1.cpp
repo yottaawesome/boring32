@@ -34,6 +34,7 @@ import boring32.async.timerqueue;
 import boring32.async.timerqueuetimer;
 import boring32.async.threadsafevector;
 import boring32.ipc.anonymouspipe;
+import boring32.ipc.overlappednamedpipeserver;
 
 #pragma comment(lib, "Pathcch.lib")
 
@@ -198,7 +199,7 @@ void TestProcessOverlappedNamedPipe()
 	directory.erase(std::find(directory.begin(), directory.end(), '\0'), directory.end());
 	std::wstring filePath = directory + L"\\TestProcess.exe";
 
-	Boring32::Async::OverlappedNamedPipeServer serverPipe(
+	Boring32::IPC::OverlappedNamedPipeServer serverPipe(
 		L"\\\\.\\pipe\\mynamedpipe",
 		1024,
 		5,
@@ -420,9 +421,9 @@ int OldJunk()
 
 	/*try
 	{
-		Boring32::Async::OverlappedNamedPipeServer server(L"A", 512, 1, L"", false, true);
+		Boring32::IPC::OverlappedNamedPipeServer server(L"A", 512, 1, L"", false, true);
 		auto a = server.Connect();
-		Boring32::Async::OverlappedNamedPipeClient client(L"A");
+		Boring32::IPC::OverlappedNamedPipeClient client(L"A");
 		client.Connect(0);
 		client.CloseSocket();
 		auto b = server.Read(0);
