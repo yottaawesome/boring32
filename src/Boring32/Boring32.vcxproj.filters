@@ -239,22 +239,22 @@
     <ClCompile Include="src\IPC\AnonymousPipe.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Async\Pipes\BlockingNamedPipeClient.cpp">
+    <ClCompile Include="src\IPC\BlockingNamedPipeClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Async\Pipes\BlockingNamedPipeServer.cpp">
+    <ClCompile Include="src\IPC\BlockingNamedPipeServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Async\Pipes\OverlappedNamedPipeServer.cpp">
+    <ClCompile Include="src\IPC\OverlappedNamedPipeServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Async\Pipes\OverlappedNamedPipeClient.cpp">
+    <ClCompile Include="src\IPC\OverlappedNamedPipeClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Async\Pipes\NamedPipeServerBase.cpp">
+    <ClCompile Include="src\IPC\NamedPipeServerBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Async\Pipes\NamedPipeClientBase.cpp">
+    <ClCompile Include="src\IPC\NamedPipeClientBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Async\OverlappedOp.cpp">
