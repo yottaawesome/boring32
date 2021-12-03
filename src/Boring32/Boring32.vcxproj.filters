@@ -78,9 +78,6 @@
     <ClInclude Include="include\Async\Pipes\NamedPipeClientBase.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Async\Pipes\OverlappedNamedPipeServer.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Async\Pipes\OverlappedNamedPipeClient.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

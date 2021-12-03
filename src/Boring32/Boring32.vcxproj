@@ -184,7 +184,6 @@
     <ClInclude Include="include\Async\Pipes\NamedPipeServerBase.hpp" />
     <ClInclude Include="include\Async\OverlappedIo.hpp" />
     <ClInclude Include="include\Async\Pipes\OverlappedNamedPipeClient.hpp" />
-    <ClInclude Include="include\Async\Pipes\OverlappedNamedPipeServer.hpp" />
     <ClInclude Include="include\Async\Process.hpp" />
     <ClInclude Include="include\Async\ProcessInfo.hpp" />
     <ClInclude Include="include\Async\SlimReadWriteLock.hpp" />
