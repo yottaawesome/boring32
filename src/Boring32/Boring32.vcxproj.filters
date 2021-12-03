@@ -433,6 +433,12 @@
     <ClCompile Include="src\Async\boring32.async.timerqueuetimer.ixx" />
     <ClCompile Include="src\Async\boring32.async.timerqueuetimercallback.ixx" />
     <ClCompile Include="src\IPC\boring32.ipc.anonymouspipe.ixx" />
+    <ClCompile Include="src\IPC\boring32.ipc.overlappednamedpipeclient.ixx" />
+    <ClCompile Include="src\IPC\boring32.ipc.overlappednamedpipeserver.ixx" />
+    <ClCompile Include="src\IPC\boring32.ipc.namedpipeclientbase.ixx" />
+    <ClCompile Include="src\IPC\boring32.ipc.namedpipeserverbase.ixx" />
+    <ClCompile Include="src\IPC\boring32.ipc.blockingnamedpipeclient.ixx" />
+    <ClCompile Include="src\IPC\boring32.ipc.blockingnamedpipeserver.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />
