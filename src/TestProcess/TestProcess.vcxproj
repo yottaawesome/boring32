@@ -158,6 +158,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="myfunc1.cpp" />
+    <ClCompile Include="myfunc2.cpp" />
+    <ClCompile Include="test.ixx" />
     <ClCompile Include="TestProcess.cpp" />
   </ItemGroup>
   <ItemGroup>

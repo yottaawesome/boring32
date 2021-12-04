@@ -7,6 +7,7 @@ import boring32.async.event;
 import boring32.ipc.anonymouspipe;
 import boring32.ipc.overlappednamedpipeserver;
 import boring32.ipc.overlappednamedpipeclient;
+import test;
 
 int MainAnon(int argc, char** args)
 {
@@ -96,6 +97,8 @@ DWORD ConnectToPrivateNamespace()
 
 int main(int argc, char** args)
 {
+    MyFunc1();
+    MyFunc2();
     try
     {
         if (argc < 2)
