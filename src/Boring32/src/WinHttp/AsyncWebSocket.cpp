@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include <algorithm>
+#include <wincrypt.h>
 #include "include/WinHttp/WebSockets/AsyncWebSocket.hpp"
 
 import boring32.error.win32error;

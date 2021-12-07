@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "CppUnitTest.h"
-#include "Boring32/include/Crypto/Certificate.hpp"
 #include "Boring32/include/Crypto/CertStore.hpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+import boring32.crypto.certificate;
 
 namespace Crypto
 {

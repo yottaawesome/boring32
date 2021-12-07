@@ -1,8 +1,9 @@
 #pragma once
 #include <Windows.h>
 #include <wincrypt.h>
-#include "Certificate.hpp"
 #include "CertStore.hpp"
+
+import boring32.crypto.certificate;
 
 namespace Boring32::Crypto
 {

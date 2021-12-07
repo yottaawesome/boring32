@@ -1,9 +1,14 @@
-#pragma once
+module;
+
 #include <vector>
+#include <string>
 #include <Windows.h>
+#include <dpapi.h>
 #include <wincrypt.h>
 
-namespace Boring32::Crypto
+export module boring32.crypto.certificate;
+
+export namespace Boring32::Crypto
 {
 	class Certificate
 	{

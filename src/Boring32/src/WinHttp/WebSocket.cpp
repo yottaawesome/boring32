@@ -3,6 +3,7 @@
 #include <vector>
 #include <future>
 #include <sstream>
+#include <wincrypt.h>
 #include "include/WinHttp/WebSockets/WebSocket.hpp"
 #include "include/WinHttp/ProxyInfo.hpp"
 

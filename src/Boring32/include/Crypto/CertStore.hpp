@@ -6,7 +6,8 @@
 #include <wincrypt.h>
 #include <cryptuiapi.h>
 #include <winnt.h>
-#include "Certificate.hpp"
+
+import boring32.crypto.certificate;
 
 namespace Boring32::Crypto
 {

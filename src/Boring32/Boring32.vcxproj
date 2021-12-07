@@ -189,7 +189,6 @@
     <ClInclude Include="include\Async\SlimReadWriteLock.hpp" />
     <ClInclude Include="include\Async\Thread.hpp" />
     <ClInclude Include="include\Crypto\AesEncryption.hpp" />
-    <ClInclude Include="include\Crypto\Certificate.hpp" />
     <ClInclude Include="include\Crypto\CertificateChain.hpp" />
     <ClInclude Include="include\Crypto\CertStore.hpp" />
     <ClInclude Include="include\Crypto\ChainingMode.hpp" />
@@ -236,6 +235,7 @@
     <ClCompile Include="src\Async\boring32.async.threadsafevector.ixx" />
     <ClCompile Include="src\Async\boring32.async.timerqueuetimer.ixx" />
     <ClCompile Include="src\Async\boring32.async.timerqueuetimercallback.ixx" />
+    <ClCompile Include="src\Crypto\boring32.crypto.certificate.ixx" />
     <ClCompile Include="src\Crypto\boring32.crypto.cryptokey.ixx" />
     <ClCompile Include="src\Crypto\boring32.crypto.functions.ixx" />
     <ClCompile Include="src\Crypto\boring32.crypto.tempcertimport.ixx" />

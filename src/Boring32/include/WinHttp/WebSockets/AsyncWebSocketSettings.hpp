@@ -1,7 +1,8 @@
 #pragma once
 #include <string>
 #include "../Session.hpp"
-#include "../../Crypto/Certificate.hpp"
+
+import boring32.crypto.certificate;
 
 namespace Boring32::WinHttp::WebSockets
 {

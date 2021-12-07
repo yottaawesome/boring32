@@ -1,8 +1,13 @@
-#include "pch.hpp"
-#include "vector"
-#include <dpapi.h>
-#include "include/Crypto/Certificate.hpp"
+module;
 
+#include <vector>
+#include <string>
+#include <stdexcept>
+#include <Windows.h>
+#include <dpapi.h>
+#include <wincrypt.h>
+
+module boring32.crypto.certificate;
 import boring32.error.win32error;
 import boring32.crypto.functions;
 
