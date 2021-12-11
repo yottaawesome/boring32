@@ -1,7 +1,15 @@
-#include "pch.hpp"
-//#include <ntstatus.h>
-#include "include/Crypto/AesEncryption.hpp"
+module;
 
+//#include "pch.hpp"
+//#include <ntstatus.h>
+#include <string>
+#include <vector>
+#include <stdexcept>
+#include <Windows.h>
+#include <bcrypt.h>
+#include "include/Crypto/ChainingMode.hpp"
+
+module boring32.crypto.aesencryption;
 import boring32.error.ntstatuserror;
 
 // See: https://docs.microsoft.com/en-us/windows/win32/seccng/encrypting-data-with-cng

@@ -1,13 +1,15 @@
-#pragma once
+module;
+
 #include <string>
 #include <vector>
 #include <Windows.h>
 #include <bcrypt.h>
-#include "ChainingMode.hpp"
+#include "include/Crypto/ChainingMode.hpp"
 
+export module boring32.crypto.aesencryption;
 import boring32.crypto.cryptokey;
 
-namespace Boring32::Crypto
+export namespace Boring32::Crypto
 {
 	class AesEncryption
 	{

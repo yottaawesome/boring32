@@ -123,9 +123,6 @@
     <ClInclude Include="include\Crypto\CertStore.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Crypto\AesEncryption.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Crypto\ChainingMode.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -434,6 +431,7 @@
     <ClCompile Include="src\IPC\boring32.ipc.blockingnamedpipeclient.ixx" />
     <ClCompile Include="src\IPC\boring32.ipc.blockingnamedpipeserver.ixx" />
     <ClCompile Include="src\Crypto\boring32.crypto.certificate.ixx" />
+    <ClCompile Include="src\Crypto\boring32.crypto.aesencryption.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />
