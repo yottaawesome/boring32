@@ -84,14 +84,15 @@ namespace Boring32::Crypto
 	{
 		if (m_chainingMode == ChainingMode::NotSet)
 			throw std::runtime_error(__FUNCSIG__ ": m_chainingMode is not set");
+
 		//https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptopenalgorithmprovider
-		NTSTATUS status = BCryptOpenAlgorithmProvider(
+		const NTSTATUS status = BCryptOpenAlgorithmProvider(
 			&m_algHandle,
 			BCRYPT_AES_ALGORITHM, // https://docs.microsoft.com/en-us/windows/win32/seccng/cng-algorithm-identifiers
 			nullptr,
 			0
 		);
-		if (BCRYPT_SUCCESS(status) == false)
+		if (!BCRYPT_SUCCESS(status))
 			throw Error::NtStatusError(__FUNCSIG__ ": failed to create AES algorithm", status);
 		SetChainingMode(m_chainingMode);
 	}
@@ -103,7 +104,7 @@ namespace Boring32::Crypto
 
 	DWORD AesEncryption::GetObjectByteSize() const
 	{
-		if (m_algHandle == nullptr)
+		if (!m_algHandle)
 			throw std::runtime_error(__FUNCSIG__ ": cipher algorithm not initialised");
 
 		DWORD cbKeyObject = 0;
@@ -112,12 +113,12 @@ namespace Boring32::Crypto
 		const NTSTATUS status = BCryptGetProperty(
 			m_algHandle,
 			BCRYPT_OBJECT_LENGTH,
-			(PBYTE)&cbKeyObject,
+			reinterpret_cast<PBYTE>(&cbKeyObject),
 			sizeof(DWORD),
 			&cbData,
 			0
 		);
-		if (BCRYPT_SUCCESS(status) == false)
+		if (!BCRYPT_SUCCESS(status))
 			throw Error::NtStatusError(__FUNCSIG__ ": failed to set AES key length", status);
 
 		return cbKeyObject;
@@ -125,7 +126,7 @@ namespace Boring32::Crypto
 
 	DWORD AesEncryption::GetBlockByteLength() const
 	{
-		if (m_algHandle == nullptr)
+		if (!m_algHandle)
 			throw std::runtime_error(__FUNCSIG__ ": cipher algorithm not initialised");
 
 		DWORD cbKeyObject = 0;
@@ -134,12 +135,12 @@ namespace Boring32::Crypto
 		const NTSTATUS status = BCryptGetProperty(
 			m_algHandle,
 			BCRYPT_BLOCK_LENGTH,
-			(PBYTE)&cbKeyObject,
+			reinterpret_cast<PBYTE>(&cbKeyObject),
 			sizeof(DWORD),
 			&cbData,
 			0
 		);
-		if (BCRYPT_SUCCESS(status) == false)
+		if (!BCRYPT_SUCCESS(status))
 			throw Error::NtStatusError(__FUNCSIG__ ": failed to set AES key length", status);
 
 		return cbKeyObject;
@@ -147,7 +148,7 @@ namespace Boring32::Crypto
 
 	void AesEncryption::SetChainingMode(const ChainingMode cm)
 	{
-		if (m_algHandle == nullptr)
+		if (!m_algHandle)
 			throw std::runtime_error(__FUNCSIG__ ": cipher algorithm not initialised");
 		
 		const std::wstring& mode = ChainingModeString.at(cm);
@@ -155,18 +156,18 @@ namespace Boring32::Crypto
 		const NTSTATUS status = BCryptSetProperty(
 			m_algHandle,
 			BCRYPT_CHAINING_MODE,
-			(PUCHAR)&mode[0],
-			(ULONG)mode.size() * sizeof(wchar_t),
+			reinterpret_cast<PUCHAR>(const_cast<wchar_t*>(&mode[0])),
+			static_cast<ULONG>(mode.size() * sizeof(wchar_t)),
 			0
 		);
-		if (BCRYPT_SUCCESS(status) == false)
+		if (!BCRYPT_SUCCESS(status))
 			throw Error::NtStatusError(__FUNCSIG__ ": failed to set chaining mode", status);
 		m_chainingMode = cm;
 	}
 
 	CryptoKey AesEncryption::GenerateSymmetricKey(const std::vector<std::byte>& rgbAES128Key)
 	{
-		if (m_algHandle == nullptr)
+		if (!m_algHandle)
 			throw std::runtime_error(__FUNCSIG__ ": cipher algorithm not initialised");
 		if (rgbAES128Key.empty())
 			throw std::invalid_argument(__FUNCSIG__ ": rgbAES128Key is empty");
@@ -178,13 +179,13 @@ namespace Boring32::Crypto
 		const NTSTATUS status = BCryptGenerateSymmetricKey(
 			m_algHandle,
 			&hKey,
-			(PUCHAR)&keyObject[0],
+			reinterpret_cast<PUCHAR>(&keyObject[0]),
 			cbKeyObject,
-			(PBYTE)&rgbAES128Key[0],
+			reinterpret_cast<PBYTE>(const_cast<std::byte*>(&rgbAES128Key[0])),
 			(ULONG)rgbAES128Key.size(),
 			0
 		);
-		if (BCRYPT_SUCCESS(status) == false)
+		if (!BCRYPT_SUCCESS(status))
 			throw Error::NtStatusError(__FUNCSIG__ ": failed to set chaining mode", status);
 		
 		return CryptoKey(hKey, std::move(keyObject));
@@ -210,9 +211,9 @@ namespace Boring32::Crypto
 		const std::vector<std::byte>& plainText
 	)
 	{
-		if (m_algHandle == nullptr)
+		if (!m_algHandle)
 			throw std::runtime_error(__FUNCSIG__ ": cipher algorithm not initialised");
-		if (key.GetHandle() == nullptr)
+		if (!key.GetHandle())
 			throw std::invalid_argument(__FUNCSIG__ ": key is null");
 
 		// IV is optional
@@ -222,8 +223,8 @@ namespace Boring32::Crypto
 		{
 			if (iv.size() != GetBlockByteLength())
 				throw std::invalid_argument(__FUNCSIG__ ": IV must be the same size as the AES block lenth");
-			pIV = (PUCHAR)&iv[0];
-			ivSize = (ULONG)iv.size();
+			pIV = reinterpret_cast<PUCHAR>(const_cast<std::byte*>(&iv[0]));
+			ivSize = static_cast<ULONG>(iv.size());
 		}
 
 		// Determine the byte size of the encrypted data
@@ -232,8 +233,8 @@ namespace Boring32::Crypto
 		// https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptencrypt
 		NTSTATUS status = BCryptEncrypt(
 			key.GetHandle(),
-			(PUCHAR)&plainText[0],
-			(ULONG)plainText.size(),
+			reinterpret_cast<PUCHAR>(const_cast<std::byte*>(&plainText[0])),
+			static_cast<ULONG>(plainText.size()),
 			nullptr,
 			pIV,
 			ivSize,
@@ -242,24 +243,24 @@ namespace Boring32::Crypto
 			&cbData,
 			flags
 		);
-		if (BCRYPT_SUCCESS(status) == false)
+		if (!BCRYPT_SUCCESS(status))
 			throw Error::NtStatusError(__FUNCSIG__ ": BCryptEncrypt() failed to count bytes", status);
 
 		// Actually do the encryption
 		std::vector<std::byte> cypherText(cbData, std::byte{ 0 });
 		status = BCryptEncrypt(
 			key.GetHandle(),
-			(PUCHAR)&plainText[0],
-			(ULONG)plainText.size(),
+			reinterpret_cast<PUCHAR>(const_cast<std::byte*>(&plainText[0])),
+			static_cast<ULONG>(plainText.size()),
 			nullptr,
 			pIV,
 			ivSize,
-			(PUCHAR)&cypherText[0],
-			(ULONG)cypherText.size(),
+			reinterpret_cast<PUCHAR>(&cypherText[0]),
+			static_cast<ULONG>(cypherText.size()),
 			&cbData,
 			flags
 		);
-		if (BCRYPT_SUCCESS(status) == false)
+		if (!BCRYPT_SUCCESS(status))
 			throw Error::NtStatusError(__FUNCSIG__ ": BCryptEncrypt() failed to encrypt", status);
 
 		return cypherText;
@@ -271,9 +272,9 @@ namespace Boring32::Crypto
 		const std::vector<std::byte>& cypherText
 	)
 	{
-		if (m_algHandle == nullptr)
+		if (!m_algHandle)
 			throw std::runtime_error(__FUNCSIG__ ": cipher algorithm not initialised");
-		if (key.GetHandle() == nullptr)
+		if (!key.GetHandle())
 			throw std::invalid_argument(__FUNCSIG__ ": key is null");
 
 		// IV is optional
@@ -283,8 +284,8 @@ namespace Boring32::Crypto
 		{
 			if (iv.size() != GetBlockByteLength())
 				throw std::invalid_argument(__FUNCSIG__ ": IV must be the same size as the AES block lenth");
-			pIV = (PUCHAR)&iv[0];
-			ivSize = (ULONG)iv.size();
+			pIV = reinterpret_cast<PUCHAR>(const_cast<std::byte*>(&iv[0]));
+			ivSize = static_cast<ULONG>(iv.size());
 		}
 
 		// Determine the byte size of the decrypted data
@@ -293,8 +294,8 @@ namespace Boring32::Crypto
 		// https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptdecrypt
 		NTSTATUS status = BCryptDecrypt(
 			key.GetHandle(),
-			(PUCHAR)&cypherText[0],
-			(ULONG)cypherText.size(),
+			reinterpret_cast<PUCHAR>(const_cast<std::byte*>(&cypherText[0])),
+			static_cast<ULONG>(cypherText.size()),
 			nullptr,
 			pIV,
 			ivSize,
@@ -303,24 +304,24 @@ namespace Boring32::Crypto
 			&cbData,
 			flags
 		);
-		if (BCRYPT_SUCCESS(status) == false)
+		if (!BCRYPT_SUCCESS(status))
 			throw Error::NtStatusError(__FUNCSIG__ ": BCryptDecrypt() failed to count bytes", status);
 
 		// Actually do the decryption
 		std::vector<std::byte> plainText(cbData, std::byte{ 0 });
 		status = BCryptDecrypt(
 			key.GetHandle(),
-			(PUCHAR)&cypherText[0],
-			(ULONG)cypherText.size(),
+			reinterpret_cast<PUCHAR>(const_cast<std::byte*>(&cypherText[0])),
+			static_cast<ULONG>(cypherText.size()),
 			nullptr,
 			pIV,
 			ivSize,
-			(PUCHAR)&plainText[0],
-			(ULONG)plainText.size(),
+			reinterpret_cast<PUCHAR>(&plainText[0]),
+			static_cast<ULONG>(plainText.size()),
 			&cbData,
 			flags
 		);
-		if (BCRYPT_SUCCESS(status) == false)
+		if (!BCRYPT_SUCCESS(status))
 			throw Error::NtStatusError(__FUNCSIG__ ": BCryptDecrypt() failed to decrypt", status);
 
 		plainText.resize(cbData);
