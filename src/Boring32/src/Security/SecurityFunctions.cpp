@@ -1,9 +1,12 @@
-#include "pch.hpp"
+module;
+
 #include <stdexcept>
+#include <string>
+#include <Windows.h>
 #include <sddl.h>
-#include "include/Security/SecurityFunctions.hpp"
 #include "include/Security/Constants.hpp"
 
+module boring32.security.functions;
 import boring32.error.win32error;
 
 namespace Boring32::Security

@@ -1,13 +1,16 @@
-#pragma once
-#include <Windows.h>
-#include "Constants.hpp"
+module;
 
+#include <Windows.h>
+#include <string>
+#include "include/Security/Constants.hpp"
+
+export module boring32.security.functions;
 import boring32.raii.win32handle;
 
-namespace Boring32::Security
+export namespace Boring32::Security
 {
 	Raii::Win32Handle GetProcessToken(
-		const HANDLE processHandle, 
+		const HANDLE processHandle,
 		const DWORD desiredAccess
 	);
 	void AdjustPrivileges(
@@ -16,7 +19,7 @@ namespace Boring32::Security
 		const bool enabled
 	);
 	void SetIntegrity(
-		HANDLE token, 
+		HANDLE token,
 		const Constants::GroupIntegrity integrity
 	);
 }

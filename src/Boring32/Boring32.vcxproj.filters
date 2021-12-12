@@ -147,9 +147,6 @@
     <ClInclude Include="include\Security\Token.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Security\SecurityFunctions.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Security\Constants.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -432,6 +429,7 @@
     <ClCompile Include="src\IPC\boring32.ipc.blockingnamedpipeserver.ixx" />
     <ClCompile Include="src\Crypto\boring32.crypto.certificate.ixx" />
     <ClCompile Include="src\Crypto\boring32.crypto.aesencryption.ixx" />
+    <ClCompile Include="src\Security\boring32.security.functions.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />
