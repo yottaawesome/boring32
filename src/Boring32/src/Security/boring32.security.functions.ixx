@@ -40,7 +40,7 @@ export namespace Boring32::Security
 	);
 	bool SetPrivilege(
 		const HANDLE hToken,          // access token handle
-		const std::vector<std::wstring> privileges,  // name of privilege to enable/disable
+		const std::vector<std::wstring>& privileges,  // name of privilege to enable/disable
 		const AdjustPrivilegeType enablePrivilege   // to enable or disable privilege
-	);
+	) noexcept;
 }
