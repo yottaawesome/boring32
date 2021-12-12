@@ -22,4 +22,6 @@ export namespace Boring32::Security
 		HANDLE token,
 		const Constants::GroupIntegrity integrity
 	);
+	bool SearchTokenGroupsForSID(HANDLE hToken, PSID pSID);
+	void EnumerateTokenGroups(HANDLE hToken);
 }

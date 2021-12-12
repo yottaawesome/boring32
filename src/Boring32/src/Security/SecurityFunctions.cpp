@@ -2,12 +2,15 @@ module;
 
 #include <stdexcept>
 #include <string>
+#include <vector>
+#include <iostream>
 #include <Windows.h>
 #include <sddl.h>
 #include "include/Security/Constants.hpp"
 
 module boring32.security.functions;
 import boring32.error.win32error;
+import boring32.raii.uniqueptrs;
 
 namespace Boring32::Security
 {
@@ -99,5 +102,97 @@ namespace Boring32::Security
 		LocalFree(pIntegritySid);
 		if (succeeded == false)
 			throw Error::Win32Error(__FUNCSIG__": SetTokenInformation() failed", GetLastError());
+	}
+
+	// See https://docs.microsoft.com/en-us/windows/win32/secauthz/searching-for-a-sid-in-an-access-token-in-c--
+	// See also https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-checktokenmembership
+    bool SearchTokenGroupsForSID(HANDLE hToken, PSID pSID)
+    {
+		if (!hToken || !pSID)
+			throw std::invalid_argument(__FUNCSIG__ "hToken and pSID cannot be nullptr");
+
+        // Call GetTokenInformation to get the buffer size.
+		constexpr unsigned MAX_NAME = 256;
+		DWORD dwSize = 0;
+		if (!GetTokenInformation(hToken, TokenGroups, nullptr, 0, &dwSize))
+            if (DWORD dwResult = GetLastError(); dwResult != ERROR_INSUFFICIENT_BUFFER) 
+                throw Error::Win32Error(__FUNCSIG__ ": GetTokenInformation() failed", dwResult);
+
+        // Allocate the buffer.
+		std::vector<std::byte> groupInfoBytes(dwSize);
+		PTOKEN_GROUPS pGroupInfo = reinterpret_cast<PTOKEN_GROUPS>(&groupInfoBytes[0]);
+
+        // Call GetTokenInformation again to get the group information.
+        if (!GetTokenInformation(hToken, TokenGroups, pGroupInfo, dwSize, &dwSize))
+            throw Error::Win32Error(__FUNCSIG__ ": GetTokenInformation() failed", GetLastError());
+
+        // Loop through the group SIDs looking for the SID.
+		for (unsigned i = 0; i < pGroupInfo->GroupCount; i++)
+			if (EqualSid(pSID, pGroupInfo->Groups[i].Sid))
+				return true;
+
+        return false;
+    }
+
+	void EnumerateTokenGroups(HANDLE hToken)
+	{
+		if (!hToken)
+			throw std::invalid_argument(__FUNCSIG__ "hToken and pSID cannot be nullptr");
+
+		// Call GetTokenInformation to get the buffer size.
+		constexpr unsigned MAX_NAME = 256;
+		DWORD dwSize = 0;
+		DWORD dwResult = 0;
+		if (!GetTokenInformation(hToken, TokenGroups, nullptr, 0, &dwSize))
+			if (DWORD dwResult = GetLastError(); dwResult != ERROR_INSUFFICIENT_BUFFER)
+				throw Error::Win32Error(__FUNCSIG__ ": GetTokenInformation() failed", dwResult);
+
+		// Allocate the buffer.
+		std::vector<std::byte> groupInfoBytes(dwSize);
+		PTOKEN_GROUPS pGroupInfo = reinterpret_cast<PTOKEN_GROUPS>(&groupInfoBytes[0]);
+
+		// Call GetTokenInformation again to get the group information.
+		if (!GetTokenInformation(hToken, TokenGroups, pGroupInfo, dwSize, &dwSize))
+			throw Error::Win32Error(__FUNCSIG__ ": GetTokenInformation() failed", GetLastError());
+
+		// Loop through the group SIDs looking for the administrator SID.
+		SID_NAME_USE SidType;
+		for (unsigned i = 0; i < pGroupInfo->GroupCount; i++)
+		{
+			dwSize = MAX_NAME;
+			std::wstring groupName(MAX_NAME, '\0');
+			std::wstring groupDomain(MAX_NAME, '\0');
+
+			// Lookup the account m_name and print it.
+			// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupaccountsidw
+			if (!LookupAccountSidW(
+				nullptr,
+				pGroupInfo->Groups[i].Sid,
+				&groupName[0],
+				&dwSize,
+				&groupDomain[0],
+				&dwSize,
+				&SidType))
+			{
+				if (DWORD dwResult = GetLastError(); dwResult == ERROR_NONE_MAPPED)
+				{
+					std::wcout << "NONE_MAPPED\n";
+					continue;
+				}
+				throw Error::Win32Error(__FUNCSIG__": LookupAccountSidW() failed");
+			}
+
+			groupName = groupName.c_str();
+			groupDomain = groupDomain.c_str();
+			std::wcout << L"Current user is a member of the " << groupDomain << "\\" << groupName << std::endl;
+
+			// Find out whether the SID is enabled in the token.
+			if (pGroupInfo->Groups[i].Attributes & SE_GROUP_ENABLED)
+				std::wcout << "The group SID is enabled.\n";
+			else if (pGroupInfo->Groups[i].Attributes & SE_GROUP_USE_FOR_DENY_ONLY)
+				std::wcout << "The group SID is a deny-only SID.\n";
+			else
+				std::wcout << "The group SID is not enabled.\n";
+		}
 	}
 }

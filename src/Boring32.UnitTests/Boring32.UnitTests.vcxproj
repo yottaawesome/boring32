@@ -187,6 +187,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Registry\RegKey.cpp" />
+    <ClCompile Include="Security\SecurityFunctions.cpp" />
     <ClCompile Include="Strings\Strings.cpp" />
     <ClCompile Include="Util\Util.cpp" />
   </ItemGroup>

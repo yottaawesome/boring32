@@ -2,6 +2,7 @@ module;
 
 #include <memory>
 #include <Windows.h>
+#include <sddl.h>
 
 export module boring32.raii.uniqueptrs;
 
@@ -24,4 +25,13 @@ export namespace Boring32::Raii
 		}
 	};
 	using DllUniquePtr = std::unique_ptr<std::remove_pointer<HMODULE>::type, DllDeleter>;
+
+	struct SidDeleter final
+	{
+		void operator()(PSID ptr)
+		{
+			FreeSid(ptr);
+		}
+	};
+	using SidUniquePtr = std::unique_ptr<std::remove_pointer<PSID>::type, SidDeleter>;
 }
