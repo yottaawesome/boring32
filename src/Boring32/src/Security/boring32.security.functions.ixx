@@ -14,14 +14,27 @@ export namespace Boring32::Security
 		const DWORD desiredAccess
 	);
 	void AdjustPrivileges(
-		HANDLE token,
+		const HANDLE token,
 		const std::wstring& privilege,
 		const bool enabled
 	);
 	void SetIntegrity(
-		HANDLE token,
+		const HANDLE token,
 		const Constants::GroupIntegrity integrity
 	);
-	bool SearchTokenGroupsForSID(HANDLE hToken, PSID pSID);
-	void EnumerateTokenGroups(HANDLE hToken);
+	bool SearchTokenGroupsForSID(const HANDLE hToken, const PSID pSID);
+	void EnumerateTokenGroups(const HANDLE hToken);
+	void EnumerateTokenPrivileges(const HANDLE hToken);
+
+	enum class AdjustPrivilegeType
+	{
+		Disable = 0,
+		Enable = SE_PRIVILEGE_ENABLED,
+		Removed = SE_PRIVILEGE_REMOVED
+	};
+	bool SetPrivilege(
+		const HANDLE hToken,          // access token handle
+		const std::wstring& privilegeName,  // name of privilege to enable/disable
+		const AdjustPrivilegeType enablePrivilege   // to enable or disable privilege
+	);
 }

@@ -58,14 +58,29 @@ void EnumerateTokenGroups()
 	Boring32::Security::EnumerateTokenGroups(hToken);
 }
 
+void EnumerateTokenPrivileges()
+{
+	// Open a handle to the access token for the calling process.
+	Boring32::Raii::Win32Handle hToken;
+	if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken))
+		throw Boring32::Error::Win32Error(__FUNCSIG__ ": OpenProcessToken() failed", GetLastError());
+	Boring32::Security::EnumerateTokenPrivileges(hToken);
+}
+
 int main(int argc, char** args) try
 {
-	SearchTokenForAdminGroup();
-	EnumerateTokenGroups();
+	while (true)
+		new int(10);
+
+	//SearchTokenForAdminGroup();
+	//EnumerateTokenGroups();
+	//EnumerateTokenPrivileges();
 	return 0;
 }
 catch (const std::exception& ex)
 {
+	
+
 	std::wcout << ex.what() << std::endl;
 	return -1;
 }

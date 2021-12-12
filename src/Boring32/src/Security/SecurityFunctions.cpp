@@ -3,6 +3,7 @@ module;
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <format>
 #include <iostream>
 #include <Windows.h>
 #include <sddl.h>
@@ -32,7 +33,7 @@ namespace Boring32::Security
 		return handle;
 	}
 
-	void AdjustPrivileges(HANDLE token, const std::wstring& privilege, const bool enabled)
+	void AdjustPrivileges(const HANDLE token, const std::wstring& privilege, const bool enabled)
 	{
 		// See also: https://docs.microsoft.com/en-us/windows/win32/secauthz/enabling-and-disabling-privileges-in-c--
 		if (token == nullptr || token == INVALID_HANDLE_VALUE)
@@ -75,7 +76,7 @@ namespace Boring32::Security
 	}
 
 	void SetIntegrity(
-		HANDLE token,
+		const HANDLE token,
 		const Constants::GroupIntegrity integrity
 	)
 	{
@@ -106,7 +107,7 @@ namespace Boring32::Security
 
 	// See https://docs.microsoft.com/en-us/windows/win32/secauthz/searching-for-a-sid-in-an-access-token-in-c--
 	// See also https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-checktokenmembership
-    bool SearchTokenGroupsForSID(HANDLE hToken, PSID pSID)
+    bool SearchTokenGroupsForSID(const HANDLE hToken, const PSID pSID)
     {
 		if (!hToken || !pSID)
 			throw std::invalid_argument(__FUNCSIG__ "hToken and pSID cannot be nullptr");
@@ -134,7 +135,7 @@ namespace Boring32::Security
         return false;
     }
 
-	void EnumerateTokenGroups(HANDLE hToken)
+	void EnumerateTokenGroups(const HANDLE hToken)
 	{
 		if (!hToken)
 			throw std::invalid_argument(__FUNCSIG__ "hToken and pSID cannot be nullptr");
@@ -194,5 +195,101 @@ namespace Boring32::Security
 			else
 				std::wcout << "The group SID is not enabled.\n";
 		}
+	}
+
+	// See https://docs.microsoft.com/en-us/windows/win32/secauthz/privilege-constants
+	// https://docs.microsoft.com/en-us/windows/win32/services/service-user-accounts
+	// https://docs.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-rights-assignment
+	void EnumerateTokenPrivileges(const HANDLE hToken)
+	{
+		DWORD bytesNeeded = 0;
+		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-gettokeninformation
+		bool succeeded = GetTokenInformation(
+			hToken,
+			TokenPrivileges,
+			nullptr,
+			0,
+			&bytesNeeded
+		);
+		if (const DWORD lastError = GetLastError(); !succeeded && lastError != ERROR_INSUFFICIENT_BUFFER)
+			throw Error::Win32Error(__FUNCSIG__": GetTokenInformation() [1] failed", lastError);
+
+		std::vector<std::byte> buffer(bytesNeeded);
+		succeeded = GetTokenInformation(
+			hToken,
+			TokenPrivileges,
+			reinterpret_cast<PBYTE>(&buffer[0]),
+			bytesNeeded,
+			&bytesNeeded
+		);
+		if (!succeeded)
+			throw Error::Win32Error(__FUNCSIG__": GetTokenInformation() [2] failed", GetLastError());
+
+		TOKEN_PRIVILEGES* pPrivs = reinterpret_cast<TOKEN_PRIVILEGES*>(&buffer[0]);
+		for (unsigned i = 0; i < pPrivs->PrivilegeCount; i++)
+		{
+			DWORD size = 256;
+			std::wstring privName(size, '\0');
+			// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupprivilegenamew
+			if (!LookupPrivilegeNameW(nullptr, &pPrivs->Privileges[i].Luid, &privName[0], &size))
+				throw Error::Win32Error(__FUNCSIG__": LookupPrivilegeName() failed", GetLastError());
+
+			std::wstring privsString;
+			if (pPrivs->Privileges[i].Attributes & SE_PRIVILEGE_ENABLED)
+				privsString += L"enabled; ";
+			if (pPrivs->Privileges[i].Attributes & SE_PRIVILEGE_ENABLED_BY_DEFAULT)
+				privsString += L"enabled by default; ";
+			if (pPrivs->Privileges[i].Attributes & SE_PRIVILEGE_REMOVED)
+				privsString += L"removed; ";
+			if (pPrivs->Privileges[i].Attributes & SE_PRIVILEGE_USED_FOR_ACCESS)
+				privsString += L"used for access";
+			
+			if (privsString.empty()) 
+				privsString = L"disabled";
+			else while (privsString.back() == ' ' || privsString.back() == ';') 
+				privsString.pop_back();
+
+			privName = std::format(L"{} ({})", privName.c_str(), privsString);
+			std::wcout << privName << std::endl;
+		}
+	}
+
+	bool SetPrivilege(
+		const HANDLE hToken,
+		const std::wstring& privilegeName,
+		const AdjustPrivilegeType enablePrivilege
+	)
+	{
+		// See https://docs.microsoft.com/en-us/windows/win32/secauthz/enabling-and-disabling-privileges-in-c--
+		LUID luid;
+		// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupprivilegevaluew
+		if (!LookupPrivilegeValueW(
+			nullptr,				// lookup privilege on local system
+			privilegeName.c_str(),  // privilege to lookup 
+			&luid)					// receives LUID of privilege
+		) throw Error::Win32Error(__FUNCSIG__": LookupPrivilegeValue() failed", GetLastError());
+
+		TOKEN_PRIVILEGES tokenPrivileges{
+			.PrivilegeCount = 1,
+			.Privileges = {
+				{ 
+					.Luid = luid, 
+					.Attributes = static_cast<DWORD>(enablePrivilege)
+				}
+			}
+		};
+
+		// Enable or disable the privilege.
+		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-adjusttokenprivileges
+		if (!AdjustTokenPrivileges(
+			hToken,
+			false,
+			&tokenPrivileges,
+			sizeof(TOKEN_PRIVILEGES),
+			nullptr,
+			nullptr)
+		) throw Error::Win32Error(__FUNCSIG__": AdjustTokenPrivileges() failed", GetLastError());
+
+		return GetLastError() == ERROR_NOT_ALL_ASSIGNED ? false : true;
 	}
 }
