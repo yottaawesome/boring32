@@ -1,7 +1,8 @@
 module;
 
-#include <Windows.h>
 #include <string>
+#include <vector>
+#include <Windows.h>
 #include "include/Security/Constants.hpp"
 
 export module boring32.security.functions;
@@ -35,6 +36,11 @@ export namespace Boring32::Security
 	bool SetPrivilege(
 		const HANDLE hToken,          // access token handle
 		const std::wstring& privilegeName,  // name of privilege to enable/disable
+		const AdjustPrivilegeType enablePrivilege   // to enable or disable privilege
+	);
+	bool SetPrivilege(
+		const HANDLE hToken,          // access token handle
+		const std::vector<std::wstring> privileges,  // name of privilege to enable/disable
 		const AdjustPrivilegeType enablePrivilege   // to enable or disable privilege
 	);
 }

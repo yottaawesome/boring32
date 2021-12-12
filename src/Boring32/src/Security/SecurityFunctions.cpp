@@ -292,4 +292,24 @@ namespace Boring32::Security
 
 		return GetLastError() == ERROR_NOT_ALL_ASSIGNED ? false : true;
 	}
+
+	bool SetPrivilege(
+		const HANDLE hToken,
+		const std::vector<std::wstring>& privileges,
+		const AdjustPrivilegeType enablePrivilege
+	) noexcept
+	{
+		bool allOK = true;
+		for (const auto& privilege : privileges) try
+		{
+			SetPrivilege(hToken, privilege, enablePrivilege);
+		}
+		catch (const std::exception& ex)
+		{
+			std::wcerr << "SetPrivilege()" << ": failed on " << privilege << " : " << ex.what();
+			allOK = false;
+		}
+
+		return allOK;
+	}
 }
