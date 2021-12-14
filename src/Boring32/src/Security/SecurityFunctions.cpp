@@ -83,25 +83,24 @@ namespace Boring32::Security
 		if (token == nullptr || token == INVALID_HANDLE_VALUE)
 			throw std::invalid_argument(__FUNCSIG__ ": token cannot be null");
 
-		const std::wstring& integritySid = Constants::Integrities.at(integrity);
-		PSID pIntegritySid = nullptr;
+		const std::wstring& integritySidString = Constants::Integrities.at(integrity);
+		PSID rawIntegritySid = nullptr;
 		// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw
-		bool succeeded = ConvertStringSidToSidW(integritySid.c_str(), &pIntegritySid);
-		if (succeeded == false)
+		if (!ConvertStringSidToSidW(integritySidString.c_str(), &rawIntegritySid))
 			throw Error::Win32Error(__FUNCSIG__": ConvertStringSidToSidW() failed", GetLastError());
+		Raii::SidUniquePtr integritySid(rawIntegritySid);
 
 		TOKEN_MANDATORY_LABEL tml = { 0 };
 		tml.Label.Attributes = SE_GROUP_INTEGRITY;
-		tml.Label.Sid = pIntegritySid;
+		tml.Label.Sid = integritySid.get();
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-settokeninformation
-		succeeded = SetTokenInformation(
+		const bool succeeded = SetTokenInformation(
 			token,
 			TokenIntegrityLevel,
 			&tml,
-			sizeof(TOKEN_MANDATORY_LABEL) + GetLengthSid(pIntegritySid)
+			sizeof(TOKEN_MANDATORY_LABEL) + GetLengthSid(integritySid.get())
 		);
-		LocalFree(pIntegritySid);
-		if (succeeded == false)
+		if (!succeeded)
 			throw Error::Win32Error(__FUNCSIG__": SetTokenInformation() failed", GetLastError());
 	}
 
