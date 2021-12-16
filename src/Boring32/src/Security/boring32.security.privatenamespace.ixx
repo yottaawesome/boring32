@@ -1,9 +1,12 @@
-#pragma once
+module;
+
 #include <string>
 #include <vector>
 #include <Windows.h>
 
-namespace Boring32::Security
+export module boring32.security.privatenamespace;
+
+export namespace Boring32::Security
 {
 	class PrivateNamespace
 	{

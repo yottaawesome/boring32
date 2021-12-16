@@ -1,8 +1,13 @@
-#include "pch.hpp"
-#include <Sddl.h>          // for SID management
-#include "include/Security/PrivateNamespace.hpp"
+module;
 
+#include <string>
+#include <Windows.h>
+#include <Sddl.h>          // for SID management
+
+
+module boring32.security.privatenamespace;
 import boring32.error.win32error;
+import boring32.raii.uniqueptrs;
 
 namespace Boring32::Security
 {
@@ -48,62 +53,59 @@ namespace Boring32::Security
 		CreateOrOpen(create);
 	}
 
-	void PrivateNamespace::CreateOrOpen(const bool create)
+	void PrivateNamespace::CreateOrOpen(const bool create) try
 	{
-		try
+		m_boundaryDescriptor = CreateBoundaryDescriptorW(m_boundaryName.c_str(), 0);
+		if (m_boundaryDescriptor == nullptr)
+			throw Error::Win32Error("Failed to create boundary descriptor", GetLastError());
+
+		BYTE localAdminSID[SECURITY_MAX_SID_SIZE];
+		DWORD cbSID = sizeof(localAdminSID);
+		bool sidCreated = CreateWellKnownSid(
+			WinBuiltinAdministratorsSid,
+			nullptr,
+			localAdminSID,
+			&cbSID);
+		if (sidCreated == false)
+			throw Error::Win32Error("Failed to create SID", GetLastError());
+		bool sidAdded = AddSIDToBoundaryDescriptor(&m_boundaryDescriptor, localAdminSID);
+		if (sidAdded == false)
+			throw Error::Win32Error("Failed to add SID to boundary", GetLastError());
+
+		if (create)
 		{
-			m_boundaryDescriptor = CreateBoundaryDescriptorW(m_boundaryName.c_str(), 0);
-			if (m_boundaryDescriptor == nullptr)
-				throw Error::Win32Error("Failed to create boundary descriptor", GetLastError());
+			// https://docs.microsoft.com/en-us/windows/win32/secauthz/security-descriptor-string-format
+			// https://docs.microsoft.com/en-us/windows/win32/secauthz/ace-strings
+			// https://docs.microsoft.com/en-us/windows/win32/secauthz/sid-strings
+			SECURITY_ATTRIBUTES sa;
+			sa.nLength = sizeof(sa);
+			sa.bInheritHandle = false;
+			bool converted = ConvertStringSecurityDescriptorToSecurityDescriptorW(
+				m_namespaceSid.c_str(),
+				SDDL_REVISION_1,
+				&sa.lpSecurityDescriptor,
+				nullptr
+			);
+			if (converted == false)
+				throw Error::Win32Error("Failed to convert security descriptor", GetLastError());
+			Raii::LocalHeapUniquePtr securityDescriptor(sa.lpSecurityDescriptor);
 
-			BYTE localAdminSID[SECURITY_MAX_SID_SIZE];
-			DWORD cbSID = sizeof(localAdminSID);
-			bool sidCreated = CreateWellKnownSid(
-				WinBuiltinAdministratorsSid,
-				nullptr,
-				localAdminSID,
-				&cbSID);
-			if (sidCreated == false)
-				throw Error::Win32Error("Failed to create SID", GetLastError());
-			bool sidAdded = AddSIDToBoundaryDescriptor(&m_boundaryDescriptor, localAdminSID);
-			if (sidAdded == false)
-				throw Error::Win32Error("Failed to add SID to boundary", GetLastError());
-
-			if (create)
-			{
-				// https://docs.microsoft.com/en-us/windows/win32/secauthz/security-descriptor-string-format
-				// https://docs.microsoft.com/en-us/windows/win32/secauthz/ace-strings
-				// https://docs.microsoft.com/en-us/windows/win32/secauthz/sid-strings
-				SECURITY_ATTRIBUTES sa;
-				sa.nLength = sizeof(sa);
-				sa.bInheritHandle = false;
-				bool converted = ConvertStringSecurityDescriptorToSecurityDescriptorW(
-					m_namespaceSid.c_str(),
-					SDDL_REVISION_1,
-					&sa.lpSecurityDescriptor,
-					nullptr
-				);
-				if (converted == false)
-					throw Error::Win32Error("Failed to convert security descriptor", GetLastError());
-
-				m_namespace = CreatePrivateNamespaceW(
-					&sa,
-					m_boundaryDescriptor,
-					m_namespaceName.c_str()
-				);
-				LocalFree(sa.lpSecurityDescriptor);
-			}
-			else
-				m_namespace = OpenPrivateNamespaceW(m_boundaryDescriptor, m_namespaceName.c_str());
-
-			if (m_namespace == nullptr)
-				throw Error::Win32Error("Failed to create private namespace", GetLastError());
+			m_namespace = CreatePrivateNamespaceW(
+				&sa,
+				m_boundaryDescriptor,
+				m_namespaceName.c_str()
+			);
 		}
-		catch (...)
-		{
-			Close();
-			throw;
-		}
+		else
+			m_namespace = OpenPrivateNamespaceW(m_boundaryDescriptor, m_namespaceName.c_str());
+
+		if (m_namespace == nullptr)
+			throw Error::Win32Error("Failed to create private namespace", GetLastError());
+	}
+	catch (...)
+	{
+		Close();
+		throw;
 	}
 
 	PrivateNamespace::PrivateNamespace(const PrivateNamespace& other)

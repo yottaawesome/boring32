@@ -197,7 +197,6 @@
     <ClInclude Include="include\Async\Async.hpp" />
     <ClInclude Include="include\Security\Sid.hpp" />
     <ClInclude Include="include\Security\ImpersonationContext.hpp" />
-    <ClInclude Include="include\Security\PrivateNamespace.hpp" />
     <ClInclude Include="include\Boring32.hpp" />
     <ClInclude Include="include\WinHttp\ProxyInfo.hpp" />
     <ClInclude Include="include\WinHttp\ProxyType.hpp" />
@@ -259,6 +258,7 @@
     <ClCompile Include="src\Registry\boring32.registry.key.ixx" />
     <ClCompile Include="src\Security\boring32.security.constants.ixx" />
     <ClCompile Include="src\Security\boring32.security.functions.ixx" />
+    <ClCompile Include="src\Security\boring32.security.privatenamespace.ixx" />
     <ClCompile Include="src\Security\boring32.security.token.ixx" />
     <ClCompile Include="src\TaskScheduler\boring32.taskscheduler.ixx" />
     <ClCompile Include="src\TaskScheduler\boring32.taskscheduler.registeredtask.ixx" />

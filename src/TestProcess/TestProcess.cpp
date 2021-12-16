@@ -7,6 +7,7 @@ import boring32.async.event;
 import boring32.ipc.anonymouspipe;
 import boring32.ipc.overlappednamedpipeserver;
 import boring32.ipc.overlappednamedpipeclient;
+import boring32.security.privatenamespace;
 import test;
 
 int MainAnon(int argc, char** args)

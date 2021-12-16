@@ -87,9 +87,6 @@
     <ClInclude Include="include\Async\OverlappedOp.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Security\PrivateNamespace.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Security\Security.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -426,6 +423,7 @@
     <ClCompile Include="src\Security\boring32.security.functions.ixx" />
     <ClCompile Include="src\Security\boring32.security.token.ixx" />
     <ClCompile Include="src\Security\boring32.security.constants.ixx" />
+    <ClCompile Include="src\Security\boring32.security.privatenamespace.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />
