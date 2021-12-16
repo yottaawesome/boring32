@@ -1,7 +1,9 @@
-#include "pch.hpp"
-#include <stdexcept>
-#include "include/Security/ImpersonationContext.hpp"
+module;
 
+#include <stdexcept>
+#include <Windows.h>
+
+module boring32.security.impersonationcontext;
 import boring32.error.win32error;
 import boring32.error.ntstatuserror;
 
