@@ -36,9 +36,6 @@
     <ClInclude Include="include\Async\Thread.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Security\Sid.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Boring32.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -85,9 +82,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Async\OverlappedOp.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Security\Security.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\WinHttp\ProxyInfo.hpp">
@@ -422,6 +416,7 @@
     <ClCompile Include="src\Security\boring32.security.constants.ixx" />
     <ClCompile Include="src\Security\boring32.security.privatenamespace.ixx" />
     <ClCompile Include="src\Security\boring32.security.impersonationcontext.ixx" />
+    <ClCompile Include="src\Security\boring32.security.sid.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

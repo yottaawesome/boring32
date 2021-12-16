@@ -1,6 +1,11 @@
-#include "pch.hpp"
-#include "include/Security/Sid.hpp"
+module;
 
+#include <vector>
+#include <stdexcept>
+#include <iostream>
+#include <Windows.h>
+
+module boring32.security.sid;
 import boring32.error.win32error;
 
 namespace Boring32::Security

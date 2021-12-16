@@ -1,8 +1,11 @@
-#pragma once
+module;
+
 #include <vector>
 #include <Windows.h>
 
-namespace Boring32::Security
+export module boring32.security.sid;
+
+export namespace Boring32::Security
 {
 	class Sid
 	{

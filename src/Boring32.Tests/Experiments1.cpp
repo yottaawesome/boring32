@@ -35,6 +35,7 @@ import boring32.async.timerqueuetimer;
 import boring32.async.threadsafevector;
 import boring32.ipc.anonymouspipe;
 import boring32.ipc.overlappednamedpipeserver;
+import boring32.security.sid;
 
 #pragma comment(lib, "Pathcch.lib")
 
