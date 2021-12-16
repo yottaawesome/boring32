@@ -1,10 +1,11 @@
-#pragma once
+module;
 #include <Windows.h>
-#include "Constants.hpp"
+#include "include/Security/Constants.hpp"
 
+export module boring32.security.token;
 import boring32.raii.win32handle;
 
-namespace Boring32::Security
+export namespace Boring32::Security
 {
 	class Token
 	{

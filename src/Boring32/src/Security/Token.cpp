@@ -1,9 +1,11 @@
+module;
+
 #include <string>
 #include <stdexcept>
 #include <Windows.h>
 #include <sddl.h>
-#include "include/Security/Token.hpp"
 
+module boring32.security.token;
 import boring32.error.win32error;
 import boring32.security.functions;
 
