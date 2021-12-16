@@ -7,11 +7,11 @@ module;
 #include <iostream>
 #include <Windows.h>
 #include <sddl.h>
-#include "include/Security/Constants.hpp"
 
 module boring32.security.functions;
 import boring32.error.win32error;
 import boring32.raii.uniqueptrs;
+import boring32.security.constants;
 
 namespace Boring32::Security
 {
@@ -83,7 +83,7 @@ namespace Boring32::Security
 		if (token == nullptr || token == INVALID_HANDLE_VALUE)
 			throw std::invalid_argument(__FUNCSIG__ ": token cannot be null");
 
-		const std::wstring& integritySidString = Constants::Integrities.at(integrity);
+		const std::wstring& integritySidString = Constants::GetIntegrity(integrity);
 		PSID rawIntegritySid = nullptr;
 		// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw
 		if (!ConvertStringSidToSidW(integritySidString.c_str(), &rawIntegritySid))

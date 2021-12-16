@@ -144,9 +144,6 @@
     <ClInclude Include="include\WinHttp\WebSockets\AsyncWebSocketSettings.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Security\Constants.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\pch.cpp">
@@ -428,6 +425,7 @@
     <ClCompile Include="src\Crypto\boring32.crypto.aesencryption.ixx" />
     <ClCompile Include="src\Security\boring32.security.functions.ixx" />
     <ClCompile Include="src\Security\boring32.security.token.ixx" />
+    <ClCompile Include="src\Security\boring32.security.constants.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

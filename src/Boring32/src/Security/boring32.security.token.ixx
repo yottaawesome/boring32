@@ -1,8 +1,9 @@
 module;
+#include <string>
 #include <Windows.h>
-#include "include/Security/Constants.hpp"
 
 export module boring32.security.token;
+import boring32.security.constants;
 import boring32.raii.win32handle;
 
 export namespace Boring32::Security

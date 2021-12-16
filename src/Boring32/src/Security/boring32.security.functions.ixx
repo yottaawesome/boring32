@@ -3,10 +3,10 @@ module;
 #include <string>
 #include <vector>
 #include <Windows.h>
-#include "include/Security/Constants.hpp"
 
 export module boring32.security.functions;
 import boring32.raii.win32handle;
+import boring32.security.constants;
 
 export namespace Boring32::Security
 {
