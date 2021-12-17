@@ -311,4 +311,17 @@ namespace Boring32::Security
 
 		return allOK;
 	}
+
+	bool CheckMembership(const HANDLE token, const PSID sidToCheck)
+	{
+		if (!token)
+			throw std::invalid_argument(__FUNCSIG__ "token and pSID cannot be nullptr");
+		if (!sidToCheck)
+			throw std::invalid_argument(__FUNCSIG__ "sidToCheck and pSID cannot be nullptr");
+		BOOL result = false;
+		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-checktokenmembership
+		if (!CheckTokenMembership(token, sidToCheck, &result))
+			throw Error::Win32Error(__FUNCSIG__": CheckTokenMembership() failed", GetLastError());
+		return result;
+	}
 }

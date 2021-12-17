@@ -56,7 +56,7 @@ namespace Boring32::Security
 		}
 	}
 
-	PSID Sid::GetSid()
+	PSID Sid::GetSid() const noexcept
 	{
 		return m_sid;
 	}

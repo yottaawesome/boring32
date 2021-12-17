@@ -12,13 +12,12 @@ export namespace Boring32::Security
 		public:
 			virtual ~Sid();
 			Sid();
+			Sid(const Sid& other);
+			Sid(Sid&& other) noexcept;
 			Sid(
 				const SID_IDENTIFIER_AUTHORITY& pIdentifierAuthority,
 				const std::vector<DWORD>& subAuthorities
 			);
-
-			Sid(const Sid& other);
-			Sid(Sid&& other) noexcept;
 
 		public:
 			virtual void operator=(const Sid& other);
@@ -26,7 +25,7 @@ export namespace Boring32::Security
 
 		public:
 			virtual void Close();
-			virtual PSID GetSid();
+			virtual PSID GetSid() const noexcept;
 			virtual BYTE GetSubAuthorityCount() const;
 
 		protected:

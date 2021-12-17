@@ -26,6 +26,7 @@ export namespace Boring32::Security
 	bool SearchTokenGroupsForSID(const HANDLE hToken, const PSID pSID);
 	void EnumerateTokenGroups(const HANDLE hToken);
 	void EnumerateTokenPrivileges(const HANDLE hToken);
+	bool CheckMembership(const HANDLE token, const PSID sidToCheck);
 
 	enum class AdjustPrivilegeType
 	{
