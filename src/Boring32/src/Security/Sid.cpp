@@ -44,17 +44,13 @@ namespace Boring32::Security
 		m_pIdentifierAuthority(pIdentifierAuthority),
 		m_subAuthorities(subAuthorities)
 	{
-		Create();
+		Create(m_pIdentifierAuthority, m_subAuthorities);
 	}
 
 	Sid::Sid(const std::wstring& sidString)
 		: Sid()
 	{
-		if (sidString.empty())
-			throw std::invalid_argument(__FUNCSIG__": sidString cannot be empty");
-		// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw
-		if (!ConvertStringSidToSidW(sidString.c_str(), &m_sid))
-			throw Error::Win32Error(__FUNCSIG__": ConvertStringSidToSidW() failed", GetLastError());
+		Create(sidString);
 	}
 
 	void Sid::Close()
@@ -80,8 +76,29 @@ namespace Boring32::Security
 		if (!IsValidSid(m_sid))
 			throw std::runtime_error(__FUNCSIG__ ": invalid SID");
 
+		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsidsubauthoritycount
 		PUCHAR authorityCount = GetSidSubAuthorityCount(m_sid);
 		return (BYTE)*authorityCount;
+	}
+
+	PSID_IDENTIFIER_AUTHORITY Sid::GetIdentifierAuthority() const
+	{
+		if (!m_sid)
+			return nullptr;
+		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsididentifierauthority
+		if (PSID_IDENTIFIER_AUTHORITY identifier = GetSidIdentifierAuthority(m_sid))
+			return identifier;
+		throw Error::Win32Error(__FUNCSIG__ ": GetSidIdentifierAuthority() failed", GetLastError());
+	}
+	
+	PDWORD Sid::GetSubAuthority(const DWORD index) const
+	{
+		if (!m_sid)
+			return nullptr;
+		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsidsubauthority
+		if (PDWORD returnVal = GetSidSubAuthority(m_sid, index))
+			return returnVal;
+		throw Error::Win32Error(__FUNCSIG__ ": GetSidSubAuthority() failed", GetLastError());
 	}
 
 	void Sid::operator=(const Sid& other)
@@ -117,7 +134,7 @@ namespace Boring32::Security
 		m_pIdentifierAuthority = other.m_pIdentifierAuthority;
 		m_subAuthorities = other.m_subAuthorities;
 
-		Create();
+		Create(m_pIdentifierAuthority, m_subAuthorities);
 	}
 
 	void Sid::Move(Sid& other) noexcept
@@ -131,15 +148,16 @@ namespace Boring32::Security
 		m_subAuthorities = std::move(other.m_subAuthorities);
 	}
 
-	void Sid::Create()
+	void Sid::Create(const SID_IDENTIFIER_AUTHORITY& identifierAuthority, const std::vector<DWORD>& subAuthorities)
 	{
-		std::vector<DWORD> subAuthorities2 = m_subAuthorities;
+		// What's the reason for doing this?
+		std::vector<DWORD> subAuthorities2 = subAuthorities;
 		if (subAuthorities2.size() != 8)
 			subAuthorities2.resize(8);
 
 		const bool succeeded = AllocateAndInitializeSid(
-			&m_pIdentifierAuthority,
-			(BYTE)m_subAuthorities.size(),
+			&const_cast<SID_IDENTIFIER_AUTHORITY&>(identifierAuthority),
+			static_cast<BYTE>(m_subAuthorities.size()),
 			subAuthorities2[0],
 			subAuthorities2[1],
 			subAuthorities2[2],
@@ -148,9 +166,18 @@ namespace Boring32::Security
 			subAuthorities2[5],
 			subAuthorities2[6],
 			subAuthorities2[7],
-			(PSID*)&m_sid
+			&m_sid
 		);
 		if (!succeeded)
 			throw Error::Win32Error(__FUNCSIG__ ": failed to initialise SID", GetLastError());
+	}
+
+	void Sid::Create(const std::wstring sidString)
+	{
+		if (sidString.empty())
+			throw std::invalid_argument(__FUNCSIG__": sidString cannot be empty");
+		// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw
+		if (!ConvertStringSidToSidW(sidString.c_str(), &m_sid))
+			throw Error::Win32Error(__FUNCSIG__": ConvertStringSidToSidW() failed", GetLastError());
 	}
 }
