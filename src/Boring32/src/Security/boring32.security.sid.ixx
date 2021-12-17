@@ -1,6 +1,7 @@
 module;
 
 #include <vector>
+#include <string>
 #include <Windows.h>
 
 export module boring32.security.sid;
@@ -18,10 +19,12 @@ export namespace Boring32::Security
 				const SID_IDENTIFIER_AUTHORITY& pIdentifierAuthority,
 				const std::vector<DWORD>& subAuthorities
 			);
+			Sid(const std::wstring& sidString);
 
 		public:
 			virtual void operator=(const Sid& other);
 			virtual void operator=(Sid&& other) noexcept;
+			virtual operator std::wstring() const;
 
 		public:
 			virtual void Close();

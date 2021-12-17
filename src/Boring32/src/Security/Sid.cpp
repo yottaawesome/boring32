@@ -4,9 +4,11 @@ module;
 #include <stdexcept>
 #include <iostream>
 #include <Windows.h>
+#include <sddl.h>
 
 module boring32.security.sid;
 import boring32.error.win32error;
+import boring32.raii.uniqueptrs;
 
 namespace Boring32::Security
 {
@@ -45,15 +47,25 @@ namespace Boring32::Security
 		Create();
 	}
 
+	Sid::Sid(const std::wstring& sidString)
+		: Sid()
+	{
+		if (sidString.empty())
+			throw std::invalid_argument(__FUNCSIG__": sidString cannot be empty");
+		// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw
+		if (!ConvertStringSidToSidW(sidString.c_str(), &m_sid))
+			throw Error::Win32Error(__FUNCSIG__": ConvertStringSidToSidW() failed", GetLastError());
+	}
+
 	void Sid::Close()
 	{
-		if (m_sid)
-		{
-			if (FreeSid(m_sid) != nullptr)
-				std::wcerr << L"Failed to release SID" << std::endl;
-			m_sid = nullptr;
-			m_subAuthorities.clear();
-		}
+		if (!m_sid)
+			return;
+		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-freesid
+		if (FreeSid(m_sid))
+			std::wcerr << TEXT(__FUNCSIG__) L": failed to release SID" << std::endl;
+		m_sid = nullptr;
+		m_subAuthorities.clear();
 	}
 
 	PSID Sid::GetSid() const noexcept
@@ -63,9 +75,9 @@ namespace Boring32::Security
 	
 	BYTE Sid::GetSubAuthorityCount() const
 	{
-		if (m_sid == nullptr)
+		if (!m_sid)
 			return 0;
-		if (IsValidSid(m_sid) == false)
+		if (!IsValidSid(m_sid))
 			throw std::runtime_error(__FUNCSIG__ ": invalid SID");
 
 		PUCHAR authorityCount = GetSidSubAuthorityCount(m_sid);
@@ -82,13 +94,24 @@ namespace Boring32::Security
 		Move(other);
 	}
 
+	Sid::operator std::wstring() const
+	{
+		LPWSTR string = nullptr;
+		// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertsidtostringsidw
+		const bool succeeded = ConvertSidToStringSidW(m_sid, &string);
+		if (!succeeded)
+			throw Error::Win32Error(__FUNCSIG__": ConvertSidToStringSidW() failed", GetLastError());
+		Raii::LocalHeapUniquePtr ptr(string);
+		return string;
+	}
+
 	void Sid::Copy(const Sid& other)
 	{
 		if (&other == this)
 			return;
 
 		Close();
-		if (other.m_sid == nullptr)
+		if (!other.m_sid)
 			return;
 
 		m_pIdentifierAuthority = other.m_pIdentifierAuthority;
@@ -100,21 +123,21 @@ namespace Boring32::Security
 	void Sid::Move(Sid& other) noexcept
 	{
 		Close();
-		if (other.m_sid == nullptr)
+		if (!other.m_sid)
 			return;
 
 		m_sid = other.m_sid;
-		m_subAuthorities = other.m_subAuthorities;
+		other.m_sid = nullptr;
+		m_subAuthorities = std::move(other.m_subAuthorities);
 	}
 
 	void Sid::Create()
 	{
-		std::vector<DWORD> subAuthorities2
-			= m_subAuthorities;
+		std::vector<DWORD> subAuthorities2 = m_subAuthorities;
 		if (subAuthorities2.size() != 8)
 			subAuthorities2.resize(8);
 
-		const bool isInitialized = AllocateAndInitializeSid(
+		const bool succeeded = AllocateAndInitializeSid(
 			&m_pIdentifierAuthority,
 			(BYTE)m_subAuthorities.size(),
 			subAuthorities2[0],
@@ -127,7 +150,7 @@ namespace Boring32::Security
 			subAuthorities2[7],
 			(PSID*)&m_sid
 		);
-		if (isInitialized == false)
+		if (!succeeded)
 			throw Error::Win32Error(__FUNCSIG__ ": failed to initialise SID", GetLastError());
 	}
 }
