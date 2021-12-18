@@ -2,6 +2,7 @@ module;
 
 #include <stdexcept>
 #include <format>
+// See #include <winnt.h> for FAST_FAIL error codes
 #include "Windows.h"
 
 module boring32.error.win32error;

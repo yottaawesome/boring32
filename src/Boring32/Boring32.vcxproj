@@ -192,7 +192,6 @@
     <ClInclude Include="include\Crypto\CertStore.hpp" />
     <ClInclude Include="include\Crypto\ChainingMode.hpp" />
     <ClInclude Include="include\Crypto\SecureString.hpp" />
-    <ClInclude Include="include\Crypto\SensitiveString.hpp" />
     <ClInclude Include="include\Crypto\Crypto.hpp" />
     <ClInclude Include="include\Async\Async.hpp" />
     <ClInclude Include="include\Boring32.hpp" />
@@ -306,7 +305,6 @@
     <ClCompile Include="src\Crypto\CryptoFuncs.cpp" />
     <ClCompile Include="src\Crypto\CryptoKey.cpp" />
     <ClCompile Include="src\Crypto\SecureString.cpp" />
-    <ClCompile Include="src\Crypto\SensitiveString.cpp" />
     <ClCompile Include="src\Crypto\TempCertImport.cpp" />
     <ClCompile Include="src\Error\ComError.cpp" />
     <ClCompile Include="src\Error\NtStatusError.cpp" />
