@@ -262,7 +262,7 @@
     <ClCompile Include="src\Time\boring32.time.ixx" />
     <ClCompile Include="src\Util\boring32.util.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.winhttphandle.ixx" />
-    <ClCompile Include="src\WinHttp\boring.32winhttp.proxytype.ixx" />
+    <ClCompile Include="src\WinHttp\boring32.winhttp.proxytype.ixx" />
     <ClCompile Include="src\WinSock\boring32.winsock.ixx" />
     <ClCompile Include="src\Async\AsyncFuncs.cpp" />
     <ClCompile Include="src\Async\CriticalSectionLock.cpp" />
