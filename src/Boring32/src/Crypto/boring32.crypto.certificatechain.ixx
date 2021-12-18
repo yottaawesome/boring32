@@ -1,11 +1,14 @@
-#pragma once
+module;
+
+#include <vector>
 #include <Windows.h>
 #include <wincrypt.h>
 
+export module boring32.crypto.certificatechain;
 import boring32.crypto.certificate;
 import boring32.crypto.certstore;
 
-namespace Boring32::Crypto
+export namespace Boring32::Crypto
 {
 	class CertificateChain
 	{

@@ -1,6 +1,12 @@
-#include "pch.hpp"
-#include "include/Crypto/CertificateChain.hpp"
+module;
 
+#include <vector>
+#include <string>
+#include <stdexcept>
+#include <Windows.h>
+#include <wincrypt.h>
+
+module boring32.crypto.certificatechain;
 import boring32.error.win32error;
 
 namespace Boring32::Crypto
