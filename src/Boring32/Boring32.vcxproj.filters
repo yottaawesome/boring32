@@ -42,9 +42,6 @@
     <ClInclude Include="include\WinHttp\WinHttp.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\WinHttp\WinHttpHandle.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\WinHttp\HttpWebClient.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -400,6 +397,7 @@
     <ClCompile Include="src\Crypto\boring32.crypto.certstore.ixx" />
     <ClCompile Include="src\Crypto\boring32.crypto.chainingmode.ixx" />
     <ClCompile Include="src\Crypto\boring32.crypto.certificatechain.ixx" />
+    <ClCompile Include="src\WinHttp\boring32.winhttp.winhttphandle.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

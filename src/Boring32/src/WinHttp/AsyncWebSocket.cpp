@@ -4,6 +4,7 @@
 #include "include/WinHttp/WebSockets/AsyncWebSocket.hpp"
 
 import boring32.error.win32error;
+import boring32.winhttp.winhttphandle;
 
 namespace Boring32::WinHttp::WebSockets
 {

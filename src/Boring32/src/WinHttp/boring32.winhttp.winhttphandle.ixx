@@ -1,9 +1,12 @@
-#pragma once
+module;
+
 #include <memory>
 #include <Windows.h>
 #include <winhttp.h>
 
-namespace Boring32::WinHttp
+export module boring32.winhttp.winhttphandle;
+
+export namespace Boring32::WinHttp
 {
 	class WinHttpHandle
 	{

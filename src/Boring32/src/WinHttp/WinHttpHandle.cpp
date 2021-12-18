@@ -1,5 +1,11 @@
-#include "pch.hpp"
-#include "include/WinHttp/WinHttpHandle.hpp"
+module;
+
+
+#include <memory>
+#include <Windows.h>
+#include <winhttp.h>
+
+module boring32.winhttp.winhttphandle;
 
 namespace Boring32::WinHttp
 {

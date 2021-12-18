@@ -1,8 +1,11 @@
 #pragma once
-#include <winhttp.h>
+#include <string>
 #include <memory>
+#include <windows.h>
+#include <winhttp.h>
 #include "ProxyType.hpp"
-#include "WinHttpHandle.hpp"
+
+import boring32.winhttp.winhttphandle;
 
 namespace Boring32::WinHttp
 {

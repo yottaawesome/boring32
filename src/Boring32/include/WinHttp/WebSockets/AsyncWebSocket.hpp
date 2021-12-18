@@ -7,6 +7,7 @@
 
 import boring32.async.criticalsectionlock;
 import boring32.async.event;
+import boring32.winhttp.winhttphandle;
 
 namespace Boring32::WinHttp::WebSockets
 {

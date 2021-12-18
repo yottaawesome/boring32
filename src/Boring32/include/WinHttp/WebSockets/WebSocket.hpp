@@ -4,12 +4,12 @@
 #include <vector>
 #include <memory>
 #include <future>
-#include "../WinHttpHandle.hpp"
 #include "../Session.hpp"
 #include "WebSocketStatus.hpp"
 #include "WebSocketSettings.hpp"
 
 import boring32.async.event;
+import boring32.winhttp.winhttphandle;
 
 namespace Boring32::WinHttp::WebSockets
 {

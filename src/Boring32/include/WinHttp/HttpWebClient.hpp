@@ -1,10 +1,11 @@
 #pragma once
-#include <Windows.h>
 #include <string>
 #include <vector>
-#include "WinHttpHandle.hpp"
+#include <Windows.h>
 #include "HttpRequestResult.hpp"
 #include "ProxyInfo.hpp"
+
+import boring32.winhttp.winhttphandle;
 
 namespace Boring32::WinHttp
 {
