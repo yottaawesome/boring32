@@ -3,11 +3,11 @@ module;
 #include <string>
 #include <vector>
 #include <Windows.h>
-#include "include/WinHttp/HttpRequestResult.hpp"
 #include "include/WinHttp/ProxyInfo.hpp"
 
 export module boring32.winhttp.httpwebclient;
 import boring32.winhttp.winhttphandle;
+import boring32.winhttp.requestresult;
 
 export namespace Boring32::WinHttp
 {
