@@ -1,13 +1,14 @@
 #define WIN32_LEAN_AND_MEAN
 
-#include <Windows.h>
 #include <iostream>
 #include <sstream>
+#include <Windows.h>
 #include <dbghelp.h>
 #include <stdio.h>
-#include <windows.h>
 #include <tchar.h>
 #include <taskschd.h>
+#include <wincrypt.h>
+#include <cryptuiapi.h>
 #include "pathcch.h"
 
 #include "Boring32.Tests.h"
@@ -36,6 +37,7 @@ import boring32.async.threadsafevector;
 import boring32.ipc.anonymouspipe;
 import boring32.ipc.overlappednamedpipeserver;
 import boring32.security.sid;
+import boring32.crypto.certstore;
 
 #pragma comment(lib, "Pathcch.lib")
 

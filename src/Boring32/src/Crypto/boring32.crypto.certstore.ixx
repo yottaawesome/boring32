@@ -1,15 +1,17 @@
-#pragma once
+module;
+
 #include <string>
-#include <Windows.h>
 #include <filesystem>
+#include <vector>
 #include <Windows.h>
 #include <wincrypt.h>
 #include <cryptuiapi.h>
 #include <winnt.h>
 
+export module boring32.crypto.certstore;
 import boring32.crypto.certificate;
 
-namespace Boring32::Crypto
+export namespace Boring32::Crypto
 {
 	enum class CertStoreCloseOptions : DWORD
 	{

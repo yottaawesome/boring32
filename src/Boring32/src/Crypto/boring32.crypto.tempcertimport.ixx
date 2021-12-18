@@ -1,10 +1,10 @@
 module;
 
 #include <string>
-#include "include/Crypto/CertStore.hpp"
 
 export module boring32.crypto.tempcertimport;
 import boring32.crypto.certificate;
+import boring32.crypto.certstore;
 
 export namespace Boring32::Crypto
 {

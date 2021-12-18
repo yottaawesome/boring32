@@ -1,16 +1,24 @@
-#include "pch.hpp"
+module;
+
 #include <stdexcept>
 #include <iostream>
 #include <vector>
+#include <string>
+#include <filesystem>
+#include <Windows.h>
+#include <wincrypt.h>
 #include <cryptuiapi.h>
-#include "include/Crypto/CertStore.hpp"
+#include <winnt.h>
 
+module boring32.crypto.certstore;
 import boring32.strings;
 import boring32.error.win32error;
 import boring32.crypto.functions;
 
 namespace Boring32::Crypto
 {
+	constexpr DWORD CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS = 0x0002;
+
 	CertStore::~CertStore()
 	{
 		Close();

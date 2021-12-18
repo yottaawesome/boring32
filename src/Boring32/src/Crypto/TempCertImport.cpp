@@ -3,10 +3,10 @@ module;
 #include <iostream>
 #include <string>
 #include <Windows.h>
-#include "include/Crypto/CertStore.hpp"
 
 module boring32.crypto.tempcertimport;
 import boring32.crypto.certificate;
+import boring32.crypto.certstore;
 
 namespace Boring32::Crypto
 {
