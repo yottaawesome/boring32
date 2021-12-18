@@ -75,23 +75,23 @@ namespace Boring32::Security
 		return (BYTE)*authorityCount;
 	}
 
-	PSID_IDENTIFIER_AUTHORITY Sid::GetIdentifierAuthority() const
+	SID_IDENTIFIER_AUTHORITY Sid::GetIdentifierAuthority() const
 	{
 		if (!m_sid)
-			return nullptr;
+			throw std::runtime_error(__FUNCSIG__": no valid SID");
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsididentifierauthority
 		if (PSID_IDENTIFIER_AUTHORITY identifier = GetSidIdentifierAuthority(m_sid))
-			return identifier;
+			return *identifier;
 		throw Error::Win32Error(__FUNCSIG__ ": GetSidIdentifierAuthority() failed", GetLastError());
 	}
 	
-	PDWORD Sid::GetSubAuthority(const DWORD index) const
+	DWORD Sid::GetSubAuthority(const DWORD index) const
 	{
 		if (!m_sid)
-			return nullptr;
+			throw std::runtime_error(__FUNCSIG__": no valid SID");
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsidsubauthority
 		if (PDWORD returnVal = GetSidSubAuthority(m_sid, index))
-			return returnVal;
+			return *returnVal;
 		throw Error::Win32Error(__FUNCSIG__ ": GetSidSubAuthority() failed", GetLastError());
 	}
 
@@ -125,11 +125,7 @@ namespace Boring32::Security
 		if (!other.m_sid)
 			return;
 
-		// TODO: fix
-		/*m_pIdentifierAuthority = other.m_pIdentifierAuthority;
-		m_subAuthorities = other.m_subAuthorities;
-
-		Create(m_pIdentifierAuthority, m_subAuthorities);*/
+		Create(other.GetIdentifierAuthority(), other.GetAllSubAuthorities());
 	}
 
 	void Sid::Move(Sid& other) noexcept
@@ -173,5 +169,16 @@ namespace Boring32::Security
 		// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw
 		if (!ConvertStringSidToSidW(sidString.c_str(), &m_sid))
 			throw Error::Win32Error(__FUNCSIG__": ConvertStringSidToSidW() failed", GetLastError());
+	}
+	
+	std::vector<DWORD> Sid::GetAllSubAuthorities() const
+	{
+		if (!m_sid)
+			return {};
+
+		std::vector<DWORD> returnVal;
+		for (BYTE i = 0, count = GetSubAuthorityCount(); i < count; i++)
+			returnVal.push_back(GetSubAuthority(i));
+		return returnVal;
 	}
 }

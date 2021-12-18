@@ -30,8 +30,9 @@ export namespace Boring32::Security
 			virtual void Close();
 			virtual PSID GetSid() const noexcept;
 			virtual BYTE GetSubAuthorityCount() const;
-			virtual PSID_IDENTIFIER_AUTHORITY GetIdentifierAuthority() const;
-			virtual PDWORD GetSubAuthority(const DWORD index) const;
+			virtual SID_IDENTIFIER_AUTHORITY GetIdentifierAuthority() const;
+			virtual DWORD GetSubAuthority(const DWORD index) const;
+			virtual std::vector<DWORD> GetAllSubAuthorities() const;
 
 		protected:
 			virtual void Copy(const Sid& other);
