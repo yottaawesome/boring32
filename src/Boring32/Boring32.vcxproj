@@ -191,7 +191,6 @@
     <ClInclude Include="include\Crypto\CertificateChain.hpp" />
     <ClInclude Include="include\Crypto\CertStore.hpp" />
     <ClInclude Include="include\Crypto\ChainingMode.hpp" />
-    <ClInclude Include="include\Crypto\SecureString.hpp" />
     <ClInclude Include="include\Crypto\Crypto.hpp" />
     <ClInclude Include="include\Async\Async.hpp" />
     <ClInclude Include="include\Boring32.hpp" />
@@ -230,6 +229,7 @@
     <ClCompile Include="src\Crypto\boring32.crypto.certificate.ixx" />
     <ClCompile Include="src\Crypto\boring32.crypto.cryptokey.ixx" />
     <ClCompile Include="src\Crypto\boring32.crypto.functions.ixx" />
+    <ClCompile Include="src\Crypto\boring32.crypto.securestring.ixx" />
     <ClCompile Include="src\Crypto\boring32.crypto.tempcertimport.ixx" />
     <ClCompile Include="src\DataStructures\boring32.datastructures.cappedstack.ixx" />
     <ClCompile Include="src\DataStructures\boring32.datastructures.ixx" />

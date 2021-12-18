@@ -1,9 +1,13 @@
-#pragma once
+module;
+
 #include <string>
 #include <vector>
 #include <Windows.h>
+#include <dpapi.h>
 
-namespace Boring32::Crypto
+export module boring32.crypto.securestring;
+
+export namespace Boring32::Crypto
 {
 	enum class EncryptionType : DWORD
 	{

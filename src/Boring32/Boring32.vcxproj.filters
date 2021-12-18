@@ -117,9 +117,6 @@
     <ClInclude Include="include\Crypto\ChainingMode.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Crypto\SecureString.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Crypto\CertificateChain.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -411,6 +408,7 @@
     <ClCompile Include="src\Security\boring32.security.privatenamespace.ixx" />
     <ClCompile Include="src\Security\boring32.security.impersonationcontext.ixx" />
     <ClCompile Include="src\Security\boring32.security.sid.ixx" />
+    <ClCompile Include="src\Crypto\boring32.crypto.securestring.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

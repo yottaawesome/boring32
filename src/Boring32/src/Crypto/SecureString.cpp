@@ -1,9 +1,11 @@
-#include "pch.hpp"
+module;
+
 #include <algorithm>
 #include <stdexcept>
+#include <Windows.h>
 #include <dpapi.h>
-#include "include/Crypto/SecureString.hpp"
 
+module boring32.crypto.securestring;
 import boring32.error.win32error;
 
 namespace Boring32::Crypto
