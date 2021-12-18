@@ -128,7 +128,7 @@ namespace Boring32::WinHttp
 			0
 		);
 		if (m_hSession == nullptr)
-			throw Error::Win32Error("WinHttpOpen failed", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__": WinHttpOpen() failed", GetLastError());
 
 		//if (m_proxy.empty() == false)
 		//{
@@ -143,7 +143,7 @@ namespace Boring32::WinHttp
 			0
 		);
 		if (m_hConnect == nullptr)
-			throw Error::Win32Error("WinHttpConnect failed", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__": WinHttpConnect() failed", GetLastError());
 	}
 	
 	HttpRequestResult HttpWebClient::Get(const std::wstring& path)
@@ -182,37 +182,37 @@ namespace Boring32::WinHttp
 				acceptHeader[i] = m_acceptTypes.at(i).c_str();
 		}
 
+		// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpopenrequest
 		WinHttpHandle hRequest = WinHttpOpenRequest(
 			m_hConnect.Get(),
 			verb.c_str(),
 			path.c_str(),
 			nullptr,
 			WINHTTP_NO_REFERER,
-			m_acceptTypes.empty() 
-				? WINHTTP_DEFAULT_ACCEPT_TYPES 
-				: &acceptHeader[0],
+			m_acceptTypes.empty() ? WINHTTP_DEFAULT_ACCEPT_TYPES : &acceptHeader[0],
 			WINHTTP_FLAG_SECURE
 		);
 		if (hRequest == nullptr)
-			throw Error::Win32Error("WinHttpOpenRequest failed", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__": WinHttpOpenRequest() failed", GetLastError());
 
 		if (m_ignoreSslErrors)
 		{
-			DWORD dwFlags =
+			DWORD flags =
 				SECURITY_FLAG_IGNORE_UNKNOWN_CA |
 				SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE |
 				SECURITY_FLAG_IGNORE_CERT_CN_INVALID |
 				SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
-			bool succeeded = WinHttpSetOption(
+			const bool succeeded = WinHttpSetOption(
 				hRequest.Get(),
 				WINHTTP_OPTION_SECURITY_FLAGS,
-				&dwFlags,
-				sizeof(dwFlags)
+				&flags,
+				sizeof(flags)
 			);
-			if(succeeded == false)
-				throw Error::Win32Error("WinHttpSetOption failed", GetLastError());
+			if (succeeded == false)
+				throw Error::Win32Error(__FUNCSIG__ ": WinHttpSetOption() failed", GetLastError());
 		}
 
+		// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpsendrequest
 		bool succeeded = WinHttpSendRequest(
 			hRequest.Get(),
 			additionalHeaders.size() > 0 
@@ -220,21 +220,24 @@ namespace Boring32::WinHttp
 				: WINHTTP_NO_ADDITIONAL_HEADERS,
 			-1L,
 			requestBody.size() > 0 
-				? (LPVOID)requestBody.c_str()
+				? const_cast<char*>(&requestBody[0])
 				: WINHTTP_NO_REQUEST_DATA,
-			(DWORD)requestBody.size(),
-			(DWORD)requestBody.size(),
+			static_cast<DWORD>(requestBody.size()),
+			static_cast<DWORD>(requestBody.size()),
 			reinterpret_cast<DWORD_PTR>(this)
 		);
 		if (succeeded == false)
-			throw Error::Win32Error("WinHttpSendRequest failed", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__ ": WinHttpSendRequest() failed", GetLastError());
 
+		// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpreceiveresponse
 		succeeded = WinHttpReceiveResponse(hRequest.Get(), nullptr);
 		if (succeeded == false)
-			throw Error::Win32Error("WinHttpReceiveResponse failed", GetLastError());
+			throw Error::Win32Error(__FUNCSIG__": WinHttpReceiveResponse() failed", GetLastError());
 
+		// Get the status code of the response
 		DWORD statusCode = 0;
 		DWORD statusCodeSize = sizeof(statusCode);
+		// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpqueryheaders
 		WinHttpQueryHeaders(
 			hRequest.Get(),
 			WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
@@ -243,32 +246,32 @@ namespace Boring32::WinHttp
 			&statusCodeSize,
 			WINHTTP_NO_HEADER_INDEX);
 
-		DWORD dwSize = 0;
+		DWORD bytesOfDataAvailable = 0;
 		std::string response = "";
 		do
 		{
-			bool succeeded = WinHttpQueryDataAvailable(hRequest.Get(), &dwSize);
-			if (succeeded == false)
-				throw Error::Win32Error("WinHttpQueryDataAvailable failed", GetLastError());
-			if (dwSize == 0)
+			// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpquerydataavailable
+			if (!WinHttpQueryDataAvailable(hRequest.Get(), &bytesOfDataAvailable))
+				throw Error::Win32Error(__FUNCSIG__": WinHttpQueryDataAvailable() failed", GetLastError());
+			if (bytesOfDataAvailable == 0)
 				continue;
 
 			// Allocate space for the buffer.
-			std::vector<char> outBuffer;
-			outBuffer.resize(dwSize);
-			DWORD dwDownloaded = 0;
-
-			succeeded = WinHttpReadData(
+			std::vector<char> outBuffer(bytesOfDataAvailable);
+			DWORD downloadedBytes = 0;
+			// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpreaddata
+			// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpreaddataex
+			const bool succeeded = WinHttpReadData(
 				hRequest.Get(),
-				(LPVOID)&outBuffer[0],
-				dwSize,
-				&dwDownloaded
+				&outBuffer[0],
+				bytesOfDataAvailable,
+				&downloadedBytes
 			);
 			if (succeeded == false)
-				throw Error::Win32Error("WinHttpQueryDataAvailable failed", GetLastError());
+				throw Error::Win32Error(__FUNCSIG__": WinHttpQueryDataAvailable() failed", GetLastError());
 
 			response.append(outBuffer.begin(), outBuffer.end());
-		} while (dwSize > 0);
+		} while (bytesOfDataAvailable > 0);
 
 		return HttpRequestResult{ statusCode, response };
 	}
