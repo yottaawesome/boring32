@@ -9,7 +9,7 @@
 
 ## Status
 
-This project is being actively developed over time.
+This project is being actively developed over time. The project is currently being migrated to C++20 modules.
 
 ## Building
 
