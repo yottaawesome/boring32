@@ -1,13 +1,15 @@
-#pragma once
+module;
+
 #include <string>
 #include <vector>
 #include <Windows.h>
-#include "HttpRequestResult.hpp"
-#include "ProxyInfo.hpp"
+#include "include/WinHttp/HttpRequestResult.hpp"
+#include "include/WinHttp/ProxyInfo.hpp"
 
+export module boring32.winhttp.httpwebclient;
 import boring32.winhttp.winhttphandle;
 
-namespace Boring32::WinHttp
+export namespace Boring32::WinHttp
 {
 	class HttpWebClient
 	{

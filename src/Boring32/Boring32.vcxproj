@@ -197,7 +197,6 @@
     <ClInclude Include="include\WinHttp\WebSockets\WebSocketSettings.hpp" />
     <ClInclude Include="include\WinHttp\WinHttp.hpp" />
     <ClInclude Include="include\WinHttp\HttpRequestResult.hpp" />
-    <ClInclude Include="include\WinHttp\HttpWebClient.hpp" />
     <ClInclude Include="include\WinHttp\WebSockets\WebSocket.hpp" />
     <ClInclude Include="include\WinHttp\WebSockets\WebSocketStatus.hpp" />
     <ClInclude Include="include\Async\ThreadStatus.hpp" />
@@ -261,6 +260,7 @@
     <ClCompile Include="src\TaskScheduler\boring32.taskscheduler.taskservice.ixx" />
     <ClCompile Include="src\Time\boring32.time.ixx" />
     <ClCompile Include="src\Util\boring32.util.ixx" />
+    <ClCompile Include="src\WinHttp\boring32.winhttp.httpwebclient.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.winhttphandle.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.proxytype.ixx" />
     <ClCompile Include="src\WinSock\boring32.winsock.ixx" />

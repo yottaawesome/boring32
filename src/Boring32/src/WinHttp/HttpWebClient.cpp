@@ -1,10 +1,14 @@
-#include "pch.hpp"
+module;
+
 #include <stdexcept>
 #include <vector>
+#include <string>
 #include <functional>
 #include <sstream>
-#include "include/WinHttp/HttpWebClient.hpp"
+#include <Windows.h>
+#include <winhttp.h>
 
+module boring32.winhttp.httpwebclient;
 import boring32.error.win32error;
 
 namespace Boring32::WinHttp
