@@ -16,6 +16,8 @@ export namespace Boring32::WinHttp
 		public:
 			virtual ~HttpWebClient();
 			HttpWebClient();
+			HttpWebClient(const HttpWebClient& other);
+			HttpWebClient(HttpWebClient&& other) noexcept;
 			HttpWebClient(
 				const std::wstring& userAgentName,
 				const std::wstring& serverToConnectTo,
@@ -32,12 +34,12 @@ export namespace Boring32::WinHttp
 				const std::vector<std::wstring>& acceptTypes,
 				const std::wstring& additionalHeaders
 			);
-			HttpWebClient(const HttpWebClient& other);
-			virtual void operator=(const HttpWebClient& other);
 
-			HttpWebClient(HttpWebClient&& other) noexcept;
+		public:
+			virtual void operator=(const HttpWebClient& other);
 			virtual void operator=(HttpWebClient&& other) noexcept;
 
+		public:
 			virtual HttpRequestResult Get(const std::wstring& path);
 			virtual HttpRequestResult Post(const std::wstring& path, const std::string& requestBody);
 			virtual HttpRequestResult Put(const std::wstring& path, const std::string& requestBody);
