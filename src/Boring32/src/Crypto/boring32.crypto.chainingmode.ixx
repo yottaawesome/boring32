@@ -1,9 +1,13 @@
-#pragma once
+module;
+
 #include <map>
 #include <string>
+#include <Windows.h>
 #include <bcrypt.h>
 
-namespace Boring32::Crypto
+export module boring32.crypto.chainingmode;
+
+export namespace Boring32::Crypto
 {
 	enum class ChainingMode
 	{
@@ -15,7 +19,7 @@ namespace Boring32::Crypto
 		GaloisCounterMode
 	};
 
-	static const std::map<ChainingMode, std::wstring> ChainingModeString
+	extern const std::map<ChainingMode, std::wstring> ChainingModeString
 	{
 		{ChainingMode::CipherBlockChaining,	BCRYPT_CHAIN_MODE_CBC},
 		{ChainingMode::CbcMac,				BCRYPT_CHAIN_MODE_CCM},

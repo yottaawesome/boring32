@@ -4,10 +4,10 @@ module;
 #include <vector>
 #include <Windows.h>
 #include <bcrypt.h>
-#include "include/Crypto/ChainingMode.hpp"
 
 export module boring32.crypto.aesencryption;
 import boring32.crypto.cryptokey;
+import boring32.crypto.chainingmode;
 
 export namespace Boring32::Crypto
 {
