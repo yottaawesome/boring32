@@ -2,6 +2,7 @@ module;
 
 #include <vector>
 #include <string>
+#include <format>
 #include <stdexcept>
 #include <Windows.h>
 #include <wincrypt.h>
@@ -119,23 +120,26 @@ namespace Boring32::Crypto
 	{
 		if (m_chainContext == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": m_chainContext is null");
+		
 		if (chainIndex >= m_chainContext->cChain)
 			throw std::invalid_argument(
-				__FUNCSIG__ ": expected index to be less than "
-				+ std::to_string(m_chainContext->cChain)
-				+ ", but got an index of "
-				+ std::to_string(chainIndex)
-			);
+				std::format(
+					"{}: expected index to be less than {} but got an index of {}",
+					__FUNCSIG__,
+					m_chainContext->cChain,
+					chainIndex
+				));
 
 		std::vector<Certificate> certsInChain;
 		CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
 		// This probably should never happen, but guard just in case
 		if (simpleChain == nullptr)
 			throw std::runtime_error(
-				__FUNCSIG__ ": the simpleChain at "
-				+ std::to_string(chainIndex)
-				+ " was unexpectedly null"
-			);
+				std::format(
+					"{}: the simpleChain at {} was unexpectedly null",
+					__FUNCSIG__,
+					chainIndex
+				));
 
 		for (
 			DWORD certIndexInChain = 0;
@@ -159,10 +163,12 @@ namespace Boring32::Crypto
 			throw std::runtime_error(__FUNCSIG__ ": m_chainContext is null");
 		if (chainIndex >= m_chainContext->cChain)
 			throw std::invalid_argument(
-				__FUNCSIG__ ": expected chainIndex to be less than "
-				+ std::to_string(m_chainContext->cChain)
-				+ ", but got an index of "
-				+ std::to_string(chainIndex)
+				std::format(
+					"{}: expected chainIndex to be less than {} but got an index of {}",
+					__FUNCSIG__,
+					m_chainContext->cChain,
+					chainIndex
+				)
 			);
 
 		CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
@@ -170,10 +176,12 @@ namespace Boring32::Crypto
 			throw std::runtime_error(__FUNCSIG__ ": simpleChain is null");
 		if (certIndex >= simpleChain->cElement)
 			throw std::invalid_argument(
-				__FUNCSIG__ ": expected certIndex to be less than "
-				+ std::to_string(simpleChain->cElement)
-				+ ", but got an index of "
-				+ std::to_string(certIndex)
+				std::format(
+					"{}: expected certIndex to be less than {} but got an index of {}"
+					__FUNCSIG__,
+					simpleChain->cElement,
+					certIndex
+				)
 			);
 		
 		return { simpleChain->rgpElement[certIndex]->pCertContext, false };
@@ -185,13 +193,14 @@ namespace Boring32::Crypto
 	{
 		if (m_chainContext == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": m_chainContext is null");
-		if (chainIndex >= m_chainContext->cChain)
+		if (chainIndex >= m_chainContext->cChain) 
 			throw std::invalid_argument(
-				__FUNCSIG__ ": expected chainIndex to be less than "
-				+ std::to_string(m_chainContext->cChain)
-				+ ", but got an index of "
-				+ std::to_string(chainIndex)
-			);
+				std::format(
+					"{}: expected index to be less than {} but got an index of {}",
+					__FUNCSIG__,
+					m_chainContext->cChain,
+					chainIndex
+			));
 
 		CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
 		if (simpleChain == nullptr)
@@ -209,11 +218,12 @@ namespace Boring32::Crypto
 			throw std::runtime_error(__FUNCSIG__ ": m_chainContext is null");
 		if (chainIndex >= m_chainContext->cChain)
 			throw std::invalid_argument(
-				__FUNCSIG__ ": expected chainIndex to be less than "
-				+ std::to_string(m_chainContext->cChain)
-				+ ", but got an index of "
-				+ std::to_string(chainIndex)
-			);
+				std::format(
+					"{}: expected index to be less than {} but got an index of {}",
+					__FUNCSIG__,
+					m_chainContext->cChain,
+					chainIndex
+				));
 
 		CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
 		if (simpleChain == nullptr)
@@ -275,7 +285,7 @@ namespace Boring32::Crypto
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certgetcertificatechain
 		// https://docs.microsoft.com/en-us/windows/win32/seccrypto/example-c-program-creating-a-certificate-chain
-		bool succeeded = CertGetCertificateChain(
+		const bool succeeded = CertGetCertificateChain(
 			nullptr,
 			contextToBuildFrom,
 			nullptr,
