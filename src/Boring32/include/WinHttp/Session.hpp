@@ -3,9 +3,9 @@
 #include <memory>
 #include <windows.h>
 #include <winhttp.h>
-#include "ProxyType.hpp"
 
 import boring32.winhttp.winhttphandle;
+import boring32.winhttp.proxytype;
 
 namespace Boring32::WinHttp
 {

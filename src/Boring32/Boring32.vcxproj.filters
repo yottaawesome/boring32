@@ -96,9 +96,6 @@
     <ClInclude Include="include\WinHttp\Session.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\WinHttp\ProxyType.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Async\EventLoop.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -398,6 +395,7 @@
     <ClCompile Include="src\Crypto\boring32.crypto.chainingmode.ixx" />
     <ClCompile Include="src\Crypto\boring32.crypto.certificatechain.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.winhttphandle.ixx" />
+    <ClCompile Include="src\WinHttp\boring.32winhttp.proxytype.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

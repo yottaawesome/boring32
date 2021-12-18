@@ -1,6 +1,6 @@
-#pragma once
+export module boring32.winhttp.proxytype;
 
-namespace Boring32::WinHttp
+export namespace Boring32::WinHttp
 {
 	enum class ProxyType : unsigned long
 	{

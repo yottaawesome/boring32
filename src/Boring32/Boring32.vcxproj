@@ -191,7 +191,6 @@
     <ClInclude Include="include\Async\Async.hpp" />
     <ClInclude Include="include\Boring32.hpp" />
     <ClInclude Include="include\WinHttp\ProxyInfo.hpp" />
-    <ClInclude Include="include\WinHttp\ProxyType.hpp" />
     <ClInclude Include="include\WinHttp\Session.hpp" />
     <ClInclude Include="include\WinHttp\WebSockets\AsyncWebSocket.hpp" />
     <ClInclude Include="include\WinHttp\WebSockets\AsyncWebSocketSettings.hpp" />
@@ -263,6 +262,7 @@
     <ClCompile Include="src\Time\boring32.time.ixx" />
     <ClCompile Include="src\Util\boring32.util.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.winhttphandle.ixx" />
+    <ClCompile Include="src\WinHttp\boring.32winhttp.proxytype.ixx" />
     <ClCompile Include="src\WinSock\boring32.winsock.ixx" />
     <ClCompile Include="src\Async\AsyncFuncs.cpp" />
     <ClCompile Include="src\Async\CriticalSectionLock.cpp" />
