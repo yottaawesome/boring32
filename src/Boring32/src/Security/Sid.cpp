@@ -18,20 +18,17 @@ namespace Boring32::Security
 	}
 
 	Sid::Sid()
-	:	m_sid(nullptr),
-		m_pIdentifierAuthority{}
+	:	m_sid(nullptr)
 	{ }
 
 	Sid::Sid(const Sid& other)
-	:	m_sid(nullptr),
-		m_pIdentifierAuthority{}
+	:	m_sid(nullptr)
 	{
 		Copy(other);
 	}
 
 	Sid::Sid(Sid&& other) noexcept
-	:	m_sid(nullptr),
-		m_pIdentifierAuthority{}
+	:	m_sid(nullptr)
 	{
 		Move(other);
 	}
@@ -40,11 +37,9 @@ namespace Boring32::Security
 		const SID_IDENTIFIER_AUTHORITY& pIdentifierAuthority,
 		const std::vector<DWORD>& subAuthorities
 	)
-	:	m_sid(nullptr),
-		m_pIdentifierAuthority(pIdentifierAuthority),
-		m_subAuthorities(subAuthorities)
+	:	m_sid(nullptr)
 	{
-		Create(m_pIdentifierAuthority, m_subAuthorities);
+		Create(pIdentifierAuthority, subAuthorities);
 	}
 
 	Sid::Sid(const std::wstring& sidString)
@@ -61,7 +56,6 @@ namespace Boring32::Security
 		if (FreeSid(m_sid))
 			std::wcerr << TEXT(__FUNCSIG__) L": failed to release SID" << std::endl;
 		m_sid = nullptr;
-		m_subAuthorities.clear();
 	}
 
 	PSID Sid::GetSid() const noexcept
@@ -131,10 +125,11 @@ namespace Boring32::Security
 		if (!other.m_sid)
 			return;
 
-		m_pIdentifierAuthority = other.m_pIdentifierAuthority;
+		// TODO: fix
+		/*m_pIdentifierAuthority = other.m_pIdentifierAuthority;
 		m_subAuthorities = other.m_subAuthorities;
 
-		Create(m_pIdentifierAuthority, m_subAuthorities);
+		Create(m_pIdentifierAuthority, m_subAuthorities);*/
 	}
 
 	void Sid::Move(Sid& other) noexcept
@@ -145,7 +140,6 @@ namespace Boring32::Security
 
 		m_sid = other.m_sid;
 		other.m_sid = nullptr;
-		m_subAuthorities = std::move(other.m_subAuthorities);
 	}
 
 	void Sid::Create(const SID_IDENTIFIER_AUTHORITY& identifierAuthority, const std::vector<DWORD>& subAuthorities)
@@ -157,7 +151,7 @@ namespace Boring32::Security
 
 		const bool succeeded = AllocateAndInitializeSid(
 			&const_cast<SID_IDENTIFIER_AUTHORITY&>(identifierAuthority),
-			static_cast<BYTE>(m_subAuthorities.size()),
+			static_cast<BYTE>(subAuthorities.size()),
 			subAuthorities2[0],
 			subAuthorities2[1],
 			subAuthorities2[2],

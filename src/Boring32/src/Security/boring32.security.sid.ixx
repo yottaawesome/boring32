@@ -44,7 +44,5 @@ export namespace Boring32::Security
 
 		protected:
 			PSID m_sid;
-			SID_IDENTIFIER_AUTHORITY m_pIdentifierAuthority;
-			std::vector<DWORD> m_subAuthorities;
 	};
 }
