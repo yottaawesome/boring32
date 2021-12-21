@@ -5,7 +5,7 @@
 
 ## Introduction
 
-`Boring32` is a small static library framework developed as hobby that provides a number of convenience classes around the Win32 API, with a particular emphasis on asynchronous Win32 functions, such as threading, mutexes, pipes, events, and so on. `Boring32` provides wrapper classes for IPC Win32 kernel objects, such as events, mutexes, semaphores, timers, processes, and threads, as well as some additional classes for other things such as compression.
+`Boring32` is a small static library framework developed as a hobby that provides a number of convenience classes around the Win32 API, with a particular emphasis on asynchronous functions. `Boring32` provides wrapper classes for IPC Win32 kernel objects, such as events, mutexes, semaphores, timers, processes, and threads, as well as some additional classes for other things such as compression.
 
 ## Status
 

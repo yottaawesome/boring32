@@ -44,4 +44,7 @@ export namespace Boring32::Security
 		const std::vector<std::wstring>& privileges,  // name of privilege to enable/disable
 		const AdjustPrivilegeType enablePrivilege   // to enable or disable privilege
 	) noexcept;
+
+	// Make sure to check your privilege
+	bool CheckTokenPrivileges(const HANDLE token, PRIVILEGE_SET& privileges);
 }

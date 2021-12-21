@@ -324,4 +324,24 @@ namespace Boring32::Security
 			throw Error::Win32Error(__FUNCSIG__": CheckTokenMembership() failed", GetLastError());
 		return result;
 	}
+
+	bool CheckTokenPrivileges(const HANDLE token, PRIVILEGE_SET& privileges)
+	{
+		if (!token)
+			throw std::invalid_argument(__FUNCSIG__": token cannot be null");
+
+		BOOL result = false;
+		// Check https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-privilegecheck
+		// for the behaviour of this function and how it adjusts the privileges argument
+		// See also https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-privilege_set
+		const bool succeeded = PrivilegeCheck(
+			token,
+			&privileges,
+			&result
+		);
+		if (!succeeded)
+			throw Error::Win32Error(__FUNCSIG__ ": PrivilegeCheck() failed", GetLastError());
+
+		return result;
+	}
 }
