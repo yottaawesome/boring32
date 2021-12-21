@@ -340,18 +340,29 @@ namespace Boring32::Security
 		return result;
 	}
 
-	bool CheckTokenPrivileges(const HANDLE token, PRIVILEGE_SET& privileges)
+	bool CheckTokenPrivileges(
+		const HANDLE token, 
+		const bool checkAll, 
+		const std::vector<LUID_AND_ATTRIBUTES>& privileges
+	)
 	{
 		if (!IsHandleValid(token))
-			throw std::invalid_argument(__FUNCSIG__ "hToken cannot be nullptr");
+			throw std::invalid_argument(__FUNCSIG__ "token cannot be nullptr");
+
+		// See also https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-privilege_set
+		std::vector<std::byte> privilegesBytes(sizeof(PRIVILEGE_SET) + sizeof(LUID_AND_ATTRIBUTES) * privileges.size());
+		PRIVILEGE_SET* privs = reinterpret_cast<PRIVILEGE_SET*>(&privilegesBytes[0]);
+		privs->PrivilegeCount = privileges.size();
+		privs->Control = checkAll ? PRIVILEGE_SET_ALL_NECESSARY : 0;
+		for (size_t index = 0; index < privileges.size(); index++)
+			privs->Privilege[index] = privileges[index];
 
 		BOOL result = false;
 		// Check https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-privilegecheck
-		// for the behaviour of this function and how it adjusts the privileges argument
-		// See also https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-privilege_set
+		// for notes on the behaviour of this function
 		const bool succeeded = PrivilegeCheck(
 			token,
-			&privileges,
+			privs,
 			&result
 		);
 		if (!succeeded)

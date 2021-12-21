@@ -46,5 +46,9 @@ export namespace Boring32::Security
 	) noexcept;
 
 	// Make sure to check your privilege
-	bool CheckTokenPrivileges(const HANDLE token, PRIVILEGE_SET& privileges);
+	bool CheckTokenPrivileges(
+		const HANDLE token, 
+		const bool checkAll, 
+		const std::vector<LUID_AND_ATTRIBUTES>& privileges
+	);
 }
