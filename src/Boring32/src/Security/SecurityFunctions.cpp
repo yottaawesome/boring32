@@ -273,12 +273,15 @@ namespace Boring32::Security
 		// See https://docs.microsoft.com/en-us/windows/win32/secauthz/enabling-and-disabling-privileges-in-c--
 		LUID luid;
 		// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupprivilegevaluew
-		if (!LookupPrivilegeValueW(
+		bool succeeded = LookupPrivilegeValueW(
 			nullptr,				// lookup privilege on local system
 			privilegeName.c_str(),  // privilege to lookup 
-			&luid)					// receives LUID of privilege
-		) throw Error::Win32Error(__FUNCSIG__": LookupPrivilegeValue() failed", GetLastError());
+			&luid					// receives LUID of privilege
+		);					
+		if (!succeeded)
+			throw Error::Win32Error(__FUNCSIG__": LookupPrivilegeValue() failed", GetLastError());
 
+		// Enable or disable the privilege.
 		TOKEN_PRIVILEGES tokenPrivileges{
 			.PrivilegeCount = 1,
 			.Privileges = {
@@ -288,17 +291,17 @@ namespace Boring32::Security
 				}
 			}
 		};
-
-		// Enable or disable the privilege.
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-adjusttokenprivileges
-		if (!AdjustTokenPrivileges(
+		succeeded = AdjustTokenPrivileges(
 			token,
 			false,
 			&tokenPrivileges,
 			sizeof(TOKEN_PRIVILEGES),
 			nullptr,
-			nullptr)
-		) throw Error::Win32Error(__FUNCSIG__": AdjustTokenPrivileges() failed", GetLastError());
+			nullptr
+		);
+		if (!succeeded) 
+			throw Error::Win32Error(__FUNCSIG__": AdjustTokenPrivileges() failed", GetLastError());
 
 		return GetLastError() == ERROR_NOT_ALL_ASSIGNED ? false : true;
 	}
@@ -352,7 +355,7 @@ namespace Boring32::Security
 		// See also https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-privilege_set
 		std::vector<std::byte> privilegesBytes(sizeof(PRIVILEGE_SET) + sizeof(LUID_AND_ATTRIBUTES) * privileges.size());
 		PRIVILEGE_SET* privs = reinterpret_cast<PRIVILEGE_SET*>(&privilegesBytes[0]);
-		privs->PrivilegeCount = privileges.size();
+		privs->PrivilegeCount = static_cast<DWORD>(privileges.size());
 		privs->Control = checkAll ? PRIVILEGE_SET_ALL_NECESSARY : 0;
 		for (size_t index = 0; index < privileges.size(); index++)
 			privs->Privilege[index] = privileges[index];

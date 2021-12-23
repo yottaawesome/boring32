@@ -58,10 +58,17 @@ namespace Boring32::Error
             nullptr
         );
         if (!messageBuffer)
-            return std::format("{}: FormatMessageA() failed on code {} with error {}", __FUNCSIG__, errorCode, GetLastError());
+            return std::format(
+                "{}: FormatMessageA() failed on code {} with error {}", 
+                __FUNCSIG__, 
+                errorCode, 
+                GetLastError()
+            );
+
         std::string msg(static_cast<char*>(messageBuffer));
         if (LocalFree(messageBuffer))
             std::wcerr << std::format(L"{}: LocalFree() failed: {}\n", TEXT(__FUNCSIG__), GetLastError());
+
         return msg;
     }
 
@@ -78,10 +85,17 @@ namespace Boring32::Error
             nullptr
         );
         if (!messageBuffer)
-            return std::format(L"{}: FormatMessageA() failed on code {} with error {}", TEXT(__FUNCSIG__), errorCode, GetLastError());
+            return std::format(
+                L"{}: FormatMessageA() failed on code {} with error {}", 
+                TEXT(__FUNCSIG__), 
+                errorCode, 
+                GetLastError()
+            );
+        
         std::wstring msg(static_cast<wchar_t*>(messageBuffer));
         if (LocalFree(messageBuffer))
             std::wcerr << std::format(L"{}: LocalFree() failed: {}\n", TEXT(__FUNCSIG__), GetLastError());
+        
         return msg;
     }
 }

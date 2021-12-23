@@ -392,6 +392,11 @@
     <ClCompile Include="src\WinHttp\boring32.winhttp.proxytype.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.httpwebclient.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.requestresult.ixx" />
+    <ClCompile Include="src\Wic\boring32.wic.ixx" />
+    <ClCompile Include="src\Wic\boring32.wic.imagingfactory.ixx" />
+    <ClCompile Include="src\Wic\ImagingFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

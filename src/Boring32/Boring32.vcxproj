@@ -259,6 +259,9 @@
     <ClCompile Include="src\TaskScheduler\boring32.taskscheduler.taskservice.ixx" />
     <ClCompile Include="src\Time\boring32.time.ixx" />
     <ClCompile Include="src\Util\boring32.util.ixx" />
+    <ClCompile Include="src\Wic\boring32.wic.imagingfactory.ixx" />
+    <ClCompile Include="src\Wic\boring32.wic.ixx" />
+    <ClCompile Include="src\Wic\ImagingFactory.cpp" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.httpwebclient.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.requestresult.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.winhttphandle.ixx" />
