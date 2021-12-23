@@ -29,9 +29,49 @@ namespace Boring32::Wic
 			throw Error::ComError(__FUNCSIG__": CoCreateInstance() failed", hr);
 	}
 
+	ImagingFactory::ImagingFactory(const ImagingFactory& other)
+	{
+		Copy(other);
+	}
+
+	ImagingFactory::ImagingFactory(ImagingFactory&& other) noexcept
+	{
+		Move(other);
+	}
+
+	ImagingFactory& ImagingFactory::operator=(const ImagingFactory& other)
+	{
+		return Copy(other);
+	}
+
+	ImagingFactory& ImagingFactory::operator=(ImagingFactory&& other) noexcept
+	{
+		return Move(other);
+	}
+
 	void ImagingFactory::Close()
 	{
 		m_imagingFactory = nullptr;
+	}
+
+	ImagingFactory& ImagingFactory::Copy(const ImagingFactory& other)
+	{
+		if (this == &other)
+			return *this;
+
+		m_imagingFactory = other.m_imagingFactory;
+
+		return *this;
+	}
+
+	ImagingFactory& ImagingFactory::Move(const ImagingFactory& other)
+	{
+		if (this == &other)
+			return *this;
+
+		m_imagingFactory = std::move(other.m_imagingFactory);
+
+		return *this;
 	}
 
 	Microsoft::WRL::ComPtr<IWICBitmapDecoder> ImagingFactory::CreateDecoderFromFilename(const std::wstring& path)
@@ -60,7 +100,7 @@ namespace Boring32::Wic
 			throw std::runtime_error(__FUNCSIG__": m_imagingFactory is nullptr");
 
 		Microsoft::WRL::ComPtr<IWICFormatConverter> pConverter;
-		HRESULT hr = m_imagingFactory->CreateFormatConverter(&pConverter);
+		const HRESULT hr = m_imagingFactory->CreateFormatConverter(&pConverter);
 		if (FAILED(hr))
 			throw Error::ComError(__FUNCSIG__ ": CreateFormatConverter() failed", hr);
 
