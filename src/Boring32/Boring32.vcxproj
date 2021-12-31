@@ -195,7 +195,6 @@
     <ClInclude Include="include\WinHttp\WebSockets\AsyncWebSocketSettings.hpp" />
     <ClInclude Include="include\WinHttp\WebSockets\WebSocketSettings.hpp" />
     <ClInclude Include="include\WinHttp\WinHttp.hpp" />
-    <ClInclude Include="include\WinHttp\WebSockets\WebSocketStatus.hpp" />
     <ClInclude Include="include\Async\ThreadStatus.hpp" />
     <ClInclude Include="include\Async\Pipes\Pipes.hpp" />
     <ClInclude Include="src\pch.hpp" />
@@ -264,6 +263,7 @@
     <ClCompile Include="src\WinHttp\boring32.winhttp.requestresult.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.websockets.asyncwebsocket.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.websockets.websocket.ixx" />
+    <ClCompile Include="src\WinHttp\boring32.winhttp.websockets.websocketstatus.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.winhttphandle.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.proxytype.ixx" />
     <ClCompile Include="src\WinSock\boring32.winsock.ixx" />

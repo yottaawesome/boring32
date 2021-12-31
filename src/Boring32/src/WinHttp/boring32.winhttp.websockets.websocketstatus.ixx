@@ -1,6 +1,6 @@
-#pragma once
+export module boring32.winhttp.websockets.websocketstatus;
 
-namespace Boring32::WinHttp::WebSockets
+export namespace Boring32::WinHttp::WebSockets
 {
 	enum class WebSocketStatus
 	{
