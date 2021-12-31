@@ -1,13 +1,20 @@
-#include "pch.hpp"
+module;
+
+#include <Windows.h>
+#include <winhttp.h>
 #include <stdexcept>
 #include <vector>
 #include <future>
 #include <sstream>
+#include <iostream>
 #include <wincrypt.h>
+#include "include/WinHttp/Session.hpp"
 #include "include/WinHttp/WebSockets/WebSocket.hpp"
 #include "include/WinHttp/ProxyInfo.hpp"
 
+module boring32.winhttp.websockets.websocket;
 import boring32.error.win32error;
+import boring32.winhttp.winhttphandle;
 
 namespace Boring32::WinHttp::WebSockets
 {

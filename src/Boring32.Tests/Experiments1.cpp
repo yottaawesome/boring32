@@ -38,6 +38,7 @@ import boring32.ipc.anonymouspipe;
 import boring32.ipc.overlappednamedpipeserver;
 import boring32.security.sid;
 import boring32.crypto.certstore;
+import boring32.winhttp.websockets.websocket;
 
 #pragma comment(lib, "Pathcch.lib")
 

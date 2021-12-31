@@ -76,6 +76,8 @@ namespace Boring32::Wic
 
 	Microsoft::WRL::ComPtr<IWICBitmapDecoder> ImagingFactory::CreateDecoderFromFilename(const std::wstring& path)
 	{
+		if (path.empty())
+			throw std::invalid_argument(__FUNCSIG__": path cannot be empty");
 		if (!m_imagingFactory)
 			throw std::runtime_error(__FUNCSIG__": m_imagingFactory is nullptr");
 

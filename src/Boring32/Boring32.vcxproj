@@ -264,6 +264,7 @@
     <ClCompile Include="src\Wic\ImagingFactory.cpp" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.httpwebclient.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.requestresult.ixx" />
+    <ClCompile Include="src\WinHttp\boring32.winhttp.websockets.websocket.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.winhttphandle.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.proxytype.ixx" />
     <ClCompile Include="src\WinSock\boring32.winsock.ixx" />

@@ -397,6 +397,7 @@
     <ClCompile Include="src\Wic\ImagingFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\WinHttp\boring32.winhttp.websockets.websocket.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />
