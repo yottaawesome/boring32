@@ -1,15 +1,17 @@
-#pragma once
+module;
 #include <vector>
+#include <string>
 #include <future>
 #include <memory>
-#include "AsyncWebSocketSettings.hpp"
-#include "WebSocketStatus.hpp"
+#include "include/WinHttp/WebSockets/AsyncWebSocketSettings.hpp"
+#include "include/WinHttp/WebSockets/WebSocketStatus.hpp"
 
+export module boring32.winhttp.websockets.asyncwebsocket;
 import boring32.async.criticalsectionlock;
 import boring32.async.event;
 import boring32.winhttp.winhttphandle;
 
-namespace Boring32::WinHttp::WebSockets
+export namespace Boring32::WinHttp::WebSockets
 {
 	enum class ReadResultStatus : DWORD
 	{

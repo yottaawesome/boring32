@@ -9,7 +9,6 @@ module;
 #include <iostream>
 #include <wincrypt.h>
 #include "include/WinHttp/Session.hpp"
-#include "include/WinHttp/WebSockets/WebSocket.hpp"
 #include "include/WinHttp/ProxyInfo.hpp"
 
 module boring32.winhttp.websockets.websocket;

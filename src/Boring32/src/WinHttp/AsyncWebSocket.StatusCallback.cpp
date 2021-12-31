@@ -1,9 +1,13 @@
-#include "pch.hpp"
+module;
+
 #include <future>
 #include <algorithm>
 #include <map>
-#include "include/WinHttp/WebSockets/AsyncWebSocket.hpp"
+#include <iostream>
+#include <Windows.h>
+#include <winhttp.h>
 
+module boring32.winhttp.websockets.asyncwebsocket;
 import boring32.strings;
 import boring32.error.win32error;
 
