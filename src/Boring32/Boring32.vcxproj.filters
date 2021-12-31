@@ -78,9 +78,6 @@
     <ClInclude Include="include\WinHttp\ProxyInfo.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\WinHttp\WebSockets\WebSocket.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\WinHttp\WebSockets\WebSocketSettings.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

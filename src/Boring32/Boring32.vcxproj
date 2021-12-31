@@ -196,7 +196,6 @@
     <ClInclude Include="include\WinHttp\WebSockets\AsyncWebSocketSettings.hpp" />
     <ClInclude Include="include\WinHttp\WebSockets\WebSocketSettings.hpp" />
     <ClInclude Include="include\WinHttp\WinHttp.hpp" />
-    <ClInclude Include="include\WinHttp\WebSockets\WebSocket.hpp" />
     <ClInclude Include="include\WinHttp\WebSockets\WebSocketStatus.hpp" />
     <ClInclude Include="include\Async\ThreadStatus.hpp" />
     <ClInclude Include="include\Async\Pipes\Pipes.hpp" />
