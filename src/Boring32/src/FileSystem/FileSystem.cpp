@@ -49,7 +49,7 @@ namespace Boring32::FileSystem
         // DWORD is always 32 bits, so first two revision numbers
         // come from dwFileVersionMS, last two come from dwFileVersionLS
         return std::format(
-            L"{}.{}.{}.{}",
+            L"{}.{}.{}.{}", // major.minor.build.revision
             (verInfo->dwFileVersionMS >> 16) & 0xffff,
             (verInfo->dwFileVersionMS >> 0) & 0xffff,
             (verInfo->dwFileVersionLS >> 16) & 0xffff,
