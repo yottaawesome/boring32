@@ -85,7 +85,6 @@ int main(int argc, char** args) try
 }
 catch (const std::exception& ex)
 {
-
 	std::wcout << ex.what() << std::endl;
 	return -1;
 }
