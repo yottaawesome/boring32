@@ -9,6 +9,7 @@ import boring32.strings;
 import boring32.error.win32error;
 import boring32.raii.uniqueptrs;
 import boring32.security.functions;
+import boring32.filesystem;
 
 struct Test
 {
@@ -67,11 +68,16 @@ void EnumerateTokenPrivileges()
 	Boring32::Security::EnumerateTokenPrivileges(hToken);
 }
 
+void PrintFileVersion()
+{
+	std::wcout
+		<< Boring32::FileSystem::GetFileVersion(LR"(C:\Program Files\Notepad++\notepad++.exe)")
+		<< std::endl;
+}
+
 int main(int argc, char** args) try
 {
-	while (true)
-		new int(10);
-
+	PrintFileVersion();
 	//SearchTokenForAdminGroup();
 	//EnumerateTokenGroups();
 	//EnumerateTokenPrivileges();
@@ -79,7 +85,6 @@ int main(int argc, char** args) try
 }
 catch (const std::exception& ex)
 {
-	
 
 	std::wcout << ex.what() << std::endl;
 	return -1;

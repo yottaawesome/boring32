@@ -232,6 +232,8 @@
     <ClCompile Include="src\Error\boring32.error.ntstatuserror.ixx" />
     <ClCompile Include="src\Error\boring32.error.win32error.ixx" />
     <ClCompile Include="src\Error\ErrorFunctions.cpp" />
+    <ClCompile Include="src\FileSystem\boring32.filsystem.ixx" />
+    <ClCompile Include="src\FileSystem\FileSystem.cpp" />
     <ClCompile Include="src\IPC\boring32.ipc.blockingnamedpipeclient.ixx" />
     <ClCompile Include="src\IPC\boring32.ipc.blockingnamedpipeserver.ixx" />
     <ClCompile Include="src\IPC\boring32.ipc.anonymouspipe.ixx" />
