@@ -17,7 +17,7 @@ namespace Boring32::FileSystem
 	{
         // Adapted from https://stackoverflow.com/questions/940707/how-do-i-programmatically-get-the-version-of-a-dll-or-exe-file
         // See also https://docs.microsoft.com/en-us/windows/win32/menurc/version-information
-        if (std::filesystem::exists(filePath))
+        if (!std::filesystem::exists(filePath))
             throw std::runtime_error(
                 std::format("{}: file {} does not exist", __FUNCSIG__, Strings::ConvertString(filePath)));
 
