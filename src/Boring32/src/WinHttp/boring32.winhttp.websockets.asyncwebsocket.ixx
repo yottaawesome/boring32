@@ -1,12 +1,15 @@
 module;
+
 #include <vector>
 #include <string>
 #include <future>
 #include <memory>
-#include "include/WinHttp/WebSockets/AsyncWebSocketSettings.hpp"
+#include <Windows.h>
+#include <winhttp.h>
 
 export module boring32.winhttp.websockets.asyncwebsocket;
 import boring32.winhttp.websockets.websocketstatus;
+import boring32.winhttp.websockets.asyncwebsocketsettings;
 import boring32.async.criticalsectionlock;
 import boring32.async.event;
 import boring32.winhttp.winhttphandle;

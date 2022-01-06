@@ -90,9 +90,6 @@
     <ClInclude Include="include\Async\AsyncFuncs.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\WinHttp\WebSockets\AsyncWebSocketSettings.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\pch.cpp">
@@ -395,6 +392,7 @@
     <ClCompile Include="src\FileSystem\FileSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\WinHttp\boring32.winhttp.websockets.asyncwebsocketsettings.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

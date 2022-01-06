@@ -1,10 +1,13 @@
-#pragma once
-#include <string>
-#include "../Session.hpp"
+module;
 
+#include <string>
+#include <Windows.h>
+#include "include/WinHttp/Session.hpp"
+
+export module boring32.winhttp.websockets.asyncwebsocketsettings;
 import boring32.crypto.certificate;
 
-namespace Boring32::WinHttp::WebSockets
+export namespace Boring32::WinHttp::WebSockets
 {
 	struct AsyncWebSocketSettings
 	{
