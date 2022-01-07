@@ -1,6 +1,10 @@
-#include "pch.hpp"
-#include "include/WinHttp/ProxyInfo.hpp"
+module;
 
+#include <string>
+#include <Windows.h>
+#include <winhttp.h>
+
+module boring32.winhttp.proxyinfo;
 import boring32.error.win32error;
 
 namespace Boring32::WinHttp

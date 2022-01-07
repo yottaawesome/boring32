@@ -1,9 +1,12 @@
-#pragma once
+module;
+
 #include <string>
 #include <Windows.h>
 #include <winhttp.h>
 
-namespace Boring32::WinHttp
+export module boring32.winhttp.proxyinfo;
+
+export namespace Boring32::WinHttp
 {
 	class ProxyInfo
 	{

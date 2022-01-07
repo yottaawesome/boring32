@@ -9,11 +9,11 @@ module;
 #include <iostream>
 #include <wincrypt.h>
 #include "include/WinHttp/Session.hpp"
-#include "include/WinHttp/ProxyInfo.hpp"
 
 module boring32.winhttp.websockets.websocket;
 import boring32.error.win32error;
 import boring32.winhttp.winhttphandle;
+import boring32.winhttp.proxyinfo;
 
 namespace Boring32::WinHttp::WebSockets
 {

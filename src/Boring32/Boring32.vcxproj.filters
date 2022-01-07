@@ -75,9 +75,6 @@
     <ClInclude Include="include\Async\OverlappedOp.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\WinHttp\ProxyInfo.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\WinHttp\Session.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -391,6 +388,7 @@
     </ClCompile>
     <ClCompile Include="src\WinHttp\boring32.winhttp.websockets.asyncwebsocketsettings.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.websockets.websocketsettings.ixx" />
+    <ClCompile Include="src\WinHttp\boring32.winhttp.proxyinfo.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />
