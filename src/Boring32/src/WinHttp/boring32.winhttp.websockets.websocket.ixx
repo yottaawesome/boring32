@@ -6,10 +6,10 @@ module;
 #include <memory>
 #include <future>
 #include "include/WinHttp/Session.hpp"
-#include "include/WinHttp/WebSockets/WebSocketSettings.hpp"
 
 export module boring32.winhttp.websockets.websocket;
 import boring32.winhttp.websockets.websocketstatus;
+import boring32.winhttp.websockets.websocketsettings;
 import boring32.async.event;
 import boring32.winhttp.winhttphandle;
 
