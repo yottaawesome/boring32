@@ -376,7 +376,7 @@
     <ClCompile Include="src\WinHttp\boring32.winhttp.websockets.websocket.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.websockets.asyncwebsocket.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.websockets.websocketstatus.ixx" />
-    <ClCompile Include="src\FileSystem\boring32.filsystem.ixx" />
+    <ClCompile Include="src\FileSystem\boring32.filesystem.ixx" />
     <ClCompile Include="src\FileSystem\FileSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
