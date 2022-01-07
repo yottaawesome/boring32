@@ -5,13 +5,13 @@ module;
 #include <vector>
 #include <memory>
 #include <future>
-#include "include/WinHttp/Session.hpp"
 
 export module boring32.winhttp.websockets.websocket;
 import boring32.winhttp.websockets.websocketstatus;
 import boring32.winhttp.websockets.websocketsettings;
 import boring32.async.event;
 import boring32.winhttp.winhttphandle;
+import boring32.winhttp.session;
 
 export namespace Boring32::WinHttp::WebSockets
 {

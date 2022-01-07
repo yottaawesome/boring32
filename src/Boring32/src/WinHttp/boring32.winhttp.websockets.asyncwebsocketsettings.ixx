@@ -2,10 +2,10 @@ module;
 
 #include <string>
 #include <Windows.h>
-#include "include/WinHttp/Session.hpp"
 
 export module boring32.winhttp.websockets.asyncwebsocketsettings;
 import boring32.crypto.certificate;
+import boring32.winhttp.session;
 
 export namespace Boring32::WinHttp::WebSockets
 {

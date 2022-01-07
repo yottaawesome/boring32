@@ -39,9 +39,6 @@
     <ClInclude Include="include\Boring32.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\WinHttp\WinHttp.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Async\ThreadStatus.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -73,9 +70,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Async\OverlappedOp.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\WinHttp\Session.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Async\EventLoop.hpp">
@@ -389,6 +383,7 @@
     <ClCompile Include="src\WinHttp\boring32.winhttp.websockets.asyncwebsocketsettings.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.websockets.websocketsettings.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.proxyinfo.ixx" />
+    <ClCompile Include="src\WinHttp\boring32.winhttp.session.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

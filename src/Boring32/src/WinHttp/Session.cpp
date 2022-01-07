@@ -1,6 +1,12 @@
-#include "pch.hpp"
-#include "include/WinHttp/Session.hpp"
+module;
 
+#include <string>
+#include <memory>
+#include <stdexcept>
+#include <Windows.h>
+#include <winhttp.h>
+
+module boring32.winhttp.session;
 import boring32.error.win32error;
 
 namespace Boring32::WinHttp

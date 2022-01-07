@@ -1,13 +1,15 @@
-#pragma once
+module;
+
 #include <string>
 #include <memory>
 #include <windows.h>
 #include <winhttp.h>
 
+export module boring32.winhttp.session;
 import boring32.winhttp.winhttphandle;
 import boring32.winhttp.proxytype;
 
-namespace Boring32::WinHttp
+export namespace Boring32::WinHttp
 {
 	class Session
 	{
