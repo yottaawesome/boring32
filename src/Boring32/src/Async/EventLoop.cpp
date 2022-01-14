@@ -1,7 +1,11 @@
-#include "pch.hpp"
-#include <algorithm>
-#include "include/Async/EventLoop.hpp"
+module;
 
+#include <algorithm>
+#include <functional>
+#include <stdexcept>
+#include <Windows.h>
+
+module boring32.async.eventloop;
 import boring32.error.win32error;
 import boring32.async.criticalsectionlock;
 
@@ -26,7 +30,7 @@ namespace Boring32::Async
 	
 	bool EventLoop::WaitOn(const DWORD millis, const bool waitAll)
 	{
-		if (m_events.size() == 0)
+		if (m_events.empty())
 			throw std::runtime_error("EventLoop::WaitOn(): m_events is empty");
 
 		CriticalSectionLock cs(m_cs);

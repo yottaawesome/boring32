@@ -5,5 +5,4 @@
 #include "MemoryMappedView.hpp"
 #include "Process.hpp"
 #include "Thread.hpp"
-#include "EventLoop.hpp"
 #include "AsyncFuncs.hpp"

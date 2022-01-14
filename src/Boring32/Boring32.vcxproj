@@ -174,7 +174,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Async\AsyncFuncs.hpp" />
-    <ClInclude Include="include\Async\EventLoop.hpp" />
     <ClInclude Include="include\Async\MemoryMappedFile.hpp" />
     <ClInclude Include="include\Async\OverlappedOp.hpp" />
     <ClInclude Include="include\Async\Pipes\AnonymousPipe.hpp" />
@@ -195,6 +194,7 @@
     <ClInclude Include="src\targetver.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Async\boring32.async.eventloop.ixx" />
     <ClCompile Include="src\Async\boring32.async.slimreadwritelock.ixx" />
     <ClCompile Include="src\Async\boring32.async.waitabletimert.ixx" />
     <ClCompile Include="src\Async\boring32.async.criticalsectionlock.ixx" />

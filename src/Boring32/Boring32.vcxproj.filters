@@ -69,9 +69,6 @@
     <ClInclude Include="include\Async\OverlappedOp.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Async\EventLoop.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Async\AsyncFuncs.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -382,6 +379,7 @@
     <ClCompile Include="src\WinHttp\boring32.winhttp.proxyinfo.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.session.ixx" />
     <ClCompile Include="src\Async\boring32.async.slimreadwritelock.ixx" />
+    <ClCompile Include="src\Async\boring32.async.eventloop.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

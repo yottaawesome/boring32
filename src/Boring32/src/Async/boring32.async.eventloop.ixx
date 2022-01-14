@@ -1,9 +1,12 @@
-#pragma once
-#include <Windows.h>
+module;
+
 #include <vector>
 #include <functional>
+#include <Windows.h>
 
-namespace Boring32::Async
+export module boring32.async.eventloop;
+
+export namespace Boring32::Async
 {
 	class EventLoop
 	{
