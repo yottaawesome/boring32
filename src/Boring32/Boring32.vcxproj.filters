@@ -42,9 +42,6 @@
     <ClInclude Include="include\Async\ThreadStatus.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Async\SlimReadWriteLock.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Async\OverlappedIo.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -334,7 +331,7 @@
     <ClCompile Include="src\Async\boring32.async.mutex.ixx" />
     <ClCompile Include="src\Async\boring32.async.synchronizationbarrier.ixx" />
     <ClCompile Include="src\Async\boring32.async.criticalsectionlock.ixx" />
-    <ClCompile Include="src\Async\borin32.async.waitabletimert.ixx" />
+    <ClCompile Include="src\Async\boring32.async.waitabletimert.ixx" />
     <ClCompile Include="src\Async\boring32.async.event.ixx" />
     <ClCompile Include="src\Raii\boring32.raii.uniqueptrs.ixx" />
     <ClCompile Include="src\Async\boring32.async.timerqueue.ixx" />
@@ -384,6 +381,7 @@
     <ClCompile Include="src\WinHttp\boring32.winhttp.websockets.websocketsettings.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.proxyinfo.ixx" />
     <ClCompile Include="src\WinHttp\boring32.winhttp.session.ixx" />
+    <ClCompile Include="src\Async\boring32.async.slimreadwritelock.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

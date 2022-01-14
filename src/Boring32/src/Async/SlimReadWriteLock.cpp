@@ -1,6 +1,10 @@
-#include "pch.hpp"
+
+module;
+
 #include <stdexcept>
-#include "include/Async/SlimReadWriteLock.hpp"
+#include <Windows.h>
+
+module boring32.async.slimreadwritelock;
 
 namespace Boring32::Async
 {

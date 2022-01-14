@@ -5,6 +5,5 @@
 #include "MemoryMappedView.hpp"
 #include "Process.hpp"
 #include "Thread.hpp"
-#include "SlimReadWriteLock.hpp"
 #include "EventLoop.hpp"
 #include "AsyncFuncs.hpp"
