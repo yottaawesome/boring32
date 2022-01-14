@@ -4,6 +4,7 @@ module;
 #include <iostream>
 #include <stdexcept>
 #include <sstream>
+#include <algorithm>
 #include <format>
 #include <Windows.h>
 
@@ -68,6 +69,8 @@ namespace Boring32::Error
         std::string msg(static_cast<char*>(messageBuffer));
         if (LocalFree(messageBuffer))
             std::wcerr << std::format(L"{}: LocalFree() failed: {}\n", TEXT(__FUNCSIG__), GetLastError());
+        
+        std::erase_if(msg, [](const char x) { return x == '\n' || x == '\r'; });
 
         return msg;
     }
@@ -96,6 +99,8 @@ namespace Boring32::Error
         if (LocalFree(messageBuffer))
             std::wcerr << std::format(L"{}: LocalFree() failed: {}\n", TEXT(__FUNCSIG__), GetLastError());
         
+        std::erase_if(msg, [](const wchar_t x) { return x == '\n' || x == '\r'; });
+
         return msg;
     }
 }

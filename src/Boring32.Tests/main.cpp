@@ -1,6 +1,7 @@
 ﻿#include <format>
 #include <iostream>
 #include <stdexcept>
+#include <source_location>
 #include <windows.h>
 #include "Experiments1Main.hpp"
 
@@ -77,7 +78,9 @@ void PrintFileVersion()
 
 int main(int argc, char** args) try
 {
-	PrintFileVersion();
+	throw Boring32::Error::Win32Error(std::source_location::current(), "Some error message", 5);
+
+	//PrintFileVersion();
 	//SearchTokenForAdminGroup();
 	//EnumerateTokenGroups();
 	//EnumerateTokenPrivileges();
