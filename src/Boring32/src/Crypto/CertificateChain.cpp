@@ -4,6 +4,7 @@ module;
 #include <string>
 #include <format>
 #include <stdexcept>
+#include <source_location>
 #include <Windows.h>
 #include <wincrypt.h>
 
@@ -106,7 +107,7 @@ namespace Boring32::Crypto
 			&status
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__ ": CertVerifyCertificateChainPolicy() failed");
+			throw Error::Win32Error(std::source_location::current(), "CertVerifyCertificateChainPolicy() failed");
 	}
 	
 	PCCERT_CHAIN_CONTEXT CertificateChain::GetChainContext() const noexcept

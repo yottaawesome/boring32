@@ -10,7 +10,7 @@ namespace Boring32::Error
 {
 	ComError::~ComError() {}
 
-	ComError::ComError(const char* msg, const HRESULT hr)
+	ComError::ComError(const std::source_location& location, const char* msg, const HRESULT hr)
 		: std::runtime_error(""),
 		m_hresult(hr)
 	{
@@ -18,7 +18,7 @@ namespace Boring32::Error
 		m_errorString = std::format("{} (COM code: {}, {:#X}): {}", msg, hr, hr, m_errorString);
 	}
 
-	ComError::ComError(const std::string& msg, const HRESULT hr)
+	ComError::ComError(const std::source_location& location, const std::string& msg, const HRESULT hr)
 		: std::runtime_error(""),
 		m_hresult(hr)
 	{

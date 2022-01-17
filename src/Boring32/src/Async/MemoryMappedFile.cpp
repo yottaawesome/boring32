@@ -10,7 +10,7 @@ namespace Boring32::Async
 	void MemoryMappedFile::Close()
 	{
 		if (m_view && !UnmapViewOfFile(m_view))
-			throw Error::Win32Error(__FUNCSIG__": UnmapViewOfFile() failed");
+			throw Error::Win32Error(__FUNCSIG__": UnmapViewOfFile() failed", GetLastError());
 		m_view = nullptr;
 		m_mapFile = nullptr;
 	}

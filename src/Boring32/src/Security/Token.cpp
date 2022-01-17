@@ -61,7 +61,7 @@ namespace Boring32::Security
 			&m_token
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__ ": DuplicateTokenEx() failed");
+			throw Error::Win32Error(__FUNCSIG__ ": DuplicateTokenEx() failed", GetLastError());
 	}
 
 	Token& Token::operator=(const Token& other)

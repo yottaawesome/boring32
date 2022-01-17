@@ -1,7 +1,9 @@
 module;
 
 #include <stdexcept>
+#include <string>
 #include <chrono>
+#include <source_location>
 #include <Windows.h>
 #include <comdef.h>
 #include <pathcch.h>
@@ -27,7 +29,7 @@ namespace Boring32::Util
 
         const HRESULT result = PathCchRemoveFileSpec(&filePath[0], filePath.size());
         if (result != S_OK && result != S_FALSE)
-            throw Error::ComError(__FUNCSIG__ ": PathCchRemoveFileSpec() failed", result);
+            throw Error::ComError(std::source_location::current(), "PathCchRemoveFileSpec() failed", result);
         filePath = filePath.c_str();
         
         return filePath;

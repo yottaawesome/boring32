@@ -33,7 +33,7 @@ namespace Boring32::Security
 			&handle
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__ ": OpenProcessToken() failed");
+			throw Error::Win32Error(__FUNCSIG__ ": OpenProcessToken() failed", GetLastError());
 
 		return handle;
 	}
@@ -49,7 +49,7 @@ namespace Boring32::Security
 		// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupprivilegevaluew
 		bool succeeded = LookupPrivilegeValueW(nullptr, privilege.c_str(), &luidPrivilege);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__ ": LookupPrivilegeValueW() failed");
+			throw Error::Win32Error(__FUNCSIG__ ": LookupPrivilegeValueW() failed", GetLastError());
 
 		// See https://cpp.hotexamples.com/examples/-/-/AdjustTokenPrivileges/cpp-adjusttokenprivileges-function-examples.html
 		// and https://stackoverflow.com/questions/9195889/what-is-the-purpose-of-anysize-array-in-winnt-h
@@ -184,7 +184,7 @@ namespace Boring32::Security
 					std::wcout << "NONE_MAPPED\n";
 					continue;
 				}
-				throw Error::Win32Error(__FUNCSIG__": LookupAccountSidW() failed");
+				throw Error::Win32Error(__FUNCSIG__": LookupAccountSidW() failed", dwResult);
 			}
 
 			groupName = groupName.c_str();

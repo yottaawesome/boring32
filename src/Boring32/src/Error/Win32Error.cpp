@@ -13,11 +13,18 @@ namespace Boring32::Error
 {
 	Win32Error::~Win32Error() {}
 
-	Win32Error::Win32Error(const char* msg)
+	Win32Error::Win32Error(const std::source_location& location, const char* msg)
 		: std::runtime_error(msg),
 		m_errorCode(0)
 	{
-		m_errorString = std::format("{} {}", msg, "(no win32 error code was provided)");
+		m_errorString = std::format(
+			"Exception in function {}() in {}:{}:{}, {} (no win32 code provided)",
+			location.function_name(),
+			location.file_name(),
+			location.line(),
+			location.column(),
+			msg
+		);
 	}
 
 	Win32Error::Win32Error(const char* msg, const DWORD errorCode)

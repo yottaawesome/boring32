@@ -1,6 +1,9 @@
 module;
 
-#include "pch.hpp"
+#include <string>
+#include <stdexcept>
+#include <source_location>
+#include <Windows.h>
 #include "Objbase.h"
 
 module boring32.guid;
@@ -24,7 +27,7 @@ namespace Boring32::Guid
 		GUID guidReference;
 		HRESULT result = CoCreateGuid(&guidReference);
 		if (FAILED(result))
-			throw Error::ComError(__FUNCSIG__": CoCreateGuid() failed", result);
+			throw Error::ComError(std::source_location::current(), "CoCreateGuid() failed", result);
 		return GetGuidAsWString(guidReference);
 	}
 }

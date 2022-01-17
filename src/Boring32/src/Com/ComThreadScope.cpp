@@ -1,7 +1,10 @@
 module;
 
-#include "pch.hpp"
+#include <iostream>
 #include <stdexcept>
+#include <source_location>
+#include <Windows.h>
+#include <objbase.h>
 
 module boring32.com.comthreadscope;
 import boring32.error.comerror;
@@ -81,7 +84,7 @@ namespace Boring32::Com
 		// Initialise COM for this thread
 		HRESULT hr = CoInitializeEx(nullptr, m_apartmentThreadingMode);
 		if (FAILED(hr))
-			throw Error::ComError(__FUNCSIG__ ": CoInitializeEx() failed", hr);
+			throw Error::ComError(std::source_location::current(), "CoInitializeEx() failed", hr);
 
 		m_isInitialised = true;
 		m_comInitialisedThreadId = GetCurrentThreadId();
@@ -115,7 +118,7 @@ namespace Boring32::Com
 			nullptr                         // Reserved
 		);
 		if (FAILED(hr))
-			throw Error::ComError(__FUNCSIG__ ": failed", hr);
+			throw Error::ComError(std::source_location::current(),"CoInitializeSecurity() failed", hr);
 	}
 
 	void ComThreadScope::Uninitialise()

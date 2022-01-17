@@ -2,6 +2,7 @@ module;
 
 #include <stdexcept>
 #include <string>
+#include <source_location>
 #include <Windows.h>
 #include <wincodec.h>
 #include <wrl/client.h>
@@ -26,7 +27,7 @@ namespace Boring32::Wic
 			IID_PPV_ARGS(&m_imagingFactory)
 		);
 		if (FAILED(hr))
-			throw Error::ComError(__FUNCSIG__": CoCreateInstance() failed", hr);
+			throw Error::ComError(std::source_location::current(), "CoCreateInstance() failed", hr);
 	}
 
 	ImagingFactory::ImagingFactory(const ImagingFactory& other)
@@ -91,7 +92,7 @@ namespace Boring32::Wic
 			&result
 		);
 		if (FAILED(hr))
-			throw Error::ComError(__FUNCSIG__": CreateDecoderFromFilename() failed", hr);
+			throw Error::ComError(std::source_location::current(), "CreateDecoderFromFilename() failed", hr);
 
 		return result;
 	}
@@ -104,7 +105,7 @@ namespace Boring32::Wic
 		Microsoft::WRL::ComPtr<IWICFormatConverter> pConverter;
 		const HRESULT hr = m_imagingFactory->CreateFormatConverter(&pConverter);
 		if (FAILED(hr))
-			throw Error::ComError(__FUNCSIG__ ": CreateFormatConverter() failed", hr);
+			throw Error::ComError(std::source_location::current(), "CreateFormatConverter() failed", hr);
 
 		return pConverter;
 	}

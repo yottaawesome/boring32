@@ -2,6 +2,7 @@ module;
 
 #include <string>
 #include <vector>
+#include <source_location>
 #include <optional>
 #include <stdexcept>
 #include <windows.h>
@@ -38,11 +39,11 @@ namespace Boring32::TaskScheduler
 
 		ComPtr<IRegisteredTaskCollection> collection;
 		if (HRESULT hr = m_taskFolder->GetTasks(0, &collection); FAILED(hr))
-			throw Error::ComError(__FUNCSIG__ ": failed to acquire tasks", hr);
+			throw Error::ComError(std::source_location::current(), "Failed to acquire tasks", hr);
 
 		LONG count = 0;
 		if (HRESULT hr = collection->get_Count(&count); FAILED(hr))
-			throw Error::ComError(__FUNCSIG__ ": failed to acquire task count", hr);
+			throw Error::ComError(std::source_location::current(), "Failed to acquire task count", hr);
 
 		if (count == 0)
 			return {};
@@ -53,7 +54,7 @@ namespace Boring32::TaskScheduler
 		{
 			ComPtr<IRegisteredTask> task;
 			if (HRESULT hr = collection->get_Item(_variant_t(i), &task); FAILED(hr))
-				throw Error::ComError(__FUNCSIG__ ": failed to get task item", hr);
+				throw Error::ComError(std::source_location::current(), "Failed to get task item", hr);
 
 			results.push_back(task);
 		}
@@ -90,6 +91,6 @@ namespace Boring32::TaskScheduler
 			&registeredTask
 		);
 		if (FAILED(hr))
-			throw Error::ComError(__FUNCSIG__ ": failed to save or update task", hr);
+			throw Error::ComError(std::source_location::current(), "Failed to save or update task", hr);
 	}
 }

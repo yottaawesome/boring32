@@ -2,6 +2,7 @@ module;
 
 #include <vector>
 #include <stdexcept>
+#include <source_location>
 #include <string>
 #include <Windows.h>
 #include <dpapi.h> // not including this header causes symbol has already been defined error
@@ -268,7 +269,7 @@ namespace Boring32::Crypto
 			&size
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__ ": CryptBinaryToStringA() failed when calculating size");
+			throw Error::Win32Error(std::source_location::current(), "CryptBinaryToStringA() failed when calculating size");
 		if (size == 0)
 			return "";
 
@@ -281,7 +282,7 @@ namespace Boring32::Crypto
 			&size
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__ ": CryptBinaryToStringA() failed when encoding");
+			throw Error::Win32Error(std::source_location::current(), "CryptBinaryToStringA() failed when encoding");
 		// Remove terminating null character
 		if (returnVal.empty() == false)
 			returnVal.pop_back();
@@ -302,7 +303,7 @@ namespace Boring32::Crypto
 			&size
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__ ": CryptBinaryToStringW() failed when calculating size");
+			throw Error::Win32Error(std::source_location::current(), "CryptBinaryToStringW() failed when calculating size");
 		if (size == 0)
 			return L"";
 
@@ -315,7 +316,7 @@ namespace Boring32::Crypto
 			&size
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__ ": CryptBinaryToStringW() failed when encoding");
+			throw Error::Win32Error(std::source_location::current(), "CryptBinaryToStringW() failed when encoding");
 		// Remove terminating null character
 		if (returnVal.empty() == false)
 			returnVal.pop_back();
@@ -336,7 +337,7 @@ namespace Boring32::Crypto
 			nullptr
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__ ": CryptStringToBinaryW() failed when calculating size");
+			throw Error::Win32Error(std::source_location::current(), "CryptStringToBinaryW() failed when calculating size");
 
 		std::vector<std::byte> returnVal(byteSize);
 		succeeded = CryptStringToBinaryW(
@@ -349,7 +350,7 @@ namespace Boring32::Crypto
 			nullptr
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__ ": CryptStringToBinaryW() failed when decoding");
+			throw Error::Win32Error(std::source_location::current(), "CryptStringToBinaryW() failed when decoding");
 
 		returnVal.resize(byteSize);
 		return returnVal;

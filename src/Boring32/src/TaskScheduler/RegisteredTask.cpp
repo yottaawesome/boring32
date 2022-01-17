@@ -1,6 +1,7 @@
 module;
 
-#include "pch.hpp"
+#include <source_location>
+#include <iostream>
 #include <string>
 #include <vector>
 #include <windows.h>
@@ -25,7 +26,7 @@ namespace Boring32::TaskScheduler
 	{
 		if (m_registeredTask)
 			if (HRESULT hr = m_registeredTask->get_Definition(&m_taskDefinition); FAILED(hr))
-				throw Error::ComError(__FUNCSIG__ ": failed to get ITaskDefinition", hr);
+				throw Error::ComError(std::source_location::current(), "Failed to get ITaskDefinition", hr);
 	}
 
 	void RegisteredTask::Close() noexcept
@@ -40,7 +41,7 @@ namespace Boring32::TaskScheduler
 
 		bstr_t taskName;
 		if (HRESULT hr = m_registeredTask->get_Name(taskName.GetAddress()); FAILED(hr))
-			throw Error::ComError(__FUNCSIG__ ": failed to get Task name", hr);
+			throw Error::ComError(std::source_location::current(), "Failed to get Task name", hr);
 
 		return std::wstring(taskName, taskName.length());
 	}
@@ -50,7 +51,7 @@ namespace Boring32::TaskScheduler
 		CheckIsValid();
 
 		if (HRESULT hr = m_registeredTask->put_Enabled(isEnabled ? VARIANT_TRUE : VARIANT_FALSE); FAILED(hr))
-			throw Error::ComError(__FUNCSIG__ ": failed to set task enabled property", hr);
+			throw Error::ComError(std::source_location::current(), "Failed to set task enabled property", hr);
 
 		/*std::vector<ComPtr<ITrigger>> triggers = GetTriggers();
 		for (auto& trigger : triggers)
@@ -78,11 +79,11 @@ namespace Boring32::TaskScheduler
 		{
 			ComPtr<IRepetitionPattern> pattern;
 			if (HRESULT hr = trigger->get_Repetition(&pattern); FAILED(hr))
-				throw Error::ComError(__FUNCSIG__ ": failed to get task repetition pattern", hr);
+				throw Error::ComError(std::source_location::current(), "Failed to get task repetition pattern", hr);
 
 			std::wstring interval = L"PT" + std::to_wstring(intervalMinutes) + L"M";
 			if (HRESULT hr = pattern->put_Interval(bstr_t(interval.c_str())); FAILED(hr))
-				throw Error::ComError(__FUNCSIG__ ": failed to set trigger repetition pattern interval", hr);
+				throw Error::ComError(std::source_location::current(), "Failed to set trigger repetition pattern interval", hr);
 		}
 	}
 
@@ -96,7 +97,7 @@ namespace Boring32::TaskScheduler
 		// need to bother.
 		ComPtr<IRunningTask> runningTask;
 		if (HRESULT hr = m_registeredTask->Run(_variant_t(VT_NULL), &runningTask); FAILED(hr))
-			throw Error::ComError(__FUNCSIG__ ": failed to start task", hr);
+			throw Error::ComError(std::source_location::current(), "Failed to start task", hr);
 	}
 	
 	UINT RegisteredTask::SetRandomDelay(const DWORD minutes)
@@ -110,7 +111,7 @@ namespace Boring32::TaskScheduler
 			TASK_TRIGGER_TYPE2 type = TASK_TRIGGER_TYPE2::TASK_TRIGGER_EVENT;
 			HRESULT hr = trigger->get_Type(&type);
 			if (FAILED(hr))
-				throw Error::ComError(__FUNCSIG__ ": failed to get ITrigger type", hr);
+				throw Error::ComError(std::source_location::current(), "Failed to get ITrigger type", hr);
 
 			// Some, but not all, triggers support random delays, so we only
 			// set the daily one for now, as that's the one of interest.
@@ -121,17 +122,14 @@ namespace Boring32::TaskScheduler
 					ComPtr<IDailyTrigger> dailyTrigger = (IDailyTrigger*)trigger.Get();
 					hr = dailyTrigger->put_RandomDelay(_bstr_t(delay.c_str()));
 					if (FAILED(hr))
-						throw Error::ComError(__FUNCSIG__ ": failed to set trigger random delay", hr);
+						throw Error::ComError(std::source_location::current(), "Failed to set trigger random delay", hr);
 					triggersUpdated++;
 					break;
 				}
 
-				default:
-				{
-					std::wcerr
-						<< L"Did not set random delay for a trigger as it's not supported"
-						<< std::endl;
-				}
+				default: std::wcerr
+					<< L"Did not set random delay for a trigger as it's not supported"
+					<< std::endl;
 			}
 		}
 
@@ -144,18 +142,18 @@ namespace Boring32::TaskScheduler
 
 		ComPtr<ITriggerCollection> triggers;
 		if (HRESULT hr = m_taskDefinition->get_Triggers(&triggers); FAILED(hr))
-			throw Error::ComError(__FUNCSIG__ ": failed to get trigger collection", hr);
+			throw Error::ComError(std::source_location::current(), "Failed to get trigger collection", hr);
 
 		long count = 0;
 		if (HRESULT hr = triggers->get_Count(&count); FAILED(hr))
-			throw Error::ComError(__FUNCSIG__ ": failed to get trigger collection count", hr);
+			throw Error::ComError(std::source_location::current(), "Failed to get trigger collection count", hr);
 
 		std::vector<ComPtr<ITrigger>> returnVal;
 		for (int i = 1; i <= count; i++) // Collections start at 1
 		{
 			ComPtr<ITrigger> trigger = nullptr;
 			if (HRESULT hr = triggers->get_Item(i, &trigger); FAILED(hr))
-				throw Error::ComError(__FUNCSIG__ ": failed to get trigger", hr);
+				throw Error::ComError(std::source_location::current(), "Failed to get trigger", hr);
 			returnVal.push_back(std::move(trigger));
 		}
 		return returnVal;
