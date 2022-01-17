@@ -222,10 +222,12 @@
     <ClCompile Include="src\DataStructures\boring32.datastructures.ixx" />
     <ClCompile Include="src\DataStructures\boring32.datastructures.singlylinkedlist.ixx" />
     <ClCompile Include="src\Error\boring32.error.comerror.ixx" />
+    <ClCompile Include="src\Error\boring32.error.errorbase.ixx" />
     <ClCompile Include="src\Error\boring32.error.functions.ixx" />
     <ClCompile Include="src\Error\boring32.error.ixx" />
     <ClCompile Include="src\Error\boring32.error.ntstatuserror.ixx" />
     <ClCompile Include="src\Error\boring32.error.win32error.ixx" />
+    <ClCompile Include="src\Error\ErrorBase.cpp" />
     <ClCompile Include="src\Error\ErrorFunctions.cpp" />
     <ClCompile Include="src\FileSystem\boring32.filesystem.ixx" />
     <ClCompile Include="src\FileSystem\FileSystem.cpp" />

@@ -380,6 +380,10 @@
     <ClCompile Include="src\WinHttp\boring32.winhttp.session.ixx" />
     <ClCompile Include="src\Async\boring32.async.slimreadwritelock.ixx" />
     <ClCompile Include="src\Async\boring32.async.eventloop.ixx" />
+    <ClCompile Include="src\Error\boring32.error.errorbase.ixx" />
+    <ClCompile Include="src\Error\ErrorBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

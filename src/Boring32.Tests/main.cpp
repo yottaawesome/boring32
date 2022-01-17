@@ -8,6 +8,7 @@
 import boring32.raii.win32handle;
 import boring32.strings;
 import boring32.error.win32error;
+import boring32.error.errorbase;
 import boring32.raii.uniqueptrs;
 import boring32.security.functions;
 import boring32.filesystem;
@@ -78,8 +79,7 @@ void PrintFileVersion()
 
 int main(int argc, char** args) try
 {
-	throw Boring32::Error::Win32Error(std::source_location::current(), "Some error message", 5);
-
+	throw Boring32::Error::ErrorBase<std::runtime_error>(std::source_location::current(), "AAAA");
 	//PrintFileVersion();
 	//SearchTokenForAdminGroup();
 	//EnumerateTokenGroups();
