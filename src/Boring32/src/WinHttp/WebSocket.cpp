@@ -14,6 +14,7 @@ import boring32.error.win32error;
 import boring32.winhttp.winhttphandle;
 import boring32.winhttp.proxyinfo;
 import boring32.winhttp.session;
+import boring32.util.switcher;
 
 namespace Boring32::WinHttp::WebSockets
 {
@@ -266,7 +267,7 @@ namespace Boring32::WinHttp::WebSockets
 	{
 		auto result = std::make_shared<WebSocket::ReadResult>();
 		// need to assign this as this causes the process to block if it goes out of scope
-		/*result->Future = std::async(
+		m_readFuture = std::async(
 			std::launch::async, 
 			[this, result] 
 			{
@@ -280,9 +281,9 @@ namespace Boring32::WinHttp::WebSockets
 					std::wcerr << ex.what() << std::endl;
 				}
 				result->Done.Signal(std::nothrow);
-			});*/
+			});
 
-		std::thread(
+		/*std::thread(
 			[this, result]
 			{
 				try
@@ -296,7 +297,7 @@ namespace Boring32::WinHttp::WebSockets
 				}
 				result->Done.Signal(std::nothrow);
 			}
-		).detach();
+		).detach();*/
 
 		return result;
 	}
@@ -305,6 +306,9 @@ namespace Boring32::WinHttp::WebSockets
 	{
 		if (m_status != WebSocketStatus::Connected)
 			throw std::runtime_error("WebSocket is not connected to receive data");
+		if (m_readInProgress)
+			throw std::runtime_error("WebSocket is already reading data");
+		Util::Switcher switcher(m_readInProgress);
 
 		receiveBuffer.clear();
 		receiveBuffer.resize(m_settings.BufferBlockSize);
@@ -312,7 +316,7 @@ namespace Boring32::WinHttp::WebSockets
 		DWORD bufferLength = static_cast<DWORD>(receiveBuffer.size() * sizeof(char));
 		DWORD totalBytesTransferred = 0;
 		char* currentBufferPointer = &receiveBuffer[0];
-		
+
 		while (true)
 		{
 			DWORD bytesTransferred = 0;

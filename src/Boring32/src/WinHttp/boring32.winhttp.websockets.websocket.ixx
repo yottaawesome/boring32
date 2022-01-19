@@ -3,6 +3,7 @@ module;
 #include <Windows.h>
 #include <string>
 #include <vector>
+#include <atomic>
 #include <memory>
 #include <future>
 
@@ -57,5 +58,7 @@ export namespace Boring32::WinHttp::WebSockets
 			WinHttpHandle m_winHttpWebSocket;
 			WebSocketStatus m_status;
 			WebSocketSettings m_settings;
+			std::future<void> m_readFuture;
+			bool m_readInProgress;
 	};
 }

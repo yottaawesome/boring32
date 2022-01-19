@@ -384,6 +384,10 @@
     <ClCompile Include="src\Error\ErrorBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Util\boring32.util.switcher.ixx" />
+    <ClCompile Include="src\Util\Switcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

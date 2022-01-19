@@ -255,6 +255,8 @@
     <ClCompile Include="src\TaskScheduler\boring32.taskscheduler.taskservice.ixx" />
     <ClCompile Include="src\Time\boring32.time.ixx" />
     <ClCompile Include="src\Util\boring32.util.ixx" />
+    <ClCompile Include="src\Util\boring32.util.switcher.ixx" />
+    <ClCompile Include="src\Util\Switcher.cpp" />
     <ClCompile Include="src\Wic\boring32.wic.imagingfactory.ixx" />
     <ClCompile Include="src\Wic\boring32.wic.ixx" />
     <ClCompile Include="src\Wic\ImagingFactory.cpp" />
