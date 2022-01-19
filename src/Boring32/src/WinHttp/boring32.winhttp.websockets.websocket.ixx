@@ -23,7 +23,7 @@ export namespace Boring32::WinHttp::WebSockets
 				std::vector<char> Buffer;
 				bool Succeeded = false;
 				Async::Event Done{ false, true, false };
-				std::future<void> Future;
+				//std::future<void> Future;
 			};
 
 		public:

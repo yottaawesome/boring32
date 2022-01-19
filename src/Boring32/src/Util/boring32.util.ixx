@@ -27,7 +27,7 @@ export namespace Boring32::Util
 		return{ std::byte(std::forward<Ts>(args))... };
 	}
 
-	template<typename T>
+	template<typename T> requires std::is_same<std::wstring, T>::value || std::is_same<std::string, T>::value
 	T ByteVectorToString(const std::vector<std::byte>& vector)
 	{
 		static_assert(false, "Cannot use this template");

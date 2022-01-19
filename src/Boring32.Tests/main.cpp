@@ -79,7 +79,8 @@ void PrintFileVersion()
 
 int main(int argc, char** args) try
 {
-	throw Boring32::Error::ErrorBase<std::runtime_error>(std::source_location::current(), "AAAA");
+	Experiments1Main();
+	//throw Boring32::Error::ErrorBase<std::runtime_error>(std::source_location::current(), "AAAA");
 	//PrintFileVersion();
 	//SearchTokenForAdminGroup();
 	//EnumerateTokenGroups();

@@ -32,7 +32,7 @@ export namespace Boring32::Error
 			}
 
 		public:
-			virtual const char* what() const noexcept 
+			virtual const char* what() const noexcept override
 			{ 
 				return m_errorMsg.c_str();
 			}

@@ -266,7 +266,7 @@ namespace Boring32::WinHttp::WebSockets
 	{
 		auto result = std::make_shared<WebSocket::ReadResult>();
 		// need to assign this as this causes the process to block if it goes out of scope
-		result->Future = std::async(
+		/*result->Future = std::async(
 			std::launch::async, 
 			[this, result] 
 			{
@@ -280,7 +280,23 @@ namespace Boring32::WinHttp::WebSockets
 					std::wcerr << ex.what() << std::endl;
 				}
 				result->Done.Signal(std::nothrow);
-			});
+			});*/
+
+		std::thread(
+			[this, result]
+			{
+				try
+				{
+					this->Receive(result->Buffer);
+					result->Succeeded = true;
+				}
+				catch (const std::exception& ex)
+				{
+					std::wcerr << ex.what() << std::endl;
+				}
+				result->Done.Signal(std::nothrow);
+			}
+		).detach();
 
 		return result;
 	}

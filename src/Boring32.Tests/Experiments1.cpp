@@ -713,7 +713,7 @@ void TestSyncWebSocket()
 
 	socket.Connect();
 	WsrrPtr readResult = socket.AsyncReceive();
-	socket.SendString("abort");
+	socket.SendString("echo");
 	readResult->Done.WaitOnEvent(INFINITE, true);
 	if (readResult->Succeeded)
 	{
@@ -920,18 +920,7 @@ void Stuff()
 
 int Experiments1Main()
 {
-	try
-	{
-		Threadpool();
-		//TestSyncWebSocket();
-		//TestAsyncWebSocket();
-		//throw Boring32::Error::Win32Error("Oh no", ERROR_ACCESS_DENIED);
-		Sleep(2000);
-	}
-	catch (const std::exception& ex)
-	{
-		std::wcerr << ex.what() << std::endl;
-	}
+	TestSyncWebSocket();
 
 	return 0;
 }
