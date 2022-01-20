@@ -30,13 +30,13 @@ export namespace Boring32::WinHttp::WebSockets
 		public:
 			virtual ~WebSocket();
 			WebSocket();
+			WebSocket(WebSocket&& other) noexcept;
+			WebSocket(const WebSocket&) = delete;
 			WebSocket(WebSocketSettings settings);
 
-			WebSocket(WebSocket&& other) noexcept;
-			virtual WebSocket& operator=(WebSocket&& other) noexcept;
-
-			WebSocket(const WebSocket&) = delete;
+		public:
 			virtual WebSocket& operator=(const WebSocket&) = delete;
+			virtual WebSocket& operator=(WebSocket&& other) noexcept;
 
 		public:
 			virtual const WebSocketSettings& GetSettings();
