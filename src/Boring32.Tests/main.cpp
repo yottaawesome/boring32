@@ -12,6 +12,7 @@ import boring32.error.errorbase;
 import boring32.raii.uniqueptrs;
 import boring32.security.functions;
 import boring32.filesystem;
+import boring32.winhttp.winhttperror;
 
 struct Test
 {
@@ -79,7 +80,8 @@ void PrintFileVersion()
 
 int main(int argc, char** args) try
 {
-	Experiments1Main();
+	throw Boring32::WinHttp::WinHttpError(std::source_location::current(), "AAA", 12001);
+	//Experiments1Main();
 	//throw Boring32::Error::ErrorBase<std::runtime_error>(std::source_location::current(), "AAAA");
 	//PrintFileVersion();
 	//SearchTokenForAdminGroup();

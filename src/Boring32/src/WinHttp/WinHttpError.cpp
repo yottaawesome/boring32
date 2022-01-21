@@ -20,7 +20,7 @@ namespace Boring32::WinHttp
 		location, 
 		msg, 
 		errorCode,
-		errorCode >= WINHTTP_ERROR_BASE && errorCode <= WINHTTP_ERROR_LAST ? L"winhttp.dll" : L""
+		errorCode > WINHTTP_ERROR_BASE && errorCode <= WINHTTP_ERROR_LAST ? L"winhttp.dll" : L""
 	)
 	{ }
 }

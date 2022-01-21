@@ -71,7 +71,17 @@ namespace Boring32::Error
 		m_errorCode(errorCode)
 	{
 		m_errorString = Boring32::Error::TranslateErrorCode<std::string>(errorCode, moduleName);
-		m_errorString = std::format("{} (win32 code: {}, {:#X}): {}", msg, errorCode, errorCode, m_errorString);
+		m_errorString = std::format(
+			"Exception in function {}() in {}:{}:{}, {}, win32 error code {} ({:#X}): {}",
+			location.function_name(),
+			location.file_name(),
+			location.line(),
+			location.column(),
+			msg,
+			errorCode,
+			errorCode,
+			m_errorString
+		);
 	}
 
 	DWORD Win32Error::GetErrorCode() const noexcept
