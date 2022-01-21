@@ -39,7 +39,7 @@ export namespace Boring32::WinHttp::WebSockets
 			virtual WebSocket& operator=(WebSocket&& other) noexcept;
 
 		public:
-			virtual const WebSocketSettings& GetSettings();
+			virtual const WebSocketSettings& GetSettings() const noexcept;
 			virtual void Connect();
 			virtual void Connect(const std::wstring& path);
 			virtual void SendString(const std::string& msg);

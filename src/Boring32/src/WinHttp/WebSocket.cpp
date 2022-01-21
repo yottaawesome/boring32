@@ -78,7 +78,7 @@ namespace Boring32::WinHttp::WebSockets
 		m_winHttpWebSocket = std::move(other.m_winHttpWebSocket);
 	}
 
-	const WebSocketSettings& WebSocket::GetSettings()
+	const WebSocketSettings& WebSocket::GetSettings() const noexcept
 	{
 		return m_settings;
 	}
