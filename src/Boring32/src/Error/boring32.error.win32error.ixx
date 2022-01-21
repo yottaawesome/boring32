@@ -17,6 +17,12 @@ export namespace Boring32::Error
 			Win32Error(const char* msg, const DWORD errorCode);
 			Win32Error(const std::string& msg, const DWORD errorCode);
 			Win32Error(const std::source_location& location, const std::string& msg, const DWORD errorCode);
+			Win32Error(
+				const std::source_location& location, 
+				const std::string& msg, 
+				const DWORD errorCode, 
+				const std::wstring& moduleName
+			);
 
 		public:
 			virtual DWORD GetErrorCode() const noexcept;

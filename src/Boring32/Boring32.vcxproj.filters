@@ -388,6 +388,10 @@
     <ClCompile Include="src\Util\Switcher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\WinHttp\boring32.winhttp.winhttperror.ixx" />
+    <ClCompile Include="src\WinHttp\WinHttpError.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />
