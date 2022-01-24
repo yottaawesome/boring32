@@ -12,14 +12,15 @@ export namespace Boring32::Security
 	{
 		public:
 			virtual ~SecurityDescriptor();
-
-			SecurityDescriptor(std::wstring descriptorString);
+			SecurityDescriptor(SecurityDescriptor&& other) noexcept;
 			SecurityDescriptor(const SecurityDescriptor&) = delete;
+			SecurityDescriptor(std::wstring descriptorString);
 
 		public:
 			virtual SecurityDescriptor& operator=(const SecurityDescriptor&) = delete;
-			virtual operator std::wstring() const noexcept;
-			virtual operator PSECURITY_DESCRIPTOR() const noexcept;
+			virtual SecurityDescriptor& operator=(SecurityDescriptor&&) noexcept;
+			[[nodiscard]] virtual operator std::wstring() const noexcept;
+			[[nodiscard]] virtual operator PSECURITY_DESCRIPTOR() const noexcept;
 
 		public:
 			virtual void Close();
@@ -28,6 +29,7 @@ export namespace Boring32::Security
 
 		protected:
 			virtual void Create();
+			virtual SecurityDescriptor& Move(SecurityDescriptor& other) noexcept;
 
 		protected:
 			std::wstring m_descriptorString;

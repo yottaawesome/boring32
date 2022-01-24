@@ -12,6 +12,11 @@ namespace Boring32::Security
 {
 	SecurityDescriptor::~SecurityDescriptor() { Close(); }
 
+	SecurityDescriptor::SecurityDescriptor(SecurityDescriptor&& other) noexcept
+	{
+		Move(other);
+	}
+
 	SecurityDescriptor::SecurityDescriptor(std::wstring descriptorString)
 		: m_descriptorString(std::move(descriptorString))
 	{
@@ -61,5 +66,19 @@ namespace Boring32::Security
 	SecurityDescriptor::operator PSECURITY_DESCRIPTOR() const noexcept
 	{
 		return m_descriptor.get();
+	}
+
+	SecurityDescriptor& SecurityDescriptor::operator=(SecurityDescriptor&& other) noexcept
+	{
+		return Move(other);
+	}
+	
+	SecurityDescriptor& SecurityDescriptor::Move(SecurityDescriptor& other) noexcept
+	{
+		if (&other == this)
+			return *this;
+		m_descriptorString = std::move(other.m_descriptorString);
+		m_descriptor = std::move(other.m_descriptor);
+		return *this;
 	}
 }

@@ -9,6 +9,8 @@
 
 // add headers that you want to pre-compile here
 #include <vector>
+#include <string>
+#include <format>
 #include <Windows.h>
 
 #endif //PCH_H
