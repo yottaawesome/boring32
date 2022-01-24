@@ -8,6 +8,7 @@ import boring32.raii.uniqueptrs;
 
 export namespace Boring32::Security
 {
+	// See https://docs.microsoft.com/en-us/windows/win32/secauthz/access-control-components
 	class SecurityDescriptor
 	{
 		public:
