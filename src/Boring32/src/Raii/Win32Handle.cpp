@@ -22,16 +22,15 @@ namespace Boring32::Raii
 
 	void Win32Handle::CloseHandleAndFreeMemory(HANDLE* pHandle)
 	{
-		std::wcout << L"Deleting handle\n";
 		if (!pHandle)
 			return;
 		InternalCloseHandle(*pHandle);
 		delete pHandle;
-		std::wcout << L"Deleted handle\n";
 	}
 
 	std::shared_ptr<HANDLE> Win32Handle::CreateClosableHandle(HANDLE handle)
 	{
+		//std::shared_ptr<HANDLE> x(new void* (handle), std::bind(&Win32Handle::CloseHandleAndFreeMemory, this, std::placeholders::_1));
 		return { new void* (handle), std::bind(&Win32Handle::CloseHandleAndFreeMemory, this, std::placeholders::_1) };
 	}
 

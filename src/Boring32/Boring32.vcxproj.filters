@@ -392,6 +392,10 @@
     <ClCompile Include="src\WinHttp\WinHttpError.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Security\boring32.security.securitydescriptor.ixx" />
+    <ClCompile Include="src\Security\SecurityDescriptor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

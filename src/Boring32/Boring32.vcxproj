@@ -247,8 +247,10 @@
     <ClCompile Include="src\Security\boring32.security.functions.ixx" />
     <ClCompile Include="src\Security\boring32.security.impersonationcontext.ixx" />
     <ClCompile Include="src\Security\boring32.security.privatenamespace.ixx" />
+    <ClCompile Include="src\Security\boring32.security.securitydescriptor.ixx" />
     <ClCompile Include="src\Security\boring32.security.sid.ixx" />
     <ClCompile Include="src\Security\boring32.security.token.ixx" />
+    <ClCompile Include="src\Security\SecurityDescriptor.cpp" />
     <ClCompile Include="src\TaskScheduler\boring32.taskscheduler.ixx" />
     <ClCompile Include="src\TaskScheduler\boring32.taskscheduler.registeredtask.ixx" />
     <ClCompile Include="src\TaskScheduler\boring32.taskscheduler.taskfolder.ixx" />
