@@ -4,6 +4,7 @@
 #include "include/Async/Process.hpp"
 
 import boring32.error.win32error;
+import boring32.error.errorbase;
 
 namespace Boring32::Async
 {
@@ -128,7 +129,9 @@ namespace Boring32::Async
 	void Process::Start()
 	{
 		if (m_executablePath.empty() && m_commandLine.empty())
-			throw std::runtime_error("No executable path or command line set");
+			throw Error::ErrorBase<std::runtime_error>(
+				std::source_location::current(), 
+				"No executable path or command line set");
 
 		PROCESS_INFORMATION processInfo{ 0 };
 		m_dataSi.cb = sizeof(m_dataSi);
@@ -219,12 +222,18 @@ namespace Boring32::Async
 
 	DWORD Process::GetProcessExitCode() const
 	{
+		if (!m_process)
+			throw Error::ErrorBase<std::runtime_error>(
+				std::source_location::current(),
+				"No process handle to query");
+
 		DWORD exitCode = 0;
 		if (!GetExitCodeProcess(m_process.GetHandle(), &exitCode))
 			throw Error::Win32Error(
 				std::source_location::current(), 
 				"Failed to determine process exit code", 
 				GetLastError());
+
 		return exitCode;
 	}
 }
