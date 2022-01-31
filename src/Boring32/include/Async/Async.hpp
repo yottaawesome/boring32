@@ -1,5 +1,4 @@
 #pragma once
-#include "ProcessInfo.hpp"
 #include "Pipes/Pipes.hpp"
 #include "MemoryMappedFile.hpp"
 #include "MemoryMappedView.hpp"

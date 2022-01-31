@@ -1,5 +1,9 @@
-#include "pch.hpp"
-#include "include/Async/Async.hpp"
+module;
+
+#include <Windows.h>
+
+module boring32.async.processinfo;
+import boring32.raii.win32handle;
 
 namespace Boring32::Async
 {

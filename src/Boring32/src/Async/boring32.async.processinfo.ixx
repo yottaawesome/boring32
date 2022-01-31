@@ -1,7 +1,10 @@
-#pragma once
+module;
+
 #include <Windows.h>
 
-namespace Boring32::Async
+export module boring32.async.processinfo;
+
+export namespace Boring32::Async
 {
 	class ProcessInfo
 	{
