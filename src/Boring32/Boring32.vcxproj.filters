@@ -24,9 +24,6 @@
     <ClInclude Include="include\Async\Async.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Async\MemoryMappedFile.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Async\Thread.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -392,6 +389,7 @@
     </ClCompile>
     <ClCompile Include="src\Async\boring32.async.processinfo.ixx" />
     <ClCompile Include="src\Async\boring32.async.process.ixx" />
+    <ClCompile Include="src\Async\boring32.async.memorymappedfile.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

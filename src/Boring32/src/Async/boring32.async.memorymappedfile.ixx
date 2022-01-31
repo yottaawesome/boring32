@@ -1,10 +1,12 @@
-#pragma once
+module;
+
 #include <Windows.h>
 #include <string>
 
+export module boring32.async.memorymappedfile;
 import boring32.raii.win32handle;
 
-namespace Boring32::Async
+export namespace Boring32::Async
 {
 	/// <summary>
 	///		Represents a <a href="https://docs.microsoft.com/en-us/dotnet/standard/io/memory-mapped-files">Win32 memory-mapped file</a>,

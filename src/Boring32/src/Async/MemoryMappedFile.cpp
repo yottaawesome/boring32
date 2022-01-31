@@ -1,8 +1,11 @@
-#include "pch.hpp"
+module;
+
 #include <stdexcept>
 #include <format>
-#include "include/Async/MemoryMappedFile.hpp"
+#include <iostream>
+#include <Windows.h>
 
+module boring32.async.memorymappedfile;
 import boring32.error.win32error;
 
 namespace Boring32::Async

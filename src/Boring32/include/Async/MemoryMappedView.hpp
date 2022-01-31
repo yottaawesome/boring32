@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
-#include "MemoryMappedFile.hpp"
+
+import boring32.async.memorymappedfile;
 
 namespace Boring32::Async
 {
