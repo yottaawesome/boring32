@@ -1,8 +1,11 @@
-#include "pch.hpp"
-#include <stdexcept>
-#include <source_location>
-#include "include/Async/Process.hpp"
+module;
 
+#include <stdexcept>
+#include <string>
+#include <source_location>
+#include <Windows.h>
+
+module boring32.async.process;
 import boring32.error.win32error;
 import boring32.error.errorbase;
 

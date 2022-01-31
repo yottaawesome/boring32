@@ -183,7 +183,6 @@
     <ClInclude Include="include\Async\Pipes\NamedPipeServerBase.hpp" />
     <ClInclude Include="include\Async\OverlappedIo.hpp" />
     <ClInclude Include="include\Async\Pipes\OverlappedNamedPipeClient.hpp" />
-    <ClInclude Include="include\Async\Process.hpp" />
     <ClInclude Include="include\Async\Thread.hpp" />
     <ClInclude Include="include\Async\Async.hpp" />
     <ClInclude Include="include\Boring32.hpp" />
@@ -194,6 +193,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Async\boring32.async.eventloop.ixx" />
+    <ClCompile Include="src\Async\boring32.async.process.ixx" />
     <ClCompile Include="src\Async\boring32.async.processinfo.ixx" />
     <ClCompile Include="src\Async\boring32.async.slimreadwritelock.ixx" />
     <ClCompile Include="src\Async\boring32.async.waitabletimert.ixx" />
