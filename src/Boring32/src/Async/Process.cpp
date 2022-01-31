@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include <stdexcept>
+#include <source_location>
 #include "include/Async/Process.hpp"
 
 import boring32.error.win32error;
@@ -126,13 +127,13 @@ namespace Boring32::Async
 
 	void Process::Start()
 	{
-		if(m_executablePath == L"" && m_commandLine == L"")
+		if (m_executablePath.empty() && m_commandLine.empty())
 			throw std::runtime_error("No executable path or command line set");
 
 		PROCESS_INFORMATION processInfo{ 0 };
 		m_dataSi.cb = sizeof(m_dataSi);
 		// https://docs.microsoft.com/en-us/windows/win32/procthread/creating-processes
-		bool successfullyCreatedProcess =
+		const bool successfullyCreatedProcess =
 			CreateProcessW(
 				m_executablePath != L"" 
 					? m_executablePath.c_str()
@@ -151,8 +152,11 @@ namespace Boring32::Async
 				&m_dataSi,				// Pointer to STARTUPINFO structure
 				&processInfo			// Pointer to PROCESS_INFORMATION structure
 			);
-		if (successfullyCreatedProcess == false)
-			throw Error::Win32Error("Failed to create process", GetLastError());
+		if (!successfullyCreatedProcess)
+			throw Error::Win32Error(
+				std::source_location::current(), 
+				"Failed to create process", 
+				GetLastError());
 
 		m_process = processInfo.hProcess;
 		m_thread = processInfo.hThread;
@@ -178,46 +182,49 @@ namespace Boring32::Async
 		m_thread = nullptr;
 	}
 
-	HANDLE Process::GetProcessHandle()
+	HANDLE Process::GetProcessHandle() const noexcept
 	{
 		return m_process.GetHandle();
 	}
 
-	HANDLE Process::GetThreadHandle()
+	HANDLE Process::GetThreadHandle() const noexcept
 	{
 		return m_thread.GetHandle();
 	}
 
-	std::wstring Process::GetExecutablePath()
+	std::wstring Process::GetExecutablePath() const noexcept
 	{
 		return m_executablePath;
 	}
 
-	std::wstring Process::GetCommandLineStr()
+	std::wstring Process::GetCommandLineStr() const noexcept
 	{
 		return m_commandLine;
 	}
 
-	std::wstring Process::GetStartingDirectory()
+	std::wstring Process::GetStartingDirectory() const noexcept
 	{
 		return m_startingDirectory;
 	}
 
-	bool Process::GetHandlesInheritability()
+	bool Process::GetHandlesInheritability() const noexcept
 	{
 		return m_canInheritHandles;
 	}
 
-	DWORD Process::GetCreationFlags()
+	DWORD Process::GetCreationFlags() const noexcept
 	{
 		return m_creationFlags;
 	}
 
-	DWORD Process::GetProcessExitCode()
+	DWORD Process::GetProcessExitCode() const
 	{
 		DWORD exitCode = 0;
-		if (GetExitCodeProcess(m_process.GetHandle(), &exitCode) == false)
-			throw Error::Win32Error("Failed to determine process exit code", GetLastError());
+		if (!GetExitCodeProcess(m_process.GetHandle(), &exitCode))
+			throw Error::Win32Error(
+				std::source_location::current(), 
+				"Failed to determine process exit code", 
+				GetLastError());
 		return exitCode;
 	}
 }

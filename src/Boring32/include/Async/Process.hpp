@@ -39,15 +39,15 @@ namespace Boring32::Async
 			virtual void CloseProcessHandle();
 			virtual void CloseThreadHandle();
 
-			virtual HANDLE GetProcessHandle();
-			virtual HANDLE GetThreadHandle();
-			virtual std::wstring GetExecutablePath();
-			virtual std::wstring GetCommandLineStr();
-			virtual std::wstring GetStartingDirectory();
-			virtual bool GetHandlesInheritability();
-			virtual DWORD GetCreationFlags();
+			virtual HANDLE GetProcessHandle() const noexcept;
+			virtual HANDLE GetThreadHandle() const noexcept;
+			virtual std::wstring GetExecutablePath() const noexcept;
+			virtual std::wstring GetCommandLineStr() const noexcept;
+			virtual std::wstring GetStartingDirectory() const noexcept;
+			virtual bool GetHandlesInheritability() const noexcept;
+			virtual DWORD GetCreationFlags() const noexcept;
 
-			virtual DWORD GetProcessExitCode();
+			virtual DWORD GetProcessExitCode() const;
 
 		protected:
 			virtual void Duplicate(const Process& other);
