@@ -25,11 +25,6 @@ namespace Boring32::Async
 		}
 	}
 
-	PROCESS_INFORMATION& ProcessInfo::GetProcessInfo()
-	{
-		return m_processInfo;
-	}
-
 	ProcessInfo::ProcessInfo(const ProcessInfo& other)
 		: m_processInfo{ 0 }
 	{
@@ -70,17 +65,27 @@ namespace Boring32::Async
 		m_processInfo.hThread = nullptr;
 	}
 
-	PROCESS_INFORMATION* ProcessInfo::operator&()
+	PROCESS_INFORMATION& ProcessInfo::GetProcessInfo() noexcept
+	{
+		return m_processInfo;
+	}
+
+	const PROCESS_INFORMATION& ProcessInfo::GetProcessInfo() const noexcept
+	{
+		return m_processInfo;
+	}
+
+	PROCESS_INFORMATION* ProcessInfo::operator&() noexcept
 	{
 		return &m_processInfo;
 	}
 
-	HANDLE ProcessInfo::GetProcessHandle()
+	HANDLE ProcessInfo::GetProcessHandle() const noexcept
 	{
 		return m_processInfo.hProcess;
 	}
 
-	HANDLE ProcessInfo::GetThreadHandle()
+	HANDLE ProcessInfo::GetThreadHandle() const noexcept
 	{
 		return m_processInfo.hThread;
 	}
