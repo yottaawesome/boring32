@@ -15,10 +15,11 @@ export namespace Boring32::Async
 			ProcessInfo(ProcessInfo&& other) noexcept;
 
 		public:
-			virtual void operator=(const ProcessInfo& other);
-			virtual void operator=(ProcessInfo&& other) noexcept;
+			virtual ProcessInfo& operator=(const ProcessInfo& other);
+			virtual ProcessInfo& operator=(ProcessInfo&& other) noexcept;
 		
 		public:
+			virtual void Close();
 			virtual PROCESS_INFORMATION& GetProcessInfo() noexcept;
 			virtual const PROCESS_INFORMATION& GetProcessInfo() const noexcept;
 			virtual PROCESS_INFORMATION* operator&() noexcept;
@@ -26,8 +27,8 @@ export namespace Boring32::Async
 			virtual HANDLE GetThreadHandle() const noexcept;
 
 		protected:
-			virtual void Copy(const ProcessInfo& other);
-			virtual void Move(ProcessInfo& other) noexcept;
+			virtual ProcessInfo& Copy(const ProcessInfo& other);
+			virtual ProcessInfo& Move(ProcessInfo& other) noexcept;
 
 		protected:
 			PROCESS_INFORMATION m_processInfo;
