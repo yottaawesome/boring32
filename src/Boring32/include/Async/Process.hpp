@@ -11,6 +11,8 @@ namespace Boring32::Async
 		public:
 			virtual ~Process();
 			Process();
+			Process(Process&& other) noexcept;
+			Process(const Process& other);
 			Process(
 				std::wstring executablePath,
 				std::wstring commandLine,
@@ -25,15 +27,12 @@ namespace Boring32::Async
 				const DWORD creationFlags,
 				const STARTUPINFO& dataSi
 			);
-
-			// Move
-			Process(Process&& other) noexcept;
-			virtual void operator=(Process&& other) noexcept;
-
-			// Copy
-			Process(const Process& other);
-			virtual void operator=(Process& other);
-
+			
+		public:
+			virtual Process& operator=(Process&& other) noexcept;
+			virtual Process& operator=(Process& other);
+		
+		public:
 			virtual void Start();
 			virtual void CloseHandles();
 			virtual void CloseProcessHandle();
@@ -50,8 +49,8 @@ namespace Boring32::Async
 			virtual DWORD GetProcessExitCode() const;
 
 		protected:
-			virtual void Duplicate(const Process& other);
-			virtual void Move(Process& other) noexcept;
+			virtual Process& Copy(const Process& other);
+			virtual Process& Move(Process& other) noexcept;
 
 		protected:
 			std::wstring m_executablePath;

@@ -72,12 +72,12 @@ namespace Boring32::Async
 		m_threadId(0),
 		m_dataSi{ 0 }
 	{
-		Duplicate(other);
+		Copy(other);
 	}
 
-	void Process::operator=(Process& other)
+	Process& Process::operator=(Process& other)
 	{
-		Duplicate(other);
+		return Copy(other);
 	}
 
 	Process::Process(Process&& other) noexcept
@@ -93,13 +93,16 @@ namespace Boring32::Async
 		Move(other);
 	}
 
-	void Process::operator=(Process&& other) noexcept
+	Process& Process::operator=(Process&& other) noexcept
 	{
-		Move(other);
+		return Move(other);
 	}
 
-	void Process::Move(Process& other) noexcept
+	Process& Process::Move(Process& other) noexcept
 	{
+		if (this == &other)
+			return *this;
+
 		CloseHandles();
 		m_executablePath = std::move(other.m_executablePath);
 		m_commandLine = std::move(other.m_commandLine);
@@ -110,10 +113,14 @@ namespace Boring32::Async
 		m_threadId = other.m_threadId;
 		m_process = std::move(other.m_process);
 		m_thread = std::move(other.m_thread);
+		return *this;
 	}
 
-	void Process::Duplicate(const Process& other)
+	Process& Process::Copy(const Process& other)
 	{
+		if (this == &other)
+			return *this;
+
 		CloseHandles();
 		m_executablePath = other.m_executablePath;
 		m_commandLine = other.m_commandLine;
@@ -124,6 +131,7 @@ namespace Boring32::Async
 		m_threadId = other.m_threadId;
 		m_process = other.m_process;
 		m_thread = other.m_thread;
+		return *this;
 	}
 
 	void Process::Start()
