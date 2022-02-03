@@ -332,7 +332,6 @@
     <ClCompile Include="src\IPC\boring32.ipc.overlappednamedpipeserver.ixx" />
     <ClCompile Include="src\IPC\boring32.ipc.namedpipeclientbase.ixx" />
     <ClCompile Include="src\IPC\boring32.ipc.namedpipeserverbase.ixx" />
-    <ClCompile Include="src\IPC\boring32.ipc.blockingnamedpipeclient.ixx" />
     <ClCompile Include="src\IPC\boring32.ipc.blockingnamedpipeserver.ixx" />
     <ClCompile Include="src\Crypto\boring32.crypto.certificate.ixx" />
     <ClCompile Include="src\Crypto\boring32.crypto.aesencryption.ixx" />
@@ -387,6 +386,8 @@
     <ClCompile Include="src\Async\boring32.async.processinfo.ixx" />
     <ClCompile Include="src\Async\boring32.async.process.ixx" />
     <ClCompile Include="src\Async\boring32.async.memorymappedfile.ixx" />
+    <ClCompile Include="src\IPC\boring32.ipc.blockingnamedpipeclient.ixx" />
+    <ClCompile Include="src\IPC\boring32.ipc.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

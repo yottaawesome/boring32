@@ -1,8 +1,11 @@
-#include "pch.hpp"
+module;
+
 #include <vector>
 #include <stdexcept>
+#include <Windows.h>
 #include "include/Async/Pipes/BlockingNamedPipeClient.hpp"
 
+module boring32.ipc.blockingnamedpipeclient;
 import boring32.error.win32error;
 import boring32.util;
 

@@ -233,6 +233,7 @@
     <ClCompile Include="src\IPC\boring32.ipc.blockingnamedpipeclient.ixx" />
     <ClCompile Include="src\IPC\boring32.ipc.blockingnamedpipeserver.ixx" />
     <ClCompile Include="src\IPC\boring32.ipc.anonymouspipe.ixx" />
+    <ClCompile Include="src\IPC\boring32.ipc.ixx" />
     <ClCompile Include="src\IPC\boring32.ipc.namedpipeclientbase.ixx" />
     <ClCompile Include="src\IPC\boring32.ipc.namedpipeserverbase.ixx" />
     <ClCompile Include="src\IPC\boring32.ipc.overlappednamedpipeclient.ixx" />
