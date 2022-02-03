@@ -1,6 +1,12 @@
-#include "pch.hpp"
+module;
+
+#include <string>
 #include <stdexcept>
-#include "include/Async/Pipes/BlockingNamedPipeServer.hpp"
+#include <vector>
+#include <Windows.h>
+
+module boring32.ipc.blockingnamedpipeserver;
+import boring32.util;
 
 namespace Boring32::Async
 {
@@ -92,23 +98,23 @@ namespace Boring32::Async
 
     void BlockingNamedPipeServer::Write(const std::wstring& msg)
     {
-        InternalWrite(msg);
+        InternalWrite(Util::StringToByteVector(msg));
     }
 
-    bool BlockingNamedPipeServer::Write(const std::wstring& msg, const std::nothrow_t)
+    bool BlockingNamedPipeServer::Write(
+        const std::wstring& msg, 
+        const std::nothrow_t&
+    ) noexcept try
     {
-        try
-        {
-            InternalWrite(msg);
-            return true;
-        }
-        catch (...)
-        {
-            return false;
-        }
+        InternalWrite(Util::StringToByteVector(msg));
+        return true;
+    }
+    catch (...)
+    {
+        return false;
     }
 
-    void BlockingNamedPipeServer::InternalWrite(const std::wstring& msg)
+    void BlockingNamedPipeServer::InternalWrite(const std::vector<std::byte>& msg)
     {
         if (m_pipe == nullptr)
             throw std::runtime_error("No pipe to write to");
@@ -117,7 +123,7 @@ namespace Boring32::Async
         bool success = WriteFile(
             m_pipe.GetHandle(),     // handle to pipe 
             &msg[0],                // buffer to write from 
-            (DWORD)(msg.size()*sizeof(wchar_t)), // number of bytes to write 
+            (DWORD)msg.size(), // number of bytes to write 
             &bytesWritten,          // number of bytes written 
             nullptr                 // not overlapped I/O
         );               
@@ -125,32 +131,32 @@ namespace Boring32::Async
             throw std::runtime_error("Failed to read pipe");
     }
 
-    std::wstring BlockingNamedPipeServer::Read()
+    std::wstring BlockingNamedPipeServer::ReadAsString()
     {
-        return InternalRead();
+        return Util::ByteVectorToString<std::wstring>(InternalRead());
     }
 
-    bool BlockingNamedPipeServer::Read(std::wstring& out, const std::nothrow_t)
+    bool BlockingNamedPipeServer::ReadAsString(
+        std::wstring& out, 
+        const std::nothrow_t&
+    ) noexcept
+    try
     {
-        try
-        {
-            out = InternalRead();
-            return true;
-        }
-        catch (...)
-        {
-            return false;
-        }
+        out = Util::ByteVectorToString<std::wstring>(InternalRead());
+        return true;
+    }
+    catch (...)
+    {
+        return false;
     }
 
-    std::wstring BlockingNamedPipeServer::InternalRead()
+    std::vector<std::byte> BlockingNamedPipeServer::InternalRead()
     {
         if (m_pipe == nullptr)
             throw std::runtime_error("No pipe to read from");
 
-        std::wstring dataBuffer;
         constexpr DWORD blockSize = 1024;
-        dataBuffer.resize(1024);
+        std::vector<std::byte> dataBuffer(blockSize);
 
         bool continueReading = true;
         DWORD totalBytesRead = 0;
@@ -161,9 +167,10 @@ namespace Boring32::Async
             bool successfulRead = ReadFile(
                 m_pipe.GetHandle(),    // pipe handle 
                 &dataBuffer[0],    // buffer to receive reply 
-                (DWORD)(dataBuffer.size() * sizeof(TCHAR)),  // size of buffer 
+                (DWORD)dataBuffer.size(),  // size of buffer 
                 &currentBytesRead,  // number of bytes read 
-                nullptr);    // not overlapped
+                nullptr // not overlapped
+            );    
             totalBytesRead += currentBytesRead;
 
             const DWORD lastError = GetLastError();
@@ -175,7 +182,7 @@ namespace Boring32::Async
         }
 
         if (totalBytesRead > 0)
-            dataBuffer.resize(totalBytesRead / sizeof(wchar_t));
+            dataBuffer.resize(totalBytesRead);
 
         return dataBuffer;
     }

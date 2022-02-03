@@ -36,6 +36,7 @@ import boring32.async.timerqueuetimer;
 import boring32.async.threadsafevector;
 import boring32.ipc.anonymouspipe;
 import boring32.ipc.overlappednamedpipeserver;
+import boring32.ipc.blockingnamedpipeserver;
 import boring32.security.sid;
 import boring32.crypto.certstore;
 import boring32.winhttp.websockets.websocket;
