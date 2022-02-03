@@ -43,17 +43,35 @@ namespace Boring32::Async
 		InternalWrite(Util::StringToByteVector(msg));
 	}
 	
-	bool BlockingNamedPipeClient::Write(const std::wstring& msg, const std::nothrow_t)
+	bool BlockingNamedPipeClient::Write(
+		const std::wstring& msg, 
+		const std::nothrow_t
+	) noexcept try
 	{
-		try
-		{
-			InternalWrite(Util::StringToByteVector(msg));
-			return true;
-		}
-		catch (...)
-		{
-			return false;
-		}
+		InternalWrite(Util::StringToByteVector(msg));
+		return true;
+	}
+	catch (...)
+	{
+		return false;
+	}
+
+	void BlockingNamedPipeClient::Write(const std::vector<std::byte>& data)
+	{
+		InternalWrite(data);
+	}
+
+	bool BlockingNamedPipeClient::Write(
+		const std::vector<std::byte>& data, 
+		const std::nothrow_t
+	) noexcept try
+	{
+		InternalWrite(data);
+		return true;
+	}
+	catch (...)
+	{
+		return false;
 	}
 
 	void BlockingNamedPipeClient::InternalWrite(const std::vector<std::byte>& data)
@@ -74,22 +92,22 @@ namespace Boring32::Async
 			throw Error::Win32Error("Failed to write to client pipe", GetLastError());
 	}
 
-	std::wstring BlockingNamedPipeClient::Read()
+	std::wstring BlockingNamedPipeClient::ReadAsString()
 	{
 		return Util::ByteVectorToString<std::wstring>(InternalRead());
 	}
 
-	bool BlockingNamedPipeClient::Read(std::wstring& out, const std::nothrow_t)
+	bool BlockingNamedPipeClient::ReadAsString(
+		std::wstring& out, 
+		const std::nothrow_t
+	) noexcept try
 	{
-		try
-		{
-			out = Util::ByteVectorToString<std::wstring>(InternalRead());
-			return true;
-		}
-		catch (...)
-		{
-			return false;
-		}
+		out = Util::ByteVectorToString<std::wstring>(InternalRead());
+		return true;
+	}
+	catch (...)
+	{
+		return false;
 	}
 
 	std::vector<std::byte> BlockingNamedPipeClient::InternalRead()
@@ -124,7 +142,7 @@ namespace Boring32::Async
 		}
 
 		if (totalBytesRead > 0)
-			dataBuffer.resize(totalBytesRead / sizeof(wchar_t));
+			dataBuffer.resize(totalBytesRead);
 
 		return dataBuffer;
 	}
