@@ -31,14 +31,8 @@ export namespace Boring32::Util
 	template<typename T> requires std::is_same<std::wstring, T>::value || std::is_same<std::string, T>::value
 	T ByteVectorToString(const std::vector<std::byte>& vector)
 	{
-		static_assert(false, "Cannot use this template");
+		return { reinterpret_cast<T::const_pointer>(&vector[0]), vector.size() / sizeof(T::value_type) };
 	}
-
-	template<>
-	std::wstring ByteVectorToString(const std::vector<std::byte>& vector);
-
-	template<>
-	std::string ByteVectorToString(const std::vector<std::byte>& vector);
 
 	typedef std::string(*blah)(const std::vector<std::byte>& vector);// = ByteVectorToString<std::string>;
 	//static blah m = ByteVectorToString<std::string>;

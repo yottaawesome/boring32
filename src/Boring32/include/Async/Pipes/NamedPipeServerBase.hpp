@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <memory>
+#include <Windows.h>
 
 import boring32.raii.win32handle;
 

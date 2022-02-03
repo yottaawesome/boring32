@@ -87,18 +87,6 @@ namespace Boring32::Util
         };
     }
 
-    template<>
-    std::wstring ByteVectorToString(const std::vector<std::byte>& vector)
-    {
-        return { reinterpret_cast<const wchar_t*>(&vector[0]), vector.size() / sizeof(wchar_t) };
-    }
-
-    template<>
-    std::string ByteVectorToString(const std::vector<std::byte>& vector)
-    {
-        return { reinterpret_cast<const char*>(&vector[0]), vector.size() / sizeof(char) };
-    }
-
     /*template<typename X>
     X Blah()
     {

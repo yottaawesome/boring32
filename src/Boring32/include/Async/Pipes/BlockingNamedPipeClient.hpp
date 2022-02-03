@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "NamedPipeClientBase.hpp"
 
 namespace Boring32::Async
@@ -22,7 +23,7 @@ namespace Boring32::Async
 			virtual bool Read(std::wstring& out, const std::nothrow_t);
 
 		protected:
-			virtual void InternalWrite(const std::wstring& msg);
-			virtual std::wstring InternalRead();
+			virtual void InternalWrite(const std::vector<std::byte>& data);
+			virtual std::vector<std::byte> InternalRead();
 	};
 }

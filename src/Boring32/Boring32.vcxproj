@@ -175,7 +175,6 @@
   <ItemGroup>
     <ClInclude Include="include\Async\AsyncFuncs.hpp" />
     <ClInclude Include="include\Async\OverlappedOp.hpp" />
-    <ClInclude Include="include\Async\Pipes\AnonymousPipe.hpp" />
     <ClInclude Include="include\Async\Pipes\BlockingNamedPipeClient.hpp" />
     <ClInclude Include="include\Async\Pipes\NamedPipeClientBase.hpp" />
     <ClInclude Include="include\Async\Pipes\BlockingNamedPipeServer.hpp" />

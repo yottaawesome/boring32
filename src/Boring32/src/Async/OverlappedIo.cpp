@@ -33,7 +33,7 @@ namespace Boring32::Async
 			throw std::runtime_error("ResizeBuffer(): operation is not successful");
 		const uint64_t bytesTransferred = GetBytesTransferred();
 		if (bytesTransferred > 0)
-			IoBuffer.resize(bytesTransferred / sizeof(wchar_t));
+			IoBuffer.resize(bytesTransferred);
 	}
 
 	void OverlappedIo::OnSuccess()

@@ -237,10 +237,10 @@ void TestProcessOverlappedNamedPipe()
 
 
 	writeOp2.WaitForCompletion(INFINITE);
-	std::wcout << writeOp2.IoBuffer << std::endl;
+	std::wcout << Boring32::Util::ByteVectorToString<std::wstring>(writeOp2.IoBuffer) << std::endl;
 	serverPipe.Read(1024, writeOp2);
 	writeOp2.WaitForCompletion(INFINITE);
-	std::wcout << writeOp2.IoBuffer << std::endl;
+	std::wcout << Boring32::Util::ByteVectorToString<std::wstring>(writeOp2.IoBuffer) << std::endl;
 }
 
 void TestProcessAnonPipe()

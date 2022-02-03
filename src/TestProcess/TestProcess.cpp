@@ -8,6 +8,7 @@ import boring32.ipc.anonymouspipe;
 import boring32.ipc.overlappednamedpipeserver;
 import boring32.ipc.overlappednamedpipeclient;
 import boring32.security.privatenamespace;
+import boring32.util;
 import test;
 
 int MainAnon(int argc, char** args)
@@ -44,14 +45,13 @@ int MainBlocking(int argc, char** args)
 int MainOverlapped(int argc, char** args)
 {
     Sleep(1000);
-
     Boring32::IPC::OverlappedNamedPipeClient p(L"\\\\.\\pipe\\mynamedpipe");
     p.Connect(0);
     p.SetMode(PIPE_READMODE_MESSAGE);
     Boring32::Async::OverlappedIo readOp;
     p.Read(1024, readOp);
     readOp.WaitForCompletion(INFINITE);
-    std::wcout << readOp.IoBuffer << std::endl;
+    std::wcout << Boring32::Util::ByteVectorToString<std::wstring>(readOp.IoBuffer) << std::endl;
     Sleep(1000);
 
     Boring32::Async::OverlappedIo writeOp;

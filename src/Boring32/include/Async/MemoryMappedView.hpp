@@ -9,7 +9,11 @@ namespace Boring32::Async
 	class MemoryMappedView
 	{
 		public:
-			MemoryMappedView(const std::wstring& name, const bool create, const bool inheritable)
+			MemoryMappedView(
+				const std::wstring& name, 
+				const bool create, 
+				const bool inheritable
+			)
 			:	m_mappedMemory(
 					name,
 					sizeof(T),

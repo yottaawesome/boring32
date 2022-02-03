@@ -1,5 +1,4 @@
 #pragma once
-#include "AnonymousPipe.hpp"
 #include "NamedPipeClientBase.hpp"
 #include "NamedPipeServerBase.hpp"
 #include "OverlappedNamedPipeClient.hpp"

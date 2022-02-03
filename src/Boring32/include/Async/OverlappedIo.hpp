@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "OverlappedOp.hpp"
 
 namespace Boring32::Async
@@ -17,7 +18,7 @@ namespace Boring32::Async
 			virtual OverlappedIo& operator=(const OverlappedIo& other) = delete;
 
 		public:
-			std::wstring IoBuffer;
+			std::vector<std::byte> IoBuffer;
 
 		protected:
 			virtual void Move(OverlappedIo& other) noexcept;
