@@ -71,7 +71,7 @@ namespace Boring32::Util
 
     
 
-    std::vector<std::byte> StringToByteVector(const std::wstring_view str)
+    /*std::vector<std::byte> StringToByteVector(const std::wstring_view str)
     {
         return { 
             reinterpret_cast<const std::byte*>(&str[0]), 
@@ -85,7 +85,7 @@ namespace Boring32::Util
             reinterpret_cast<const std::byte*>(&str[0]), 
             reinterpret_cast<const std::byte*>(&str[0]) + str.size() * sizeof(char)
         };
-    }
+    }*/
 
     /*template<typename X>
     X Blah()

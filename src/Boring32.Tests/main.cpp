@@ -78,8 +78,17 @@ void PrintFileVersion()
 		<< std::endl;
 }
 
+typedef int Z;
+typedef int Y;
+
+void R(Z x) {}
+
 int main(int argc, char** args) try
 {
+	Y y = 1;
+	R(y);
+
+
 	throw Boring32::WinHttp::WinHttpError(std::source_location::current(), "AAA", 12001);
 	//Experiments1Main();
 	//throw Boring32::Error::ErrorBase<std::runtime_error>(std::source_location::current(), "AAAA");
