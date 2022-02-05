@@ -173,7 +173,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\Async\AsyncFuncs.hpp" />
     <ClInclude Include="include\Async\OverlappedOp.hpp" />
     <ClInclude Include="include\Async\OverlappedIo.hpp" />
     <ClInclude Include="include\Async\Thread.hpp" />
@@ -185,6 +184,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Async\boring32.async.eventloop.ixx" />
+    <ClCompile Include="src\Async\boring32.async.functions.ixx" />
     <ClCompile Include="src\Async\boring32.async.memorymappedfile.ixx" />
     <ClCompile Include="src\Async\boring32.async.process.ixx" />
     <ClCompile Include="src\Async\boring32.async.processinfo.ixx" />

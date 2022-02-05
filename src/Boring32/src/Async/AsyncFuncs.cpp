@@ -1,9 +1,12 @@
-#include "pch.hpp"
-#include <stdexcept>
-#include <format>
-#include <TlHelp32.h>
-#include "include/Async/AsyncFuncs.hpp"
+module;
 
+#include <stdexcept>
+#include <vector>
+#include <format>
+#include <Windows.h>
+#include <TlHelp32.h>
+
+module boring32.async.functions;
 import boring32.raii.win32handle;
 import boring32.strings;
 import boring32.error.win32error;

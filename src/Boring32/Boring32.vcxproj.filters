@@ -39,9 +39,6 @@
     <ClInclude Include="include\Async\OverlappedOp.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Async\AsyncFuncs.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\pch.cpp">
@@ -370,6 +367,7 @@
     <ClCompile Include="src\Async\boring32.async.memorymappedfile.ixx" />
     <ClCompile Include="src\IPC\boring32.ipc.blockingnamedpipeclient.ixx" />
     <ClCompile Include="src\IPC\boring32.ipc.ixx" />
+    <ClCompile Include="src\Async\boring32.async.functions.ixx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Async\MemoryMappedView.hpp" />

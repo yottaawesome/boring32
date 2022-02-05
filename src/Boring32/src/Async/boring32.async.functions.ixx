@@ -1,20 +1,24 @@
-#pragma once
+module;
+
 #include <vector>
+#include <string>
 #include <windows.h>
 
-namespace Boring32::Async
+export module boring32.async.functions;
+
+export namespace Boring32::Async
 {
 	void WaitFor(const HANDLE handle);
-	
+
 	bool WaitFor(const HANDLE handle, const DWORD timeout);
-	
+
 	bool WaitFor(const HANDLE handle, const DWORD timeout, const bool alertable);
-	
+
 	DWORD WaitFor(
 		const std::vector<HANDLE>& handles,
 		const bool waitForAll
 	);
-	
+
 	DWORD WaitFor(
 		const std::vector<HANDLE>& handles,
 		const bool waitForAll,
@@ -44,7 +48,7 @@ namespace Boring32::Async
 	///		handle that was signaled otherwise.
 	/// </returns>
 	DWORD WaitFor(
-		const std::vector<HANDLE>& handles, 
+		const std::vector<HANDLE>& handles,
 		const bool waitForAll,
 		const DWORD timeout,
 		const bool alertable
