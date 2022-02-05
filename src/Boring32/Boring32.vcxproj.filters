@@ -179,7 +179,7 @@
     <ClCompile Include="src\Async\EventLoop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Async\AsyncFuncs.cpp">
+    <ClCompile Include="src\Async\boring32.async.functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Registry\RegistryFuncs.cpp">
@@ -368,8 +368,6 @@
     <ClCompile Include="src\IPC\boring32.ipc.blockingnamedpipeclient.ixx" />
     <ClCompile Include="src\IPC\boring32.ipc.ixx" />
     <ClCompile Include="src\Async\boring32.async.functions.ixx" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="include\Async\MemoryMappedView.hpp" />
+    <ClCompile Include="src\Async\boring32.async.memorymappedview.ixx" />
   </ItemGroup>
 </Project>

@@ -1,9 +1,11 @@
-#pragma once
+module;
+
 #include <string>
 
+export module boring32.async.memorymappedview;
 import boring32.async.memorymappedfile;
 
-namespace Boring32::Async
+export namespace Boring32::Async
 {
 	template<typename T>
 	class MemoryMappedView

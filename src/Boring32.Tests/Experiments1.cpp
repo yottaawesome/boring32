@@ -34,6 +34,8 @@ import boring32.async.event;
 import boring32.async.timerqueue;
 import boring32.async.timerqueuetimer;
 import boring32.async.threadsafevector;
+import boring32.async.memorymappedview;
+import boring32.async.memorymappedfile;
 import boring32.ipc.anonymouspipe;
 import boring32.ipc.overlappednamedpipeserver;
 import boring32.ipc.blockingnamedpipeserver;

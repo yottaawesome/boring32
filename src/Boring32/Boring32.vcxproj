@@ -186,6 +186,7 @@
     <ClCompile Include="src\Async\boring32.async.eventloop.ixx" />
     <ClCompile Include="src\Async\boring32.async.functions.ixx" />
     <ClCompile Include="src\Async\boring32.async.memorymappedfile.ixx" />
+    <ClCompile Include="src\Async\boring32.async.memorymappedview.ixx" />
     <ClCompile Include="src\Async\boring32.async.process.ixx" />
     <ClCompile Include="src\Async\boring32.async.processinfo.ixx" />
     <ClCompile Include="src\Async\boring32.async.slimreadwritelock.ixx" />
@@ -270,7 +271,7 @@
     <ClCompile Include="src\WinHttp\boring32.winhttp.proxytype.ixx" />
     <ClCompile Include="src\WinHttp\WinHttpError.cpp" />
     <ClCompile Include="src\WinSock\boring32.winsock.ixx" />
-    <ClCompile Include="src\Async\AsyncFuncs.cpp" />
+    <ClCompile Include="src\Async\boring32.async.functions.cpp" />
     <ClCompile Include="src\Async\CriticalSectionLock.cpp" />
     <ClCompile Include="src\Async\Event.cpp" />
     <ClCompile Include="src\Async\EventLoop.cpp" />
@@ -352,9 +353,6 @@
     <ClCompile Include="src\WinHttp\WinHttpHandle.cpp" />
     <ClCompile Include="src\WinHttp\HttpWebClient.cpp" />
     <ClCompile Include="src\WinHttp\WebSocket.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="include\Async\MemoryMappedView.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
