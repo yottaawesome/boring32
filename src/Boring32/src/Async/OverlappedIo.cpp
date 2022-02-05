@@ -1,6 +1,9 @@
-#include "pch.hpp"
-#include "include/Async/OverlappedIo.hpp"
+module;
 
+#include <vector>
+#include <stdexcept>
+
+module boring32.async.overlappedio;
 import boring32.error.win32error;
 
 namespace Boring32::Async

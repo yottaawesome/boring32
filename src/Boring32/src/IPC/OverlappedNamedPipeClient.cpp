@@ -5,8 +5,6 @@ module;
 #include <string>
 #include <iostream>
 #include <Windows.h>
-#include "include/Async/OverlappedOp.hpp"
-#include "include/Async/OverlappedIo.hpp"
 
 module boring32.ipc.overlappednamedpipeclient;
 import boring32.error.win32error;

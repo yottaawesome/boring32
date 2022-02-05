@@ -1,8 +1,11 @@
-#pragma once
-#include <vector>
-#include "OverlappedOp.hpp"
+module;
 
-namespace Boring32::Async
+#include <vector>
+
+export module boring32.async.overlappedio;
+import boring32.async.overlappedop;
+
+export namespace Boring32::Async
 {
 	class OverlappedIo : public OverlappedOp
 	{
@@ -12,7 +15,7 @@ namespace Boring32::Async
 			OverlappedIo(OverlappedIo&& other) noexcept;
 			virtual OverlappedIo& operator=(OverlappedIo&& other) noexcept;
 
-		// Non-copyable
+			// Non-copyable
 		public:
 			OverlappedIo(const OverlappedIo& other) = delete;
 			virtual OverlappedIo& operator=(const OverlappedIo& other) = delete;

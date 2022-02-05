@@ -2,12 +2,12 @@ module;
 
 #include <string>
 #include <Windows.h>
-#include "include/Async/OverlappedOp.hpp"
-#include "include/Async/OverlappedIo.hpp"
 
 export module boring32.ipc.overlappednamedpipeserver;
 import boring32.ipc.namedpipeserverbase;
 import boring32.raii.win32handle;
+import boring32.async.overlappedop;
+import boring32.async.overlappedio;
 
 export namespace Boring32::IPC
 {

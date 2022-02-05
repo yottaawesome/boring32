@@ -1,13 +1,15 @@
-#pragma once
-#include <memory>
+module;
 
+#include <memory>
+#include <Windows.h>
+
+export module boring32.async.overlappedop;
 import boring32.async.event;
 
-namespace Boring32::Async
+export namespace Boring32::Async
 {
-	class 
-		[[nodiscard("This object must remain live while the I/O operation is in progress")]] 
-		OverlappedOp
+	
+	class OverlappedOp [[nodiscard("This object must remain live while the I/O operation is in progress")]]
 	{
 		public:
 			virtual ~OverlappedOp();

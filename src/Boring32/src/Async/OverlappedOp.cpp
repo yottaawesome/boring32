@@ -1,9 +1,12 @@
-#include "pch.hpp"
+module;
+
 #include <stdexcept>
+#include <memory>
+#include <Windows.h>
 //#include <winternl.h>
 //#include <ntstatus.h>
-#include "include/Async/OverlappedOp.hpp"
 
+module boring32.async.overlappedop;
 import boring32.error.win32error;
 
 namespace Boring32::Async
