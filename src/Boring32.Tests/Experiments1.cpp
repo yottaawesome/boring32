@@ -12,7 +12,6 @@
 #include "pathcch.h"
 
 #include "Boring32.Tests.h"
-#include "../Boring32/include/Boring32.hpp"
 
 import boring32.winsock;
 import boring32.async.threadpools;

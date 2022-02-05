@@ -1,10 +1,10 @@
 #include "pch.h"
 #include <thread>
 #include "CppUnitTest.h"
-#include "Boring32/include/Async/Async.hpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 import boring32.async.functions;
+import boring32.async.event;
 
 namespace Async
 {

@@ -1,11 +1,13 @@
-#pragma once
-#include <Windows.h>
-#include <functional>
+module;
 
+#include <functional>
+#include <Windows.h>
+
+export module boring32.async.thread;
 import boring32.raii.win32handle;
 import boring32.async.event;
 
-namespace Boring32::Async
+export namespace Boring32::Async
 {
 	enum class ThreadStatus
 	{

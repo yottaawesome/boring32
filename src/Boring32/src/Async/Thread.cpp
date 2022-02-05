@@ -1,8 +1,12 @@
-#include "pch.hpp"
+module;
+
 #include <stdexcept>
 #include <iostream>
-#include "include/Async/Thread.hpp"
+#include <string>
+#include <Windows.h>
+#include <process.h>
 
+module boring32.async.thread;
 import boring32.error.win32error;
 
 namespace Boring32::Async

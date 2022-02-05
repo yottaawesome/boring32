@@ -175,9 +175,6 @@
   <ItemGroup>
     <ClInclude Include="include\Async\OverlappedOp.hpp" />
     <ClInclude Include="include\Async\OverlappedIo.hpp" />
-    <ClInclude Include="include\Async\Thread.hpp" />
-    <ClInclude Include="include\Async\Async.hpp" />
-    <ClInclude Include="include\Boring32.hpp" />
     <ClInclude Include="src\pch.hpp" />
     <ClInclude Include="src\targetver.hpp" />
   </ItemGroup>
@@ -189,6 +186,7 @@
     <ClCompile Include="src\Async\boring32.async.process.ixx" />
     <ClCompile Include="src\Async\boring32.async.processinfo.ixx" />
     <ClCompile Include="src\Async\boring32.async.slimreadwritelock.ixx" />
+    <ClCompile Include="src\Async\boring32.async.thread.ixx" />
     <ClCompile Include="src\Async\boring32.async.waitabletimert.ixx" />
     <ClCompile Include="src\Async\boring32.async.criticalsectionlock.ixx" />
     <ClCompile Include="src\Async\boring32.async.event.ixx" />

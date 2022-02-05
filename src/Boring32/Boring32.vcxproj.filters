@@ -21,15 +21,6 @@
     <ClInclude Include="src\targetver.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Async\Async.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Async\Thread.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Boring32.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Async\OverlappedIo.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -366,5 +357,6 @@
     <ClCompile Include="src\IPC\boring32.ipc.ixx" />
     <ClCompile Include="src\Async\boring32.async.functions.ixx" />
     <ClCompile Include="src\Async\boring32.async.memorymappedview.ixx" />
+    <ClCompile Include="src\Async\boring32.async.thread.ixx" />
   </ItemGroup>
 </Project>
