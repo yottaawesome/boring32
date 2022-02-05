@@ -1,6 +1,7 @@
 module;
 
 #include "pch.hpp"
+#include <iostream>
 #include <utility>
 
 module boring32.registry.key;
@@ -45,10 +46,7 @@ namespace Boring32::Registry
 	) noexcept
 	:	m_access(KEY_ALL_ACCESS)
 	{
-		Error::TryCatchLogToWCerr(
-			[this, key = key, &subkey = subkey] { InternalOpen(key, subkey); }, 
-			__FUNCSIG__
-		);
+		InternalOpen(key, subkey, std::nothrow);
 	}
 
 	Key::Key(
@@ -59,10 +57,7 @@ namespace Boring32::Registry
 	) noexcept
 	:	m_access(access)
 	{
-		Error::TryCatchLogToWCerr(
-			[this, key = key, &subkey = subkey] { InternalOpen(key, subkey); }, 
-			__FUNCSIG__
-		);
+		InternalOpen(key, subkey, std::nothrow);
 	}
 
 	Key::Key(const Key& other)
@@ -189,6 +184,19 @@ namespace Boring32::Registry
 		if (status != ERROR_SUCCESS)
 			throw Error::Win32Error(__FUNCSIG__ ": failed to open registry key", status);
 		m_key = CreateRegKeyPtr(key);
+	}
+
+	void Key::InternalOpen(
+		const HKEY key,
+		const std::wstring& subkey,
+		const std::nothrow_t&
+	) noexcept try
+	{
+		InternalOpen(key, subkey);
+	}
+	catch (const std::exception& ex)
+	{
+		std::wcerr << ex.what() << std::endl;
 	}
 
 	void Key::Export(const std::wstring& path, const DWORD flags)

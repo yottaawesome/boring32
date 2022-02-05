@@ -9,77 +9,14 @@ export module boring32.error.functions;
 
 export namespace Boring32::Error
 {
-    template<typename T, typename S> 
-        requires std::is_same<S,char>::value || std::is_same<S, wchar_t>::value
-    bool TryCatchLog(const T& function, const S* string) noexcept try
-    {
-        function();
-        return true;
-    }
-    catch (const std::exception& ex)
-    {
-        std::wcerr
-            << string
-            << L" "
-            << ex.what()
-            << std::endl;
-        return false;
-    }
-
-    template<typename T>
-    bool TryCatchLogToWCerr(const T& function, const std::string& string) noexcept
-    {
-        return TryCatchLog(function, string.c_str());
-    }
-
-    template<typename T>
-    bool TryCatchLogToWCerr(const T& function, const std::wstring& string) noexcept
-    {
-        return TryCatchLog(function, string.c_str());
-    }
-
-    template<typename S, typename...Args>
-    bool TryCatchLogToWCerr(
-        const auto function,
-        const auto type,
-        const S& string,
-        Args&&...args
-    ) noexcept
-    {
-        try
-        {
-            //((*type).*function)(std::forward<Args>(args)...);
-            (type->*function)(std::forward<Args>(args)...);
-            return true;
-        }
-        catch (const std::exception& ex)
-        {
-            std::wcerr
-                << string
-                << L" "
-                << ex.what()
-                << std::endl;
-            return false;
-        }
-    }
-
     template<typename S>
-    struct ErrorFormatter
-    {
-        static S FormatCode(const DWORD errorCode, const DWORD flags, HMODULE moduleToSearch) { static_assert(false); }
-    };
+    S FormatCode(const DWORD errorCode, const DWORD flags, HMODULE moduleToSearch) { static_assert(false); }
 
     template<>
-    struct ErrorFormatter<std::string>
-    {
-        static std::string FormatCode(const DWORD errorCode, const DWORD flags, HMODULE moduleToSearch);
-    };
+    std::string FormatCode<std::string>(const DWORD errorCode, const DWORD flags, HMODULE moduleToSearch);
 
     template<>
-    struct ErrorFormatter<std::wstring>
-    {
-        static std::wstring FormatCode(const DWORD errorCode, const DWORD flags, HMODULE moduleToSearch);
-    };
+    std::wstring FormatCode<std::wstring>(const DWORD errorCode, const DWORD flags, HMODULE moduleToSearch);
 
     /// <summary>
     ///     Translates Win32 errors, including COM errors, to human-readable error strings.
@@ -102,7 +39,7 @@ export namespace Boring32::Error
             FORMAT_MESSAGE_FROM_SYSTEM |
             FORMAT_MESSAGE_IGNORE_INSERTS |
             (moduleHandle ? FORMAT_MESSAGE_FROM_HMODULE : 0);
-        const STR_T errorString = ErrorFormatter<STR_T>::FormatCode(errorCode, flags, moduleHandle);
+        const STR_T errorString = FormatCode<STR_T>(errorCode, flags, moduleHandle);
         if (moduleHandle)
             FreeLibrary(moduleHandle);
 

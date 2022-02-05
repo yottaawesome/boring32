@@ -64,6 +64,11 @@ export namespace Boring32::Registry
 			virtual Key& Copy(const Key& other);
 			virtual Key& Move(Key& other) noexcept;
 			virtual void InternalOpen(const HKEY key, const std::wstring& subkey);
+			virtual void InternalOpen(
+				const HKEY key, 
+				const std::wstring& subkey, 
+				const std::nothrow_t&
+			) noexcept;
 
 		protected:
 			std::shared_ptr<HKEY__> m_key;

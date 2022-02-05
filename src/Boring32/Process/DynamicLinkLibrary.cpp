@@ -2,6 +2,7 @@ module;
 
 #include <format>
 #include <iostream>
+#include <stdexcept>
 #include <Windows.h>
 
 module boring32.process.dynamiclinklibrary;
@@ -125,8 +126,14 @@ namespace Boring32::Process
 			throw Error::Win32Error(__FUNCSIG__ ": failed to load library", GetLastError());
 	}
 
-	bool DynamicLinkLibrary::InternalLoad(const std::nothrow_t&) noexcept
+	bool DynamicLinkLibrary::InternalLoad(const std::nothrow_t&) noexcept try
 	{
-		return Error::TryCatchLogToWCerr([this]{ InternalLoad(); }, __FUNCSIG__);
+		InternalLoad();
+		return true;
+	}
+	catch (const std::exception& ex)
+	{
+		std::wcerr << ex.what() << std::endl;
+		return false;
 	}
 }

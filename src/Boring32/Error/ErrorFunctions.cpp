@@ -46,7 +46,7 @@ namespace Boring32::Error
         }
     }
 
-    std::string ErrorFormatter<std::string>::FormatCode(const DWORD errorCode, const DWORD flags, HMODULE moduleToSearch)
+    std::string FormatCode<std::string>(const DWORD errorCode, const DWORD flags, HMODULE moduleToSearch)
     { 
         void* messageBuffer = nullptr;
         FormatMessageA(
@@ -75,7 +75,7 @@ namespace Boring32::Error
         return msg;
     }
 
-    std::wstring ErrorFormatter<std::wstring>::FormatCode(const DWORD errorCode, const DWORD flags, HMODULE moduleToSearch)
+    std::wstring FormatCode<std::wstring>(const DWORD errorCode, const DWORD flags, HMODULE moduleToSearch)
     {
         void* messageBuffer = nullptr;
         FormatMessageW(

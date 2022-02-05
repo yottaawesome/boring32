@@ -46,9 +46,15 @@ namespace Boring32::TaskScheduler
 			throw Error::ComError(std::source_location::current(), "Failed to connect to Task Service", hr);
 	}
 	
-	bool TaskService::Connect(const std::nothrow_t&) noexcept
+	bool TaskService::Connect(const std::nothrow_t&) noexcept try
 	{
-		return Error::TryCatchLogToWCerr([this] { Connect(); }, __FUNCSIG__);
+		Connect();
+		return true;
+	}
+	catch (const std::exception& ex)
+	{
+		std::wcerr << ex.what() << std::endl;
+		return false;
 	}
 
 	void TaskService::Close() noexcept
