@@ -1,11 +1,12 @@
 module;
 
 #include <vector>
-#include "include/Async/Pipes/NamedPipeClientBase.hpp"
+#include <string>
 
 export module boring32.ipc.blockingnamedpipeclient;
+import boring32.ipc.namedpipeclientbase;
 
-export namespace Boring32::Async
+export namespace Boring32::IPC
 {
 	class BlockingNamedPipeClient : public NamedPipeClientBase
 	{

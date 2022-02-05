@@ -34,7 +34,7 @@ int MainBlocking(int argc, char** args)
 {
     Sleep(1000);
 
-    Boring32::Async::BlockingNamedPipeClient p(L"\\\\.\\pipe\\mynamedpipe");
+    Boring32::IPC::BlockingNamedPipeClient p(L"\\\\.\\pipe\\mynamedpipe");
     p.Connect(0);
     p.SetMode(PIPE_READMODE_MESSAGE);
     std::wcout << p.ReadAsString() << std::endl;

@@ -1,10 +1,14 @@
-#include "pch.hpp"
-#include <stdexcept>
-#include "include/Async/Pipes/NamedPipeClientBase.hpp"
+module;
 
+#include <string>
+#include <iostream>
+#include <stdexcept>
+#include <Windows.h>
+
+module boring32.ipc.namedpipeclientbase;
 import boring32.error.win32error;
 
-namespace Boring32::Async
+namespace Boring32::IPC
 {
 	NamedPipeClientBase::~NamedPipeClientBase()
 	{

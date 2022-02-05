@@ -3,23 +3,23 @@ module;
 #include <string>
 #include <Windows.h>
 #include "include/Async/OverlappedIo.hpp"
-#include "include/Async/Pipes/NamedPipeClientBase.hpp"
 
 export module boring32.ipc.overlappednamedpipeclient;
+import boring32.ipc.namedpipeclientbase;
 
 export namespace Boring32::IPC
 {
-	class OverlappedNamedPipeClient : public Async::NamedPipeClientBase
+	class OverlappedNamedPipeClient : public NamedPipeClientBase
 	{
 		public:
 			virtual ~OverlappedNamedPipeClient();
 			OverlappedNamedPipeClient();
+			OverlappedNamedPipeClient(const OverlappedNamedPipeClient& other);
+			OverlappedNamedPipeClient(OverlappedNamedPipeClient&& other) noexcept;
 			OverlappedNamedPipeClient(const std::wstring& name);
 
-			OverlappedNamedPipeClient(const OverlappedNamedPipeClient& other);
+		public:
 			virtual void operator=(const OverlappedNamedPipeClient& other);
-
-			OverlappedNamedPipeClient(OverlappedNamedPipeClient&& other) noexcept;
 			virtual void operator=(OverlappedNamedPipeClient&& other) noexcept;
 
 		public:

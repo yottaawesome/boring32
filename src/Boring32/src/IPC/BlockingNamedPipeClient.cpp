@@ -8,7 +8,7 @@ module boring32.ipc.blockingnamedpipeclient;
 import boring32.error.win32error;
 import boring32.util;
 
-namespace Boring32::Async
+namespace Boring32::IPC
 {
 	BlockingNamedPipeClient::~BlockingNamedPipeClient() { }
 

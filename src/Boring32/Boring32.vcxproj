@@ -175,14 +175,11 @@
   <ItemGroup>
     <ClInclude Include="include\Async\AsyncFuncs.hpp" />
     <ClInclude Include="include\Async\OverlappedOp.hpp" />
-    <ClInclude Include="include\Async\Pipes\NamedPipeClientBase.hpp" />
     <ClInclude Include="include\Async\OverlappedIo.hpp" />
-    <ClInclude Include="include\Async\Pipes\OverlappedNamedPipeClient.hpp" />
     <ClInclude Include="include\Async\Thread.hpp" />
     <ClInclude Include="include\Async\Async.hpp" />
     <ClInclude Include="include\Boring32.hpp" />
     <ClInclude Include="include\Async\ThreadStatus.hpp" />
-    <ClInclude Include="include\Async\Pipes\Pipes.hpp" />
     <ClInclude Include="src\pch.hpp" />
     <ClInclude Include="src\targetver.hpp" />
   </ItemGroup>

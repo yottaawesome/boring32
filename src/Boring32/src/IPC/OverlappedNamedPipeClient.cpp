@@ -5,7 +5,6 @@ module;
 #include <string>
 #include <iostream>
 #include <Windows.h>
-#include "include/Async/Pipes/NamedPipeClientBase.hpp"
 #include "include/Async/OverlappedOp.hpp"
 #include "include/Async/OverlappedIo.hpp"
 
