@@ -1,8 +1,13 @@
-#include "pch.hpp"
-#include <Sddl.h>
-#include "include/Async/Pipes/NamedPipeServerBase.hpp"
+module;
 
+#include <string>
+#include <iostream>
+#include <Windows.h>
+#include <Sddl.h>
+
+module boring32.ipc.namedpipeserverbase;
 import boring32.error.win32error;
+import boring32.raii.win32handle;
 
 namespace Boring32::Async
 {

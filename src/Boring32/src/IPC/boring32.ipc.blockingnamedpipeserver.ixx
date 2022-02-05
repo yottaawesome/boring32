@@ -3,10 +3,10 @@ module;
 #include <string>
 #include <vector>
 #include <Windows.h>
-#include "include/Async/Pipes/NamedPipeServerBase.hpp"
 
 export module boring32.ipc.blockingnamedpipeserver;
 import boring32.raii.win32handle;
+import boring32.ipc.namedpipeserverbase;
 
 export namespace Boring32::Async
 {

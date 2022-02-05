@@ -4,9 +4,9 @@ module;
 #include <Windows.h>
 #include "include/Async/OverlappedOp.hpp"
 #include "include/Async/OverlappedIo.hpp"
-#include "include/Async/Pipes/NamedPipeServerBase.hpp"
 
 export module boring32.ipc.overlappednamedpipeserver;
+import boring32.ipc.namedpipeserverbase;
 import boring32.raii.win32handle;
 
 export namespace Boring32::IPC

@@ -36,9 +36,6 @@
     <ClInclude Include="include\Async\OverlappedIo.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Async\Pipes\NamedPipeServerBase.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Async\Pipes\NamedPipeClientBase.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
