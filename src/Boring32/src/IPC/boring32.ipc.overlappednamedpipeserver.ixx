@@ -16,6 +16,8 @@ export namespace Boring32::IPC
 		public:
 			virtual ~OverlappedNamedPipeServer();
 			OverlappedNamedPipeServer();
+			OverlappedNamedPipeServer(const OverlappedNamedPipeServer& other);
+			OverlappedNamedPipeServer(OverlappedNamedPipeServer&& other) noexcept;
 			OverlappedNamedPipeServer(
 				const std::wstring& pipeName, 
 				const DWORD size,
@@ -34,10 +36,8 @@ export namespace Boring32::IPC
 				const DWORD pipeMode
 			);
 
-			OverlappedNamedPipeServer(const OverlappedNamedPipeServer& other);
+		public:
 			virtual void operator=(const OverlappedNamedPipeServer& other);
-
-			OverlappedNamedPipeServer(OverlappedNamedPipeServer&& other) noexcept;
 			virtual void operator=(OverlappedNamedPipeServer&& other) noexcept;
 
 		public:

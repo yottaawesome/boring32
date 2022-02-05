@@ -33,8 +33,7 @@ namespace Boring32::IPC
         maxInstances,
         sid,
         isInheritable,
-        PIPE_ACCESS_DUPLEX 
-            | FILE_FLAG_OVERLAPPED,
+        PIPE_ACCESS_DUPLEX | FILE_FLAG_OVERLAPPED,
         PIPE_TYPE_MESSAGE           // message type pipe 
             | PIPE_READMODE_MESSAGE     // message-read mode
             | PIPE_WAIT
