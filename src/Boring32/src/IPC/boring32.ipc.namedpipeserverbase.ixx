@@ -6,7 +6,7 @@ module;
 export module boring32.ipc.namedpipeserverbase;
 import boring32.raii.win32handle;
 
-export namespace Boring32::Async
+export namespace Boring32::IPC
 {
 	class NamedPipeServerBase
 	{

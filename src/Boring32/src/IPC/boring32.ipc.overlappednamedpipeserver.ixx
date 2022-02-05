@@ -11,7 +11,7 @@ import boring32.raii.win32handle;
 
 export namespace Boring32::IPC
 {
-	class OverlappedNamedPipeServer : public Async::NamedPipeServerBase
+	class OverlappedNamedPipeServer : public NamedPipeServerBase
 	{
 		public:
 			virtual ~OverlappedNamedPipeServer();

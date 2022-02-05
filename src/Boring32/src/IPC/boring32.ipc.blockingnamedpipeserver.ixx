@@ -8,7 +8,7 @@ export module boring32.ipc.blockingnamedpipeserver;
 import boring32.raii.win32handle;
 import boring32.ipc.namedpipeserverbase;
 
-export namespace Boring32::Async
+export namespace Boring32::IPC
 {
 	class BlockingNamedPipeServer : public NamedPipeServerBase
 	{

@@ -182,7 +182,7 @@ void TestProcessBlockingNamedPipe()
 	testProcess.Start();
 	job.AssignProcessToThisJob(testProcess.GetProcessHandle());
 
-	Boring32::Async::BlockingNamedPipeServer pipeServer(
+	Boring32::IPC::BlockingNamedPipeServer pipeServer(
 		L"\\\\.\\pipe\\mynamedpipe",
 		200,
 		5,

@@ -8,7 +8,7 @@ module;
 module boring32.ipc.blockingnamedpipeserver;
 import boring32.util;
 
-namespace Boring32::Async
+namespace Boring32::IPC
 {
 	BlockingNamedPipeServer::~BlockingNamedPipeServer()
 	{
