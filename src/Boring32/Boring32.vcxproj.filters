@@ -35,7 +35,7 @@
     <ClCompile Include="Process\boring32.process.dynamiclinklibrary.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinHttp\WinHttpHandle.cpp">
+    <ClCompile Include="WinHttp\boring32.winhttp.winhttphandle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Raii\Win32Handle.cpp">
@@ -71,10 +71,10 @@
     <ClCompile Include="Util\boring32.util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinHttp\HttpWebClient.cpp">
+    <ClCompile Include="WinHttp\boring32.winhttp.httpwebclient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinHttp\WebSocket.cpp">
+    <ClCompile Include="WinHttp\boring32.winhttp.websockets.websocket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Async\WaitableTimer.cpp">
@@ -146,13 +146,13 @@
     <ClCompile Include="Async\SynchronizationBarrier.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinHttp\ProxyInfo.cpp">
+    <ClCompile Include="WinHttp\boring32.winhttp.proxyinfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Async\ThreadPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinHttp\Session.cpp">
+    <ClCompile Include="WinHttp\boring32.winhttp.session.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Async\Mutev.cpp">
@@ -209,10 +209,10 @@
     <ClCompile Include="Crypto\CertificateChain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinHttp\AsyncWebSocket.cpp">
+    <ClCompile Include="WinHttp\boring32.winhttp.websockets.asyncwebsocket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinHttp\AsyncWebSocket.StatusCallback.cpp">
+    <ClCompile Include="WinHttp\boring32.winhttp.websockets.asyncwebsocket.statuscallback.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Security\boring32.security.token.cpp">
@@ -334,7 +334,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WinHttp\boring32.winhttp.winhttperror.ixx" />
-    <ClCompile Include="WinHttp\WinHttpError.cpp">
+    <ClCompile Include="WinHttp\boring32.winhttp.winhttperror.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Security\boring32.security.securitydescriptor.ixx" />
