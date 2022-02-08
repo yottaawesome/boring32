@@ -26,7 +26,7 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Strings\Win32Strings.cpp">
+    <ClCompile Include="Strings\boring32.strings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Time\Time.cpp">
@@ -41,7 +41,7 @@
     <ClCompile Include="Raii\Win32Handle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Security\Sid.cpp">
+    <ClCompile Include="Security\boring32.security.sid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Async\MemoryMappedFile.cpp">
@@ -119,7 +119,7 @@
     <ClCompile Include="Async\OverlappedOp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Security\PrivateNamespace.cpp">
+    <ClCompile Include="Security\boring32.security.privatenamespace.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Error\Win32Error.cpp">
@@ -164,7 +164,7 @@
     <ClCompile Include="Async\boring32.async.functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Registry\RegistryFuncs.cpp">
+    <ClCompile Include="Registry\boring32.registry.functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Crypto\CertStore.cpp">
@@ -194,13 +194,13 @@
     <ClCompile Include="TaskScheduler\TaskService.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Security\ImpersonationContext.cpp">
+    <ClCompile Include="Security\boring32.security.impersonationcontext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Crypto\SecureString.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Registry\RegistryKey.cpp">
+    <ClCompile Include="Registry\boring32.registry.key.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Crypto\TempCertImport.cpp">
@@ -215,10 +215,10 @@
     <ClCompile Include="WinHttp\AsyncWebSocket.StatusCallback.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Security\Token.cpp">
+    <ClCompile Include="Security\boring32.security.token.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Security\SecurityFunctions.cpp">
+    <ClCompile Include="Security\boring32.security.functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WinSock\boring32.winsock.ixx" />
@@ -232,9 +232,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Strings\boring32.strings.ixx" />
-    <ClCompile Include="Strings\Utf16String.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Async\boring32.async.threadpools.ixx" />
     <ClCompile Include="Async\boring32.async.semaphore.ixx" />
     <ClCompile Include="Async\boring32.async.filemapping.ixx" />
@@ -341,7 +338,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Security\boring32.security.securitydescriptor.ixx" />
-    <ClCompile Include="Security\SecurityDescriptor.cpp">
+    <ClCompile Include="Security\boring32.security.securitydescriptor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Async\boring32.async.processinfo.ixx" />
