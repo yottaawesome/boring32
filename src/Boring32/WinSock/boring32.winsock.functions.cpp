@@ -1,14 +1,14 @@
 module;
 
-#include "pch.hpp"
 #include <string>
 #include <vector>
 #include <stdexcept>
-#include <ws2tcpip.h>
 #include <ostream>
 #include <iostream>
+#include <Windows.h>
+#include <ws2tcpip.h>
 
-module boring32.winsock;
+module boring32.winsock.functions;
 import boring32.winsock.winsockerror;
 import boring32.raii.win32handle;
 import boring32.error.win32error;

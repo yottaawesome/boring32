@@ -222,10 +222,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WinSock\boring32.winsock.ixx" />
-    <ClCompile Include="WinSock\WinSockFuncs.cpp">
+    <ClCompile Include="WinSock\boring32.winsock.functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinSock\WinSockInit.cpp">
+    <ClCompile Include="WinSock\boring32.winsock.winsockinit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WinSock\boring32.winsock.winsockerror.cpp">
@@ -352,5 +352,7 @@
     <ClCompile Include="Async\boring32.async.overlappedio.ixx" />
     <ClCompile Include="Async\boring32.async.overlappedop.ixx" />
     <ClCompile Include="WinSock\boring32.winsock.winsockerror.ixx" />
+    <ClCompile Include="WinSock\boring32.winsock.winsockinit.ixx" />
+    <ClCompile Include="WinSock\boring32.winsock.functions.ixx" />
   </ItemGroup>
 </Project>

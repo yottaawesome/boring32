@@ -1,8 +1,10 @@
 module;
 
-#include "pch.hpp"
+#include <stdexcept>
+#include <windows.h>
+#include <winsock2.h>
 
-module boring32.winsock;
+module boring32.winsock.winsockinit;
 
 namespace Boring32::WinSock
 {
