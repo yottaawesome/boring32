@@ -32,7 +32,7 @@
     <ClCompile Include="Time\Time.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Process\DynamicLinkLibrary.cpp">
+    <ClCompile Include="Process\boring32.process.dynamiclinklibrary.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WinHttp\WinHttpHandle.cpp">

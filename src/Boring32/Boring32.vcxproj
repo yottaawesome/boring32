@@ -337,7 +337,7 @@
     <ClCompile Include="Security\Token.cpp" />
     <ClCompile Include="Strings\Win32Strings.cpp" />
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="Process\DynamicLinkLibrary.cpp" />
+    <ClCompile Include="Process\boring32.process.dynamiclinklibrary.cpp" />
     <ClCompile Include="TaskScheduler\RegisteredTask.cpp" />
     <ClCompile Include="TaskScheduler\TaskFolder.cpp" />
     <ClCompile Include="TaskScheduler\TaskService.cpp" />
