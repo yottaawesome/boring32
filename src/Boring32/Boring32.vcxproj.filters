@@ -167,22 +167,22 @@
     <ClCompile Include="Registry\boring32.registry.functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\CertStore.cpp">
+    <ClCompile Include="Crypto\boring32.crypto.certstore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\CryptoFuncs.cpp">
+    <ClCompile Include="Crypto\boring32.crypto.functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\Certificate.cpp">
+    <ClCompile Include="Crypto\boring32.crypto.certificate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\AesEncryption.cpp">
+    <ClCompile Include="Crypto\boring32.crypto.aesencryption.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Error\boring32.error.ntstatuserror.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\CryptoKey.cpp">
+    <ClCompile Include="Crypto\boring32.crypto.cryptokey.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TaskScheduler\boring32.taskscheduler.taskfolder.cpp">
@@ -197,16 +197,16 @@
     <ClCompile Include="Security\boring32.security.impersonationcontext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\SecureString.cpp">
+    <ClCompile Include="Crypto\boring32.crypto.securestring.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Registry\boring32.registry.key.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\TempCertImport.cpp">
+    <ClCompile Include="Crypto\boring32.crypto.tempcertimport.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\CertificateChain.cpp">
+    <ClCompile Include="Crypto\boring32.crypto.certificatechain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WinHttp\boring32.winhttp.websockets.asyncwebsocket.cpp">
