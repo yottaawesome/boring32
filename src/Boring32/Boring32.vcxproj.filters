@@ -95,25 +95,25 @@
     <ClCompile Include="Async\OverlappedIo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IPC\AnonymousPipe.cpp">
+    <ClCompile Include="IPC\boring32.ipc.anonymouspipe.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IPC\BlockingNamedPipeClient.cpp">
+    <ClCompile Include="IPC\boring32.ipc.blockingnamedpipeclient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IPC\BlockingNamedPipeServer.cpp">
+    <ClCompile Include="IPC\boring32.ipc.blockingnamedpipeserver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IPC\OverlappedNamedPipeServer.cpp">
+    <ClCompile Include="IPC\boring32.ipc.overlappednamedpipeserver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IPC\OverlappedNamedPipeClient.cpp">
+    <ClCompile Include="IPC\boring32.ipc.overlappednamedpipeclient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IPC\NamedPipeServerBase.cpp">
+    <ClCompile Include="IPC\boring32.ipc.namedpipeserverbase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IPC\NamedPipeClientBase.cpp">
+    <ClCompile Include="IPC\boring32.ipc.namedpipeclientbase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Async\OverlappedOp.cpp">
