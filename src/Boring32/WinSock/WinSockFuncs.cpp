@@ -9,6 +9,7 @@ module;
 #include <iostream>
 
 module boring32.winsock;
+import boring32.winsock.winsockerror;
 import boring32.raii.win32handle;
 import boring32.error.win32error;
 import boring32.async.event;

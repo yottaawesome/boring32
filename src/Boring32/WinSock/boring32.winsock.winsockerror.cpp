@@ -1,9 +1,10 @@
 module;
 
 #include <string>
+#include <stdexcept>
 #include <Windows.h>
 
-module boring32.winsock;
+module boring32.winsock.winsockerror;
 import boring32.error.functions;
 
 namespace Boring32::WinSock

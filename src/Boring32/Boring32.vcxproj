@@ -323,7 +323,8 @@
     <ClCompile Include="Async\ProcessInfo.cpp" />
     <ClCompile Include="Raii\boring32.raii.win32handle.ixx" />
     <ClCompile Include="Strings\boring32.strings.ixx" />
-    <ClCompile Include="WinSock\WinSockError.cpp" />
+    <ClCompile Include="WinSock\boring32.winsock.winsockerror.ixx" />
+    <ClCompile Include="WinSock\boring32.winsock.winsockerror.cpp" />
     <ClCompile Include="WinSock\WinSockFuncs.cpp" />
     <ClCompile Include="WinSock\WinSockInit.cpp" />
     <ClCompile Include="Security\boring32.security.functions.cpp" />
