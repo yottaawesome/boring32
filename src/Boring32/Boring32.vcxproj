@@ -221,7 +221,7 @@
     <ClCompile Include="Error\ErrorBase.cpp" />
     <ClCompile Include="Error\ErrorFunctions.cpp" />
     <ClCompile Include="FileSystem\boring32.filesystem.ixx" />
-    <ClCompile Include="FileSystem\FileSystem.cpp" />
+    <ClCompile Include="FileSystem\boring32.filesystem.cpp" />
     <ClCompile Include="IPC\boring32.ipc.blockingnamedpipeclient.ixx" />
     <ClCompile Include="IPC\boring32.ipc.blockingnamedpipeserver.ixx" />
     <ClCompile Include="IPC\boring32.ipc.anonymouspipe.ixx" />
@@ -269,7 +269,7 @@
     <ClCompile Include="WinHttp\WinHttpError.cpp" />
     <ClCompile Include="WinSock\boring32.winsock.ixx" />
     <ClCompile Include="Async\boring32.async.functions.cpp" />
-    <ClCompile Include="Async\CriticalSectionLock.cpp" />
+    <ClCompile Include="Async\boring32.async.criticalsectionlock.cpp" />
     <ClCompile Include="Async\Event.cpp" />
     <ClCompile Include="Async\EventLoop.cpp" />
     <ClCompile Include="Async\FileMapping.cpp" />
@@ -297,10 +297,10 @@
     <ClCompile Include="Compression\boring32.compression.decompressor.ixx" />
     <ClCompile Include="Compression\boring32.compression.ixx" />
     <ClCompile Include="Compression\boring32.compression.compressiontype.ixx" />
-    <ClCompile Include="Compression\Compressor.cpp" />
-    <ClCompile Include="Compression\Decompressor.cpp" />
+    <ClCompile Include="Compression\boring32.compression.compressor.cpp" />
+    <ClCompile Include="Compression\boring32.compression.decompressor.cpp" />
     <ClCompile Include="Com\boring32.com.comthreadscope.ixx" />
-    <ClCompile Include="Com\ComThreadScope.cpp" />
+    <ClCompile Include="Com\boring32.com.comthreadscope.cpp" />
     <ClCompile Include="Crypto\AesEncryption.cpp" />
     <ClCompile Include="Crypto\Certificate.cpp" />
     <ClCompile Include="Crypto\CertificateChain.cpp" />
@@ -312,10 +312,10 @@
     <ClCompile Include="Error\ComError.cpp" />
     <ClCompile Include="Error\NtStatusError.cpp" />
     <ClCompile Include="Error\Win32Error.cpp" />
-    <ClCompile Include="FileSystem\File.cpp" />
+    <ClCompile Include="FileSystem\boring32.filesystem.file.cpp" />
     <ClCompile Include="FileSystem\boring32.filesystem.file.ixx" />
     <ClCompile Include="Guid\boring32.guid.ixx" />
-    <ClCompile Include="Guid\Guid.cpp" />
+    <ClCompile Include="Guid\boring32.guid.cpp" />
     <ClCompile Include="Async\MemoryMappedFile.cpp" />
     <ClCompile Include="Async\Mutex.cpp" />
     <ClCompile Include="IPC\AnonymousPipe.cpp" />

@@ -65,7 +65,7 @@
     <ClCompile Include="Async\Job.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Guid\Guid.cpp">
+    <ClCompile Include="Guid\boring32.guid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Util\Util.cpp">
@@ -86,10 +86,10 @@
     <ClCompile Include="Async\SlimReadWriteLock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Com\ComThreadScope.cpp">
+    <ClCompile Include="Com\boring32.com.comthreadscope.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\CriticalSectionLock.cpp">
+    <ClCompile Include="Async\boring32.async.criticalsectionlock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Async\OverlappedIo.cpp">
@@ -128,10 +128,10 @@
     <ClCompile Include="Error\ComError.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Compression\Compressor.cpp">
+    <ClCompile Include="Compression\boring32.compression.compressor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Compression\Decompressor.cpp">
+    <ClCompile Include="Compression\boring32.compression.decompressor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Async\TimerQueue.cpp">
@@ -242,7 +242,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FileSystem\boring32.filesystem.file.ixx" />
-    <ClCompile Include="FileSystem\File.cpp">
+    <ClCompile Include="FileSystem\boring32.filesystem.file.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Raii\boring32.raii.win32handle.ixx" />
@@ -319,7 +319,7 @@
     <ClCompile Include="WinHttp\boring32.winhttp.websockets.asyncwebsocket.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp.websockets.websocketstatus.ixx" />
     <ClCompile Include="FileSystem\boring32.filesystem.ixx" />
-    <ClCompile Include="FileSystem\FileSystem.cpp">
+    <ClCompile Include="FileSystem\boring32.filesystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WinHttp\boring32.winhttp.websockets.asyncwebsocketsettings.ixx" />
