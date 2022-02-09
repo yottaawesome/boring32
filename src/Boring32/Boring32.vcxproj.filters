@@ -354,5 +354,6 @@
     <ClCompile Include="WinSock\boring32.winsock.winsockerror.ixx" />
     <ClCompile Include="WinSock\boring32.winsock.winsockinit.ixx" />
     <ClCompile Include="WinSock\boring32.winsock.functions.ixx" />
+    <ClCompile Include="Security\boring32.security.ixx" />
   </ItemGroup>
 </Project>
