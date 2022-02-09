@@ -316,7 +316,7 @@
     <ClCompile Include="WinHttp\boring32.winhttp.websockets.asyncwebsocket.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp.websockets.websocketstatus.ixx" />
     <ClCompile Include="FileSystem\boring32.filesystem.ixx" />
-    <ClCompile Include="FileSystem\boring32.filesystem.cpp">
+    <ClCompile Include="FileSystem\boring32.filesystem.functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WinHttp\boring32.winhttp.websockets.asyncwebsocketsettings.ixx" />
@@ -357,5 +357,6 @@
     <ClCompile Include="Security\boring32.security.ixx" />
     <ClCompile Include="Raii\boring32.raii.ixx" />
     <ClCompile Include="Process\boring32.process.ixx" />
+    <ClCompile Include="FileSystem\boring32.filesystem.functions.ixx" />
   </ItemGroup>
 </Project>
