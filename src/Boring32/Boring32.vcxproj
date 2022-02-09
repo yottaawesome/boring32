@@ -210,6 +210,7 @@
     <ClCompile Include="Crypto\boring32.crypto.functions.ixx" />
     <ClCompile Include="Crypto\boring32.crypto.securestring.ixx" />
     <ClCompile Include="Crypto\boring32.crypto.tempcertimport.ixx" />
+    <ClCompile Include="Crypto\boring32.crypto.ixx" />
     <ClCompile Include="DataStructures\boring32.datastructures.cappedstack.ixx" />
     <ClCompile Include="DataStructures\boring32.datastructures.ixx" />
     <ClCompile Include="DataStructures\boring32.datastructures.singlylinkedlist.ixx" />

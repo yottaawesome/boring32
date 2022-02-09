@@ -359,5 +359,6 @@
     <ClCompile Include="Process\boring32.process.ixx" />
     <ClCompile Include="FileSystem\boring32.filesystem.functions.ixx" />
     <ClCompile Include="Com\boring32.com.ixx" />
+    <ClCompile Include="Crypto\boring32.crypto.ixx" />
   </ItemGroup>
 </Project>
