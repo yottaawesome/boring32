@@ -356,5 +356,6 @@
     <ClCompile Include="WinSock\boring32.winsock.functions.ixx" />
     <ClCompile Include="Security\boring32.security.ixx" />
     <ClCompile Include="Raii\boring32.raii.ixx" />
+    <ClCompile Include="Process\boring32.process.ixx" />
   </ItemGroup>
 </Project>
