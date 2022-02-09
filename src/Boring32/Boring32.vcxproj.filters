@@ -358,5 +358,6 @@
     <ClCompile Include="Raii\boring32.raii.ixx" />
     <ClCompile Include="Process\boring32.process.ixx" />
     <ClCompile Include="FileSystem\boring32.filesystem.functions.ixx" />
+    <ClCompile Include="Com\boring32.com.ixx" />
   </ItemGroup>
 </Project>
