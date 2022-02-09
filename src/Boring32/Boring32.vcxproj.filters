@@ -38,7 +38,7 @@
     <ClCompile Include="WinHttp\boring32.winhttp.winhttphandle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Raii\Win32Handle.cpp">
+    <ClCompile Include="Raii\boring32.raii.win32handle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Security\boring32.security.sid.cpp">
@@ -355,5 +355,6 @@
     <ClCompile Include="WinSock\boring32.winsock.winsockinit.ixx" />
     <ClCompile Include="WinSock\boring32.winsock.functions.ixx" />
     <ClCompile Include="Security\boring32.security.ixx" />
+    <ClCompile Include="Raii\boring32.raii.ixx" />
   </ItemGroup>
 </Project>

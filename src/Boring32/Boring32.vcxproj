@@ -231,6 +231,7 @@
     <ClCompile Include="IPC\boring32.ipc.overlappednamedpipeclient.ixx" />
     <ClCompile Include="IPC\boring32.ipc.overlappednamedpipeserver.ixx" />
     <ClCompile Include="Process\boring32.process.dynamiclinklibrary.ixx" />
+    <ClCompile Include="Raii\boring32.raii.ixx" />
     <ClCompile Include="Raii\boring32.raii.uniqueptrs.ixx" />
     <ClCompile Include="Registry\boring32.registry.functions.ixx" />
     <ClCompile Include="Registry\boring32.registry.ixx" />
@@ -332,7 +333,7 @@
     <ClCompile Include="WinSock\boring32.winsock.winsockinit.cpp" />
     <ClCompile Include="Security\boring32.security.functions.cpp" />
     <ClCompile Include="Security\boring32.security.sid.cpp" />
-    <ClCompile Include="Raii\Win32Handle.cpp" />
+    <ClCompile Include="Raii\boring32.raii.win32handle.cpp" />
     <ClCompile Include="Registry\boring32.registry.functions.cpp" />
     <ClCompile Include="Registry\boring32.registry.key.cpp" />
     <ClCompile Include="Security\boring32.security.impersonationcontext.cpp" />
