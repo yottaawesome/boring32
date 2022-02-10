@@ -28,6 +28,10 @@ export namespace Boring32::WinSock
 			virtual void Send(const std::vector<std::byte>& data);
 			virtual std::vector<std::byte> Receive(const unsigned bytesToRead);
 
+		public:
+			virtual const std::wstring& GetHost() const noexcept;
+			virtual unsigned GetPort() const noexcept;
+
 		protected:
 			std::wstring m_host;
 			unsigned m_portNumber;

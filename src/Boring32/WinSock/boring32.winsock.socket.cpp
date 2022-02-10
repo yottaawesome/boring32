@@ -2,6 +2,7 @@ module;
 
 #include <string>
 #include <vector>
+#include <format>
 #include <source_location>
 #include <stdexcept>
 #include <Windows.h>
@@ -11,6 +12,7 @@ module;
 module boring32.winsock.socket;
 import boring32.winsock.winsockerror;
 import boring32.error.errorbase;
+import boring32.strings;
 
 namespace Boring32::WinSock
 {	
@@ -86,12 +88,17 @@ namespace Boring32::WinSock
 				);
 			connectSocket = INVALID_SOCKET;
 		}
+		// Failed connecting in all cases.
 		if (connectSocket == INVALID_SOCKET)
-			throw Error::ErrorBase<std::runtime_error>(
-				std::source_location::current(), 
-				"Failed connecting to server"
+		{
+			const std::string errorMsg = std::format(
+				"Failed connecting to server {}:{}", 
+				Strings::ConvertString(m_host), 
+				m_portNumber
 			);
-
+			throw Error::ErrorBase<std::runtime_error>(std::source_location::current(), errorMsg);
+		}
+			
 		m_socket = connectSocket;
 	}
 
@@ -104,7 +111,7 @@ namespace Boring32::WinSock
 	void Socket::Send(const std::vector<std::byte>& data)
 	{
 		if (!m_socket || m_socket == INVALID_SOCKET)
-			throw std::runtime_error("Socket is not valid");
+			throw Error::ErrorBase<std::runtime_error>(std::source_location::current(), "Socket is not valid");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-send
 		const int sentBytes = send(
@@ -120,7 +127,7 @@ namespace Boring32::WinSock
 	std::vector<std::byte> Socket::Receive(const unsigned bytesToRead)
 	{
 		if (!m_socket || m_socket == INVALID_SOCKET)
-			throw std::runtime_error("Socket is not valid");
+			throw Error::ErrorBase<std::runtime_error>(std::source_location::current(), "Socket is not valid");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-recv
 		std::vector<std::byte> recvbuf(bytesToRead);
@@ -130,5 +137,15 @@ namespace Boring32::WinSock
 
 		recvbuf.resize(bytesRead);
 		return recvbuf;
+	}
+
+	const std::wstring& Socket::GetHost() const noexcept
+	{
+		return m_host;
+	}
+
+	unsigned Socket::GetPort() const noexcept
+	{
+		return m_portNumber;
 	}
 }
