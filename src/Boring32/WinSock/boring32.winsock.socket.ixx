@@ -1,6 +1,7 @@
 module;
 
 #include <string>
+#include <vector>
 #include <winsock2.h>
 
 export module boring32.winsock.socket;
@@ -8,6 +9,7 @@ import boring32.winsock.uniqueptrs;
 
 export namespace Boring32::WinSock
 {
+	// Based on https://docs.microsoft.com/en-us/windows/win32/winsock/winsock-client-application
 	class Socket
 	{
 		public:
@@ -23,6 +25,8 @@ export namespace Boring32::WinSock
 		public:
 			virtual void Connect();
 			virtual void Close();
+			virtual void Send(const std::vector<std::byte>& data);
+			virtual std::vector<std::byte> Receive(const unsigned bytesToRead);
 
 		protected:
 			std::wstring m_host;

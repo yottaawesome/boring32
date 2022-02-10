@@ -1,6 +1,7 @@
 module;
 
 #include <string>
+#include <vector>
 #include <source_location>
 #include <stdexcept>
 #include <Windows.h>
@@ -9,6 +10,7 @@ module;
 
 module boring32.winsock.socket;
 import boring32.winsock.winsockerror;
+import boring32.error.errorbase;
 
 namespace Boring32::WinSock
 {	
@@ -39,7 +41,7 @@ namespace Boring32::WinSock
 
 		ADDRINFOW* addrResult;
 		// https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-getaddrinfow
-		int status = GetAddrInfoW(
+		const int status = GetAddrInfoW(
 			m_host.c_str(),
 			m_portNumber ? std::to_wstring(m_portNumber).c_str() : nullptr,
 			&hints,
@@ -47,39 +49,48 @@ namespace Boring32::WinSock
 		);
 		if (status)
 			throw WinSockError(std::source_location::current(), "GetAddreInfoW() failed", status);
-		AddrInfoWUniquePtr addrPtr = AddrInfoWUniquePtr(addrResult);
 
+		AddrInfoWUniquePtr addrPtr = AddrInfoWUniquePtr(addrResult);
 		// Attempt to connect to an address until one succeeds
 		SOCKET connectSocket = INVALID_SOCKET;
-		for (ADDRINFOW* ptr = addrResult; ptr != nullptr; ptr = ptr->ai_next)
+		for (ADDRINFOW* currentAddr = addrResult; currentAddr != nullptr; currentAddr = currentAddr->ai_next)
 		{
 			// Create a SOCKET for connecting to server
 			connectSocket = socket(
-				ptr->ai_family,
-				ptr->ai_socktype,
-				ptr->ai_protocol
+				currentAddr->ai_family,
+				currentAddr->ai_socktype,
+				currentAddr->ai_protocol
 			);
 			if (connectSocket == INVALID_SOCKET)
-			{
-				throw WinSockError(std::source_location::current(), "socket() failed", WSAGetLastError());
-			}
+				throw WinSockError(
+					std::source_location::current(), 
+					"socket() failed", 
+					WSAGetLastError()
+				);
 
 			// Connect to server.
-			int iResult = connect(connectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
-			if (iResult == SOCKET_ERROR)
-			{
-				closesocket(connectSocket);
-				connectSocket = INVALID_SOCKET;
-			}
-			else
-			{
+			const int connectionResult = connect(
+				connectSocket, 
+				currentAddr->ai_addr, 
+				static_cast<int>(currentAddr->ai_addrlen)
+			);
+			// Connected successfully.
+			if (connectionResult != SOCKET_ERROR)
 				break;
-			}
+			// Couldn't connect; free the socket and try the next entry.
+			if (closesocket(connectSocket) == SOCKET_ERROR)
+				throw WinSockError(
+					std::source_location::current(), 
+					"closesocket() failed", 
+					WSAGetLastError()
+				);
+			connectSocket = INVALID_SOCKET;
 		}
 		if (connectSocket == INVALID_SOCKET)
-		{
-			throw std::runtime_error("Failed connecting to server");
-		}
+			throw Error::ErrorBase<std::runtime_error>(
+				std::source_location::current(), 
+				"Failed connecting to server"
+			);
 
 		m_socket = connectSocket;
 	}
@@ -88,5 +99,36 @@ namespace Boring32::WinSock
 	{
 		if (m_socket && m_socket != INVALID_SOCKET)
 			closesocket(m_socket);
+	}
+
+	void Socket::Send(const std::vector<std::byte>& data)
+	{
+		if (!m_socket || m_socket == INVALID_SOCKET)
+			throw std::runtime_error("Socket is not valid");
+
+		// https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-send
+		const int sentBytes = send(
+			m_socket, 
+			reinterpret_cast<char*>(const_cast<std::byte*>(&data[0])),
+			static_cast<int>(data.size()), 
+			0
+		);
+		if (sentBytes == SOCKET_ERROR)
+			throw WinSockError(std::source_location::current(), "send() failed", WSAGetLastError());
+	}
+
+	std::vector<std::byte> Socket::Receive(const unsigned bytesToRead)
+	{
+		if (!m_socket || m_socket == INVALID_SOCKET)
+			throw std::runtime_error("Socket is not valid");
+
+		// https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-recv
+		std::vector<std::byte> recvbuf(bytesToRead);
+		const int bytesRead = recv(m_socket, reinterpret_cast<char*>(&recvbuf[0]), bytesToRead, 0);
+		if (bytesRead < 0)
+			throw WinSockError(std::source_location::current(), "recv() failed", WSAGetLastError());
+
+		recvbuf.resize(bytesRead);
+		return recvbuf;
 	}
 }
