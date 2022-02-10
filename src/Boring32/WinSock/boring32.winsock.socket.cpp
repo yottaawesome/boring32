@@ -131,11 +131,11 @@ namespace Boring32::WinSock
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-recv
 		std::vector<std::byte> recvbuf(bytesToRead);
-		const int bytesRead = recv(m_socket, reinterpret_cast<char*>(&recvbuf[0]), bytesToRead, 0);
-		if (bytesRead < 0)
+		const int actualBytesRead = recv(m_socket, reinterpret_cast<char*>(&recvbuf[0]), bytesToRead, 0);
+		if (actualBytesRead < 0)
 			throw WinSockError(std::source_location::current(), "recv() failed", WSAGetLastError());
 
-		recvbuf.resize(bytesRead);
+		recvbuf.resize(actualBytesRead);
 		return recvbuf;
 	}
 
