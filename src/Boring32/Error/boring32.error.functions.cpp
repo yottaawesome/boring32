@@ -4,6 +4,7 @@ module;
 #include <iostream>
 #include <stdexcept>
 #include <sstream>
+#include <source_location>
 #include <algorithm>
 #include <format>
 #include <Windows.h>
@@ -12,6 +13,28 @@ module boring32.error.functions;
 
 namespace Boring32::Error
 {
+    std::string FormatErrorMessage(
+        const std::source_location& location, 
+        const std::string& message, 
+        const std::string& errorCodeType,
+        const DWORD errorCode,
+        const std::string& translatedError
+    )
+    {
+        return std::format(
+            "Exception in function {}() in {}:{}:{}, {}, {} error code {} ({:#X}): {}",
+            location.function_name(),
+            location.file_name(),
+            location.line(),
+            location.column(),
+            message,
+            errorCodeType,
+            errorCode,
+            errorCode,
+            translatedError
+        );
+    }
+
     std::stringstream& PrintExceptionToStringStream(
         const std::exception& ex,
         std::stringstream& ss

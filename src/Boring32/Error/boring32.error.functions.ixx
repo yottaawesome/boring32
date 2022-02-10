@@ -2,6 +2,7 @@ module;
 
 #include <string>
 #include <iostream>
+#include <source_location>
 #include <memory>
 #include <Windows.h>
 
@@ -9,6 +10,14 @@ export module boring32.error.functions;
 
 export namespace Boring32::Error
 {
+    std::string FormatErrorMessage(
+        const std::source_location& location, 
+        const std::string& message,
+        const std::string& errorCodeType,
+        const DWORD errorCode,
+        const std::string& translatedError
+    );
+
     template<typename S>
     S FormatCode(const DWORD errorCode, const DWORD flags, HMODULE moduleToSearch) { static_assert(false); }
 
@@ -58,25 +67,9 @@ export namespace Boring32::Error
         return TranslateErrorCode<STR_T>(errorCode, L"");
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="STR_T"></typeparam>
-    /// <param name="errorCode"></param>
-    /// <returns></returns>
     template<typename STR_T>
     STR_T GetNtStatusCode(const DWORD errorCode)
     {
-        /*struct Deleter
-        {
-            void operator()(void* library)
-            {
-                if (library) FreeLibrary(static_cast<HMODULE>(library));
-            }
-        };
-
-        using LibPtr = std::unique_ptr<void, Deleter>;
-        LibPtr lib(LoadLibraryW(L"ntdll.dll"));*/
         return TranslateErrorCode<STR_T>(errorCode, L"ntdll.dll");
     }
 
@@ -89,16 +82,4 @@ export namespace Boring32::Error
         const std::exception& ex,
         std::wstringstream& ss
     );
-}
-
-module :private;
-namespace Boring32::Error
-{
-    /*struct Deleter 
-    { 
-        void operator()(void* library) 
-        { 
-            if (library) FreeLibrary(static_cast<HMODULE>(library)); 
-        } 
-    };*/
 }

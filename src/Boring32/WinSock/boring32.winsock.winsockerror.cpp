@@ -1,6 +1,7 @@
 module;
 
 #include <string>
+#include <source_location>
 #include <stdexcept>
 #include <Windows.h>
 
@@ -11,25 +12,16 @@ namespace Boring32::WinSock
 {
 	WinSockError::~WinSockError() { }
 
-	WinSockError::WinSockError(const DWORD errorCode)
-		: std::runtime_error(""),
-		m_errorCode(errorCode)
-	{
-		/*const HMODULE winsock = GetModuleHandleW(L"Ws2_32.dll");
-		if (winsock == nullptr)
-		{
-			m_errorString += "WinSockError failed to translate error code " + errorCode;
-			return;
-		}*/
-
-		m_errorString = Boring32::Error::TranslateErrorCode<std::string>(errorCode, L"Ws2_32.dll");
-	}
-
-	WinSockError::WinSockError(const std::string& message, const DWORD errorCode)
+	WinSockError::WinSockError(
+		const std::source_location& location, 
+		const std::string& message, 
+		const DWORD errorCode
+	)
 		: std::runtime_error(""),
 		m_errorCode(errorCode)
 	{
 		m_errorString = Boring32::Error::TranslateErrorCode<std::string>(errorCode, L"Ws2_32.dll");
+		m_errorString = Error::FormatErrorMessage(location, message, "winsock", errorCode, m_errorString);
 	}
 
 	DWORD WinSockError::GetErrorCode() const noexcept

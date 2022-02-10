@@ -13,6 +13,7 @@ import boring32.raii.uniqueptrs;
 import boring32.security.functions;
 import boring32.filesystem;
 import boring32.winhttp.winhttperror;
+import boring32.winsock;
 
 struct Test
 {
@@ -78,24 +79,16 @@ void PrintFileVersion()
 		<< std::endl;
 }
 
-typedef int Z;
-typedef int Y;
-
-void R(Z x) {}
+void SocketTest()
+{
+	Boring32::WinSock::WinSockInit init(2,2);
+	Boring32::WinSock::Socket socket(L"www.google.com", 80);
+	socket.Connect();
+}
 
 int main(int argc, char** args) try
 {
-	Y y = 1;
-	R(y);
-
-
-	throw Boring32::WinHttp::WinHttpError(std::source_location::current(), "AAA", 12001);
-	//Experiments1Main();
-	//throw Boring32::Error::ErrorBase<std::runtime_error>(std::source_location::current(), "AAAA");
-	//PrintFileVersion();
-	//SearchTokenForAdminGroup();
-	//EnumerateTokenGroups();
-	//EnumerateTokenPrivileges();
+	SocketTest();
 	return 0;
 }
 catch (const std::exception& ex)

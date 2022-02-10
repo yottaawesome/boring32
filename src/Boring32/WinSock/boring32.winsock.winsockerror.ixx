@@ -1,6 +1,7 @@
 module;
 
 #include <string>
+#include <source_location>
 #include <stdexcept>
 #include <Windows.h>
 
@@ -12,9 +13,13 @@ export namespace Boring32::WinSock
 	{
 		public:
 			virtual ~WinSockError();
-			WinSockError(const DWORD errorCode);
-			WinSockError(const std::string& message, const DWORD errorCode);
+			WinSockError(
+				const std::source_location& location, 
+				const std::string& message, 
+				const DWORD errorCode
+			);
 
+		public:
 			virtual DWORD GetErrorCode() const noexcept;
 			virtual const char* what() const noexcept override;
 

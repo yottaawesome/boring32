@@ -3,6 +3,7 @@ module;
 #include <string>
 #include <vector>
 #include <stdexcept>
+#include <source_location>
 #include <ostream>
 #include <iostream>
 #include <Windows.h>
@@ -35,7 +36,7 @@ namespace Boring32::WinSock
 			&resolvedNames
 		);
 		if (result != 0)
-			throw WinSockError(__FUNCSIG__ ": GetAddrInfoW() failed", result);
+			throw WinSockError(std::source_location::current(), "GetAddrInfoW() failed", result);
 
 		std::vector<NetworkingAddress> names;
 		for (PADDRINFOW ptr = resolvedNames; ptr != nullptr; ptr = ptr->ai_next)
@@ -116,7 +117,7 @@ namespace Boring32::WinSock
 			&cancelHandle
 		);
 		if (error != WSA_IO_PENDING)
-			throw WinSockError(__FUNCSIG__ ": GetAddrInfoExW() failed", error);
+			throw WinSockError(std::source_location::current(), "GetAddrInfoExW() failed", error);
 		e.WaitOnEvent();
 
 		if (ov.InternalHigh != NOERROR)
@@ -182,7 +183,7 @@ namespace Boring32::WinSock
 			nullptr
 		);
 		if (error != WSA_IO_PENDING)
-			throw WinSockError(__FUNCSIG__ ": GetAddrInfoExW() failed", error);
+			throw WinSockError(std::source_location::current(), "GetAddrInfoExW() failed", error);
 
 		opCompleted.WaitOnEvent();
 		if (ov.InternalHigh != NOERROR)

@@ -360,5 +360,10 @@
     <ClCompile Include="FileSystem\boring32.filesystem.functions.ixx" />
     <ClCompile Include="Com\boring32.com.ixx" />
     <ClCompile Include="Crypto\boring32.crypto.ixx" />
+    <ClCompile Include="WinSock\boring32.winsock.socket.ixx" />
+    <ClCompile Include="WinSock\boring32.winsock.socket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WinSock\boring32.winsock.uniqueptrs.ixx" />
   </ItemGroup>
 </Project>

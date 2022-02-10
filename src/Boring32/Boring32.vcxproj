@@ -330,6 +330,9 @@
     <ClCompile Include="Async\boring32.async.processinfo.cpp" />
     <ClCompile Include="Raii\boring32.raii.win32handle.ixx" />
     <ClCompile Include="Strings\boring32.strings.ixx" />
+    <ClCompile Include="WinSock\boring32.winsock.socket.cpp" />
+    <ClCompile Include="WinSock\boring32.winsock.socket.ixx" />
+    <ClCompile Include="WinSock\boring32.winsock.uniqueptrs.ixx" />
     <ClCompile Include="WinSock\boring32.winsock.winsockerror.ixx" />
     <ClCompile Include="WinSock\boring32.winsock.winsockerror.cpp" />
     <ClCompile Include="WinSock\boring32.winsock.winsockinit.ixx" />
