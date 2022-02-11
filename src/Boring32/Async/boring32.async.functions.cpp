@@ -2,6 +2,7 @@ module;
 
 #include <stdexcept>
 #include <vector>
+#include <source_location>
 #include <format>
 #include <Windows.h>
 #include <TlHelp32.h>
@@ -30,12 +31,18 @@ namespace Boring32::Async
 		
 		switch (const DWORD status = WaitForSingleObjectEx(handle, timeout, alertable))
 		{
-			case WAIT_OBJECT_0: return true;
-			case WAIT_ABANDONED: throw std::runtime_error(__FUNCSIG__ ": the wait was abandoned");
-			case WAIT_FAILED: throw Error::Win32Error(__FUNCSIG__ ": WaitForSingleObjectEx() failed", GetLastError());
-			case WAIT_TIMEOUT: return false;
-			case WAIT_IO_COMPLETION: return false;
-			default: throw std::runtime_error(std::format(__FUNCSIG__": unknown wait status: {}", status));
+			case WAIT_OBJECT_0: 
+				return true;
+			case WAIT_ABANDONED: 
+				throw std::runtime_error(__FUNCSIG__ ": the wait was abandoned");
+			case WAIT_FAILED: 
+				throw Error::Win32Error(std::source_location::current(), "WaitForSingleObjectEx() failed", GetLastError());
+			case WAIT_TIMEOUT: 
+				return false;
+			case WAIT_IO_COMPLETION: 
+				return false;
+			default: 
+				throw std::runtime_error(std::format(__FUNCSIG__": unknown wait status: {}", status));
 		}
 	}
 
@@ -79,7 +86,7 @@ namespace Boring32::Async
 		if (status == WAIT_ABANDONED)
 			throw std::runtime_error(__FUNCSIG__ ": the wait was abandoned");
 		if (status == WAIT_FAILED)
-			throw Error::Win32Error(__FUNCSIG__ ": WaitForSingleObjectEx() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "WaitForSingleObjectEx() failed", GetLastError());
 		if (status == WAIT_TIMEOUT || status == WAIT_IO_COMPLETION)
 			return status;
 
@@ -95,45 +102,42 @@ namespace Boring32::Async
 		Raii::Win32Handle processesSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 		if (processesSnapshot == INVALID_HANDLE_VALUE)
 			throw Error::Win32Error(
-				__FUNCSIG__ ": CreateToolhelp32Snapshot() failed",
+				std::source_location::current(), 
+				"CreateToolhelp32Snapshot() failed",
 				GetLastError()
 			);
 
 		PROCESSENTRY32W procEntry{ .dwSize = sizeof(PROCESSENTRY32W) };
 		if (Process32FirstW(processesSnapshot.GetHandle(), &procEntry) == false)
 			throw Error::Win32Error(
-				__FUNCSIG__ ": Process32First() failed",
+				std::source_location::current(), 
+				"Process32First() failed",
 				GetLastError()
 			);
 
 		do
 		{
-			if (Strings::DoCaseInsensitiveMatch(procEntry.szExeFile, processName))
+			if (!Strings::DoCaseInsensitiveMatch(procEntry.szExeFile, processName))
+				continue;
+
+			if (sessionIdToMatch < 0)
 			{
-				if (sessionIdToMatch < 0)
-				{
-					outResult = procEntry.th32ProcessID;
-					return true;
-				}
-				else
-				{
-					DWORD processSessionId = 0;
-					if (ProcessIdToSessionId(procEntry.th32ProcessID, &processSessionId))
-					{
-						if (processSessionId == sessionIdToMatch)
-						{
-							outResult = procEntry.th32ProcessID;
-							return true;
-						}
-					}
-					else
-					{
-						throw Error::Win32Error(
-							__FUNCSIG__ ": ProcessIdToSessionId() failed",
-							GetLastError()
-						);
-					}
-				}
+				outResult = procEntry.th32ProcessID;
+				return true;
+			}
+
+			DWORD processSessionId = 0;
+			if (!ProcessIdToSessionId(procEntry.th32ProcessID, &processSessionId))
+				throw Error::Win32Error(
+					std::source_location::current(), 
+					"ProcessIdToSessionId() failed",
+					GetLastError()
+				);
+
+			if (processSessionId == sessionIdToMatch)
+			{
+				outResult = procEntry.th32ProcessID;
+				return true;
 			}
 		} while (Process32NextW(processesSnapshot.GetHandle(), &procEntry));
 
