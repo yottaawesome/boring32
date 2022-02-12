@@ -13,11 +13,17 @@ export namespace Boring32::Error
 	{
 		public:
 			virtual ~ComError();
+			ComError(const ComError& other);
+			ComError(ComError&& other) noexcept;
 			ComError(
 				const std::source_location& location, 
 				const std::string& msg, 
 				const HRESULT hr
 			);
+
+		public:
+			virtual ComError& operator=(const ComError& other);
+			virtual ComError& operator=(ComError&& other) noexcept;
 
 		public:
 			virtual HRESULT GetHResult() const noexcept;

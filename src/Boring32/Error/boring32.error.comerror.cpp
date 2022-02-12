@@ -12,6 +12,11 @@ namespace Boring32::Error
 {
 	ComError::~ComError() {}
 
+	ComError::ComError(const ComError& other)					= default;
+	ComError::ComError(ComError&& other) noexcept				= default;
+	ComError& ComError::operator=(const ComError& other)		= default;
+	ComError& ComError::operator=(ComError&& other) noexcept	= default;
+
 	ComError::ComError(
 		const std::source_location& location, 
 		const std::string& msg, 
