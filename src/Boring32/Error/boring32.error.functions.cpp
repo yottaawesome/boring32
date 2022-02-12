@@ -14,24 +14,40 @@ module boring32.error.functions;
 namespace Boring32::Error
 {
     std::string FormatErrorMessage(
+        const std::string& errorType,
+        const std::source_location& location,
+        const std::string& message
+    )
+    {
+        return std::format(
+            "{} error at {}() in {}:{}:{}: {}",
+            errorType,
+            location.function_name(),
+            location.file_name(),
+            location.line(),
+            location.column(),
+            message
+        );
+    }
+
+    std::string FormatErrorMessage(
+        const std::string& errorType,
         const std::source_location& location, 
         const std::string& message, 
-        const std::string& errorCodeType,
         const DWORD errorCode,
         const std::string& translatedError
     )
     {
         return std::format(
-            "Exception in function {}() in {}:{}:{}, {}, {} error code {} ({:#X}): {}",
+            "{} error {:#010X} ({}) at {}() in {}:{}:{}: {}",
+            errorType,
+            errorCode,
+            translatedError,
             location.function_name(),
             location.file_name(),
             location.line(),
             location.column(),
-            message,
-            errorCodeType,
-            errorCode,
-            errorCode,
-            translatedError
+            message
         );
     }
 

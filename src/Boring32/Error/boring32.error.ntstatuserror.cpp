@@ -25,14 +25,7 @@ namespace Boring32::Error
 		: std::runtime_error(msg),
 		m_errorCode(0)
 	{
-		m_errorString = std::format(
-			"NTSTATUS exception in function {}() in {}:{}:{}: {}",
-			location.function_name(),
-			location.file_name(),
-			location.line(),
-			location.column(),
-			msg
-		);
+		m_errorString = Error::FormatErrorMessage("NTSTATUS", location, msg);
 	}
 	
 	NtStatusError::NtStatusError(
@@ -44,17 +37,7 @@ namespace Boring32::Error
 		m_errorCode(errorCode)
 	{
 		m_errorString = Boring32::Error::GetNtStatusCode<std::string>(errorCode);
-		m_errorString = std::format(
-			"NTSTATUS exception in function {}() in {}:{}:{}: {} (NTSTATUS code: {}, {:#X}): {}",
-			location.function_name(),
-			location.file_name(),
-			location.line(),
-			location.column(),
-			msg, 
-			errorCode, 
-			errorCode, 
-			m_errorString
-		);
+		m_errorString = Error::FormatErrorMessage("NTSTATUS", location, msg, errorCode, m_errorString);
 	}
 
 	LONG NtStatusError::GetErrorCode() const noexcept

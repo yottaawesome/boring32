@@ -11,9 +11,15 @@ export module boring32.error.functions;
 export namespace Boring32::Error
 {
     std::string FormatErrorMessage(
+        const std::string& errorType,
+        const std::source_location& location,
+        const std::string& message
+    );
+
+    std::string FormatErrorMessage(
+        const std::string& errorType,
         const std::source_location& location, 
         const std::string& message,
-        const std::string& errorCodeType,
         const DWORD errorCode,
         const std::string& translatedError
     );

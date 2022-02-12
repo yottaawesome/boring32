@@ -21,7 +21,7 @@ namespace Boring32::WinSock
 		m_errorCode(errorCode)
 	{
 		m_errorString = Boring32::Error::TranslateErrorCode<std::string>(errorCode, L"Ws2_32.dll");
-		m_errorString = Error::FormatErrorMessage(location, message, "winsock", errorCode, m_errorString);
+		m_errorString = Error::FormatErrorMessage("WinSock", location, message, errorCode, m_errorString);
 	}
 
 	DWORD WinSockError::GetErrorCode() const noexcept

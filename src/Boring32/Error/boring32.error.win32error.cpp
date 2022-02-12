@@ -26,14 +26,7 @@ namespace Boring32::Error
 		: std::runtime_error(msg),
 		m_errorCode(0)
 	{
-		m_errorString = std::format(
-			"Exception in function {}() in {}:{}:{}, {} (no win32 code provided)",
-			location.function_name(),
-			location.file_name(),
-			location.line(),
-			location.column(),
-			msg
-		);
+		m_errorString = Error::FormatErrorMessage("Win32", location, msg);
 	}
 	
 	Win32Error::Win32Error(
@@ -45,17 +38,7 @@ namespace Boring32::Error
 		m_errorCode(errorCode)
 	{
 		m_errorString = Boring32::Error::TranslateErrorCode<std::string>(errorCode);
-		m_errorString = std::format(
-			"Exception in function {}() in {}:{}:{}, {}, win32 error code {} ({:#X}): {}",
-			location.function_name(),
-			location.file_name(),
-			location.line(),
-			location.column(),
-			msg, 
-			errorCode, 
-			errorCode, 
-			m_errorString
-		);
+		m_errorString = Error::FormatErrorMessage("Win32", location, msg, errorCode, m_errorString);
 	}
 
 	Win32Error::Win32Error(
@@ -68,17 +51,7 @@ namespace Boring32::Error
 		m_errorCode(errorCode)
 	{
 		m_errorString = Boring32::Error::TranslateErrorCode<std::string>(errorCode, moduleName);
-		m_errorString = std::format(
-			"Exception in function {}() in {}:{}:{}, {}, win32 error code {} ({:#X}): {}",
-			location.function_name(),
-			location.file_name(),
-			location.line(),
-			location.column(),
-			msg,
-			errorCode,
-			errorCode,
-			m_errorString
-		);
+		m_errorString = Error::FormatErrorMessage("Win32", location, msg, errorCode, m_errorString);
 	}
 
 	DWORD Win32Error::GetErrorCode() const noexcept

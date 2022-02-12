@@ -26,7 +26,7 @@ namespace Boring32::Error
 		m_hresult(hr)
 	{
 		m_errorString = Boring32::Error::TranslateErrorCode<std::string>(hr);
-		m_errorString = std::format("{} (COM code: {}, {:#X}): {}", msg, hr, hr, m_errorString);
+		m_errorString = Error::FormatErrorMessage("COM", location, msg, hr, m_errorString);
 	}
 
 	HRESULT ComError::GetHResult() const noexcept

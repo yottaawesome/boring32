@@ -88,6 +88,7 @@ void SocketTest()
 
 int main(int argc, char** args) try
 {
+	throw Boring32::Error::Win32Error(std::source_location::current(), "The operation failed", 5);
 	SocketTest();
 	return 0;
 }
