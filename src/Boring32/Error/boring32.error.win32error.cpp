@@ -2,6 +2,7 @@ module;
 
 #include <stdexcept>
 #include <source_location>
+#include <string>
 #include <format>
 // See #include <winnt.h> for FAST_FAIL error codes
 #include "Windows.h"
