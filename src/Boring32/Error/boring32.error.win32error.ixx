@@ -13,10 +13,15 @@ export namespace Boring32::Error
 	{
 		public:
 			virtual ~Win32Error();
-			Win32Error(const std::source_location& location, const char* msg);
-			Win32Error(const char* msg, const DWORD errorCode);
-			Win32Error(const std::string& msg, const DWORD errorCode);
-			Win32Error(const std::source_location& location, const std::string& msg, const DWORD errorCode);
+			Win32Error(
+				const std::source_location& location, 
+				const std::string& msg
+			);
+			Win32Error(
+				const std::source_location& location, 
+				const std::string& msg, 
+				const DWORD errorCode
+			);
 			Win32Error(
 				const std::source_location& location, 
 				const std::string& msg, 

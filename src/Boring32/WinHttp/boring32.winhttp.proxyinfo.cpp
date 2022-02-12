@@ -1,6 +1,7 @@
 module;
 
 #include <string>
+#include <source_location>
 #include <Windows.h>
 #include <winhttp.h>
 
@@ -28,7 +29,7 @@ namespace Boring32::WinHttp
 	)
 	{
 		if (WinHttpGetProxyForUrl(session, url.c_str(), &options, &m_info) == false)
-			throw Error::Win32Error("ProxyInfo::GetProxyForUrl(): WinHttpGetProxyForUrl() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "WinHttpGetProxyForUrl() failed", GetLastError());
 		m_mustRelease = true;
 	}
 
@@ -72,7 +73,7 @@ namespace Boring32::WinHttp
 		autoProxyOptions.dwReserved = 0;
 		// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpgetproxyforurl
 		if (WinHttpGetProxyForUrl(session, url.c_str(), &autoProxyOptions, &m_info) == false)
-			throw Error::Win32Error("ProxyInfo::SetAutoProxy(): WinHttpGetProxyForUrl() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "WinHttpGetProxyForUrl() failed", GetLastError());
 	}
 
 	void ProxyInfo::SetAllInfo(
@@ -94,6 +95,6 @@ namespace Boring32::WinHttp
 		if (m_info.lpszProxy == nullptr)
 			throw std::runtime_error("No proxy set");
 		if (WinHttpSetOption(session, WINHTTP_OPTION_PROXY, &m_info, sizeof(m_info)) == false)
-			throw Error::Win32Error("ProxyInfo::SetOnSession(): WinHttpSetOption() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "WinHttpSetOption() failed", GetLastError());
 	}
 }

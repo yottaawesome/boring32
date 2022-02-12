@@ -35,7 +35,8 @@ namespace Boring32::Registry
         );
         if (statusCode != ERROR_SUCCESS)
             throw Error::Win32Error(
-                __FUNCSIG__ ": RegGetValueW() failed (1)",
+                std::source_location::current(),
+                "RegGetValueW() failed (1)",
                 statusCode
             );
 
@@ -51,7 +52,8 @@ namespace Boring32::Registry
         );
         if (statusCode != ERROR_SUCCESS)
             throw Error::Win32Error(
-                __FUNCSIG__ ": RegGetValueW() failed (2)",
+                std::source_location::current(),
+                "RegGetValueW() failed (2)",
                 statusCode
             );
 

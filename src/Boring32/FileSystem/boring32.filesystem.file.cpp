@@ -2,6 +2,7 @@ module;
 
 #include <string>
 #include <stdexcept>
+#include <source_location>
 #include <windows.h>
 
 module boring32.filesystem.file;
@@ -39,6 +40,6 @@ namespace Boring32::FileSystem
 			nullptr							// hTemplateFile
 		);
 		if (m_fileHandle == INVALID_HANDLE_VALUE)
-			throw Error::Win32Error(__FUNCSIG__": CreateFileW() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "CreateFileW() failed", GetLastError());
 	}
 }

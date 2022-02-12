@@ -2,6 +2,7 @@ module;
 
 #include "pch.hpp"
 #include <stdexcept>
+#include <source_location>
 #include <string>
 #include <format>
 
@@ -72,7 +73,7 @@ namespace Boring32::Async
 		//SEMAPHORE_ALL_ACCESS
 		m_handle = OpenSemaphoreW(desiredAccess, isInheritable, m_name.c_str());
 		if (m_handle == nullptr)
-			throw Error::Win32Error(__FUNCSIG__": failed to open semaphore", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "failed to open semaphore", GetLastError());
 	}
 
 	Semaphore::Semaphore(const Semaphore& other)
@@ -100,7 +101,7 @@ namespace Boring32::Async
 			name.empty() ? nullptr : name.c_str()
 		);
 		if (m_handle == nullptr)
-			throw Error::Win32Error(__FUNCSIG__": failed to create or open semaphore", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "failed to create or open semaphore", GetLastError());
 
 		m_handle.SetInheritability(isInheritable);
 	}
@@ -154,7 +155,7 @@ namespace Boring32::Async
 
 		long previousCount;
 		if (!ReleaseSemaphore(m_handle.GetHandle(), countToRelease, &previousCount))
-			throw Error::Win32Error(__FUNCSIG__": failed to release semaphore", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "failed to release semaphore", GetLastError());
 		m_currentCount += countToRelease;
 
 		return previousCount;
@@ -183,7 +184,7 @@ namespace Boring32::Async
 				throw std::runtime_error(__FUNCSIG__": the wait was abandoned");
 
 			case WAIT_FAILED:
-				throw Error::Win32Error(__FUNCSIG__": WaitForSingleObject() failed", GetLastError());
+				throw Error::Win32Error(std::source_location::current(), "WaitForSingleObject() failed", GetLastError());
 
 			default:
 				throw std::logic_error(std::format(__FUNCSIG__": unknown WaitForSingleObjectEx() value {}", status));

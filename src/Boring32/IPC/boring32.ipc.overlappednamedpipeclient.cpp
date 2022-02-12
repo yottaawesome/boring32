@@ -110,6 +110,6 @@ namespace Boring32::IPC
 
 		if (succeeded == false)
 			if (oio.LastError() != ERROR_IO_PENDING && oio.LastError() != ERROR_MORE_DATA)
-				throw Error::Win32Error(__FUNCSIG__": ReadFile() failed", oio.LastError());
+				throw Error::Win32Error(std::source_location::current(), "ReadFile() failed", oio.LastError());
 	}
 }

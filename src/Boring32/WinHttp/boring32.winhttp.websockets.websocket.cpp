@@ -177,7 +177,8 @@ namespace Boring32::WinHttp::WebSockets
 			);
 			if (success == false)
 				throw Error::Win32Error(
-					__FUNCSIG__ ": WinHttpSendRequest() failed on initial request", 
+					std::source_location::current(),
+					"WinHttpSendRequest() failed on initial request", 
 					GetLastError()
 				);
 
@@ -242,7 +243,7 @@ namespace Boring32::WinHttp::WebSockets
 		if (statusCode != ERROR_SUCCESS)
 		{
 			m_status = WebSocketStatus::Error;
-			throw Error::Win32Error("WebSocket::SendString(): WinHttpWebSocketSend() failed", statusCode);
+			throw Error::Win32Error(std::source_location::current(), "WinHttpWebSocketSend() failed", statusCode);
 		}
 	}
 
@@ -260,7 +261,7 @@ namespace Boring32::WinHttp::WebSockets
 		if (statusCode != ERROR_SUCCESS)
 		{
 			m_status = WebSocketStatus::Error;
-			throw Error::Win32Error("WebSocket::SendString(): WinHttpWebSocketSend() failed", statusCode);
+			throw Error::Win32Error(std::source_location::current(), "WinHttpWebSocketSend() failed", statusCode);
 		}
 	}
 	
@@ -329,7 +330,7 @@ namespace Boring32::WinHttp::WebSockets
 				&bufferType);
 			// If the server terminates the connection, 12030 will returned.
 			if (statusCode != ERROR_SUCCESS)
-				throw Error::Win32Error("Connection error when receiving websocket data", statusCode);
+				throw Error::Win32Error(std::source_location::current(), "Connection error when receiving websocket data", statusCode);
 			
 			// The server closed the connection.
 			if (bufferType == WINHTTP_WEB_SOCKET_CLOSE_BUFFER_TYPE)

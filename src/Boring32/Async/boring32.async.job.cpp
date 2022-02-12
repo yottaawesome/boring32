@@ -1,6 +1,7 @@
 module;
 
 #include <stdexcept>
+#include <source_location>
 #include <Windows.h>
 #include <Jobapi2.h>
 
@@ -90,7 +91,7 @@ namespace Boring32::Async
 			sizeof(jeli)
 		);
 		if (bSuccess == false)
-			throw Error::Win32Error("SetInformationJobObject failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "SetInformationJobObject failed", GetLastError());
 	}
 
 	void Job::AssignProcessToThisJob(const HANDLE process)
@@ -101,7 +102,11 @@ namespace Boring32::Async
 			throw std::runtime_error("Cannot assign process to job; process is null.");
 
 		if (AssignProcessToJobObject(m_job.GetHandle(), process) == false)
-			throw Error::Win32Error("Cannot assign process to job; AssignProcessToJobObject() failed.", GetLastError());
+			throw Error::Win32Error(
+				std::source_location::current(), 
+				"Cannot assign process to job; AssignProcessToJobObject() failed.", 
+				GetLastError()
+			);
 	}
 
 	HANDLE Job::GetHandle()
@@ -127,7 +132,7 @@ namespace Boring32::Async
 			m_name.c_str()
 		);
 		if (m_job == nullptr)
-			throw Error::Win32Error("OpenJobObjectW() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::source_location(), "OpenJobObjectW() failed", GetLastError());
 	}
 
 	void Job::Create(const bool isInheritable)
@@ -139,7 +144,7 @@ namespace Boring32::Async
 				: nullptr
 		);
 		if (m_job == nullptr)
-			throw Error::Win32Error("CreateJobObjectW() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::source_location(), "CreateJobObjectW() failed", GetLastError());
 		m_job.SetInheritability(isInheritable);
 	}
 }

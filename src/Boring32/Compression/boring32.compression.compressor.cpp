@@ -135,7 +135,7 @@ namespace Boring32::Compression
 			returnVal.size(),       //  Compressed Buffer size
 			&compressedBufferSize);	//  Compressed Data size
 		if (succeeded == false)
-			throw Error::Win32Error("Compressor::CompressBuffer(): Compress() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::source_location(), "Compressor::CompressBuffer(): Compress() failed", GetLastError());
 
 		return returnVal;
 	}
@@ -151,7 +151,7 @@ namespace Boring32::Compression
 				&m_compressor	// CompressorHandle
 			);
 			if (succeeded == false)
-				throw Error::Win32Error("Compressor::Create(): CreateCompressor() failed", GetLastError());
+				throw Error::Win32Error(std::source_location::source_location(), "Compressor::Create(): CreateCompressor() failed", GetLastError());
 		}
 	}
 

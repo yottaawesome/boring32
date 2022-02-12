@@ -86,7 +86,8 @@ namespace Boring32::WinHttp::WebSockets
 				if (success == false)
 				{
 					Error::Win32Error ex(
-						__FUNCSIG__ ": WinHttpReceiveResponse() failed on initial connection",
+						std::source_location::current(),
+						"WinHttpReceiveResponse() failed on initial connection",
 						GetLastError()
 					);
 
@@ -227,7 +228,7 @@ namespace Boring32::WinHttp::WebSockets
 				
 				AsyncWebSocket* socket = (AsyncWebSocket*)dwContext;
 				socket->m_status = WebSocketStatus::Error;
-				Error::Win32Error err("", (DWORD)requestError->dwError);
+				Error::Win32Error err(std::source_location::current(), "Error occurred in async socket callback", (DWORD)requestError->dwError);
 				switch (requestError->dwResult)
 				{
 					case API_RECEIVE_RESPONSE:

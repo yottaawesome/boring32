@@ -1,6 +1,7 @@
 module;
 
 #include <stdexcept>
+#include <source_location>
 #include <Windows.h>
 
 module boring32.security.impersonationcontext;
@@ -23,7 +24,8 @@ namespace Boring32::Security
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-impersonateloggedonuser
 		if (ImpersonateLoggedOnUser(token) == false)
 			throw Error::Win32Error(
-				__FUNCSIG__ ": ImpersonateLoggedOnUser() failed",
+				std::source_location::current(),
+				"ImpersonateLoggedOnUser() failed",
 				GetLastError()
 			);
 	}
@@ -60,7 +62,9 @@ namespace Boring32::Security
 			LSTATUS status = RegOpenCurrentUser(KEY_READ, &m_registryHive);
 			if (status != ERROR_SUCCESS)
 				throw Error::NtStatusError(
-					__FUNCSIG__ ": RegOpenCurrentUser() failed", status
+					std::source_location::current(),
+					"RegOpenCurrentUser() failed", 
+					status
 				);
 		}
 		return m_registryHive;

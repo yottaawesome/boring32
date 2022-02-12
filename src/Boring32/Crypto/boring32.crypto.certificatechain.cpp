@@ -298,7 +298,8 @@ namespace Boring32::Crypto
 		);
 		if (succeeded == false)
 			throw Error::Win32Error(
-				__FUNCSIG__ ": CertGetCertificateChain() failed", 
+				std::source_location::current(),
+				"CertGetCertificateChain() failed", 
 				GetLastError()
 			);
 	}

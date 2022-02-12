@@ -112,7 +112,7 @@ namespace Boring32::Security
 		// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertsidtostringsidw
 		const bool succeeded = ConvertSidToStringSidW(m_sid, &string);
 		if (!succeeded)
-			throw Error::Win32Error(__FUNCSIG__": ConvertSidToStringSidW() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "ConvertSidToStringSidW() failed", GetLastError());
 		Raii::LocalHeapUniquePtr ptr(string);
 		return string;
 	}
@@ -169,7 +169,7 @@ namespace Boring32::Security
 			throw std::invalid_argument(__FUNCSIG__": sidString cannot be empty");
 		// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw
 		if (!ConvertStringSidToSidW(sidString.c_str(), &m_sid))
-			throw Error::Win32Error(__FUNCSIG__": ConvertStringSidToSidW() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "ConvertStringSidToSidW() failed", GetLastError());
 	}
 	
 	std::vector<DWORD> Sid::GetAllSubAuthorities() const

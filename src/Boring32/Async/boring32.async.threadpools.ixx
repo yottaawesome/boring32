@@ -2,8 +2,10 @@ module;
 
 #include <functional>
 #include <iostream>
-#include <Windows.h>
+#include <stdexcept>
+#include <source_location>
 #include <memory>
+#include <Windows.h>
 
 export module boring32.async.threadpools;
 import boring32.error.win32error;
@@ -61,7 +63,11 @@ export namespace Boring32::Async::ThreadPools
 
 				outWorkItem.Item = CreateThreadpoolWork(InternalCallback, &outWorkItem, &m_environ);
 				if (outWorkItem.Item == nullptr)
-					throw Error::Win32Error(__FUNCSIG__": CreateThreadpoolWork() failed", GetLastError());
+				{
+					const auto location = std::source_location::current();
+					// using current() directly causes a compiler internal error
+					throw Error::Win32Error(location, "CreateThreadpoolWork() failed", GetLastError());
+				}
 			}
 
 			template<typename T>

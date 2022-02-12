@@ -3,6 +3,7 @@ module;
 #include <vector>
 #include <string>
 #include <stdexcept>
+#include <source_location>
 #include <Windows.h>
 #include <dpapi.h>
 #include <wincrypt.h>
@@ -202,7 +203,8 @@ namespace Boring32::Crypto
 		);
 		if (!succeeded)
 			throw Error::Win32Error(
-				__FUNCSIG__ ": CertGetCertificateContextProperty() failed (1)",
+				std::source_location::source_location(), 
+				"CertGetCertificateContextProperty() failed (1)",
 				GetLastError()
 			);
 
@@ -215,7 +217,8 @@ namespace Boring32::Crypto
 		);
 		if (!succeeded)
 			throw Error::Win32Error(
-				__FUNCSIG__ ": CertGetCertificateContextProperty() failed (2)",
+				std::source_location::source_location(), 
+				"CertGetCertificateContextProperty() failed (2)",
 				GetLastError()
 			);
 		returnValue.resize(sizeInBytes);

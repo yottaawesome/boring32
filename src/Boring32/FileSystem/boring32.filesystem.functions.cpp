@@ -4,6 +4,7 @@ module;
 #include <format>
 #include <vector>
 #include <stdexcept>
+#include <source_location>
 #include <filesystem>
 #include <Windows.h>
 
@@ -25,12 +26,12 @@ namespace Boring32::FileSystem
         // https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfosizew
         const DWORD verSize = GetFileVersionInfoSizeW(filePath.c_str(), &verHandle);
         if (!verSize)
-            throw Error::Win32Error(__FUNCSIG__": GetFileVersionInfoSizeW() failed",GetLastError());
+            throw Error::Win32Error(std::source_location::current(), "GetFileVersionInfoSizeW() failed",GetLastError());
 
         std::vector<std::byte> verData(verSize);
         // https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfow
         if (!GetFileVersionInfoW(filePath.c_str(), verHandle, verSize, &verData[0]))
-            throw Error::Win32Error(__FUNCSIG__": GetFileVersionInfoW() failed", GetLastError());
+            throw Error::Win32Error(std::source_location::current(), "GetFileVersionInfoW() failed", GetLastError());
 
         UINT size = 0;
         LPBYTE lpBuffer = nullptr;

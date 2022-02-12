@@ -1,9 +1,11 @@
 module;
 
-#include "pch.hpp"
 #include <stdexcept>
 #include <format>
+#include <source_location>
 #include <functional>
+#include <iostream>
+#include <Windows.h>
 
 module boring32.raii.win32handle;
 import boring32.error.win32error;
@@ -175,7 +177,7 @@ namespace Boring32::Raii
 		if (!IsValidValue())
 			throw std::runtime_error(__FUNCSIG__": handle is null or invalid.");
 		if (SetHandleInformation(*m_handle, HANDLE_FLAG_INHERIT, isInheritable) == false)
-			throw Error::Win32Error(__FUNCSIG__": SetHandleInformation() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "SetHandleInformation() failed", GetLastError());
 	}
 
 	HANDLE Win32Handle::Detach() noexcept
@@ -194,7 +196,7 @@ namespace Boring32::Raii
 
 		DWORD flags = 0;
 		if (!GetHandleInformation(handle, &flags))
-			throw Error::Win32Error(__FUNCSIG__": GetHandleInformation() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "GetHandleInformation() failed", GetLastError());
 		return flags & HANDLE_FLAG_INHERIT;
 	}
 
@@ -216,7 +218,7 @@ namespace Boring32::Raii
 			DUPLICATE_SAME_ACCESS
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__": DuplicateHandle() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "DuplicateHandle() failed", GetLastError());
 
 		return duplicateHandle;
 	}

@@ -2,6 +2,7 @@ module;
 
 #include <iostream>
 #include <stdexcept>
+#include <source_location>
 #include <Windows.h>
 
 module boring32.async.timerqueue;
@@ -79,7 +80,7 @@ namespace Boring32::Async
 
 			//https://docs.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-deletetimerqueueex
 			if (!DeleteTimerQueueEx(m_timer, argValue))
-				throw Error::Win32Error(__FUNCSIG__": DeleteTimerQueueEx() failed", GetLastError());
+				throw Error::Win32Error(std::source_location::current(), "DeleteTimerQueueEx() failed", GetLastError());
 			m_timer = nullptr;
 		}
 	}
@@ -108,6 +109,6 @@ namespace Boring32::Async
 		//https://docs.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-createtimerqueue
 		m_timer = CreateTimerQueue();
 		if (m_timer == nullptr)
-			throw Error::Win32Error(__FUNCSIG__": CreateTimerQueue() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "CreateTimerQueue() failed", GetLastError());
 	}
 }

@@ -374,7 +374,7 @@ namespace Boring32::Crypto
 			nullptr
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__, GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "CertStrToNameW() failed", GetLastError());
 
 		std::vector<std::byte> byte(encoded);
 		succeeded = CertStrToNameW(
@@ -387,7 +387,7 @@ namespace Boring32::Crypto
 			nullptr
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__, GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "CertStrToNameW() failed", GetLastError());
 		byte.resize(encoded);
 
 		return byte;

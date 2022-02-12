@@ -2,6 +2,7 @@ module;
 
 #include "pch.hpp"
 #include <tuple>
+#include <source_location>
 
 module boring32.async.threadpools;
 import boring32.error.win32error;
@@ -51,7 +52,7 @@ namespace Boring32::Async::ThreadPools
 		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-closethreadpool
 		m_pool = std::shared_ptr<TP_POOL>(CreateThreadpool(nullptr), CloseThreadpool);
 		if (m_pool == nullptr)
-			throw Error::Win32Error(__FUNCSIG__": CreateThreadPool() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "CreateThreadPool() failed", GetLastError());
 
 		SetMinAndMaxThreads(m_minThreads, m_maxThreads);
 		// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-initializethreadpoolenvironment
@@ -88,7 +89,7 @@ namespace Boring32::Async::ThreadPools
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-setthreadpoolthreadminimum
 		if (!SetThreadpoolThreadMinimum(m_pool.get(), value))
-			throw Error::Win32Error(__FUNCSIG__": SetThreadpoolThreadMinimum() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "SetThreadpoolThreadMinimum() failed", GetLastError());
 
 		m_minThreads = value;
 	}
@@ -136,7 +137,7 @@ namespace Boring32::Async::ThreadPools
 			&m_environ
 		);
 		if (item == nullptr)
-			throw Error::Win32Error(__FUNCSIG__": CreateThreadPool() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "CreateThreadPool() failed", GetLastError());
 
 		return item;
 	}

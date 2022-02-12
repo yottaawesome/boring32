@@ -3,6 +3,7 @@ module;
 #include <string>
 #include <iostream>
 #include <stdexcept>
+#include <source_location>
 #include <Windows.h>
 
 module boring32.ipc.namedpipeclientbase;
@@ -80,9 +81,9 @@ namespace Boring32::IPC
 		if (m_handle == INVALID_HANDLE_VALUE)
 		{
 			if (GetLastError() != ERROR_PIPE_BUSY || timeout == 0)
-				throw Error::Win32Error(__FUNCSIG__": failed to connect client pipe", GetLastError());
+				throw Error::Win32Error(std::source_location::current(), "Failed to connect client pipe", GetLastError());
 			if (WaitNamedPipeW(m_pipeName.c_str(), timeout) == false)
-				throw Error::Win32Error(__FUNCSIG__": timed out trying to connect client pipe", GetLastError());
+				throw Error::Win32Error(std::source_location::current(), "Timed out trying to connect client pipe", GetLastError());
 		}
 	}
 
@@ -154,7 +155,7 @@ namespace Boring32::IPC
 		if (!m_handle)
 			throw std::runtime_error(__FUNCSIG__": pipe is nullptr");
 		if (!CancelIo(m_handle.GetHandle()))
-			throw Error::Win32Error(__FUNCSIG__": CancelIo failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "CancelIo failed", GetLastError());
 	}
 
 	bool NamedPipeClientBase::CancelCurrentThreadIo(std::nothrow_t) noexcept
@@ -176,7 +177,7 @@ namespace Boring32::IPC
 		if (m_handle == nullptr)
 			throw std::runtime_error(__FUNCSIG__": pipe is nullptr");
 		if (CancelIoEx(m_handle.GetHandle(), overlapped) == false)
-			throw Error::Win32Error(__FUNCSIG__": CancelIo() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "CancelIo() failed", GetLastError());
 	}
 
 	bool NamedPipeClientBase::CancelCurrentProcessIo(OVERLAPPED* overlapped, std::nothrow_t) noexcept

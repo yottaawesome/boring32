@@ -71,12 +71,14 @@ namespace Boring32::Security
 		);
 		if (succeeded == false)
 			throw Error::Win32Error(
-				__FUNCSIG__ ": AdjustTokenPrivileges() failed",
+				std::source_location::current(), 
+				"AdjustTokenPrivileges() failed",
 				GetLastError()
 			);
 		if (GetLastError() == ERROR_NOT_ALL_ASSIGNED)
 			throw Error::Win32Error(
-				__FUNCSIG__ ": AdjustTokenPrivileges() could not adjust all privileges",
+				std::source_location::current(), 
+				"AdjustTokenPrivileges() could not adjust all privileges",
 				GetLastError()
 			);
 	}
@@ -93,7 +95,7 @@ namespace Boring32::Security
 		PSID rawIntegritySid = nullptr;
 		// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw
 		if (!ConvertStringSidToSidW(integritySidString.c_str(), &rawIntegritySid))
-			throw Error::Win32Error(__FUNCSIG__": ConvertStringSidToSidW() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "ConvertStringSidToSidW() failed", GetLastError());
 		Raii::SidUniquePtr integritySid(rawIntegritySid);
 
 		TOKEN_MANDATORY_LABEL tml = { 0 };
@@ -107,7 +109,7 @@ namespace Boring32::Security
 			sizeof(TOKEN_MANDATORY_LABEL) + GetLengthSid(integritySid.get())
 		);
 		if (!succeeded)
-			throw Error::Win32Error(__FUNCSIG__": SetTokenInformation() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "SetTokenInformation() failed", GetLastError());
 	}
 
 	// See https://docs.microsoft.com/en-us/windows/win32/secauthz/searching-for-a-sid-in-an-access-token-in-c--
@@ -185,7 +187,7 @@ namespace Boring32::Security
 					std::wcout << "NONE_MAPPED\n";
 					continue;
 				}
-				throw Error::Win32Error(__FUNCSIG__": LookupAccountSidW() failed", dwResult);
+				throw Error::Win32Error(std::source_location::current(), "LookupAccountSidW() failed", dwResult);
 			}
 
 			groupName = groupName.c_str();
@@ -220,7 +222,7 @@ namespace Boring32::Security
 			&bytesNeeded
 		);
 		if (const DWORD lastError = GetLastError(); !succeeded && lastError != ERROR_INSUFFICIENT_BUFFER)
-			throw Error::Win32Error(__FUNCSIG__": GetTokenInformation() [1] failed", lastError);
+			throw Error::Win32Error(std::source_location::current(), "GetTokenInformation() [1] failed", lastError);
 
 		std::vector<std::byte> buffer(bytesNeeded);
 		succeeded = GetTokenInformation(
@@ -231,7 +233,7 @@ namespace Boring32::Security
 			&bytesNeeded
 		);
 		if (!succeeded)
-			throw Error::Win32Error(__FUNCSIG__": GetTokenInformation() [2] failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "GetTokenInformation() [2] failed", GetLastError());
 
 		TOKEN_PRIVILEGES* pPrivs = reinterpret_cast<TOKEN_PRIVILEGES*>(&buffer[0]);
 		for (unsigned i = 0; i < pPrivs->PrivilegeCount; i++)
@@ -240,7 +242,7 @@ namespace Boring32::Security
 			std::wstring privName(size, '\0');
 			// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupprivilegenamew
 			if (!LookupPrivilegeNameW(nullptr, &pPrivs->Privileges[i].Luid, &privName[0], &size))
-				throw Error::Win32Error(__FUNCSIG__": LookupPrivilegeName() failed", GetLastError());
+				throw Error::Win32Error(std::source_location::current(), "LookupPrivilegeName() failed", GetLastError());
 
 			std::wstring privsString;
 			if (pPrivs->Privileges[i].Attributes & SE_PRIVILEGE_ENABLED)
@@ -280,7 +282,7 @@ namespace Boring32::Security
 			&luid					// receives LUID of privilege
 		);					
 		if (!succeeded)
-			throw Error::Win32Error(__FUNCSIG__": LookupPrivilegeValue() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "LookupPrivilegeValue() failed", GetLastError());
 
 		// Enable or disable the privilege.
 		TOKEN_PRIVILEGES tokenPrivileges{
@@ -302,7 +304,7 @@ namespace Boring32::Security
 			nullptr
 		);
 		if (!succeeded) 
-			throw Error::Win32Error(__FUNCSIG__": AdjustTokenPrivileges() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "AdjustTokenPrivileges() failed", GetLastError());
 
 		return GetLastError() == ERROR_NOT_ALL_ASSIGNED ? false : true;
 	}
@@ -340,7 +342,7 @@ namespace Boring32::Security
 		BOOL result = false;
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-checktokenmembership
 		if (!CheckTokenMembership(token, sidToCheck, &result))
-			throw Error::Win32Error(__FUNCSIG__": CheckTokenMembership() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "CheckTokenMembership() failed", GetLastError());
 		return result;
 	}
 

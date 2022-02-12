@@ -80,7 +80,7 @@ namespace Boring32::Compression
 				&m_decompressor
 			);
 			if (succeeded == false)
-				throw Error::Win32Error("Failed to create decompressor", GetLastError());
+				throw Error::Win32Error(std::source_location::source_location(), "Failed to create decompressor", GetLastError());
 		}
 	}
 
@@ -106,7 +106,7 @@ namespace Boring32::Compression
 			0,                          // Buffer size set to 0
 			&decompressedBufferSize);	// Decompressed data size
 		if (success == false)
-			throw Error::Win32Error("Decompressor::GetDecompressedSize(): Decompress() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::source_location(), "Decompressor::GetDecompressedSize(): Decompress() failed", GetLastError());
 		return decompressedBufferSize;
 	}
 
@@ -128,7 +128,7 @@ namespace Boring32::Compression
 			returnVal.size(),			//  Uncompressed buffer size
 			&decompressedBufferSize);	//  Decompressed data size
 		if (succeeded == false)
-			throw Error::Win32Error("Decompressor::DecompressBuffer(): Decompressor() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::source_location(), "Decompressor::DecompressBuffer(): Decompressor() failed", GetLastError());
 
 		return returnVal;
 	}

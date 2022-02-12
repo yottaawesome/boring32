@@ -2,6 +2,7 @@ module;
 
 #include <iostream>
 #include <stdexcept>
+#include <source_location>
 #include <Windows.h>
 
 module boring32.async.timerqueuetimer;
@@ -96,7 +97,7 @@ namespace Boring32::Async
 			period
 		);
 		if (success == false)
-			throw Error::Win32Error(__FUNCSIG__": ChangeTimerQueueTimer() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "ChangeTimerQueueTimer() failed", GetLastError());
 	}
 
 	void TimerQueueTimer::Close()
@@ -109,7 +110,7 @@ namespace Boring32::Async
 				m_completionEvent
 			);
 			if (succeeded == false)
-				throw Error::Win32Error(__FUNCSIG__": DeleteTimerQueueTimer() failed", GetLastError());
+				throw Error::Win32Error(std::source_location::current(), "DeleteTimerQueueTimer() failed", GetLastError());
 			m_timerQueueTimer = nullptr;
 		}
 	}
@@ -160,6 +161,6 @@ namespace Boring32::Async
 			m_flags
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__": CreateTimerQueueTimer() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "CreateTimerQueueTimer() failed", GetLastError());
 	}
 }

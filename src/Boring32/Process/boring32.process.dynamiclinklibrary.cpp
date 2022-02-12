@@ -2,7 +2,7 @@ module;
 
 #include <format>
 #include <iostream>
-#include <stdexcept>
+#include <source_location>
 #include <Windows.h>
 
 module boring32.process.dynamiclinklibrary;
@@ -105,6 +105,7 @@ namespace Boring32::Process
 			return ptr;
 
 		throw Error::Win32Error(
+			std::source_location::current(),
 			std::format("{}: failed to resolve symbol: {}", __FUNCSIG__, symbolName), 
 			GetLastError());
 	}

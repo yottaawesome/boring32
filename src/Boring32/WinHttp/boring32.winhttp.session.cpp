@@ -3,6 +3,7 @@ module;
 #include <string>
 #include <memory>
 #include <stdexcept>
+#include <source_location>
 #include <Windows.h>
 #include <winhttp.h>
 
@@ -151,7 +152,7 @@ namespace Boring32::WinHttp
 			0
 		);
 		if (handle == nullptr)
-			throw Error::Win32Error("Session::Session(): WinHttpOpen() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "WinHttpOpen() failed", GetLastError());
 		
 		m_session = std::shared_ptr<void>(
 			handle, 

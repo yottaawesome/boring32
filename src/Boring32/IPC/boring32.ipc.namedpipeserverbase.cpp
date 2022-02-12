@@ -2,6 +2,7 @@ module;
 
 #include <string>
 #include <iostream>
+#include <source_location>
 #include <Windows.h>
 #include <Sddl.h>
 
@@ -95,7 +96,7 @@ namespace Boring32::IPC
                 nullptr
             );
             if (converted == false)
-                throw Error::Win32Error("Failed to convert security descriptor", GetLastError());
+                throw Error::Win32Error(std::source_location::source_location(), "Failed to convert security descriptor", GetLastError());
         }
 
         // https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createnamedpipea
@@ -111,7 +112,7 @@ namespace Boring32::IPC
         if (m_sid != L"")
             LocalFree(sa.lpSecurityDescriptor);
         if (m_pipe == nullptr)
-            throw Error::Win32Error("Failed to create named pipe", GetLastError());
+            throw Error::Win32Error(std::source_location::source_location(), "Failed to create named pipe", GetLastError());
     }
 
     NamedPipeServerBase::NamedPipeServerBase(const NamedPipeServerBase& other)
@@ -225,7 +226,7 @@ namespace Boring32::IPC
         if (succeeded == false)
         {
             if (throwOnError)
-                throw Error::Win32Error("NamedPipeServerBase::InternalUnreadCharactersRemaining(): PeekNamedPipe() failed", GetLastError());
+                throw Error::Win32Error(std::source_location::source_location(), "PeekNamedPipe() failed", GetLastError());
             return false;
         }
 
@@ -238,7 +239,7 @@ namespace Boring32::IPC
         if (m_pipe == nullptr)
             throw std::runtime_error("No pipe to flush");
         if (FlushFileBuffers(m_pipe.GetHandle()) == false)
-            throw Error::Win32Error("NamedPipeClientBase::Flush() failed", GetLastError());
+            throw Error::Win32Error(std::source_location::source_location(), "Flush() failed", GetLastError());
     }
 
     void NamedPipeServerBase::CancelCurrentThreadIo()
@@ -246,7 +247,7 @@ namespace Boring32::IPC
         if (m_pipe == nullptr)
             throw std::runtime_error("NamedPipeServerBase::CancelCurrentThreadIo(): pipe is nullptr");
         if (CancelIo(m_pipe.GetHandle()) == false)
-            throw Error::Win32Error("NamedPipeServerBase::CancelCurrentThreadIo(): CancelIo failed", GetLastError());
+            throw Error::Win32Error(std::source_location::source_location(), "CancelIo() failed", GetLastError());
     }
 
     bool NamedPipeServerBase::CancelCurrentThreadIo(std::nothrow_t) noexcept
@@ -271,7 +272,7 @@ namespace Boring32::IPC
         if (m_pipe == nullptr)
             throw std::runtime_error("NamedPipeServerBase::CancelCurrentProcessIo(): pipe is nullptr");
         if (CancelIoEx(m_pipe.GetHandle(), overlapped) == false)
-            throw Error::Win32Error("NamedPipeServerBase::CancelCurrentThreadIo(): CancelIo failed", GetLastError());
+            throw Error::Win32Error(std::source_location::source_location(), "CancelIo() failed", GetLastError());
     }
 
     bool NamedPipeServerBase::CancelCurrentProcessIo(OVERLAPPED* overlapped, std::nothrow_t) noexcept

@@ -239,7 +239,7 @@ namespace Boring32::Async
 
 		bool succeeded = CancelWaitableTimer(m_handle.GetHandle());
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__, GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "CancelWaitableTimer() failed", GetLastError());
 	}
 
 	bool WaitableTimer::CancelTimer(std::nothrow_t) noexcept try

@@ -5,6 +5,7 @@ module;
 #include <vector>
 #include <string>
 #include <filesystem>
+#include <source_location>
 #include <Windows.h>
 #include <wincrypt.h>
 #include <cryptuiapi.h>
@@ -161,7 +162,7 @@ namespace Boring32::Crypto
 			// for additional resource notes under remarks
 			if (CertCloseStore(m_certStore, (DWORD)m_closeOptions) == false)
 			{
-				Error::Win32Error error(__FUNCSIG__ ": CertCloseStore() failed", GetLastError());
+				Error::Win32Error error(std::source_location::current(), "CertCloseStore() failed", GetLastError());
 				std::wcerr << error.what() << std::endl;
 			}
 			m_certStore = nullptr;
@@ -285,7 +286,8 @@ namespace Boring32::Crypto
 		const DWORD lastError = GetLastError();
 		if (lastError != CRYPT_E_NOT_FOUND && lastError != ERROR_NO_MORE_FILES)
 			throw Error::Win32Error(
-				__FUNCSIG__ ": CertEnumCertificatesInStore() failed", 
+				std::source_location::current(),
+				"CertEnumCertificatesInStore() failed", 
 				lastError
 			);
 
@@ -430,7 +432,8 @@ namespace Boring32::Crypto
 
 		if (CertDeleteCertificateFromStore(cert) == false)
 			throw Error::Win32Error(
-				__FUNCSIG__ ": CertDeleteCertificateFromStore() failed",
+				std::source_location::current(),
+				"CertDeleteCertificateFromStore() failed",
 				GetLastError()
 			);
 	}
@@ -479,7 +482,8 @@ namespace Boring32::Crypto
 		);
 		if (succeeded == false)
 			throw Error::Win32Error(
-				__FUNCSIG__ ": CertAddCertificateContextToStore()", 
+				std::source_location::current(),
+				"CertAddCertificateContextToStore()", 
 				GetLastError()
 			);
 	}
@@ -501,7 +505,8 @@ namespace Boring32::Crypto
 		);
 		if (succeeded == false)
 			throw Error::Win32Error(
-				__FUNCSIG__ ": CryptUIWizImport() failed",
+				std::source_location::current(),
+				"CryptUIWizImport() failed",
 				GetLastError()
 			);
 	}

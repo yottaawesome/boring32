@@ -3,6 +3,7 @@ module;
 #include <stdexcept>
 #include <string>
 #include <iostream>
+#include <source_location>
 #include <Windows.h>
 
 module boring32.ipc.overlappednamedpipeserver;
@@ -115,7 +116,7 @@ namespace Boring32::IPC
         bool succeeded = ConnectNamedPipe(m_pipe.GetHandle(), oio.GetOverlapped());
         oio.LastError(GetLastError());
         if (succeeded == false && oio.LastError() != ERROR_IO_PENDING)
-            throw Error::Win32Error("OverlappedNamedPipeServer::Connect(): ConnectNamedPipe() failed", oio.LastError());
+            throw Error::Win32Error(std::source_location::source_location(), "ConnectNamedPipe() failed", oio.LastError());
         
         /*
         HANDLE out = nullptr;
@@ -167,7 +168,7 @@ namespace Boring32::IPC
         );
         oio.LastError(GetLastError());
         if (succeeded == false && oio.LastError() != ERROR_IO_PENDING)
-            throw Error::Win32Error("OverlappedNamedPipeServer::Write(): WriteFile() failed", oio.LastError());
+            throw Error::Win32Error(std::source_location::current(), "WriteFile() failed", oio.LastError());
     }
 
     void OverlappedNamedPipeServer::Read(const DWORD noOfCharacters, Async::OverlappedIo& oio)
@@ -213,7 +214,7 @@ namespace Boring32::IPC
             && oio.LastError() != ERROR_MORE_DATA
         )
         {
-            throw Error::Win32Error("OverlappedNamedPipeServer::Read(): ReadFile() failed", oio.LastError());
+            throw Error::Win32Error(std::source_location::current(), "ReadFile() failed", oio.LastError());
         }
     }
 }

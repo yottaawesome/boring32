@@ -2,6 +2,7 @@ module;
 
 #include <string>
 #include <format>
+#include <source_location>
 #include <Windows.h>
 
 module boring32.error.ntstatuserror;
@@ -21,6 +22,14 @@ namespace Boring32::Error
 	}
 
 	NtStatusError::NtStatusError(const std::string& msg, const LONG errorCode)
+		: std::runtime_error(msg),
+		m_errorCode(errorCode)
+	{
+		m_errorString = Boring32::Error::GetNtStatusCode<std::string>(errorCode);
+		m_errorString = std::format("{} (NTSTATUS code: {}, {:#X}): {}", msg, errorCode, errorCode, m_errorString);
+	}
+	
+	NtStatusError::NtStatusError(const std::source_location& location, const std::string& msg, const LONG errorCode)
 		: std::runtime_error(msg),
 		m_errorCode(errorCode)
 	{
