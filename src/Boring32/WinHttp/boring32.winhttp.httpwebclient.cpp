@@ -209,7 +209,7 @@ namespace Boring32::WinHttp
 				sizeof(flags)
 			);
 			if (succeeded == false)
-				throw Error::Win32Error(__FUNCSIG__ ": WinHttpSetOption() failed", GetLastError());
+				throw Error::Win32Error(std::source_location::current(), "WinHttpSetOption() failed", GetLastError());
 		}
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpsendrequest
@@ -227,7 +227,7 @@ namespace Boring32::WinHttp
 			reinterpret_cast<DWORD_PTR>(this)
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__ ": WinHttpSendRequest() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "WinHttpSendRequest() failed", GetLastError());
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpreceiveresponse
 		succeeded = WinHttpReceiveResponse(hRequest.Get(), nullptr);

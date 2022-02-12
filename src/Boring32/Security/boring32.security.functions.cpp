@@ -3,6 +3,7 @@ module;
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <source_location>
 #include <format>
 #include <iostream>
 #include <Windows.h>
@@ -33,7 +34,7 @@ namespace Boring32::Security
 			&handle
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__ ": OpenProcessToken() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "OpenProcessToken() failed", GetLastError());
 
 		return handle;
 	}
@@ -49,7 +50,7 @@ namespace Boring32::Security
 		// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupprivilegevaluew
 		bool succeeded = LookupPrivilegeValueW(nullptr, privilege.c_str(), &luidPrivilege);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__ ": LookupPrivilegeValueW() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "LookupPrivilegeValueW() failed", GetLastError());
 
 		// See https://cpp.hotexamples.com/examples/-/-/AdjustTokenPrivileges/cpp-adjusttokenprivileges-function-examples.html
 		// and https://stackoverflow.com/questions/9195889/what-is-the-purpose-of-anysize-array-in-winnt-h
@@ -121,7 +122,7 @@ namespace Boring32::Security
 		DWORD dwSize = 0;
 		if (!GetTokenInformation(token, TokenGroups, nullptr, 0, &dwSize))
             if (DWORD dwResult = GetLastError(); dwResult != ERROR_INSUFFICIENT_BUFFER) 
-                throw Error::Win32Error(__FUNCSIG__ ": GetTokenInformation() failed", dwResult);
+                throw Error::Win32Error(std::source_location::current(), "GetTokenInformation() failed", dwResult);
 
         // Allocate the buffer.
 		std::vector<std::byte> groupInfoBytes(dwSize);
@@ -129,7 +130,7 @@ namespace Boring32::Security
 
         // Call GetTokenInformation again to get the group information.
         if (!GetTokenInformation(token, TokenGroups, pGroupInfo, dwSize, &dwSize))
-            throw Error::Win32Error(__FUNCSIG__ ": GetTokenInformation() failed", GetLastError());
+            throw Error::Win32Error(std::source_location::current(), "GetTokenInformation() failed", GetLastError());
 
         // Loop through the group SIDs looking for the SID.
 		for (unsigned i = 0; i < pGroupInfo->GroupCount; i++)
@@ -150,7 +151,7 @@ namespace Boring32::Security
 		DWORD dwResult = 0;
 		if (!GetTokenInformation(token, TokenGroups, nullptr, 0, &dwSize))
 			if (DWORD dwResult = GetLastError(); dwResult != ERROR_INSUFFICIENT_BUFFER)
-				throw Error::Win32Error(__FUNCSIG__ ": GetTokenInformation() failed", dwResult);
+				throw Error::Win32Error(std::source_location::current(), "GetTokenInformation() failed", dwResult);
 
 		// Allocate the buffer.
 		std::vector<std::byte> groupInfoBytes(dwSize);
@@ -158,7 +159,7 @@ namespace Boring32::Security
 
 		// Call GetTokenInformation again to get the group information.
 		if (!GetTokenInformation(token, TokenGroups, pGroupInfo, dwSize, &dwSize))
-			throw Error::Win32Error(__FUNCSIG__ ": GetTokenInformation() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "GetTokenInformation() failed", GetLastError());
 
 		// Loop through the group SIDs looking for the administrator SID.
 		SID_NAME_USE SidType;
@@ -369,7 +370,7 @@ namespace Boring32::Security
 			&result
 		);
 		if (!succeeded)
-			throw Error::Win32Error(__FUNCSIG__ ": PrivilegeCheck() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "PrivilegeCheck() failed", GetLastError());
 
 		return result;
 	}

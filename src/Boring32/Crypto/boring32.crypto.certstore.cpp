@@ -212,7 +212,7 @@ namespace Boring32::Crypto
 		}
 		
 		if (m_certStore == nullptr)
-			throw Error::Win32Error(__FUNCSIG__ ": CertOpenSystemStoreW() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "CertOpenSystemStoreW() failed", GetLastError());
 	}
 
 	HCERTSTORE CertStore::GetHandle() const noexcept
@@ -238,7 +238,7 @@ namespace Boring32::Crypto
 		
 		const DWORD lastError = GetLastError();
 		if (lastError != CRYPT_E_NOT_FOUND && lastError != ERROR_NO_MORE_FILES)
-			throw Error::Win32Error(__FUNCSIG__ ": CertEnumCertificatesInStore() failed", lastError);
+			throw Error::Win32Error(std::source_location::current(), "CertEnumCertificatesInStore() failed", lastError);
 
 		return results;
 	}
@@ -261,7 +261,7 @@ namespace Boring32::Crypto
 		}
 		const DWORD lastError = GetLastError();
 		if (lastError != CRYPT_E_NOT_FOUND && lastError != ERROR_NO_MORE_FILES)
-			throw Error::Win32Error(__FUNCSIG__ ": CertEnumCertificatesInStore() failed", lastError);
+			throw Error::Win32Error(std::source_location::current(), "CertEnumCertificatesInStore() failed", lastError);
 
 		return Certificate();
 	}
@@ -410,7 +410,7 @@ namespace Boring32::Crypto
 		{
 			const DWORD lastError = GetLastError();
 			if (lastError != CRYPT_E_NOT_FOUND)
-				throw Error::Win32Error(__FUNCSIG__ ": CertFindCertificateInStore() failed", lastError);
+				throw Error::Win32Error(std::source_location::current(), "CertFindCertificateInStore() failed", lastError);
 		}
 
 		return certContext;

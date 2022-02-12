@@ -54,7 +54,7 @@ namespace Boring32::Crypto
 			&encryptedBlob				// Receives the encrypted information.
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__ ": CryptProtectData() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "CryptProtectData() failed", GetLastError());
 
 		// Should we really return std::byte instead of Windows' BYTE?
 		// Using std::byte means we'll need to cast at the API call.
@@ -117,7 +117,7 @@ namespace Boring32::Crypto
 			&decryptedBlob				// Receives the decrypted data
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__ ": CryptUnprotectData() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "CryptUnprotectData() failed", GetLastError());
 
 		if (descrOut)
 		{

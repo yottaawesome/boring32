@@ -114,7 +114,7 @@ namespace Boring32::IPC
 			nullptr,     // don't set maximum bytes 
 			nullptr);    // don't set maximum time 
 		if (!succeeded)
-			throw Error::Win32Error(__FUNCSIG__ ": SetNamedPipeHandleState() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "SetNamedPipeHandleState() failed", GetLastError());
 	}
 
 	void NamedPipeClientBase::Close()
@@ -136,7 +136,7 @@ namespace Boring32::IPC
 			&bytesLeft
 		);
 		if (!succeeded)
-			throw Error::Win32Error(__FUNCSIG__ ": PeekNamedPipe() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "PeekNamedPipe() failed", GetLastError());
 
 		return bytesLeft / sizeof(wchar_t);
 	}
@@ -146,7 +146,7 @@ namespace Boring32::IPC
 		if (!m_handle)
 			throw std::runtime_error("No pipe to flush");
 		if (FlushFileBuffers(m_handle.GetHandle()) == false)
-			throw Error::Win32Error(__FUNCSIG__ ": FlushFileBuffers() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "FlushFileBuffers() failed", GetLastError());
 	}
 
 	void NamedPipeClientBase::CancelCurrentThreadIo()

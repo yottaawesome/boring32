@@ -121,7 +121,7 @@ namespace Boring32::WinSock
 		e.WaitOnEvent();
 
 		if (ov.InternalHigh != NOERROR)
-			throw Error::Win32Error(__FUNCSIG__ ": GetAddrInfoExW() overlapped op failed", (DWORD)ov.InternalHigh);
+			throw Error::Win32Error(std::source_location::current(), "GetAddrInfoExW() overlapped op failed", (DWORD)ov.InternalHigh);
 
 		std::vector<NetworkingAddress> names;
 		for (PADDRINFOEXW ptr = queryResults; ptr != nullptr; ptr = ptr->ai_next)
@@ -187,7 +187,7 @@ namespace Boring32::WinSock
 
 		opCompleted.WaitOnEvent();
 		if (ov.InternalHigh != NOERROR)
-			throw Error::Win32Error(__FUNCSIG__ ": GetAddrInfoExW() overlapped op failed", (DWORD)ov.InternalHigh);
+			throw Error::Win32Error(std::source_location::current(), "GetAddrInfoExW() overlapped op failed", (DWORD)ov.InternalHigh);
 
 		std::vector<NetworkingAddress> names;
 		for (PADDRINFOEXW ptr = queryResults; ptr != nullptr; ptr = ptr->ai_next)

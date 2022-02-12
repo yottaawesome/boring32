@@ -4,6 +4,7 @@ module;
 #include <string>
 #include <iostream>
 #include <format>
+#include <source_location>
 #include <Windows.h>
 
 module boring32.async.mutex;
@@ -46,7 +47,7 @@ namespace Boring32::Async
 		);
 		m_mutex.SetInheritability(inheritable);
 		if (m_mutex == nullptr)
-			throw Error::Win32Error(__FUNCSIG__ ": failed to create mutex", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "failed to create mutex", GetLastError());
 	}
 
 	Mutex::Mutex(
@@ -66,7 +67,7 @@ namespace Boring32::Async
 		);
 		m_mutex.SetInheritability(inheritable);
 		if (m_mutex == nullptr)
-			throw Error::Win32Error(__FUNCSIG__ ": failed to create mutex", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "failed to create mutex", GetLastError());
 
 		m_locked = acquireOnCreation;
 	}
@@ -86,7 +87,7 @@ namespace Boring32::Async
 			throw std::runtime_error(__FUNCSIG__ ": cannot open mutex with empty name");
 		m_mutex = OpenMutexW(desiredAccess, isInheritable, m_name.c_str());
 		if (m_mutex == nullptr)
-			throw Error::Win32Error(__FUNCSIG__ ": failed to open mutex", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "failed to open mutex", GetLastError());
 		if(acquireOnOpen)
 			Lock(INFINITE, true);
 	}
@@ -137,7 +138,7 @@ namespace Boring32::Async
 
 		DWORD result = WaitForSingleObjectEx(m_mutex.GetHandle(), waitTime, isAlertable);
 		if (result == WAIT_FAILED)
-			throw Error::Win32Error(__FUNCSIG__ ": failed to acquire mutex", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "failed to acquire mutex", GetLastError());
 		if (result == WAIT_OBJECT_0)
 			m_locked = true;
 		if (result == WAIT_TIMEOUT)
@@ -165,7 +166,7 @@ namespace Boring32::Async
 		if (m_mutex == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": cannot wait on null mutex");
 		if (ReleaseMutex(m_mutex.GetHandle()) == false)
-			throw Error::Win32Error(__FUNCSIG__ ": failed to release mutex", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "failed to release mutex", GetLastError());
 
 		m_locked = false;
 	}

@@ -2,6 +2,7 @@ module;
 
 #include "pch.hpp"
 #include <stdexcept>
+#include <source_location>
 #include <algorithm>
 #include <vector>
 
@@ -28,7 +29,7 @@ namespace Boring32::Strings
 			nullptr											// lpUsedDefaultChar
 		);
 		if (sizeInBytes == 0)
-			throw Error::Win32Error(__FUNCSIG__ ": WideCharToMultiByte() [1] failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "WideCharToMultiByte() [1] failed", GetLastError());
 
 		std::string strTo(sizeInBytes / sizeof(char), '\0');
 		const int status = WideCharToMultiByte(
@@ -42,7 +43,7 @@ namespace Boring32::Strings
 			nullptr											// lpUsedDefaultChar
 		);
 		if (status == 0)
-			throw Error::Win32Error(__FUNCSIG__ ": WideCharToMultiByte() [2] failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "WideCharToMultiByte() [2] failed", GetLastError());
 
 		return strTo;
 	}
@@ -63,7 +64,7 @@ namespace Boring32::Strings
 			0											// cchWideChar
 		);
 		if (sizeInCharacters == 0)
-			throw Error::Win32Error(__FUNCSIG__ ": MultiByteToWideChar() [1] failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "MultiByteToWideChar() [1] failed", GetLastError());
 
 		std::wstring wstrTo(sizeInCharacters, '\0');
 		const int status = MultiByteToWideChar(
@@ -75,7 +76,7 @@ namespace Boring32::Strings
 			static_cast<int>(wstrTo.size())				// cchWideChar
 		);
 		if (status == 0)
-			throw Error::Win32Error(__FUNCSIG__ ": MultiByteToWideChar() [2] failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "MultiByteToWideChar() [2] failed", GetLastError());
 
 		return wstrTo;
 	}

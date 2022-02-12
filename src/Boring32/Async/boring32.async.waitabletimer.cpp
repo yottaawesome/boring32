@@ -4,6 +4,7 @@ module;
 #include <string>
 #include <iostream>
 #include <format>
+#include <source_location>
 #include <Windows.h>
 
 module boring32.async.waitabletimer;
@@ -45,7 +46,7 @@ namespace Boring32::Async
 				: m_name.c_str()
 		);
 		if (m_handle == nullptr)
-			throw Error::Win32Error(__FUNCSIG__ ": failed to create waitable timer", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "failed to create waitable timer", GetLastError());
 		m_handle.SetInheritability(isInheritable);
 	}
 
@@ -62,7 +63,7 @@ namespace Boring32::Async
 		//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-openwaitabletimerw
 		m_handle = OpenWaitableTimerW(desiredAccess, isInheritable, m_name.c_str());
 		if (m_handle == nullptr)
-			throw Error::Win32Error(__FUNCSIG__ ": failed to open waitable timer", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "failed to open waitable timer", GetLastError());
 	}
 
 	// Copy constructor
@@ -190,7 +191,7 @@ namespace Boring32::Async
 			false
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__ ": failed to set timer", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "failed to set timer", GetLastError());
 	}
 
 	bool WaitableTimer::WaitOnTimer(const DWORD millis)

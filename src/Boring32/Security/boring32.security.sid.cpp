@@ -2,6 +2,7 @@ module;
 
 #include <vector>
 #include <stdexcept>
+#include <source_location>
 #include <iostream>
 #include <Windows.h>
 #include <sddl.h>
@@ -82,7 +83,7 @@ namespace Boring32::Security
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsididentifierauthority
 		if (PSID_IDENTIFIER_AUTHORITY identifier = GetSidIdentifierAuthority(m_sid))
 			return *identifier;
-		throw Error::Win32Error(__FUNCSIG__ ": GetSidIdentifierAuthority() failed", GetLastError());
+		throw Error::Win32Error(std::source_location::current(), "GetSidIdentifierAuthority() failed", GetLastError());
 	}
 	
 	DWORD Sid::GetSubAuthority(const DWORD index) const
@@ -92,7 +93,7 @@ namespace Boring32::Security
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsidsubauthority
 		if (PDWORD returnVal = GetSidSubAuthority(m_sid, index))
 			return *returnVal;
-		throw Error::Win32Error(__FUNCSIG__ ": GetSidSubAuthority() failed", GetLastError());
+		throw Error::Win32Error(std::source_location::current(), "GetSidSubAuthority() failed", GetLastError());
 	}
 
 	void Sid::operator=(const Sid& other)
@@ -159,7 +160,7 @@ namespace Boring32::Security
 			&m_sid
 		);
 		if (!succeeded)
-			throw Error::Win32Error(__FUNCSIG__ ": failed to initialise SID", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "failed to initialise SID", GetLastError());
 	}
 
 	void Sid::Create(const std::wstring sidString)

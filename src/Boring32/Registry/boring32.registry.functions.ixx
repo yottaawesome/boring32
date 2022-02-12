@@ -27,7 +27,7 @@ export namespace Boring32::Registry
 			&sizeInBytes
 		);
 		if (status != ERROR_SUCCESS)
-			throw Error::Win32Error(__FUNCSIG__ ": RegGetValueW() failed", status);
+			throw Error::Win32Error(std::source_location::current(), "RegGetValueW() failed", status);
 		return out;
 	}
 
@@ -58,7 +58,7 @@ export namespace Boring32::Registry
 			sizeof(value)
 		);
 		if (status != ERROR_SUCCESS)
-			throw Error::Win32Error(__FUNCSIG__ ": RegSetValueExW() failed", status);
+			throw Error::Win32Error(std::source_location::current(), "RegSetValueExW() failed", status);
 	}
 
 	void DeleteKeyAndSubkey(const HKEY parent, const std::wstring& subkey);

@@ -4,6 +4,7 @@ module;
 #include <format>
 #include <string>
 #include <iostream>
+#include <source_location>
 #include <Windows.h>
 
 module boring32.ipc.overlappednamedpipeclient;
@@ -72,7 +73,7 @@ namespace Boring32::IPC
 			oio.GetOverlapped());							// overlapped 
 		oio.LastError(GetLastError());
 		if (succeeded == false && oio.LastError() != ERROR_IO_PENDING)
-			throw Error::Win32Error(__FUNCSIG__ ": WriteFile() failed", oio.LastError());
+			throw Error::Win32Error(std::source_location::current(), "WriteFile() failed", oio.LastError());
 	}
 
 	void OverlappedNamedPipeClient::Read(const DWORD noOfCharacters, Async::OverlappedIo& op)

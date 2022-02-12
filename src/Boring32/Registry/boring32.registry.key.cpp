@@ -1,6 +1,7 @@
 module;
 
 #include "pch.hpp"
+#include <source_location>
 #include <iostream>
 #include <utility>
 
@@ -152,7 +153,7 @@ namespace Boring32::Registry
 			(DWORD)((value.size() + 1) * sizeof(wchar_t))
 		);
 		if (status != ERROR_SUCCESS)
-			throw Error::Win32Error(__FUNCSIG__ ": RegSetValueExW() failed", status);
+			throw Error::Win32Error(std::source_location::current(), "RegSetValueExW() failed", status);
 	}
 
 	void Key::WriteValue(
@@ -182,7 +183,7 @@ namespace Boring32::Registry
 			&key
 		);
 		if (status != ERROR_SUCCESS)
-			throw Error::Win32Error(__FUNCSIG__ ": failed to open registry key", status);
+			throw Error::Win32Error(std::source_location::current(), "failed to open registry key", status);
 		m_key = CreateRegKeyPtr(key);
 	}
 
@@ -211,6 +212,6 @@ namespace Boring32::Registry
 			REG_LATEST_FORMAT
 		);
 		if (status != ERROR_SUCCESS)
-			throw Error::Win32Error(__FUNCSIG__ ": RegSaveKeyExW() failed", status);
+			throw Error::Win32Error(std::source_location::current(), "RegSaveKeyExW() failed", status);
 	}
 }

@@ -6,6 +6,7 @@ module;
 #include <vector>
 #include <future>
 #include <sstream>
+#include <source_location>
 #include <iostream>
 #include <wincrypt.h>
 
@@ -110,7 +111,7 @@ namespace Boring32::WinHttp::WebSockets
 				0
 			);
 			if (m_winHttpConnection == nullptr)
-				throw Error::Win32Error(__FUNCSIG__ ": WinHttpConnect() failed", GetLastError());
+				throw Error::Win32Error(std::source_location::current(), "WinHttpConnect() failed", GetLastError());
 
 			// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpopenrequest
 			WinHttpHandle requestHandle = WinHttpOpenRequest(
@@ -123,7 +124,7 @@ namespace Boring32::WinHttp::WebSockets
 				WINHTTP_FLAG_SECURE
 			);
 			if (requestHandle == nullptr)
-				throw Error::Win32Error(__FUNCSIG__ ": WinHttpOpenRequest() failed", GetLastError());
+				throw Error::Win32Error(std::source_location::current(), "WinHttpOpenRequest() failed", GetLastError());
 
 			bool success = false;
 			if (m_settings.IgnoreSslErrors)
@@ -138,7 +139,7 @@ namespace Boring32::WinHttp::WebSockets
 					sizeof(optionFlags)
 				);
 				if (success == false)
-					throw Error::Win32Error(__FUNCSIG__ ": WinHttpSetOption() failed", GetLastError());
+					throw Error::Win32Error(std::source_location::current(), "WinHttpSetOption() failed", GetLastError());
 			}
 
 			success = WinHttpSetOption(
@@ -148,7 +149,7 @@ namespace Boring32::WinHttp::WebSockets
 				0
 			);
 			if (success == false)
-				throw Error::Win32Error(__FUNCSIG__ ": WinHttpSetOption() failed", GetLastError());
+				throw Error::Win32Error(std::source_location::current(), "WinHttpSetOption() failed", GetLastError());
 
 			if (m_settings.ClientCert.GetCert())
 			{
@@ -160,7 +161,7 @@ namespace Boring32::WinHttp::WebSockets
 					sizeof(CERT_CONTEXT)
 				);
 				if (setCertOption == false)
-					throw Error::Win32Error(__FUNCSIG__ ": WinHttpSetOption() failed for client certificate", GetLastError());
+					throw Error::Win32Error(std::source_location::current(), "WinHttpSetOption() failed for client certificate", GetLastError());
 			}
 			const wchar_t* connectionHeaders = m_settings.ConnectionHeaders.empty()
 				? WINHTTP_NO_ADDITIONAL_HEADERS
@@ -182,7 +183,7 @@ namespace Boring32::WinHttp::WebSockets
 
 			success = WinHttpReceiveResponse(requestHandle.Get(), 0);
 			if(success == false)
-				throw Error::Win32Error(__FUNCSIG__ ": WinHttpReceiveResponse() failed on initial connection", GetLastError());
+				throw Error::Win32Error(std::source_location::current(), "WinHttpReceiveResponse() failed on initial connection", GetLastError());
 
 			DWORD statusCode = 0;
 			DWORD statusCodeSize = sizeof(statusCode);
@@ -196,7 +197,7 @@ namespace Boring32::WinHttp::WebSockets
 				WINHTTP_NO_HEADER_INDEX
 			);
 			if (success == false)
-				throw Error::Win32Error(__FUNCSIG__ ": WinHttpQueryHeaders() failed", GetLastError());
+				throw Error::Win32Error(std::source_location::current(), "WinHttpQueryHeaders() failed", GetLastError());
 
 			if (statusCode != 101) // switching protocol
 			{
@@ -210,7 +211,7 @@ namespace Boring32::WinHttp::WebSockets
 			// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpwebsocketcompleteupgrade
 			m_winHttpWebSocket = WinHttpWebSocketCompleteUpgrade(requestHandle.Get(), 0);
 			if (m_winHttpWebSocket == nullptr)
-				throw Error::Win32Error(__FUNCSIG__ ": WinHttpWebSocketCompleteUpgrade() failed", GetLastError());
+				throw Error::Win32Error(std::source_location::current(), "WinHttpWebSocketCompleteUpgrade() failed", GetLastError());
 
 			requestHandle = nullptr;
 			m_status = WebSocketStatus::Connected;

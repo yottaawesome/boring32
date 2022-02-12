@@ -1,6 +1,10 @@
 module;
 
-#include "pch.hpp"
+#include <stdexcept>
+#include <string>
+#include <source_location>
+#include <Windows.h>
+#include <shlwapi.h>
 
 module boring32.registry.functions;
 import boring32.error.win32error;
@@ -103,7 +107,7 @@ namespace Boring32::Registry
             true
         );
         if (status != ERROR_SUCCESS)
-            throw Error::Win32Error(__FUNCSIG__ ": failed to watch registry key for changes", status);
+            throw Error::Win32Error(std::source_location::current(), "failed to watch registry key for changes", status);
     }
 
     void DeleteKeyAndSubkey(const HKEY parent, const std::wstring& subkey)
@@ -117,7 +121,7 @@ namespace Boring32::Registry
             subkey.c_str()
         );
         if (status != ERROR_SUCCESS)
-            throw Error::Win32Error(__FUNCSIG__ ": SHDeleteKeyW() failed", GetLastError());
+            throw Error::Win32Error(std::source_location::current(), "SHDeleteKeyW() failed", GetLastError());
     }
 
     void DeleteSubkeys(const HKEY parent, const std::wstring& subkey)
@@ -131,6 +135,6 @@ namespace Boring32::Registry
             subkey.c_str()
         );
         if (status != ERROR_SUCCESS)
-            throw Error::Win32Error(__FUNCSIG__ ": RegDeleteTreeW() failed", GetLastError());
+            throw Error::Win32Error(std::source_location::current(), "RegDeleteTreeW() failed", GetLastError());
     }
 }

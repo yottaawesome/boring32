@@ -2,6 +2,7 @@ module;
 
 #include <algorithm>
 #include <stdexcept>
+#include <source_location>
 #include <Windows.h>
 #include <dpapi.h>
 
@@ -131,7 +132,7 @@ namespace Boring32::Crypto
 			(DWORD)m_encryptionType
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__ ": CryptProtectMemory() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "CryptProtectMemory() failed", GetLastError());
 		m_isEncrypted = true;
 	}
 
@@ -148,7 +149,7 @@ namespace Boring32::Crypto
 			(DWORD)m_encryptionType
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(__FUNCSIG__ ": CryptUnprotectMemory() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "CryptUnprotectMemory() failed", GetLastError());
 		m_isEncrypted = false;
 	}
 

@@ -1,6 +1,11 @@
 module;
 
-#include "pch.hpp"
+#include <source_location>
+#include <vector>
+#include <stdexcept>
+#include <iostream>
+#include <Windows.h>
+#include <compressapi.h>
 
 module boring32.compression.compressor;
 import boring32.error.win32error;
@@ -102,7 +107,7 @@ namespace Boring32::Compression
 		);	
 		const DWORD lastError = GetLastError();
 		if (succeeded == false && lastError != ERROR_INSUFFICIENT_BUFFER)
-			throw Error::Win32Error(__FUNCSIG__ ": Compress() failed", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "Compress() failed", GetLastError());
 
 		return compressedBufferSize;
 	}

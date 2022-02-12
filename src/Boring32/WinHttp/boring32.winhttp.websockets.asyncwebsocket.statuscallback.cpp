@@ -2,6 +2,7 @@ module;
 
 #include <future>
 #include <algorithm>
+#include <source_location>
 #include <map>
 #include <iostream>
 #include <Windows.h>
@@ -114,7 +115,7 @@ namespace Boring32::WinHttp::WebSockets
 						WINHTTP_NO_HEADER_INDEX
 					);
 					if (success == false)
-						throw Error::Win32Error(__FUNCSIG__ ": WinHttpQueryHeaders() failed", GetLastError());
+						throw Error::Win32Error(std::source_location::current(), "WinHttpQueryHeaders() failed", GetLastError());
 
 					switch (statusCode)
 					{
