@@ -12,7 +12,11 @@ namespace Boring32::Error
 {
 	ComError::~ComError() {}
 
-	ComError::ComError(const std::source_location& location, const std::string& msg, const HRESULT hr)
+	ComError::ComError(
+		const std::source_location& location, 
+		const std::string& msg, 
+		const HRESULT hr
+	)
 		: std::runtime_error(""),
 		m_hresult(hr)
 	{

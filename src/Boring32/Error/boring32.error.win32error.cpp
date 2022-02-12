@@ -14,7 +14,10 @@ namespace Boring32::Error
 {
 	Win32Error::~Win32Error() {}
 
-	Win32Error::Win32Error(const std::source_location& location, const std::string& msg)
+	Win32Error::Win32Error(
+		const std::source_location& location, 
+		const std::string& msg
+	)
 		: std::runtime_error(msg),
 		m_errorCode(0)
 	{
@@ -28,7 +31,11 @@ namespace Boring32::Error
 		);
 	}
 	
-	Win32Error::Win32Error(const std::source_location& location, const std::string& msg, const DWORD errorCode)
+	Win32Error::Win32Error(
+		const std::source_location& location, 
+		const std::string& msg, 
+		const DWORD errorCode
+	)
 		: std::runtime_error(msg),
 		m_errorCode(errorCode)
 	{
