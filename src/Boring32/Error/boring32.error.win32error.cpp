@@ -14,6 +14,11 @@ namespace Boring32::Error
 {
 	Win32Error::~Win32Error() {}
 
+	Win32Error::Win32Error(const Win32Error& other)					= default;
+	Win32Error::Win32Error(Win32Error&& other) noexcept				= default;
+	Win32Error& Win32Error::operator=(const Win32Error& other)		= default;
+	Win32Error& Win32Error::operator=(Win32Error&& other) noexcept	= default;
+
 	Win32Error::Win32Error(
 		const std::source_location& location, 
 		const std::string& msg
