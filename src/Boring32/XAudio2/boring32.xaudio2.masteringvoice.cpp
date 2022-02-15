@@ -19,7 +19,7 @@ namespace Boring32::XAudio2
 	MasteringVoice::MasteringVoice(MasteringVoice&&) noexcept = default;
 
 	MasteringVoice::MasteringVoice(IXAudio2MasteringVoice* voice)
-		: m_masteringVoice(voice)
+		: m_voice(voice)
 	{
 		if (!voice) throw Error::ErrorBase<std::runtime_error>(
 			std::source_location::current(),
@@ -31,12 +31,15 @@ namespace Boring32::XAudio2
 
 	void MasteringVoice::Close()
 	{
-		m_masteringVoice->DestroyVoice();
-		m_masteringVoice = nullptr;
+		if (m_voice)
+		{
+			m_voice->DestroyVoice();
+			m_voice = nullptr;
+		}
 	}
 
 	IXAudio2MasteringVoice* MasteringVoice::Get() const noexcept
 	{
-		return m_masteringVoice;
+		return m_voice;
 	}
 }

@@ -27,6 +27,6 @@ export namespace Boring32::XAudio2
 			virtual IXAudio2MasteringVoice* Get() const noexcept;
 
 		protected:
-			IXAudio2MasteringVoice* m_masteringVoice;
+			IXAudio2MasteringVoice* m_voice;
 	};
 }
