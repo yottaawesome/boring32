@@ -8,6 +8,6 @@ export namespace Boring32::XAudio2
 			virtual ~Voice();
 
 		public:
-			virtual void Close();
+			virtual void Close() = 0;
 	};
 }

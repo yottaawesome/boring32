@@ -386,5 +386,9 @@
     <ClCompile Include="XAudio2\boring32.xaudio2.sourcevoice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="XAudio2\boring32.xaudio2.functions.ixx" />
+    <ClCompile Include="XAudio2\boring32.xaudio2.functions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

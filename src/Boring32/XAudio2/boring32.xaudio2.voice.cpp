@@ -8,9 +8,4 @@ namespace Boring32::XAudio2
 	{
 		Close();
 	}
-
-	void Voice::Close()
-	{
-
-	}
 }

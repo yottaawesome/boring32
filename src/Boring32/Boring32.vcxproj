@@ -364,6 +364,8 @@
     <ClCompile Include="XAudio2\boring32.xaudio2.audiograph.cpp" />
     <ClCompile Include="XAudio2\boring32.xaudio2.audiograph.ixx" />
     <ClCompile Include="XAudio2\boring32.xaudio2.engine.cpp" />
+    <ClCompile Include="XAudio2\boring32.xaudio2.functions.cpp" />
+    <ClCompile Include="XAudio2\boring32.xaudio2.functions.ixx" />
     <ClCompile Include="XAudio2\boring32.xaudio2.ixx" />
     <ClCompile Include="XAudio2\boring32.xaudio2.engine.ixx" />
     <ClCompile Include="XAudio2\boring32.xaudio2.masteringvoice.cpp" />
