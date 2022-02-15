@@ -14,6 +14,9 @@ namespace Boring32::XAudio2
 	{
 		Close();
 	}
+	
+	SourceVoice::SourceVoice(SourceVoice&&) noexcept = default;
+	SourceVoice& SourceVoice::operator=(SourceVoice&&) noexcept = default;
 
 	SourceVoice::SourceVoice(IXAudio2SourceVoice* voice)
 		: m_voice(voice)
