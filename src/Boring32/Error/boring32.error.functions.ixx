@@ -25,7 +25,7 @@ export namespace Boring32::Error
     );
 
     template<typename S>
-    S FormatCode(const DWORD errorCode, const DWORD flags, HMODULE moduleToSearch) { static_assert(false); }
+    S FormatCode(const DWORD errorCode, const DWORD flags, HMODULE moduleToSearch) { return S(); }
 
     template<>
     std::string FormatCode<std::string>(const DWORD errorCode, const DWORD flags, HMODULE moduleToSearch);
