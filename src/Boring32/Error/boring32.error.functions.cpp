@@ -20,13 +20,13 @@ namespace Boring32::Error
     )
     {
         return std::format(
-            "{} error at {}() in {}:{}:{}: {}",
+            "{}: {} error at {}() in {}:{}:{}",
+            message,
             errorType,
             location.function_name(),
             location.file_name(),
             location.line(),
-            location.column(),
-            message
+            location.column()
         );
     }
 
@@ -39,15 +39,15 @@ namespace Boring32::Error
     )
     {
         return std::format(
-            "{} error {:#010X} ({}) at {}() in {}:{}:{}: {}",
+            "{}: {} error {:#010X} ({}) at {}() in {}:{}:{}",
+            message,
             errorType,
             errorCode,
             translatedError,
             location.function_name(),
             location.file_name(),
             location.line(),
-            location.column(),
-            message
+            location.column()
         );
     }
 
@@ -107,7 +107,11 @@ namespace Boring32::Error
 
         std::string msg(static_cast<char*>(messageBuffer));
         if (LocalFree(messageBuffer))
-            std::wcerr << std::format(L"{}: LocalFree() failed: {}\n", TEXT(__FUNCSIG__), GetLastError());
+            std::wcerr << std::format(
+                L"{}: LocalFree() failed: {}\n", 
+                L"FormatCode()", 
+                GetLastError()
+            );
         
         std::erase_if(msg, [](const char x) { return x == '\n' || x == '\r'; });
 

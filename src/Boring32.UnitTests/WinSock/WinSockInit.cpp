@@ -5,6 +5,7 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 import boring32.winsock;
+import boring32.winsock.winsockerror;
 
 namespace WinSock
 {
@@ -18,7 +19,7 @@ namespace WinSock
 
 			TEST_METHOD(TestBadInit)
 			{
-				Assert::ExpectException<std::exception>(
+				Assert::ExpectException<Boring32::WinSock::WinSockError>(
 					[]() { Boring32::WinSock::WinSockInit init(0, 0); }
 				);
 			}

@@ -1,10 +1,12 @@
 module;
 
 #include <stdexcept>
+#include <source_location>
 #include <windows.h>
 #include <winsock2.h>
 
 module boring32.winsock.winsockinit;
+import boring32.winsock.winsockerror;
 
 namespace Boring32::WinSock
 {
@@ -26,11 +28,8 @@ namespace Boring32::WinSock
 	void WinSockInit::Initialize(const DWORD highVersion, const DWORD lowVersion)
 	{
 		//https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-wsastartup
-		const int err = WSAStartup(MAKEWORD(highVersion, lowVersion), &m_wsaData);
-		if (err != 0)
-		{
-			throw std::runtime_error(__FUNCSIG__ ": Failed to initialise WinSock: " + err);
-		}
+		if (const int err = WSAStartup(MAKEWORD(highVersion, lowVersion), &m_wsaData))
+			throw WinSockError(std::source_location::current(), "Failed to initialise WinSock", err);
 	}
 
 	const WSAData& WinSockInit::GetData() const noexcept
