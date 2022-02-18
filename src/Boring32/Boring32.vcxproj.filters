@@ -390,5 +390,9 @@
     <ClCompile Include="XAudio2\boring32.xaudio2.functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Error\boring32.error.boring32error.ixx" />
+    <ClCompile Include="Error\boring32.error.boring32error.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
