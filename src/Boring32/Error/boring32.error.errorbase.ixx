@@ -9,6 +9,8 @@ export module boring32.error.errorbase;
 
 export namespace Boring32::Error
 {
+	//class NestedException : std::nested_exception
+
 	template<typename T> requires std::is_base_of<std::exception, T>::value
 	class ErrorBase : public T 
 	{

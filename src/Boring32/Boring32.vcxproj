@@ -376,6 +376,8 @@
     <ClCompile Include="XAudio2\boring32.xaudio2.sourcevoice.ixx" />
     <ClCompile Include="XAudio2\boring32.xaudio2.voice.cpp" />
     <ClCompile Include="XAudio2\boring32.xaudio2.voice.ixx" />
+    <ClCompile Include="XAudio2\boring32.xaudio2.xaudio2error.cpp" />
+    <ClCompile Include="XAudio2\boring32.xaudio2.xaudio2error.ixx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

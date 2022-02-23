@@ -9,6 +9,7 @@ import boring32.raii.win32handle;
 import boring32.strings;
 import boring32.error.win32error;
 import boring32.error.errorbase;
+import boring32.error.functions;
 import boring32.raii.uniqueptrs;
 import boring32.security.functions;
 import boring32.filesystem;
@@ -86,14 +87,28 @@ void SocketTest()
 	socket.Connect();
 }
 
+void print_exception_info2(const std::exception& e)
+{
+	std::cerr << e.what() << "\n";
+	try {
+		std::rethrow_if_nested(e);
+	}
+	catch (const std::exception& ne) {
+		print_exception_info2(ne);
+	}
+	catch (...) {}
+}
+
 int main(int argc, char** args) try
 {
-	throw Boring32::Error::Win32Error(std::source_location::current(), "The operation failed", 5);
 	SocketTest();
 	return 0;
 }
 catch (const std::exception& ex)
 {
-	std::wcout << ex.what() << std::endl;
+
+	print_exception_info2(ex);
+
+	//std::wcout << ex.what() << std::endl;
 	return -1;
 }
