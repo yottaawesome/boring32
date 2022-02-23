@@ -22,10 +22,9 @@ namespace Boring32::Error
 		const std::source_location& location, 
 		const std::string& msg
 	)
-		: std::runtime_error(msg),
-		m_errorCode(0)
+		: m_errorCode(0), Boring32Error(location, msg)
 	{
-		m_errorString = Error::FormatErrorMessage("NTSTATUS", location, msg);
+		GenerateErrorMessage(location, msg);
 	}
 	
 	NtStatusError::NtStatusError(
@@ -33,11 +32,9 @@ namespace Boring32::Error
 		const std::string& msg, 
 		const LONG errorCode
 	)
-		: std::runtime_error(msg),
-		m_errorCode(errorCode)
+		: m_errorCode(errorCode), Boring32Error(location, msg)
 	{
-		m_errorString = Boring32::Error::GetNtStatusCode<std::string>(errorCode);
-		m_errorString = Error::FormatErrorMessage("NTSTATUS", location, msg, errorCode, m_errorString);
+		GenerateErrorMessage(location, msg);
 	}
 
 	LONG NtStatusError::GetErrorCode() const noexcept
@@ -45,8 +42,19 @@ namespace Boring32::Error
 		return m_errorCode;
 	}
 
-	const char* NtStatusError::what() const noexcept
+	void NtStatusError::GenerateErrorMessage(
+		const std::source_location& location,
+		const std::string& message
+	)
 	{
-		return m_errorString.c_str();
+		if (m_errorCode)
+		{
+			m_message = Boring32::Error::GetNtStatusCode<std::string>(m_errorCode);
+			m_message = Error::FormatErrorMessage("NTSTATUS", location, message, m_errorCode, m_message);
+		}
+		else
+		{
+			m_message = Error::FormatErrorMessage("NTSTATUS", location, message);
+		}
 	}
 }

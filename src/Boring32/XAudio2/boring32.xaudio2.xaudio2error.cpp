@@ -10,6 +10,7 @@ namespace Boring32::XAudio2
 		const std::string& message
 	) : Error::Boring32Error(location, message)
 	{
+		GenerateErrorMessage(location, message);
 	}
 
 	void XAudio2Error::GenerateErrorMessage(

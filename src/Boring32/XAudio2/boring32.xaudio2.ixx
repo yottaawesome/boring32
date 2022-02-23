@@ -4,4 +4,5 @@ export import boring32.xaudio2.engine;
 export import boring32.xaudio2.voice;
 export import boring32.xaudio2.sourcevoice;
 export import boring32.xaudio2.masteringvoice;
-export import boring32.xaudio2.audiograph;
+export import boring32.xaudio2.audiograph; 
+export import boring32.xaudio2.xaudio2error;

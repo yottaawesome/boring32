@@ -8,7 +8,7 @@ export module boring32.error.boring32error;
 
 export namespace Boring32::Error
 {
-	class Boring32Error : public std::exception
+	class Boring32Error : public virtual std::exception
 	{
 		public:
 			virtual ~Boring32Error();

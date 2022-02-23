@@ -6,10 +6,11 @@ module;
 #include <Windows.h>
 
 export module boring32.error.ntstatuserror;
+import boring32.error.boring32error;
 
 export namespace Boring32::Error
 {
-	class NtStatusError : public std::runtime_error
+	class NtStatusError : public Boring32Error
 	{
 		public:
 			virtual ~NtStatusError();
@@ -30,11 +31,13 @@ export namespace Boring32::Error
 			virtual NtStatusError& operator=(NtStatusError&& other) noexcept;
 
 		public:
-			virtual LONG GetErrorCode() const noexcept;
-			virtual const char* what() const noexcept override;
+			[[nodiscard]] virtual LONG GetErrorCode() const noexcept;
+			virtual void GenerateErrorMessage(
+				const std::source_location& location,
+				const std::string& message
+			) override;
 
 		protected:
 			LONG m_errorCode;
-			std::string m_errorString;
 	};
 }

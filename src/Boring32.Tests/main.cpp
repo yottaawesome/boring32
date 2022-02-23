@@ -7,14 +7,13 @@
 
 import boring32.raii.win32handle;
 import boring32.strings;
-import boring32.error.win32error;
-import boring32.error.errorbase;
-import boring32.error.functions;
+import boring32.error;
 import boring32.raii.uniqueptrs;
 import boring32.security.functions;
 import boring32.filesystem;
 import boring32.winhttp.winhttperror;
 import boring32.winsock;
+import boring32.xaudio2;
 
 struct Test
 {
@@ -87,28 +86,54 @@ void SocketTest()
 	socket.Connect();
 }
 
-void print_exception_info2(const std::exception& e)
+struct Q
 {
-	std::cerr << e.what() << "\n";
-	try {
-		std::rethrow_if_nested(e);
+	virtual ~Q() {}
+	virtual std::wstring QQ() { return L"An unknown error occurred"; }
+};
+
+struct W : public virtual Q
+{
+	virtual ~W() {}
+	virtual std::wstring QQ() override { return L"A COM error occurred"; }
+};
+
+struct E : public virtual Q
+{
+	virtual ~E() {}
+	virtual std::wstring QQ() override { return L"An XAudio2 error occurred"; }
+};
+
+template<typename...R>
+struct Error : public virtual R...
+{
+	virtual ~Error() {}
+	virtual void Blah(const std::wstring& str) { std::wcout << str << std::endl; }
+	virtual std::wstring QQ() override 
+	{ 
+		// https://stackoverflow.com/questions/43322854/multiple-inheritance-with-variadic-templates-how-to-call-function-for-each-base
+		// Call QQ() on each base class...
+		//(R::QQ(), ...);
+		// Forward the results of calling QQ on each base class to a vector
+		//std::vector strings = { (R::QQ())... };
+		// Call Blah() once for each instance of QQ()
+		(Blah(R::QQ()), ...);
+		return L"";
 	}
-	catch (const std::exception& ne) {
-		print_exception_info2(ne);
-	}
-	catch (...) {}
-}
+};
+
 
 int main(int argc, char** args) try
 {
-	SocketTest();
+	//SocketTest();
+	//throw Boring32::Error::NtStatusError(std::source_location::current(), "Blah blah", 0x40000026);
+	Error<W, E> X;
+	X.QQ();
 	return 0;
 }
 catch (const std::exception& ex)
 {
-
-	print_exception_info2(ex);
-
-	//std::wcout << ex.what() << std::endl;
+	//print_exception_info2(ex);
+	std::wcout << ex.what() << std::endl;
 	return -1;
 }
