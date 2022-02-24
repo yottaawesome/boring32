@@ -170,6 +170,7 @@
     <ClCompile Include="Async\Async\FileMappingTests.cpp" />
     <ClCompile Include="Async\Async\Semaphore.cpp" />
     <ClCompile Include="Async\Async\ThreadPool.cpp" />
+    <ClCompile Include="Compression\Decompressor.cpp" />
     <ClCompile Include="Crypto\AesEncryption.cpp" />
     <ClCompile Include="Crypto\Certificate.cpp" />
     <ClCompile Include="Crypto\CertStore.cpp" />

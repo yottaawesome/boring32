@@ -145,4 +145,9 @@ namespace Boring32::Compression
 
 		return returnVal;
 	}
+	
+	DECOMPRESSOR_HANDLE Decompressor::GetHandle() const noexcept
+	{
+		return m_decompressor;
+	}
 }

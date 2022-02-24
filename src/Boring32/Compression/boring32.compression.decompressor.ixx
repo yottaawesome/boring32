@@ -46,6 +46,8 @@ export namespace Boring32::Compression
 			/// <returns>The decompressed buffer.</returns>
 			[[nodiscard]] virtual std::vector<std::byte> DecompressBuffer(const std::vector<std::byte>& compressedBuffer);
 
+			virtual DECOMPRESSOR_HANDLE GetHandle() const noexcept;
+
 		protected:
 			virtual void Create();
 			virtual void Copy(const Decompressor& other);
