@@ -13,16 +13,16 @@ module boring32.error.functions;
 
 namespace Boring32::Error
 {
-    void PrintExceptionInfo(const std::exception& e)
+    void PrintExceptionInfo(const std::exception& e, const unsigned level)
     {
-        std::wcout << e.what() << std::endl;
+        std::wcout << std::format("{}-> {}", std::string(level, '-'), e.what()).c_str() << std::endl;
         try
         {
             rethrow_if_nested(e);
         }
         catch (const std::exception& ne)
         {
-            PrintExceptionInfo(ne);
+            PrintExceptionInfo(ne, level+1);
         }
     }
 

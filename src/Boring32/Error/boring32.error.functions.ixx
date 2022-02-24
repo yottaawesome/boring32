@@ -36,7 +36,7 @@ export namespace Boring32::Error
         throw_with_nested(ex2);
     }
 
-    void PrintExceptionInfo(const std::exception& e);
+    void PrintExceptionInfo(const std::exception& e, const unsigned level = 0);
 
     std::string FormatErrorMessage(
         const std::string& errorType,

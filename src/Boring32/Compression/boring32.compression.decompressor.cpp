@@ -122,8 +122,8 @@ namespace Boring32::Compression
 		{
 			const auto lastError = GetLastError();
 			Error::ThrowNested(
-				Error::Win32Error(std::source_location::current(), "CreateDecompressor() failed", lastError),
-				CompressionError(std::source_location::current(), "An error occurred creating the decompressor")
+				Error::Win32Error(std::source_location::current(), "Decompress() failed", lastError),
+				CompressionError(std::source_location::current(), "An error occurred while decompressing data")
 			);
 		}
 		return decompressedBufferSize;
