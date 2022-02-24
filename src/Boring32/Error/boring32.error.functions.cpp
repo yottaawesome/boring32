@@ -13,13 +13,17 @@ module boring32.error.functions;
 
 namespace Boring32::Error
 {
-    void ThrowNested(const std::exception& ex1, const std::exception& ex2) try
+    void PrintExceptionInfo(const std::exception& e)
     {
-        throw ex1;
-    }
-    catch (...)
-    {
-        throw_with_nested(ex2);
+        std::wcout << e.what() << std::endl;
+        try
+        {
+            rethrow_if_nested(e);
+        }
+        catch (const std::exception& ne)
+        {
+            PrintExceptionInfo(ne);
+        }
     }
 
     std::string FormatErrorMessage(

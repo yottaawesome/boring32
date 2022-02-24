@@ -8,7 +8,7 @@ export module boring32.error.boring32error;
 
 export namespace Boring32::Error
 {
-	class Boring32Error : public virtual std::exception
+	class Boring32Error : public std::exception
 	{
 		public:
 			virtual ~Boring32Error();
@@ -19,9 +19,9 @@ export namespace Boring32::Error
 		public:
 			virtual Boring32Error& operator=(const Boring32Error& other);
 			virtual Boring32Error& operator=(Boring32Error&& other) noexcept;
+			virtual const char* what() const noexcept override;
 
 		protected:
-			[[nodiscard]] virtual const char* what() const noexcept override;
 			virtual void GenerateErrorMessage(
 				const std::source_location& location,
 				const std::string& message

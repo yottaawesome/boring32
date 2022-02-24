@@ -14,6 +14,7 @@ import boring32.filesystem;
 import boring32.winhttp.winhttperror;
 import boring32.winsock;
 import boring32.xaudio2;
+import boring32.compression;
 
 struct Test
 {
@@ -152,7 +153,7 @@ struct TP
 	std::vector<std::exception_ptr> m_ptrs;
 };
 
-int main(int argc, char** args) try
+void RandomStuff()
 {
 	TP t(std::runtime_error("AAAA"), std::runtime_error("BBBB"));
 
@@ -162,11 +163,22 @@ int main(int argc, char** args) try
 	E e(2);
 	Error X(w, e);
 	X.QQ();
+}
+
+void Compression()
+{
+	//throw Boring32::Compression::CompressionError(std::source_location::current(), "Blah");
+	Boring32::Compression::Decompressor decompressor(Boring32::Compression::CompressionType::MSZIP);
+	auto x = decompressor.DecompressBuffer({ std::byte(0x1), std::byte(0x2) });
+}
+
+int main(int argc, char** args) try
+{
+	Compression();
 	return 0;
 }
 catch (const std::exception& ex)
 {
-	//print_exception_info2(ex);
-	std::wcout << ex.what() << std::endl;
+	Boring32::Error::PrintExceptionInfo(ex);
 	return -1;
 }

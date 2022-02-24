@@ -10,7 +10,33 @@ export module boring32.error.functions;
 
 export namespace Boring32::Error
 {
-    [[noreturn]] void ThrowNested(const std::exception& ex1, const std::exception& ex2);
+    // Parameters need to be templated, because throwing via
+    // reference type will cause copy construction of the wrong
+    // type, effectively causing slicing.
+    // You *must* call GetLastError() before invoking this function
+    // for system calls where GetLastError() may return useful
+    // info.
+    template <typename EX1, typename EX2>
+    void ThrowNested(EX1&& ex1, EX2&& ex2) try
+    {
+        throw ex1;
+    }
+    catch (...)
+    {
+        throw_with_nested(ex2);
+    }
+
+    template <typename EX1, typename EX2>
+    void ThrowNested2(const EX1* ex1, const EX2* ex2) try
+    {
+        throw ex1;
+    }
+    catch (...)
+    {
+        throw_with_nested(ex2);
+    }
+
+    void PrintExceptionInfo(const std::exception& e);
 
     std::string FormatErrorMessage(
         const std::string& errorType,

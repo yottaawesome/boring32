@@ -19,7 +19,7 @@ namespace Boring32::Error
 	Boring32Error::Boring32Error(
 		const std::source_location& location,
 		const std::string& message
-	) : std::exception()
+	)
 	{
 		GenerateErrorMessage(location, message);
 	}

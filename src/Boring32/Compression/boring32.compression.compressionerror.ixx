@@ -1,31 +1,34 @@
-export module boring32.error.compressionerror;
+module;
+
+#include <source_location>
+#include <stdexcept>
+#include <string>
+
+export module boring32.compression.compressionerror;
 
 import boring32.error.boring32error;
-import <source_location>;
-import <string>;
 
 export namespace Boring32::Compression
 {
-	class CompressionError : public virtual Error::Boring32Error
+	class CompressionError : public Error::Boring32Error
 	{
 		public:
 			virtual ~CompressionError();
-			CompressionError(const CompressionError&);
-			CompressionError(CompressionError&&) noexcept;
+			CompressionError(const CompressionError& other);
+			CompressionError(CompressionError&& other) noexcept;
 			CompressionError(
 				const std::source_location& location,
 				const std::string& message
 			);
 
 		public:
-			virtual CompressionError& operator=(const CompressionError&);
-			virtual CompressionError& operator=(CompressionError&&) noexcept;
+			virtual CompressionError& operator=(const CompressionError& other);
+			virtual CompressionError& operator=(CompressionError&& other) noexcept;
 
-		public:
+		protected:
 			virtual void GenerateErrorMessage(
 				const std::source_location& location,
 				const std::string& message
 			) override;
-
 	};
 }
