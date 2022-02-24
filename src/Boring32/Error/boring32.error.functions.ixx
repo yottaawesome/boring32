@@ -10,6 +10,8 @@ export module boring32.error.functions;
 
 export namespace Boring32::Error
 {
+    [[noreturn]] void ThrowNested(const std::exception& ex1, const std::exception& ex2);
+
     std::string FormatErrorMessage(
         const std::string& errorType,
         const std::source_location& location,

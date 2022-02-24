@@ -89,25 +89,43 @@ void SocketTest()
 struct Q
 {
 	virtual ~Q() {}
+	Q() = default;
+	Q(const Q& other) = default;
 	virtual std::wstring QQ() { return L"An unknown error occurred"; }
+	int m_i;
 };
 
 struct W : public virtual Q
 {
+	W(int i) { m_i = i; }
+	W(const W& other)
+	{
+		m_i = other.m_i;
+	}
 	virtual ~W() {}
-	virtual std::wstring QQ() override { return L"A COM error occurred"; }
+	virtual std::wstring QQ() override { return std::to_wstring(m_i); }
 };
 
 struct E : public virtual Q
 {
+	E(int i) { m_i = i; }
+	E(const E& other) 
+	{
+		m_i = other.m_i;
+	}
 	virtual ~E() {}
-	virtual std::wstring QQ() override { return L"An XAudio2 error occurred"; }
-};
+	virtual std::wstring QQ() override { return std::to_wstring(m_i); }
+};	
 
 template<typename...R>
 struct Error : public virtual R...
 {
 	virtual ~Error() {}
+
+	//using R::R()...;
+	Error() {}
+	Error(const R... args) : R(args)... {}
+
 	virtual void Blah(const std::wstring& str) { std::wcout << str << std::endl; }
 	virtual std::wstring QQ() override 
 	{ 
@@ -122,12 +140,27 @@ struct Error : public virtual R...
 	}
 };
 
+template<typename...R>
+struct TP
+{
+	TP(const R... args)
+	{
+		(std::make_exception_ptr(args), ...);
+
+		m_ptrs = { (std::make_exception_ptr(args))... };
+	}
+	std::vector<std::exception_ptr> m_ptrs;
+};
 
 int main(int argc, char** args) try
 {
+	TP t(std::runtime_error("AAAA"), std::runtime_error("BBBB"));
+
 	//SocketTest();
 	//throw Boring32::Error::NtStatusError(std::source_location::current(), "Blah blah", 0x40000026);
-	Error<W, E> X;
+	W w(1);
+	E e(2);
+	Error X(w, e);
 	X.QQ();
 	return 0;
 }
