@@ -127,7 +127,7 @@ namespace Boring32::Compression
 		if (compressedBuffer.empty())
 			throw CompressionError(std::source_location::source_location(), "Buffer is empty");
 
-		std::vector<std::byte> returnVal(GetDecompressedSize(compressedBuffer), (std::byte)0);
+		std::vector<std::byte> returnVal(GetDecompressedSize(compressedBuffer));
 		size_t decompressedBufferSize = 0;
 		// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-compress
 		const bool succeeded = Decompress(
