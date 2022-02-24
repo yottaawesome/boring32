@@ -5,6 +5,11 @@ namespace Boring32::XAudio2
 {
 	XAudio2Error::~XAudio2Error() = default;
 
+	XAudio2Error::XAudio2Error(const XAudio2Error&) = default;
+	XAudio2Error::XAudio2Error(XAudio2Error&&) noexcept = default;
+	XAudio2Error& XAudio2Error::operator=(const XAudio2Error&) = default;
+	XAudio2Error& XAudio2Error::operator=(XAudio2Error&&) noexcept = default;
+
 	XAudio2Error::XAudio2Error(
 		const std::source_location& location,
 		const std::string& message

@@ -10,11 +10,16 @@ export namespace Boring32::Compression
 	{
 		public:
 			virtual ~CompressionError();
+			CompressionError(const CompressionError&);
+			CompressionError(CompressionError&&) noexcept;
 			CompressionError(
 				const std::source_location& location,
 				const std::string& message
 			);
 
+		public:
+			virtual CompressionError& operator=(const CompressionError&);
+			virtual CompressionError& operator=(CompressionError&&) noexcept;
 
 		public:
 			virtual void GenerateErrorMessage(

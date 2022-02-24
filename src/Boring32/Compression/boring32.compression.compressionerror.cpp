@@ -5,6 +5,11 @@ namespace Boring32::Compression
 {
 	CompressionError::~CompressionError() = default;
 
+	CompressionError::CompressionError(const CompressionError&) = default;
+	CompressionError::CompressionError(CompressionError&&) noexcept = default;
+	CompressionError& CompressionError::operator=(const CompressionError&) = default;
+	CompressionError& CompressionError::operator=(CompressionError&&) noexcept = default;
+
 	CompressionError::CompressionError(
 		const std::source_location & location,
 		const std::string & message
