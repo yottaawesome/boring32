@@ -16,15 +16,13 @@ export namespace Boring32::Compression
 	{
 		public:
 			virtual ~Compressor();
-
 			Compressor();
-
+			Compressor(const Compressor& other);
+			Compressor(Compressor&& other) noexcept;
 			Compressor(const CompressionType type);
 
-			Compressor(const Compressor& other);
+		public:
 			virtual Compressor& operator=(const Compressor other);
-
-			Compressor(Compressor&& other) noexcept;
 			virtual Compressor& operator=(Compressor&& other) noexcept;
 
 		public:
