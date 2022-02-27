@@ -15,10 +15,8 @@ namespace Boring32::Compression
 {
 	void Decompressor::Close()
 	{
-		if (m_decompressor)
-		{
-			m_decompressor.reset();
-		}
+		m_decompressor.reset();
+		m_type = CompressionType::NotSet;
 	}
 
 	Decompressor::~Decompressor()
@@ -102,7 +100,9 @@ namespace Boring32::Compression
 		return m_type;
 	}
 
-	size_t Decompressor::GetDecompressedSize(const std::vector<std::byte>& compressedBuffer) const
+	size_t Decompressor::GetDecompressedSize(
+		const std::vector<std::byte>& compressedBuffer
+	) const
 	{
 		if (!m_decompressor)
 			throw CompressionError(std::source_location::current(), "Decompressor handle is null");
@@ -135,7 +135,9 @@ namespace Boring32::Compression
 		return decompressedBufferSize;
 	}
 
-	std::vector<std::byte> Decompressor::DecompressBuffer(const std::vector<std::byte>& compressedBuffer)
+	std::vector<std::byte> Decompressor::DecompressBuffer(
+		const std::vector<std::byte>& compressedBuffer
+	)
 	{
 		if (!m_decompressor)
 			throw CompressionError(std::source_location::current(), "Decompressor handle is null");

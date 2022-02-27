@@ -16,11 +16,8 @@ namespace Boring32::Compression
 {
 	void Compressor::Close()
 	{
-		if (m_compressor)
-		{
-			m_compressor.reset();
-			m_type = CompressionType::NotSet;
-		}
+		m_compressor.reset();
+		m_type = CompressionType::NotSet;
 	}
 
 	Compressor::Compressor()
