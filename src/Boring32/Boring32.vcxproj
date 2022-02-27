@@ -202,6 +202,7 @@
     <ClCompile Include="Async\boring32.async.timerqueuetimercallback.ixx" />
     <ClCompile Include="Compression\boring32.compression.compressionerror.cpp" />
     <ClCompile Include="Compression\boring32.compression.compressionerror.ixx" />
+    <ClCompile Include="Compression\boring32.compression.deleters.ixx" />
     <ClCompile Include="Com\boring32.com.ixx" />
     <ClCompile Include="Crypto\boring32.crypto.aesencryption.ixx" />
     <ClCompile Include="Crypto\boring32.crypto.certificate.ixx" />

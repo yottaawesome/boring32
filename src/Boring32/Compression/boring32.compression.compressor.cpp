@@ -2,7 +2,6 @@ module;
 
 #include <source_location>
 #include <vector>
-#include <stdexcept>
 #include <iostream>
 #include <Windows.h>
 #include <compressapi.h>
@@ -90,9 +89,9 @@ namespace Boring32::Compression
 	size_t Compressor::GetCompressedSize(const std::vector<std::byte>& buffer) const
 	{
 		if (!m_compressor)
-			throw std::runtime_error(__FUNCSIG__ ": compressor handle is null");
+			throw CompressionError(std::source_location::current(), "Compressor handle is null");
 		if (buffer.empty())
-			throw std::runtime_error(__FUNCSIG__  ": buffer is empty");
+			throw CompressionError(std::source_location::current(), "Buffer is empty");
 
 		size_t compressedBufferSize = 0;
 		// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-compress
@@ -116,7 +115,7 @@ namespace Boring32::Compression
 		return compressedBufferSize;
 	}
 
-	CompressionType Compressor::GetType() const
+	CompressionType Compressor::GetType() const noexcept
 	{
 		return m_type;
 	}

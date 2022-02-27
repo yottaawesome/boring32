@@ -37,7 +37,7 @@ export namespace Boring32::Compression
 			///		Returns the type of algorithm of this compressor.
 			/// </summary>
 			/// <returns>The algorithm used by this compressor.</returns>
-			[[nodiscard]] virtual CompressionType GetType() const;
+			[[nodiscard]] virtual CompressionType GetType() const noexcept;
 
 			/// <summary>
 			///		Returns a buffer that is the compressed data of the input argument, buffer.
