@@ -54,6 +54,8 @@ export namespace Boring32::Compression
 			virtual void Close();
 
 			virtual COMPRESSOR_HANDLE GetHandle() const noexcept;
+			
+			virtual void Reset();
 
 		protected:
 			virtual void Create();

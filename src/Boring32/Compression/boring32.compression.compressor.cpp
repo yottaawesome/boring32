@@ -8,7 +8,9 @@ module;
 #include <compressapi.h>
 
 module boring32.compression.compressor;
+import boring32.compression.compressionerror;
 import boring32.error.win32error;
+import boring32.error.functions;
 
 // For reference see: https://docs.microsoft.com/en-us/windows/win32/cmpapi/using-the-compression-api-in-block-mode
 namespace Boring32::Compression
@@ -158,5 +160,20 @@ namespace Boring32::Compression
 	COMPRESSOR_HANDLE Compressor::GetHandle() const noexcept
 	{
 		return m_compressor;
+	}
+
+	void Compressor::Reset()
+	{
+		if (!m_compressor)
+			throw CompressionError(std::source_location::current(), "Compressor handle is null");
+		// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-resetcompressor
+		if (!ResetDecompressor(m_compressor))
+		{
+			const auto lastError = GetLastError();
+			Error::ThrowNested(
+				Error::Win32Error(std::source_location::current(), "ResetCompressor() failed", lastError),
+				CompressionError(std::source_location::current(), "An error occurred resetting the compressor")
+			);
+		}
 	}
 }

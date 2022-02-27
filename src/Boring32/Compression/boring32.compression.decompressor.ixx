@@ -48,6 +48,8 @@ export namespace Boring32::Compression
 
 			virtual DECOMPRESSOR_HANDLE GetHandle() const noexcept;
 
+			virtual void Reset();
+
 		protected:
 			virtual void Create();
 			virtual void Copy(const Decompressor& other);

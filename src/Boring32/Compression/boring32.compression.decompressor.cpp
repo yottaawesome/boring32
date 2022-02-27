@@ -163,4 +163,19 @@ namespace Boring32::Compression
 	{
 		return m_decompressor;
 	}
+
+	void Decompressor::Reset()
+	{
+		if (!m_decompressor)
+			throw CompressionError(std::source_location::current(), "Decompressor handle is null");
+		// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-resetdecompressor
+		if (!ResetDecompressor(m_decompressor))
+		{
+			const auto lastError = GetLastError();
+			Error::ThrowNested(
+				Error::Win32Error(std::source_location::current(), "ResetDecompressor() failed", lastError),
+				CompressionError(std::source_location::current(), "An error occurred resetting the decompressor")
+			);
+		}
+	}
 }
