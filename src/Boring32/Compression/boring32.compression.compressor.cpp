@@ -18,15 +18,13 @@ namespace Boring32::Compression
 	{
 		if (m_compressor)
 		{
-			CloseCompressor(m_compressor);
+			m_compressor.reset();
 			m_type = CompressionType::NotSet;
-			m_compressor = nullptr;
 		}
 	}
 
 	Compressor::Compressor()
-	:	m_type(CompressionType::NotSet),
-		m_compressor(nullptr)
+	:	m_type(CompressionType::NotSet)
 	{ }
 
 	Compressor::~Compressor()
@@ -35,15 +33,13 @@ namespace Boring32::Compression
 	}
 
 	Compressor::Compressor(const CompressionType type)
-	:	m_type(type),
-		m_compressor(nullptr)
+	:	m_type(type)
 	{
 		Create();
 	}
 
 	Compressor::Compressor(const Compressor& other)
-	:	m_type(CompressionType::NotSet),
-		m_compressor(nullptr)
+	:	m_type(CompressionType::NotSet)
 	{
 		Copy(other);
 	}
@@ -62,8 +58,7 @@ namespace Boring32::Compression
 	}
 
 	Compressor::Compressor(Compressor&& other) noexcept
-	:	m_type(CompressionType::NotSet),
-		m_compressor(nullptr)
+	:	m_type(CompressionType::NotSet)
 	{
 		Move(other);
 	}
@@ -78,8 +73,7 @@ namespace Boring32::Compression
 	{
 		Close();
 		m_type = other.m_type;
-		m_compressor = other.m_compressor;
-		other.m_compressor = nullptr;
+		m_compressor = std::move(other.m_compressor);
 	}
 	catch (const std::exception& ex)
 	{
@@ -96,7 +90,7 @@ namespace Boring32::Compression
 		size_t compressedBufferSize = 0;
 		// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-compress
 		const bool succeeded = Compress(
-			m_compressor,           //  Compressor Handle
+			m_compressor.get(),     //  Compressor Handle
 			&buffer[0],             //  Input buffer, Uncompressed data
 			buffer.size(),          //  Uncompressed data size
 			nullptr,                //  Compressed Buffer
@@ -131,7 +125,7 @@ namespace Boring32::Compression
 		size_t compressedBufferSize = 0;
 		// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-compress
 		const bool succeeded = Compress(
-			m_compressor,           //  Compressor Handle
+			m_compressor.get(),     //  Compressor Handle
 			&buffer[0],             //  Input buffer, Uncompressed data
 			buffer.size(),          //  Uncompressed data size
 			&returnVal[0],          //  Compressed Buffer
@@ -154,11 +148,12 @@ namespace Boring32::Compression
 	{
 		if (m_type == CompressionType::NotSet)
 			return;
+		COMPRESSOR_HANDLE handle;
 		// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-createcompressor
 		const bool succeeded = CreateCompressor(
 			(DWORD)m_type,	// Algorithm
 			nullptr,		// AllocationRoutines
-			&m_compressor	// CompressorHandle
+			&handle			// CompressorHandle
 		);
 		if (!succeeded)
 		{
@@ -168,11 +163,12 @@ namespace Boring32::Compression
 				CompressionError(std::source_location::current(), "An error occurred creating the compressor")
 			);
 		}
+		m_compressor = CompressorUniquePtr(handle);
 	}
 
 	COMPRESSOR_HANDLE Compressor::GetHandle() const noexcept
 	{
-		return m_compressor;
+		return m_compressor.get();
 	}
 
 	void Compressor::Reset()
@@ -180,7 +176,7 @@ namespace Boring32::Compression
 		if (!m_compressor)
 			throw CompressionError(std::source_location::current(), "Compressor handle is null");
 		// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-resetcompressor
-		if (!ResetDecompressor(m_compressor))
+		if (!ResetDecompressor(m_compressor.get()))
 		{
 			const auto lastError = GetLastError();
 			Error::ThrowNested(
