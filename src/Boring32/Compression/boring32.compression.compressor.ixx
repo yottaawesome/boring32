@@ -32,7 +32,9 @@ export namespace Boring32::Compression
 			/// </summary>
 			/// <param name="buffer">The buffer to determine the compressed size of.</param>
 			/// <returns>The size, in bytes, of the compressed buffer specified in the parameter</returns>
-			[[nodiscard]] virtual size_t GetCompressedSize(const std::vector<std::byte>& buffer) const;
+			[[nodiscard]] virtual size_t GetCompressedSize(
+				const std::vector<std::byte>& buffer
+			) const;
 
 			/// <summary>
 			///		Returns the type of algorithm of this compressor.
@@ -45,7 +47,9 @@ export namespace Boring32::Compression
 			/// </summary>
 			/// <param name="buffer">The buffer to compress.</param>
 			/// <returns>The compressed buffer.</returns>
-			[[nodiscard]] virtual std::vector<std::byte> CompressBuffer(const std::vector<std::byte>& buffer);
+			[[nodiscard]] virtual std::vector<std::byte> CompressBuffer(
+				const std::vector<std::byte>& buffer
+			);
 
 			/// <summary>
 			///		Releases all resources associated with this object.
