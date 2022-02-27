@@ -6,6 +6,7 @@ module;
 
 export module boring32.compression.decompressor;
 import boring32.compression.compressiontype;
+import boring32.compression.deleters;
 
 export namespace Boring32::Compression
 {
@@ -56,6 +57,6 @@ export namespace Boring32::Compression
 
 		protected:
 			CompressionType m_type;
-			DECOMPRESSOR_HANDLE m_decompressor;
+			DecompressorUniquePtr m_decompressor;
 	};
 }
