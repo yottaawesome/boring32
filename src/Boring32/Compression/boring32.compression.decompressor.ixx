@@ -14,14 +14,13 @@ export namespace Boring32::Compression
 		public:
 			virtual ~Decompressor();
 			Decompressor();
-
 			Decompressor(const Decompressor& other);
-			virtual Decompressor& operator=(const Decompressor& other);
-
 			Decompressor(Decompressor&& other) noexcept;
-			virtual Decompressor& operator=(Decompressor&& other) noexcept;
-
 			Decompressor(const CompressionType type);
+
+		public:
+			virtual Decompressor& operator=(const Decompressor& other);
+			virtual Decompressor& operator=(Decompressor&& other) noexcept;
 
 		public:
 			virtual void Close();
@@ -30,7 +29,7 @@ export namespace Boring32::Compression
 			///		Returns the type of algorithm of this decompressor.
 			/// </summary>
 			/// <returns>The algorithm used by this decompressor.</returns>
-			[[nodiscard]] virtual CompressionType GetType() const;
+			[[nodiscard]] virtual CompressionType GetType() const noexcept;
 
 			/// <summary>
 			///		Returns the uncompressed size, in bytes, of the compressed buffer specified in the parameter.
@@ -46,7 +45,7 @@ export namespace Boring32::Compression
 			/// <returns>The decompressed buffer.</returns>
 			[[nodiscard]] virtual std::vector<std::byte> DecompressBuffer(const std::vector<std::byte>& compressedBuffer);
 
-			virtual DECOMPRESSOR_HANDLE GetHandle() const noexcept;
+			[[nodiscard]] virtual DECOMPRESSOR_HANDLE GetHandle() const noexcept;
 
 			virtual void Reset();
 

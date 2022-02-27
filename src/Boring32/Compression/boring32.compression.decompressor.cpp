@@ -96,7 +96,7 @@ namespace Boring32::Compression
 		}
 	}
 
-	CompressionType Decompressor::GetType() const
+	CompressionType Decompressor::GetType() const noexcept
 	{
 		return m_type;
 	}
