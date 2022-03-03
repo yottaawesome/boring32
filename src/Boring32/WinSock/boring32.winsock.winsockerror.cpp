@@ -13,6 +13,15 @@ namespace Boring32::WinSock
 	WinSockError::~WinSockError() { }
 
 	WinSockError::WinSockError(
+		const std::source_location& location,
+		const std::string& message
+	) : std::runtime_error(""),
+		m_errorCode(0)
+	{
+		m_errorString = Error::FormatErrorMessage("WinSock", location, message);
+	}
+
+	WinSockError::WinSockError(
 		const std::source_location& location, 
 		const std::string& message, 
 		const DWORD errorCode

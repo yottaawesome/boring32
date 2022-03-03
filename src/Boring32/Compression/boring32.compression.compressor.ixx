@@ -32,6 +32,7 @@ export namespace Boring32::Compression
 			/// </summary>
 			/// <param name="buffer">The buffer to determine the compressed size of.</param>
 			/// <returns>The size, in bytes, of the compressed buffer specified in the parameter</returns>
+			/// <exception cref="CompressionError">Thrown if an empty buffer is passed, or no compressor is set, or compression fails.</exception>
 			[[nodiscard]] virtual size_t GetCompressedSize(
 				const std::vector<std::byte>& buffer
 			) const;

@@ -85,6 +85,7 @@ void SocketTest()
 	Boring32::WinSock::WinSockInit init(2,2);
 	Boring32::WinSock::Socket socket(L"www.google.com", 80);
 	socket.Connect();
+	socket.Send({ std::byte(0x5) });
 }
 
 struct Q
@@ -174,7 +175,8 @@ void Compression()
 
 int main(int argc, char** args) try
 {
-	Compression();
+	//Compression();
+	SocketTest();
 	return 0;
 }
 catch (const std::exception& ex)

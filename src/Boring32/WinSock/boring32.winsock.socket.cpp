@@ -2,6 +2,7 @@ module;
 
 #include <string>
 #include <vector>
+#include <iostream>
 #include <format>
 #include <source_location>
 #include <stdexcept>
@@ -24,19 +25,76 @@ namespace Boring32::WinSock
 	Socket::Socket(const std::wstring host, const unsigned portNumber)
 		: m_host(std::move(host)),
 		m_portNumber(portNumber)
-	{
-	}
+	{ }
 
 	Socket::Socket(Socket&& other) noexcept = default;
 
 	Socket& Socket::operator=(Socket&& other) noexcept = default;
+
+	void Socket::SetSocketTTL(const DWORD ttl)
+	{
+		if (!m_socket || m_socket == INVALID_SOCKET) throw WinSockError(
+			std::source_location::current(),
+			"Not in a valid state to set TTL support"
+		);
+
+		DWORD layer;
+		DWORD argument;
+
+		switch (m_addressFamily)
+		{
+			case AF_INET:
+				layer = IPPROTO_IP;
+				argument = IP_TTL;
+				break;
+
+			case AF_INET6:
+				layer = IPPROTO_IPV6;
+				argument = IPV6_UNICAST_HOPS;
+				break;
+
+			default:
+				throw WinSockError(std::source_location::current(), "Unknown address family");
+		}
+
+		// Query support for the argument
+		DWORD optVal;
+		int optLen = sizeof(optVal);
+		int optResult = getsockopt(
+			m_socket,
+			layer,
+			argument,
+			reinterpret_cast<char*>(&optVal),
+			&optLen
+		);
+		if (optResult == SOCKET_ERROR) throw WinSockError(
+			std::source_location::current(),
+			"TTL option is not support",
+			WSAGetLastError()
+		);
+
+		// Actually set the argument
+		optVal = ttl;
+		optResult = setsockopt(
+			m_socket,
+			layer,
+			argument,
+			reinterpret_cast<char*>(&optVal),
+			optLen
+		);
+		if (optResult == SOCKET_ERROR) throw WinSockError(
+			std::source_location::current(),
+			"setsockopt() failed",
+			WSAGetLastError()
+		);
+	}
 
 	void Socket::Connect()
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/ws2def/ns-ws2def-addrinfow
 		ADDRINFOW hints
 		{
-			.ai_family = AF_UNSPEC,
+			.ai_family = AF_INET | AF_INET6,
 			.ai_socktype = SOCK_STREAM,
 			.ai_protocol = IPPROTO_TCP
 		};
@@ -54,16 +112,16 @@ namespace Boring32::WinSock
 
 		AddrInfoWUniquePtr addrPtr = AddrInfoWUniquePtr(addrResult);
 		// Attempt to connect to an address until one succeeds
-		SOCKET connectSocket = INVALID_SOCKET;
-		for (ADDRINFOW* currentAddr = addrResult; currentAddr != nullptr; currentAddr = currentAddr->ai_next)
+		m_socket = INVALID_SOCKET;
+		for (ADDRINFOW* currentAddr = addrResult; currentAddr != nullptr && m_socket == INVALID_SOCKET; currentAddr = currentAddr->ai_next)
 		{
 			// Create a SOCKET for connecting to server
-			connectSocket = socket(
+			m_socket = socket(
 				currentAddr->ai_family,
 				currentAddr->ai_socktype,
 				currentAddr->ai_protocol
 			);
-			if (connectSocket == INVALID_SOCKET)
+			if (m_socket == INVALID_SOCKET)
 				throw WinSockError(
 					std::source_location::current(), 
 					"socket() failed", 
@@ -72,34 +130,38 @@ namespace Boring32::WinSock
 
 			// Connect to server.
 			const int connectionResult = connect(
-				connectSocket, 
+				m_socket,
 				currentAddr->ai_addr, 
 				static_cast<int>(currentAddr->ai_addrlen)
 			);
 			// Connected successfully.
 			if (connectionResult != SOCKET_ERROR)
-				break;
-			// Couldn't connect; free the socket and try the next entry.
-			if (closesocket(connectSocket) == SOCKET_ERROR)
-				throw WinSockError(
-					std::source_location::current(), 
-					"closesocket() failed", 
-					WSAGetLastError()
-				);
-			connectSocket = INVALID_SOCKET;
+			{
+				m_addressFamily = currentAddr->ai_family;
+			}
+			else
+			{
+				// Couldn't connect; free the socket and try the next entry.
+				if (closesocket(m_socket) == SOCKET_ERROR)
+					throw WinSockError(
+						std::source_location::current(),
+						"closesocket() failed",
+						WSAGetLastError()
+					);
+				m_socket = INVALID_SOCKET;
+			}
 		}
+
 		// Failed connecting in all cases.
-		if (connectSocket == INVALID_SOCKET)
+		if (m_socket == INVALID_SOCKET)
 		{
 			const std::string errorMsg = std::format(
 				"Failed connecting to server {}:{}", 
 				Strings::ConvertString(m_host), 
 				m_portNumber
 			);
-			throw Error::ErrorBase<std::runtime_error>(std::source_location::current(), errorMsg);
+			throw WinSockError(std::source_location::current(), errorMsg);
 		}
-			
-		m_socket = connectSocket;
 	}
 
 	void Socket::Close()

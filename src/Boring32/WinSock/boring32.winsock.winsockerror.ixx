@@ -14,6 +14,10 @@ export namespace Boring32::WinSock
 		public:
 			virtual ~WinSockError();
 			WinSockError(
+				const std::source_location& location,
+				const std::string& message
+			);
+			WinSockError(
 				const std::source_location& location, 
 				const std::string& message, 
 				const DWORD errorCode
