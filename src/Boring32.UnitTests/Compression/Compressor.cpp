@@ -19,7 +19,7 @@ namespace Compression
 				Assert::IsTrue(compressor.GetType() == Boring32::Compression::CompressionType::MSZIP);
 			}
 
-			TEST_METHOD(TestCompressorGetCompressedBytes)
+			TEST_METHOD(TestCompressorGetCompressedBytesMSZIP)
 			{
 				Boring32::Compression::Compressor compressor(Boring32::Compression::CompressionType::MSZIP);
 				const std::byte* buffer = (std::byte*)&m_compressionString[0];
@@ -31,13 +31,85 @@ namespace Compression
 				Assert::IsTrue(compressedBytesSize > 0);
 			}
 
-			TEST_METHOD(TestCompressorCompression)
+			TEST_METHOD(TestCompressorGetCompressedBytesLZMS)
+			{
+				Boring32::Compression::Compressor compressor(Boring32::Compression::CompressionType::LZMS);
+				const std::byte* buffer = (std::byte*)&m_compressionString[0];
+				const size_t compressedBytesSize = compressor.GetCompressedSize({
+						buffer,
+						buffer + m_compressionString.size()
+					}
+				);
+				Assert::IsTrue(compressedBytesSize > 0);
+			}
+
+			TEST_METHOD(TestCompressorGetCompressedBytesXPRESS)
+			{
+				Boring32::Compression::Compressor compressor(Boring32::Compression::CompressionType::XPRESS);
+				const std::byte* buffer = (std::byte*)&m_compressionString[0];
+				const size_t compressedBytesSize = compressor.GetCompressedSize({
+						buffer,
+						buffer + m_compressionString.size()
+					}
+				);
+				Assert::IsTrue(compressedBytesSize > 0);
+			}
+
+			TEST_METHOD(TestCompressorGetCompressedBytesXPRESSHuffman)
+			{
+				Boring32::Compression::Compressor compressor(Boring32::Compression::CompressionType::XPRESSHuffman);
+				const std::byte* buffer = (std::byte*)&m_compressionString[0];
+				const size_t compressedBytesSize = compressor.GetCompressedSize({
+						buffer,
+						buffer + m_compressionString.size()
+					}
+				);
+				Assert::IsTrue(compressedBytesSize > 0);
+			}
+
+			TEST_METHOD(TestCompressorCompressionMSZIP)
 			{
 				Boring32::Compression::Compressor compressor(Boring32::Compression::CompressionType::MSZIP);
 				const std::byte* buffer = (std::byte*)&m_compressionString[0];
 				std::vector<std::byte> compressed = compressor.CompressBuffer({ 
 						buffer, 
 						buffer + m_compressionString.size() 
+					}
+				);
+				Assert::IsTrue(compressed.size() > 0);
+			}
+
+			TEST_METHOD(TestCompressorCompressionLZMS)
+			{
+				Boring32::Compression::Compressor compressor(Boring32::Compression::CompressionType::LZMS);
+				const std::byte* buffer = (std::byte*)&m_compressionString[0];
+				std::vector<std::byte> compressed = compressor.CompressBuffer({
+						buffer,
+						buffer + m_compressionString.size()
+					}
+				);
+				Assert::IsTrue(compressed.size() > 0);
+			}
+
+			TEST_METHOD(TestCompressorCompressionXPRESS)
+			{
+				Boring32::Compression::Compressor compressor(Boring32::Compression::CompressionType::XPRESS);
+				const std::byte* buffer = (std::byte*)&m_compressionString[0];
+				std::vector<std::byte> compressed = compressor.CompressBuffer({
+						buffer,
+						buffer + m_compressionString.size()
+					}
+				);
+				Assert::IsTrue(compressed.size() > 0);
+			}
+
+			TEST_METHOD(TestCompressorCompressionXPRESSHuffman)
+			{
+				Boring32::Compression::Compressor compressor(Boring32::Compression::CompressionType::XPRESSHuffman);
+				const std::byte* buffer = (std::byte*)&m_compressionString[0];
+				std::vector<std::byte> compressed = compressor.CompressBuffer({
+						buffer,
+						buffer + m_compressionString.size()
 					}
 				);
 				Assert::IsTrue(compressed.size() > 0);
