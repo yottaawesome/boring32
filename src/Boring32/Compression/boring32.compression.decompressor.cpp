@@ -49,7 +49,9 @@ namespace Boring32::Compression
 
 	Decompressor::Decompressor(Decompressor&& other) noexcept
 	:	m_type(CompressionType::NotSet)
-	{ }
+	{ 
+		Move(other);
+	}
 
 	Decompressor& Decompressor::operator=(Decompressor&& other) noexcept
 	{
