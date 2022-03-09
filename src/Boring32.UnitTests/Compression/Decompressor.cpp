@@ -137,5 +137,13 @@ namespace Compression
 
 				Assert::IsTrue(decompressor.GetDecompressedSize(compressedData) > 0);
 			}
+
+			TEST_METHOD(TestDecompressorClose)
+			{
+				Boring32::Compression::Decompressor decompressor(Boring32::Compression::CompressionType::LZMS);
+				decompressor.Close();
+				Assert::IsNull(decompressor.GetHandle());
+				Assert::IsTrue(decompressor.GetType() == Boring32::Compression::CompressionType::NotSet);
+			}
 	};
 }
