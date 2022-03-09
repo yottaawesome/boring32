@@ -17,7 +17,7 @@ export namespace Boring32::Error
     // for system calls where GetLastError() may return useful
     // info.
     template <typename EX1, typename EX2>
-    void ThrowNested(EX1&& ex1, EX2&& ex2) try
+    [[noreturn]] void ThrowNested(EX1&& ex1, EX2&& ex2) try
     {
         throw ex1;
     }

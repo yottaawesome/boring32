@@ -119,20 +119,20 @@ namespace Boring32::Compression
 			0,                          // Buffer size set to 0
 			&decompressedBufferSize		// Decompressed data size
 		);
+
 		const auto lastError = GetLastError();
-		if (lastError != ERROR_INSUFFICIENT_BUFFER)
-		{
-			Error::ThrowNested(
-				Error::Win32Error(
-					std::source_location::current(), 
-					"Decompress() failed", 
-					lastError),
-				CompressionError(
-					std::source_location::current(), 
-					"An error occurred while decompressing data")
-			);
-		}
-		return decompressedBufferSize;
+		if (lastError == ERROR_INSUFFICIENT_BUFFER)
+			return decompressedBufferSize;
+
+		Error::ThrowNested(
+			Error::Win32Error(
+				std::source_location::current(), 
+				"Decompress() failed", 
+				lastError),
+			CompressionError(
+				std::source_location::current(), 
+				"An error occurred while decompressing data")
+		);
 	}
 
 	std::vector<std::byte> Decompressor::DecompressBuffer(
