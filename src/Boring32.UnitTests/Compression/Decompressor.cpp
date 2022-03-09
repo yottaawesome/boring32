@@ -8,22 +8,41 @@ namespace Compression
 {
 	TEST_CLASS(Decompressor)
 	{
-		TEST_METHOD(TestDecompressorConstructor)
-		{
-			Boring32::Compression::Decompressor decompressor(Boring32::Compression::CompressionType::MSZIP);
-			Assert::IsNotNull(decompressor.GetHandle());
-			Assert::IsTrue(decompressor.GetType() == Boring32::Compression::CompressionType::MSZIP);
-		}
+		private:
+			const std::string m_compressionString = "Hello world! This buffer will be compressed";
 
-		TEST_METHOD(TestInvalidDecompression)
-		{
-			Assert::ExpectException<Boring32::Compression::CompressionError>(
-				[]() 
-				{ 
-					Boring32::Compression::Decompressor decompressor(Boring32::Compression::CompressionType::MSZIP);
-					auto x = decompressor.DecompressBuffer({ std::byte(0x1), std::byte(0x2) }); 
-				}
-			);
-		}
+		public:
+			TEST_METHOD(TestDecompressorConstructor)
+			{
+				Boring32::Compression::Decompressor decompressor(Boring32::Compression::CompressionType::MSZIP);
+				Assert::IsNotNull(decompressor.GetHandle());
+				Assert::IsTrue(decompressor.GetType() == Boring32::Compression::CompressionType::MSZIP);
+			}
+
+			TEST_METHOD(TestInvalidDecompression)
+			{
+				Assert::ExpectException<Boring32::Compression::CompressionError>(
+					[]() 
+					{ 
+						Boring32::Compression::Decompressor decompressor(Boring32::Compression::CompressionType::MSZIP);
+						auto x = decompressor.DecompressBuffer({ std::byte(0x1), std::byte(0x2) }); 
+					}
+				);
+			}
+
+			TEST_METHOD(TestDecompressorGetDecompressedSizeMSZIP)
+			{
+				Boring32::Compression::Compressor compressor(Boring32::Compression::CompressionType::MSZIP);
+				const std::byte* buffer = (std::byte*)&m_compressionString[0];
+				const auto compressedData = compressor.CompressBuffer({
+						buffer,
+						buffer + m_compressionString.size()
+					}
+				);
+
+				Boring32::Compression::Decompressor decompressor(Boring32::Compression::CompressionType::MSZIP);
+
+				Assert::IsTrue(decompressor.GetDecompressedSize(compressedData) > 0);
+			}
 	};
 }

@@ -119,9 +119,9 @@ namespace Boring32::Compression
 			0,                          // Buffer size set to 0
 			&decompressedBufferSize		// Decompressed data size
 		);
-		if (!success)
+		const auto lastError = GetLastError();
+		if (lastError != ERROR_INSUFFICIENT_BUFFER)
 		{
-			const auto lastError = GetLastError();
 			Error::ThrowNested(
 				Error::Win32Error(
 					std::source_location::current(), 
