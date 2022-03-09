@@ -50,6 +50,15 @@ namespace Compression
 				Assert::IsTrue(decompressor2.GetType() == Boring32::Compression::CompressionType::MSZIP);
 			}
 
+			TEST_METHOD(TestDecompressorMoveAssignment)
+			{
+				Boring32::Compression::Decompressor decompressor1(Boring32::Compression::CompressionType::MSZIP);
+				Boring32::Compression::Decompressor decompressor2 = std::move(decompressor1);
+				Assert::IsNull(decompressor1.GetHandle());
+				Assert::IsNotNull(decompressor2.GetHandle());
+				Assert::IsTrue(decompressor2.GetType() == Boring32::Compression::CompressionType::MSZIP);
+			}
+
 			TEST_METHOD(TestInvalidDecompression)
 			{
 				Assert::ExpectException<Boring32::Compression::CompressionError>(
