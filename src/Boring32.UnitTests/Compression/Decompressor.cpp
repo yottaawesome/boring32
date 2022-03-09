@@ -19,6 +19,17 @@ namespace Compression
 				Assert::IsTrue(decompressor.GetType() == Boring32::Compression::CompressionType::MSZIP);
 			}
 
+			TEST_METHOD(TestDecompressorCopyConstructor)
+			{
+				Boring32::Compression::Decompressor decompressor1(Boring32::Compression::CompressionType::MSZIP);
+				Boring32::Compression::Decompressor decompressor2(decompressor1);
+				Assert::IsNotNull(decompressor1.GetHandle());
+				Assert::IsTrue(decompressor1.GetType() == Boring32::Compression::CompressionType::MSZIP);
+				Assert::IsNotNull(decompressor2.GetHandle());
+				Assert::IsTrue(decompressor2.GetType() == Boring32::Compression::CompressionType::MSZIP);
+				Assert::IsTrue(decompressor1.GetHandle() != decompressor2.GetHandle());
+			}
+
 			TEST_METHOD(TestInvalidDecompression)
 			{
 				Assert::ExpectException<Boring32::Compression::CompressionError>(

@@ -30,7 +30,9 @@ namespace Boring32::Compression
 
 	Decompressor::Decompressor(const Decompressor& other)
 	:	m_type(CompressionType::NotSet)
-	{ }
+	{ 
+		Copy(other);
+	}
 
 	Decompressor& Decompressor::operator=(const Decompressor& other)
 	{
