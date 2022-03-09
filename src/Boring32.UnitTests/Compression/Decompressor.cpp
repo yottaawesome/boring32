@@ -63,5 +63,39 @@ namespace Compression
 
 				Assert::IsTrue(decompressor.GetDecompressedSize(compressedData) > 0);
 			}
+
+			TEST_METHOD(TestDecompressorGetDecompressedSizeXPRESSHuffman)
+			{
+				const auto type = Boring32::Compression::CompressionType::XPRESSHuffman;
+
+				Boring32::Compression::Compressor compressor(type);
+				const std::byte* buffer = (std::byte*)&m_compressionString[0];
+				const auto compressedData = compressor.CompressBuffer({
+						buffer,
+						buffer + m_compressionString.size()
+					}
+				);
+
+				Boring32::Compression::Decompressor decompressor(type);
+
+				Assert::IsTrue(decompressor.GetDecompressedSize(compressedData) > 0);
+			}
+
+			TEST_METHOD(TestDecompressorGetDecompressedSizeLZMS)
+			{
+				const auto type = Boring32::Compression::CompressionType::LZMS;
+
+				Boring32::Compression::Compressor compressor(type);
+				const std::byte* buffer = (std::byte*)&m_compressionString[0];
+				const auto compressedData = compressor.CompressBuffer({
+						buffer,
+						buffer + m_compressionString.size()
+					}
+				);
+
+				Boring32::Compression::Decompressor decompressor(type);
+
+				Assert::IsTrue(decompressor.GetDecompressedSize(compressedData) > 0);
+			}
 	};
 }
