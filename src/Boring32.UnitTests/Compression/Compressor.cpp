@@ -35,6 +35,17 @@ namespace Compression
 				Assert::IsTrue(compressor1.GetHandle() != compressor2.GetHandle());
 			}
 
+			TEST_METHOD(TestCompressorCopyAssignment)
+			{
+				Boring32::Compression::Compressor compressor1(Boring32::Compression::CompressionType::MSZIP);
+				Boring32::Compression::Compressor compressor2 = compressor1;
+				Assert::IsNotNull(compressor1.GetHandle());
+				Assert::IsTrue(compressor1.GetType() == Boring32::Compression::CompressionType::MSZIP);
+				Assert::IsNotNull(compressor2.GetHandle());
+				Assert::IsTrue(compressor2.GetType() == Boring32::Compression::CompressionType::MSZIP);
+				Assert::IsTrue(compressor1.GetHandle() != compressor2.GetHandle());
+			}
+
 			TEST_METHOD(TestCompressorGetCompressedBytesMSZIP)
 			{
 				Boring32::Compression::Compressor compressor(Boring32::Compression::CompressionType::MSZIP);
