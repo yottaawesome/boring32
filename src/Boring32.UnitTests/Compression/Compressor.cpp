@@ -159,5 +159,17 @@ namespace Compression
 				);
 				Assert::IsTrue(compressed.size() > 0);
 			}
+
+			TEST_METHOD(TestCompressorReset)
+			{
+				Boring32::Compression::Compressor compressor(Boring32::Compression::CompressionType::XPRESSHuffman);
+				const std::byte* buffer = (std::byte*)&m_compressionString[0];
+				std::vector<std::byte> compressed = compressor.CompressBuffer({
+						buffer,
+						buffer + m_compressionString.size()
+					}
+				);
+				compressor.Reset();
+			}
 	};
 }
