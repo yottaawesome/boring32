@@ -171,5 +171,13 @@ namespace Compression
 				);
 				compressor.Reset();
 			}
+
+			TEST_METHOD(TestCompressorClose)
+			{
+				Boring32::Compression::Decompressor compressor(Boring32::Compression::CompressionType::LZMS);
+				compressor.Close();
+				Assert::IsNull(compressor.GetHandle());
+				Assert::IsTrue(compressor.GetType() == Boring32::Compression::CompressionType::NotSet);
+			}
 	};
 }
