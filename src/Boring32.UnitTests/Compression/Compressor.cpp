@@ -12,6 +12,11 @@ namespace Compression
 			const std::string m_compressionString = "Hello world! This buffer will be compressed";
 
 		public:
+			TEST_METHOD(TestCompressorDefaultConstructor)
+			{
+				Boring32::Compression::Compressor compressor;
+			}
+
 			TEST_METHOD(TestCompressorConstructor)
 			{
 				Boring32::Compression::Compressor compressor(Boring32::Compression::CompressionType::MSZIP);
