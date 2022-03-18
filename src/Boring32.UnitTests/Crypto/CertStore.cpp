@@ -55,6 +55,17 @@ namespace Crypto
 				);
 			}
 
+			TEST_METHOD(TestMoveAssignment)
+			{
+				Boring32::Crypto::CertStore store1(L"MY");
+				Boring32::Crypto::CertStore store2 = std::move(store1);
+				Assert::IsNull(store1.GetHandle());
+				Assert::IsNotNull(store2.GetHandle());
+				Assert::IsTrue(
+					Boring32::Crypto::CertStoreType::CurrentUser == store2.GetStoreType()
+				);
+			}
+
 			TEST_METHOD(TestCreateUserCertStore)
 			{
 				Boring32::Crypto::CertStore store(L"MY");
