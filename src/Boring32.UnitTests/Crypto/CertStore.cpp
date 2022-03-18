@@ -16,6 +16,20 @@ namespace Crypto
 				Assert::IsTrue(store.GetStoreType() == Boring32::Crypto::CertStoreType::CurrentUser);
 			}
 
+			TEST_METHOD(TestCopyConstructor)
+			{
+				Boring32::Crypto::CertStore store1(L"MY");
+				Boring32::Crypto::CertStore store2(store1);
+				Assert::IsNotNull(store1.GetHandle());
+				Assert::IsTrue(
+					Boring32::Crypto::CertStoreType::CurrentUser == store1.GetStoreType()
+				);
+				Assert::IsNotNull(store2.GetHandle());
+				Assert::IsTrue(
+					Boring32::Crypto::CertStoreType::CurrentUser == store2.GetStoreType()
+				);
+			}
+
 			TEST_METHOD(TestCreateUserCertStore)
 			{
 				Boring32::Crypto::CertStore store(L"MY");
