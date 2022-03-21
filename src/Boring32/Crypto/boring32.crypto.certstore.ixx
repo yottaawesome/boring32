@@ -69,7 +69,7 @@ export namespace Boring32::Crypto
 			virtual void Close() noexcept;
 			virtual HCERTSTORE GetHandle() const noexcept;
 			virtual const std::wstring& GetName() const noexcept;
-			virtual std::vector<Certificate> GetAll();
+			virtual std::vector<Certificate> GetAll() const;
 			virtual Certificate GetCertByFormattedSubject(
 				const std::wstring& subjectRdn
 			) const;

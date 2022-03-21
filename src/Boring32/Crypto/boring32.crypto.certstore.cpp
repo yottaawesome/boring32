@@ -226,7 +226,7 @@ namespace Boring32::Crypto
 		return m_storeName;
 	}
 
-	std::vector<Certificate> CertStore::GetAll()
+	std::vector<Certificate> CertStore::GetAll() const
 	{
 		if (m_certStore == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": m_certStore is null");
@@ -480,12 +480,11 @@ namespace Boring32::Crypto
 			CERT_STORE_ADD_REPLACE_EXISTING, 
 			nullptr
 		);
-		if (succeeded == false)
-			throw Error::Win32Error(
-				std::source_location::current(),
-				"CertAddCertificateContextToStore()", 
-				GetLastError()
-			);
+		if (!succeeded) throw Error::Win32Error(
+			std::source_location::current(),
+			"CertAddCertificateContextToStore() failed", 
+			GetLastError()
+		);
 	}
 
 	void CertStore::InternalImport(const CRYPTUI_WIZ_IMPORT_SRC_INFO& info)
@@ -503,11 +502,10 @@ namespace Boring32::Crypto
 			&info,
 			m_certStore
 		);
-		if (succeeded == false)
-			throw Error::Win32Error(
-				std::source_location::current(),
-				"CryptUIWizImport() failed",
-				GetLastError()
-			);
+		if (!succeeded) throw Error::Win32Error(
+			std::source_location::current(),
+			"CryptUIWizImport() failed",
+			GetLastError()
+		);
 	}
 }
