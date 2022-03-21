@@ -10,7 +10,13 @@ namespace Crypto
 	TEST_CLASS(Certificate)
 	{
 		public:
-			TEST_METHOD(TestGetCertificate)
+			TEST_METHOD(TestDefaultConstructor)
+			{
+				Boring32::Crypto::Certificate cert;
+				Assert::IsNull(cert.GetCert());
+			}
+
+			TEST_METHOD(TestGetSignatureHashCngAlgorithm)
 			{
 				Boring32::Crypto::CertStore certStore(L"MY");
 				Boring32::Crypto::Certificate cert 
