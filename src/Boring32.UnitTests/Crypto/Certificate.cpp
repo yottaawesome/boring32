@@ -32,6 +32,15 @@ namespace Crypto
 				Assert::IsTrue(cert.GetSignatureHashCngAlgorithm() == L"RSA/SHA256");
 			}
 
+			TEST_METHOD(TestCopyConstructor)
+			{
+				Boring32::Crypto::CertStore certStore(L"MY");
+				Boring32::Crypto::Certificate cert1 = certStore.GetCertBySubjectCn(L"client.localhost");
+				Boring32::Crypto::Certificate cert2(cert1);
+				Assert::IsNotNull(cert1.GetCert());
+				Assert::IsNotNull(cert2.GetCert());
+			}
+
 			TEST_METHOD(TestCopyAssignment)
 			{
 				Boring32::Crypto::CertStore certStore(L"MY");
