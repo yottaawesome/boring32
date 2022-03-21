@@ -49,5 +49,23 @@ namespace Crypto
 				Assert::IsNotNull(cert1.GetCert());
 				Assert::IsNotNull(cert2.GetCert());
 			}
+
+			TEST_METHOD(TestMoveConstructor)
+			{
+				Boring32::Crypto::CertStore certStore(L"MY");
+				Boring32::Crypto::Certificate cert1 = certStore.GetCertBySubjectCn(L"client.localhost");
+				Boring32::Crypto::Certificate cert2(std::move(cert1));
+				Assert::IsNull(cert1.GetCert());
+				Assert::IsNotNull(cert2.GetCert());
+			}
+
+			TEST_METHOD(TestMoveAssignment)
+			{
+				Boring32::Crypto::CertStore certStore(L"MY");
+				Boring32::Crypto::Certificate cert1 = certStore.GetCertBySubjectCn(L"client.localhost");
+				Boring32::Crypto::Certificate cert2 = std::move(cert1);
+				Assert::IsNull(cert1.GetCert());
+				Assert::IsNotNull(cert2.GetCert());
+			}
 	};
 }
