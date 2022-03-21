@@ -67,5 +67,13 @@ namespace Crypto
 				Assert::IsNull(cert1.GetCert());
 				Assert::IsNotNull(cert2.GetCert());
 			}
+
+			TEST_METHOD(TestClose)
+			{
+				Boring32::Crypto::CertStore certStore(L"MY");
+				Boring32::Crypto::Certificate cert1 = certStore.GetCertBySubjectCn(L"client.localhost");
+				cert1.Close();
+				Assert::IsNull(cert1.GetCert());
+			}
 	};
 }
