@@ -1,5 +1,6 @@
 ﻿#include <format>
 #include <iostream>
+#include <vector>
 #include <stdexcept>
 #include <source_location>
 #include <windows.h>
@@ -78,14 +79,6 @@ void PrintFileVersion()
 	std::wcout
 		<< Boring32::FileSystem::GetFileVersion(LR"(C:\Program Files\Notepad++\notepad++.exe)")
 		<< std::endl;
-}
-
-void SocketTest()
-{
-	Boring32::WinSock::WinSockInit init(2,2);
-	Boring32::WinSock::Socket socket(L"www.google.com", 80);
-	socket.Connect();
-	socket.Send({ std::byte(0x5) });
 }
 
 struct Q
@@ -171,6 +164,14 @@ void Compression()
 	//throw Boring32::Compression::CompressionError(std::source_location::current(), "Blah");
 	Boring32::Compression::Decompressor decompressor(Boring32::Compression::CompressionType::MSZIP);
 	auto x = decompressor.DecompressBuffer({ std::byte(0x1), std::byte(0x2) });
+}
+
+void SocketTest()
+{
+	Boring32::WinSock::WinSockInit init(2, 2);
+	Boring32::WinSock::Socket socket(L"www.google.com", 80);
+	socket.Connect();
+	socket.Send({ std::byte(0x5) });
 }
 
 int main(int argc, char** args) try

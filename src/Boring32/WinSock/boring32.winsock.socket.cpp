@@ -24,7 +24,8 @@ namespace Boring32::WinSock
 
 	Socket::Socket(const std::wstring host, const unsigned portNumber)
 		: m_host(std::move(host)),
-		m_portNumber(portNumber)
+		m_portNumber(portNumber),
+		m_preconnectTTL(0)
 	{ }
 
 	Socket::Socket(Socket&& other) noexcept = default;
@@ -89,6 +90,11 @@ namespace Boring32::WinSock
 		);
 	}
 
+	void Socket::SetPreconnectTTL(const DWORD ttl)
+	{
+		m_preconnectTTL = ttl;
+	}
+
 	void Socket::Connect()
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/ws2def/ns-ws2def-addrinfow
@@ -121,13 +127,14 @@ namespace Boring32::WinSock
 				currentAddr->ai_socktype,
 				currentAddr->ai_protocol
 			);
-			if (m_socket == INVALID_SOCKET)
-				throw WinSockError(
-					std::source_location::current(), 
-					"socket() failed", 
-					WSAGetLastError()
-				);
-
+			if (m_socket == INVALID_SOCKET) throw WinSockError(
+				std::source_location::current(), 
+				"socket() failed", 
+				WSAGetLastError()
+			);
+			m_addressFamily = currentAddr->ai_family;
+			if (m_preconnectTTL)
+				SetSocketTTL(m_preconnectTTL);
 			// Connect to server.
 			const int connectionResult = connect(
 				m_socket,
@@ -142,12 +149,11 @@ namespace Boring32::WinSock
 			else
 			{
 				// Couldn't connect; free the socket and try the next entry.
-				if (closesocket(m_socket) == SOCKET_ERROR)
-					throw WinSockError(
-						std::source_location::current(),
-						"closesocket() failed",
-						WSAGetLastError()
-					);
+				if (closesocket(m_socket) == SOCKET_ERROR) throw WinSockError(
+					std::source_location::current(),
+					"closesocket() failed",
+					WSAGetLastError()
+				);
 				m_socket = INVALID_SOCKET;
 			}
 		}
