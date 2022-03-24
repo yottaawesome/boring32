@@ -34,6 +34,10 @@ export namespace Boring32::WinSock
 		public:
 			virtual const std::wstring& GetHost() const noexcept;
 			virtual unsigned GetPort() const noexcept;
+			virtual SOCKET GetHandle() const noexcept;
+
+		protected:
+			virtual Socket& Move(Socket& other) noexcept;
 
 		protected:
 			std::wstring m_host;

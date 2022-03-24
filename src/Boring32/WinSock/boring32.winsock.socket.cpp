@@ -37,9 +37,28 @@ namespace Boring32::WinSock
 		m_preconnectTTL(0)
 	{ }
 
-	Socket::Socket(Socket&& other) noexcept = default;
+	Socket::Socket(Socket&& other) noexcept
+	{
+		Move(other);
+	}
 
-	Socket& Socket::operator=(Socket&& other) noexcept = default;
+	Socket& Socket::operator=(Socket&& other) noexcept
+	{
+		return Move(other);
+	}
+
+	Socket& Socket::Move(Socket& other) noexcept
+	{
+		Close();
+		m_host = std::move(other.m_host);
+		m_portNumber = other.m_portNumber;
+		m_socket = other.m_socket;
+		other.m_socket = 0;
+		m_addressFamily = other.m_addressFamily;
+		m_preconnectTTL = other.m_preconnectTTL;
+
+		return *this;
+	}
 
 	void Socket::SetSocketTTL(const DWORD ttl)
 	{
@@ -224,5 +243,10 @@ namespace Boring32::WinSock
 	unsigned Socket::GetPort() const noexcept
 	{
 		return m_portNumber;
+	}
+
+	SOCKET Socket::GetHandle() const noexcept
+	{
+		return m_socket;
 	}
 }
