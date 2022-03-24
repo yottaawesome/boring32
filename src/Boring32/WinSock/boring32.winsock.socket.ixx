@@ -14,6 +14,7 @@ export namespace Boring32::WinSock
 	{
 		public:
 			virtual ~Socket();
+			Socket();
 			Socket(const Socket& other) = delete;
 			Socket(Socket&& other) noexcept;
 			Socket(const std::wstring host, const unsigned portNumber);

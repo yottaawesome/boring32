@@ -22,9 +22,18 @@ namespace Boring32::WinSock
 		Close();
 	}
 
+	Socket::Socket()
+		: m_portNumber(0),
+		m_socket(0),
+		m_addressFamily(0),
+		m_preconnectTTL(0)
+	{ }
+
 	Socket::Socket(const std::wstring host, const unsigned portNumber)
 		: m_host(std::move(host)),
 		m_portNumber(portNumber),
+		m_socket(0),
+		m_addressFamily(0),
 		m_preconnectTTL(0)
 	{ }
 
