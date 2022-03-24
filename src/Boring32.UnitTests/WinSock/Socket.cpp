@@ -17,5 +17,11 @@ namespace WinSock
 				Boring32::WinSock::WinSockInit init(2,2);
 				Boring32::WinSock::Socket socket;
 			}
+
+			TEST_METHOD(TestBasicConstructor)
+			{
+				Boring32::WinSock::WinSockInit init(2, 2);
+				Boring32::WinSock::Socket socket(L"www.google.com", 80);
+			}
 	};
 }
