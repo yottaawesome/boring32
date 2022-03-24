@@ -23,5 +23,20 @@ namespace WinSock
 				Boring32::WinSock::WinSockInit init(2, 2);
 				Boring32::WinSock::Socket socket(L"www.google.com", 80);
 			}
+
+			TEST_METHOD(TestConnect)
+			{
+				Boring32::WinSock::WinSockInit init(2, 2);
+				Boring32::WinSock::Socket socket(L"www.google.com", 80);
+				socket.Connect();
+			}
+
+			TEST_METHOD(TestSendPacket)
+			{
+				Boring32::WinSock::WinSockInit init(2, 2);
+				Boring32::WinSock::Socket socket(L"www.google.com", 80);
+				socket.Connect();
+				socket.Send({ std::byte(0x5) });
+			}
 	};
 }
