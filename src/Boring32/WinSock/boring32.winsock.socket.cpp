@@ -64,14 +64,13 @@ namespace Boring32::WinSock
 
 	void Socket::SetSocketTTL(const DWORD ttl)
 	{
-		if (!m_socket || m_socket == INVALID_SOCKET) throw WinSockError(
+		if (!m_socket || m_socket == InvalidSocket) throw WinSockError(
 			std::source_location::current(),
 			"Not in a valid state to set TTL support"
 		);
 
 		DWORD layer;
 		DWORD argument;
-
 		switch (m_addressFamily)
 		{
 			case AF_INET:
@@ -148,8 +147,8 @@ namespace Boring32::WinSock
 
 		AddrInfoWUniquePtr addrPtr = AddrInfoWUniquePtr(addrResult);
 		// Attempt to connect to an address until one succeeds
-		m_socket = INVALID_SOCKET;
-		for (ADDRINFOW* currentAddr = addrResult; currentAddr != nullptr && m_socket == INVALID_SOCKET; currentAddr = currentAddr->ai_next)
+		m_socket = InvalidSocket;
+		for (ADDRINFOW* currentAddr = addrResult; currentAddr != nullptr && m_socket == InvalidSocket; currentAddr = currentAddr->ai_next)
 		{
 			// Create a SOCKET for connecting to server
 			m_socket = socket(
@@ -157,7 +156,7 @@ namespace Boring32::WinSock
 				currentAddr->ai_socktype,
 				currentAddr->ai_protocol
 			);
-			if (m_socket == INVALID_SOCKET) throw WinSockError(
+			if (m_socket == InvalidSocket) throw WinSockError(
 				std::source_location::current(), 
 				"socket() failed", 
 				WSAGetLastError()
@@ -184,12 +183,12 @@ namespace Boring32::WinSock
 					"closesocket() failed",
 					WSAGetLastError()
 				);
-				m_socket = INVALID_SOCKET;
+				m_socket = InvalidSocket;
 			}
 		}
 
 		// Failed connecting in all cases.
-		if (m_socket == INVALID_SOCKET)
+		if (m_socket == InvalidSocket)
 		{
 			const std::string errorMsg = std::format(
 				"Failed connecting to server {}:{}", 
@@ -213,7 +212,7 @@ namespace Boring32::WinSock
 
 	void Socket::Send(const std::vector<std::byte>& data)
 	{
-		if (!m_socket || m_socket == INVALID_SOCKET)
+		if (!m_socket || m_socket == InvalidSocket)
 			throw Error::ErrorBase<std::runtime_error>(std::source_location::current(), "Socket is not valid");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-send
@@ -229,8 +228,8 @@ namespace Boring32::WinSock
 
 	std::vector<std::byte> Socket::Receive(const unsigned bytesToRead)
 	{
-		if (!m_socket || m_socket == INVALID_SOCKET)
-			throw Error::ErrorBase<std::runtime_error>(std::source_location::current(), "Socket is not valid");
+		if (!m_socket || m_socket == InvalidSocket)
+			throw WinSockError(std::source_location::current(), "Socket is not valid");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-recv
 		std::vector<std::byte> recvbuf(bytesToRead);
