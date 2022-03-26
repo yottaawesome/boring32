@@ -61,7 +61,7 @@ namespace Async
 				Assert::IsTrue(testEvent2.WaitOnEvent(0, true));
 			}
 
-			TEST_METHOD(TestAssignment)
+			TEST_METHOD(TestCopyAssignment)
 			{
 				Boring32::Async::Event testEvent1(true, true, true, L"TestEvent");
 				Boring32::Async::Event testEvent2 = testEvent1;
@@ -70,7 +70,15 @@ namespace Async
 				Assert::IsTrue(testEvent2.WaitOnEvent(0, true));
 			}
 
-			TEST_METHOD(TestMove)
+			TEST_METHOD(TestMoveConstructor)
+			{
+				Boring32::Async::Event testEvent(Boring32::Async::Event(true, true, true, L"TestEvent"));
+				Assert::IsNotNull(testEvent.GetHandle());
+				Assert::IsTrue(testEvent.GetName() == L"TestEvent");
+				Assert::IsTrue(testEvent.WaitOnEvent(0, true));
+			}
+
+			TEST_METHOD(TestMoveAssignment)
 			{
 				Boring32::Async::Event testEvent = Boring32::Async::Event(true, true, true, L"TestEvent");
 				Assert::IsNotNull(testEvent.GetHandle());
@@ -85,6 +93,13 @@ namespace Async
 						Boring32::Async::Event testEvent;
 						Assert::IsTrue(testEvent.WaitOnEvent(0, true));
 					});
+			}
+
+			TEST_METHOD(TestClose)
+			{
+				Boring32::Async::Event testEvent(true, true, true, L"TestEvent");
+				testEvent.Close();
+				Assert::IsNull(testEvent.GetHandle());
 			}
 	};
 }
