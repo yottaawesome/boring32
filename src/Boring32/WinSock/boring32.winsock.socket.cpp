@@ -17,6 +17,8 @@ import boring32.strings;
 
 namespace Boring32::WinSock
 {	
+	const SOCKET Socket::InvalidSocket = INVALID_SOCKET;
+
 	Socket::~Socket()
 	{
 		Close();
@@ -24,7 +26,7 @@ namespace Boring32::WinSock
 
 	Socket::Socket()
 		: m_portNumber(0),
-		m_socket(0),
+		m_socket(InvalidSocket),
 		m_addressFamily(0),
 		m_preconnectTTL(0)
 	{ }
@@ -32,7 +34,7 @@ namespace Boring32::WinSock
 	Socket::Socket(const std::wstring host, const unsigned portNumber)
 		: m_host(std::move(host)),
 		m_portNumber(portNumber),
-		m_socket(0),
+		m_socket(InvalidSocket),
 		m_addressFamily(0),
 		m_preconnectTTL(0)
 	{ }
@@ -53,7 +55,7 @@ namespace Boring32::WinSock
 		m_host = std::move(other.m_host);
 		m_portNumber = other.m_portNumber;
 		m_socket = other.m_socket;
-		other.m_socket = 0;
+		other.m_socket = InvalidSocket;
 		m_addressFamily = other.m_addressFamily;
 		m_preconnectTTL = other.m_preconnectTTL;
 
@@ -138,11 +140,11 @@ namespace Boring32::WinSock
 		const int status = GetAddrInfoW(
 			m_host.c_str(),
 			m_portNumber ? std::to_wstring(m_portNumber).c_str() : nullptr,
-			&hints,
+			nullptr,
 			&addrResult
 		);
 		if (status)
-			throw WinSockError(std::source_location::current(), "GetAddreInfoW() failed", status);
+			throw WinSockError(std::source_location::current(), "GetAddrInfoW() failed", status);
 
 		AddrInfoWUniquePtr addrPtr = AddrInfoWUniquePtr(addrResult);
 		// Attempt to connect to an address until one succeeds
@@ -200,8 +202,13 @@ namespace Boring32::WinSock
 
 	void Socket::Close()
 	{
-		if (m_socket && m_socket != INVALID_SOCKET)
-			closesocket(m_socket);
+		if (!m_socket)
+			return;
+		if (m_socket == InvalidSocket)
+			return;
+
+		closesocket(m_socket);
+		m_socket = InvalidSocket;
 	}
 
 	void Socket::Send(const std::vector<std::byte>& data)

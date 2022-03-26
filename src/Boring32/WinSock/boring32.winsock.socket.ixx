@@ -13,6 +13,9 @@ export namespace Boring32::WinSock
 	class Socket
 	{
 		public:
+			static const SOCKET InvalidSocket;
+
+		public:
 			virtual ~Socket();
 			Socket();
 			Socket(const Socket& other) = delete;

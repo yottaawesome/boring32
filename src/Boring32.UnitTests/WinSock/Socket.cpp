@@ -24,7 +24,7 @@ namespace WinSock
 				Boring32::WinSock::Socket socket1(L"www.google.com", 80);
 				socket1.Connect();
 				Boring32::WinSock::Socket socket2(std::move(socket1));
-				Assert::IsTrue(socket1.GetHandle() == 0);
+				Assert::IsTrue(socket1.GetHandle() == Boring32::WinSock::Socket::InvalidSocket);
 				Assert::IsTrue(socket2.GetHandle() > 0);
 			}
 
@@ -35,7 +35,7 @@ namespace WinSock
 				socket1.Connect();
 				Boring32::WinSock::Socket socket2;
 				socket2 = std::move(socket1);
-				Assert::IsTrue(socket1.GetHandle() == 0);
+				Assert::IsTrue(socket1.GetHandle() == Boring32::WinSock::Socket::InvalidSocket);
 				Assert::IsTrue(socket2.GetHandle() > 0);
 			}
 
@@ -58,6 +58,15 @@ namespace WinSock
 				Boring32::WinSock::Socket socket(L"www.google.com", 80);
 				socket.Connect();
 				socket.Send({ std::byte(0x5) });
+			}
+
+			TEST_METHOD(TestClose)
+			{
+				Boring32::WinSock::WinSockInit init(2, 2);
+				Boring32::WinSock::Socket socket(L"www.google.com", 80);
+				socket.Connect();
+				socket.Close();
+				Assert::IsTrue(socket.GetHandle() == Boring32::WinSock::Socket::InvalidSocket);
 			}
 	};
 }
