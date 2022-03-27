@@ -403,5 +403,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Compression\boring32.compression.deleters.ixx" />
+    <ClCompile Include="Registry\boring32.registry.value.ixx" />
   </ItemGroup>
 </Project>

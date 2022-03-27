@@ -1,0 +1,32 @@
+module;
+
+#include <Windows.h>
+
+export module boring32.registry.value;
+
+export namespace Boring32::Registry
+{
+	// https://docs.microsoft.com/en-us/windows/win32/sysinfo/registry-value-types
+	enum class ValueTypes
+	{
+		Binary = REG_BINARY,
+		DWord = REG_DWORD,
+		DWordLittleEndian = REG_DWORD_LITTLE_ENDIAN,
+		DWordBigEndian = REG_DWORD_BIG_ENDIAN,
+		ExpandableString = REG_EXPAND_SZ,
+		Link = REG_LINK,
+		MultiString = REG_MULTI_SZ,
+		None = REG_NONE,
+		QWord = REG_QWORD,
+		QWordLittleEndian = REG_QWORD_LITTLE_ENDIAN,
+		String = REG_SZ,
+	};
+
+	template<ValueTypes>
+	class Value
+	{
+		public:
+			virtual ~Value() { }
+			Value() { }
+	};
+}
