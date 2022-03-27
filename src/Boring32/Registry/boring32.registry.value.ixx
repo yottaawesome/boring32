@@ -1,5 +1,6 @@
 module;
 
+#include <string>
 #include <Windows.h>
 
 export module boring32.registry.value;
@@ -22,11 +23,35 @@ export namespace Boring32::Registry
 		String = REG_SZ,
 	};
 
-	template<ValueTypes>
+	template<typename T>
 	class Value
 	{
 		public:
 			virtual ~Value() { }
-			Value() { }
+			Value(const Value& other) = default;
+			Value(Value&& other) noexcept = default;
+			Value(
+				const std::wstring& path,
+				const std::wstring& valueName,
+				const T value
+			)
+				: m_path(path),
+				m_valueName(valueName),
+				m_value(std::move(value))
+			{ }
+			
+		public:
+			virtual Value& operator=(const Value& other) = default;
+			virtual Value& operator=(Value&& other) noexcept = default;
+
+		public:
+			virtual const std::wstring& GetPath() const noexcept { return m_path; }
+			virtual const std::wstring& GetValueName() const noexcept { return m_valueName; }
+			virtual const T& GetValue() const noexcept { return m_value; }
+
+		protected:
+			std::wstring m_path;
+			std::wstring m_valueName;
+			T m_value;
 	};
 }

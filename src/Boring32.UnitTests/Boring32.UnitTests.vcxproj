@@ -174,7 +174,7 @@
     <ClCompile Include="Crypto\AesEncryption.cpp" />
     <ClCompile Include="Crypto\Certificate.cpp" />
     <ClCompile Include="Crypto\CertStore.cpp" />
-    <ClCompile Include="Async\Async\Event..cpp" />
+    <ClCompile Include="Async\Async\Event.cpp" />
     <ClCompile Include="Async\Async\EventLoop.cpp" />
     <ClCompile Include="Async\Async\Mutex.cpp" />
     <ClCompile Include="Async\Async\WaitableTimer.cpp" />
