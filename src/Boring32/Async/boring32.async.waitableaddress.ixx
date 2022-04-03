@@ -35,6 +35,7 @@ export namespace Boring32::Async
 			virtual DWORD GetDefaultValue() const noexcept;
 
 		protected:
+			// These might probably be best extracted into their own template class
 			DWORD m_defaultValue;
 			DWORD m_waitValue;
 	};
