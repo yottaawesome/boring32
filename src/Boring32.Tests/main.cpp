@@ -178,6 +178,7 @@ void SocketTest()
 int main(int argc, char** args) try
 {
 	//Compression();
+	std::wcout << GetCurrentProcessId() << std::endl;
 	SocketTest();
 	return 0;
 }

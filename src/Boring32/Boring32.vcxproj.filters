@@ -404,5 +404,9 @@
     </ClCompile>
     <ClCompile Include="Compression\boring32.compression.deleters.ixx" />
     <ClCompile Include="Registry\boring32.registry.value.ixx" />
+    <ClCompile Include="Async\boring32.async.waitableaddress.ixx" />
+    <ClCompile Include="Async\boring32.async.waitableaddress.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

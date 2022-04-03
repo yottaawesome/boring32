@@ -187,6 +187,8 @@
     <ClCompile Include="Async\boring32.async.processinfo.ixx" />
     <ClCompile Include="Async\boring32.async.slimreadwritelock.ixx" />
     <ClCompile Include="Async\boring32.async.thread.ixx" />
+    <ClCompile Include="Async\boring32.async.waitableaddress.cpp" />
+    <ClCompile Include="Async\boring32.async.waitableaddress.ixx" />
     <ClCompile Include="Async\boring32.async.waitabletimert.ixx" />
     <ClCompile Include="Async\boring32.async.criticalsectionlock.ixx" />
     <ClCompile Include="Async\boring32.async.event.ixx" />

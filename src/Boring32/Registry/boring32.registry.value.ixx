@@ -1,6 +1,7 @@
 module;
 
 #include <string>
+#include <tuple>
 #include <Windows.h>
 
 export module boring32.registry.value;
@@ -23,6 +24,17 @@ export namespace Boring32::Registry
 		String = REG_SZ,
 	};
 
+	template<ValueTypes V, typename T>
+	struct KeyValuePair
+	{
+		ValueTypes V;
+		using LanguageType = T;
+	};
+	template<>
+	struct KeyValuePair<ValueTypes::String, std::string> { void Blah() {} };
+
+
+
 	template<typename T>
 	class Value
 	{
@@ -38,7 +50,8 @@ export namespace Boring32::Registry
 				: m_path(path),
 				m_valueName(valueName),
 				m_value(std::move(value))
-			{ }
+			{
+			}
 			
 		public:
 			virtual Value& operator=(const Value& other) = default;
