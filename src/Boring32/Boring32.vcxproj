@@ -271,9 +271,16 @@
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform.callout.ixx" />
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform.engine.ixx" />
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform.filter.ixx" />
+    <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform.functions.ixx" />
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform.ixx" />
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform.provider.ixx" />
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform.providercontext.ixx" />
+    <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform.callout.cpp" />
+    <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform.engine.cpp" />
+    <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform.filter.cpp" />
+    <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform.functions.cpp" />
+    <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform.provider.cpp" />
+    <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform.providercontext.cpp" />
     <ClCompile Include="WinHttp\boring32.winhttp.httpwebclient.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp.proxyinfo.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp.requestresult.ixx" />
