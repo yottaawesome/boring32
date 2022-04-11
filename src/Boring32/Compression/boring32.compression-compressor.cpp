@@ -6,7 +6,7 @@ module;
 #include <Windows.h>
 #include <compressapi.h>
 
-module boring32.compression.compressor;
+module boring32.compression:compressor;
 import boring32.compression.compressionerror;
 import boring32.error.win32error;
 import boring32.error.functions;

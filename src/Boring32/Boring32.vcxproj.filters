@@ -128,7 +128,7 @@
     <ClCompile Include="Error\boring32.error.comerror.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Compression\boring32.compression.compressor.cpp">
+    <ClCompile Include="Compression\boring32.compression-compressor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Compression\boring32.compression.decompressor.cpp">
@@ -246,7 +246,7 @@
     <ClCompile Include="Guid\boring32.guid.ixx" />
     <ClCompile Include="Com\boring32.com.comthreadscope.ixx" />
     <ClCompile Include="Compression\boring32.compression.ixx" />
-    <ClCompile Include="Compression\boring32.compression.compressor.ixx" />
+    <ClCompile Include="Compression\boring32.compression-compressor.ixx" />
     <ClCompile Include="Compression\boring32.compression.decompressor.ixx" />
     <ClCompile Include="Compression\boring32.compression.compressiontype.ixx" />
     <ClCompile Include="Time\boring32.time.ixx" />
