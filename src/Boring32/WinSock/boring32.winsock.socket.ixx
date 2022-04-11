@@ -28,11 +28,12 @@ export namespace Boring32::WinSock
 
 		public:
 			virtual void Connect();
+			virtual void Connect(const DWORD socketTTL, const DWORD maxRetryTimeout);
 			virtual void Close();
 			virtual void Send(const std::vector<std::byte>& data);
 			virtual std::vector<std::byte> Receive(const unsigned bytesToRead);
 			virtual void SetSocketTTL(const DWORD ttl);
-			virtual void SetPreconnectTTL(const DWORD ttl);
+			virtual void SetMaxRetryTimeout(const DWORD timeoutSeconds);
 
 		public:
 			virtual const std::wstring& GetHost() const noexcept;
@@ -47,6 +48,5 @@ export namespace Boring32::WinSock
 			unsigned m_portNumber;
 			SOCKET m_socket; // doesn't work with unique_ptr
 			int m_addressFamily;
-			DWORD m_preconnectTTL;
 	};
 }

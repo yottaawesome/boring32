@@ -170,8 +170,7 @@ void SocketTest()
 {
 	Boring32::WinSock::WinSockInit init(2, 2);
 	Boring32::WinSock::Socket socket(L"142.250.70.164", 80);
-	socket.SetPreconnectTTL(1);
-	socket.Connect();
+	socket.Connect(1, 1);
 	socket.Send({ std::byte(0x5) });
 }
 

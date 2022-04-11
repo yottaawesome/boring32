@@ -27,16 +27,14 @@ namespace Boring32::WinSock
 	Socket::Socket()
 		: m_portNumber(0),
 		m_socket(InvalidSocket),
-		m_addressFamily(0),
-		m_preconnectTTL(0)
+		m_addressFamily(0)
 	{ }
 
 	Socket::Socket(const std::wstring host, const unsigned portNumber)
 		: m_host(std::move(host)),
 		m_portNumber(portNumber),
 		m_socket(InvalidSocket),
-		m_addressFamily(0),
-		m_preconnectTTL(0)
+		m_addressFamily(0)
 	{ }
 
 	Socket::Socket(Socket&& other) noexcept
@@ -57,7 +55,6 @@ namespace Boring32::WinSock
 		m_socket = other.m_socket;
 		other.m_socket = InvalidSocket;
 		m_addressFamily = other.m_addressFamily;
-		m_preconnectTTL = other.m_preconnectTTL;
 
 		return *this;
 	}
@@ -118,13 +115,13 @@ namespace Boring32::WinSock
 			WSAGetLastError()
 		);
 	}
-
-	void Socket::SetPreconnectTTL(const DWORD ttl)
+	
+	void Socket::Connect()
 	{
-		m_preconnectTTL = ttl;
+		Connect(0, 0);
 	}
 
-	void Socket::Connect()
+	void Socket::Connect(const DWORD socketTTL, const DWORD maxRetryTimeout)
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/ws2def/ns-ws2def-addrinfow
 		ADDRINFOW hints
@@ -162,20 +159,20 @@ namespace Boring32::WinSock
 				WSAGetLastError()
 			);
 			m_addressFamily = currentAddr->ai_family;
-			if (m_preconnectTTL)
-				SetSocketTTL(m_preconnectTTL);
+
+			// Option not supported https://docs.microsoft.com/en-us/windows/win32/winsock/ipproto-tcp-socket-options
+			if (socketTTL)
+				SetSocketTTL(socketTTL);
+			if (maxRetryTimeout)
+				SetMaxRetryTimeout(maxRetryTimeout);
+
 			// Connect to server.
 			const int connectionResult = connect(
 				m_socket,
 				currentAddr->ai_addr, 
 				static_cast<int>(currentAddr->ai_addrlen)
 			);
-			// Connected successfully.
-			if (connectionResult != SOCKET_ERROR)
-			{
-				m_addressFamily = currentAddr->ai_family;
-			}
-			else
+			if (connectionResult == SOCKET_ERROR)
 			{
 				// Couldn't connect; free the socket and try the next entry.
 				if (closesocket(m_socket) == SOCKET_ERROR) throw WinSockError(
@@ -254,5 +251,43 @@ namespace Boring32::WinSock
 	SOCKET Socket::GetHandle() const noexcept
 	{
 		return m_socket;
+	}
+
+	void Socket::SetMaxRetryTimeout(const DWORD timeoutSeconds)
+	{
+		if (!m_socket || m_socket == InvalidSocket) throw WinSockError(
+			std::source_location::current(),
+			"Not in a valid state to set TTL support"
+		);
+
+		// Query support for the argument
+		DWORD optVal;
+		int optLen = sizeof(optVal);
+		int optResult = getsockopt(
+			m_socket,
+			IPPROTO_TCP,
+			TCP_MAXRT,
+			reinterpret_cast<char*>(&optVal),
+			&optLen
+		);
+		if (optResult == SOCKET_ERROR) throw WinSockError(
+			std::source_location::current(),
+			"RT option is not supported",
+			WSAGetLastError()
+		);
+
+		optVal = timeoutSeconds;
+		optResult = setsockopt(
+			m_socket,
+			IPPROTO_TCP,
+			TCP_MAXRT,
+			reinterpret_cast<char*>(&optVal),
+			optLen
+		);
+		if (optResult == SOCKET_ERROR) throw WinSockError(
+			std::source_location::current(),
+			"setsockopt() failed",
+			WSAGetLastError()
+		);
 	}
 }
