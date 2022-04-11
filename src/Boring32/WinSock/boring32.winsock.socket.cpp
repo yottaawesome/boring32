@@ -133,9 +133,10 @@ namespace Boring32::WinSock
 
 		ADDRINFOW* addrResult;
 		// https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-getaddrinfow
+		std::wstring portNumber = m_portNumber ? std::to_wstring(m_portNumber) : L"";
 		const int status = GetAddrInfoW(
 			m_host.c_str(),
-			m_portNumber ? std::to_wstring(m_portNumber).c_str() : nullptr,
+			portNumber.c_str(),
 			nullptr,
 			&addrResult
 		);
