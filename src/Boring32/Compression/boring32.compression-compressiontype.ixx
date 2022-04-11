@@ -2,7 +2,7 @@ module;
 
 #include <Windows.h>
 
-export module boring32.compression.compressiontype;
+export module boring32.compression:compressiontype;
 
 export namespace Boring32::Compression
 {

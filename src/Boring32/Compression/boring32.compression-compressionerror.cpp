@@ -4,7 +4,7 @@ module;
 #include <stdexcept>
 #include <string>
 
-module boring32.compression.compressionerror;
+module boring32.compression:compressionerror;
 import boring32.error.functions;
 
 namespace Boring32::Compression

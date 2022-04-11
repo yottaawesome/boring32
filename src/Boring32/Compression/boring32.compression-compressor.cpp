@@ -7,7 +7,7 @@ module;
 #include <compressapi.h>
 
 module boring32.compression:compressor;
-import boring32.compression.compressionerror;
+import :compressionerror;
 import boring32.error.win32error;
 import boring32.error.functions;
 

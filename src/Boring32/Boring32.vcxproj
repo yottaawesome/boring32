@@ -202,9 +202,9 @@
     <ClCompile Include="Async\boring32.async.threadsafevector.ixx" />
     <ClCompile Include="Async\boring32.async.timerqueuetimer.ixx" />
     <ClCompile Include="Async\boring32.async.timerqueuetimercallback.ixx" />
-    <ClCompile Include="Compression\boring32.compression.compressionerror.cpp" />
-    <ClCompile Include="Compression\boring32.compression.compressionerror.ixx" />
-    <ClCompile Include="Compression\boring32.compression.deleters.ixx" />
+    <ClCompile Include="Compression\boring32.compression-compressionerror.cpp" />
+    <ClCompile Include="Compression\boring32.compression-compressionerror.ixx" />
+    <ClCompile Include="Compression\boring32.compression-deleters.ixx" />
     <ClCompile Include="Com\boring32.com.ixx" />
     <ClCompile Include="Crypto\boring32.crypto.aesencryption.ixx" />
     <ClCompile Include="Crypto\boring32.crypto.certificate.ixx" />
@@ -322,11 +322,11 @@
     <ClCompile Include="Async\boring32.async.timerqueuetimercallback.cpp" />
     <ClCompile Include="Async\boring32.async.waitabletimer.cpp" />
     <ClCompile Include="Compression\boring32.compression-compressor.ixx" />
-    <ClCompile Include="Compression\boring32.compression.decompressor.ixx" />
+    <ClCompile Include="Compression\boring32.compression-decompressor.ixx" />
     <ClCompile Include="Compression\boring32.compression.ixx" />
-    <ClCompile Include="Compression\boring32.compression.compressiontype.ixx" />
+    <ClCompile Include="Compression\boring32.compression-compressiontype.ixx" />
     <ClCompile Include="Compression\boring32.compression-compressor.cpp" />
-    <ClCompile Include="Compression\boring32.compression.decompressor.cpp" />
+    <ClCompile Include="Compression\boring32.compression-decompressor.cpp" />
     <ClCompile Include="Com\boring32.com.comthreadscope.ixx" />
     <ClCompile Include="Com\boring32.com.comthreadscope.cpp" />
     <ClCompile Include="Crypto\boring32.crypto.aesencryption.cpp" />

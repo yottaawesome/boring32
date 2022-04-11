@@ -131,7 +131,7 @@
     <ClCompile Include="Compression\boring32.compression-compressor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Compression\boring32.compression.decompressor.cpp">
+    <ClCompile Include="Compression\boring32.compression-decompressor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Async\boring32.async.timerqueue.cpp">
@@ -247,8 +247,8 @@
     <ClCompile Include="Com\boring32.com.comthreadscope.ixx" />
     <ClCompile Include="Compression\boring32.compression.ixx" />
     <ClCompile Include="Compression\boring32.compression-compressor.ixx" />
-    <ClCompile Include="Compression\boring32.compression.decompressor.ixx" />
-    <ClCompile Include="Compression\boring32.compression.compressiontype.ixx" />
+    <ClCompile Include="Compression\boring32.compression-decompressor.ixx" />
+    <ClCompile Include="Compression\boring32.compression-compressiontype.ixx" />
     <ClCompile Include="Time\boring32.time.ixx" />
     <ClCompile Include="Process\boring32.process.dynamiclinklibrary.ixx" />
     <ClCompile Include="Util\boring32.util.ixx" />
@@ -398,11 +398,11 @@
     <ClCompile Include="XAudio2\boring32.xaudio2.xaudio2error.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Compression\boring32.compression.compressionerror.ixx" />
-    <ClCompile Include="Compression\boring32.compression.compressionerror.cpp">
+    <ClCompile Include="Compression\boring32.compression-compressionerror.ixx" />
+    <ClCompile Include="Compression\boring32.compression-compressionerror.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Compression\boring32.compression.deleters.ixx" />
+    <ClCompile Include="Compression\boring32.compression-deleters.ixx" />
     <ClCompile Include="Registry\boring32.registry.value.ixx" />
     <ClCompile Include="Async\boring32.async.waitableaddress.ixx" />
     <ClCompile Include="Async\boring32.async.waitableaddress.cpp">
