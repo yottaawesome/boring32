@@ -5,8 +5,8 @@ module;
 #include <windows.h>
 #include <winsock2.h>
 
-module boring32.winsock.winsockinit;
-import boring32.winsock.winsockerror;
+module boring32.winsock:winsockinit;
+import :winsockerror;
 
 namespace Boring32::WinSock
 {

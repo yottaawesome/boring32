@@ -5,7 +5,7 @@ module;
 #include <string>
 #include <stdexcept>
 
-export module boring32.winsock.functions;
+export module boring32.winsock:functions;
 
 export namespace Boring32::WinSock
 {

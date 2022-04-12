@@ -5,7 +5,7 @@ module;
 #include <stdexcept>
 #include <Windows.h>
 
-export module boring32.winsock.winsockerror;
+export module boring32.winsock:winsockerror;
 
 export namespace Boring32::WinSock
 {

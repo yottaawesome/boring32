@@ -4,8 +4,8 @@ module;
 #include <vector>
 #include <winsock2.h>
 
-export module boring32.winsock.socket;
-import boring32.winsock.uniqueptrs;
+export module boring32.winsock:socket;
+import :uniqueptrs;
 
 export namespace Boring32::WinSock
 {

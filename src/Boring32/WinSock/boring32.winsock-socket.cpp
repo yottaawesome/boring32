@@ -10,8 +10,8 @@ module;
 #include <winsock2.h>
 #include <Ws2tcpip.h>
 
-module boring32.winsock.socket;
-import boring32.winsock.winsockerror;
+module boring32.winsock:socket;
+import :winsockerror;
 import boring32.error.errorbase;
 import boring32.strings;
 

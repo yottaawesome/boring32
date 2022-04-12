@@ -9,8 +9,8 @@ module;
 #include <Windows.h>
 #include <ws2tcpip.h>
 
-module boring32.winsock.functions;
-import boring32.winsock.winsockerror;
+module boring32.winsock:functions;
+import :winsockerror;
 import boring32.raii.win32handle;
 import boring32.error.win32error;
 import boring32.async.event;

@@ -3,7 +3,7 @@ module;
 #include <windows.h>
 #include <winsock2.h>
 
-export module boring32.winsock.winsockinit;
+export module boring32.winsock:winsockinit;
 
 export namespace Boring32::WinSock
 {

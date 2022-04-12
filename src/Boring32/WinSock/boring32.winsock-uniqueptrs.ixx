@@ -5,7 +5,7 @@ module;
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
-export module boring32.winsock.uniqueptrs;
+export module boring32.winsock:uniqueptrs;
 
 export namespace Boring32::WinSock
 {

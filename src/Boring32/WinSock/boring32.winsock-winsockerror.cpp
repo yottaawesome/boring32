@@ -5,7 +5,7 @@ module;
 #include <stdexcept>
 #include <Windows.h>
 
-module boring32.winsock.winsockerror;
+module boring32.winsock:winsockerror;
 import boring32.error.functions;
 
 namespace Boring32::WinSock

@@ -5,7 +5,6 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 import boring32.winsock;
-import boring32.winsock.winsockerror;
 
 namespace WinSock
 {
