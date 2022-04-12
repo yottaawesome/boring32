@@ -221,16 +221,6 @@
     <ClCompile Include="Security\boring32.security.functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinSock\boring32.winsock.ixx" />
-    <ClCompile Include="WinSock\boring32.winsock.functions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WinSock\boring32.winsock.winsockinit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WinSock\boring32.winsock.winsockerror.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Strings\boring32.strings.ixx" />
     <ClCompile Include="Async\boring32.async.threadpools.ixx" />
     <ClCompile Include="Async\boring32.async.semaphore.ixx" />
@@ -351,20 +341,12 @@
     <ClCompile Include="Async\boring32.async.thread.ixx" />
     <ClCompile Include="Async\boring32.async.overlappedio.ixx" />
     <ClCompile Include="Async\boring32.async.overlappedop.ixx" />
-    <ClCompile Include="WinSock\boring32.winsock.winsockerror.ixx" />
-    <ClCompile Include="WinSock\boring32.winsock.winsockinit.ixx" />
-    <ClCompile Include="WinSock\boring32.winsock.functions.ixx" />
     <ClCompile Include="Security\boring32.security.ixx" />
     <ClCompile Include="Raii\boring32.raii.ixx" />
     <ClCompile Include="Process\boring32.process.ixx" />
     <ClCompile Include="FileSystem\boring32.filesystem.functions.ixx" />
     <ClCompile Include="Com\boring32.com.ixx" />
     <ClCompile Include="Crypto\boring32.crypto.ixx" />
-    <ClCompile Include="WinSock\boring32.winsock.socket.ixx" />
-    <ClCompile Include="WinSock\boring32.winsock.socket.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WinSock\boring32.winsock.uniqueptrs.ixx" />
     <ClCompile Include="XAudio2\boring32.xaudio2.ixx" />
     <ClCompile Include="XAudio2\boring32.xaudio2.engine.ixx" />
     <ClCompile Include="XAudio2\boring32.xaudio2.voice.ixx" />
@@ -433,5 +415,23 @@
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform.providercontext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="WinSock\boring32.winsock-winsockinit.ixx" />
+    <ClCompile Include="WinSock\boring32.winsock-functions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WinSock\boring32.winsock-functions.ixx" />
+    <ClCompile Include="WinSock\boring32.winsock-socket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WinSock\boring32.winsock-socket.ixx" />
+    <ClCompile Include="WinSock\boring32.winsock-uniqueptrs.ixx" />
+    <ClCompile Include="WinSock\boring32.winsock-winsockerror.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WinSock\boring32.winsock-winsockerror.ixx" />
+    <ClCompile Include="WinSock\boring32.winsock-winsockinit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WinSock\boring32.winsock.ixx" />
   </ItemGroup>
 </Project>
