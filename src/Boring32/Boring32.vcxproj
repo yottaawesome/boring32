@@ -265,9 +265,9 @@
     <ClCompile Include="Util\boring32.util.ixx" />
     <ClCompile Include="Util\boring32.util.switcher.ixx" />
     <ClCompile Include="Util\boring32.util.switcher.cpp" />
-    <ClCompile Include="Wic\boring32.wic.imagingfactory.ixx" />
+    <ClCompile Include="Wic\boring32.wic-imagingfactory.ixx" />
     <ClCompile Include="Wic\boring32.wic.ixx" />
-    <ClCompile Include="Wic\boring32.wic.imagingfactory.cpp" />
+    <ClCompile Include="Wic\boring32.wic-imagingfactory.cpp" />
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform.callout.ixx" />
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform.engine.ixx" />
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform.filter.ixx" />

@@ -298,8 +298,8 @@
     <ClCompile Include="WinHttp\boring32.winhttp.httpwebclient.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp.requestresult.ixx" />
     <ClCompile Include="Wic\boring32.wic.ixx" />
-    <ClCompile Include="Wic\boring32.wic.imagingfactory.ixx" />
-    <ClCompile Include="Wic\boring32.wic.imagingfactory.cpp">
+    <ClCompile Include="Wic\boring32.wic-imagingfactory.ixx" />
+    <ClCompile Include="Wic\boring32.wic-imagingfactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WinHttp\boring32.winhttp.websockets.websocket.ixx" />

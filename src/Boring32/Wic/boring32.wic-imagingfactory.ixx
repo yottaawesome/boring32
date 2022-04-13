@@ -5,7 +5,7 @@ module;
 #include <wincodec.h>
 #include <wrl/client.h>
 
-export module boring32.wic.imagingfactory;
+export module boring32.wic:imagingfactory;
 
 export namespace Boring32::Wic
 {

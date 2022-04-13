@@ -7,7 +7,7 @@ module;
 #include <wincodec.h>
 #include <wrl/client.h>
 
-module boring32.wic.imagingfactory;
+module boring32.wic:imagingfactory;
 import boring32.error.comerror;
 
 namespace Boring32::Wic
