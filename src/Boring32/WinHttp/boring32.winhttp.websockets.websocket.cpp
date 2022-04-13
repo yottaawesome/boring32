@@ -15,7 +15,7 @@ import boring32.error.win32error;
 import boring32.winhttp.winhttphandle;
 import boring32.winhttp.proxyinfo;
 import boring32.winhttp.session;
-import boring32.util.switcher;
+import boring32.util;
 
 namespace Boring32::WinHttp::WebSockets
 {

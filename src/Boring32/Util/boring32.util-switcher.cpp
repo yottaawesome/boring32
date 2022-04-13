@@ -1,4 +1,4 @@
-module boring32.util.switcher;
+module boring32.util:switcher;
 
 namespace Boring32::Util
 {

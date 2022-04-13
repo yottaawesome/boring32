@@ -6,7 +6,7 @@ module;
 #include <Windows.h>
 
 export module boring32.util;
-export import boring32.util.switcher;
+export import :switcher;
 
 //#define colconc(str1,str2) #str1 ": " #str2
 
