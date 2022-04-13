@@ -68,7 +68,7 @@
     <ClCompile Include="Guid\boring32.guid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Util\boring32.util.cpp">
+    <ClCompile Include="Util\boring32.util-functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WinHttp\boring32.winhttp.httpwebclient.cpp">
@@ -433,5 +433,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WinSock\boring32.winsock.ixx" />
+    <ClCompile Include="Util\boring32.util-functions.ixx" />
   </ItemGroup>
 </Project>
