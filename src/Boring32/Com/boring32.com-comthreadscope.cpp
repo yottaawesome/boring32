@@ -6,7 +6,7 @@ module;
 #include <Windows.h>
 #include <objbase.h>
 
-module boring32.com.comthreadscope;
+module boring32.com:comthreadscope;
 import boring32.error.comerror;
 
 namespace Boring32::Com

@@ -86,7 +86,7 @@
     <ClCompile Include="Async\boring32.async.slimreadwritelock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Com\boring32.com.comthreadscope.cpp">
+    <ClCompile Include="Com\boring32.com-comthreadscope.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Async\boring32.async.criticalsectionlock.cpp">
@@ -234,7 +234,7 @@
     </ClCompile>
     <ClCompile Include="Raii\boring32.raii.win32handle.ixx" />
     <ClCompile Include="Guid\boring32.guid.ixx" />
-    <ClCompile Include="Com\boring32.com.comthreadscope.ixx" />
+    <ClCompile Include="Com\boring32.com-comthreadscope.ixx" />
     <ClCompile Include="Compression\boring32.compression.ixx" />
     <ClCompile Include="Compression\boring32.compression-compressor.ixx" />
     <ClCompile Include="Compression\boring32.compression-decompressor.ixx" />

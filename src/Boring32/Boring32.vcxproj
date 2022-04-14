@@ -335,8 +335,8 @@
     <ClCompile Include="Compression\boring32.compression-compressiontype.ixx" />
     <ClCompile Include="Compression\boring32.compression-compressor.cpp" />
     <ClCompile Include="Compression\boring32.compression-decompressor.cpp" />
-    <ClCompile Include="Com\boring32.com.comthreadscope.ixx" />
-    <ClCompile Include="Com\boring32.com.comthreadscope.cpp" />
+    <ClCompile Include="Com\boring32.com-comthreadscope.ixx" />
+    <ClCompile Include="Com\boring32.com-comthreadscope.cpp" />
     <ClCompile Include="Crypto\boring32.crypto.aesencryption.cpp" />
     <ClCompile Include="Crypto\boring32.crypto.certificate.cpp" />
     <ClCompile Include="Crypto\boring32.crypto.certificatechain.cpp" />

@@ -15,7 +15,7 @@ import boring32.winsock;
 import boring32.async.threadpools;
 import boring32.async.semaphore;
 import boring32.strings;
-import boring32.com.comthreadscope;
+import boring32.com;
 import boring32.compression;
 import boring32.process;
 import boring32.util;

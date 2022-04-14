@@ -3,7 +3,7 @@ module;
 #include <atomic>
 #include <objbase.h>
 
-export module boring32.com.comthreadscope;
+export module boring32.com:comthreadscope;
 
 export namespace Boring32::Com
 {
