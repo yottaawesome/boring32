@@ -2,7 +2,7 @@
 #include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-import boring32.datastructures.cappedstack;
+import boring32.datastructures;
 
 namespace DataStructures
 {

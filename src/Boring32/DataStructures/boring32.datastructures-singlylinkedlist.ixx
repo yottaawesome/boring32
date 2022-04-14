@@ -6,7 +6,7 @@ module;
 #include <windows.h>
 #include <malloc.h>
 
-export module boring32.datastructures.singlylinkedlist;
+export module boring32.datastructures:singlylinkedlist;
 
 export namespace Boring32::DataStructures
 {

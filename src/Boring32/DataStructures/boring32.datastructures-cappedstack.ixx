@@ -4,7 +4,7 @@ module;
 #include <algorithm>
 #include <stdexcept>
 
-export module boring32.datastructures.cappedstack;
+export module boring32.datastructures:cappedstack;
 
 export namespace Boring32::DataStructures
 {
