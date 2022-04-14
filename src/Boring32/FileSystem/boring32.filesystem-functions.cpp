@@ -8,7 +8,7 @@ module;
 #include <filesystem>
 #include <Windows.h>
 
-module boring32.filesystem.functions;
+module boring32.filesystem:functions;
 import boring32.error.win32error;
 import boring32.strings;
 

@@ -229,9 +229,9 @@
     <ClCompile Include="Error\boring32.error.win32error.ixx" />
     <ClCompile Include="Error\boring32.error.errorbase.cpp" />
     <ClCompile Include="Error\boring32.error.functions.cpp" />
-    <ClCompile Include="FileSystem\boring32.filesystem.functions.ixx" />
+    <ClCompile Include="FileSystem\boring32.filesystem-functions.ixx" />
     <ClCompile Include="FileSystem\boring32.filesystem.ixx" />
-    <ClCompile Include="FileSystem\boring32.filesystem.functions.cpp" />
+    <ClCompile Include="FileSystem\boring32.filesystem-functions.cpp" />
     <ClCompile Include="IPC\boring32.ipc.blockingnamedpipeclient.ixx" />
     <ClCompile Include="IPC\boring32.ipc.blockingnamedpipeserver.ixx" />
     <ClCompile Include="IPC\boring32.ipc.anonymouspipe.ixx" />
@@ -240,7 +240,7 @@
     <ClCompile Include="IPC\boring32.ipc.namedpipeserverbase.ixx" />
     <ClCompile Include="IPC\boring32.ipc.overlappednamedpipeclient.ixx" />
     <ClCompile Include="IPC\boring32.ipc.overlappednamedpipeserver.ixx" />
-    <ClCompile Include="Process\boring32.process.dynamiclinklibrary.ixx" />
+    <ClCompile Include="Process\boring32.process-dynamiclinklibrary.ixx" />
     <ClCompile Include="Process\boring32.process.ixx" />
     <ClCompile Include="Raii\boring32.raii.ixx" />
     <ClCompile Include="Raii\boring32.raii.uniqueptrs.ixx" />
@@ -348,8 +348,8 @@
     <ClCompile Include="Error\boring32.error.comerror.cpp" />
     <ClCompile Include="Error\boring32.error.ntstatuserror.cpp" />
     <ClCompile Include="Error\boring32.error.win32error.cpp" />
-    <ClCompile Include="FileSystem\boring32.filesystem.file.cpp" />
-    <ClCompile Include="FileSystem\boring32.filesystem.file.ixx" />
+    <ClCompile Include="FileSystem\boring32.filesystem-file.cpp" />
+    <ClCompile Include="FileSystem\boring32.filesystem-file.ixx" />
     <ClCompile Include="Guid\boring32.guid.ixx" />
     <ClCompile Include="Guid\boring32.guid.cpp" />
     <ClCompile Include="Async\boring32.async.memorymappedfile.cpp" />
@@ -369,7 +369,7 @@
     <ClCompile Include="Security\boring32.security.token.cpp" />
     <ClCompile Include="Strings\boring32.strings.cpp" />
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="Process\boring32.process.dynamiclinklibrary.cpp" />
+    <ClCompile Include="Process\boring32.process-dynamiclinklibrary.cpp" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler.registeredtask.cpp" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler.taskfolder.cpp" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler.taskservice.cpp" />

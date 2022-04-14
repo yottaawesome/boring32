@@ -32,7 +32,7 @@
     <ClCompile Include="Time\boring32.time.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Process\boring32.process.dynamiclinklibrary.cpp">
+    <ClCompile Include="Process\boring32.process-dynamiclinklibrary.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WinHttp\boring32.winhttp.winhttphandle.cpp">
@@ -228,8 +228,8 @@
     <ClCompile Include="Async\boring32.async.filemapping.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileSystem\boring32.filesystem.file.ixx" />
-    <ClCompile Include="FileSystem\boring32.filesystem.file.cpp">
+    <ClCompile Include="FileSystem\boring32.filesystem-file.ixx" />
+    <ClCompile Include="FileSystem\boring32.filesystem-file.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Raii\boring32.raii.win32handle.ixx" />
@@ -240,7 +240,7 @@
     <ClCompile Include="Compression\boring32.compression-decompressor.ixx" />
     <ClCompile Include="Compression\boring32.compression-compressiontype.ixx" />
     <ClCompile Include="Time\boring32.time.ixx" />
-    <ClCompile Include="Process\boring32.process.dynamiclinklibrary.ixx" />
+    <ClCompile Include="Process\boring32.process-dynamiclinklibrary.ixx" />
     <ClCompile Include="Util\boring32.util.ixx" />
     <ClCompile Include="DataStructures\boring32.datastructures.cappedstack.ixx" />
     <ClCompile Include="DataStructures\boring32.datastructures.singlylinkedlist.ixx" />
@@ -306,7 +306,7 @@
     <ClCompile Include="WinHttp\boring32.winhttp.websockets.asyncwebsocket.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp.websockets.websocketstatus.ixx" />
     <ClCompile Include="FileSystem\boring32.filesystem.ixx" />
-    <ClCompile Include="FileSystem\boring32.filesystem.functions.cpp">
+    <ClCompile Include="FileSystem\boring32.filesystem-functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WinHttp\boring32.winhttp.websockets.asyncwebsocketsettings.ixx" />
@@ -344,7 +344,7 @@
     <ClCompile Include="Security\boring32.security.ixx" />
     <ClCompile Include="Raii\boring32.raii.ixx" />
     <ClCompile Include="Process\boring32.process.ixx" />
-    <ClCompile Include="FileSystem\boring32.filesystem.functions.ixx" />
+    <ClCompile Include="FileSystem\boring32.filesystem-functions.ixx" />
     <ClCompile Include="Com\boring32.com.ixx" />
     <ClCompile Include="Crypto\boring32.crypto.ixx" />
     <ClCompile Include="XAudio2\boring32.xaudio2.ixx" />

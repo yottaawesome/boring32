@@ -2,7 +2,7 @@ module;
 
 #include <string>
 
-export module boring32.filesystem.file;
+export module boring32.filesystem:file;
 import boring32.raii.win32handle;
 
 export namespace Boring32::FileSystem

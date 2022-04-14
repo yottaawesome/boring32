@@ -5,7 +5,7 @@ module;
 #include <source_location>
 #include <windows.h>
 
-module boring32.filesystem.file;
+module boring32.filesystem:file;
 import boring32.error.win32error;
 
 namespace Boring32::FileSystem
