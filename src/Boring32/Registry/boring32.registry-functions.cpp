@@ -6,7 +6,7 @@ module;
 #include <Windows.h>
 #include <shlwapi.h>
 
-module boring32.registry.functions;
+module boring32.registry:functions;
 import boring32.error.win32error;
 import boring32.async.event;
 

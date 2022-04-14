@@ -164,7 +164,7 @@
     <ClCompile Include="Async\boring32.async.functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Registry\boring32.registry.functions.cpp">
+    <ClCompile Include="Registry\boring32.registry-functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Crypto\boring32.crypto.certstore.cpp">
@@ -200,7 +200,7 @@
     <ClCompile Include="Crypto\boring32.crypto.securestring.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Registry\boring32.registry.key.cpp">
+    <ClCompile Include="Registry\boring32.registry-key.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Crypto\boring32.crypto.tempcertimport.cpp">
@@ -245,8 +245,8 @@
     <ClCompile Include="DataStructures\boring32.datastructures-cappedstack.ixx" />
     <ClCompile Include="DataStructures\boring32.datastructures-singlylinkedlist.ixx" />
     <ClCompile Include="DataStructures\boring32.datastructures.ixx" />
-    <ClCompile Include="Registry\boring32.registry.key.ixx" />
-    <ClCompile Include="Registry\boring32.registry.functions.ixx" />
+    <ClCompile Include="Registry\boring32.registry-key.ixx" />
+    <ClCompile Include="Registry\boring32.registry-functions.ixx" />
     <ClCompile Include="Registry\boring32.registry.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-registeredtask.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskfolder.ixx" />
@@ -385,7 +385,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Compression\boring32.compression-deleters.ixx" />
-    <ClCompile Include="Registry\boring32.registry.value.ixx" />
+    <ClCompile Include="Registry\boring32.registry-value.ixx" />
     <ClCompile Include="Async\boring32.async.waitableaddress.ixx" />
     <ClCompile Include="Async\boring32.async.waitableaddress.cpp">
       <Filter>Source Files</Filter>

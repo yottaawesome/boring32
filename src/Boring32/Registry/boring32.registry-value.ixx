@@ -4,7 +4,7 @@ module;
 #include <tuple>
 #include <Windows.h>
 
-export module boring32.registry.value;
+export module boring32.registry:value;
 
 export namespace Boring32::Registry
 {

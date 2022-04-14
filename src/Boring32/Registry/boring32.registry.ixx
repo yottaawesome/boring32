@@ -1,4 +1,4 @@
 export module boring32.registry;
-export import boring32.registry.functions;
-export import boring32.registry.key;
-export import boring32.registry.value;
+export import :functions;
+export import :key;
+export import :value;

@@ -5,8 +5,8 @@ module;
 #include <iostream>
 #include <utility>
 
-module boring32.registry.key;
-import boring32.registry.functions;
+module boring32.registry:key;
+import :functions;
 import boring32.error.functions;
 
 namespace Boring32::Registry

@@ -4,7 +4,7 @@ module;
 #include <memory>
 #include <Windows.h>
 
-export module boring32.registry.key;
+export module boring32.registry:key;
 
 export namespace Boring32::Registry
 {

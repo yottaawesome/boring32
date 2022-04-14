@@ -4,7 +4,7 @@ module;
 #include <stdexcept>
 #include <Windows.h>
 
-export module boring32.registry.functions;
+export module boring32.registry:functions;
 import boring32.error.win32error;
 
 export namespace Boring32::Registry

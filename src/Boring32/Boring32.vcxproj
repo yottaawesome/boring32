@@ -244,10 +244,10 @@
     <ClCompile Include="Process\boring32.process.ixx" />
     <ClCompile Include="Raii\boring32.raii.ixx" />
     <ClCompile Include="Raii\boring32.raii.uniqueptrs.ixx" />
-    <ClCompile Include="Registry\boring32.registry.functions.ixx" />
+    <ClCompile Include="Registry\boring32.registry-functions.ixx" />
     <ClCompile Include="Registry\boring32.registry.ixx" />
-    <ClCompile Include="Registry\boring32.registry.key.ixx" />
-    <ClCompile Include="Registry\boring32.registry.value.ixx" />
+    <ClCompile Include="Registry\boring32.registry-key.ixx" />
+    <ClCompile Include="Registry\boring32.registry-value.ixx" />
     <ClCompile Include="Security\boring32.security.constants.ixx" />
     <ClCompile Include="Security\boring32.security.functions.ixx" />
     <ClCompile Include="Security\boring32.security.impersonationcontext.ixx" />
@@ -362,8 +362,8 @@
     <ClCompile Include="Security\boring32.security.functions.cpp" />
     <ClCompile Include="Security\boring32.security.sid.cpp" />
     <ClCompile Include="Raii\boring32.raii.win32handle.cpp" />
-    <ClCompile Include="Registry\boring32.registry.functions.cpp" />
-    <ClCompile Include="Registry\boring32.registry.key.cpp" />
+    <ClCompile Include="Registry\boring32.registry-functions.cpp" />
+    <ClCompile Include="Registry\boring32.registry-key.cpp" />
     <ClCompile Include="Security\boring32.security.impersonationcontext.cpp" />
     <ClCompile Include="Security\boring32.security.privatenamespace.cpp" />
     <ClCompile Include="Security\boring32.security.token.cpp" />
