@@ -5,30 +5,30 @@ module;
 
 export module boring32.com:comthreadscope;
 
-export namespace Boring32::Com
+export namespace Boring32::COM
 {
 	/// <summary>
 	///		Represents a COM library lifetime scope for a thread.
 	/// </summary>
-	class ComThreadScope
+	class COMThreadScope
 	{
 		public:
 			/// <summary>
 			///		Internally calls Uninitialise().
 			/// </summary>
-			virtual ~ComThreadScope();
+			virtual ~COMThreadScope();
 
 			/// <summary>
 			///		Default constructor. Does not initialise COM.
 			/// </summary>
-			ComThreadScope();
+			COMThreadScope();
 			
 			/// <summary>
 			///		Initialises COM for the creating thread with the specified
 			///		apartment threading mode.
 			/// </summary>
 			/// <param name="apartmentThreadingMode">The threading mode to initialise COM with.</param>
-			ComThreadScope(const COINIT apartmentThreadingMode);
+			COMThreadScope(const COINIT apartmentThreadingMode);
 			
 			/// <summary>
 			///		Copy constructor. Copies the ComThreadScope's threading mode
@@ -36,23 +36,23 @@ export namespace Boring32::Com
 			///		is initialised.
 			/// </summary>
 			/// <param name="other">The ComThreadScope to copy from.</param>
-			ComThreadScope(const ComThreadScope& other);
+			COMThreadScope(const COMThreadScope& other);
 			/// <summary>
 			///		Copy assignment. Copies the ComThreadScope's threading mode
 			///		and initialises COM for the current thread if ComThreadScope
 			///		is initialised.
 			/// </summary>
 			/// <param name="other">The ComThreadScope to copy from.</param>
-			virtual void operator=(const ComThreadScope& other);
+			virtual void operator=(const COMThreadScope& other);
 
 			/// <summary>
 			///		Move constructor. Assumes the temporary's scope.
 			/// </summary>
-			ComThreadScope(ComThreadScope&& other) noexcept;
+			COMThreadScope(COMThreadScope&& other) noexcept;
 			/// <summary>
 			///		Move assignment. Assumes the temporary's scope.
 			/// </summary>
-			virtual void operator=(ComThreadScope&& other) noexcept;
+			virtual void operator=(COMThreadScope&& other) noexcept;
 			
 			/// <summary>
 			///		Initialises COM for the calling thread with the specified
@@ -102,8 +102,8 @@ export namespace Boring32::Com
 			virtual COINIT GetApartmentThreadingMode() const;
 
 		protected:
-			void Copy(const ComThreadScope& other);
-			void Move(ComThreadScope& other);
+			void Copy(const COMThreadScope& other);
+			void Move(COMThreadScope& other);
 
 		protected:
 			bool m_isInitialised;

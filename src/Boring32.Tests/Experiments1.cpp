@@ -557,7 +557,7 @@ void TestTaskService()
 {
 	try
 	{
-		Boring32::Com::ComThreadScope scope;
+		Boring32::COM::COMThreadScope scope;
 		scope.Initialise();
 		scope.InitialiseSecurity();
 

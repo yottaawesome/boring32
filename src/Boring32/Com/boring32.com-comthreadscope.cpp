@@ -9,22 +9,22 @@ module;
 module boring32.com:comthreadscope;
 import boring32.error.comerror;
 
-namespace Boring32::Com
+namespace Boring32::COM
 {
-	std::atomic<unsigned> ComThreadScope::m_isSecurityInitialised(0);
+	std::atomic<unsigned> COMThreadScope::m_isSecurityInitialised(0);
 
-	ComThreadScope::~ComThreadScope()
+	COMThreadScope::~COMThreadScope()
 	{
 		Uninitialise();
 	}
 
-	ComThreadScope::ComThreadScope()
+	COMThreadScope::COMThreadScope()
 	:	m_isInitialised(false),
 		m_comInitialisedThreadId(0),
 		m_apartmentThreadingMode(COINIT_MULTITHREADED)
 	{}
 
-	ComThreadScope::ComThreadScope(const COINIT apartmentThreadingMode)
+	COMThreadScope::COMThreadScope(const COINIT apartmentThreadingMode)
 	:	m_isInitialised(false),
 		m_comInitialisedThreadId(0),
 		m_apartmentThreadingMode(apartmentThreadingMode)
@@ -32,7 +32,7 @@ namespace Boring32::Com
 		Initialise();
 	}
 
-	ComThreadScope::ComThreadScope(const ComThreadScope& other)
+	COMThreadScope::COMThreadScope(const COMThreadScope& other)
 	:	m_isInitialised(false),
 		m_comInitialisedThreadId(0),
 		m_apartmentThreadingMode(COINIT_MULTITHREADED)
@@ -40,12 +40,12 @@ namespace Boring32::Com
 		Copy(other);
 	}
 
-	void ComThreadScope::operator=(const ComThreadScope& other)
+	void COMThreadScope::operator=(const COMThreadScope& other)
 	{
 		Copy(other);
 	}
 
-	void ComThreadScope::Copy(const ComThreadScope& other)
+	void COMThreadScope::Copy(const COMThreadScope& other)
 	{
 		Uninitialise();
 		m_comInitialisedThreadId = 0;
@@ -55,17 +55,17 @@ namespace Boring32::Com
 			Initialise();
 	}
 
-	ComThreadScope::ComThreadScope(ComThreadScope&& other) noexcept
+	COMThreadScope::COMThreadScope(COMThreadScope&& other) noexcept
 	{
 		Move(other);
 	}
 
-	void ComThreadScope::operator=(ComThreadScope&& other) noexcept
+	void COMThreadScope::operator=(COMThreadScope&& other) noexcept
 	{
 		Move(other);
 	}
 
-	void ComThreadScope::Move(ComThreadScope& other)
+	void COMThreadScope::Move(COMThreadScope& other)
 	{
 		Uninitialise();
 		m_comInitialisedThreadId = other.m_comInitialisedThreadId;
@@ -76,7 +76,7 @@ namespace Boring32::Com
 			other.m_isInitialised = false;
 	}
 
-	void ComThreadScope::Initialise()
+	void COMThreadScope::Initialise()
 	{
 		if (m_isInitialised)
 			return;
@@ -90,7 +90,7 @@ namespace Boring32::Com
 		m_comInitialisedThreadId = GetCurrentThreadId();
 	}
 
-	void ComThreadScope::InitialiseSecurity()
+	void COMThreadScope::InitialiseSecurity()
 	{
 		m_isSecurityInitialised++;
 		if (m_isSecurityInitialised != 1)
@@ -121,7 +121,7 @@ namespace Boring32::Com
 			throw Error::ComError(std::source_location::current(),"CoInitializeSecurity() failed", hr);
 	}
 
-	void ComThreadScope::Uninitialise()
+	void COMThreadScope::Uninitialise()
 	{
 		if (m_isInitialised == false)
 			return;
@@ -133,17 +133,17 @@ namespace Boring32::Com
 		m_isInitialised = false;
 	}
 
-	bool ComThreadScope::IsInitialised() const
+	bool COMThreadScope::IsInitialised() const
 	{
 		return m_isInitialised;
 	}
 
-	DWORD ComThreadScope::GetComInitialisedThreadId() const
+	DWORD COMThreadScope::GetComInitialisedThreadId() const
 	{
 		return m_comInitialisedThreadId;
 	}
 
-	COINIT ComThreadScope::GetApartmentThreadingMode() const
+	COINIT COMThreadScope::GetApartmentThreadingMode() const
 	{
 		return m_apartmentThreadingMode;
 	}
