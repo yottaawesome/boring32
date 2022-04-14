@@ -8,7 +8,7 @@ module;
 #include <taskschd.h>
 #include <wrl/client.h>
 
-module boring32.taskscheduler.taskservice;
+module boring32.taskscheduler:taskservice;
 import boring32.error.functions;
 import boring32.error.comerror;
 

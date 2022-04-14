@@ -258,9 +258,9 @@
     <ClCompile Include="Security\boring32.security.token.ixx" />
     <ClCompile Include="Security\boring32.security.securitydescriptor.cpp" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler.ixx" />
-    <ClCompile Include="TaskScheduler\boring32.taskscheduler.registeredtask.ixx" />
-    <ClCompile Include="TaskScheduler\boring32.taskscheduler.taskfolder.ixx" />
-    <ClCompile Include="TaskScheduler\boring32.taskscheduler.taskservice.ixx" />
+    <ClCompile Include="TaskScheduler\boring32.taskscheduler-registeredtask.ixx" />
+    <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskfolder.ixx" />
+    <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskservice.ixx" />
     <ClCompile Include="Time\boring32.time.ixx" />
     <ClCompile Include="Util\boring32.util-functions.ixx" />
     <ClCompile Include="Util\boring32.util.ixx" />
@@ -370,9 +370,9 @@
     <ClCompile Include="Strings\boring32.strings.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Process\boring32.process-dynamiclinklibrary.cpp" />
-    <ClCompile Include="TaskScheduler\boring32.taskscheduler.registeredtask.cpp" />
-    <ClCompile Include="TaskScheduler\boring32.taskscheduler.taskfolder.cpp" />
-    <ClCompile Include="TaskScheduler\boring32.taskscheduler.taskservice.cpp" />
+    <ClCompile Include="TaskScheduler\boring32.taskscheduler-registeredtask.cpp" />
+    <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskfolder.cpp" />
+    <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskservice.cpp" />
     <ClCompile Include="Time\boring32.time.cpp" />
     <ClCompile Include="Util\boring32.util-functions.cpp" />
     <ClCompile Include="WinHttp\boring32.winhttp.websockets.asyncwebsocket.cpp" />

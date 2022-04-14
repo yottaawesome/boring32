@@ -9,7 +9,7 @@ module;
 #include <taskschd.h>
 #include <wrl/client.h>
 
-module boring32.taskscheduler.registeredtask;
+module boring32.taskscheduler:registeredtask;
 import boring32.error.comerror;
 
 namespace Boring32::TaskScheduler

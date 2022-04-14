@@ -185,13 +185,13 @@
     <ClCompile Include="Crypto\boring32.crypto.cryptokey.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TaskScheduler\boring32.taskscheduler.taskfolder.cpp">
+    <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskfolder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TaskScheduler\boring32.taskscheduler.registeredtask.cpp">
+    <ClCompile Include="TaskScheduler\boring32.taskscheduler-registeredtask.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TaskScheduler\boring32.taskscheduler.taskservice.cpp">
+    <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskservice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Security\boring32.security.impersonationcontext.cpp">
@@ -248,9 +248,9 @@
     <ClCompile Include="Registry\boring32.registry.key.ixx" />
     <ClCompile Include="Registry\boring32.registry.functions.ixx" />
     <ClCompile Include="Registry\boring32.registry.ixx" />
-    <ClCompile Include="TaskScheduler\boring32.taskscheduler.registeredtask.ixx" />
-    <ClCompile Include="TaskScheduler\boring32.taskscheduler.taskfolder.ixx" />
-    <ClCompile Include="TaskScheduler\boring32.taskscheduler.taskservice.ixx" />
+    <ClCompile Include="TaskScheduler\boring32.taskscheduler-registeredtask.ixx" />
+    <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskfolder.ixx" />
+    <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskservice.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler.ixx" />
     <ClCompile Include="Error\boring32.error.functions.ixx" />
     <ClCompile Include="Error\boring32.error.functions.cpp">

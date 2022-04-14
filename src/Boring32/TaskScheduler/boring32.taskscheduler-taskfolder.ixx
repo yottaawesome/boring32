@@ -7,8 +7,8 @@ module;
 #include <taskschd.h>
 #include <wrl/client.h>
 
-export module boring32.taskscheduler.taskfolder;
-import boring32.taskscheduler.registeredtask;
+export module boring32.taskscheduler:taskfolder;
+import :registeredtask;
 
 export namespace Boring32::TaskScheduler
 {
