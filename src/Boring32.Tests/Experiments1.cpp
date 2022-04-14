@@ -17,7 +17,7 @@ import boring32.async.semaphore;
 import boring32.strings;
 import boring32.com.comthreadscope;
 import boring32.compression;
-import boring32.process.dynamiclinklibrary;
+import boring32.process;
 import boring32.util;
 import boring32.datastructures.singlylinkedlist;
 import boring32.datastructures.cappedstack;

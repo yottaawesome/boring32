@@ -4,7 +4,7 @@ module;
 #include <string>
 #include <stdexcept>
 
-export module boring32.process.dynamiclinklibrary;
+export module boring32.process:dynamiclinklibrary;
 
 export namespace Boring32::Process
 {
