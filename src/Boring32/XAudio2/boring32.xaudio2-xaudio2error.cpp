@@ -1,3 +1,8 @@
+module;
+
+#include <source_location>
+#include <string>
+
 module boring32.xaudio2:xaudio2error;
 import boring32.error.functions;
 
