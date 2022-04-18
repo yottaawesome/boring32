@@ -4,7 +4,7 @@ module;
 #include <stdexcept>
 #include <Windows.h>
 
-module boring32.xaudio2.functions;
+module boring32.xaudio2:functions;
 import boring32.error.comerror;
 import boring32.error.win32error;
 

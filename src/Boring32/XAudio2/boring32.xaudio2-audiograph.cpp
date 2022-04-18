@@ -1,6 +1,6 @@
 module;
 
-module boring32.xaudio2.audiograph;
+module boring32.xaudio2:audiograph;
 
 namespace Boring32::XAudio2
 {

@@ -3,8 +3,8 @@ module;
 #include <Windows.h>
 #include <xaudio2.h>
 
-export module boring32.xaudio2.masteringvoice;
-import boring32.xaudio2.voice;
+export module boring32.xaudio2:masteringvoice;
+import :voice;
 
 export namespace Boring32::XAudio2
 {

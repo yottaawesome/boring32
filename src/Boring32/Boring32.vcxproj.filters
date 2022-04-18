@@ -348,36 +348,36 @@
     <ClCompile Include="COM\boring32.com.ixx" />
     <ClCompile Include="Crypto\boring32.crypto.ixx" />
     <ClCompile Include="XAudio2\boring32.xaudio2.ixx" />
-    <ClCompile Include="XAudio2\boring32.xaudio2.engine.ixx" />
-    <ClCompile Include="XAudio2\boring32.xaudio2.voice.ixx" />
-    <ClCompile Include="XAudio2\boring32.xaudio2.audiograph.ixx" />
-    <ClCompile Include="XAudio2\boring32.xaudio2.engine.cpp">
+    <ClCompile Include="XAudio2\boring32.xaudio2-engine.ixx" />
+    <ClCompile Include="XAudio2\boring32.xaudio2-voice.ixx" />
+    <ClCompile Include="XAudio2\boring32.xaudio2-audiograph.ixx" />
+    <ClCompile Include="XAudio2\boring32.xaudio2-engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="XAudio2\boring32.xaudio2.audiograph.cpp">
+    <ClCompile Include="XAudio2\boring32.xaudio2-audiograph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="XAudio2\boring32.xaudio2.voice.cpp">
+    <ClCompile Include="XAudio2\boring32.xaudio2-voice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="XAudio2\boring32.xaudio2.masteringvoice.ixx" />
-    <ClCompile Include="XAudio2\boring32.xaudio2.sourcevoice.ixx" />
-    <ClCompile Include="XAudio2\boring32.xaudio2.masteringvoice.cpp">
+    <ClCompile Include="XAudio2\boring32.xaudio2-masteringvoice.ixx" />
+    <ClCompile Include="XAudio2\boring32.xaudio2-sourcevoice.ixx" />
+    <ClCompile Include="XAudio2\boring32.xaudio2-masteringvoice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="XAudio2\boring32.xaudio2.sourcevoice.cpp">
+    <ClCompile Include="XAudio2\boring32.xaudio2-sourcevoice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="XAudio2\boring32.xaudio2.functions.ixx" />
-    <ClCompile Include="XAudio2\boring32.xaudio2.functions.cpp">
+    <ClCompile Include="XAudio2\boring32.xaudio2-functions.ixx" />
+    <ClCompile Include="XAudio2\boring32.xaudio2-functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Error\boring32.error.boring32error.ixx" />
     <ClCompile Include="Error\boring32.error.boring32error.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="XAudio2\boring32.xaudio2.xaudio2error.ixx" />
-    <ClCompile Include="XAudio2\boring32.xaudio2.xaudio2error.cpp">
+    <ClCompile Include="XAudio2\boring32.xaudio2-xaudio2error.ixx" />
+    <ClCompile Include="XAudio2\boring32.xaudio2-xaudio2error.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Compression\boring32.compression-compressionerror.ixx" />

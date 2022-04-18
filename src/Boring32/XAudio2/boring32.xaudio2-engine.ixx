@@ -4,7 +4,7 @@ module;
 #include <xaudio2.h>
 #include <wrl/client.h>
 
-export module boring32.xaudio2.engine;
+export module boring32.xaudio2:engine;
 
 export namespace Boring32::XAudio2
 {
