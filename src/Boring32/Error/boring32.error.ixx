@@ -4,3 +4,4 @@ export import boring32.error.win32error;
 export import boring32.error.ntstatuserror;
 export import boring32.error.comerror;
 export import boring32.error.errorbase;
+export import boring32.error.boring32error;
