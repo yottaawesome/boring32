@@ -167,22 +167,22 @@
     <ClCompile Include="Registry\boring32.registry-functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\boring32.crypto.certstore.cpp">
+    <ClCompile Include="Crypto\boring32.crypto-certstore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\boring32.crypto.functions.cpp">
+    <ClCompile Include="Crypto\boring32.crypto-functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\boring32.crypto.certificate.cpp">
+    <ClCompile Include="Crypto\boring32.crypto-certificate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\boring32.crypto.aesencryption.cpp">
+    <ClCompile Include="Crypto\boring32.crypto-aesencryption.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Error\boring32.error-ntstatuserror.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\boring32.crypto.cryptokey.cpp">
+    <ClCompile Include="Crypto\boring32.crypto-cryptokey.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskfolder.cpp">
@@ -197,16 +197,16 @@
     <ClCompile Include="Security\boring32.security.impersonationcontext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\boring32.crypto.securestring.cpp">
+    <ClCompile Include="Crypto\boring32.crypto-securestring.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Registry\boring32.registry-key.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\boring32.crypto.tempcertimport.cpp">
+    <ClCompile Include="Crypto\boring32.crypto-tempcertimport.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\boring32.crypto.certificatechain.cpp">
+    <ClCompile Include="Crypto\boring32.crypto-certificatechain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WinHttp\boring32.winhttp.websockets.asyncwebsocket.cpp">
@@ -270,9 +270,9 @@
     <ClCompile Include="Async\boring32.async.timerqueue.ixx" />
     <ClCompile Include="Async\boring32.async.mutev.ixx" />
     <ClCompile Include="Async\boring32.async.threadsafevector.ixx" />
-    <ClCompile Include="Crypto\boring32.crypto.tempcertimport.ixx" />
-    <ClCompile Include="Crypto\boring32.crypto.functions.ixx" />
-    <ClCompile Include="Crypto\boring32.crypto.cryptokey.ixx" />
+    <ClCompile Include="Crypto\boring32.crypto-tempcertimport.ixx" />
+    <ClCompile Include="Crypto\boring32.crypto-functions.ixx" />
+    <ClCompile Include="Crypto\boring32.crypto-cryptokey.ixx" />
     <ClCompile Include="Async\boring32.async.timerqueuetimer.ixx" />
     <ClCompile Include="Async\boring32.async.timerqueuetimercallback.ixx" />
     <ClCompile Include="IPC\boring32.ipc.anonymouspipe.ixx" />
@@ -281,18 +281,18 @@
     <ClCompile Include="IPC\boring32.ipc.namedpipeclientbase.ixx" />
     <ClCompile Include="IPC\boring32.ipc.namedpipeserverbase.ixx" />
     <ClCompile Include="IPC\boring32.ipc.blockingnamedpipeserver.ixx" />
-    <ClCompile Include="Crypto\boring32.crypto.certificate.ixx" />
-    <ClCompile Include="Crypto\boring32.crypto.aesencryption.ixx" />
+    <ClCompile Include="Crypto\boring32.crypto-certificate.ixx" />
+    <ClCompile Include="Crypto\boring32.crypto-aesencryption.ixx" />
     <ClCompile Include="Security\boring32.security.functions.ixx" />
     <ClCompile Include="Security\boring32.security.token.ixx" />
     <ClCompile Include="Security\boring32.security.constants.ixx" />
     <ClCompile Include="Security\boring32.security.privatenamespace.ixx" />
     <ClCompile Include="Security\boring32.security.impersonationcontext.ixx" />
     <ClCompile Include="Security\boring32.security.sid.ixx" />
-    <ClCompile Include="Crypto\boring32.crypto.securestring.ixx" />
-    <ClCompile Include="Crypto\boring32.crypto.certstore.ixx" />
-    <ClCompile Include="Crypto\boring32.crypto.chainingmode.ixx" />
-    <ClCompile Include="Crypto\boring32.crypto.certificatechain.ixx" />
+    <ClCompile Include="Crypto\boring32.crypto-securestring.ixx" />
+    <ClCompile Include="Crypto\boring32.crypto-certstore.ixx" />
+    <ClCompile Include="Crypto\boring32.crypto-chainingmode.ixx" />
+    <ClCompile Include="Crypto\boring32.crypto-certificatechain.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp.winhttphandle.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp.proxytype.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp.httpwebclient.ixx" />
