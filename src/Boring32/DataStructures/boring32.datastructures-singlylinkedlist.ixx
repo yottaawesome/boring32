@@ -56,6 +56,13 @@ export namespace Boring32::DataStructures
 			}
 
 		public:
+			virtual SinglyLinkedList& operator=(const SinglyLinkedList&) = delete;
+			virtual SinglyLinkedList& operator=(SinglyLinkedList&& other) noexcept
+			{
+				return Move(other);
+			}
+
+		public:
 			virtual void Close()
 			{
 				if (m_listHeader)
