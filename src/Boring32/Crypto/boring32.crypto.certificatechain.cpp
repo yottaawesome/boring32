@@ -8,7 +8,7 @@ module;
 #include <Windows.h>
 #include <wincrypt.h>
 
-module boring32.crypto.certificatechain;
+module boring32.crypto:certificatechain;
 import boring32.error;
 
 namespace Boring32::Crypto

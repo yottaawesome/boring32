@@ -8,9 +8,9 @@ module;
 #include <dpapi.h>
 #include <wincrypt.h>
 
-module boring32.crypto.certificate;
+module boring32.crypto:certificate;
 import boring32.error;
-import boring32.crypto.functions;
+import :functions;
 
 namespace Boring32::Crypto
 {

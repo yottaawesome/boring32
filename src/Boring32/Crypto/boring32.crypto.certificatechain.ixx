@@ -4,9 +4,9 @@ module;
 #include <Windows.h>
 #include <wincrypt.h>
 
-export module boring32.crypto.certificatechain;
-import boring32.crypto.certificate;
-import boring32.crypto.certstore;
+export module boring32.crypto:certificatechain;
+import :certificate;
+import :certstore;
 
 export namespace Boring32::Crypto
 {

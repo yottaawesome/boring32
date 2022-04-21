@@ -6,7 +6,7 @@ module;
 #include <dpapi.h>
 #include <wincrypt.h>
 
-export module boring32.crypto.certificate;
+export module boring32.crypto:certificate;
 
 export namespace Boring32::Crypto
 {

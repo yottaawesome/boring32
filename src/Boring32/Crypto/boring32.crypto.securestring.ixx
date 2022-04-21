@@ -5,7 +5,7 @@ module;
 #include <Windows.h>
 #include <dpapi.h>
 
-export module boring32.crypto.securestring;
+export module boring32.crypto:securestring;
 
 export namespace Boring32::Crypto
 {

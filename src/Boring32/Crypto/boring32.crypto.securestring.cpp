@@ -6,7 +6,7 @@ module;
 #include <Windows.h>
 #include <dpapi.h>
 
-module boring32.crypto.securestring;
+module boring32.crypto:securestring;
 import boring32.error;
 
 namespace Boring32::Crypto

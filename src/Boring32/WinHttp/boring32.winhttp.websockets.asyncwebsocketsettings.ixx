@@ -4,7 +4,7 @@ module;
 #include <Windows.h>
 
 export module boring32.winhttp.websockets.asyncwebsocketsettings;
-import boring32.crypto.certificate;
+import boring32.crypto;
 import boring32.winhttp.session;
 
 export namespace Boring32::WinHttp::WebSockets

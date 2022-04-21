@@ -5,7 +5,7 @@ module;
 #include <vector>
 //#include <ntstatus.h>
 
-module boring32.crypto.cryptokey;
+module boring32.crypto:cryptokey;
 
 // See: https://docs.microsoft.com/en-us/windows/win32/seccng/encrypting-data-with-cng
 namespace Boring32::Crypto

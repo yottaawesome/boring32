@@ -8,7 +8,7 @@ module;
 #include <dpapi.h> // not including this header causes symbol has already been defined error
 #include <Wincrypt.h>
 
-module boring32.crypto.functions;
+module boring32.crypto:functions;
 import boring32.error;
 
 namespace Boring32::Crypto

@@ -9,8 +9,8 @@ module;
 #include <Windows.h>
 #include <bcrypt.h>
 
-module boring32.crypto.aesencryption;
-import boring32.crypto.chainingmode;
+module boring32.crypto:aesencryption;
+import :chainingmode;
 import boring32.error;
 
 // See: https://docs.microsoft.com/en-us/windows/win32/seccng/encrypting-data-with-cng

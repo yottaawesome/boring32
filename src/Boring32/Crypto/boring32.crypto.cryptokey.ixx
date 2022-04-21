@@ -6,7 +6,7 @@ module;
 #include <Windows.h>
 #include <bcrypt.h>
 
-export module boring32.crypto.cryptokey;
+export module boring32.crypto:cryptokey;
 
 export namespace Boring32::Crypto
 {

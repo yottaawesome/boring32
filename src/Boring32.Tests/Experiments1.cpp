@@ -36,7 +36,7 @@ import boring32.ipc.anonymouspipe;
 import boring32.ipc.overlappednamedpipeserver;
 import boring32.ipc.blockingnamedpipeserver;
 import boring32.security.sid;
-import boring32.crypto.certstore;
+import boring32.crypto;
 import boring32.winhttp.websockets.websocket;
 import boring32.winhttp.websockets.asyncwebsocket;
 import boring32.async.process;

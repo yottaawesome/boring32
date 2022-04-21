@@ -5,9 +5,9 @@ module;
 #include <Windows.h>
 #include <bcrypt.h>
 
-export module boring32.crypto.aesencryption;
-import boring32.crypto.cryptokey;
-import boring32.crypto.chainingmode;
+export module boring32.crypto:aesencryption;
+import :cryptokey;
+import :chainingmode;
 
 export namespace Boring32::Crypto
 {

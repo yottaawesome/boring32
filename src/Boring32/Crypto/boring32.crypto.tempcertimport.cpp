@@ -4,9 +4,7 @@ module;
 #include <string>
 #include <Windows.h>
 
-module boring32.crypto.tempcertimport;
-import boring32.crypto.certificate;
-import boring32.crypto.certstore;
+module boring32.crypto:tempcertimport;
 
 namespace Boring32::Crypto
 {

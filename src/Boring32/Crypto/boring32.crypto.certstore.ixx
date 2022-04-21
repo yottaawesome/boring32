@@ -4,12 +4,13 @@ module;
 #include <filesystem>
 #include <vector>
 #include <Windows.h>
+#include <dpapi.h> // not including this header causes symbol has already been defined error
 #include <wincrypt.h>
 #include <cryptuiapi.h>
 #include <winnt.h>
 
-export module boring32.crypto.certstore;
-import boring32.crypto.certificate;
+export module boring32.crypto:certstore;
+import :certificate;
 
 export namespace Boring32::Crypto
 {

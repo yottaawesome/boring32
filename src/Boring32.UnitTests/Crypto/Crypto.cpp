@@ -4,7 +4,7 @@
 #include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-import boring32.crypto.functions;
+import boring32.crypto;
 
 namespace Crypto
 {

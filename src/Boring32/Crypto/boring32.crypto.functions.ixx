@@ -6,8 +6,8 @@ module;
 //#include <bcrypt.h>
 #include <dpapi.h>
 
-export module boring32.crypto.functions;
-import boring32.crypto.cryptokey;
+export module boring32.crypto:functions;
+import :cryptokey;
 
 export namespace Boring32::Crypto
 {
