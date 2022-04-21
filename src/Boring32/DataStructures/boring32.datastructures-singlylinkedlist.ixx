@@ -47,6 +47,14 @@ export namespace Boring32::DataStructures
 				InitializeSListHead(m_listHeader);
 			}
 
+			SinglyLinkedList(const SinglyLinkedList& other) = delete;
+
+			SinglyLinkedList(SinglyLinkedList&& other) noexcept
+				: SinglyLinkedList()
+			{
+				Move(other);
+			}
+
 		public:
 			virtual void Close()
 			{
@@ -138,6 +146,16 @@ export namespace Boring32::DataStructures
 			}
 
 		protected:
+			virtual SinglyLinkedList& Move(SinglyLinkedList& other)
+			{
+				Close();
+				m_listHeader = other.m_listHeader;
+				m_firstEntry = other.m_firstEntry;
+				other.m_listHeader = nullptr;
+				other.m_firstEntry = nullptr;
+				return *this;
+			}
+
 			virtual ListElement<T>* InternalAdd()
 			{
 				const auto newEntry = (ListElement<T>*)_aligned_malloc(
