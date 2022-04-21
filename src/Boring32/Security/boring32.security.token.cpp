@@ -7,8 +7,7 @@ module;
 #include <sddl.h>
 
 module boring32.security.token;
-import boring32.error.win32error;
-import boring32.error.errorbase;
+import boring32.error;
 import boring32.security.functions;
 
 namespace Boring32::Security

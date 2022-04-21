@@ -7,8 +7,7 @@ module;
 
 module boring32.xaudio2:engine;
 import :xaudio2error;
-import boring32.error.comerror;
-import boring32.error.functions;
+import boring32.error;
 
 namespace Boring32::XAudio2
 {

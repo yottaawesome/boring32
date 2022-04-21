@@ -7,7 +7,7 @@ module;
 #include <Windows.h>
 
 module boring32.async.memorymappedfile;
-import boring32.error.win32error;
+import boring32.error;
 
 namespace Boring32::Async
 {

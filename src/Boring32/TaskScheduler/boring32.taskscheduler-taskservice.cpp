@@ -9,8 +9,7 @@ module;
 #include <wrl/client.h>
 
 module boring32.taskscheduler:taskservice;
-import boring32.error.functions;
-import boring32.error.comerror;
+import boring32.error;
 
 namespace Boring32::TaskScheduler
 {

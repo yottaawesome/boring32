@@ -9,8 +9,7 @@ module;
 #include <pathcch.h>
 
 module boring32.util:functions;
-import boring32.error.win32error;
-import boring32.error.comerror;
+import boring32.error;
 
 namespace Boring32::Util
 {

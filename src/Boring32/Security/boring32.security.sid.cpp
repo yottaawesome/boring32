@@ -8,7 +8,7 @@ module;
 #include <sddl.h>
 
 module boring32.security.sid;
-import boring32.error.win32error;
+import boring32.error;
 import boring32.raii.uniqueptrs;
 
 namespace Boring32::Security

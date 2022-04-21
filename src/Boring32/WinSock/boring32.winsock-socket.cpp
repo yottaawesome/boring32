@@ -12,7 +12,7 @@ module;
 
 module boring32.winsock:socket;
 import :winsockerror;
-import boring32.error.errorbase;
+import boring32.error;
 import boring32.strings;
 
 namespace Boring32::WinSock

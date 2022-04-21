@@ -6,7 +6,7 @@ module;
 
 export module boring32.compression:compressionerror;
 
-import boring32.error.boring32error;
+import boring32.error;
 
 export namespace Boring32::Compression
 {

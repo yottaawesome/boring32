@@ -4,8 +4,8 @@ module;
 #include <string>
 #include <source_location>
 
-module boring32.error.boring32error;
-import boring32.error.functions;
+module boring32.error:boring32error;
+import :functions;
 
 namespace Boring32::Error
 {

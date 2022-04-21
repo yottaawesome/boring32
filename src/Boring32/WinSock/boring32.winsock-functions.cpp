@@ -12,7 +12,7 @@ module;
 module boring32.winsock:functions;
 import :winsockerror;
 import boring32.raii.win32handle;
-import boring32.error.win32error;
+import boring32.error;
 import boring32.async.event;
 
 namespace Boring32::WinSock

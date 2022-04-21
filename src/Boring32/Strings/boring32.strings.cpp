@@ -7,7 +7,7 @@ module;
 #include <vector>
 
 module boring32.strings;
-import boring32.error.win32error;
+import boring32.error;
 
 namespace Boring32::Strings
 {

@@ -7,7 +7,7 @@ module;
 #include <wrl/client.h>
 
 module boring32.xaudio2:masteringvoice;
-import boring32.error.errorbase;
+import boring32.error;
 
 namespace Boring32::XAudio2
 {

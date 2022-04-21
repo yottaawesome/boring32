@@ -8,7 +8,7 @@ module;
 #include <Windows.h>
 
 module boring32.async.waitabletimer;
-import boring32.error.win32error;
+import boring32.error;
 //import boring32.error.functions;
 
 //https://docs.microsoft.com/en-us/windows/win32/sync/using-a-waitable-timer-with-an-asynchronous-procedure-call

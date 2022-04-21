@@ -7,9 +7,7 @@ module;
 
 module boring32.compression:decompressor;
 import :compressionerror;
-import boring32.error.win32error;
-import boring32.error.boring32error;
-import boring32.error.functions;
+import boring32.error;
 
 namespace Boring32::Compression
 {

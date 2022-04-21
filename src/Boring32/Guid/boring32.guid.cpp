@@ -7,7 +7,7 @@ module;
 #include "Objbase.h"
 
 module boring32.guid;
-import boring32.error.comerror;
+import boring32.error;
 
 namespace Boring32::Guid
 {

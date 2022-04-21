@@ -6,8 +6,7 @@ module;
 #include <Windows.h>
 
 module boring32.async.process;
-import boring32.error.win32error;
-import boring32.error.errorbase;
+import boring32.error;
 
 namespace Boring32::Async
 {

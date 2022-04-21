@@ -7,8 +7,8 @@ module;
 // See #include <winnt.h> for FAST_FAIL error codes
 #include "Windows.h"
 
-module boring32.error.win32error;
-import boring32.error.functions;
+module boring32.error:win32error;
+import :functions;
 
 namespace Boring32::Error
 {

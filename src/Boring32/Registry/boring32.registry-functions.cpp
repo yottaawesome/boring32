@@ -7,7 +7,7 @@ module;
 #include <shlwapi.h>
 
 module boring32.registry:functions;
-import boring32.error.win32error;
+import boring32.error;
 import boring32.async.event;
 
 namespace Boring32::Registry

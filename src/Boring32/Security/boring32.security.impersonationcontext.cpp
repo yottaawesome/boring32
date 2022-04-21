@@ -5,8 +5,7 @@ module;
 #include <Windows.h>
 
 module boring32.security.impersonationcontext;
-import boring32.error.win32error;
-import boring32.error.ntstatuserror;
+import boring32.error;
 
 namespace Boring32::Security
 {

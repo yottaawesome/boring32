@@ -4,7 +4,7 @@ module;
 #include <string>
 #include <source_location>
 
-export module boring32.error.boring32error;
+export module boring32.error:boring32error;
 
 export namespace Boring32::Error
 {

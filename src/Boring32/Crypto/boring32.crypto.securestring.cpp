@@ -7,7 +7,7 @@ module;
 #include <dpapi.h>
 
 module boring32.crypto.securestring;
-import boring32.error.win32error;
+import boring32.error;
 
 namespace Boring32::Crypto
 {

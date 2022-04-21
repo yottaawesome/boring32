@@ -24,7 +24,7 @@ import boring32.registry;
 import boring32.taskscheduler;
 import boring32.async.job;
 import boring32.async.mutex;
-import boring32.error.functions;
+import boring32.error;
 import boring32.async.waitabletimer;
 import boring32.async.event;
 import boring32.async.timerqueue;

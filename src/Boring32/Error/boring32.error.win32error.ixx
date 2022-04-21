@@ -5,7 +5,7 @@ module;
 #include <source_location>
 #include <Windows.h>
 
-export module boring32.error.win32error;
+export module boring32.error:win32error;
 
 export namespace Boring32::Error
 {

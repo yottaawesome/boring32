@@ -11,7 +11,7 @@ module;
 
 module boring32.crypto.aesencryption;
 import boring32.crypto.chainingmode;
-import boring32.error.ntstatuserror;
+import boring32.error;
 
 // See: https://docs.microsoft.com/en-us/windows/win32/seccng/encrypting-data-with-cng
 namespace Boring32::Crypto

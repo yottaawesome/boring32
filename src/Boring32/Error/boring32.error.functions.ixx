@@ -6,7 +6,7 @@ module;
 #include <memory>
 #include <Windows.h>
 
-export module boring32.error.functions;
+export module boring32.error:functions;
 
 export namespace Boring32::Error
 {

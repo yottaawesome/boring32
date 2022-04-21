@@ -6,7 +6,7 @@ module;
 #include <Jobapi2.h>
 
 module boring32.async.job;
-import boring32.error.win32error;
+import boring32.error;
 
 namespace Boring32::Async
 {

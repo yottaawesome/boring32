@@ -5,8 +5,7 @@ module;
 #include <Windows.h>
 
 module boring32.xaudio2:functions;
-import boring32.error.comerror;
-import boring32.error.win32error;
+import boring32.error;
 
 constexpr DWORD fourccRIFF = 'FFIR';
 constexpr DWORD fourccDATA = 'atad';

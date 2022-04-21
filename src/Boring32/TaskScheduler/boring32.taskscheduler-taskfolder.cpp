@@ -11,7 +11,7 @@ module;
 #include <wrl/client.h>
 
 module boring32.taskscheduler:taskfolder;
-import boring32.error.comerror;
+import boring32.error;
 
 namespace Boring32::TaskScheduler
 {

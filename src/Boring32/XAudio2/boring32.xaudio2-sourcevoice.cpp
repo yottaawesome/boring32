@@ -6,7 +6,7 @@ module;
 #include <xaudio2.h>
 
 module boring32.xaudio2:sourcevoice;
-import boring32.error.errorbase;
+import boring32.error;
 
 namespace Boring32::XAudio2
 {

@@ -9,8 +9,7 @@ module;
 #include <Wincrypt.h>
 
 module boring32.crypto.functions;
-import boring32.error.win32error;
-import boring32.error.ntstatuserror;
+import boring32.error;
 
 namespace Boring32::Crypto
 {

@@ -10,7 +10,7 @@ module;
 module boring32.async.functions;
 import boring32.raii.win32handle;
 import boring32.strings;
-import boring32.error.win32error;
+import boring32.error;
 
 namespace Boring32::Async
 {

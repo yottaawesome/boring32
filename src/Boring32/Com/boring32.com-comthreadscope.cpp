@@ -7,7 +7,7 @@ module;
 #include <objbase.h>
 
 module boring32.com:comthreadscope;
-import boring32.error.comerror;
+import boring32.error;
 
 namespace Boring32::COM
 {

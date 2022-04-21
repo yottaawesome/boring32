@@ -5,8 +5,8 @@ module;
 #include <source_location>
 #include <Windows.h>
 
-module boring32.error.comerror;
-import boring32.error.functions;
+module boring32.error:comerror;
+import :functions;
 
 namespace Boring32::Error
 {

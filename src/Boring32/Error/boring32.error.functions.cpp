@@ -9,7 +9,7 @@ module;
 #include <format>
 #include <Windows.h>
 
-module boring32.error.functions;
+module boring32.error:functions;
 
 namespace Boring32::Error
 {

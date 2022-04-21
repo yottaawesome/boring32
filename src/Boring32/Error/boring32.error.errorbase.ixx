@@ -5,7 +5,7 @@ module;
 #include <string>
 #include <source_location>
 
-export module boring32.error.errorbase;
+export module boring32.error:errorbase;
 
 export namespace Boring32::Error
 {

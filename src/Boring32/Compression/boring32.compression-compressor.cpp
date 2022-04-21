@@ -8,8 +8,7 @@ module;
 
 module boring32.compression:compressor;
 import :compressionerror;
-import boring32.error.win32error;
-import boring32.error.functions;
+import boring32.error;
 
 // For reference see: https://docs.microsoft.com/en-us/windows/win32/cmpapi/using-the-compression-api-in-block-mode
 namespace Boring32::Compression

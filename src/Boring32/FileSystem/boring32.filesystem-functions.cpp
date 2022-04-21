@@ -9,7 +9,7 @@ module;
 #include <Windows.h>
 
 module boring32.filesystem:functions;
-import boring32.error.win32error;
+import boring32.error;
 import boring32.strings;
 
 namespace Boring32::FileSystem

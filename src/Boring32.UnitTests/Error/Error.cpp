@@ -4,7 +4,7 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-import boring32.error.functions;
+import boring32.error;
 import boring32.async.event;
 
 namespace Error
