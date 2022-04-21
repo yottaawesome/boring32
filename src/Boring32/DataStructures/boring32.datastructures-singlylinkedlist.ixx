@@ -8,7 +8,6 @@ module;
 #include <malloc.h>
 
 export module boring32.datastructures:singlylinkedlist;
-import boring32.error;
 
 export namespace Boring32::DataStructures
 {
