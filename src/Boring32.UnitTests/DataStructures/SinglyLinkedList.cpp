@@ -36,5 +36,25 @@ namespace DataStructures
 				list.EmptyList();
 				Assert::IsTrue(list.GetDepth() == 0);
 			}
+
+			TEST_METHOD(TestMoveAssignment)
+			{
+				Boring32::DataStructures::SinglyLinkedList<int> list1;
+				list1.Add(4);
+				list1.Add(8);
+				Boring32::DataStructures::SinglyLinkedList<int> list2 = std::move(list1);
+				Assert::IsTrue(list1.GetDepth() == 0);
+				Assert::IsTrue(list2.GetDepth() == 2);
+			}
+
+			TEST_METHOD(TestMoveConstructor)
+			{
+				Boring32::DataStructures::SinglyLinkedList<int> list1;
+				list1.Add(4);
+				list1.Add(8);
+				Boring32::DataStructures::SinglyLinkedList<int> list2(std::move(list1));
+				Assert::IsTrue(list1.GetDepth() == 0);
+				Assert::IsTrue(list2.GetDepth() == 2);
+			}
 	};
 }
