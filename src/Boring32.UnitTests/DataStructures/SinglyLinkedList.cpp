@@ -56,5 +56,14 @@ namespace DataStructures
 				Assert::IsTrue(list1.GetDepth() == 0);
 				Assert::IsTrue(list2.GetDepth() == 2);
 			}
+
+			TEST_METHOD(TestClose)
+			{
+				Boring32::DataStructures::SinglyLinkedList<int> list;
+				list.Add(4);
+				list.Add(8);
+				list.Close();
+				Assert::IsTrue(list.GetDepth() == 0);
+			}
 	};
 }
