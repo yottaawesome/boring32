@@ -65,5 +65,11 @@ namespace DataStructures
 				list.Close();
 				Assert::IsTrue(list.GetDepth() == 0);
 			}
+
+			TEST_METHOD(TestEmptyGetAt)
+			{
+				Boring32::DataStructures::SinglyLinkedList<int> list;
+				Assert::IsNull(list.GetAt(1).get());
+			}
 	};
 }
