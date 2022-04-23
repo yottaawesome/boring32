@@ -138,13 +138,14 @@ export namespace Boring32::DataStructures
 			/// </summary>
 			/// <param name="index"></param>
 			/// <returns></returns>
+			/// WARNING: doesn't work. Not sure why, but EntryInfo.Next is always null.
 			virtual std::shared_ptr<T> GetAt(const UINT index)
 			{
 				if (m_firstEntry == nullptr)
 					return nullptr;
 				
 				ListElement<T>* desiredEntry = m_firstEntry;
-				for (UINT i = 0; i < index; i++)
+				for (UINT i = 0; i <= index; i++)
 					if (desiredEntry != nullptr)
 						desiredEntry = (ListElement<T>*)desiredEntry->EntryInfo.Next;
 				
