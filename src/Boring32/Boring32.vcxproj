@@ -290,7 +290,7 @@
     <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocketsettings.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-websocket.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp-websockets.websocketsettings.ixx" />
+    <ClCompile Include="WinHttp\boring32.winhttp-websocketsettings.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-websocketstatus.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-winhttperror.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-winhttphandle.ixx" />
