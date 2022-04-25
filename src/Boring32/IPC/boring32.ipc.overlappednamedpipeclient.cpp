@@ -7,7 +7,7 @@ module;
 #include <source_location>
 #include <Windows.h>
 
-module boring32.ipc.overlappednamedpipeclient;
+module boring32.ipc:overlappednamedpipeclient;
 import boring32.error;
 
 namespace Boring32::IPC

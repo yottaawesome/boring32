@@ -3,8 +3,8 @@ module;
 #include <string>
 #include <Windows.h>
 
-export module boring32.ipc.overlappednamedpipeserver;
-import boring32.ipc.namedpipeserverbase;
+export module boring32.ipc:overlappednamedpipeserver;
+import :namedpipeserverbase;
 import boring32.raii.win32handle;
 import boring32.async.overlappedop;
 import boring32.async.overlappedio;

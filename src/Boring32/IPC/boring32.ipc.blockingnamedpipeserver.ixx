@@ -4,9 +4,9 @@ module;
 #include <vector>
 #include <Windows.h>
 
-export module boring32.ipc.blockingnamedpipeserver;
+export module boring32.ipc:blockingnamedpipeserver;
 import boring32.raii.win32handle;
-import boring32.ipc.namedpipeserverbase;
+import :namedpipeserverbase;
 
 export namespace Boring32::IPC
 {

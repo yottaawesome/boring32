@@ -4,7 +4,7 @@ module;
 #include <iostream>
 #include <Windows.h>
 
-module boring32.ipc.anonymouspipe;
+module boring32.ipc:anonymouspipe;
 import boring32.strings;
 
 namespace Boring32::IPC

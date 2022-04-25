@@ -6,7 +6,7 @@ module;
 #include <Windows.h>
 #include <Sddl.h>
 
-module boring32.ipc.namedpipeserverbase;
+module boring32.ipc:namedpipeserverbase;
 import boring32.error;
 import boring32.raii.win32handle;
 

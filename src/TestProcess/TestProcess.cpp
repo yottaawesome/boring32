@@ -3,10 +3,7 @@
 #include <string>
 
 import boring32.async.event;
-import boring32.ipc.anonymouspipe;
-import boring32.ipc.overlappednamedpipeserver;
-import boring32.ipc.overlappednamedpipeclient;
-import boring32.ipc.blockingnamedpipeclient;
+import boring32.ipc;
 import boring32.security.privatenamespace;
 import boring32.util;
 import test;

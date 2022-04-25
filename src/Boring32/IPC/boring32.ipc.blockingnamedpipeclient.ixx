@@ -3,8 +3,8 @@ module;
 #include <vector>
 #include <string>
 
-export module boring32.ipc.blockingnamedpipeclient;
-import boring32.ipc.namedpipeclientbase;
+export module boring32.ipc:blockingnamedpipeclient;
+import :namedpipeclientbase;
 
 export namespace Boring32::IPC
 {

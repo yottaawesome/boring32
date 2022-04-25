@@ -3,7 +3,7 @@ module;
 #include <string>
 #include <Windows.h>
 
-export module boring32.ipc.namedpipeserverbase;
+export module boring32.ipc:namedpipeserverbase;
 import boring32.raii.win32handle;
 
 export namespace Boring32::IPC

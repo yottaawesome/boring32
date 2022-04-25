@@ -5,7 +5,7 @@ module;
 #include <vector>
 #include <Windows.h>
 
-module boring32.ipc.blockingnamedpipeserver;
+module boring32.ipc:blockingnamedpipeserver;
 import boring32.util;
 
 namespace Boring32::IPC
