@@ -35,7 +35,7 @@
     <ClCompile Include="Process\boring32.process-dynamiclinklibrary.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinHttp\boring32.winhttp.winhttphandle.cpp">
+    <ClCompile Include="WinHttp\boring32.winhttp-winhttphandle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Raii\boring32.raii.win32handle.cpp">
@@ -71,10 +71,10 @@
     <ClCompile Include="Util\boring32.util-functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinHttp\boring32.winhttp.httpwebclient.cpp">
+    <ClCompile Include="WinHttp\boring32.winhttp-httpwebclient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinHttp\boring32.winhttp.websockets.websocket.cpp">
+    <ClCompile Include="WinHttp\boring32.winhttp-websocket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Async\boring32.async.waitabletimer.cpp">
@@ -146,13 +146,13 @@
     <ClCompile Include="Async\boring32.async.synchronizationbarrier.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinHttp\boring32.winhttp.proxyinfo.cpp">
+    <ClCompile Include="WinHttp\boring32.winhttp-proxyinfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Async\boring32.async.threadpool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinHttp\boring32.winhttp.session.cpp">
+    <ClCompile Include="WinHttp\boring32.winhttp-session.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Async\boring32.async.mutev.cpp">
@@ -209,10 +209,10 @@
     <ClCompile Include="Crypto\boring32.crypto-certificatechain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinHttp\boring32.winhttp.websockets.asyncwebsocket.cpp">
+    <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinHttp\boring32.winhttp.websockets.asyncwebsocket.statuscallback.cpp">
+    <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket-statuscallback.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Security\boring32.security.token.cpp">
@@ -293,26 +293,26 @@
     <ClCompile Include="Crypto\boring32.crypto-certstore.ixx" />
     <ClCompile Include="Crypto\boring32.crypto-chainingmode.ixx" />
     <ClCompile Include="Crypto\boring32.crypto-certificatechain.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp.winhttphandle.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp.proxytype.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp.httpwebclient.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp.requestresult.ixx" />
+    <ClCompile Include="WinHttp\boring32.winhttp-winhttphandle.ixx" />
+    <ClCompile Include="WinHttp\boring32.winhttp-proxytype.ixx" />
+    <ClCompile Include="WinHttp\boring32.winhttp-httpwebclient.ixx" />
+    <ClCompile Include="WinHttp\boring32.winhttp-requestresult.ixx" />
     <ClCompile Include="Wic\boring32.wic.ixx" />
     <ClCompile Include="Wic\boring32.wic-imagingfactory.ixx" />
     <ClCompile Include="Wic\boring32.wic-imagingfactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinHttp\boring32.winhttp.websockets.websocket.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp.websockets.asyncwebsocket.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp.websockets.websocketstatus.ixx" />
+    <ClCompile Include="WinHttp\boring32.winhttp-websocket.ixx" />
+    <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket.ixx" />
+    <ClCompile Include="WinHttp\boring32.winhttp-websocketstatus.ixx" />
     <ClCompile Include="FileSystem\boring32.filesystem.ixx" />
     <ClCompile Include="FileSystem\boring32.filesystem-functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinHttp\boring32.winhttp.websockets.asyncwebsocketsettings.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp.websockets.websocketsettings.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp.proxyinfo.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp.session.ixx" />
+    <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocketsettings.ixx" />
+    <ClCompile Include="WinHttp\boring32.winhttp-websockets.websocketsettings.ixx" />
+    <ClCompile Include="WinHttp\boring32.winhttp-proxyinfo.ixx" />
+    <ClCompile Include="WinHttp\boring32.winhttp-session.ixx" />
     <ClCompile Include="Async\boring32.async.slimreadwritelock.ixx" />
     <ClCompile Include="Async\boring32.async.eventloop.ixx" />
     <ClCompile Include="Error\boring32.error-errorbase.ixx" />
@@ -323,8 +323,8 @@
     <ClCompile Include="Util\boring32.util-switcher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinHttp\boring32.winhttp.winhttperror.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp.winhttperror.cpp">
+    <ClCompile Include="WinHttp\boring32.winhttp-winhttperror.ixx" />
+    <ClCompile Include="WinHttp\boring32.winhttp-winhttperror.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Security\boring32.security.securitydescriptor.ixx" />
