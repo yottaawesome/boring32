@@ -10,7 +10,7 @@ module;
 module boring32.windowsimagingcomponent:imagingfactory;
 import boring32.error;
 
-namespace Boring32::Wic
+namespace Boring32::WindowsImagingComponent
 {
 	ImagingFactory::~ImagingFactory()
 	{

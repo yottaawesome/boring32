@@ -7,7 +7,7 @@ module;
 
 export module boring32.windowsimagingcomponent:imagingfactory;
 
-export namespace Boring32::Wic
+export namespace Boring32::WindowsImagingComponent
 {
 	// https://docs.microsoft.com/en-us/windows/win32/api/wincodec/nn-wincodec-iwicimagingfactory
 	class ImagingFactory
