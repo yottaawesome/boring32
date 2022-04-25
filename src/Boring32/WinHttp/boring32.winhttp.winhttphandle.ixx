@@ -4,7 +4,7 @@ module;
 #include <Windows.h>
 #include <winhttp.h>
 
-export module boring32.winhttp.winhttphandle;
+export module boring32.winhttp:winhttphandle;
 
 export namespace Boring32::WinHttp
 {

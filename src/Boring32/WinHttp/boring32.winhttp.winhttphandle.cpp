@@ -5,7 +5,7 @@ module;
 #include <Windows.h>
 #include <winhttp.h>
 
-module boring32.winhttp.winhttphandle;
+module boring32.winhttp:winhttphandle;
 
 namespace Boring32::WinHttp
 {

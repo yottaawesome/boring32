@@ -4,10 +4,10 @@ module;
 #include <vector>
 #include <Windows.h>
 
-export module boring32.winhttp.httpwebclient;
-import boring32.winhttp.winhttphandle;
-import boring32.winhttp.requestresult;
-import boring32.winhttp.proxyinfo;
+export module boring32.winhttp:httpwebclient;
+import :winhttphandle;
+import :requestresult;
+import :proxyinfo;
 
 export namespace Boring32::WinHttp
 {

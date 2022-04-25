@@ -7,12 +7,12 @@ module;
 #include <memory>
 #include <future>
 
-export module boring32.winhttp.websockets.websocket;
-import boring32.winhttp.websockets.websocketstatus;
-import boring32.winhttp.websockets.websocketsettings;
+export module boring32.winhttp:websocket;
+import :websocketstatus;
+import :websocketsettings;
 import boring32.async.event;
-import boring32.winhttp.winhttphandle;
-import boring32.winhttp.session;
+import :winhttphandle;
+import :session;
 
 export namespace Boring32::WinHttp::WebSockets
 {

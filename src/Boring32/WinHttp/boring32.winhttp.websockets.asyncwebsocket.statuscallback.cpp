@@ -8,7 +8,7 @@ module;
 #include <Windows.h>
 #include <winhttp.h>
 
-module boring32.winhttp.websockets.asyncwebsocket;
+module boring32.winhttp:asyncwebsocket;
 import boring32.strings;
 import boring32.error;
 

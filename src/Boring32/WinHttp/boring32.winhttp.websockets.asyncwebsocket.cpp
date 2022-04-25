@@ -9,9 +9,9 @@ module;
 #include <winhttp.h>
 #include <wincrypt.h>
 
-module boring32.winhttp.websockets.asyncwebsocket;
+module boring32.winhttp:asyncwebsocket;
 import boring32.error;
-import boring32.winhttp.winhttphandle;
+import :winhttphandle;
 
 namespace Boring32::WinHttp::WebSockets
 {

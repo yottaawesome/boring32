@@ -1,4 +1,4 @@
-export module boring32.winhttp.proxytype;
+export module boring32.winhttp:proxytype;
 
 export namespace Boring32::WinHttp
 {

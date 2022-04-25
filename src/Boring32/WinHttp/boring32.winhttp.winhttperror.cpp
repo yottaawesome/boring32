@@ -5,7 +5,7 @@ module;
 #include <Windows.h>
 #include <winhttp.h>
 
-module boring32.winhttp.winhttperror;
+module boring32.winhttp:winhttperror;
 
 namespace Boring32::WinHttp
 {

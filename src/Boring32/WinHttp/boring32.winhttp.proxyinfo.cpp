@@ -5,7 +5,7 @@ module;
 #include <Windows.h>
 #include <winhttp.h>
 
-module boring32.winhttp.proxyinfo;
+module boring32.winhttp:proxyinfo;
 import boring32.error;
 
 namespace Boring32::WinHttp

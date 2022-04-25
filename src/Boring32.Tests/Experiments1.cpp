@@ -35,8 +35,7 @@ import boring32.async.memorymappedfile;
 import boring32.ipc;
 import boring32.security.sid;
 import boring32.crypto;
-import boring32.winhttp.websockets.websocket;
-import boring32.winhttp.websockets.asyncwebsocket;
+import boring32.winhttp;
 import boring32.async.process;
 
 #pragma comment(lib, "Pathcch.lib")

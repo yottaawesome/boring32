@@ -4,7 +4,7 @@ module;
 #include <Windows.h>
 #include <winhttp.h>
 
-export module boring32.winhttp.proxyinfo;
+export module boring32.winhttp:proxyinfo;
 
 export namespace Boring32::WinHttp
 {

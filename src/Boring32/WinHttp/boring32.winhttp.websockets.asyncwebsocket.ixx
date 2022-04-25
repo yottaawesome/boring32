@@ -7,12 +7,12 @@ module;
 #include <Windows.h>
 #include <winhttp.h>
 
-export module boring32.winhttp.websockets.asyncwebsocket;
-import boring32.winhttp.websockets.websocketstatus;
-import boring32.winhttp.websockets.asyncwebsocketsettings;
+export module boring32.winhttp:asyncwebsocket;
+import :websocketstatus;
+import :asyncwebsocketsettings;
 import boring32.async.criticalsectionlock;
 import boring32.async.event;
-import boring32.winhttp.winhttphandle;
+import :winhttphandle;
 
 export namespace Boring32::WinHttp::WebSockets
 {

@@ -12,7 +12,7 @@ import boring32.error;
 import boring32.raii.uniqueptrs;
 import boring32.security.functions;
 import boring32.filesystem;
-import boring32.winhttp.winhttperror;
+import boring32.winhttp;
 import boring32.winsock;
 import boring32.xaudio2;
 import boring32.compression;

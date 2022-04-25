@@ -7,7 +7,7 @@ module;
 #include <Windows.h>
 #include <winhttp.h>
 
-module boring32.winhttp.session;
+module boring32.winhttp:session;
 import boring32.error;
 
 namespace Boring32::WinHttp

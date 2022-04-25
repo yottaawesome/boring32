@@ -5,9 +5,9 @@ module;
 #include <windows.h>
 #include <winhttp.h>
 
-export module boring32.winhttp.session;
-import boring32.winhttp.winhttphandle;
-import boring32.winhttp.proxytype;
+export module boring32.winhttp:session;
+import :winhttphandle;
+import :proxytype;
 
 export namespace Boring32::WinHttp
 {

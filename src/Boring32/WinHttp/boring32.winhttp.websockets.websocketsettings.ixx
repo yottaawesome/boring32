@@ -3,9 +3,9 @@ module;
 #include <string>
 #include <Windows.h>
 
-export module boring32.winhttp.websockets.websocketsettings;
+export module boring32.winhttp:websocketsettings;
 import boring32.crypto;
-import boring32.winhttp.session;
+import :session;
 
 export namespace Boring32::WinHttp::WebSockets
 {
