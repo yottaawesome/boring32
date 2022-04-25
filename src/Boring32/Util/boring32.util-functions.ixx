@@ -4,6 +4,7 @@ module;
 #include <stdexcept>
 #include <vector>
 #include <Windows.h>
+#include <guiddef.h>
 
 export module boring32.util:functions;
 
@@ -44,4 +45,6 @@ export namespace Boring32::Util
 	size_t GetUnixTime() noexcept;
 	size_t GetMillisToMinuteBoundary(const SYSTEMTIME& time, const size_t boundary) noexcept;
 	size_t GetMillisToSecondBoundary(const SYSTEMTIME& time, const size_t secondBoundary) noexcept;
+	std::wstring GetGuidAsWString(const GUID& guid);
+	std::wstring GetGuidAsWString();
 }

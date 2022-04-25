@@ -266,9 +266,9 @@
     <ClCompile Include="Util\boring32.util.ixx" />
     <ClCompile Include="Util\boring32.util-switcher.ixx" />
     <ClCompile Include="Util\boring32.util-switcher.cpp" />
-    <ClCompile Include="Wic\boring32.wic-imagingfactory.ixx" />
-    <ClCompile Include="Wic\boring32.wic.ixx" />
-    <ClCompile Include="Wic\boring32.wic-imagingfactory.cpp" />
+    <ClCompile Include="WindowsImagingComponent\boring32.windowsimagingcomponent-imagingfactory.ixx" />
+    <ClCompile Include="WindowsImagingComponent\boring32.windowsimagingcomponent.ixx" />
+    <ClCompile Include="WindowsImagingComponent\boring32.windowsimagingcomponent-imagingfactory.cpp" />
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform.callout.ixx" />
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform.engine.ixx" />
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform.filter.ixx" />
@@ -351,8 +351,6 @@
     <ClCompile Include="Error\boring32.error-win32error.cpp" />
     <ClCompile Include="FileSystem\boring32.filesystem-file.cpp" />
     <ClCompile Include="FileSystem\boring32.filesystem-file.ixx" />
-    <ClCompile Include="Guid\boring32.guid.ixx" />
-    <ClCompile Include="Guid\boring32.guid.cpp" />
     <ClCompile Include="Async\boring32.async.memorymappedfile.cpp" />
     <ClCompile Include="Async\boring32.async.mutex.cpp" />
     <ClCompile Include="IPC\boring32.ipc-anonymouspipe.cpp" />

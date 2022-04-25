@@ -65,9 +65,6 @@
     <ClCompile Include="Async\boring32.async.job.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Guid\boring32.guid.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Util\boring32.util-functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -233,7 +230,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Raii\boring32.raii.win32handle.ixx" />
-    <ClCompile Include="Guid\boring32.guid.ixx" />
     <ClCompile Include="COM\boring32.com-comthreadscope.ixx" />
     <ClCompile Include="Compression\boring32.compression.ixx" />
     <ClCompile Include="Compression\boring32.compression-compressor.ixx" />
@@ -297,9 +293,9 @@
     <ClCompile Include="WinHttp\boring32.winhttp-proxytype.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-httpwebclient.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-requestresult.ixx" />
-    <ClCompile Include="Wic\boring32.wic.ixx" />
-    <ClCompile Include="Wic\boring32.wic-imagingfactory.ixx" />
-    <ClCompile Include="Wic\boring32.wic-imagingfactory.cpp">
+    <ClCompile Include="WindowsImagingComponent\boring32.windowsimagingcomponent.ixx" />
+    <ClCompile Include="WindowsImagingComponent\boring32.windowsimagingcomponent-imagingfactory.ixx" />
+    <ClCompile Include="WindowsImagingComponent\boring32.windowsimagingcomponent-imagingfactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WinHttp\boring32.winhttp-websocket.ixx" />
