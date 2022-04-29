@@ -2,7 +2,7 @@
 #include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-import boring32.security.securitydescriptor;
+import boring32.security;
 
 namespace Security
 {

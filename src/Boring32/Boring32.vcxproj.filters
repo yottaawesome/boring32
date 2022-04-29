@@ -41,7 +41,7 @@
     <ClCompile Include="Raii\boring32.raii-win32handle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Security\boring32.security.sid.cpp">
+    <ClCompile Include="Security\boring32.security-sid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Async\boring32.async.memorymappedfile.cpp">
@@ -116,7 +116,7 @@
     <ClCompile Include="Async\boring32.async.overlappedop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Security\boring32.security.privatenamespace.cpp">
+    <ClCompile Include="Security\boring32.security-privatenamespace.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Error\boring32.error-win32error.cpp">
@@ -191,7 +191,7 @@
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskservice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Security\boring32.security.impersonationcontext.cpp">
+    <ClCompile Include="Security\boring32.security-impersonationcontext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Crypto\boring32.crypto-securestring.cpp">
@@ -212,10 +212,10 @@
     <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket-statuscallback.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Security\boring32.security.token.cpp">
+    <ClCompile Include="Security\boring32.security-token.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Security\boring32.security.functions.cpp">
+    <ClCompile Include="Security\boring32.security-functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Strings\boring32.strings.ixx" />
@@ -279,12 +279,12 @@
     <ClCompile Include="IPC\boring32.ipc-blockingnamedpipeserver.ixx" />
     <ClCompile Include="Crypto\boring32.crypto-certificate.ixx" />
     <ClCompile Include="Crypto\boring32.crypto-aesencryption.ixx" />
-    <ClCompile Include="Security\boring32.security.functions.ixx" />
-    <ClCompile Include="Security\boring32.security.token.ixx" />
-    <ClCompile Include="Security\boring32.security.constants.ixx" />
-    <ClCompile Include="Security\boring32.security.privatenamespace.ixx" />
-    <ClCompile Include="Security\boring32.security.impersonationcontext.ixx" />
-    <ClCompile Include="Security\boring32.security.sid.ixx" />
+    <ClCompile Include="Security\boring32.security-functions.ixx" />
+    <ClCompile Include="Security\boring32.security-token.ixx" />
+    <ClCompile Include="Security\boring32.security-constants.ixx" />
+    <ClCompile Include="Security\boring32.security-privatenamespace.ixx" />
+    <ClCompile Include="Security\boring32.security-impersonationcontext.ixx" />
+    <ClCompile Include="Security\boring32.security-sid.ixx" />
     <ClCompile Include="Crypto\boring32.crypto-securestring.ixx" />
     <ClCompile Include="Crypto\boring32.crypto-certstore.ixx" />
     <ClCompile Include="Crypto\boring32.crypto-chainingmode.ixx" />
@@ -323,8 +323,8 @@
     <ClCompile Include="WinHttp\boring32.winhttp-winhttperror.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Security\boring32.security.securitydescriptor.ixx" />
-    <ClCompile Include="Security\boring32.security.securitydescriptor.cpp">
+    <ClCompile Include="Security\boring32.security-securitydescriptor.ixx" />
+    <ClCompile Include="Security\boring32.security-securitydescriptor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Async\boring32.async.processinfo.ixx" />

@@ -4,7 +4,7 @@
 
 import boring32.async.event;
 import boring32.ipc;
-import boring32.security.privatenamespace;
+import boring32.security;
 import boring32.util;
 import test;
 

@@ -33,7 +33,7 @@ import boring32.async.threadsafevector;
 import boring32.async.memorymappedview;
 import boring32.async.memorymappedfile;
 import boring32.ipc;
-import boring32.security.sid;
+import boring32.security;
 import boring32.crypto;
 import boring32.winhttp;
 import boring32.async.process;
