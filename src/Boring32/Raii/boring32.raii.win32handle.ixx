@@ -3,7 +3,7 @@ module;
 #include <Windows.h>
 #include <memory>
 
-export module boring32.raii.win32handle;
+export module boring32.raii:win32handle;
 
 export namespace Boring32::Raii
 {

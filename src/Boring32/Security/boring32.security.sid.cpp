@@ -9,7 +9,7 @@ module;
 
 module boring32.security.sid;
 import boring32.error;
-import boring32.raii.uniqueptrs;
+import boring32.raii;
 
 namespace Boring32::Security
 {

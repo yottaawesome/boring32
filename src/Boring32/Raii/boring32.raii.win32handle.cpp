@@ -7,7 +7,7 @@ module;
 #include <iostream>
 #include <Windows.h>
 
-module boring32.raii.win32handle;
+module boring32.raii:win32handle;
 import boring32.error;
 
 namespace Boring32::Raii

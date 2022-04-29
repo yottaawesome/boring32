@@ -4,7 +4,7 @@ module;
 #include <string>
 
 export module boring32.async.process;
-import boring32.raii.win32handle;
+import boring32.raii;
 
 export namespace Boring32::Async
 {

@@ -8,7 +8,7 @@ module;
 
 module boring32.security.privatenamespace;
 import boring32.error;
-import boring32.raii.uniqueptrs;
+import boring32.raii;
 
 namespace Boring32::Security
 {

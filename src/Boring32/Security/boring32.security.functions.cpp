@@ -11,7 +11,7 @@ module;
 
 module boring32.security.functions;
 import boring32.error;
-import boring32.raii.uniqueptrs;
+import boring32.raii;
 import boring32.security.constants;
 
 namespace Boring32::Security

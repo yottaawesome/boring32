@@ -6,10 +6,10 @@
 #include <windows.h>
 #include "Experiments1Main.hpp"
 
-import boring32.raii.win32handle;
+import boring32.raii;
 import boring32.strings;
 import boring32.error;
-import boring32.raii.uniqueptrs;
+import boring32.raii;
 import boring32.security.functions;
 import boring32.filesystem;
 import boring32.winhttp;

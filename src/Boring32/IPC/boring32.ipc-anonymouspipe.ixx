@@ -5,7 +5,7 @@ module;
 #include <Windows.h>
 
 export module boring32.ipc:anonymouspipe;
-import boring32.raii.win32handle;
+import boring32.raii;
 
 export namespace Boring32::IPC
 {

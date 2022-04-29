@@ -4,7 +4,7 @@ module;
 #include <Windows.h>
 #include <sddl.h>
 
-export module boring32.raii.uniqueptrs;
+export module boring32.raii:uniqueptrs;
 
 export namespace Boring32::Raii
 {

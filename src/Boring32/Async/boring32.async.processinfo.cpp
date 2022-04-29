@@ -3,7 +3,7 @@ module;
 #include <Windows.h>
 
 module boring32.async.processinfo;
-import boring32.raii.win32handle;
+import boring32.raii;
 
 namespace Boring32::Async
 {

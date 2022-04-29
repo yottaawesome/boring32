@@ -4,7 +4,7 @@ module;
 
 export module boring32.security.token;
 import boring32.security.constants;
-import boring32.raii.win32handle;
+import boring32.raii;
 
 export namespace Boring32::Security
 {

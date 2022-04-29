@@ -8,7 +8,7 @@ module;
 
 module boring32.ipc:namedpipeserverbase;
 import boring32.error;
-import boring32.raii.win32handle;
+import boring32.raii;
 
 namespace Boring32::IPC
 {

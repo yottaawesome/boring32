@@ -5,7 +5,7 @@ module;
 #include <Windows.h>
 
 export module boring32.ipc:blockingnamedpipeserver;
-import boring32.raii.win32handle;
+import boring32.raii;
 import :namedpipeserverbase;
 
 export namespace Boring32::IPC

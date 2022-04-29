@@ -5,7 +5,7 @@ module;
 #include <Windows.h>
 
 export module boring32.security.functions;
-import boring32.raii.win32handle;
+import boring32.raii;
 import boring32.security.constants;
 
 export namespace Boring32::Security
