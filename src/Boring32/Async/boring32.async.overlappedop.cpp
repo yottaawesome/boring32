@@ -6,7 +6,7 @@ module;
 //#include <winternl.h>
 //#include <ntstatus.h>
 
-module boring32.async.overlappedop;
+module boring32.async:overlappedop;
 import boring32.error;
 
 namespace Boring32::Async

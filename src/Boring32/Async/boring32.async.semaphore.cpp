@@ -6,7 +6,7 @@ module;
 #include <string>
 #include <format>
 
-module boring32.async.semaphore;
+module boring32.async:semaphore;
 import boring32.error;
 
 namespace Boring32::Async

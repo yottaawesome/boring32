@@ -2,7 +2,7 @@
 #include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-import boring32.async.waitabletimer;
+import boring32.async;
 
 namespace Async
 {

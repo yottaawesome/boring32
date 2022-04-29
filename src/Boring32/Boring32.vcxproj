@@ -198,7 +198,7 @@
     <ClCompile Include="Async\boring32.async.mutev.ixx" />
     <ClCompile Include="Async\boring32.async.mutex.ixx" />
     <ClCompile Include="Async\boring32.async.synchronizationbarrier.ixx" />
-    <ClCompile Include="Async\boring32.async.threadpools.ixx" />
+    <ClCompile Include="Async\boring32.async.threadpool.ixx" />
     <ClCompile Include="Async\boring32.async.timerqueue.ixx" />
     <ClCompile Include="Async\boring32.async.threadsafevector.ixx" />
     <ClCompile Include="Async\boring32.async.timerqueuetimer.ixx" />

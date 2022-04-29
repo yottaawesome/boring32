@@ -3,8 +3,7 @@
 #include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-import boring32.async.functions;
-import boring32.async.event;
+import boring32.async;
 
 namespace Async
 {

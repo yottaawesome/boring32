@@ -5,9 +5,9 @@ module;
 #include <algorithm>
 #include <Windows.h>
 
-export module boring32.async.threadsafevector;
-import boring32.async;
-import boring32.async.event;
+export module boring32.async:threadsafevector;
+import :criticalsectionlock;
+import :event;
 
 export namespace Boring32::Async
 {

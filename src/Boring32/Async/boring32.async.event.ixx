@@ -3,7 +3,7 @@ module;
 #include <string>
 #include <Windows.h>
 
-export module boring32.async.event;
+export module boring32.async:event;
 import boring32.raii;
 
 export namespace Boring32::Async

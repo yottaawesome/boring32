@@ -2,7 +2,7 @@ module;
 
 #include <Windows.h>
 
-export module boring32.async.waitableaddress;
+export module boring32.async:waitableaddress;
 
 export namespace Boring32::Async
 {

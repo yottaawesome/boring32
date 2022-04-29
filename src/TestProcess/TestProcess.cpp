@@ -2,7 +2,7 @@
 #include <Windows.h>
 #include <string>
 
-import boring32.async.event;
+import boring32.async;
 import boring32.ipc;
 import boring32.security;
 import boring32.util;

@@ -5,7 +5,7 @@ module;
 #include <Windows.h>
 #include <Jobapi2.h>
 
-module boring32.async.job;
+module boring32.async:job;
 import boring32.error;
 
 namespace Boring32::Async

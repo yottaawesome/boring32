@@ -2,7 +2,7 @@ module;
 
 #include <Windows.h>
 
-export module boring32.async.synchronizationbarrier;
+export module boring32.async:synchronizationbarrier;
 
 export namespace Boring32::Async
 {

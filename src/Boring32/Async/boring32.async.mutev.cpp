@@ -5,7 +5,7 @@ module;
 #include <string>
 #include <Windows.h>
 
-module boring32.async.mutev;
+module boring32.async:mutev;
 
 namespace Boring32::Async
 {

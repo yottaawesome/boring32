@@ -8,7 +8,7 @@ module;
 
 module boring32.registry:functions;
 import boring32.error;
-import boring32.async.event;
+import boring32.async;
 
 namespace Boring32::Registry
 {

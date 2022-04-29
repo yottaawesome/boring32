@@ -7,7 +7,7 @@ module;
 #include <source_location>
 #include <Windows.h>
 
-module boring32.async.mutex;
+module boring32.async:mutex;
 import boring32.error;
 
 namespace Boring32::Async

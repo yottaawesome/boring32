@@ -7,7 +7,7 @@ module;
 #include <source_location>
 #include <Windows.h>
 
-module boring32.async.waitabletimer;
+module boring32.async:waitabletimer;
 import boring32.error;
 //import boring32.error.functions;
 

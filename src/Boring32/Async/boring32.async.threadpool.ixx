@@ -7,7 +7,7 @@ module;
 #include <memory>
 #include <Windows.h>
 
-export module boring32.async.threadpools;
+export module boring32.async:threadpool;
 import boring32.error;
 
 export namespace Boring32::Async::ThreadPools

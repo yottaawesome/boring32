@@ -10,7 +10,7 @@ module;
 export module boring32.winhttp:websocket;
 import :websocketstatus;
 import :websocketsettings;
-import boring32.async.event;
+import boring32.async;
 import :winhttphandle;
 import :session;
 

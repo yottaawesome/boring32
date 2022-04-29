@@ -3,7 +3,7 @@ module;
 #include <string>
 #include <Windows.h>
 
-export module boring32.async.filemapping;
+export module boring32.async:filemapping;
 import boring32.raii;
 
 export namespace Boring32::Async

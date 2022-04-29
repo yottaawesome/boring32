@@ -4,7 +4,7 @@ module;
 #include <tuple>
 #include <source_location>
 
-module boring32.async.threadpools;
+module boring32.async:threadpool;
 import boring32.error;
 
 namespace Boring32::Async::ThreadPools

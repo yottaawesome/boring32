@@ -3,9 +3,9 @@ module;
 #include <functional>
 #include <Windows.h>
 
-export module boring32.async.thread;
+export module boring32.async:thread;
 import boring32.raii;
-import boring32.async.event;
+import :event;
 
 export namespace Boring32::Async
 {

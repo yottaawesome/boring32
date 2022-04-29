@@ -4,7 +4,7 @@ module;
 #include <functional>
 #include <Windows.h>
 
-export module boring32.async.eventloop;
+export module boring32.async:eventloop;
 
 export namespace Boring32::Async
 {

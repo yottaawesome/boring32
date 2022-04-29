@@ -4,7 +4,7 @@ module;
 #include <string>
 #include <windows.h>
 
-export module boring32.async.functions;
+export module boring32.async:functions;
 
 export namespace Boring32::Async
 {

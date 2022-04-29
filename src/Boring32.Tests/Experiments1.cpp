@@ -12,8 +12,7 @@
 #include "Boring32.Tests.h"
 
 import boring32.winsock;
-import boring32.async.threadpools;
-import boring32.async.semaphore;
+import boring32.async;
 import boring32.strings;
 import boring32.com;
 import boring32.compression;
@@ -22,21 +21,11 @@ import boring32.util;
 import boring32.datastructures;
 import boring32.registry;
 import boring32.taskscheduler;
-import boring32.async.job;
-import boring32.async.mutex;
 import boring32.error;
-import boring32.async.waitabletimer;
-import boring32.async.event;
-import boring32.async.timerqueue;
-import boring32.async.timerqueuetimer;
-import boring32.async.threadsafevector;
-import boring32.async.memorymappedview;
-import boring32.async.memorymappedfile;
 import boring32.ipc;
 import boring32.security;
 import boring32.crypto;
 import boring32.winhttp;
-import boring32.async.process;
 
 #pragma comment(lib, "Pathcch.lib")
 

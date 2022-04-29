@@ -6,9 +6,9 @@ module;
 #include <stdexcept>
 #include <Windows.h>
 
-module boring32.async.eventloop;
+module boring32.async:eventloop;
 import boring32.error;
-import boring32.async;
+import :criticalsectionlock;
 
 namespace Boring32::Async
 {

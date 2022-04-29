@@ -2,7 +2,7 @@ module;
 
 #include <Windows.h>
 
-export module boring32.async.processinfo;
+export module boring32.async:processinfo;
 
 export namespace Boring32::Async
 {

@@ -7,7 +7,7 @@ module;
 #include <format>
 #include <Windows.h>
 
-module boring32.async.event;
+module boring32.async:event;
 import boring32.error;
 
 namespace Boring32::Async

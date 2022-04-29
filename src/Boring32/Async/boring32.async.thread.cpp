@@ -7,7 +7,7 @@ module;
 #include <Windows.h>
 #include <process.h>
 
-module boring32.async.thread;
+module boring32.async:thread;
 import boring32.error;
 
 namespace Boring32::Async

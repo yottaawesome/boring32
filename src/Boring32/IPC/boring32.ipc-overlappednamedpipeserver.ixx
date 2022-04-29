@@ -6,8 +6,7 @@ module;
 export module boring32.ipc:overlappednamedpipeserver;
 import :namedpipeserverbase;
 import boring32.raii;
-import boring32.async.overlappedop;
-import boring32.async.overlappedio;
+import boring32.async;
 
 export namespace Boring32::IPC
 {

@@ -3,7 +3,7 @@ module;
 #include <Windows.h>
 #include <string>
 
-export module boring32.async.mutex;
+export module boring32.async:mutex;
 import boring32.raii;
 
 export namespace Boring32::Async

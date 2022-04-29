@@ -5,7 +5,7 @@ module;
 #include <stdexcept>
 #include <source_location>
 
-module boring32.async.synchronizationbarrier;
+module boring32.async:synchronizationbarrier;
 import boring32.error;
 
 namespace Boring32::Async

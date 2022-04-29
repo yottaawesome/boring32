@@ -7,7 +7,7 @@ module;
 #include <Windows.h>
 #include <TlHelp32.h>
 
-module boring32.async.functions;
+module boring32.async:functions;
 import boring32.raii;
 import boring32.strings;
 import boring32.error;

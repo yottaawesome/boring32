@@ -3,7 +3,7 @@ module;
 #include <source_location>
 #include <Windows.h>
 
-module boring32.async.waitableaddress;
+module boring32.async:waitableaddress;
 import boring32.error;
 
 namespace Boring32::Async

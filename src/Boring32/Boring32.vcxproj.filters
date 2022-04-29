@@ -219,7 +219,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Strings\boring32.strings.ixx" />
-    <ClCompile Include="Async\boring32.async.threadpools.ixx" />
+    <ClCompile Include="Async\boring32.async.threadpool.ixx" />
     <ClCompile Include="Async\boring32.async.semaphore.ixx" />
     <ClCompile Include="Async\boring32.async.filemapping.ixx" />
     <ClCompile Include="Async\boring32.async.filemapping.cpp">
