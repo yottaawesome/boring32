@@ -6,7 +6,7 @@ module;
 #include <Sddl.h>          // for SID management
 
 
-module boring32.security.privatenamespace;
+module boring32.security:privatenamespace;
 import boring32.error;
 import boring32.raii;
 

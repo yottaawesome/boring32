@@ -5,7 +5,7 @@ module;
 #include <Windows.h>
 #include <sddl.h>
 
-module boring32.security.securitydescriptor;
+module boring32.security:securitydescriptor;
 import boring32.error;
 
 namespace Boring32::Security

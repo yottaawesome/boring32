@@ -3,7 +3,7 @@ module;
 #include <string>
 #include <Windows.h>
 
-export module boring32.security.securitydescriptor;
+export module boring32.security:securitydescriptor;
 import boring32.raii;
 
 export namespace Boring32::Security

@@ -9,10 +9,10 @@ module;
 #include <Windows.h>
 #include <sddl.h>
 
-module boring32.security.functions;
+module boring32.security:functions;
 import boring32.error;
 import boring32.raii;
-import boring32.security.constants;
+import :constants;
 
 namespace Boring32::Security
 {

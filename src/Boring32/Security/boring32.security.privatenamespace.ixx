@@ -4,7 +4,7 @@ module;
 #include <vector>
 #include <Windows.h>
 
-export module boring32.security.privatenamespace;
+export module boring32.security:privatenamespace;
 
 export namespace Boring32::Security
 {

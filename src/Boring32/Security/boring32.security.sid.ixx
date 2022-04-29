@@ -4,7 +4,7 @@ module;
 #include <string>
 #include <Windows.h>
 
-export module boring32.security.sid;
+export module boring32.security:sid;
 
 export namespace Boring32::Security
 {

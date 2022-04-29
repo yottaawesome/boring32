@@ -4,9 +4,9 @@ module;
 #include <vector>
 #include <Windows.h>
 
-export module boring32.security.functions;
+export module boring32.security:functions;
 import boring32.raii;
-import boring32.security.constants;
+import :constants;
 
 export namespace Boring32::Security
 {

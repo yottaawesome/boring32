@@ -2,7 +2,7 @@ module;
 
 #include <Windows.h>
 
-export module boring32.security.impersonationcontext;
+export module boring32.security:impersonationcontext;
 
 export namespace Boring32::Security
 {

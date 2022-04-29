@@ -7,7 +7,7 @@ module;
 #include <Windows.h>
 #include <sddl.h>
 
-module boring32.security.sid;
+module boring32.security:sid;
 import boring32.error;
 import boring32.raii;
 

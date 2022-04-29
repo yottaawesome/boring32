@@ -3,7 +3,7 @@ module;
 #include <map>
 #include <string>
 
-export module boring32.security.constants;
+export module boring32.security:constants;
 
 export namespace Boring32::Security::Constants
 {

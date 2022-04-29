@@ -6,9 +6,9 @@ module;
 #include <Windows.h>
 #include <sddl.h>
 
-module boring32.security.token;
+module boring32.security:token;
 import boring32.error;
-import boring32.security.functions;
+import :functions;
 
 namespace Boring32::Security
 {
