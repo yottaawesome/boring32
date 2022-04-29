@@ -44,25 +44,25 @@
     <ClCompile Include="Security\boring32.security-sid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async.memorymappedfile.cpp">
+    <ClCompile Include="Async\boring32.async-memorymappedfile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async.mutex.cpp">
+    <ClCompile Include="Async\boring32.async-mutex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async.process.cpp">
+    <ClCompile Include="Async\boring32.async-process.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async.processinfo.cpp">
+    <ClCompile Include="Async\boring32.async-processinfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async.event.cpp">
+    <ClCompile Include="Async\boring32.async-event.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async.thread.cpp">
+    <ClCompile Include="Async\boring32.async-thread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async.job.cpp">
+    <ClCompile Include="Async\boring32.async-job.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Util\boring32.util-functions.cpp">
@@ -74,22 +74,22 @@
     <ClCompile Include="WinHttp\boring32.winhttp-websocket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async.waitabletimer.cpp">
+    <ClCompile Include="Async\boring32.async-waitabletimer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async.semaphore.cpp">
+    <ClCompile Include="Async\boring32.async-semaphore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async.slimreadwritelock.cpp">
+    <ClCompile Include="Async\boring32.async-slimreadwritelock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="COM\boring32.com-comthreadscope.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async.criticalsectionlock.cpp">
+    <ClCompile Include="Async\boring32.async-criticalsectionlock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async.overlappedio.cpp">
+    <ClCompile Include="Async\boring32.async-overlappedio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="IPC\boring32.ipc-anonymouspipe.cpp">
@@ -113,7 +113,7 @@
     <ClCompile Include="IPC\boring32.ipc-namedpipeclientbase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async.overlappedop.cpp">
+    <ClCompile Include="Async\boring32.async-overlappedop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Security\boring32.security-privatenamespace.cpp">
@@ -131,34 +131,34 @@
     <ClCompile Include="Compression\boring32.compression-decompressor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async.timerqueue.cpp">
+    <ClCompile Include="Async\boring32.async-timerqueue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async.timerqueuetimer.cpp">
+    <ClCompile Include="Async\boring32.async-timerqueuetimer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async.timerqueuetimercallback.cpp">
+    <ClCompile Include="Async\boring32.async-timerqueuetimercallback.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async.synchronizationbarrier.cpp">
+    <ClCompile Include="Async\boring32.async-synchronizationbarrier.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WinHttp\boring32.winhttp-proxyinfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async.threadpool.cpp">
+    <ClCompile Include="Async\boring32.async-threadpool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WinHttp\boring32.winhttp-session.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async.mutev.cpp">
+    <ClCompile Include="Async\boring32.async-mutev.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async.eventloop.cpp">
+    <ClCompile Include="Async\boring32.async-eventloop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async.functions.cpp">
+    <ClCompile Include="Async\boring32.async-functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Registry\boring32.registry-functions.cpp">
@@ -219,10 +219,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Strings\boring32.strings.ixx" />
-    <ClCompile Include="Async\boring32.async.threadpool.ixx" />
-    <ClCompile Include="Async\boring32.async.semaphore.ixx" />
-    <ClCompile Include="Async\boring32.async.filemapping.ixx" />
-    <ClCompile Include="Async\boring32.async.filemapping.cpp">
+    <ClCompile Include="Async\boring32.async-threadpool.ixx" />
+    <ClCompile Include="Async\boring32.async-semaphore.ixx" />
+    <ClCompile Include="Async\boring32.async-filemapping.ixx" />
+    <ClCompile Include="Async\boring32.async-filemapping.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FileSystem\boring32.filesystem-file.ixx" />
@@ -256,21 +256,21 @@
     <ClCompile Include="Error\boring32.error.ixx" />
     <ClCompile Include="Error\boring32.error-comerror.ixx" />
     <ClCompile Include="Error\boring32.error-ntstatuserror.ixx" />
-    <ClCompile Include="Async\boring32.async.job.ixx" />
-    <ClCompile Include="Async\boring32.async.mutex.ixx" />
-    <ClCompile Include="Async\boring32.async.synchronizationbarrier.ixx" />
-    <ClCompile Include="Async\boring32.async.criticalsectionlock.ixx" />
-    <ClCompile Include="Async\boring32.async.waitabletimert.ixx" />
-    <ClCompile Include="Async\boring32.async.event.ixx" />
+    <ClCompile Include="Async\boring32.async-job.ixx" />
+    <ClCompile Include="Async\boring32.async-mutex.ixx" />
+    <ClCompile Include="Async\boring32.async-synchronizationbarrier.ixx" />
+    <ClCompile Include="Async\boring32.async-criticalsectionlock.ixx" />
+    <ClCompile Include="Async\boring32.async-waitabletimer.ixx" />
+    <ClCompile Include="Async\boring32.async-event.ixx" />
     <ClCompile Include="Raii\boring32.raii-uniqueptrs.ixx" />
-    <ClCompile Include="Async\boring32.async.timerqueue.ixx" />
-    <ClCompile Include="Async\boring32.async.mutev.ixx" />
-    <ClCompile Include="Async\boring32.async.threadsafevector.ixx" />
+    <ClCompile Include="Async\boring32.async-timerqueue.ixx" />
+    <ClCompile Include="Async\boring32.async-mutev.ixx" />
+    <ClCompile Include="Async\boring32.async-threadsafevector.ixx" />
     <ClCompile Include="Crypto\boring32.crypto-tempcertimport.ixx" />
     <ClCompile Include="Crypto\boring32.crypto-functions.ixx" />
     <ClCompile Include="Crypto\boring32.crypto-cryptokey.ixx" />
-    <ClCompile Include="Async\boring32.async.timerqueuetimer.ixx" />
-    <ClCompile Include="Async\boring32.async.timerqueuetimercallback.ixx" />
+    <ClCompile Include="Async\boring32.async-timerqueuetimer.ixx" />
+    <ClCompile Include="Async\boring32.async-timerqueuetimercallback.ixx" />
     <ClCompile Include="IPC\boring32.ipc-anonymouspipe.ixx" />
     <ClCompile Include="IPC\boring32.ipc-overlappednamedpipeclient.ixx" />
     <ClCompile Include="IPC\boring32.ipc-overlappednamedpipeserver.ixx" />
@@ -309,8 +309,8 @@
     <ClCompile Include="WinHttp\boring32.winhttp-websocketsettings.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-proxyinfo.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-session.ixx" />
-    <ClCompile Include="Async\boring32.async.slimreadwritelock.ixx" />
-    <ClCompile Include="Async\boring32.async.eventloop.ixx" />
+    <ClCompile Include="Async\boring32.async-slimreadwritelock.ixx" />
+    <ClCompile Include="Async\boring32.async-eventloop.ixx" />
     <ClCompile Include="Error\boring32.error-errorbase.ixx" />
     <ClCompile Include="Error\boring32.error-errorbase.cpp">
       <Filter>Source Files</Filter>
@@ -327,16 +327,16 @@
     <ClCompile Include="Security\boring32.security-securitydescriptor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async.processinfo.ixx" />
-    <ClCompile Include="Async\boring32.async.process.ixx" />
-    <ClCompile Include="Async\boring32.async.memorymappedfile.ixx" />
+    <ClCompile Include="Async\boring32.async-processinfo.ixx" />
+    <ClCompile Include="Async\boring32.async-process.ixx" />
+    <ClCompile Include="Async\boring32.async-memorymappedfile.ixx" />
     <ClCompile Include="IPC\boring32.ipc-blockingnamedpipeclient.ixx" />
     <ClCompile Include="IPC\boring32.ipc.ixx" />
-    <ClCompile Include="Async\boring32.async.functions.ixx" />
-    <ClCompile Include="Async\boring32.async.memorymappedview.ixx" />
-    <ClCompile Include="Async\boring32.async.thread.ixx" />
-    <ClCompile Include="Async\boring32.async.overlappedio.ixx" />
-    <ClCompile Include="Async\boring32.async.overlappedop.ixx" />
+    <ClCompile Include="Async\boring32.async-functions.ixx" />
+    <ClCompile Include="Async\boring32.async-memorymappedview.ixx" />
+    <ClCompile Include="Async\boring32.async-thread.ixx" />
+    <ClCompile Include="Async\boring32.async-overlappedio.ixx" />
+    <ClCompile Include="Async\boring32.async-overlappedop.ixx" />
     <ClCompile Include="Security\boring32.security.ixx" />
     <ClCompile Include="Raii\boring32.raii.ixx" />
     <ClCompile Include="Process\boring32.process.ixx" />
@@ -382,8 +382,8 @@
     </ClCompile>
     <ClCompile Include="Compression\boring32.compression-deleters.ixx" />
     <ClCompile Include="Registry\boring32.registry-value.ixx" />
-    <ClCompile Include="Async\boring32.async.waitableaddress.ixx" />
-    <ClCompile Include="Async\boring32.async.waitableaddress.cpp">
+    <ClCompile Include="Async\boring32.async-waitableaddress.ixx" />
+    <ClCompile Include="Async\boring32.async-waitableaddress.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform.ixx" />
