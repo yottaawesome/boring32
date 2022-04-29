@@ -431,5 +431,6 @@
     <ClCompile Include="WinSock\boring32.winsock.ixx" />
     <ClCompile Include="Util\boring32.util-functions.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp.ixx" />
+    <ClCompile Include="Async\boring32.async.ixx" />
   </ItemGroup>
 </Project>
