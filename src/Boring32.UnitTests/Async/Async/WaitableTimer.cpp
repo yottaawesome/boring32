@@ -19,5 +19,12 @@ namespace Async
 			Boring32::Async::WaitableTimer timer(L"BlahBlah", false, true);
 			Assert::IsTrue(timer.GetHandle());
 		}
+
+		TEST_METHOD(TestClose)
+		{
+			Boring32::Async::WaitableTimer timer(false, true);
+			timer.Close();
+			Assert::IsNull(timer.GetHandle());
+		}
 	};
 }
