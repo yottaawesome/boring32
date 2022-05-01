@@ -9,7 +9,6 @@ module;
 
 module boring32.async:waitabletimer;
 import boring32.error;
-//import boring32.error.functions;
 
 //https://docs.microsoft.com/en-us/windows/win32/sync/using-a-waitable-timer-with-an-asynchronous-procedure-call
 namespace Boring32::Async
@@ -44,6 +43,9 @@ namespace Boring32::Async
 	:	m_name(std::move(name)),
 		m_isManualReset(isManualReset)
 	{
+		if (m_name.empty())
+			throw Error::Boring32Error(std::source_location::current(), "Name cannot be empty on WaitableTimer");
+
 		InternalCreate(isInheritable);
 	}
 
@@ -56,6 +58,9 @@ namespace Boring32::Async
 	:	m_name(std::move(name)),
 		m_isManualReset(isManualReset)
 	{
+		if (m_name.empty())
+			throw Error::Boring32Error(std::source_location::current(), "Name cannot be empty on WaitableTimer");
+
 		//TIMER_ALL_ACCESS
 		//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-openwaitabletimerw
 		m_handle = OpenWaitableTimerW(desiredAccess, isInheritable, m_name.c_str());
