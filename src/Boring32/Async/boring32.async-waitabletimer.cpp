@@ -114,7 +114,7 @@ namespace Boring32::Async
 	)
 	{
 		if (m_handle == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": timer handle is null");
+			throw Error::Boring32Error(std::source_location::current(), "Timer handle is null");
 		InternalSetTimer(hundredNanosecondIntervals, period, callback, param);
 	}
 
@@ -148,7 +148,7 @@ namespace Boring32::Async
 	)
 	{
 		if (m_handle == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": timer handle is null");
+			throw Error::Boring32Error(std::source_location::current(), "Timer handle is null");
 		InternalSetTimer(ms * 10000, period, callback, param);
 	}
 
@@ -162,11 +162,6 @@ namespace Boring32::Async
 	{
 		SetTimerInMillis(milliseconds, period, callback, param);
 		return true;
-		/*return Error::TryCatchLogToWCerr(
-			[this, milliseconds, period, callback, param]
-				{ SetTimerInMillis(milliseconds, period, callback, param); },
-			__FUNCSIG__
-		);*/
 	}
 	catch (const std::exception& ex)
 	{
@@ -193,13 +188,13 @@ namespace Boring32::Async
 			false
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(std::source_location::current(), "failed to set timer", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "Failed to set timer", GetLastError());
 	}
 
 	bool WaitableTimer::WaitOnTimer(const DWORD millis)
 	{
 		if (m_handle == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": no timer to wait on");
+			throw Error::Boring32Error(std::source_location::current(), "Timer handle is null");
 
 		const DWORD status = WaitForSingleObject(m_handle.GetHandle(), millis);
 		switch (status)
@@ -210,11 +205,14 @@ namespace Boring32::Async
 			case WAIT_TIMEOUT:
 				return false;
 
-			case WAIT_FAILED:
-				throw std::runtime_error(__FUNCSIG__ ": WaitForSingleObject() failed");
-
 			case WAIT_ABANDONED:
-				throw std::runtime_error(__FUNCSIG__ ": the wait was abandoned");
+				throw Error::Boring32Error(std::source_location::current(), "The wait was abandoned");
+
+			case WAIT_FAILED:
+			{
+				const auto lastError = GetLastError();
+				throw Error::Win32Error(std::source_location::current(), "WaitForSingleObject() failed", lastError);
+			}
 		}
 
 		return false;
@@ -235,11 +233,10 @@ namespace Boring32::Async
 
 	void WaitableTimer::CancelTimer()
 	{
-		if (m_handle == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": m_handle is nullptr");
+		if (!m_handle)
+			throw Error::Boring32Error(std::source_location::current(), "Timer handle is null");
 
-		bool succeeded = CancelWaitableTimer(m_handle.GetHandle());
-		if (succeeded == false)
+		if (!CancelWaitableTimer(m_handle.GetHandle()))
 			throw Error::Win32Error(std::source_location::current(), "CancelWaitableTimer() failed", GetLastError());
 	}
 
@@ -278,7 +275,7 @@ namespace Boring32::Async
 			m_name.empty() ? nullptr : m_name.c_str()
 		);
 		if (m_handle == nullptr)
-			throw Error::Win32Error(std::source_location::current(), "failed to create waitable timer", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "Failed to create waitable timer", GetLastError());
 		m_handle.SetInheritability(isInheritable);
 	}
 }
