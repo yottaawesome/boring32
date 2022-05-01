@@ -86,15 +86,15 @@ export namespace Boring32::Async
 
 			virtual bool WaitOnTimer(const DWORD millis);
 
-			virtual bool WaitOnTimer(const DWORD millis, std::nothrow_t) noexcept;
+			virtual bool WaitOnTimer(const DWORD millis, std::nothrow_t&) noexcept;
 
 			virtual void CancelTimer();
 
-			virtual bool CancelTimer(std::nothrow_t) noexcept;
+			virtual bool CancelTimer(std::nothrow_t&) noexcept;
 
 			virtual bool IsManualReset() const noexcept;
 
-			virtual const std::wstring& GetName() const  noexcept;
+			virtual const std::wstring& GetName() const noexcept;
 
 			/// <summary>
 			///		Returns the underlying HANDLE for this timer, or null

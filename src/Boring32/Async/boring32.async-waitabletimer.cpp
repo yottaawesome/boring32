@@ -220,13 +220,12 @@ namespace Boring32::Async
 		return false;
 	}
 
-	bool WaitableTimer::WaitOnTimer(const DWORD millis, std::nothrow_t) noexcept try
+	bool WaitableTimer::WaitOnTimer(
+		const DWORD millis, 
+		std::nothrow_t&
+	) noexcept try
 	{
 		return WaitOnTimer(millis);
-		/*return Error::TryCatchLogToWCerr(
-			[this, millis] {  },
-			__FUNCSIG__
-		);*/
 	}
 	catch (const std::exception& ex)
 	{
@@ -244,10 +243,9 @@ namespace Boring32::Async
 			throw Error::Win32Error(std::source_location::current(), "CancelWaitableTimer() failed", GetLastError());
 	}
 
-	bool WaitableTimer::CancelTimer(std::nothrow_t) noexcept try
+	bool WaitableTimer::CancelTimer(std::nothrow_t&) noexcept try
 	{
 		this->CancelTimer();
-		//return Error::TryCatchLogToWCerr([this] { this->CancelTimer(); }, __FUNCSIG__);
 		return true;
 	}
 	catch (const std::exception& ex)
