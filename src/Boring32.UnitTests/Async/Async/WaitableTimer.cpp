@@ -26,5 +26,13 @@ namespace Async
 			timer.Close();
 			Assert::IsNull(timer.GetHandle());
 		}
+
+		TEST_METHOD(TestAnonymousCopyConstructor)
+		{
+			Boring32::Async::WaitableTimer timer1(false, true);
+			Boring32::Async::WaitableTimer timer2(timer1);
+			Assert::IsNotNull(timer2.GetHandle());
+			Assert::IsTrue(timer2.IsManualReset());
+		}
 	};
 }
