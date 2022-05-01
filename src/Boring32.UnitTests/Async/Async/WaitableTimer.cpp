@@ -10,7 +10,13 @@ namespace Async
 	{
 		TEST_METHOD(TestCreateAnonymousWaitableTimer)
 		{
-			Boring32::Async::WaitableTimer timer(L"", false, true);
+			Boring32::Async::WaitableTimer timer(false, true);
+			Assert::IsTrue(timer.GetHandle());
+		}
+
+		TEST_METHOD(TestCreateNamedWaitableTimer)
+		{
+			Boring32::Async::WaitableTimer timer(L"BlahBlah", false, true);
 			Assert::IsTrue(timer.GetHandle());
 		}
 	};
