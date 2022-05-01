@@ -12,8 +12,9 @@ export namespace Boring32::Async
 	{
 		public:
 			virtual ~WaitableTimer();
-
 			WaitableTimer();
+			WaitableTimer(const WaitableTimer& other);
+			WaitableTimer(WaitableTimer&& other) noexcept;
 			WaitableTimer(
 				const bool isInheritable,
 				const bool isManualReset
@@ -30,13 +31,9 @@ export namespace Boring32::Async
 				const DWORD desiredAccess
 			);
 
-			WaitableTimer(const WaitableTimer& other);
+		public:
 			virtual void operator=(const WaitableTimer& other);
-			virtual void Copy(const WaitableTimer& other);
-
-			WaitableTimer(WaitableTimer&& other) noexcept;
 			virtual void operator=(WaitableTimer&& other) noexcept;
-			virtual void Move(WaitableTimer& other) noexcept;
 
 		public:
 			/// <summary>
@@ -66,7 +63,7 @@ export namespace Boring32::Async
 				const UINT period,
 				const PTIMERAPCROUTINE callback,
 				void* param,
-				std::nothrow_t
+				const std::nothrow_t&
 			) noexcept;
 
 			virtual void SetTimerInMillis(
@@ -81,7 +78,7 @@ export namespace Boring32::Async
 				const UINT period,
 				const PTIMERAPCROUTINE callback,
 				void* param,
-				std::nothrow_t
+				const std::nothrow_t&
 			) noexcept;
 
 			virtual bool WaitOnTimer(const DWORD millis);
@@ -109,8 +106,9 @@ export namespace Boring32::Async
 			virtual void Close();
 
 		protected:
+			virtual void Move(WaitableTimer& other) noexcept;
+			virtual void Copy(const WaitableTimer& other);
 			virtual void InternalCreate(const bool isInheritable);
-
 			virtual void InternalSetTimer(
 				const int64_t time, 
 				const UINT period,

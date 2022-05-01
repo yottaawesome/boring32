@@ -64,7 +64,7 @@ namespace Boring32::Async
 		//TIMER_ALL_ACCESS
 		//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-openwaitabletimerw
 		m_handle = OpenWaitableTimerW(desiredAccess, isInheritable, m_name.c_str());
-		if (m_handle == nullptr)
+		if (!m_handle)
 			throw Error::Win32Error(std::source_location::current(), "failed to open waitable timer", GetLastError());
 	}
 
@@ -113,7 +113,7 @@ namespace Boring32::Async
 		void* param
 	)
 	{
-		if (m_handle == nullptr)
+		if (!m_handle)
 			throw Error::Boring32Error(std::source_location::current(), "Timer handle is null");
 		InternalSetTimer(hundredNanosecondIntervals, period, callback, param);
 	}
@@ -123,16 +123,11 @@ namespace Boring32::Async
 		const UINT period,
 		const PTIMERAPCROUTINE callback,
 		void* param,
-		std::nothrow_t
+		const std::nothrow_t&
 	) noexcept try
 	{
 		SetTimerInNanos(hundedNsIntervals, period, callback, param);
 		return true;
-		/*return Error::TryCatchLogToWCerr(
-			[this, hundedNsIntervals, period, callback, param]
-				{ SetTimerInNanos(hundedNsIntervals, period, callback, param); },
-			__FUNCSIG__
-		);*/
 	}
 	catch (const std::exception& ex)
 	{
@@ -147,7 +142,7 @@ namespace Boring32::Async
 		void* param
 	)
 	{
-		if (m_handle == nullptr)
+		if (!m_handle)
 			throw Error::Boring32Error(std::source_location::current(), "Timer handle is null");
 		InternalSetTimer(ms * 10000, period, callback, param);
 	}
@@ -157,7 +152,7 @@ namespace Boring32::Async
 		const UINT period,
 		const PTIMERAPCROUTINE callback,
 		void* param,
-		std::nothrow_t
+		const std::nothrow_t&
 	) noexcept try
 	{
 		SetTimerInMillis(milliseconds, period, callback, param);
@@ -187,13 +182,13 @@ namespace Boring32::Async
 			param,
 			false
 		);
-		if (succeeded == false)
+		if (!succeeded)
 			throw Error::Win32Error(std::source_location::current(), "Failed to set timer", GetLastError());
 	}
 
 	bool WaitableTimer::WaitOnTimer(const DWORD millis)
 	{
-		if (m_handle == nullptr)
+		if (!m_handle)
 			throw Error::Boring32Error(std::source_location::current(), "Timer handle is null");
 
 		const DWORD status = WaitForSingleObject(m_handle.GetHandle(), millis);
@@ -274,7 +269,7 @@ namespace Boring32::Async
 			m_isManualReset,
 			m_name.empty() ? nullptr : m_name.c_str()
 		);
-		if (m_handle == nullptr)
+		if (!m_handle)
 			throw Error::Win32Error(std::source_location::current(), "Failed to create waitable timer", GetLastError());
 		m_handle.SetInheritability(isInheritable);
 	}
