@@ -15,6 +15,10 @@ export namespace Boring32::Async
 
 			WaitableTimer();
 			WaitableTimer(
+				const bool isInheritable,
+				const bool isManualReset
+			);
+			WaitableTimer(
 				std::wstring name, 
 				const bool isInheritable, 
 				const bool isManualReset
@@ -105,6 +109,8 @@ export namespace Boring32::Async
 			virtual void Close();
 
 		protected:
+			virtual void InternalCreate(const bool isInheritable);
+
 			virtual void InternalSetTimer(
 				const int64_t time, 
 				const UINT period,

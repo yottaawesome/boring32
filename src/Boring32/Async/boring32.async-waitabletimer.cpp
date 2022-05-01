@@ -25,9 +25,16 @@ namespace Boring32::Async
 	}
 
 	WaitableTimer::WaitableTimer()
-	:	m_name(L""),
-		m_isManualReset(false)
+	:	m_isManualReset(false)
 	{ }
+
+	WaitableTimer::WaitableTimer(
+		const bool isInheritable,
+		const bool isManualReset
+	) : m_isManualReset(isManualReset)
+	{ 
+		InternalCreate(isInheritable);
+	}
 
 	WaitableTimer::WaitableTimer(
 		std::wstring name, 
@@ -37,17 +44,7 @@ namespace Boring32::Async
 	:	m_name(std::move(name)),
 		m_isManualReset(isManualReset)
 	{
-		//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createwaitabletimerw
-		m_handle = CreateWaitableTimerW(
-			nullptr,
-			isManualReset,
-			m_name == L""
-				? nullptr
-				: m_name.c_str()
-		);
-		if (m_handle == nullptr)
-			throw Error::Win32Error(std::source_location::current(), "failed to create waitable timer", GetLastError());
-		m_handle.SetInheritability(isInheritable);
+		InternalCreate(isInheritable);
 	}
 
 	WaitableTimer::WaitableTimer(
@@ -267,5 +264,18 @@ namespace Boring32::Async
 	HANDLE WaitableTimer::GetHandle() const noexcept
 	{
 		return m_handle.GetHandle();
+	}
+	
+	void WaitableTimer::InternalCreate(const bool isInheritable)
+	{
+		//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createwaitabletimerw
+		m_handle = CreateWaitableTimerW(
+			nullptr,
+			m_isManualReset,
+			m_name.empty() ? nullptr : m_name.c_str()
+		);
+		if (m_handle == nullptr)
+			throw Error::Win32Error(std::source_location::current(), "failed to create waitable timer", GetLastError());
+		m_handle.SetInheritability(isInheritable);
 	}
 }
