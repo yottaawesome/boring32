@@ -57,5 +57,16 @@ namespace Async
 			Assert::IsTrue(timer1.GetName() == L"BlahBlah");
 			Assert::IsTrue(timer2.GetName() == L"BlahBlah");
 		}
+
+		TEST_METHOD(TestNamedCopyAssignment)
+		{
+			Boring32::Async::WaitableTimer timer1(L"BlahBlah", false, true);
+			Boring32::Async::WaitableTimer timer2 = timer1;
+			Assert::IsNotNull(timer2.GetHandle());
+			Assert::IsTrue(timer1.IsManualReset());
+			Assert::IsTrue(timer2.IsManualReset());
+			Assert::IsTrue(timer1.GetName() == L"BlahBlah");
+			Assert::IsTrue(timer2.GetName() == L"BlahBlah");
+		}
 	};
 }
