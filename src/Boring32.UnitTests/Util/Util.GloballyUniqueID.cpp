@@ -11,6 +11,11 @@ namespace Util
 	TEST_CLASS(UtilGloballyUniqueID)
 	{
 		public:
+			TEST_METHOD(TestDefaultConstructor)
+			{
+				Boring32::Util::GloballyUniqueID id;
+			}
+
 			TEST_METHOD(TestInvalidString)
 			{
 				Assert::ExpectException<Boring32::Error::Win32Error>(
