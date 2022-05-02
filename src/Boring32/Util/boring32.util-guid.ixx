@@ -12,6 +12,7 @@ export namespace Boring32::Util
 		public:
 			virtual ~GloballyUniqueID();
 			GloballyUniqueID();
+			GloballyUniqueID(const std::wstring& guidString);
 			GloballyUniqueID(const GloballyUniqueID& other);
 			GloballyUniqueID(GloballyUniqueID&& other) noexcept;
 
@@ -24,6 +25,7 @@ export namespace Boring32::Util
 		public:
 			virtual void ToString(std::wstring& out);
 			virtual void ToString(std::string& out);
+			virtual const GUID& Get() const noexcept;
 
 		protected:
 			GUID m_guid;
