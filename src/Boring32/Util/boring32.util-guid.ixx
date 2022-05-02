@@ -1,5 +1,6 @@
 module;
 
+#include <string>
 #include <Windows.h>
 
 export module boring32.util:guid;
@@ -19,6 +20,10 @@ export namespace Boring32::Util
 		public:
 			virtual GloballyUniqueID& operator=(const GloballyUniqueID& other);
 			virtual GloballyUniqueID& operator=(GloballyUniqueID&& other) noexcept;
+
+		public:
+			virtual void ToString(std::wstring& out);
+			virtual void ToString(std::string& out);
 
 		protected:
 			GUID m_guid;
