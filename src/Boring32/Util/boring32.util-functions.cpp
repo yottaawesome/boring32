@@ -89,6 +89,15 @@ namespace Boring32::Util
         return GetGuidAsWString(guidReference);
     }
 
+    GUID GenerateGUID()
+    {
+        GUID guid;
+        HRESULT result = CoCreateGuid(&guid);
+        if (FAILED(result))
+            throw Error::ComError(std::source_location::current(), "CoCreateGuid() failed", result);
+        return guid;
+    }
+
     /*std::vector<std::byte> StringToByteVector(const std::wstring_view str)
     {
         return { 

@@ -432,5 +432,9 @@
     <ClCompile Include="Util\boring32.util-functions.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp.ixx" />
     <ClCompile Include="Async\boring32.async.ixx" />
+    <ClCompile Include="Util\boring32.util-guid.ixx" />
+    <ClCompile Include="Util\boring32.util-guid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -47,4 +47,5 @@ export namespace Boring32::Util
 	size_t GetMillisToSecondBoundary(const SYSTEMTIME& time, const size_t secondBoundary) noexcept;
 	std::wstring GetGuidAsWString(const GUID& guid);
 	std::wstring GetGuidAsWString();
+	GUID GenerateGUID();
 }
