@@ -16,6 +16,7 @@ import boring32.winhttp;
 import boring32.winsock;
 import boring32.xaudio2;
 import boring32.compression;
+import boring32.util;
 
 struct Test
 {
@@ -177,8 +178,9 @@ void SocketTest()
 int main(int argc, char** args) try
 {
 	//Compression();
-	std::wcout << GetCurrentProcessId() << std::endl;
-	SocketTest();
+	//SocketTest();
+	Boring32::Util::GloballyUniqueID id(L"AAAAA");
+
 	return 0;
 }
 catch (const std::exception& ex)
