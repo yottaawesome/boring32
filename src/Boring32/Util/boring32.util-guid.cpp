@@ -11,6 +11,12 @@ namespace Boring32::Util
 	GloballyUniqueID::GloballyUniqueID() 
 		: m_guid(GenerateGUID())
 	{}
+
+	GloballyUniqueID::GloballyUniqueID(const GloballyUniqueID& other) = default;
+	GloballyUniqueID::GloballyUniqueID(GloballyUniqueID&& other) noexcept = default;
+	GloballyUniqueID& GloballyUniqueID::operator=(const GloballyUniqueID& other) = default;
+	GloballyUniqueID& GloballyUniqueID::operator=(GloballyUniqueID&& other) noexcept = default;
+
 	GloballyUniqueID::GloballyUniqueID(const GUID& guid)
 		: m_guid(guid)
 	{}
