@@ -195,6 +195,7 @@
     <ClCompile Include="Security\SecurityFunctions.cpp" />
     <ClCompile Include="Strings\Strings.cpp" />
     <ClCompile Include="Util\Util.cpp" />
+    <ClCompile Include="Util\Util.GloballyUniqueID.cpp" />
     <ClCompile Include="WinSock\Socket.cpp" />
     <ClCompile Include="WinSock\WinSockInit.cpp" />
   </ItemGroup>
