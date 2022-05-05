@@ -33,5 +33,11 @@ namespace Util
 				Assert::ExpectException<Boring32::Error::Win32Error>(
 					[]() { Boring32::Util::GloballyUniqueID id(L"AAAAAAA"); });
 			}
+
+			TEST_METHOD(TestComparison)
+			{
+				Boring32::Util::GloballyUniqueID id(TestGUID);
+				Assert::IsTrue(id == TestGUID);
+			}
 	};
 }
