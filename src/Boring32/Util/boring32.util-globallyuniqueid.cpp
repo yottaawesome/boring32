@@ -45,12 +45,12 @@ namespace Boring32::Util
 		: m_guid(guid)
 	{}
 
-	void GloballyUniqueID::ToString(std::wstring& out)
+	void GloballyUniqueID::ToString(std::wstring& out) const
 	{
 		out = GetGuidAsWString(m_guid);
 	}
 
-	void GloballyUniqueID::ToString(std::string& out)
+	void GloballyUniqueID::ToString(std::string& out) const
 	{
 		out = Strings::ConvertString(GetGuidAsWString(m_guid));
 	}
@@ -58,5 +58,15 @@ namespace Boring32::Util
 	const GUID& GloballyUniqueID::Get() const noexcept
 	{
 		return m_guid;
+	}
+
+	bool GloballyUniqueID::operator==(const GloballyUniqueID& other) const noexcept
+	{
+		return IsEqualGUID(m_guid, other.m_guid);
+	}
+
+	bool GloballyUniqueID::operator==(const GUID& other) const noexcept
+	{
+		return IsEqualGUID(m_guid, other);
 	}
 }

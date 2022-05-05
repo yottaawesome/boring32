@@ -21,10 +21,12 @@ export namespace Boring32::Util
 		public:
 			virtual GloballyUniqueID& operator=(const GloballyUniqueID& other);
 			virtual GloballyUniqueID& operator=(GloballyUniqueID&& other) noexcept;
+			virtual bool operator==(const GloballyUniqueID& other) const noexcept;
+			virtual bool operator==(const GUID& other) const noexcept;
 
 		public:
-			virtual void ToString(std::wstring& out);
-			virtual void ToString(std::string& out);
+			virtual void ToString(std::wstring& out) const;
+			virtual void ToString(std::string& out) const;
 			virtual const GUID& Get() const noexcept;
 
 		protected:
