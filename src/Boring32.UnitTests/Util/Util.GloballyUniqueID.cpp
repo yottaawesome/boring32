@@ -10,7 +10,19 @@ namespace Util
 {
 	TEST_CLASS(UtilGloballyUniqueID)
 	{
+		// {BA6D5A7F-6777-4D86-876B-8E0D0D79D0E3}
+		const GUID TestGUID =
+		{ 0xba6d5a7f, 0x6777, 0x4d86, { 0x87, 0x6b, 0x8e, 0xd, 0xd, 0x79, 0xd0, 0xe3 } };
+
 		public:
+			TEST_METHOD(TestGUIDConstructor)
+			{
+				Boring32::Util::GloballyUniqueID id(TestGUID);
+				std::wstring string;
+				id.ToString(string);
+				Assert::IsTrue(string == L"{BA6D5A7F-6777-4D86-876B-8E0D0D79D0E3}");
+			}
+
 			TEST_METHOD(TestDefaultConstructor)
 			{
 				Boring32::Util::GloballyUniqueID id;
