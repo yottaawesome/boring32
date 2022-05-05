@@ -19,6 +19,7 @@ export namespace Boring32::Util
 			GloballyUniqueID(const GUID& guid);
 
 		public:
+			virtual GloballyUniqueID& operator=(const GUID& other) noexcept;
 			virtual GloballyUniqueID& operator=(const GloballyUniqueID& other);
 			virtual GloballyUniqueID& operator=(GloballyUniqueID&& other) noexcept;
 			virtual bool operator==(const GloballyUniqueID& other) const noexcept;
