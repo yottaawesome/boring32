@@ -34,10 +34,17 @@ namespace Util
 					[]() { Boring32::Util::GloballyUniqueID id(L"AAAAAAA"); });
 			}
 
-			TEST_METHOD(TestComparison)
+			TEST_METHOD(TestComparisonGUID)
 			{
 				Boring32::Util::GloballyUniqueID id(TestGUID);
 				Assert::IsTrue(id == TestGUID);
+			}
+
+			TEST_METHOD(TestComparisonOwnType)
+			{
+				Boring32::Util::GloballyUniqueID id1(TestGUID);
+				Boring32::Util::GloballyUniqueID id2(TestGUID);
+				Assert::IsTrue(id1 == id2);
 			}
 	};
 }
