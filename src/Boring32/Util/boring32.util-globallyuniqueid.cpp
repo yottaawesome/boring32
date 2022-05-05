@@ -69,6 +69,7 @@ namespace Boring32::Util
 
 	bool GloballyUniqueID::operator==(const GloballyUniqueID& other) const noexcept
 	{
+		// https://docs.microsoft.com/en-us/windows/win32/api/guiddef/nf-guiddef-isequalguid
 		return IsEqualGUID(m_guid, other.m_guid);
 	}
 
