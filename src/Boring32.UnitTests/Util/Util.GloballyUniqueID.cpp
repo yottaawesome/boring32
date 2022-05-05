@@ -18,9 +18,15 @@ namespace Util
 			TEST_METHOD(TestGUIDConstructor)
 			{
 				Boring32::Util::GloballyUniqueID id(TestGUID);
-				std::wstring string;
-				id.ToString(string);
-				Assert::IsTrue(string == L"{BA6D5A7F-6777-4D86-876B-8E0D0D79D0E3}");
+				Assert::IsTrue(id == TestGUID);
+			}
+
+			TEST_METHOD(TestToString)
+			{
+				Boring32::Util::GloballyUniqueID id(TestGUID);
+				std::wstring guidString;
+				id.ToString(guidString);
+				Assert::IsTrue(guidString == L"{BA6D5A7F-6777-4D86-876B-8E0D0D79D0E3}");
 			}
 
 			TEST_METHOD(TestDefaultConstructor)
