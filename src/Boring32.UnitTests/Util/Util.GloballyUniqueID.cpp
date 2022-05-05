@@ -28,7 +28,13 @@ namespace Util
 				Boring32::Util::GloballyUniqueID id;
 			}
 
-			TEST_METHOD(TestInvalidString)
+			TEST_METHOD(TestStringConstructor)
+			{
+				Boring32::Util::GloballyUniqueID id(L"BA6D5A7F-6777-4D86-876B-8E0D0D79D0E3");
+				Assert::IsTrue(id == TestGUID);
+			}
+
+			TEST_METHOD(TestInvalidStringConstructor)
 			{
 				Assert::ExpectException<Boring32::Error::Win32Error>(
 					[]() { Boring32::Util::GloballyUniqueID id(L"AAAAAAA"); });

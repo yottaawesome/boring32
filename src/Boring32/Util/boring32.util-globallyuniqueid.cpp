@@ -26,6 +26,7 @@ namespace Boring32::Util
 		// https://docs.microsoft.com/en-us/windows/win32/api/rpcdce/nf-rpcdce-uuidfromstringw
 		// https://docs.microsoft.com/en-us/windows/win32/shell/guidfromstring
 		const RPC_WSTR cString = RPC_WSTR(guidString.c_str());
+		// Does not accept {} around the GUID
 		const RPC_STATUS status = UuidFromStringW(
 			cString,
 			&m_guid
