@@ -73,5 +73,12 @@ namespace Util
 				id1 = TestGUID;
 				Assert::IsTrue(id1 == TestGUID);
 			}
+
+			TEST_METHOD(TestAssignment2)
+			{
+				Boring32::Util::GloballyUniqueID id1 = TestGUID;
+				Boring32::Util::GloballyUniqueID id2 = id1;
+				Assert::IsTrue(id2 == TestGUID);
+			}
 	};
 }
