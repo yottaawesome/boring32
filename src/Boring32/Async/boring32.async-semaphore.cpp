@@ -49,7 +49,7 @@ namespace Boring32::Async
 		m_maxCount(maxCount)
 	{
 		if (m_name.empty())
-			throw std::invalid_argument(__FUNCSIG__": cannot create named semaphore with empty string");
+			throw Error::Boring32Error(std::source_location::current(), "Cannot create named semaphore with empty string.");
 		InternalCreate(name, initialCount, maxCount, isInheritable);
 	}
 
@@ -65,11 +65,11 @@ namespace Boring32::Async
 		m_maxCount(maxCount)
 	{
 		if (initialCount > maxCount)
-			throw std::invalid_argument(__FUNCSIG__": initial count exceeds maximum count");
+			throw Error::Boring32Error(std::source_location::current(), "Initial count exceeds maximum count.");
 		if (m_name.empty())
-			throw std::invalid_argument(__FUNCSIG__": cannot open semaphore with empty string");
+			throw Error::Boring32Error(std::source_location::current(), "Cannot open semaphore with empty string.");
 		if (maxCount == 0)
-			throw std::invalid_argument(__FUNCSIG__": maxCount cannot be 0");
+			throw Error::Boring32Error(std::source_location::current(), "MaxCount cannot be 0.");
 		//SEMAPHORE_ALL_ACCESS
 		m_handle = OpenSemaphoreW(desiredAccess, isInheritable, m_name.c_str());
 		if (m_handle == nullptr)
@@ -91,9 +91,9 @@ namespace Boring32::Async
 	)
 	{
 		if (initialCount > maxCount)
-			throw std::invalid_argument(__FUNCSIG__": initial count exceeds maximum count");
+			throw Error::Boring32Error(std::source_location::current(), "Initial count exceeds maximum count.");
 		if (maxCount == 0)
-			throw std::invalid_argument(__FUNCSIG__": maxCount cannot be 0");
+			throw Error::Boring32Error(std::source_location::current(), "MaxCount cannot be 0.");
 		m_handle = CreateSemaphoreW(
 			nullptr,
 			initialCount,
@@ -151,11 +151,11 @@ namespace Boring32::Async
 		if (countToRelease == 0)
 			return m_currentCount;
 		if (m_handle == nullptr)
-			throw std::runtime_error(__FUNCSIG__": m_handle is nullptr");
+			throw Error::Boring32Error(std::source_location::current(), "m_handle is nullptr.");
 
 		long previousCount;
 		if (!ReleaseSemaphore(m_handle.GetHandle(), countToRelease, &previousCount))
-			throw Error::Win32Error(std::source_location::current(), "failed to release semaphore", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "Failed to release semaphore", GetLastError());
 		m_currentCount += countToRelease;
 
 		return previousCount;
@@ -169,7 +169,7 @@ namespace Boring32::Async
 	bool Semaphore::Acquire(const DWORD millisTimeout, const bool isAlertable)
 	{
 		if (m_handle == nullptr)
-			throw std::runtime_error(__FUNCSIG__": m_handle is nullptr");
+			throw Error::Boring32Error(std::source_location::current(), "m_handle is nullptr.");
 
 		switch (const DWORD status = WaitForSingleObjectEx(*m_handle, millisTimeout, isAlertable))
 		{
@@ -181,22 +181,22 @@ namespace Boring32::Async
 				return false;
 
 			case WAIT_ABANDONED:
-				throw std::runtime_error(__FUNCSIG__": the wait was abandoned");
+				throw Error::Boring32Error(std::source_location::current(), "The wait was abandoned.");
 
 			case WAIT_FAILED:
 				throw Error::Win32Error(std::source_location::current(), "WaitForSingleObject() failed", GetLastError());
 
 			default:
-				throw std::logic_error(std::format(__FUNCSIG__": unknown WaitForSingleObjectEx() value {}", status));
+				throw Error::Boring32Error(std::source_location::current(), std::format(__FUNCSIG__": unknown WaitForSingleObjectEx() value {}", status));
 		}
 	}
 
 	bool Semaphore::AcquireMany(const long countToAcquire, const DWORD millisTimeout)
 	{
 		if (m_handle == nullptr)
-			throw std::runtime_error(__FUNCSIG__": m_handle is nullptr");
+			throw Error::Boring32Error(std::source_location::current(), "m_handle is nullptr.");
 		if (countToAcquire > m_maxCount)
-			throw std::runtime_error(__FUNCSIG__": cannot acquire more than the maximum of the semaphore");
+			throw Error::Boring32Error(std::source_location::current(), "Cannot acquire more than the maximum of the semaphore.");
 	
 		for (int actualAcquired = 0; actualAcquired < countToAcquire; actualAcquired++)
 		{
