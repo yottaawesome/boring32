@@ -25,6 +25,16 @@ namespace Async
 			Assert::IsTrue(semaphore2.GetName() == L"HelloMutex");
 		}
 
+		TEST_METHOD(TestMoveConstructor)
+		{
+			Boring32::Async::Semaphore semaphore1(L"HelloMutex", false, 10, 10);
+			Boring32::Async::Semaphore semaphore2(std::move(semaphore1));
+			Assert::IsNull(semaphore1.GetHandle());
+			Assert::IsNotNull(semaphore2.GetHandle());
+			Assert::IsTrue(semaphore1.GetName().empty());
+			Assert::IsTrue(semaphore2.GetName() == L"HelloMutex");
+		}
+
 		TEST_METHOD(TestCreateAnonymousSemaphore)
 		{
 			Boring32::Async::Semaphore semaphore(false, 10, 10);
