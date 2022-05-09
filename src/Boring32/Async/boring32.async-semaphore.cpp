@@ -19,6 +19,7 @@ namespace Boring32::Async
 	void Semaphore::Close()
 	{
 		m_handle = nullptr;
+		m_name.clear();
 	}
 
 	Semaphore::Semaphore()
