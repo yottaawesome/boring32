@@ -12,6 +12,7 @@ export namespace Boring32::WinSock
 	void IPv4NetworkAddressToString(const unsigned int ip, std::string& out);
 	void IPv4NetworkAddressToString(const unsigned int ip, std::wstring& out);
 	void IPv6NetworkAddressToString(const unsigned int ip, std::string& out);
+	void IPv6NetworkAddressToString(const unsigned int ip, std::wstring& out);
 	enum class AddressFamily : uint32_t
 	{
 		Unknown,
