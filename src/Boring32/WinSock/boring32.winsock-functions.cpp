@@ -14,6 +14,7 @@ import :winsockerror;
 import boring32.raii;
 import boring32.error;
 import boring32.async;
+import boring32.strings;
 
 namespace Boring32::WinSock
 {
@@ -32,6 +33,21 @@ namespace Boring32::WinSock
 			throw WinSockError(std::source_location::current(), "inet_ntop() failed", lastError);
 		}
 		out = out.c_str();
+	}
+
+	void ConvertIPv4Address(const unsigned int ip, std::wstring& out)
+	{
+		// https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-htonl
+		const ULONG converted = htonl(ip);
+		std::string str(INET_ADDRSTRLEN, '\0');
+		// https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-inet_ntop
+		PCSTR ipCString = inet_ntop(AF_INET, &converted, &str[0], INET_ADDRSTRLEN);
+		if (!ipCString)
+		{
+			const auto lastError = WSAGetLastError();
+			throw WinSockError(std::source_location::current(), "inet_ntop() failed", lastError);
+		}
+		out = Boring32::Strings::ConvertString(str.c_str());
 	}
 
 	std::ostream& operator<<(std::ostream& os, const NetworkingAddress& addr)
