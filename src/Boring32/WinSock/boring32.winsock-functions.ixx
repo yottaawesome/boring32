@@ -9,6 +9,7 @@ export module boring32.winsock:functions;
 
 export namespace Boring32::WinSock
 {
+	void ConvertIPv4Address(const unsigned int ip, std::string& out);
 	enum class AddressFamily : uint32_t
 	{
 		Unknown,
