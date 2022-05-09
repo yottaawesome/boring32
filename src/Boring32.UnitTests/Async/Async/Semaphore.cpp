@@ -12,7 +12,17 @@ namespace Async
 		TEST_METHOD(TestDefaultConstructor)
 		{
 			Boring32::Async::Semaphore semaphore;
-			Assert::IsNull(semaphore.GetHandle()); 
+			Assert::IsNull(semaphore.GetHandle());
+		}
+
+		TEST_METHOD(TestCopyConstructor)
+		{
+			Boring32::Async::Semaphore semaphore1(L"HelloMutex", false, 10, 10);
+			Boring32::Async::Semaphore semaphore2(semaphore1);
+			Assert::IsNotNull(semaphore1.GetHandle());
+			Assert::IsNotNull(semaphore2.GetHandle());
+			Assert::IsTrue(semaphore1.GetName() == L"HelloMutex");
+			Assert::IsTrue(semaphore2.GetName() == L"HelloMutex");
 		}
 
 		TEST_METHOD(TestCreateAnonymousSemaphore)
@@ -21,7 +31,7 @@ namespace Async
 			Assert::IsNotNull(semaphore.GetHandle());
 		}
 
-		TEST_METHOD(TestCreateNameSemaphore)
+		TEST_METHOD(TestCreateNamedSemaphore)
 		{
 			Boring32::Async::Semaphore semaphore(L"HelloMutex", false, 10, 10);
 			Assert::IsNotNull(semaphore.GetHandle());
