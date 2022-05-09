@@ -18,8 +18,24 @@ import boring32.strings;
 
 namespace Boring32::WinSock
 {
+	void IPv6NetworkAddressToString(const unsigned int ip, std::string& out)
+	{
+		// https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-htonl
+		const ULONG converted = htonl(ip);
+
+		out.resize(INET6_ADDRSTRLEN);
+		// https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-inet_ntop
+		PCSTR ipCString = inet_ntop(AF_INET6, &converted, &out[0], INET6_ADDRSTRLEN);
+		if (!ipCString)
+		{
+			const auto lastError = WSAGetLastError();
+			throw WinSockError(std::source_location::current(), "inet_ntop() failed", lastError);
+		}
+		out = out.c_str();
+	}
+
 	// Adapted from https://stackoverflow.com/a/54314540
-	void ConvertIPv4Address(const unsigned int ip, std::string& out)
+	void IPv4NetworkAddressToString(const unsigned int ip, std::string& out)
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-htonl
 		const ULONG converted = htonl(ip);
@@ -35,7 +51,7 @@ namespace Boring32::WinSock
 		out = out.c_str();
 	}
 
-	void ConvertIPv4Address(const unsigned int ip, std::wstring& out)
+	void IPv4NetworkAddressToString(const unsigned int ip, std::wstring& out)
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-htonl
 		const ULONG converted = htonl(ip);
