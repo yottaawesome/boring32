@@ -9,6 +9,12 @@ namespace Async
 	TEST_CLASS(Semaphore)
 	{
 	public:
+		TEST_METHOD(TestDefaultConstructor)
+		{
+			Boring32::Async::Semaphore semaphore;
+			Assert::IsNull(semaphore.GetHandle()); 
+		}
+
 		TEST_METHOD(TestCreateAnonymousSemaphore)
 		{
 			Boring32::Async::Semaphore semaphore(false, 10, 10);
