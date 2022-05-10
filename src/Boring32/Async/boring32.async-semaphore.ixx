@@ -39,6 +39,7 @@ export namespace Boring32::Async
 			virtual void Close();
 			virtual long Release();
 			virtual long Release(const long countToRelease);
+			virtual bool Acquire();
 			virtual bool Acquire(const DWORD millisTimeout);
 			virtual bool AcquireMany(const long countToAcquire, const DWORD millisTimeout);
 			virtual bool Acquire(const DWORD millisTimeout, const bool isAlertable);

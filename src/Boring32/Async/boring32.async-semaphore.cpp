@@ -23,7 +23,7 @@ namespace Boring32::Async
 	}
 
 	Semaphore::Semaphore()
-	:	m_name(L""),
+		: m_name(L""),
 		m_currentCount(0),
 		m_maxCount(0)
 	{ }
@@ -33,19 +33,19 @@ namespace Boring32::Async
 		const ULONG initialCount,
 		const ULONG maxCount
 	)
-	:	m_currentCount(initialCount),
+		: m_currentCount(initialCount),
 		m_maxCount(maxCount)
 	{
 		InternalCreate(m_name, initialCount, maxCount, isInheritable);
 	}
 
 	Semaphore::Semaphore(
-		std::wstring name, 
-		const bool isInheritable, 
+		std::wstring name,
+		const bool isInheritable,
 		const ULONG initialCount,
 		const ULONG maxCount
 	)
-	:	m_name(std::move(name)),
+		: m_name(std::move(name)),
 		m_currentCount(initialCount),
 		m_maxCount(maxCount)
 	{
@@ -61,7 +61,7 @@ namespace Boring32::Async
 		const long maxCount,
 		const DWORD desiredAccess
 	)
-	:	m_name(std::move(name)),
+		: m_name(std::move(name)),
 		m_currentCount(initialCount),
 		m_maxCount(maxCount)
 	{
@@ -78,7 +78,7 @@ namespace Boring32::Async
 	}
 
 	Semaphore::Semaphore(const Semaphore& other)
-	:	m_currentCount(0),
+		: m_currentCount(0),
 		m_maxCount(0)
 	{
 		Copy(other);
@@ -122,7 +122,7 @@ namespace Boring32::Async
 	}
 
 	Semaphore::Semaphore(Semaphore&& other) noexcept
-	:	m_currentCount(0),
+		: m_currentCount(0),
 		m_maxCount(0)
 	{
 		Move(other);
@@ -160,6 +160,11 @@ namespace Boring32::Async
 		m_currentCount += countToRelease;
 
 		return previousCount;
+	}
+
+	bool Semaphore::Acquire()
+	{
+		return Acquire(INFINITE, false);
 	}
 
 	bool Semaphore::Acquire(const DWORD millisTimeout)
