@@ -3,6 +3,7 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 import boring32.async;
+import boring32.error;
 
 namespace Async
 {
@@ -13,6 +14,12 @@ namespace Async
 		{
 			Boring32::Async::Semaphore semaphore;
 			Assert::IsNull(semaphore.GetHandle());
+		}
+
+		TEST_METHOD(TestInvalidConstructor)
+		{
+			Assert::ExpectException<Boring32::Error::Boring32Error>(
+				[]() { Boring32::Async::Semaphore semaphore(L"", false, 10, 10); });
 		}
 
 		TEST_METHOD(TestCopyConstructor)

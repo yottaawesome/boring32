@@ -13,6 +13,8 @@ export namespace Boring32::Async
 		public:
 			virtual ~Semaphore();
 			Semaphore();
+			Semaphore(const Semaphore& other);
+			Semaphore(Semaphore&& other) noexcept;
 			Semaphore(
 				const bool isInheritable,
 				const ULONG initialCount,
@@ -28,9 +30,7 @@ export namespace Boring32::Async
 				const long initialCount,
 				const long maxCount,
 				const DWORD desiredAccess);
-			Semaphore(const Semaphore& other);
-			Semaphore(Semaphore&& other) noexcept;
-
+			
 		public:
 			virtual void operator=(const Semaphore& other);
 			virtual void operator=(Semaphore&& other) noexcept;
@@ -42,8 +42,6 @@ export namespace Boring32::Async
 			virtual bool Acquire(const DWORD millisTimeout);
 			virtual bool AcquireMany(const long countToAcquire, const DWORD millisTimeout);
 			virtual bool Acquire(const DWORD millisTimeout, const bool isAlertable);
-
-		public:
 			virtual const std::wstring& GetName()	const noexcept final;
 			virtual long GetCurrentCount()			const noexcept final;
 			virtual long GetMaxCount()				const noexcept final;
