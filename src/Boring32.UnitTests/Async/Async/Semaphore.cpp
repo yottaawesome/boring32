@@ -16,10 +16,16 @@ namespace Async
 			Assert::IsNull(semaphore.GetHandle());
 		}
 
-		TEST_METHOD(TestInvalidConstructor)
+		TEST_METHOD(TestInvalidConstructor1)
 		{
 			Assert::ExpectException<Boring32::Error::Boring32Error>(
 				[]() { Boring32::Async::Semaphore semaphore(L"", false, 10, 10); });
+		}
+
+		TEST_METHOD(TestInvalidConstructor2)
+		{
+			Assert::ExpectException<Boring32::Error::Boring32Error>(
+				[]() { Boring32::Async::Semaphore semaphore(L"", false, 20, 10); });
 		}
 
 		TEST_METHOD(TestCopyConstructor)
