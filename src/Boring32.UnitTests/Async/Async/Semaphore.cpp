@@ -34,6 +34,12 @@ namespace Async
 				[]() { Boring32::Async::Semaphore semaphore(L"", false, 0, 0); });
 		}
 
+		TEST_METHOD(TestInvalidConstructor4)
+		{
+			Assert::ExpectException<Boring32::Error::Win32Error>(
+				[]() { Boring32::Async::Semaphore semaphore(L"Blah", false, 10, 10, SEMAPHORE_ALL_ACCESS); });
+		}
+
 		TEST_METHOD(TestCopyConstructor)
 		{
 			Boring32::Async::Semaphore semaphore1(L"HelloMutex", false, 10, 10);
