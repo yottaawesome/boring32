@@ -114,6 +114,19 @@ namespace Compression
 				Assert::IsTrue(decompressedString == m_compressionString);
 			}
 
+			TEST_METHOD(TestDecompressorDecompressXPRESSHuffman)
+			{
+				const auto type = Boring32::Compression::CompressionType::XPRESSHuffman;
+				Boring32::Compression::Compressor compressor(type);
+				const std::byte* buffer = (std::byte*)&m_compressionString[0];
+				std::vector<std::byte> compressedData = compressor.CompressBuffer({ buffer, buffer + m_compressionString.size() });
+
+				Boring32::Compression::Decompressor decompressor(type);
+				std::vector<std::byte> decompressedData = decompressor.DecompressBuffer(compressedData);
+				std::string decompressedString(reinterpret_cast<char*>(&decompressedData[0]), decompressedData.size());
+				Assert::IsTrue(decompressedString == m_compressionString);
+			}
+
 			TEST_METHOD(TestDecompressorGetDecompressedSizeMSZIP)
 			{
 				const auto type = Boring32::Compression::CompressionType::MSZIP;
