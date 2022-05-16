@@ -9,7 +9,7 @@ namespace Compression
 	TEST_CLASS(Compressor)
 	{
 		private: 
-			const std::string m_compressionString = "Hello world! This buffer will be compressed";
+			std::string m_compressionString = "Hello world! This buffer will be compressed";
 
 		public:
 			TEST_METHOD(TestCompressorDefaultConstructor)
@@ -74,6 +74,23 @@ namespace Compression
 					}
 				);
 				Assert::IsTrue(compressedBytesSize > 0);
+			}
+
+			TEST_METHOD(TestCompressorGetCompressedBytesUnset)
+			{
+				std::string s = m_compressionString;
+				Assert::ExpectException<Boring32::Compression::CompressionError>(
+					[&s]()
+					{
+						Boring32::Compression::Compressor compressor;
+						const std::byte* buffer = (std::byte*)&s[0];
+						const size_t compressedBytesSize = compressor.GetCompressedSize({
+								buffer,
+								buffer + s.size()
+							}
+						);
+					}
+				);
 			}
 
 			TEST_METHOD(TestCompressorGetCompressedBytesLZMS)
