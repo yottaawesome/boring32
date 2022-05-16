@@ -9,7 +9,7 @@ namespace Compression
 	TEST_CLASS(Decompressor)
 	{
 		private:
-			const std::string m_compressionString = "Hello world! This buffer will be compressed";
+			std::string m_compressionString = "Hello world! This buffer will be compressed";
 
 		public:
 			TEST_METHOD(TestDecompressorConstructor)
@@ -79,7 +79,7 @@ namespace Compression
 			{
 				const auto type = Boring32::Compression::CompressionType::MSZIP;
 				Boring32::Compression::Compressor compressor(type);
-				const std::byte* buffer = (std::byte*)&m_compressionString[0];
+				const std::byte* buffer = reinterpret_cast<std::byte*>(&m_compressionString[0]);
 				std::vector<std::byte> compressedData = compressor.CompressBuffer({ buffer, buffer + m_compressionString.size() });
 
 				Boring32::Compression::Decompressor decompressor(type);
@@ -92,7 +92,7 @@ namespace Compression
 			{
 				const auto type = Boring32::Compression::CompressionType::LZMS;
 				Boring32::Compression::Compressor compressor(type);
-				const std::byte* buffer = (std::byte*)&m_compressionString[0];
+				const std::byte* buffer = reinterpret_cast<std::byte*>(&m_compressionString[0]);
 				std::vector<std::byte> compressedData = compressor.CompressBuffer({ buffer, buffer + m_compressionString.size() });
 
 				Boring32::Compression::Decompressor decompressor(type);
@@ -105,7 +105,7 @@ namespace Compression
 			{
 				const auto type = Boring32::Compression::CompressionType::XPRESS;
 				Boring32::Compression::Compressor compressor(type);
-				const std::byte* buffer = (std::byte*)&m_compressionString[0];
+				const std::byte* buffer = reinterpret_cast<std::byte*>(&m_compressionString[0]);
 				std::vector<std::byte> compressedData = compressor.CompressBuffer({ buffer, buffer + m_compressionString.size() });
 
 				Boring32::Compression::Decompressor decompressor(type);
@@ -118,7 +118,7 @@ namespace Compression
 			{
 				const auto type = Boring32::Compression::CompressionType::XPRESSHuffman;
 				Boring32::Compression::Compressor compressor(type);
-				const std::byte* buffer = (std::byte*)&m_compressionString[0];
+				const std::byte* buffer = reinterpret_cast<std::byte*>(&m_compressionString[0]);
 				std::vector<std::byte> compressedData = compressor.CompressBuffer({ buffer, buffer + m_compressionString.size() });
 
 				Boring32::Compression::Decompressor decompressor(type);
