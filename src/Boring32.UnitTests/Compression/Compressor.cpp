@@ -78,15 +78,14 @@ namespace Compression
 
 			TEST_METHOD(TestCompressorGetCompressedBytesUnset)
 			{
-				std::string s = m_compressionString;
 				Assert::ExpectException<Boring32::Compression::CompressionError>(
-					[&s]()
+					[&m_compressionString = m_compressionString]()
 					{
 						Boring32::Compression::Compressor compressor;
-						const std::byte* buffer = (std::byte*)&s[0];
+						const std::byte* buffer = (std::byte*)&m_compressionString[0];
 						const size_t compressedBytesSize = compressor.GetCompressedSize({
 								buffer,
-								buffer + s.size()
+								buffer + m_compressionString.size()
 							}
 						);
 					}
