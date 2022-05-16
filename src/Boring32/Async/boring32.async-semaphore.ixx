@@ -43,10 +43,10 @@ export namespace Boring32::Async
 			virtual bool Acquire(const DWORD millisTimeout);
 			virtual bool AcquireMany(const long countToAcquire, const DWORD millisTimeout);
 			virtual bool Acquire(const DWORD millisTimeout, const bool isAlertable);
-			virtual const std::wstring& GetName()	const noexcept final;
-			virtual long GetCurrentCount()			const noexcept final;
-			virtual long GetMaxCount()				const noexcept final;
-			virtual HANDLE GetHandle()				const noexcept final;
+			virtual const std::wstring& GetName() const noexcept final;
+			virtual long GetCurrentCount() const noexcept final;
+			virtual long GetMaxCount() const noexcept final;
+			virtual HANDLE GetHandle() const noexcept final;
 
 		protected:
 			virtual void Copy(const Semaphore& other);

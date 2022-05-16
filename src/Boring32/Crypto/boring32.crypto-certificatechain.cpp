@@ -178,7 +178,7 @@ namespace Boring32::Crypto
 		if (certIndex >= simpleChain->cElement)
 			throw std::invalid_argument(
 				std::format(
-					"{}: expected certIndex to be less than {} but got an index of {}"
+					"{}: expected certIndex to be less than {} but got an index of {}",
 					__FUNCSIG__,
 					simpleChain->cElement,
 					certIndex
