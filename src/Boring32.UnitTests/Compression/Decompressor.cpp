@@ -75,6 +75,22 @@ namespace Compression
 				);
 			}
 
+			TEST_METHOD(TestDecompressorDecompressUnset)
+			{
+				const auto type = Boring32::Compression::CompressionType::MSZIP;
+				Boring32::Compression::Compressor compressor(type);
+				const std::byte* buffer = reinterpret_cast<std::byte*>(&m_compressionString[0]);
+				std::vector<std::byte> compressedData = compressor.CompressBuffer({ buffer, buffer + m_compressionString.size() });
+
+				Assert::ExpectException<Boring32::Compression::CompressionError>(
+					[&compressedData]()
+					{
+						Boring32::Compression::Decompressor decompressor;
+						std::vector<std::byte> decompressedData = decompressor.DecompressBuffer(compressedData);
+					}
+				);
+			}
+
 			TEST_METHOD(TestDecompressorDecompressMSZIP)
 			{
 				const auto type = Boring32::Compression::CompressionType::MSZIP;
