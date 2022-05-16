@@ -177,10 +177,6 @@ void SocketTest()
 
 int main(int argc, char** args) try
 {
-	std::string s;
-	std::string y;
-	Log::Info(s.c_str(), y);
-
 	//Compression();
 	//SocketTest();
 	//Boring32::Util::GloballyUniqueID id(L"AAAAA");
