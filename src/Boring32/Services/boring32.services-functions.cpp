@@ -28,15 +28,18 @@ namespace Boring32::Services
 
 	SERVICE_STATUS_PROCESS GetServiceStatus(const SC_HANDLE serviceHandle)
 	{
+		if (!serviceHandle)
+			throw Boring32::Error::Boring32Error(std::source_location::current(), "Service handle cannot be null");
+
 		DWORD bytesNeeded = 0;
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_status_process
-		SERVICE_STATUS_PROCESS status{ 0 };
+		SERVICE_STATUS_PROCESS serviceStatus{ 0 };
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-queryservicestatusex
 		const bool succeeded = QueryServiceStatusEx(
 			serviceHandle,
 			SC_STATUS_PROCESS_INFO, // this is the only one defined
-			reinterpret_cast<BYTE*>(&status),
-			sizeof(status),
+			reinterpret_cast<BYTE*>(&serviceStatus),
+			sizeof(serviceStatus),
 			&bytesNeeded
 		);
 		if (!succeeded)
@@ -45,7 +48,7 @@ namespace Boring32::Services
 			throw Error::Win32Error(std::source_location::current(), "QueryServiceStatusEx() failed", lastError);
 		}
 
-		return status;
+		return serviceStatus;
 	}
 
 	SC_HANDLE OpenServiceHandle(
