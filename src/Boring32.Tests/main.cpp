@@ -184,6 +184,7 @@ int main(int argc, char** args) try
 
 	SC_HANDLE handle = Boring32::Services::OpenServiceControlManager(SC_MANAGER_CONNECT);
 	SC_HANDLE handle2 = Boring32::Services::OpenServiceHandle(handle, L"Bonjour Service", SERVICE_QUERY_STATUS);
+	auto x = Boring32::Services::GetServiceStatus(handle2);
 
 	return 0;
 }

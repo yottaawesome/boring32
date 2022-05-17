@@ -26,9 +26,26 @@ namespace Boring32::Services
 		return scmHandle;
 	}
 
-	SERVICE_STATUS_PROCESS GetServiceStatus()
+	SERVICE_STATUS_PROCESS GetServiceStatus(const SC_HANDLE serviceHandle)
 	{
-		return { 0 };
+		DWORD bytesNeeded = 0;
+		// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_status_process
+		SERVICE_STATUS_PROCESS status{ 0 };
+		// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-queryservicestatusex
+		const bool succeeded = QueryServiceStatusEx(
+			serviceHandle,
+			SC_STATUS_PROCESS_INFO, // this is the only one defined
+			reinterpret_cast<BYTE*>(&status),
+			sizeof(status),
+			&bytesNeeded
+		);
+		if (!succeeded)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error(std::source_location::current(), "QueryServiceStatusEx() failed", lastError);
+		}
+
+		return status;
 	}
 
 	SC_HANDLE OpenServiceHandle(
