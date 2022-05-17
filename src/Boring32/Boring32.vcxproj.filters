@@ -441,5 +441,6 @@
     <ClCompile Include="Services\boring32.services-functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Raii\boring32.raii-handle.ixx" />
   </ItemGroup>
 </Project>

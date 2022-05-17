@@ -243,6 +243,7 @@
     <ClCompile Include="IPC\boring32.ipc-overlappednamedpipeserver.ixx" />
     <ClCompile Include="Process\boring32.process-dynamiclinklibrary.ixx" />
     <ClCompile Include="Process\boring32.process.ixx" />
+    <ClCompile Include="Raii\boring32.raii-handle.ixx" />
     <ClCompile Include="Raii\boring32.raii.ixx" />
     <ClCompile Include="Raii\boring32.raii-uniqueptrs.ixx" />
     <ClCompile Include="Registry\boring32.registry-functions.ixx" />
