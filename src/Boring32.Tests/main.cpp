@@ -17,6 +17,7 @@ import boring32.winsock;
 import boring32.xaudio2;
 import boring32.compression;
 import boring32.util;
+import boring32.services;
 
 struct Test
 {
@@ -180,6 +181,8 @@ int main(int argc, char** args) try
 	//Compression();
 	//SocketTest();
 	//Boring32::Util::GloballyUniqueID id(L"AAAAA");
+
+	Boring32::Services::OpenServiceControlManager(SC_MANAGER_CONNECT);
 
 	return 0;
 }

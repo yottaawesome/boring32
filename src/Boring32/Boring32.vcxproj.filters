@@ -436,5 +436,10 @@
     <ClCompile Include="Util\boring32.util-globallyuniqueid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Services\boring32.services.ixx" />
+    <ClCompile Include="Services\boring32.services-functions.ixx" />
+    <ClCompile Include="Services\boring32.services-functions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

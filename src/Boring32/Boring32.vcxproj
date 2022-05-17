@@ -258,6 +258,9 @@
     <ClCompile Include="Security\boring32.security-sid.ixx" />
     <ClCompile Include="Security\boring32.security-token.ixx" />
     <ClCompile Include="Security\boring32.security-securitydescriptor.cpp" />
+    <ClCompile Include="Services\boring32.services-functions.cpp" />
+    <ClCompile Include="Services\boring32.services-functions.ixx" />
+    <ClCompile Include="Services\boring32.services.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-registeredtask.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskfolder.ixx" />
