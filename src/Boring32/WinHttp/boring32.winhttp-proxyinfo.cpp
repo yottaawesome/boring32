@@ -28,23 +28,31 @@ namespace Boring32::WinHttp
 		WINHTTP_AUTOPROXY_OPTIONS& options
 	)
 	{
-		if (WinHttpGetProxyForUrl(session, url.c_str(), &options, &m_info) == false)
-			throw Error::Win32Error(std::source_location::current(), "WinHttpGetProxyForUrl() failed", GetLastError());
+		// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpgetproxyforurl
+		if (!WinHttpGetProxyForUrl(session, url.c_str(), &options, &m_info))
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error(
+				std::source_location::current(), 
+				"WinHttpGetProxyForUrl() failed", 
+				lastError
+			);
+		}
 		m_mustRelease = true;
 	}
 
 	void ProxyInfo::Close()
 	{
-		if (m_mustRelease)
-		{
-			if (m_info.lpszProxy)
-				GlobalFree(m_info.lpszProxy);
-			if (m_info.lpszProxyBypass)
-				GlobalFree(m_info.lpszProxyBypass);
-			m_info.lpszProxy = nullptr;
-			m_info.lpszProxyBypass = nullptr;
-			m_mustRelease = false;
-		}
+		if (!m_mustRelease)
+			return;
+
+		if (m_info.lpszProxy)
+			GlobalFree(m_info.lpszProxy);
+		if (m_info.lpszProxyBypass)
+			GlobalFree(m_info.lpszProxyBypass);
+		m_info.lpszProxy = nullptr;
+		m_info.lpszProxyBypass = nullptr;
+		m_mustRelease = false;
 	}
 
 	void ProxyInfo::SetNamedProxy(
@@ -72,8 +80,15 @@ namespace Boring32::WinHttp
 		autoProxyOptions.lpvReserved = 0;
 		autoProxyOptions.dwReserved = 0;
 		// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpgetproxyforurl
-		if (WinHttpGetProxyForUrl(session, url.c_str(), &autoProxyOptions, &m_info) == false)
-			throw Error::Win32Error(std::source_location::current(), "WinHttpGetProxyForUrl() failed", GetLastError());
+		if (!WinHttpGetProxyForUrl(session, url.c_str(), &autoProxyOptions, &m_info))
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error(
+				std::source_location::current(), 
+				"WinHttpGetProxyForUrl() failed", 
+				lastError
+			);
+		}
 	}
 
 	void ProxyInfo::SetAllInfo(
@@ -92,9 +107,17 @@ namespace Boring32::WinHttp
 
 	void ProxyInfo::SetOnSession(HINTERNET session)
 	{
-		if (m_info.lpszProxy == nullptr)
-			throw std::runtime_error("No proxy set");
-		if (WinHttpSetOption(session, WINHTTP_OPTION_PROXY, &m_info, sizeof(m_info)) == false)
-			throw Error::Win32Error(std::source_location::current(), "WinHttpSetOption() failed", GetLastError());
+		if (!m_info.lpszProxy)
+			throw Boring32::Error::Boring32Error(std::source_location::current(), "No proxy set");
+		// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpsetoption
+		if (!WinHttpSetOption(session, WINHTTP_OPTION_PROXY, &m_info, sizeof(m_info)))
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error(
+				std::source_location::current(), 
+				"WinHttpSetOption() failed", 
+				lastError
+			);
+		}
 	}
 }
