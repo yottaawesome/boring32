@@ -44,7 +44,7 @@ namespace Boring32::Services
 		const SC_HANDLE serviceHandle = OpenServiceW(
 			scmHandle,
 			serviceName.c_str(),
-			desiredAccess
+			desiredAccess // https://docs.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights
 		);
 		if (!serviceHandle)
 		{
