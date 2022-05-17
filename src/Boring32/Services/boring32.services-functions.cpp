@@ -12,18 +12,18 @@ namespace Boring32::Services
 	SC_HANDLE OpenServiceControlManager(const DWORD desiredAccess)
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openscmanagerw
-		const SC_HANDLE handle = OpenSCManagerW(
+		const SC_HANDLE scmHandle = OpenSCManagerW(
 			nullptr,
 			SERVICES_ACTIVE_DATABASE,
 			desiredAccess // https://docs.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights
 		);
-		if (!handle)
+		if (!scmHandle)
 		{
 			const auto lastError = GetLastError();
 			throw Error::Win32Error(std::source_location::current(), "OpenSCManagerW() failed", lastError);
 		}
 
-		return handle;
+		return scmHandle;
 	}
 
 	SERVICE_STATUS_PROCESS GetServiceStatus()

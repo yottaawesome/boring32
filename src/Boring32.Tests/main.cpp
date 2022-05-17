@@ -182,7 +182,8 @@ int main(int argc, char** args) try
 	//SocketTest();
 	//Boring32::Util::GloballyUniqueID id(L"AAAAA");
 
-	Boring32::Services::OpenServiceControlManager(SC_MANAGER_CONNECT);
+	SC_HANDLE handle = Boring32::Services::OpenServiceControlManager(SC_MANAGER_CONNECT);
+	SC_HANDLE handle2 = Boring32::Services::OpenServiceHandle(handle, L"Bonjour Service", SERVICE_QUERY_STATUS);
 
 	return 0;
 }
