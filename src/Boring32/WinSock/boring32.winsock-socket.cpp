@@ -176,6 +176,7 @@ namespace Boring32::WinSock
 		// ending with error code 0X0000274C=10060=WSAETIMEDOUT. Can we adjust this timeout
 		// and is it possible get a different error like WSAECONNREFUSED?
 		// See https://social.msdn.microsoft.com/Forums/en-US/2202d113-212d-420d-9e7b-11268de9ce90/win32-tcp-connect-timeout
+		// and https://docs.microsoft.com/en-us/windows/win32/winsock/windows-sockets-error-codes-2
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-connect
 		const int connectionResult = connect(
 			m_socket,
