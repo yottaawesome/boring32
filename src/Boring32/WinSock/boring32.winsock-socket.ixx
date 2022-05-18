@@ -27,6 +27,7 @@ export namespace Boring32::WinSock
 			virtual Socket& operator=(Socket&& other) noexcept;
 
 		public:
+			virtual void Open();
 			virtual void Connect();
 			virtual void Connect(const DWORD socketTTL, const DWORD maxRetryTimeout);
 			virtual void Close();
@@ -48,5 +49,6 @@ export namespace Boring32::WinSock
 			unsigned m_portNumber;
 			SOCKET m_socket; // doesn't work with unique_ptr
 			int m_addressFamily;
-	};
+	};		AddrInfoWUniquePtr m_addrPtr;
+
 }

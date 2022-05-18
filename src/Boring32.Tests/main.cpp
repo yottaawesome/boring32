@@ -171,20 +171,21 @@ void Compression()
 void SocketTest()
 {
 	Boring32::WinSock::WinSockInit init(2, 2);
-	Boring32::WinSock::Socket socket(L"142.250.70.164", 80);
-	socket.Connect(1, 1);
+	Boring32::WinSock::Socket socket(L"142.250.70.164", 1215);
+	socket.Open();
+	socket.Connect();
 	socket.Send({ std::byte(0x5) });
 }
 
 int main(int argc, char** args) try
 {
 	//Compression();
-	//SocketTest();
+	SocketTest();
 	//Boring32::Util::GloballyUniqueID id(L"AAAAA");
 
-	SC_HANDLE handle = Boring32::Services::OpenServiceControlManager(SC_MANAGER_CONNECT);
-	SC_HANDLE handle2 = Boring32::Services::OpenServiceHandle(handle, L"Bonjour Service", SERVICE_QUERY_STATUS);
-	auto x = Boring32::Services::GetServiceStatus(handle2);
+	//SC_HANDLE handle = Boring32::Services::OpenServiceControlManager(SC_MANAGER_CONNECT);
+	//SC_HANDLE handle2 = Boring32::Services::OpenServiceHandle(handle, L"Bonjour Service", SERVICE_QUERY_STATUS);
+	//auto x = Boring32::Services::GetServiceStatus(handle2);
 
 	return 0;
 }

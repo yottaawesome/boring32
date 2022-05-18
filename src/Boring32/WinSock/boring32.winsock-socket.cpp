@@ -121,80 +121,71 @@ namespace Boring32::WinSock
 		Connect(0, 0);
 	}
 
-	void Socket::Connect(const DWORD socketTTL, const DWORD maxRetryTimeout)
+	void Socket::Open()
 	{
-		// https://docs.microsoft.com/en-us/windows/win32/api/ws2def/ns-ws2def-addrinfow
-		ADDRINFOW hints
-		{
-			.ai_family = AF_INET | AF_INET6,
+		ADDRINFOW hints{
+			.ai_family = AF_INET,
 			.ai_socktype = SOCK_STREAM,
 			.ai_protocol = IPPROTO_TCP
 		};
 
-		ADDRINFOW* addrResult;
+		ADDRINFOW* addrInfoResult;
 		// https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-getaddrinfow
 		std::wstring portNumber = m_portNumber ? std::to_wstring(m_portNumber) : L"";
 		const int status = GetAddrInfoW(
 			m_host.c_str(),
 			portNumber.c_str(),
 			nullptr,
-			&addrResult
+			&addrInfoResult
 		);
-		if (status)
-			throw WinSockError(std::source_location::current(), "GetAddrInfoW() failed", status);
+		if (status) throw WinSockError(
+			std::source_location::current(), 
+			"GetAddrInfoW() failed", 
+			status
+		);
+		if (!addrInfoResult) throw WinSockError(
+			std::source_location::current(), 
+			"GetAddrInfoW() did not find any valid interfaces", 
+			status
+		);
+		m_addrPtr = AddrInfoWUniquePtr(addrInfoResult);
 
-		AddrInfoWUniquePtr addrPtr = AddrInfoWUniquePtr(addrResult);
-		// Attempt to connect to an address until one succeeds
-		m_socket = InvalidSocket;
-		for (ADDRINFOW* currentAddr = addrResult; currentAddr != nullptr && m_socket == InvalidSocket; currentAddr = currentAddr->ai_next)
-		{
-			// Create a SOCKET for connecting to server
-			m_socket = socket(
-				currentAddr->ai_family,
-				currentAddr->ai_socktype,
-				currentAddr->ai_protocol
-			);
-			if (m_socket == InvalidSocket) throw WinSockError(
-				std::source_location::current(), 
-				"socket() failed", 
-				WSAGetLastError()
-			);
-			m_addressFamily = currentAddr->ai_family;
+		// https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-socket
+		m_socket = socket(
+			addrInfoResult->ai_family,
+			addrInfoResult->ai_socktype,
+			addrInfoResult->ai_protocol
+		);
+		if (m_socket == InvalidSocket) throw WinSockError(
+			std::source_location::current(),
+			"socket() failed",
+			WSAGetLastError()
+		);
 
-			// Option not supported https://docs.microsoft.com/en-us/windows/win32/winsock/ipproto-tcp-socket-options
-			if (socketTTL)
-				SetSocketTTL(socketTTL);
-			if (maxRetryTimeout)
-				SetMaxRetryTimeout(maxRetryTimeout);
+		m_addressFamily = addrInfoResult->ai_family;
+	}
 
-			// Connect to server.
-			const int connectionResult = connect(
-				m_socket,
-				currentAddr->ai_addr, 
-				static_cast<int>(currentAddr->ai_addrlen)
-			);
-			if (connectionResult == SOCKET_ERROR)
-			{
-				// Couldn't connect; free the socket and try the next entry.
-				if (closesocket(m_socket) == SOCKET_ERROR) throw WinSockError(
-					std::source_location::current(),
-					"closesocket() failed",
-					WSAGetLastError()
-				);
-				m_socket = InvalidSocket;
-			}
-		}
+	void Socket::Connect(const DWORD socketTTL, const DWORD maxRetryTimeout)
+	{
+		if (socketTTL)
+			SetSocketTTL(socketTTL);
+		if (maxRetryTimeout)
+			SetMaxRetryTimeout(maxRetryTimeout);
 
-		// Failed connecting in all cases.
-		if (m_socket == InvalidSocket)
-		{
-			const std::string errorMsg = std::format(
-				"Failed connecting to server {}:{}", 
-				Strings::ConvertString(m_host), 
-				m_portNumber
-			);
-			throw WinSockError(std::source_location::current(), errorMsg);
-		}
+		// Trying to connect to a random socket on the remote host seems to trigger a long timeout
+		// ending with error code 0X0000274C=10060=WSAETIMEDOUT. Can we adjust this timeout
+		// and is it possible get a different error like WSAECONNREFUSED?
+		// https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-connect
+		const int connectionResult = connect(
+			m_socket,
+			m_addrPtr->ai_addr,
+			static_cast<int>(m_addrPtr->ai_addrlen)
+		);
+		if (connectionResult == SOCKET_ERROR) throw WinSockError(
+			std::source_location::current(),
+			"connect() failed",
+			WSAGetLastError()
+		);
 	}
 
 	void Socket::Close()
@@ -232,8 +223,11 @@ namespace Boring32::WinSock
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-recv
 		std::vector<std::byte> recvbuf(bytesToRead);
 		const int actualBytesRead = recv(m_socket, reinterpret_cast<char*>(&recvbuf[0]), bytesToRead, 0);
-		if (actualBytesRead < 0)
-			throw WinSockError(std::source_location::current(), "recv() failed", WSAGetLastError());
+		if (actualBytesRead < 0) throw WinSockError(
+			std::source_location::current(), 
+			"recv() failed", 
+			WSAGetLastError()
+		);
 
 		recvbuf.resize(actualBytesRead);
 		return recvbuf;
