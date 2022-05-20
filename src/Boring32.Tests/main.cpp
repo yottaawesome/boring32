@@ -18,6 +18,7 @@ import boring32.xaudio2;
 import boring32.compression;
 import boring32.util;
 import boring32.services;
+import boring32.async;
 
 struct Test
 {
@@ -179,8 +180,11 @@ void SocketTest()
 
 int main(int argc, char** args) try
 {
+	Boring32::Async::Semaphore s(false, 0, 10);
+	s.Release(0);
+
 	//Compression();
-	SocketTest();
+	//SocketTest();
 	//Boring32::Util::GloballyUniqueID id(L"AAAAA");
 
 	//SC_HANDLE handle = Boring32::Services::OpenServiceControlManager(SC_MANAGER_CONNECT);

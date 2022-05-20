@@ -51,7 +51,7 @@ namespace Boring32::Async
 	{
 		if (m_name.empty())
 			throw Error::Boring32Error(std::source_location::current(), "Cannot create named semaphore with empty string.");
-		InternalCreate(name, initialCount, maxCount, isInheritable);
+		InternalCreate(m_name, initialCount, maxCount, isInheritable);
 	}
 
 	Semaphore::Semaphore(
