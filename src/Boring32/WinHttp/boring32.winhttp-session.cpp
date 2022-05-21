@@ -154,9 +154,6 @@ namespace Boring32::WinHttp
 		if (handle == nullptr)
 			throw Error::Win32Error(std::source_location::current(), "WinHttpOpen() failed", GetLastError());
 		
-		m_session = std::shared_ptr<void>(
-			handle, 
-			[](void* handle) -> void { WinHttpCloseHandle(handle); }
-		);
+		m_session = std::shared_ptr<void>(handle, WinHttpCloseHandle);
 	}
 }

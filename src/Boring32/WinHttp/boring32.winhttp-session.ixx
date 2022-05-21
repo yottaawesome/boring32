@@ -16,14 +16,15 @@ export namespace Boring32::WinHttp
 		public:
 			virtual ~Session();
 			Session();
+			Session(const Session& other);
+			Session(Session&& other) noexcept;
 			Session(std::wstring userAgent);
 			Session(std::wstring userAgent, const ProxyType proxyType);
 			Session(std::wstring userAgent, std::wstring namedProxy);
 			Session(std::wstring userAgent, std::wstring namedProxy, std::wstring proxyBypass);
-
-			Session(const Session& other);
+			
+		public:
 			virtual Session& operator=(const Session& other);
-			Session(Session&& other) noexcept;
 			virtual Session& operator=(Session&& other) noexcept;
 
 		public:
@@ -36,7 +37,6 @@ export namespace Boring32::WinHttp
 			///		session is owned by this object.
 			/// </summary>
 			virtual void Close() noexcept;
-
 			virtual ProxyType GetProxyType() const noexcept;
 			virtual const std::wstring& GetUserAgent() const noexcept;
 			virtual const std::wstring& GetNamedProxy() const noexcept;
@@ -48,7 +48,7 @@ export namespace Boring32::WinHttp
 			virtual Session& Move(Session& session) noexcept;
 
 		protected:
-			std::shared_ptr<void> m_session;
+			std::shared_ptr<std::remove_pointer<HINTERNET>::type> m_session;
 			ProxyType m_proxyType;
 			std::wstring m_userAgent;
 			std::wstring m_namedProxy; 
