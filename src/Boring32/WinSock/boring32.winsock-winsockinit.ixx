@@ -9,11 +9,17 @@ export namespace Boring32::WinSock
 {
 	class WinSockInit
 	{
+		// Move semantics don't make sense for this object.
 		public:
 			virtual ~WinSockInit();
 			WinSockInit();
 			WinSockInit(const WinSockInit& other);
+			WinSockInit(WinSockInit&&) noexcept = delete;
+
 			WinSockInit(const DWORD highVersion, const DWORD lowVersion);
+
+		public:
+			virtual WinSockInit& operator=(WinSockInit&&) noexcept = delete;
 
 		public:
 			const WSAData& GetData() const noexcept;
