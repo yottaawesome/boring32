@@ -46,10 +46,11 @@ namespace WinHttp
 			{
 				Boring32::WinHttp::Session session1(UserAgent, Boring32::WinHttp::ProxyType::NoProxy);
 				Boring32::WinHttp::Session session2(session1);
-				Assert::IsTrue(session2.GetUserAgent() == UserAgent);
-				Assert::IsTrue(session2.GetProxyBypass().empty());
-				Assert::IsTrue(session2.GetNamedProxy().empty());
-				Assert::IsTrue(session2.GetProxyType() == Boring32::WinHttp::ProxyType::NoProxy);
+				Assert::IsTrue(session2.GetUserAgent() == session1.GetUserAgent());
+				Assert::IsTrue(session2.GetProxyBypass() == session1.GetProxyBypass());
+				Assert::IsTrue(session2.GetNamedProxy() == session1.GetNamedProxy());
+				Assert::IsTrue(session2.GetProxyType() == session1.GetProxyType());
+				Assert::IsTrue(session2.GetSession() == session1.GetSession());
 				Assert::IsNotNull(session2.GetSession());
 			}
 

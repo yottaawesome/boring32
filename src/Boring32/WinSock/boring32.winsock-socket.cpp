@@ -123,6 +123,9 @@ namespace Boring32::WinSock
 
 	void Socket::Open()
 	{
+		if (m_socket && m_socket != InvalidSocket)
+			return;
+
 		ADDRINFOW hints{
 			.ai_family = AF_INET,
 			.ai_socktype = SOCK_STREAM,
@@ -167,6 +170,7 @@ namespace Boring32::WinSock
 
 	void Socket::Connect(const DWORD socketTTL, const DWORD maxRetryTimeout)
 	{
+		Open();
 		if (socketTTL)
 			SetSocketTTL(socketTTL);
 		if (maxRetryTimeout)
