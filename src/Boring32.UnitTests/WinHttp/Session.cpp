@@ -59,6 +59,13 @@ namespace WinHttp
 				Boring32::WinHttp::Session session2(session1);
 				TestEquivalence(session1, session2);
 			}
+
+			TEST_METHOD(TestCopyAssignment)
+			{
+				Boring32::WinHttp::Session session1(UserAgent, Boring32::WinHttp::ProxyType::NoProxy);
+				Boring32::WinHttp::Session session2 = session1;
+				TestEquivalence(session1, session2);
+			}
 			
 			void TestMove(const Boring32::WinHttp::Session& session1, Boring32::WinHttp::Session& session2)
 			{
