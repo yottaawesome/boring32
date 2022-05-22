@@ -95,10 +95,11 @@ namespace Boring32::WinHttp
 	{
 		Close();
 		m_session = std::move(other.m_session);
-		m_proxyType = std::move(other.m_proxyType);
+		m_proxyType = other.m_proxyType;
 		m_userAgent = std::move(other.m_userAgent);
 		m_namedProxy = std::move(other.m_namedProxy);
 		m_proxyBypass = std::move(other.m_proxyBypass);
+		other.Close();
 		return *this;
 	}
 

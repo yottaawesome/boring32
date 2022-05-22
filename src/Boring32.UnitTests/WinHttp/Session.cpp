@@ -53,6 +53,24 @@ namespace WinHttp
 				Assert::IsNotNull(session2.GetSession());
 			}
 
+			TEST_METHOD(TestSessionMoveConstructor)
+			{
+				Boring32::WinHttp::Session session1(UserAgent, Boring32::WinHttp::ProxyType::AutoProxy);
+				Boring32::WinHttp::Session session2(std::move(session1));
+
+				Assert::IsTrue(session1.GetUserAgent().empty());
+				Assert::IsTrue(session1.GetProxyBypass().empty());
+				Assert::IsTrue(session1.GetNamedProxy().empty());
+				Assert::IsTrue(session1.GetProxyType() == Boring32::WinHttp::ProxyType::NoProxy);
+				Assert::IsNull(session1.GetSession());
+
+				Assert::IsTrue(session2.GetUserAgent() == UserAgent);
+				Assert::IsTrue(session2.GetProxyBypass().empty());
+				Assert::IsTrue(session2.GetNamedProxy().empty());
+				Assert::IsTrue(session2.GetProxyType() == Boring32::WinHttp::ProxyType::AutoProxy);
+				Assert::IsNotNull(session2.GetSession());
+			}
+
 			TEST_METHOD(TestSessionConstructorUserAgentAutoProxyType)
 			{
 				Boring32::WinHttp::Session session(UserAgent, Boring32::WinHttp::ProxyType::AutoProxy);
