@@ -13,7 +13,7 @@ namespace WinHttp
 
 		// Can't really test the named proxy type case
 		public:
-			TEST_METHOD(TestSessionDefaultConstructor)
+			TEST_METHOD(TestDefaultConstructor)
 			{
 				Boring32::WinHttp::Session session;
 				Assert::IsTrue(session.GetUserAgent().empty());
@@ -22,7 +22,7 @@ namespace WinHttp
 				Assert::IsTrue(session.GetProxyType() == Boring32::WinHttp::ProxyType::AutoProxy);
 			}
 
-			TEST_METHOD(TestSessionConstructorUserAgent)
+			TEST_METHOD(TestConstructorUserAgent)
 			{
 				Boring32::WinHttp::Session session(UserAgent);
 				Assert::IsTrue(session.GetUserAgent() == UserAgent);
@@ -32,7 +32,7 @@ namespace WinHttp
 				Assert::IsNotNull(session.GetSession());
 			}
 
-			TEST_METHOD(TestSessionConstructorUserAgentNoProxyType)
+			TEST_METHOD(TestConstructorUserAgentNoProxyType)
 			{
 				Boring32::WinHttp::Session session(UserAgent, Boring32::WinHttp::ProxyType::NoProxy);
 				Assert::IsTrue(session.GetUserAgent() == UserAgent);
@@ -53,7 +53,7 @@ namespace WinHttp
 				Assert::IsNotNull(session2.GetSession());
 			}
 
-			TEST_METHOD(TestSessionCopyConstructor)
+			TEST_METHOD(TestCopyConstructor)
 			{
 				Boring32::WinHttp::Session session1(UserAgent, Boring32::WinHttp::ProxyType::NoProxy);
 				Boring32::WinHttp::Session session2(session1);
@@ -82,14 +82,21 @@ namespace WinHttp
 				Assert::IsNotNull(session2.GetSession());
 			}
 
-			TEST_METHOD(TestSessionMoveConstructor)
+			TEST_METHOD(TestMoveConstructor)
 			{
 				Boring32::WinHttp::Session session1(UserAgent, Boring32::WinHttp::ProxyType::AutoProxy);
 				Boring32::WinHttp::Session session2(std::move(session1));
 				TestMove(session1, session2);
 			}
 
-			TEST_METHOD(TestSessionConstructorUserAgentAutoProxyType)
+			TEST_METHOD(TestMoveAssignment)
+			{
+				Boring32::WinHttp::Session session1(UserAgent, Boring32::WinHttp::ProxyType::AutoProxy);
+				Boring32::WinHttp::Session session2 = std::move(session1);
+				TestMove(session1, session2);
+			}
+
+			TEST_METHOD(TestConstructorUserAgentAutoProxyType)
 			{
 				Boring32::WinHttp::Session session(UserAgent, Boring32::WinHttp::ProxyType::AutoProxy);
 				Assert::IsTrue(session.GetUserAgent() == UserAgent);
