@@ -74,4 +74,14 @@ namespace Boring32::WinSock
 
 		return *this;
 	}
+
+	DWORD WinSockInit::GetLowVersion() const noexcept
+	{
+		return m_lowVersion;
+	}
+
+	DWORD WinSockInit::GetHighVersion() const noexcept
+	{
+		return m_highVersion;
+	}
 }
