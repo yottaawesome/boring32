@@ -29,7 +29,10 @@ namespace Boring32::WinSock
 		if (!ipCString)
 		{
 			const auto lastError = WSAGetLastError();
-			throw WinSockError(std::source_location::current(), "inet_ntop() failed", lastError);
+			Error::ThrowNested(
+				Error::Win32Error(std::source_location::current(), "inet_ntop() failed", lastError, L"Ws2_32.dll"),
+				WinSockError(std::source_location::current(), "Could not convert IPv6 network address string")
+			);
 		}
 		out = out.c_str();
 	}
@@ -53,7 +56,10 @@ namespace Boring32::WinSock
 		if (!ipCString)
 		{
 			const auto lastError = WSAGetLastError();
-			throw WinSockError(std::source_location::current(), "inet_ntop() failed", lastError);
+			Error::ThrowNested(
+				Error::Win32Error(std::source_location::current(), "inet_ntop() failed", lastError, L"Ws2_32.dll"),
+				WinSockError(std::source_location::current(), "Could not convert IPv4 network address string")
+			);
 		}
 		out = out.c_str();
 	}
@@ -84,7 +90,12 @@ namespace Boring32::WinSock
 			&resolvedNames
 		);
 		if (result != 0)
-			throw WinSockError(std::source_location::current(), "GetAddrInfoW() failed", result);
+		{
+			Error::ThrowNested(
+				Error::Win32Error(std::source_location::current(), "GetAddrInfoW() failed", result, L"Ws2_32.dll"),
+				WinSockError(std::source_location::current(), "Could not get domain addr info")
+			);
+		}
 
 		std::vector<NetworkingAddress> names;
 		for (PADDRINFOW ptr = resolvedNames; ptr != nullptr; ptr = ptr->ai_next)
@@ -164,12 +175,16 @@ namespace Boring32::WinSock
 			QueryCompleteCallback,
 			&cancelHandle
 		);
-		if (error != WSA_IO_PENDING)
-			throw WinSockError(std::source_location::current(), "GetAddrInfoExW() failed", error);
+		if (error != WSA_IO_PENDING) Error::ThrowNested(
+			Error::Win32Error(std::source_location::current(), "GetAddrInfoExW() failed", error, L"Ws2_32.dll"),
+			WinSockError(std::source_location::current(), "Could not get domain addr info")
+		);
 		e.WaitOnEvent();
 
-		if (ov.InternalHigh != NOERROR)
-			throw Error::Win32Error(std::source_location::current(), "GetAddrInfoExW() overlapped op failed", (DWORD)ov.InternalHigh);
+		if (ov.InternalHigh != NOERROR) Error::ThrowNested(
+			Error::Win32Error(std::source_location::current(), "GetAddrInfoExW() overlapped op failed", (DWORD)ov.InternalHigh),
+			WinSockError(std::source_location::current(), "Could not get domain addr info")
+		);
 
 		std::vector<NetworkingAddress> names;
 		for (PADDRINFOEXW ptr = queryResults; ptr != nullptr; ptr = ptr->ai_next)
@@ -230,12 +245,16 @@ namespace Boring32::WinSock
 			nullptr,
 			nullptr
 		);
-		if (error != WSA_IO_PENDING)
-			throw WinSockError(std::source_location::current(), "GetAddrInfoExW() failed", error);
+		if (error != WSA_IO_PENDING) Error::ThrowNested(
+			Error::Win32Error(std::source_location::current(), "GetAddrInfoExW() failed", error, L"Ws2_32.dll"),
+			WinSockError(std::source_location::current(), "Could not get domain addr info")
+		);
 
 		opCompleted.WaitOnEvent();
-		if (ov.InternalHigh != NOERROR)
-			throw Error::Win32Error(std::source_location::current(), "GetAddrInfoExW() overlapped op failed", (DWORD)ov.InternalHigh);
+		if (ov.InternalHigh != NOERROR) Error::ThrowNested(
+			Error::Win32Error(std::source_location::current(), "GetAddrInfoExW() overlapped op failed", (DWORD)ov.InternalHigh),
+			WinSockError(std::source_location::current(), "Could not get domain addr info")
+		);
 
 		std::vector<NetworkingAddress> names;
 		for (PADDRINFOEXW ptr = queryResults; ptr != nullptr; ptr = ptr->ai_next)

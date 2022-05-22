@@ -6,10 +6,11 @@ module;
 #include <Windows.h>
 
 export module boring32.winsock:winsockerror;
+import boring32.error;
 
 export namespace Boring32::WinSock
 {
-	class WinSockError : public std::runtime_error
+	class WinSockError : public Error::Boring32Error
 	{
 		public:
 			virtual ~WinSockError();
@@ -17,18 +18,5 @@ export namespace Boring32::WinSock
 				const std::source_location& location,
 				const std::string& message
 			);
-			WinSockError(
-				const std::source_location& location, 
-				const std::string& message, 
-				const DWORD errorCode
-			);
-
-		public:
-			virtual DWORD GetErrorCode() const noexcept;
-			virtual const char* what() const noexcept override;
-
-		protected:
-			DWORD m_errorCode;
-			std::string m_errorString;
 	};
 }

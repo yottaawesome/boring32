@@ -94,12 +94,15 @@ namespace Boring32::WinSock
 			reinterpret_cast<char*>(&optVal),
 			&optLen
 		);
-		if (optResult == SOCKET_ERROR) throw WinSockError(
-			std::source_location::current(),
-			"TTL option is not support",
-			WSAGetLastError()
-		);
-
+		if (optResult == SOCKET_ERROR)
+		{
+			const auto lastError = WSAGetLastError();
+			Error::ThrowNested(
+				Error::Win32Error(std::source_location::current(), "getsockopt() failed", lastError, L"ws2_32.dll"),
+				WinSockError(std::source_location::current(), "TTL option is not supported")
+			);
+		}
+			
 		// Actually set the argument
 		optVal = ttl;
 		optResult = setsockopt(
@@ -109,11 +112,14 @@ namespace Boring32::WinSock
 			reinterpret_cast<char*>(&optVal),
 			optLen
 		);
-		if (optResult == SOCKET_ERROR) throw WinSockError(
-			std::source_location::current(),
-			"setsockopt() failed",
-			WSAGetLastError()
-		);
+		if (optResult == SOCKET_ERROR)
+		{
+			const auto lastError = WSAGetLastError();
+			Error::ThrowNested(
+				Error::Win32Error(std::source_location::current(), "setsockopt() failed", lastError, L"ws2_32.dll"),
+				WinSockError(std::source_location::current(), "Failed to set option")
+			);
+		}
 	}
 	
 	void Socket::Connect()
@@ -141,15 +147,13 @@ namespace Boring32::WinSock
 			nullptr,
 			&addrInfoResult
 		);
-		if (status) throw WinSockError(
-			std::source_location::current(), 
-			"GetAddrInfoW() failed", 
-			status
+		if (status) Error::ThrowNested(
+			Error::Win32Error(std::source_location::current(), "GetAddrInfoW() failed", status, L"ws2_32.dll"),
+			WinSockError(std::source_location::current(), "Failed to get address info")
 		);
 		if (!addrInfoResult) throw WinSockError(
 			std::source_location::current(), 
-			"GetAddrInfoW() did not find any valid interfaces", 
-			status
+			"GetAddrInfoW() did not find any valid interfaces"
 		);
 		m_addrPtr = AddrInfoWUniquePtr(addrInfoResult);
 
@@ -159,11 +163,14 @@ namespace Boring32::WinSock
 			addrInfoResult->ai_socktype,
 			addrInfoResult->ai_protocol
 		);
-		if (m_socket == InvalidSocket) throw WinSockError(
-			std::source_location::current(),
-			"socket() failed",
-			WSAGetLastError()
-		);
+		if (m_socket == InvalidSocket)
+		{
+			const auto lastError = WSAGetLastError();
+			Error::ThrowNested(
+				Error::Win32Error(std::source_location::current(), "socket() failed", lastError, L"ws2_32.dll"),
+				WinSockError(std::source_location::current(), "Failed to open socket")
+			);
+		}
 
 		m_addressFamily = addrInfoResult->ai_family;
 	}
@@ -187,11 +194,14 @@ namespace Boring32::WinSock
 			m_addrPtr->ai_addr,
 			static_cast<int>(m_addrPtr->ai_addrlen)
 		);
-		if (connectionResult == SOCKET_ERROR) throw WinSockError(
-			std::source_location::current(),
-			"connect() failed",
-			WSAGetLastError()
-		);
+		if (connectionResult == SOCKET_ERROR)
+		{
+			const auto lastError = WSAGetLastError();
+			Error::ThrowNested(
+				Error::Win32Error(std::source_location::current(), "connect() failed", lastError, L"ws2_32.dll"),
+				WinSockError(std::source_location::current(), "Failed to connect socket")
+			);
+		}
 	}
 
 	void Socket::Close()
@@ -208,7 +218,7 @@ namespace Boring32::WinSock
 	void Socket::Send(const std::vector<std::byte>& data)
 	{
 		if (!m_socket || m_socket == InvalidSocket)
-			throw Error::ErrorBase<std::runtime_error>(std::source_location::current(), "Socket is not valid");
+			throw Error::Boring32Error(std::source_location::current(), "Socket is not valid");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-send
 		const int sentBytes = send(
@@ -218,7 +228,13 @@ namespace Boring32::WinSock
 			0
 		);
 		if (sentBytes == SOCKET_ERROR)
-			throw WinSockError(std::source_location::current(), "send() failed", WSAGetLastError());
+		{
+			const auto lastError = WSAGetLastError();
+			Error::ThrowNested(
+				Error::Win32Error(std::source_location::current(), "send() failed", lastError, L"ws2_32.dll"),
+				WinSockError(std::source_location::current(), "Failed to send data through socket")
+			);
+		}
 	}
 
 	std::vector<std::byte> Socket::Receive(const unsigned bytesToRead)
@@ -229,11 +245,14 @@ namespace Boring32::WinSock
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-recv
 		std::vector<std::byte> recvbuf(bytesToRead);
 		const int actualBytesRead = recv(m_socket, reinterpret_cast<char*>(&recvbuf[0]), bytesToRead, 0);
-		if (actualBytesRead < 0) throw WinSockError(
-			std::source_location::current(), 
-			"recv() failed", 
-			WSAGetLastError()
-		);
+		if (actualBytesRead < 0)
+		{
+			const auto lastError = WSAGetLastError();
+			Error::ThrowNested(
+				Error::Win32Error(std::source_location::current(), "recv() failed", lastError, L"ws2_32.dll"),
+				WinSockError(std::source_location::current(), "Failed to receive data through socket")
+			);
+		}
 
 		recvbuf.resize(actualBytesRead);
 		return recvbuf;
@@ -271,11 +290,14 @@ namespace Boring32::WinSock
 			reinterpret_cast<char*>(&optVal),
 			&optLen
 		);
-		if (optResult == SOCKET_ERROR) throw WinSockError(
-			std::source_location::current(),
-			"RT option is not supported",
-			WSAGetLastError()
-		);
+		if (optResult == SOCKET_ERROR)
+		{
+			const auto lastError = WSAGetLastError();
+			Error::ThrowNested(
+				Error::Win32Error(std::source_location::current(), "getsockopt() failed", lastError, L"ws2_32.dll"),
+				WinSockError(std::source_location::current(), "RT option is not supported")
+			);
+		}
 
 		optVal = timeoutSeconds;
 		optResult = setsockopt(
@@ -285,10 +307,13 @@ namespace Boring32::WinSock
 			reinterpret_cast<char*>(&optVal),
 			optLen
 		);
-		if (optResult == SOCKET_ERROR) throw WinSockError(
-			std::source_location::current(),
-			"setsockopt() failed",
-			WSAGetLastError()
-		);
+		if (optResult == SOCKET_ERROR)
+		{
+			const auto lastError = WSAGetLastError();
+			Error::ThrowNested(
+				Error::Win32Error(std::source_location::current(), "setsockopt() failed", lastError, L"ws2_32.dll"),
+				WinSockError(std::source_location::current(), "Failed to set RT option")
+			);
+		}
 	}
 }
