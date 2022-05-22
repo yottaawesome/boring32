@@ -64,8 +64,9 @@ namespace Boring32::WinSock
 	{
 		if (&other == this)
 			return *this;
+
 		Close();
-		if (other.m_highVersion && other.m_lowVersion)
+		if (other.m_highVersion || other.m_lowVersion)
 		{
 			m_highVersion = other.m_highVersion;
 			m_lowVersion = other.m_lowVersion;
