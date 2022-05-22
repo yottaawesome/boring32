@@ -442,5 +442,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Raii\boring32.raii-handle.ixx" />
+    <ClCompile Include="WinHttp\boring32.winhttp-handles.ixx" />
   </ItemGroup>
 </Project>

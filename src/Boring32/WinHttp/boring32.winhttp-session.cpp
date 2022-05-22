@@ -151,9 +151,9 @@ namespace Boring32::WinHttp
 			proxyBypass,
 			0
 		);
-		if (handle == nullptr)
+		if (!handle)
 			throw Error::Win32Error(std::source_location::current(), "WinHttpOpen() failed", GetLastError());
 		
-		m_session = std::shared_ptr<void>(handle, WinHttpCloseHandle);
+		m_session = SharedWinHttpSession(handle, WinHttpCloseHandle);
 	}
 }

@@ -289,6 +289,7 @@
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform-functions.cpp" />
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform-provider.cpp" />
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform-providercontext.cpp" />
+    <ClCompile Include="WinHttp\boring32.winhttp-handles.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-httpwebclient.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-proxyinfo.ixx" />
