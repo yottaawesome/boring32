@@ -13,7 +13,7 @@ namespace Boring32::WinSock
 {
 	WinSockInit::~WinSockInit()
 	{
-		Close();
+		Close(std::nothrow);
 	}
 	
 	WinSockInit::WinSockInit() : m_highVersion(2), m_lowVersion(2)
@@ -52,9 +52,24 @@ namespace Boring32::WinSock
 		if (!m_lowVersion && !m_highVersion)
 			return;
 
-		WSACleanup();
+		// https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-wsacleanup
+		const int error = WSACleanup();
+		if (error) Error::ThrowNested(
+			Error::Win32Error(std::source_location::current(), "WSACleanup() failed", error, L"Ws2_32.dll"),
+			WinSockError(std::source_location::current(), "Failed to cleanup WinSock")
+		);
 		m_lowVersion = 0;
 		m_highVersion = 0;
+	}
+
+	bool WinSockInit::Close(const std::nothrow_t&) try
+	{
+		Close();
+		return true;
+	}
+	catch (const std::exception&)
+	{
+		return false;
 	}
 
 	WinSockInit& WinSockInit::Copy(const WinSockInit& other)

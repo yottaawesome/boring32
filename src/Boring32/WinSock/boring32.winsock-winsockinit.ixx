@@ -1,5 +1,6 @@
 module;
 
+#include <stdexcept>
 #include <windows.h>
 #include <winsock2.h>
 
@@ -24,6 +25,7 @@ export namespace Boring32::WinSock
 
 		public:
 			virtual void Close();
+			virtual bool Close(const std::nothrow_t&);
 			virtual DWORD GetLowVersion() const noexcept;
 			virtual DWORD GetHighVersion() const noexcept;
 
