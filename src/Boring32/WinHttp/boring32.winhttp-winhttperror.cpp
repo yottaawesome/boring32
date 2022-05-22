@@ -13,14 +13,8 @@ namespace Boring32::WinHttp
 	
 	WinHttpError::WinHttpError(
 		const std::source_location& location, 
-		const std::string& msg, 
-		const DWORD errorCode
+		const std::string& msg
 	)
-	:	Error::Win32Error(
-		location, 
-		msg, 
-		errorCode,
-		errorCode > WINHTTP_ERROR_BASE && errorCode <= WINHTTP_ERROR_LAST ? L"winhttp.dll" : L""
-	)
+	:	Error::Boring32Error(location, msg)
 	{ }
 }
