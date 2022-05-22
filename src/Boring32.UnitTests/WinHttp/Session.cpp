@@ -10,9 +10,8 @@ namespace WinHttp
 	TEST_CLASS(Session)
 	{
 		const std::wstring UserAgent = L"TestUserAgent";
-		// I don't have an available proxy to test the other types...
-		const Boring32::WinHttp::ProxyType ProxyType = Boring32::WinHttp::ProxyType::NoProxy;
 
+		// Can't really test the named proxy type case
 		public:
 			TEST_METHOD(TestSessionDefaultConstructor)
 			{
@@ -33,19 +32,29 @@ namespace WinHttp
 				Assert::IsNotNull(session.GetSession());
 			}
 
-			TEST_METHOD(TestSessionConstructorUserAgentProxyType)
+			TEST_METHOD(TestSessionConstructorUserAgentNoProxyType)
 			{
-				Boring32::WinHttp::Session session(UserAgent, ProxyType);
+				Boring32::WinHttp::Session session(UserAgent, Boring32::WinHttp::ProxyType::NoProxy);
 				Assert::IsTrue(session.GetUserAgent() == UserAgent);
 				Assert::IsTrue(session.GetProxyBypass().empty());
 				Assert::IsTrue(session.GetNamedProxy().empty());
-				Assert::IsTrue(session.GetProxyType() == ProxyType);
+				Assert::IsTrue(session.GetProxyType() == Boring32::WinHttp::ProxyType::NoProxy);
+				Assert::IsNotNull(session.GetSession());
+			}
+
+			TEST_METHOD(TestSessionConstructorUserAgentAutoProxyType)
+			{
+				Boring32::WinHttp::Session session(UserAgent, Boring32::WinHttp::ProxyType::AutoProxy);
+				Assert::IsTrue(session.GetUserAgent() == UserAgent);
+				Assert::IsTrue(session.GetProxyBypass().empty());
+				Assert::IsTrue(session.GetNamedProxy().empty());
+				Assert::IsTrue(session.GetProxyType() == Boring32::WinHttp::ProxyType::AutoProxy);
 				Assert::IsNotNull(session.GetSession());
 			}
 
 			TEST_METHOD(TestClose)
 			{
-				Boring32::WinHttp::Session session(UserAgent, ProxyType);
+				Boring32::WinHttp::Session session(UserAgent, Boring32::WinHttp::ProxyType::NoProxy);
 				session.Close();
 				Assert::IsTrue(session.GetUserAgent().empty());
 				Assert::IsTrue(session.GetProxyBypass().empty());
