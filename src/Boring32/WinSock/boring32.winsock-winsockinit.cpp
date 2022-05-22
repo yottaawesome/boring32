@@ -49,6 +49,9 @@ namespace Boring32::WinSock
 	
 	void WinSockInit::Close()
 	{
+		if (!m_lowVersion && !m_highVersion)
+			return;
+
 		WSACleanup();
 		m_lowVersion = 0;
 		m_highVersion = 0;
