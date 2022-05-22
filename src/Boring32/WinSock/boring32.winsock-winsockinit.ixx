@@ -10,9 +10,9 @@ export namespace Boring32::WinSock
 	class WinSockInit
 	{
 		public:
+			virtual ~WinSockInit();
 			WinSockInit();
 			WinSockInit(const DWORD highVersion, const DWORD lowVersion);
-			virtual ~WinSockInit();
 
 		public:
 			const WSAData& GetData() const noexcept;
