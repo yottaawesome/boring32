@@ -36,5 +36,16 @@ namespace WinHttp
 				Assert::IsTrue(session.GetProxyType() == ProxyType);
 				Assert::IsNotNull(session.GetSession());
 			}
+
+			TEST_METHOD(TestClose)
+			{
+				Boring32::WinHttp::Session session(UserAgent, ProxyType);
+				session.Close();
+				Assert::IsTrue(session.GetUserAgent().empty());
+				Assert::IsTrue(session.GetProxyBypass().empty());
+				Assert::IsTrue(session.GetNamedProxy().empty());
+				Assert::IsTrue(session.GetProxyType() == Boring32::WinHttp::ProxyType::NoProxy);
+				Assert::IsNull(session.GetSession());
+			}
 	};
 }

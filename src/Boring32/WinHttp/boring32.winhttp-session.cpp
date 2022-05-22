@@ -109,6 +109,10 @@ namespace Boring32::WinHttp
 	void Session::Close() noexcept
 	{
 		m_session = nullptr;
+		m_proxyType = ProxyType::NoProxy;
+		m_userAgent.clear();
+		m_namedProxy.clear();
+		m_proxyBypass.clear();
 	}
 
 	ProxyType Session::GetProxyType() const noexcept
