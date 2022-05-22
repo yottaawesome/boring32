@@ -18,6 +18,8 @@ namespace WinHttp
 			{
 				Boring32::WinHttp::Session session;
 				Assert::IsTrue(session.GetUserAgent().empty());
+				Assert::IsTrue(session.GetProxyBypass().empty());
+				Assert::IsTrue(session.GetNamedProxy().empty());
 				Assert::IsTrue(session.GetProxyType() == Boring32::WinHttp::ProxyType::AutoProxy);
 			}
 
@@ -25,6 +27,8 @@ namespace WinHttp
 			{
 				Boring32::WinHttp::Session session(UserAgent);
 				Assert::IsTrue(session.GetUserAgent() == UserAgent);
+				Assert::IsTrue(session.GetProxyBypass().empty());
+				Assert::IsTrue(session.GetNamedProxy().empty());
 				Assert::IsTrue(session.GetProxyType() == Boring32::WinHttp::ProxyType::AutoProxy);
 				Assert::IsNotNull(session.GetSession());
 			}
@@ -33,6 +37,8 @@ namespace WinHttp
 			{
 				Boring32::WinHttp::Session session(UserAgent, ProxyType);
 				Assert::IsTrue(session.GetUserAgent() == UserAgent);
+				Assert::IsTrue(session.GetProxyBypass().empty());
+				Assert::IsTrue(session.GetNamedProxy().empty());
 				Assert::IsTrue(session.GetProxyType() == ProxyType);
 				Assert::IsNotNull(session.GetSession());
 			}
