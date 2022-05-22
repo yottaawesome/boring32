@@ -17,12 +17,15 @@ namespace WinHttp
 			TEST_METHOD(TestSessionDefaultConstructor)
 			{
 				Boring32::WinHttp::Session session;
+				Assert::IsTrue(session.GetUserAgent().empty());
+				Assert::IsTrue(session.GetProxyType() == Boring32::WinHttp::ProxyType::AutoProxy);
 			}
 
 			TEST_METHOD(TestSessionConstructorUserAgent)
 			{
 				Boring32::WinHttp::Session session(UserAgent);
 				Assert::IsTrue(session.GetUserAgent() == UserAgent);
+				Assert::IsTrue(session.GetProxyType() == Boring32::WinHttp::ProxyType::AutoProxy);
 				Assert::IsNotNull(session.GetSession());
 			}
 
