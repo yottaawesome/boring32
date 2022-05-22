@@ -42,16 +42,21 @@ namespace WinHttp
 				Assert::IsNotNull(session.GetSession());
 			}
 
-			TEST_METHOD(TestSessionCopyConstructor)
+			void TestEquivalence(const Boring32::WinHttp::Session& session1, Boring32::WinHttp::Session& session2)
 			{
-				Boring32::WinHttp::Session session1(UserAgent, Boring32::WinHttp::ProxyType::NoProxy);
-				Boring32::WinHttp::Session session2(session1);
 				Assert::IsTrue(session2.GetUserAgent() == session1.GetUserAgent());
 				Assert::IsTrue(session2.GetProxyBypass() == session1.GetProxyBypass());
 				Assert::IsTrue(session2.GetNamedProxy() == session1.GetNamedProxy());
 				Assert::IsTrue(session2.GetProxyType() == session1.GetProxyType());
 				Assert::IsTrue(session2.GetSession() == session1.GetSession());
 				Assert::IsNotNull(session2.GetSession());
+			}
+
+			TEST_METHOD(TestSessionCopyConstructor)
+			{
+				Boring32::WinHttp::Session session1(UserAgent, Boring32::WinHttp::ProxyType::NoProxy);
+				Boring32::WinHttp::Session session2(session1);
+				TestEquivalence(session1, session2);
 			}
 
 			TEST_METHOD(TestSessionMoveConstructor)
