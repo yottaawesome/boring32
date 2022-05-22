@@ -32,6 +32,11 @@ namespace Boring32::WinSock
 		Initialize();
 	}
 
+	WinSockInit& WinSockInit::operator=(const WinSockInit& other)
+	{
+		return Copy(other);
+	}
+
 	void WinSockInit::Initialize()
 	{
 		//https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-wsastartup

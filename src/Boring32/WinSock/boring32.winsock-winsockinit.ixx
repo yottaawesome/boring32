@@ -19,6 +19,7 @@ export namespace Boring32::WinSock
 			WinSockInit(const DWORD highVersion, const DWORD lowVersion);
 
 		public:
+			virtual WinSockInit& operator=(const WinSockInit& other);
 			virtual WinSockInit& operator=(WinSockInit&&) noexcept = delete;
 
 		public:
