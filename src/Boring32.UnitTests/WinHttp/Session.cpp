@@ -9,7 +9,34 @@ namespace WinHttp
 {
 	TEST_CLASS(Session)
 	{
-		const std::wstring UserAgent = L"TestUserAgent";
+		private:
+			const std::wstring UserAgent = L"TestUserAgent";
+
+			void TestEquivalence(const Boring32::WinHttp::Session& session1, Boring32::WinHttp::Session& session2)
+			{
+				Assert::IsTrue(session2.GetUserAgent() == session1.GetUserAgent());
+				Assert::IsTrue(session2.GetProxyBypass() == session1.GetProxyBypass());
+				Assert::IsTrue(session2.GetNamedProxy() == session1.GetNamedProxy());
+				Assert::IsTrue(session2.GetProxyType() == session1.GetProxyType());
+				Assert::IsTrue(session2.GetSession() == session1.GetSession());
+				Assert::IsNotNull(session1.GetSession());
+				Assert::IsNotNull(session2.GetSession());
+			}
+
+			void TestMove(const Boring32::WinHttp::Session& session1, Boring32::WinHttp::Session& session2)
+			{
+				Assert::IsTrue(session1.GetUserAgent().empty());
+				Assert::IsTrue(session1.GetProxyBypass().empty());
+				Assert::IsTrue(session1.GetNamedProxy().empty());
+				Assert::IsTrue(session1.GetProxyType() == Boring32::WinHttp::ProxyType::NoProxy);
+				Assert::IsNull(session1.GetSession());
+
+				Assert::IsTrue(session2.GetUserAgent() == UserAgent);
+				Assert::IsTrue(session2.GetProxyBypass().empty());
+				Assert::IsTrue(session2.GetNamedProxy().empty());
+				Assert::IsTrue(session2.GetProxyType() == Boring32::WinHttp::ProxyType::AutoProxy);
+				Assert::IsNotNull(session2.GetSession());
+			}
 
 		// Can't really test the named proxy type case
 		public:
@@ -42,17 +69,6 @@ namespace WinHttp
 				Assert::IsNotNull(session.GetSession());
 			}
 
-			void TestEquivalence(const Boring32::WinHttp::Session& session1, Boring32::WinHttp::Session& session2)
-			{
-				Assert::IsTrue(session2.GetUserAgent() == session1.GetUserAgent());
-				Assert::IsTrue(session2.GetProxyBypass() == session1.GetProxyBypass());
-				Assert::IsTrue(session2.GetNamedProxy() == session1.GetNamedProxy());
-				Assert::IsTrue(session2.GetProxyType() == session1.GetProxyType());
-				Assert::IsTrue(session2.GetSession() == session1.GetSession());
-				Assert::IsNotNull(session1.GetSession());
-				Assert::IsNotNull(session2.GetSession());
-			}
-
 			TEST_METHOD(TestCopyConstructor)
 			{
 				Boring32::WinHttp::Session session1(UserAgent, Boring32::WinHttp::ProxyType::NoProxy);
@@ -67,20 +83,7 @@ namespace WinHttp
 				TestEquivalence(session1, session2);
 			}
 			
-			void TestMove(const Boring32::WinHttp::Session& session1, Boring32::WinHttp::Session& session2)
-			{
-				Assert::IsTrue(session1.GetUserAgent().empty());
-				Assert::IsTrue(session1.GetProxyBypass().empty());
-				Assert::IsTrue(session1.GetNamedProxy().empty());
-				Assert::IsTrue(session1.GetProxyType() == Boring32::WinHttp::ProxyType::NoProxy);
-				Assert::IsNull(session1.GetSession());
-
-				Assert::IsTrue(session2.GetUserAgent() == UserAgent);
-				Assert::IsTrue(session2.GetProxyBypass().empty());
-				Assert::IsTrue(session2.GetNamedProxy().empty());
-				Assert::IsTrue(session2.GetProxyType() == Boring32::WinHttp::ProxyType::AutoProxy);
-				Assert::IsNotNull(session2.GetSession());
-			}
+			
 
 			TEST_METHOD(TestMoveConstructor)
 			{
