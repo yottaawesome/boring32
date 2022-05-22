@@ -23,7 +23,6 @@ export namespace Boring32::WinSock
 			virtual WinSockInit& operator=(WinSockInit&&) noexcept = delete;
 
 		public:
-			const WSAData& GetData() const noexcept;
 			virtual void Close();
 			virtual DWORD GetLowVersion() const noexcept;
 			virtual DWORD GetHighVersion() const noexcept;

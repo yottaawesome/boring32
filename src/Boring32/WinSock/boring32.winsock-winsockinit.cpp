@@ -46,12 +46,6 @@ namespace Boring32::WinSock
 			WinSockError(std::source_location::current(), "Failed to initialise WinSock")
 		);
 	}
-
-	const WSAData& WinSockInit::GetData() const noexcept
-	{
-		//https://docs.microsoft.com/en-us/windows/win32/api/winsock/ns-winsock-wsadata
-		return m_wsaData;
-	}
 	
 	void WinSockInit::Close()
 	{
