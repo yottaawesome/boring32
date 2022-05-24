@@ -18,6 +18,7 @@ import boring32.xaudio2;
 import boring32.compression;
 import boring32.util;
 import boring32.services;
+import boring32.time;
 import boring32.async;
 
 struct Test
@@ -180,8 +181,12 @@ void SocketTest()
 
 int main(int argc, char** args) try
 {
-	Boring32::Async::Semaphore s(false, 0, 10);
-	s.Release(0);
+	SYSTEMTIME st;
+	GetSystemTime(&st);
+	std::wcout << Boring32::Time::GetTimeAsUtcString(st).c_str() << std::endl;
+
+	//Boring32::Async::Semaphore s(false, 0, 10);
+	//s.Release(0);
 
 	//Compression();
 	//SocketTest();

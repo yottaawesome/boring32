@@ -97,6 +97,6 @@ namespace Boring32::Time
         }
 
         const long actualBias = tzi.Bias * -1; // should we do this?
-        return std::vformat(L"{}-{}.{}{0:+}", std::make_wformat_args(dateString, timeString, st.wMilliseconds, actualBias));
+        return std::vformat(L"{}-{}.{}{:+}", std::make_wformat_args(dateString, timeString, st.wMilliseconds, actualBias));
     }
 }
