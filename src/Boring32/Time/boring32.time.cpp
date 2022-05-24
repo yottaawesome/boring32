@@ -89,15 +89,15 @@ namespace Boring32::Time
 
         TIME_ZONE_INFORMATION tzi;
         // https://docs.microsoft.com/en-us/windows/win32/api/datetimeapi/nf-datetimeapi-gettimeformatex
-        DWORD tziStatus = GetTimeZoneInformation(&tzi);
+        const DWORD tziStatus = GetTimeZoneInformation(&tzi);
         if(tziStatus == TIME_ZONE_ID_INVALID)
         {
             const auto lastError = GetLastError();
             throw Error::Win32Error(std::source_location::current(), "GetTimeZoneInformation() failed", lastError);
         }
 
-        std::wstring formattedString = std::format(L"{}-{}.{}", dateString, timeString, st.wMilliseconds);
-        long actualBias = tzi.Bias * -1;
+        const std::wstring formattedString = std::format(L"{}-{}.{}", dateString, timeString, st.wMilliseconds);
+        const long actualBias = tzi.Bias * -1;
         return std::format(
             L"{}{}{}", 
             formattedString, 
