@@ -1,6 +1,7 @@
 module;
 
 #include <sstream>
+#include <format>
 #include "Windows.h"
 
 module boring32.time;
@@ -9,11 +10,7 @@ namespace Boring32::Time
 {
     DWORD SystemTimeToShortIsoDate(const SYSTEMTIME& st)
     {
-        std::wstring s;
-        s += std::to_wstring(st.wYear);
-        s += std::to_wstring(st.wMonth);
-        s += std::to_wstring(st.wDay);
-        return std::stoul(s);
+        return std::stoul(std::format(L"{}{}{}", st.wYear, st.wMonth, st.wDay));
     }
 
     DWORD SystemTimeToShortIsoDate()
@@ -25,9 +22,10 @@ namespace Boring32::Time
 
     uint64_t FromFileTime(const FILETIME& ft)
     {
-        ULARGE_INTEGER uli = { 0 };
-        uli.LowPart = ft.dwLowDateTime;
-        uli.HighPart = ft.dwHighDateTime;
+        const ULARGE_INTEGER uli = { 
+            .LowPart = ft.dwLowDateTime,
+            .HighPart = ft.dwHighDateTime
+        };
         return uli.QuadPart;
     }
 
