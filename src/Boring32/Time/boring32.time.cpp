@@ -96,13 +96,7 @@ namespace Boring32::Time
             throw Error::Win32Error(std::source_location::current(), "GetTimeZoneInformation() failed", lastError);
         }
 
-        const std::wstring formattedString = std::format(L"{}-{}.{}", dateString, timeString, st.wMilliseconds);
-        const long actualBias = tzi.Bias * -1;
-        const std::wstring biasString = std::format(
-            L"{}{}", 
-            actualBias >= 0 ? L"+" : L"", // sign, minus is automatically added if actualBias is negative
-            actualBias
-        );
-        return std::format(L"{}{}", formattedString, biasString);
+        const long actualBias = tzi.Bias * -1; // should we do this?
+        return std::vformat(L"{}-{}.{}{0:+}", std::make_wformat_args(dateString, timeString, st.wMilliseconds, actualBias));
     }
 }
