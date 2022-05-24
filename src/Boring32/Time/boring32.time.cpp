@@ -96,16 +96,13 @@ namespace Boring32::Time
             throw Error::Win32Error(std::source_location::current(), "GetTimeZoneInformation() failed", lastError);
         }
 
-        std::wstringstream wss;
-        wss << dateString
-            << L"-"
-            << timeString
-            << L"."
-            << st.wMilliseconds;
-        DWORD actualBias = tzi.Bias * -1;
-        if (actualBias >= 0)
-            wss << L"+";
-        wss << actualBias;
-        return wss.str();
+        std::wstring formattedString = std::format(L"{}-{}.{}", dateString, timeString, st.wMilliseconds);
+        long actualBias = tzi.Bias * -1;
+        return std::format(
+            L"{}{}{}", 
+            formattedString, 
+            actualBias >= 0 ? L"+" : L"", // sign
+            actualBias
+        );
     }
 }
