@@ -139,9 +139,10 @@ namespace Boring32::Async
 	void Process::Start()
 	{
 		if (m_executablePath.empty() && m_commandLine.empty())
-			throw Error::ErrorBase<std::runtime_error>(
+			throw Error::Boring32Error(
 				std::source_location::current(), 
-				"No executable path or command line set");
+				"No executable path or command line set"
+			);
 
 		PROCESS_INFORMATION processInfo{ 0 };
 		m_dataSi.cb = sizeof(m_dataSi);
@@ -165,11 +166,11 @@ namespace Boring32::Async
 				&m_dataSi,				// Pointer to STARTUPINFO structure
 				&processInfo			// Pointer to PROCESS_INFORMATION structure
 			);
-		if (!successfullyCreatedProcess)
-			throw Error::Win32Error(
-				std::source_location::current(), 
-				"Failed to create process", 
-				GetLastError());
+		if (!successfullyCreatedProcess) throw Error::Win32Error(
+			std::source_location::current(), 
+			"Failed to create process", 
+			GetLastError()
+		);
 
 		m_process = processInfo.hProcess;
 		m_thread = processInfo.hThread;
