@@ -149,20 +149,17 @@ namespace Boring32::Async
 		// https://docs.microsoft.com/en-us/windows/win32/procthread/creating-processes
 		const bool successfullyCreatedProcess =
 			CreateProcessW(
-				m_executablePath != L"" 
-					? m_executablePath.c_str()
-					: nullptr,		// Module name
-				m_commandLine != L"" 
-					? m_commandLine.data()
-					: nullptr,			// Command line
+				m_executablePath.empty()
+					? nullptr : m_executablePath.c_str(),		// Module name
+				m_commandLine.empty()
+					? nullptr  : m_commandLine.data(), // Command line
 				nullptr,				// Process handle not inheritable
 				nullptr,				// Thread handle not inheritable
 				m_canInheritHandles,	// Set handle inheritance
 				m_creationFlags,		// Creation flags
 				nullptr,				// Use parent's environment block
-				m_startingDirectory != L"" // Starting directory 
-					? m_startingDirectory.c_str()
-					: nullptr,				
+				m_startingDirectory.empty() // Starting directory 
+					? nullptr : m_startingDirectory.c_str(),				
 				&m_dataSi,				// Pointer to STARTUPINFO structure
 				&processInfo			// Pointer to PROCESS_INFORMATION structure
 			);
