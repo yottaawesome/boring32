@@ -242,7 +242,7 @@ namespace Boring32::Async
 			throw Error::Win32Error(
 				std::source_location::current(),
 				"Failed to determine process exit code",
-				GetLastError()
+				lastError
 			);
 		}
 
