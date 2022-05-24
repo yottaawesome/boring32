@@ -1,7 +1,7 @@
 module;
 
-#include "pch.hpp"
 #include <sstream>
+#include "Windows.h"
 
 module boring32.time;
 
@@ -37,6 +37,7 @@ namespace Boring32::Time
         ft.dwLowDateTime = li.LowPart;
         ft.dwHighDateTime = li.HighPart;
         SYSTEMTIME st;
+        // https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-filetimetosystemtime
         FileTimeToSystemTime(&ft, &st);
         return st;
 	}
@@ -46,6 +47,7 @@ namespace Boring32::Time
         // Format date buffer
         constexpr UINT dateStringLength = 9;
         wchar_t dateString[dateStringLength];
+        // https://docs.microsoft.com/en-us/windows/win32/api/datetimeapi/nf-datetimeapi-getdateformatex
         GetDateFormatEx(
             LOCALE_NAME_INVARIANT,
             0,
@@ -69,6 +71,7 @@ namespace Boring32::Time
         );
 
         TIME_ZONE_INFORMATION tzi;
+        // https://docs.microsoft.com/en-us/windows/win32/api/datetimeapi/nf-datetimeapi-gettimeformatex
         GetTimeZoneInformation(&tzi);
         std::wstringstream wss;
         wss << dateString
