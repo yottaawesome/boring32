@@ -98,11 +98,11 @@ namespace Boring32::Time
 
         const std::wstring formattedString = std::format(L"{}-{}.{}", dateString, timeString, st.wMilliseconds);
         const long actualBias = tzi.Bias * -1;
-        return std::format(
-            L"{}{}{}", 
-            formattedString, 
-            actualBias >= 0 ? L"+" : L"", // sign
+        const std::wstring biasString = std::format(
+            L"{}{}", 
+            actualBias >= 0 ? L"+" : L"", // sign, minus is automatically added if actualBias is negative
             actualBias
         );
+        return std::format(L"{}{}", formattedString, biasString);
     }
 }
