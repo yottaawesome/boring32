@@ -33,9 +33,11 @@ namespace Boring32::Time
 
 	SYSTEMTIME LargeIntegerTimeToSystemTime(const LARGE_INTEGER& li)
 	{
-        FILETIME ft;
-        ft.dwLowDateTime = li.LowPart;
-        ft.dwHighDateTime = li.HighPart;
+        const FILETIME ft{
+            .dwLowDateTime = li.LowPart,
+            .dwHighDateTime = static_cast<DWORD>(li.HighPart)
+        };
+        
         SYSTEMTIME st;
         // https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-filetimetosystemtime
         if (!FileTimeToSystemTime(&ft, &st))
