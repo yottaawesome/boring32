@@ -312,9 +312,6 @@
     <ClCompile Include="Async\boring32.async-slimreadwritelock.ixx" />
     <ClCompile Include="Async\boring32.async-eventloop.ixx" />
     <ClCompile Include="Error\boring32.error-errorbase.ixx" />
-    <ClCompile Include="Error\boring32.error-errorbase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Util\boring32.util-switcher.ixx" />
     <ClCompile Include="Util\boring32.util-switcher.cpp">
       <Filter>Source Files</Filter>

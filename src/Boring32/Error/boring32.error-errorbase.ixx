@@ -7,12 +7,11 @@ module;
 
 export module boring32.error:errorbase;
 
-export namespace Boring32::Error
+namespace Boring32::Error
 {
-	//class NestedException : std::nested_exception
-
 	template<typename T> requires std::is_base_of<std::exception, T>::value
-	class ErrorBase : public T 
+	[[deprecated("This is just here for possible repurposing.")]]
+	class ErrorBase : public T
 	{
 		public:
 			virtual ~ErrorBase() {}
@@ -59,14 +58,14 @@ export namespace Boring32::Error
 
 
 	template<typename...E>
+	[[deprecated("This is just here for possible repurposing.")]]
 	class Error : public virtual E...
 	{
 		public:
 			virtual ~Error() {}
 	};
 
-	class M : public Error<std::runtime_error, std::exception>
-	{
-
-	};
+	class M [[deprecated("This is just here for possible repurposing.")]]
+		: public Error<std::runtime_error, std::exception>
+	{ };
 }

@@ -228,7 +228,6 @@
     <ClCompile Include="Error\boring32.error.ixx" />
     <ClCompile Include="Error\boring32.error-ntstatuserror.ixx" />
     <ClCompile Include="Error\boring32.error-win32error.ixx" />
-    <ClCompile Include="Error\boring32.error-errorbase.cpp" />
     <ClCompile Include="Error\boring32.error-functions.cpp" />
     <ClCompile Include="FileSystem\boring32.filesystem-functions.ixx" />
     <ClCompile Include="FileSystem\boring32.filesystem.ixx" />
