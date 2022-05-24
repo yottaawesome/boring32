@@ -54,7 +54,7 @@ namespace Boring32::Time
         constexpr UINT dateStringLength = 9;
         wchar_t dateString[dateStringLength];
         // https://docs.microsoft.com/en-us/windows/win32/api/datetimeapi/nf-datetimeapi-getdateformatex
-        GetDateFormatEx(
+        int status = GetDateFormatEx(
             LOCALE_NAME_INVARIANT,
             0,
             &st,
@@ -63,11 +63,17 @@ namespace Boring32::Time
             dateStringLength,
             nullptr
         );
+        if (!status)
+        {
+            const auto lastError = GetLastError();
+            throw Error::Win32Error(std::source_location::current(), "GetDateFormatEx() failed", lastError);
+        }
 
         // Format time buffer
         constexpr UINT timeStringLength = 9;
         wchar_t timeString[timeStringLength];
-        GetTimeFormatEx(
+        // https://docs.microsoft.com/en-us/windows/win32/api/datetimeapi/nf-datetimeapi-gettimeformatex
+        status = GetTimeFormatEx(
             LOCALE_NAME_INVARIANT,
             0,
             &st,
@@ -75,10 +81,21 @@ namespace Boring32::Time
             timeString,
             timeStringLength
         );
+        if (!status)
+        {
+            const auto lastError = GetLastError();
+            throw Error::Win32Error(std::source_location::current(), "GetTimeFormatEx() failed", lastError);
+        }
 
         TIME_ZONE_INFORMATION tzi;
         // https://docs.microsoft.com/en-us/windows/win32/api/datetimeapi/nf-datetimeapi-gettimeformatex
-        GetTimeZoneInformation(&tzi);
+        DWORD tziStatus = GetTimeZoneInformation(&tzi);
+        if(tziStatus == TIME_ZONE_ID_INVALID)
+        {
+            const auto lastError = GetLastError();
+            throw Error::Win32Error(std::source_location::current(), "GetTimeZoneInformation() failed", lastError);
+        }
+
         std::wstringstream wss;
         wss << dateString
             << L"-"
