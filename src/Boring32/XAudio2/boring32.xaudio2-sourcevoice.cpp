@@ -7,6 +7,7 @@ module;
 
 module boring32.xaudio2:sourcevoice;
 import boring32.error;
+import :xaudio2error;
 
 namespace Boring32::XAudio2
 {
@@ -21,7 +22,7 @@ namespace Boring32::XAudio2
 	SourceVoice::SourceVoice(IXAudio2SourceVoice* voice)
 		: m_voice(voice)
 	{
-		if (!voice) throw Error::ErrorBase<std::runtime_error>(
+		if (!voice) throw XAudio2Error(
 			std::source_location::current(),
 			"voice cannot be nullptr"
 		);
