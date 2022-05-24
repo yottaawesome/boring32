@@ -232,17 +232,21 @@ namespace Boring32::Async
 
 	DWORD Process::GetProcessExitCode() const
 	{
-		if (!m_process)
-			throw Error::ErrorBase<std::runtime_error>(
-				std::source_location::current(),
-				"No process handle to query");
+		if (!m_process) throw Error::Boring32Error(
+			std::source_location::current(),
+			"No process handle to query"
+		);
 
 		DWORD exitCode = 0;
 		if (!GetExitCodeProcess(m_process.GetHandle(), &exitCode))
+		{
+			const auto lastError = GetLastError();
 			throw Error::Win32Error(
-				std::source_location::current(), 
-				"Failed to determine process exit code", 
-				GetLastError());
+				std::source_location::current(),
+				"Failed to determine process exit code",
+				GetLastError()
+			);
+		}
 
 		return exitCode;
 	}
