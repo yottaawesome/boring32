@@ -44,7 +44,7 @@ namespace Boring32::Security
 	Token::Token(const HANDLE token, const bool ownOrDuplicate)
 	{
 		if (!token)
-			throw Error::ErrorBase<std::invalid_argument>(std::source_location::current(), "Token cannot be null");
+			throw Error::Boring32Error(std::source_location::current(), "Token cannot be null");
 
 		if (ownOrDuplicate)
 		{
