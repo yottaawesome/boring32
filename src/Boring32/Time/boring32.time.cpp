@@ -2,9 +2,11 @@ module;
 
 #include <sstream>
 #include <format>
+#include <source_location>
 #include "Windows.h"
 
 module boring32.time;
+import boring32.error;
 
 namespace Boring32::Time
 {
@@ -36,7 +38,11 @@ namespace Boring32::Time
         ft.dwHighDateTime = li.HighPart;
         SYSTEMTIME st;
         // https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-filetimetosystemtime
-        FileTimeToSystemTime(&ft, &st);
+        if (!FileTimeToSystemTime(&ft, &st))
+        {
+            const auto lastError = GetLastError();
+            throw Error::Win32Error(std::source_location::current(), "FileTimeToSystemTime() failed", lastError);
+        }
         return st;
 	}
 
