@@ -21,6 +21,23 @@ export namespace Boring32::Async
 			Mutex();
 
 			/// <summary>
+			///		Clones a mutex.
+			/// </summary>
+			/// <param name="other"></param>
+			Mutex(const Mutex& other);
+
+			/// <summary>
+			///		Move constructor.
+			/// </summary>
+			/// <param name="other">The rvalue to move.</param>
+			Mutex(Mutex&& other) noexcept;
+
+			/// <summary>
+			///		Destroys this mutex.
+			/// </summary>
+			virtual ~Mutex();
+
+			/// <summary>
 			///		Creates an anonymous mutex.
 			/// </summary>
 			/// <param name="acquire">
@@ -72,23 +89,6 @@ export namespace Boring32::Async
 				const DWORD desiredAccess
 			);
 
-			/// <summary>
-			///		Clones a mutex.
-			/// </summary>
-			/// <param name="other"></param>
-			Mutex(const Mutex& other);
-
-			/// <summary>
-			///		Move constructor.
-			/// </summary>
-			/// <param name="other">The rvalue to move.</param>
-			Mutex(Mutex&& other) noexcept;
-
-			/// <summary>
-			///		Destroys this mutex.
-			/// </summary>
-			virtual ~Mutex();
-
 		public:
 			/// <summary>
 			///		Copy assignment.
@@ -101,6 +101,10 @@ export namespace Boring32::Async
 			virtual Mutex& operator=(Mutex&& other) noexcept;
 		
 		public:
+			virtual bool Lock();
+			virtual bool Lock(const DWORD waitTime);
+			virtual bool Lock(const bool isAlertable);
+
 			/// <summary>
 			///		Blocks the current thread for a specified amount of time 
 			///		(or indefinitely) until the mutex is acquired.

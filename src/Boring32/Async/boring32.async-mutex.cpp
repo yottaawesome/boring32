@@ -129,6 +129,21 @@ namespace Boring32::Async
 		m_locked = other.m_locked;
 		m_mutex = std::move(other.m_mutex);
 	}
+	
+	bool Mutex::Lock()
+	{
+		return Lock(INFINITE, false);
+	}
+	
+	bool Mutex::Lock(const DWORD waitTime)
+	{
+		return Lock(waitTime, false);
+	}
+	
+	bool Mutex::Lock(const bool isAlertable)
+	{
+		return Lock(INFINITE, isAlertable);
+	}
 
 	bool Mutex::Lock(const DWORD waitTime, const bool isAlertable)
 	{
