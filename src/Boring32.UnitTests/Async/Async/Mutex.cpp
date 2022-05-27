@@ -90,6 +90,12 @@ namespace Async
 				testMutex.Unlock();
 			}
 
+			TEST_METHOD(TestGetName)
+			{
+				Boring32::Async::Mutex testMutex(false, false, L"Mutex1");
+				Assert::IsTrue(testMutex.GetName() == L"Mutex1");
+			}
+
 			TEST_METHOD(TestLockException)
 			{
 				Assert::ExpectException<Boring32::Error::Boring32Error>(
