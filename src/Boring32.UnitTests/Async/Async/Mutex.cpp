@@ -9,6 +9,15 @@ namespace Async
 {
 	TEST_CLASS(Mutex)
 	{
+		private: 
+			void TestCopy(const Boring32::Async::Mutex& testMutex1, const Boring32::Async::Mutex& testMutex2)
+			{
+				Assert::IsTrue(testMutex1.GetName() == L"Mutex1");
+				Assert::IsNotNull(testMutex1.GetHandle());
+				Assert::IsTrue(testMutex2.GetName() == L"Mutex1");
+				Assert::IsNotNull(testMutex2.GetHandle());
+			}
+
 		public:
 			TEST_METHOD(TestCreateAnonymousMutex)
 			{
@@ -36,16 +45,14 @@ namespace Async
 			{
 				Boring32::Async::Mutex testMutex1(false, false, L"Mutex1");
 				Boring32::Async::Mutex testMutex2(testMutex1);
-				Assert::IsTrue(testMutex2.GetName() == L"Mutex1");
-				Assert::IsNotNull(testMutex2.GetHandle());
+				TestCopy(testMutex1, testMutex2);
 			}
 
 			TEST_METHOD(TestCopyAssigment)
 			{
 				Boring32::Async::Mutex testMutex1(false, false, L"Mutex1");
 				Boring32::Async::Mutex testMutex2 = testMutex1;
-				Assert::IsTrue(testMutex2.GetName() == L"Mutex1");
-				Assert::IsNotNull(testMutex2.GetHandle());
+				TestCopy(testMutex1, testMutex2);
 			}
 
 			TEST_METHOD(TestMoveAssignment)
