@@ -9,6 +9,7 @@ module;
 
 module boring32.async:mutex;
 import boring32.error;
+import :functions;
 
 namespace Boring32::Async
 {
@@ -135,14 +136,7 @@ namespace Boring32::Async
 	{
 		if (!m_mutex)
 			throw std::runtime_error(__FUNCSIG__ ": cannot wait on null mutex");
-
-		DWORD result = WaitForSingleObjectEx(m_mutex.GetHandle(), waitTime, isAlertable);
-		if (result == WAIT_FAILED)
-			throw Error::Win32Error(std::source_location::current(), "failed to acquire mutex", GetLastError());
-		if (result == WAIT_OBJECT_0)
-			m_locked = true;
-		if (result == WAIT_TIMEOUT)
-			m_locked = false;
+		m_locked = WaitFor(m_mutex.GetHandle(), waitTime, isAlertable);
 		return m_locked;
 	}
 
