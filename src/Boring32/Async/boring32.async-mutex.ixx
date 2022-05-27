@@ -140,7 +140,7 @@ export namespace Boring32::Async
 			///		Returns true if the mutex was successfully acquired,
 			///		or false if the timeout occurred, or if an error occurred.
 			/// </returns>
-			virtual bool Lock(const DWORD waitTime, const bool isAlertable, std::nothrow_t) noexcept;
+			virtual bool Lock(const DWORD waitTime, const bool isAlertable, const std::nothrow_t&) noexcept;
 
 			/// <summary>
 			///		Frees the mutex, allowing another process to acquire it.
@@ -154,7 +154,7 @@ export namespace Boring32::Async
 			///		Frees the mutex, allowing another process to acquire it.
 			///		Does not throw exceptions on failure.
 			/// </summary>
-			virtual bool Unlock(std::nothrow_t) noexcept;
+			virtual bool Unlock(const std::nothrow_t&) noexcept;
 
 			/// <summary>
 			///		Invalidates and closes the native Mutex handle.

@@ -3,6 +3,7 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 import boring32.async;
+import boring32.error;
 
 namespace Async
 {
@@ -52,7 +53,7 @@ namespace Async
 
 			TEST_METHOD(TestMutexLockException)
 			{
-				Assert::ExpectException<std::runtime_error>(
+				Assert::ExpectException<Boring32::Error::Boring32Error>(
 					[]()
 					{
 						Boring32::Async::Mutex testMutex;

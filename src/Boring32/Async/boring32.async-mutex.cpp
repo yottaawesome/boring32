@@ -29,15 +29,13 @@ namespace Boring32::Async
 	}
 
 	Mutex::Mutex()
-	:	m_name(L""),
-		m_created(false),
+	:	m_created(false),
 		m_mutex(nullptr),
 		m_locked(false)
 	{ }
 
 	Mutex::Mutex(const bool acquire, const bool inheritable)
-	:	m_name(L""),
-		m_created(false),
+	:	m_created(false),
 		m_locked(acquire),
 		m_mutex(nullptr)
 	{
@@ -85,7 +83,7 @@ namespace Boring32::Async
 		m_locked(false)
 	{
 		if(m_name.empty())
-			throw std::runtime_error(__FUNCSIG__ ": cannot open mutex with empty name");
+			throw Error::Boring32Error(std::source_location::current(), "Cannot open mutex with empty name");
 		m_mutex = OpenMutexW(desiredAccess, isInheritable, m_name.c_str());
 		if (!m_mutex)
 			throw Error::Win32Error(std::source_location::current(), "failed to open mutex", GetLastError());
@@ -135,12 +133,12 @@ namespace Boring32::Async
 	bool Mutex::Lock(const DWORD waitTime, const bool isAlertable)
 	{
 		if (!m_mutex)
-			throw std::runtime_error(__FUNCSIG__ ": cannot wait on null mutex");
+			throw Error::Boring32Error(std::source_location::current(), "Cannot wait on null mutex");
 		m_locked = WaitFor(m_mutex.GetHandle(), waitTime, isAlertable);
 		return m_locked;
 	}
 
-	bool Mutex::Lock(const DWORD waitTime, const bool isAlertable, std::nothrow_t) noexcept try
+	bool Mutex::Lock(const DWORD waitTime, const bool isAlertable, const std::nothrow_t&) noexcept try
 	{
 		return Lock(waitTime, isAlertable);
 	}
@@ -153,14 +151,14 @@ namespace Boring32::Async
 	void Mutex::Unlock()
 	{
 		if (!m_mutex)
-			throw std::runtime_error(__FUNCSIG__ ": cannot wait on null mutex");
+			throw Error::Boring32Error(std::source_location::current(), "Cannot wait on null mutex");
 		if (!ReleaseMutex(m_mutex.GetHandle()))
-			throw Error::Win32Error(std::source_location::current(), "failed to release mutex", GetLastError());
+			throw Error::Win32Error(std::source_location::current(), "Failed to release mutex", GetLastError());
 
 		m_locked = false;
 	}
 
-	bool Mutex::Unlock(std::nothrow_t) noexcept try
+	bool Mutex::Unlock(const std::nothrow_t&) noexcept try
 	{
 		Unlock();
 		return true;
