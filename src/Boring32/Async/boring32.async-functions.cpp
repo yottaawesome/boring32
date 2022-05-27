@@ -27,14 +27,14 @@ namespace Boring32::Async
 	bool WaitFor(const HANDLE handle, const DWORD timeout, const bool alertable)
 	{
 		if (!handle)
-			throw std::invalid_argument(__FUNCSIG__ ": handle is nullptr");
+			throw Error::Boring32Error(std::source_location::current(), "Handle is nullptr");
 		
 		switch (const DWORD status = WaitForSingleObjectEx(handle, timeout, alertable))
 		{
 			case WAIT_OBJECT_0: 
 				return true;
 			case WAIT_ABANDONED: 
-				throw std::runtime_error(__FUNCSIG__ ": the wait was abandoned");
+				throw Error::Boring32Error(std::source_location::current(), "The wait was abandoned");
 			case WAIT_FAILED: 
 				throw Error::Win32Error(std::source_location::current(), "WaitForSingleObjectEx() failed", GetLastError());
 			case WAIT_TIMEOUT: 
@@ -42,7 +42,10 @@ namespace Boring32::Async
 			case WAIT_IO_COMPLETION: 
 				return false;
 			default: 
-				throw std::runtime_error(std::format(__FUNCSIG__": unknown wait status: {}", status));
+				throw Error::Boring32Error(
+					std::source_location::current(), 
+					std::format("Unknown wait status: {}", status)
+				);
 		}
 	}
 
@@ -68,25 +71,33 @@ namespace Boring32::Async
 	)
 	{
 		if (handles.empty())
-			throw std::invalid_argument(__FUNCSIG__ ": handles is empty");
+			throw Error::Boring32Error(std::source_location::current(), "Handle is nullptr");
 		if (handles.size() > MAXIMUM_WAIT_OBJECTS)
 		{
-			const std::string error = 
-				__FUNCSIG__ ": too many handles to wait on: " + std::to_string(handles.size());
-			throw std::invalid_argument(error);
+			throw Error::Boring32Error(
+				std::source_location::current(), 
+				std::format("Too many handles to wait on: {}", handles.size())
+			);
 		}
 
-		DWORD status = WaitForMultipleObjectsEx(
-			(DWORD)handles.size(), 
+		const DWORD status = WaitForMultipleObjectsEx(
+			static_cast<DWORD>(handles.size()), 
 			&handles[0], 
 			waitForAll, 
 			timeout, 
 			alertable
 		);
 		if (status == WAIT_ABANDONED)
-			throw std::runtime_error(__FUNCSIG__ ": the wait was abandoned");
+			throw Error::Boring32Error(std::source_location::current(), "The wait was abandoned.");
 		if (status == WAIT_FAILED)
-			throw Error::Win32Error(std::source_location::current(), "WaitForSingleObjectEx() failed", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error(
+				std::source_location::current(), 
+				"WaitForSingleObjectEx() failed", 
+				lastError
+			);
+		}
 		if (status == WAIT_TIMEOUT || status == WAIT_IO_COMPLETION)
 			return status;
 
