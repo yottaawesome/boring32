@@ -32,13 +32,20 @@ namespace Async
 				Assert::IsTrue(testMutex2.GetName() == L"Mutex1");
 			}
 
-			TEST_METHOD(TestCopyMutex)
+			TEST_METHOD(TestCopyConstructor)
+			{
+				Boring32::Async::Mutex testMutex1(false, false, L"Mutex1");
+				Boring32::Async::Mutex testMutex2(testMutex1);
+				Assert::IsTrue(testMutex2.GetName() == L"Mutex1");
+				Assert::IsNotNull(testMutex2.GetHandle());
+			}
+
+			TEST_METHOD(TestCopyAssigment)
 			{
 				Boring32::Async::Mutex testMutex1(false, false, L"Mutex1");
 				Boring32::Async::Mutex testMutex2 = testMutex1;
 				Assert::IsTrue(testMutex2.GetName() == L"Mutex1");
 				Assert::IsNotNull(testMutex2.GetHandle());
-				Assert::IsTrue(testMutex2.Lock(0, true));
 			}
 
 			TEST_METHOD(TestMoveAssignment)
