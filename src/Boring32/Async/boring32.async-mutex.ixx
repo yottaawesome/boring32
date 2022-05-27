@@ -89,23 +89,15 @@ export namespace Boring32::Async
 			/// </summary>
 			virtual ~Mutex();
 
+		public:
 			/// <summary>
-			///		Duplicates the mutex handle held by the RHS operand.
+			///		Copy assignment.
 			/// </summary>
-			/// <param name="other">
-			///		The mutex whose handle needs to be duplicated.
-			///		The handle owned by this mutex must not be null.
-			/// </param>
-			/// <exception cref="std::runtime_error">
-			///		Thrown when the RHS operand is in an invalid state,
-			///		or if the duplicatation failed.
-			/// </exception>
 			virtual Mutex& operator=(const Mutex& other);
 
 			/// <summary>
 			///		Move assignment.
 			/// </summary>
-			/// <param name="other">The mutex to move.</param>
 			virtual Mutex& operator=(Mutex&& other) noexcept;
 		
 		public:

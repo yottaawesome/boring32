@@ -77,7 +77,13 @@ namespace Async
 				TestMove(testMutex1, testMutex2);
 			}
 
-			TEST_METHOD(TestMutexLockException)
+			TEST_METHOD(TestLock)
+			{
+				Boring32::Async::Mutex testMutex1(false, false, L"Mutex1");
+				Assert::IsTrue(testMutex1.Lock(500, false));
+			}
+
+			TEST_METHOD(TestLockException)
 			{
 				Assert::ExpectException<Boring32::Error::Boring32Error>(
 					[]()
@@ -87,7 +93,7 @@ namespace Async
 					});
 			}
 
-			TEST_METHOD(TestMutexLockNoThrow)
+			TEST_METHOD(TestLockNoThrow)
 			{
 				Boring32::Async::Mutex testMutex;
 				Assert::IsFalse(testMutex.Lock(0, true, std::nothrow));
