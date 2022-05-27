@@ -29,18 +29,31 @@ namespace Boring32::Async
 		if (!handle)
 			throw Error::Boring32Error(std::source_location::current(), "Handle is nullptr");
 		
+		// https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobjectex
 		switch (const DWORD status = WaitForSingleObjectEx(handle, timeout, alertable))
 		{
 			case WAIT_OBJECT_0: 
 				return true;
+			
+			case WAIT_TIMEOUT:
+				return false;
+			
+			case WAIT_IO_COMPLETION:
+				return false;
+			
 			case WAIT_ABANDONED: 
 				throw Error::Boring32Error(std::source_location::current(), "The wait was abandoned");
-			case WAIT_FAILED: 
-				throw Error::Win32Error(std::source_location::current(), "WaitForSingleObjectEx() failed", GetLastError());
-			case WAIT_TIMEOUT: 
-				return false;
-			case WAIT_IO_COMPLETION: 
-				return false;
+			
+			case WAIT_FAILED:
+			{
+				const auto lastError = GetLastError();
+				throw Error::Win32Error(
+					std::source_location::current(), 
+					"WaitForSingleObjectEx() failed", 
+					lastError
+				);
+			}
+			
 			default: 
 				throw Error::Boring32Error(
 					std::source_location::current(), 
@@ -80,6 +93,7 @@ namespace Boring32::Async
 			);
 		}
 
+		// https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitformultipleobjectsex
 		const DWORD status = WaitForMultipleObjectsEx(
 			static_cast<DWORD>(handles.size()), 
 			&handles[0], 
@@ -120,21 +134,29 @@ namespace Boring32::Async
 		if (processName.empty())
 			throw Error::Boring32Error(std::source_location::current(), "ProcessName cannot be empty.");
 
+		// https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-createtoolhelp32snapshot
 		Raii::Win32Handle processesSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 		if (processesSnapshot == INVALID_HANDLE_VALUE)
+		{
+			const auto lastError = GetLastError();
 			throw Error::Win32Error(
-				std::source_location::current(), 
+				std::source_location::current(),
 				"CreateToolhelp32Snapshot() failed",
-				GetLastError()
+				lastError
 			);
+		}
 
 		PROCESSENTRY32W procEntry{ .dwSize = sizeof(PROCESSENTRY32W) };
-		if (Process32FirstW(processesSnapshot.GetHandle(), &procEntry) == false)
+		// https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-process32firstw
+		if (!Process32FirstW(processesSnapshot.GetHandle(), &procEntry))
+		{
+			const auto lastError = GetLastError();
 			throw Error::Win32Error(
-				std::source_location::current(), 
+				std::source_location::current(),
 				"Process32First() failed",
-				GetLastError()
+				lastError
 			);
+		}
 
 		do
 		{
@@ -148,12 +170,16 @@ namespace Boring32::Async
 			}
 
 			DWORD processSessionId = 0;
+			// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-processidtosessionid
 			if (!ProcessIdToSessionId(procEntry.th32ProcessID, &processSessionId))
+			{
+				const auto lastError = GetLastError();
 				throw Error::Win32Error(
-					std::source_location::current(), 
+					std::source_location::current(),
 					"ProcessIdToSessionId() failed",
-					GetLastError()
+					lastError
 				);
+			}
 
 			if (processSessionId == sessionIdToMatch)
 			{
@@ -161,6 +187,7 @@ namespace Boring32::Async
 				return true;
 			}
 		} while (Process32NextW(processesSnapshot.GetHandle(), &procEntry));
+		// https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-process32nextw
 
 		return false;
 	}
