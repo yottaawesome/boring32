@@ -63,6 +63,13 @@ namespace Async
 				TestCopy(testMutex1, testMutex2);
 			}
 
+			TEST_METHOD(TestMoveConstructor)
+			{
+				Boring32::Async::Mutex testMutex1(false, false, L"Mutex1");
+				Boring32::Async::Mutex testMutex2(std::move(testMutex1));
+				TestMove(testMutex1, testMutex2);
+			}
+
 			TEST_METHOD(TestMoveAssignment)
 			{
 				Boring32::Async::Mutex testMutex1(false, false, L"Mutex1");
