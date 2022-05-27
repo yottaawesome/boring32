@@ -87,21 +87,28 @@ namespace Boring32::Async
 			timeout, 
 			alertable
 		);
-		if (status == WAIT_ABANDONED)
-			throw Error::Boring32Error(std::source_location::current(), "The wait was abandoned.");
-		if (status == WAIT_FAILED)
+		switch (status)
 		{
-			const auto lastError = GetLastError();
-			throw Error::Win32Error(
-				std::source_location::current(), 
-				"WaitForSingleObjectEx() failed", 
-				lastError
-			);
-		}
-		if (status == WAIT_TIMEOUT || status == WAIT_IO_COMPLETION)
-			return status;
+			case WAIT_ABANDONED:
+				throw Error::Boring32Error(std::source_location::current(), "The wait was abandoned.");
 
-		return waitForAll ? 0 : status - WAIT_OBJECT_0;
+			case WAIT_TIMEOUT:
+			case WAIT_IO_COMPLETION:
+				return status;
+
+			case WAIT_FAILED:
+			{
+				const auto lastError = GetLastError();
+				throw Error::Win32Error(
+					std::source_location::current(),
+					"WaitForSingleObjectEx() failed",
+					lastError
+				);
+			}
+
+			default:
+				return waitForAll ? 0 : status - WAIT_OBJECT_0;
+		}
 	}
 
 	bool GetProcessIdByName(
