@@ -19,7 +19,7 @@ namespace Boring32::Async
 
 	void Mutex::Close()
 	{
-		if (m_mutex != nullptr)
+		if (m_mutex)
 		{
 			if (m_locked)
 				Unlock();

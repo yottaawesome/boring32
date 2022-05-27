@@ -40,12 +40,12 @@ namespace Async
 				Assert::IsTrue(testMutex2.Lock(0, true));
 			}
 
-			TEST_METHOD(TestMoveMutex)
+			TEST_METHOD(TestMoveAssignment)
 			{
-				Boring32::Async::Mutex testMutex = Boring32::Async::Mutex(false, false, L"Mutex1");
-				Assert::IsNotNull(testMutex.GetHandle());
-				Assert::IsTrue(testMutex.GetName() == L"Mutex1");
-				Assert::IsTrue(testMutex.Lock(0, true));
+				Boring32::Async::Mutex testMutex1(false, false, L"Mutex1");
+				Boring32::Async::Mutex testMutex2 = std::move(testMutex1);
+				Assert::IsNotNull(testMutex1.GetHandle());
+				Assert::IsTrue(testMutex1.GetName() == L"Mutex1");
 			}
 
 			TEST_METHOD(TestMutexLockException)
