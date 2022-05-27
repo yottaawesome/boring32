@@ -117,6 +117,9 @@ namespace Boring32::Async
 		DWORD& outResult
 	)
 	{
+		if (processName.empty())
+			throw Error::Boring32Error(std::source_location::current(), "ProcessName cannot be empty.");
+
 		Raii::Win32Handle processesSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 		if (processesSnapshot == INVALID_HANDLE_VALUE)
 			throw Error::Win32Error(
