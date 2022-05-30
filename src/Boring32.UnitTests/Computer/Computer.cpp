@@ -13,5 +13,10 @@ namespace Computer
 		{
 			Assert::IsFalse(Boring32::Computer::GetFormattedHostName(ComputerNameDnsFullyQualified).empty());
 		}
+
+		TEST_METHOD(TestGetTotalMemoryKB)
+		{
+			Assert::IsTrue(Boring32::Computer::GetTotalMemoryKB() > 0);
+		}
 	};
 }
