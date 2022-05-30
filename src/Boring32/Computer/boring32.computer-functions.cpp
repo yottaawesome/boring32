@@ -52,10 +52,27 @@ namespace Boring32::Computer
             const auto lastError = GetLastError();
             throw Error::Win32Error(
                 std::source_location::current(),
-                "GetComputerNameExW() failed",
+                "GetPhysicallyInstalledSystemMemory() failed",
                 lastError
             );
         }
         return memoryInKB;
+    }
+ 
+    MEMORYSTATUSEX GetMemoryStatus()
+    {
+        // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-globalmemorystatusex
+        // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-memorystatusex
+        MEMORYSTATUSEX memoryStatus{ 0 };
+        if (!GlobalMemoryStatusEx(&memoryStatus))
+        {
+            const auto lastError = GetLastError();
+                throw Error::Win32Error(
+                    std::source_location::current(),
+                    "GlobalMemoryStatusEx() failed",
+                    lastError
+                );
+        }
+        return memoryStatus;
     }
 }
