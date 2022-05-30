@@ -63,7 +63,7 @@ namespace Boring32::Computer
     {
         // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-globalmemorystatusex
         // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-memorystatusex
-        MEMORYSTATUSEX memoryStatus{ 0 };
+        MEMORYSTATUSEX memoryStatus{ .dwLength = sizeof(MEMORYSTATUSEX) };
         if (!GlobalMemoryStatusEx(&memoryStatus))
         {
             const auto lastError = GetLastError();
