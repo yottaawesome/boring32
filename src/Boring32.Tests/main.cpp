@@ -179,11 +179,24 @@ void SocketTest()
 	socket.Send({ std::byte(0x5) });
 }
 
+void Resolving()
+{
+	Boring32::WinSock::WinSockInit init;
+	std::vector<Boring32::WinSock::NetworkingAddress> names =
+		Boring32::WinSock::Resolve(L"www.google.com");
+	for (const Boring32::WinSock::NetworkingAddress& x : names)
+	{
+		std::cout << x.Value << std::endl;
+	}
+}
+
 int main(int argc, char** args) try
 {
-	SYSTEMTIME st;
-	GetSystemTime(&st);
-	std::wcout << Boring32::Time::GetTimeAsUtcString(st).c_str() << std::endl;
+	Resolving();
+
+	//SYSTEMTIME st;
+	//GetSystemTime(&st);
+	//std::wcout << Boring32::Time::GetTimeAsUtcString(st).c_str() << std::endl;
 
 	//Boring32::Async::Semaphore s(false, 0, 10);
 	//s.Release(0);
