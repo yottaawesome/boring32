@@ -440,5 +440,10 @@
     </ClCompile>
     <ClCompile Include="Raii\boring32.raii-handle.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-handles.ixx" />
+    <ClCompile Include="Computer\boring32.computer.ixx" />
+    <ClCompile Include="Computer\boring32.computer-functions.ixx" />
+    <ClCompile Include="Computer\boring32.computer-functions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

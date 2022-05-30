@@ -40,10 +40,5 @@ namespace Util
 				std::wstring result = Boring32::Util::ByteVectorToString<std::wstring>(byteVector);
 				Assert::IsTrue(string == result);
 			}
-
-			TEST_METHOD(TestGetFormattedHostName)
-			{
-				Assert::IsFalse(Boring32::Util::GetFormattedHostName(ComputerNameDnsFullyQualified).empty());
-			}
 	};
 }

@@ -19,6 +19,7 @@ import boring32.compression;
 import boring32.util;
 import boring32.services;
 import boring32.time;
+import boring32.computer;
 import boring32.async;
 
 struct Test
@@ -192,7 +193,7 @@ void Resolving()
 
 int main(int argc, char** args) try
 {
-	std::wcout << Boring32::Util::GetFormattedHostName(ComputerNameDnsFullyQualified) << std::endl;
+	std::wcout << Boring32::Computer::GetFormattedHostName(ComputerNameDnsFullyQualified) << std::endl;
 
 	//Resolving();
 

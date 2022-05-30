@@ -48,5 +48,4 @@ export namespace Boring32::Util
 	std::wstring GetGuidAsWString(const GUID& guid);
 	std::wstring GetGuidAsWString();
 	GUID GenerateGUID();
-	std::wstring GetFormattedHostName(const COMPUTER_NAME_FORMAT format);
 }
