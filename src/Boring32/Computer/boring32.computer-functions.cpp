@@ -67,11 +67,11 @@ namespace Boring32::Computer
         if (!GlobalMemoryStatusEx(&memoryStatus))
         {
             const auto lastError = GetLastError();
-                throw Error::Win32Error(
-                    std::source_location::current(),
-                    "GlobalMemoryStatusEx() failed",
-                    lastError
-                );
+            throw Error::Win32Error(
+                std::source_location::current(),
+                "GlobalMemoryStatusEx() failed",
+                lastError
+            );
         }
         return memoryStatus;
     }
@@ -80,5 +80,30 @@ namespace Boring32::Computer
     {
         // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-gettickcount64
         return GetTickCount64();
+    }
+
+    TimeAdjustment GetSystemTimeAdjustmentInfo()
+    {
+        TimeAdjustment ts{};
+        // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtimeadjustment
+        const bool succeeded = GetSystemTimeAdjustment(
+            &ts.Adjustment,
+            &ts.Increment,
+            reinterpret_cast<BOOL*>(&ts.AdjustmentsAreEnabled)
+        );
+        if (!succeeded)
+        {
+            const auto lastError = GetLastError();
+            throw Error::Win32Error(
+                std::source_location::current(),
+                "GetSystemTimeAdjustment() failed",
+                lastError
+            );
+        }
+
+        // invert the bool since the semantics are the opposite
+        ts.AdjustmentsAreEnabled = !ts.AdjustmentsAreEnabled;
+
+        return ts;
     }
 }

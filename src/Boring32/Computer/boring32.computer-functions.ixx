@@ -11,4 +11,11 @@ export namespace Boring32::Computer
     size_t GetTotalMemoryKB();
     MEMORYSTATUSEX GetMemoryStatus();
     size_t GetMillisecondsSinceSystemBooted();
+    struct TimeAdjustment
+    {
+        DWORD Adjustment = 0;
+        DWORD Increment = 0;
+        bool AdjustmentsAreEnabled = 0;
+    };
+    TimeAdjustment GetSystemTimeAdjustmentInfo();
 }
