@@ -23,5 +23,10 @@ namespace Computer
 		{
 			Assert::IsTrue(Boring32::Computer::GetMemoryStatus().ullAvailPhys > 0);
 		}
+
+		TEST_METHOD(TestGetMillisecondsSinceSystemBooted)
+		{
+			Assert::IsTrue(Boring32::Computer::GetMillisecondsSinceSystemBooted() > 0);
+		}
 	};
 }
