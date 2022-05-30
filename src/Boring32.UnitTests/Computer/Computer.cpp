@@ -28,5 +28,12 @@ namespace Computer
 		{
 			Assert::IsTrue(Boring32::Computer::GetMillisecondsSinceSystemBooted() > 0);
 		}
+
+		TEST_METHOD(TestGetSystemTimeAdjustmentInfo)
+		{
+			// Not sure how to reliably test this; just test it for now by making
+			// sure no exceptions are raised.
+			Boring32::Computer::GetSystemTimeAdjustmentInfo();
+		}
 	};
 }
