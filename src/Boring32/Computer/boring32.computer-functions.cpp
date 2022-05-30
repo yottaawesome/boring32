@@ -75,4 +75,10 @@ namespace Boring32::Computer
         }
         return memoryStatus;
     }
+
+    size_t GetMillisecondsSinceSystemBooted()
+    {
+        // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-gettickcount64
+        return GetTickCount64();
+    }
 }
