@@ -192,7 +192,9 @@ void Resolving()
 
 int main(int argc, char** args) try
 {
-	Resolving();
+	std::wcout << Boring32::Util::GetFormattedHostName(ComputerNameDnsFullyQualified) << std::endl;
+
+	//Resolving();
 
 	//SYSTEMTIME st;
 	//GetSystemTime(&st);
