@@ -42,4 +42,20 @@ namespace Boring32::Computer
         returnVal.resize(bufferCharacterSize);
         return returnVal;
     }
+
+    size_t GetTotalMemoryKB()
+    {
+        // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getphysicallyinstalledsystemmemory
+        size_t memoryInKB;
+        if (!GetPhysicallyInstalledSystemMemory(&memoryInKB))
+        {
+            const auto lastError = GetLastError();
+            throw Error::Win32Error(
+                std::source_location::current(),
+                "GetComputerNameExW() failed",
+                lastError
+            );
+        }
+        return memoryInKB;
+    }
 }
