@@ -123,6 +123,7 @@ namespace Boring32::Computer
     )
     {
         DWORD lengthInBytes = 0;
+        // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getlogicalprocessorinformationex
         GetLogicalProcessorInformationEx(
             relationship,
             nullptr,
@@ -141,12 +142,13 @@ namespace Boring32::Computer
             );
         }
 
-        std::vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX> returnValue(lengthInBytes / sizeof(LOGICAL_PROCESSOR_RELATIONSHIP));
-        DWORD actualBytesReturned = 0;
+        std::vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX> returnValue(
+            lengthInBytes / sizeof(LOGICAL_PROCESSOR_RELATIONSHIP)
+        );
         const bool succeeded = GetLogicalProcessorInformationEx(
             relationship,
             &returnValue[0],
-            &actualBytesReturned
+            &lengthInBytes
         );
         if (!succeeded)
         {
@@ -157,7 +159,7 @@ namespace Boring32::Computer
                 lastError
             );
         }
-        returnValue.resize(actualBytesReturned / sizeof(LOGICAL_PROCESSOR_RELATIONSHIP));
+        returnValue.resize(lengthInBytes / sizeof(LOGICAL_PROCESSOR_RELATIONSHIP));
 
         return returnValue;
     }

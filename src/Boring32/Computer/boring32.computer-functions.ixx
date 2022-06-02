@@ -20,7 +20,7 @@ export namespace Boring32::Computer
     };
     TimeAdjustment GetSystemTimeAdjustmentInfo();
     SYSTEM_INFO GetSystemInfo();
-    std::vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX> GetLogicalProcessorInfo(
+    [[nodiscard]] std::vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX> GetLogicalProcessorInfo(
         const LOGICAL_PROCESSOR_RELATIONSHIP relationship
     );
 }
