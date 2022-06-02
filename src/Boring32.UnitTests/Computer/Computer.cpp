@@ -35,5 +35,12 @@ namespace Computer
 			// sure no exceptions are raised.
 			Boring32::Computer::GetSystemTimeAdjustmentInfo();
 		}
+
+		TEST_METHOD(TestGetSystemInfo)
+		{
+			// This function can't really fail, and we don't to test against the
+			// results which are hardware dependent, so just leave it as it.
+			Boring32::Computer::GetSystemInfo();
+		}
 	};
 }
