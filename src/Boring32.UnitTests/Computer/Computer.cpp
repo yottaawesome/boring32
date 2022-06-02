@@ -42,5 +42,11 @@ namespace Computer
 			// results which are hardware dependent, so just leave it as it.
 			Boring32::Computer::GetSystemInfo();
 		}
+
+		TEST_METHOD(TestGetLogicalProcessorInfo)
+		{
+			const auto result = 
+				Boring32::Computer::GetLogicalProcessorInfo(LOGICAL_PROCESSOR_RELATIONSHIP::RelationAll);
+		}
 	};
 }
