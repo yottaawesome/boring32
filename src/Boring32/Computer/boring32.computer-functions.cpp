@@ -106,4 +106,14 @@ namespace Boring32::Computer
 
         return ts;
     }
+
+    SYSTEM_INFO GetSystemInfo()
+    {
+        // Can probably break this down to more useful pieces of info
+        SYSTEM_INFO result;
+        // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsysteminfo
+        // See also https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getnativesysteminfo
+        GetSystemInfo(&result);
+        return result;
+    }
 }

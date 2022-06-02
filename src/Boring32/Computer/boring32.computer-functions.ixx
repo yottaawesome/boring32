@@ -18,4 +18,5 @@ export namespace Boring32::Computer
         bool AdjustmentsAreEnabled = 0;
     };
     TimeAdjustment GetSystemTimeAdjustmentInfo();
+    SYSTEM_INFO GetSystemInfo();
 }
