@@ -1,6 +1,7 @@
 module;
 
 #include <string>
+#include <vector>
 #include <source_location>
 #include <Windows.h>
 
@@ -115,5 +116,49 @@ namespace Boring32::Computer
         // See also https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getnativesysteminfo
         GetSystemInfo(&result);
         return result;
+    }
+
+    std::vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX> GetLogicalProcessorInfo(
+        const LOGICAL_PROCESSOR_RELATIONSHIP relationship
+    )
+    {
+        DWORD lengthInBytes = 0;
+        GetLogicalProcessorInformationEx(
+            relationship,
+            nullptr,
+            &lengthInBytes
+        );
+        auto lastError = GetLastError();
+        if (lastError == ERROR_SUCCESS)
+            return {};
+        if (lastError != ERROR_INSUFFICIENT_BUFFER)
+        {
+            lastError = GetLastError();
+            throw Error::Win32Error(
+                std::source_location::current(), 
+                "GetLogicalProcessorInformationEx() failed", 
+                lastError
+            );
+        }
+
+        std::vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX> returnValue(lengthInBytes / sizeof(LOGICAL_PROCESSOR_RELATIONSHIP));
+        DWORD actualBytesReturned = 0;
+        const bool succeeded = GetLogicalProcessorInformationEx(
+            relationship,
+            &returnValue[0],
+            &actualBytesReturned
+        );
+        if (!succeeded)
+        {
+            lastError = GetLastError();
+            throw Error::Win32Error(
+                std::source_location::current(), 
+                "GetLogicalProcessorInformationEx() failed", 
+                lastError
+            );
+        }
+        returnValue.resize(actualBytesReturned / sizeof(LOGICAL_PROCESSOR_RELATIONSHIP));
+
+        return returnValue;
     }
 }

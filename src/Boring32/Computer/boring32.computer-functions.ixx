@@ -1,6 +1,7 @@
 module;
 
 #include <string>
+#include <vector>
 #include <Windows.h>
 
 export module boring32.computer:functions;
@@ -19,4 +20,7 @@ export namespace Boring32::Computer
     };
     TimeAdjustment GetSystemTimeAdjustmentInfo();
     SYSTEM_INFO GetSystemInfo();
+    std::vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX> GetLogicalProcessorInfo(
+        const LOGICAL_PROCESSOR_RELATIONSHIP relationship
+    );
 }
