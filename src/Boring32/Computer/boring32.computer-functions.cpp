@@ -142,6 +142,7 @@ namespace Boring32::Computer
             );
         }
 
+        // https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-system_logical_processor_information_ex
         std::vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX> returnValue(
             lengthInBytes / sizeof(LOGICAL_PROCESSOR_RELATIONSHIP)
         );
@@ -159,6 +160,7 @@ namespace Boring32::Computer
                 lastError
             );
         }
+        // In case it changes somehow
         returnValue.resize(lengthInBytes / sizeof(LOGICAL_PROCESSOR_RELATIONSHIP));
 
         return returnValue;
