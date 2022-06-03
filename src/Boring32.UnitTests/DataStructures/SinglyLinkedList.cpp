@@ -83,13 +83,13 @@ namespace DataStructures
 				Assert::IsTrue(*list.Pop() == 4);
 			}
 
-			/*TEST_METHOD(TestGet)
+			TEST_METHOD(TestGet)
 			{
 				Boring32::DataStructures::SinglyLinkedList<int> list;
 				list.Add(4);
 				list.Add(8);
 				list.Add(16);
 				Assert::IsTrue(*list.GetAt(1) == 8);
-			}*/
+			}
 	};
 }

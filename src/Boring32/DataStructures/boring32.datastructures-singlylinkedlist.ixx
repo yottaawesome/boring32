@@ -137,7 +137,7 @@ export namespace Boring32::DataStructures
 					return nullptr;
 				
 				ListElement<T>* desiredEntry = m_firstEntry;
-				for (UINT i = 0; i <= index; i++)
+				for (UINT i = 0; i < index; i++)
 					if (desiredEntry)
 						desiredEntry = reinterpret_cast<ListElement<T>*>(desiredEntry->EntryInfo.Next);
 				
@@ -172,7 +172,7 @@ export namespace Boring32::DataStructures
 					&newEntry->EntryInfo
 				);
 				if (addedEntry)
-					m_firstEntry = reinterpret_cast<ListElement<T>*>(addedEntry);
+					m_firstEntry = newEntry;
 
 				return newEntry;
 			}
