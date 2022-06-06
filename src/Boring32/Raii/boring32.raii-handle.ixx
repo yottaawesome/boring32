@@ -1,5 +1,6 @@
 module;
 
+#include <Windows.h>
 #include <type_traits>
 
 export module boring32.raii:handle;
@@ -10,18 +11,42 @@ export namespace Boring32::Raii
 	struct HandleTraits
 	{
 		using Type = T;
-		using ConstTypeReference = const T&;
-		static bool IsValid(const T& handle)
+		using TypeConstReference = const T&;
+		using TypePointer = T*;
+
+		static bool IsValid(const T& handle) { return false; };
+
+		static void Close(T& handle) {  };
+
+		constexpr bool IsCopyAssignable() { return false; };
+
+		static void CopyAssignValue(T& left, T& right) {  };
+	};
+
+	template<>
+	struct HandleTraits<HANDLE>
+	{
+		using Type = HANDLE;
+		using TypeConstReference = const HANDLE&;
+		using TypePointer = HANDLE*;
+
+		static bool IsValid(const HANDLE& handle)
 		{
-			return handle;
+			return handle != 0 && handle != INVALID_HANDLE_VALUE;
 		};
 
-		static void Close(const T& handle)
+		static void Close(HANDLE& handle)
+		{
+			if (IsValid(handle))
+				CloseHandle(handle);
+		}
+		
+		constexpr bool IsCopyAssignable() { return true; };
+
+		static void CopyAssignValue(HANDLE& left, HANDLE& right)
 		{
 
 		}
-
-		constexpr bool IsCopyAssignable() { return true; };
 	};
 
 	template<typename T>
@@ -38,23 +63,23 @@ export namespace Boring32::Raii
 				HandleTraits<T>::Close(m_handle);
 			}
 
-			/*template <typename A = HandleTraits<T>::Type,
-				std::enable_if_t<std::is_integral<A>::value, bool> = true>*/
+			/*template <typename A = HandleTraits<T>::Type, std::enable_if_t<std::is_integral<A>::value, bool> = true>*/
 			template <typename A = X> requires std::is_integral<A>::value
 			void Blah()
 			{
 
 			}
 			
-			template <typename A = T>
-				requires HandleTraits<A>::IsCopyAssignable
-			Handle<T>& operator=(const typename HandleTraits<T>::Type& handle)
+			template <typename A = T> requires HandleTraits<A>::IsCopyAssignable
+			Handle<A>& operator=(const typename HandleTraits<A>::Type& handle)
 			{
-				//m_handle = handle;
+				HandleTraits<A>::CopyAssignValue(m_handle, handle);
 				return *this;
 			}
 
 		protected:
-			HandleTraits<T>::Type m_handle;
+			typename HandleTraits<T>::Type m_handle;
 	};
+
+	using BasicHandle = Handle<HANDLE>;
 }
