@@ -10,6 +10,7 @@ export namespace Boring32::Raii
 	struct HandleTraits
 	{
 		using Type = T;
+		using ConstTypeReference = const T&;
 		static bool IsValid(const T& handle)
 		{
 			return handle;
@@ -45,13 +46,9 @@ export namespace Boring32::Raii
 
 			}
 			
-			template <typename A = X> requires HandleTraits<A>::IsCopyAssignable
-			Handle& operator=(
-				//const 
-				//int 
-				HandleTraits<A>::Type& 
-				handle
-			)
+			template <typename A = T>
+				requires HandleTraits<A>::IsCopyAssignable
+			Handle<T>& operator=(const typename HandleTraits<T>::Type& handle)
 			{
 				//m_handle = handle;
 				return *this;
