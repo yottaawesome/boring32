@@ -215,7 +215,9 @@ void OtherStuff()
 
 int main(int argc, char** args) try
 {
+	HANDLE a = 0;
 	Boring32::Raii::BasicHandle s;
+	s = a;
 	struct Entry
 	{
 		LIST_ENTRY Entry;

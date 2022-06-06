@@ -18,9 +18,9 @@ export namespace Boring32::Raii
 
 		static void Close(T& handle) {  };
 
-		constexpr bool IsCopyAssignable() { return false; };
+		static constexpr bool IsCopyAssignable = false;
 
-		static void CopyAssignValue(T& left, T& right) {  };
+		static void CopyAssignValue(T left, T right) {  };
 	};
 
 	template<>
@@ -40,10 +40,10 @@ export namespace Boring32::Raii
 			if (IsValid(handle))
 				CloseHandle(handle);
 		}
-		
-		constexpr bool IsCopyAssignable() { return true; };
 
-		static void CopyAssignValue(HANDLE& left, HANDLE& right)
+		static constexpr bool IsCopyAssignable = true;
+
+		static void CopyAssignValue(HANDLE left, HANDLE right)
 		{
 
 		}
@@ -53,11 +53,6 @@ export namespace Boring32::Raii
 	class Handle
 	{
 		public:
-			virtual operator bool()
-			{
-				return HandleTraits<T>::IsValid(m_handle);
-			}
-
 			virtual void Close()
 			{
 				HandleTraits<T>::Close(m_handle);
@@ -70,8 +65,14 @@ export namespace Boring32::Raii
 
 			}
 			
+		public:
+			virtual operator bool()
+			{
+				return HandleTraits<T>::IsValid(m_handle);
+			}
+
 			template <typename A = T> requires HandleTraits<A>::IsCopyAssignable
-			Handle<A>& operator=(const typename HandleTraits<A>::Type& handle)
+			Handle<A>& operator=(const typename HandleTraits<A>::Type handle)
 			{
 				HandleTraits<A>::CopyAssignValue(m_handle, handle);
 				return *this;
