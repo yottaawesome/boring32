@@ -227,6 +227,7 @@ int main(int argc, char** args) try
 }
 catch (const std::exception& ex)
 {
+	
 	Boring32::Error::PrintExceptionInfo(ex);
 	return -1;
 }

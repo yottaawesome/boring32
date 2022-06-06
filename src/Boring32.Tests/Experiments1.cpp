@@ -864,6 +864,12 @@ struct T
 		return 1;
 	}
 
+	template <typename A=X> requires std::is_integral<A>::value
+	int Blah3()
+	{
+		return 1;
+	}
+
 	template <typename M = X, std::enable_if<std::is_class<M>::value, bool>::type = true>
 	void Blah2()
 	{
@@ -885,6 +891,7 @@ void Stuff()
 	s.Blah(1);
 	s.Blah2();
 	s.BoolType();
+	s.Blah3();
 
 	T<V> f(5);
 	f.Blah2();
