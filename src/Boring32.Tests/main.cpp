@@ -217,6 +217,7 @@ int main(int argc, char** args) try
 {
 	Boring32::Async::SyncedContainer<std::vector<int>> BB;
 	BB.PushBack(4);
+	BB(0, [](int& x) { x = 5; });
 	int x = BB[0];
 
 

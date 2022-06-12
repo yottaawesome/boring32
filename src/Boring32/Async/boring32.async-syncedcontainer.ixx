@@ -40,6 +40,14 @@ export namespace Boring32::Async
 				return func(m_protected);
 			}
 
+			auto operator()(const size_t index, const auto func)
+			{
+				CriticalSectionLock cs(m_cs);
+				if (index >= m_protected.size())
+					throw Error::Boring32Error(std::source_location::current(), "Invalid index");
+				return func(m_protected[index]);
+			}
+
 			SyncedContainer<T> operator=(const T& other)
 			requires std::is_copy_assignable<T>::value
 			{
@@ -91,6 +99,12 @@ export namespace Boring32::Async
 			{
 				CriticalSectionLock cs(m_cs);
 				return m_protected.size();
+			}
+
+			virtual bool Empty()
+			{
+				CriticalSectionLock cs(m_cs);
+				return m_protected.empty();
 			}
 
 			virtual void Delete(const size_t index)
