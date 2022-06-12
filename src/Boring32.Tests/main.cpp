@@ -215,9 +215,11 @@ void OtherStuff()
 
 int main(int argc, char** args) try
 {
+	Boring32::Async::SyncedContainer<std::vector<int>> BB;
+
+
 	Boring32::Async::Synced<int> AA(3);
 	std::wcout<<std::format(L"{}\n",AA());
-
 	HANDLE a = 0;
 	Boring32::Raii::BasicHandle s;
 	s = a;

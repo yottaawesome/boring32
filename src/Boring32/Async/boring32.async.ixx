@@ -25,3 +25,4 @@ export import :timerqueuetimercallback;
 export import :waitableaddress;
 export import :waitabletimer;
 export import :synced;
+export import :syncedcontainer;

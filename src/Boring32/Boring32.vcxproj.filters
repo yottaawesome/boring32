@@ -446,5 +446,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Async\boring32.async-synced.ixx" />
+    <ClCompile Include="Async\boring32.async-syncedcontainer.ixx" />
   </ItemGroup>
 </Project>
