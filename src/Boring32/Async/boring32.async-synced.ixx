@@ -18,6 +18,9 @@ export namespace Boring32::Async
 				DeleteCriticalSection(&m_cs);
 			}
 
+			template<typename S = T> requires std::is_trivially_constructible<S>::value
+			Synced() {}
+
 			template<typename...Args>
 			Synced(Args... args)
 				: m_protected(args...)
@@ -26,13 +29,6 @@ export namespace Boring32::Async
 			}
 
 		public:
-			/*virtual Synced<T> operator()(const std::function<void(T&)>& func)
-			{
-				EnterCriticalSection(&m_cs);
-				func(m_protected);
-				return *this;
-			}*/
-
 			virtual Synced<T> operator()(const FncPtr func)
 			{
 				EnterCriticalSection(&m_cs);
