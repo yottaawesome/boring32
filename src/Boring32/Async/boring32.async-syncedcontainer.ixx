@@ -92,6 +92,8 @@ export namespace Boring32::Async
 			virtual void PopBack()
 			{
 				CriticalSectionLock cs(m_cs);
+				if (m_protected.empty())
+					return;
 				m_protected.pop_back();
 			}
 
@@ -121,9 +123,9 @@ export namespace Boring32::Async
 
 			virtual void Delete(const size_t index)
 			{
+				CriticalSectionLock cs(m_cs);
 				if (index >= m_protected.size())
 					return;
-				CriticalSectionLock cs(m_cs);
 				m_protected.erase(m_protected.begin() + index);
 			}
 
