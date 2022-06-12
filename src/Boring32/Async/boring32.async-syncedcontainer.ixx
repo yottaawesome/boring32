@@ -78,11 +78,24 @@ export namespace Boring32::Async
 			}
 
 		public:
-			virtual SyncedContainer<T> ForEach(const std::function<void(typename T::reference)>& func)
+			virtual SyncedContainer<T> ForEach(
+				const std::function<void(typename T::reference)>& func
+			)
 			{
 				CriticalSectionLock cs(m_cs);
 				for (auto& x : m_protected)
 					func(x);
+				return *this;
+			}
+
+			virtual SyncedContainer<T> ForEach(
+				const std::function<bool(typename T::reference)>& func
+			)
+			{
+				CriticalSectionLock cs(m_cs);
+				for (auto& x : m_protected)
+					if(!func(x))
+						return *this;
 				return *this;
 			}
 
