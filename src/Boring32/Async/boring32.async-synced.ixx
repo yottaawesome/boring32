@@ -4,6 +4,7 @@ module;
 #include <Windows.h>
 
 export module boring32.async:synced;
+import :criticalsectionlock;
 
 export namespace Boring32::Async
 {
@@ -33,20 +34,20 @@ export namespace Boring32::Async
 			T operator()()
 			requires (std::is_copy_constructible<T>::value || std::is_copy_assignable<T>::value)
 			{
-				EnterCriticalSection(&m_cs);
+				CriticalSectionLock(m_cs);
 				return m_protected;
 			}
 
 			auto operator()(const auto X)
 			{
-				EnterCriticalSection(&m_cs);
+				CriticalSectionLock(m_cs);
 				return X(m_protected);
 			}
 
 			Synced<T> operator=(const T& other)
 			requires std::is_copy_assignable<T>::value
 			{
-				EnterCriticalSection(&m_cs);
+				CriticalSectionLock(m_cs);
 				m_protected = other;
 				return *this;
 			}
@@ -54,7 +55,7 @@ export namespace Boring32::Async
 			Synced<T> operator=(T&& other) noexcept
 			requires std::is_move_assignable<T>::value
 			{
-				EnterCriticalSection(&m_cs);
+				CriticalSectionLock(m_cs);
 				m_protected = other;
 				return *this;
 			}

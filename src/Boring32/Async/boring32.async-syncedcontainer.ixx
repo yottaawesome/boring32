@@ -4,6 +4,7 @@ module;
 #include <Windows.h>
 
 export module boring32.async:syncedcontainer;
+import :criticalsectionlock;
 
 export namespace Boring32::Async
 {
@@ -32,17 +33,26 @@ export namespace Boring32::Async
 		public:
 			virtual void PopBack()
 			{
+				CriticalSectionLock(m_cs);
 				m_protected.pop_back();
 			}
 
 			virtual void PushBack(typename T::const_reference newValue)
 			{
+				CriticalSectionLock(m_cs);
 				m_protected.push_back(newValue);
 			}
 
 			virtual void Clear()
 			{
+				CriticalSectionLock(m_cs);
 				m_protected.clear();
+			}
+
+			virtual size_t Size()
+			{
+				CriticalSectionLock cs(m_cs);
+				return m_protected.size();
 			}
 
 		protected:
