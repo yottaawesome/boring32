@@ -2,10 +2,12 @@ module;
 
 #include <vector>
 #include <algorithm>
+#include <source_location>
 #include <Windows.h>
 
 export module boring32.async:syncedcontainer;
 import :criticalsectionlock;
+import boring32.error;
 
 export namespace Boring32::Async
 {
@@ -61,6 +63,8 @@ export namespace Boring32::Async
 			)
 			{
 				CriticalSectionLock cs(m_cs);
+				if (index >= m_protected.size())
+					throw Error::Boring32Error(std::source_location::current(), "Invalid index");
 				return m_protected[index];
 			}
 
