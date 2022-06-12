@@ -48,6 +48,14 @@ export namespace Boring32::Async
 				return X(m_protected);
 			}
 
+			Synced<T> operator=(const T& other)
+			requires std::is_copy_assignable<T>::value
+			{
+				EnterCriticalSection(&m_cs);
+				m_protected = other;
+				return *this;
+			}
+
 		protected:
 			T m_protected;
 			CRITICAL_SECTION m_cs;
