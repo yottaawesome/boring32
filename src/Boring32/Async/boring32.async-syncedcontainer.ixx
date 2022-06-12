@@ -129,6 +129,20 @@ export namespace Boring32::Async
 				m_protected.erase(m_protected.begin() + index);
 			}
 
+			typename T::value_type Remove(const size_t index)
+			requires (
+				std::is_copy_constructible<typename T::value_type>::value
+				|| std::is_copy_assignable<typename T::value_type>::value
+			)
+			{
+				CriticalSectionLock cs(m_cs);
+				if (index >= m_protected.size())
+					throw Error::Boring32Error(std::source_location::current(), "Invalid index");
+				auto returnVal = m_protected[index];
+				m_protected.erase(m_protected.begin() + index);
+				return returnVal;
+			}
+			
 		protected:
 			T m_protected;
 			CRITICAL_SECTION m_cs;
