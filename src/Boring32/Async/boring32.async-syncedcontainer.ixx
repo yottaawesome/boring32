@@ -1,6 +1,7 @@
 module;
 
 #include <vector>
+#include <algorithm>
 #include <Windows.h>
 
 export module boring32.async:syncedcontainer;
@@ -53,6 +54,14 @@ export namespace Boring32::Async
 			{
 				CriticalSectionLock cs(m_cs);
 				return m_protected.size();
+			}
+
+			virtual void Delete(const size_t index)
+			{
+				if (index >= m_protected.size())
+					return;
+				CriticalSectionLock cs(m_cs);
+				m_protected.erase(m_protected.begin() + index);
 			}
 
 		protected:
