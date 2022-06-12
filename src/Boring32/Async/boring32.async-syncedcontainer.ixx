@@ -54,6 +54,16 @@ export namespace Boring32::Async
 				return *this;
 			}
 
+			typename T::value_type operator[](const size_t index)
+			requires (
+				std::is_copy_constructible<typename T::value_type>::value 
+				|| std::is_copy_assignable<typename T::value_type>::value
+			)
+			{
+				CriticalSectionLock cs(m_cs);
+				return m_protected[index];
+			}
+
 		public:
 			virtual void PopBack()
 			{

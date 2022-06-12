@@ -216,6 +216,8 @@ void OtherStuff()
 int main(int argc, char** args) try
 {
 	Boring32::Async::SyncedContainer<std::vector<int>> BB;
+	BB.PushBack(4);
+	int x = BB[0];
 
 
 	Boring32::Async::Synced<int> AA(3);
