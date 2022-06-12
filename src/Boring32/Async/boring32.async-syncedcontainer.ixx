@@ -40,6 +40,11 @@ export namespace Boring32::Async
 				m_protected.push_back(newValue);
 			}
 
+			virtual void Clear()
+			{
+				m_protected.clear();
+			}
+
 		protected:
 			T m_protected;
 			CRITICAL_SECTION m_cs;
