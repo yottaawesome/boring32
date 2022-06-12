@@ -12,6 +12,9 @@ export namespace Boring32::Async
 	{
 		public:
 			using FncPtr = void(*)(T&);
+			template<typename X>
+			using FncPtr2 = X(*)(T&);
+
 
 			~Synced()
 			{
@@ -19,7 +22,10 @@ export namespace Boring32::Async
 			}
 
 			template<typename S = T> requires std::is_trivially_constructible<S>::value
-			Synced() {}
+			Synced() 
+			{ 
+				InitializeCriticalSection(&m_cs); 
+			}
 
 			template<typename...Args>
 			Synced(Args... args)
@@ -29,11 +35,17 @@ export namespace Boring32::Async
 			}
 
 		public:
-			virtual Synced<T> operator()(const FncPtr func)
+			T operator()()
+			requires (std::is_copy_constructible<T>::value || std::is_copy_assignable<T>::value)
 			{
 				EnterCriticalSection(&m_cs);
-				func(m_protected);
-				return *this;
+				return m_protected;
+			}
+
+			auto operator()(const auto X)
+			{
+				EnterCriticalSection(&m_cs);
+				return X(m_protected);
 			}
 
 		protected:

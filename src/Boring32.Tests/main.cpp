@@ -216,7 +216,7 @@ void OtherStuff()
 int main(int argc, char** args) try
 {
 	Boring32::Async::Synced<int> AA(3);
-	AA([](int& val) {std::cout << std::to_string(val) << std::endl; });
+	std::wcout<<std::format(L"{}\n",AA());
 
 	HANDLE a = 0;
 	Boring32::Raii::BasicHandle s;
