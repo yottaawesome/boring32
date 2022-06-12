@@ -41,17 +41,6 @@ export namespace Boring32::Async
 				return func(m_protected);
 			}
 
-			SyncedContainer<T> operator()(
-				const std::function<bool(typename T::const_reference)>& func
-			)
-			{
-				CriticalSectionLock cs(m_cs);
-				for (auto& x : m_protected)
-					if(!func(x))
-						return *this;
-				return *this;
-			}
-
 			auto operator()(const size_t index, const auto func)
 			{
 				CriticalSectionLock cs(m_cs);
@@ -89,6 +78,14 @@ export namespace Boring32::Async
 			}
 
 		public:
+			virtual SyncedContainer<T> ForEach(const std::function<void(typename T::reference)>& func)
+			{
+				CriticalSectionLock cs(m_cs);
+				for (auto& x : m_protected)
+					func(x);
+				return *this;
+			}
+
 			virtual void PopBack()
 			{
 				CriticalSectionLock cs(m_cs);

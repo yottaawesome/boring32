@@ -217,9 +217,10 @@ int main(int argc, char** args) try
 {
 	Boring32::Async::SyncedContainer<std::vector<int>> BB;
 	BB.PushBack(4);
-	BB(0, [](int& x) { x = 5; });
-	int x = BB[0];
-
+	BB.PushBack(5);
+	//BB([](std::vector<int>::const_reference x) { std::wcout << std::format(L"{}\n", x); });
+	BB([](std::vector<int>& x) {});
+	BB.ForEach([](int& x) { });
 
 	Boring32::Async::Synced<int> AA(3);
 	std::wcout<<std::format(L"{}\n",AA());
