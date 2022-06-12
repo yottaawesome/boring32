@@ -129,6 +129,7 @@ export namespace Boring32::Async
 				m_protected.erase(m_protected.begin() + index);
 			}
 
+			[[nodiscard]]
 			typename T::value_type Remove(const size_t index)
 			requires (
 				std::is_copy_constructible<typename T::value_type>::value
