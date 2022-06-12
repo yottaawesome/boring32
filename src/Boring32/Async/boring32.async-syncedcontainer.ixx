@@ -32,6 +32,13 @@ export namespace Boring32::Async
 			}
 
 		public:
+			auto operator()(const auto func)
+			{
+				CriticalSectionLock cs(m_cs);
+				return func(m_protected);
+			}
+
+		public:
 			virtual void PopBack()
 			{
 				CriticalSectionLock cs(m_cs);
