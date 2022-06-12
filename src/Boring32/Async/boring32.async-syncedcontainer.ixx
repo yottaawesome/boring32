@@ -1,6 +1,7 @@
 module;
 
 #include <vector>
+#include <functional>
 #include <algorithm>
 #include <source_location>
 #include <Windows.h>
@@ -38,6 +39,17 @@ export namespace Boring32::Async
 			{
 				CriticalSectionLock cs(m_cs);
 				return func(m_protected);
+			}
+
+			SyncedContainer<T> operator()(
+				const std::function<bool(typename T::const_reference)>& func
+			)
+			{
+				CriticalSectionLock cs(m_cs);
+				for (auto& x : m_protected)
+					if(!func(x))
+						return *this;
+				return *this;
 			}
 
 			auto operator()(const size_t index, const auto func)
