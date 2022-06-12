@@ -38,6 +38,22 @@ export namespace Boring32::Async
 				return func(m_protected);
 			}
 
+			SyncedContainer<T> operator=(const T& other)
+			requires std::is_copy_assignable<T>::value
+			{
+				CriticalSectionLock cs(m_cs);
+				m_protected = other;
+				return *this;
+			}
+
+			SyncedContainer<T> operator=(T&& other) noexcept
+			requires std::is_move_assignable<T>::value
+			{
+				CriticalSectionLock cs(m_cs);
+				m_protected = other;
+				return *this;
+			}
+
 		public:
 			virtual void PopBack()
 			{
