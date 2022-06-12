@@ -14,9 +14,9 @@ export namespace Boring32::Raii
 		using TypeConstReference = const T&;
 		using TypePointer = T*;
 
-		static bool IsValid(const T& handle) { return false; };
+		static bool IsValid(const T handle) { return false; };
 
-		static void Close(T& handle) {  };
+		static void Close(T handle) {  };
 
 		static constexpr bool IsCopyAssignable = false;
 
@@ -30,22 +30,21 @@ export namespace Boring32::Raii
 		using TypeConstReference = const HANDLE&;
 		using TypePointer = HANDLE*;
 
-		static bool IsValid(const HANDLE& handle)
+		static bool IsValid(const HANDLE handle)
 		{
 			return handle != 0 && handle != INVALID_HANDLE_VALUE;
 		};
 
-		static void Close(HANDLE& handle)
+		static void Close(HANDLE handle)
 		{
-			if (IsValid(handle))
-				CloseHandle(handle);
+			CloseHandle(handle);
 		}
 
 		static constexpr bool IsCopyAssignable = true;
 
 		static void CopyAssignValue(HANDLE left, HANDLE right)
 		{
-
+			
 		}
 	};
 
@@ -55,7 +54,8 @@ export namespace Boring32::Raii
 		public:
 			virtual void Close()
 			{
-				HandleTraits<T>::Close(m_handle);
+				if (HandleTraits<T>::IsValid(m_handle))
+					HandleTraits<T>::Close(m_handle);
 			}
 
 			/*template <typename A = HandleTraits<T>::Type, std::enable_if_t<std::is_integral<A>::value, bool> = true>*/
@@ -74,6 +74,10 @@ export namespace Boring32::Raii
 			template <typename A = T> requires HandleTraits<A>::IsCopyAssignable
 			Handle<A>& operator=(const typename HandleTraits<A>::Type handle)
 			{
+				if (handle == m_handle)
+					return *this;
+
+				Close();
 				HandleTraits<A>::CopyAssignValue(m_handle, handle);
 				return *this;
 			}

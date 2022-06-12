@@ -215,6 +215,8 @@ void OtherStuff()
 
 int main(int argc, char** args) try
 {
+	Boring32::Async::Synced<int> AA(3);
+
 	HANDLE a = 0;
 	Boring32::Raii::BasicHandle s;
 	s = a;
