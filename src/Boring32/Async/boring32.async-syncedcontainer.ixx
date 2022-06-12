@@ -33,19 +33,19 @@ export namespace Boring32::Async
 		public:
 			virtual void PopBack()
 			{
-				CriticalSectionLock(m_cs);
+				CriticalSectionLock cs(m_cs);
 				m_protected.pop_back();
 			}
 
 			virtual void PushBack(typename T::const_reference newValue)
 			{
-				CriticalSectionLock(m_cs);
+				CriticalSectionLock cs(m_cs);
 				m_protected.push_back(newValue);
 			}
 
 			virtual void Clear()
 			{
-				CriticalSectionLock(m_cs);
+				CriticalSectionLock cs(m_cs);
 				m_protected.clear();
 			}
 
