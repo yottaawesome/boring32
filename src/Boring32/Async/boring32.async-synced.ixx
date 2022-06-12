@@ -56,6 +56,14 @@ export namespace Boring32::Async
 				return *this;
 			}
 
+			Synced<T> operator=(T&& other) noexcept
+			requires std::is_move_assignable<T>::value
+			{
+				EnterCriticalSection(&m_cs);
+				m_protected = other;
+				return *this;
+			}
+
 		protected:
 			T m_protected;
 			CRITICAL_SECTION m_cs;
