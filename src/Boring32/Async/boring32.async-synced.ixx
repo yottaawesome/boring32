@@ -11,18 +11,13 @@ export namespace Boring32::Async
 	class Synced
 	{
 		public:
-			using FncPtr = void(*)(T&);
-			template<typename X>
-			using FncPtr2 = X(*)(T&);
-
-
-			~Synced()
+			virtual ~Synced()
 			{
 				DeleteCriticalSection(&m_cs);
 			}
 
-			template<typename S = T> requires std::is_trivially_constructible<S>::value
 			Synced() 
+			requires std::is_trivially_constructible<T>::value
 			{ 
 				InitializeCriticalSection(&m_cs); 
 			}
