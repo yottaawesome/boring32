@@ -96,17 +96,20 @@ namespace Boring32::Async
 
 	void Job::AssignProcessToThisJob(const HANDLE process)
 	{
-		if (m_job == nullptr)
+		if (!m_job)
 			throw std::runtime_error("Cannot assign process to job; job is not initialised");
-		if (process == nullptr)
+		if (!process)
 			throw std::runtime_error("Cannot assign process to job; process is null.");
 
-		if (AssignProcessToJobObject(m_job.GetHandle(), process) == false)
+		if (!AssignProcessToJobObject(m_job.GetHandle(), process))
+		{
+			const auto lastError = GetLastError();
 			throw Error::Win32Error(
-				std::source_location::current(), 
-				"Cannot assign process to job; AssignProcessToJobObject() failed.", 
-				GetLastError()
+				std::source_location::current(),
+				"Cannot assign process to job; AssignProcessToJobObject() failed.",
+				lastError
 			);
+		}			
 	}
 
 	HANDLE Job::GetHandle()
