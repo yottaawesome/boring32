@@ -35,7 +35,7 @@ export namespace Boring32::Async
 			}
 
 		public:
-			auto operator()(auto func)
+			auto operator()(const auto func)
 			{
 				CriticalSectionLock cs(m_cs);
 
@@ -60,14 +60,9 @@ export namespace Boring32::Async
 					{ func(element) }->std::same_as<void>;
 				};
 				if constexpr (IsElementSignature)
-				{
 					for (auto& element : m_protected)
 						func(element);
-				}
-				else
-				{
-					return func(m_protected);
-				}
+				else return func(m_protected);
 			}
 
 			/*virtual void operator()(const std::function<void(typename T::reference)>& func)
