@@ -35,11 +35,47 @@ export namespace Boring32::Async
 			}
 
 		public:
-			auto operator()(const auto func)
+			auto operator()(auto func)
 			{
 				CriticalSectionLock cs(m_cs);
-				return func(m_protected);
+
+				// This checks if the passed in lambda corresponds to a signature of
+				// void(T::reference) and calls the func for each element (effectively
+				// a foreach). If the signature does not correspond to this, func
+				// will be called with the list as the argument.
+				// https://stackoverflow.com/questions/60791193/c-requires-expression-for-checking-function-signature-does-not-work-for-lambda
+				// https://stackoverflow.com/questions/21657627/what-is-the-type-signature-of-a-c11-1y-lambda-function
+				// https://stackoverflow.com/questions/24975147/check-if-class-has-function-with-signature
+				// https://stackoverflow.com/questions/87372/check-if-a-class-has-a-member-function-of-a-given-signature
+				// https://subscription.packtpub.com/book/application-development/9781787120495/1/ch01lvl1sec14/simplifying-compile-time-decisions-with-constexpr-if
+				// https://stackoverflow.com/questions/257288/templated-check-for-the-existence-of-a-class-member-function
+				// https://stackoverflow.com/questions/56910387/invoke-result-with-member-operator-function
+				// https://stackoverflow.com/questions/52049841/how-to-use-stdinvoke-result-t-to-get-return-type-of-a-function
+				// https://stackoverflow.com/questions/30756392/determining-return-type-of-stdfunction
+				constexpr bool IsElementSignature = requires(typename T::reference element)
+				{
+					// All three of the below work
+					//requires std::is_same_v<decltype(func(a)), void>;
+					//std::is_same_v<decltype(func(a)), void>;
+					{ func(element) }->std::same_as<void>;
+				};
+				if constexpr (IsElementSignature)
+				{
+					for (auto& element : m_protected)
+						func(element);
+				}
+				else
+				{
+					return func(m_protected);
+				}
 			}
+
+			/*virtual void operator()(const std::function<void(typename T::reference)>& func)
+			{
+				CriticalSectionLock cs(m_cs);
+				for(auto x : m_protected)
+					func(x);
+			}*/
 
 			auto operator()(const size_t index, const auto func)
 			{

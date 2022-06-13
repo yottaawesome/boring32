@@ -1,5 +1,6 @@
 ﻿#include <format>
 #include <iostream>
+#include <functional>
 #include <vector>
 #include <stdexcept>
 #include <source_location>
@@ -213,24 +214,83 @@ void OtherStuff()
 	//auto x = Boring32::Services::GetServiceStatus(handle2);
 }
 
+//template<typename A, X = std::invoke_result<std::function<A>>::type>
+//X Blah(const std::function<A>& func)
+//{
+//	return func(1);
+//}
+
+//template<typename T>
+//auto Blah(const std::function<T>& func)
+//{
+//	return func({ 1 });
+//}
+
+struct P
+{
+	int operator()(int x)
+	{
+		return x;
+	}
+};
+
+//template<typename T>
+//std::function<T>::result_type Blah(const std::function<T>& func)
+//{
+//	return func(1);
+//}
+
+int func(int a) noexcept { return 1; }
+
+int TestStuff() {
+	auto lam = [](int a) noexcept -> int { return 1; };
+	// works fine for a function with this signature: 
+	static_assert(requires(int a) { { func(a) } ->std::same_as<int>; });
+	// the following three conditions each evaluate to false for the lambda
+	static_assert(requires(int a) {
+		lam(a);
+		{lam(a)}->std::same_as<int>;
+			requires std::is_same_v<decltype(lam(a)), int>;
+	});
+	return 0;
+}
+
+int func2(int a) noexcept { return 1; }
+int TestStuff2() {
+	auto lam = [](int a) noexcept -> int { return 1; };
+	// works fine for a function with this signature: 
+	static_assert(requires(int a) { { func2(a) } ->std::same_as<int>; });
+	// the following three conditions each evaluate to false for the lambda
+	static_assert(
+		requires(int a) 
+		{
+			lam(a);
+			{lam(a)}->std::same_as<int>;
+			requires std::is_same_v<decltype(lam(a)), int>;
+		}
+	);
+	return 0;
+}
+
 int main(int argc, char** args) try
 {
-	Boring32::Async::SyncedContainer<std::vector<int>> BB;
-	BB.PushBack(4);
-	BB.PushBack(5);
+	TestStuff();
+	TestStuff2();
+	std::vector<int> Y{ 1 };
+
+	Boring32::Async::SyncedContainer<std::vector<int>> testContainer;
+	testContainer.PushBack(4);
+	testContainer.PushBack(5);
 	//BB([](std::vector<int>::const_reference x) { std::wcout << std::format(L"{}\n", x); });
-	BB([](std::vector<int>& x) {});
-	BB.ForEach([](int& x) { });
+	testContainer([](std::vector<int>& x) {});
+	testContainer([](int x) { std::cout << x << std::endl; });
+	//BB.ForEach([](int& x) { });
 
 	Boring32::Async::Synced<int> AA(3);
 	std::wcout<<std::format(L"{}\n",AA());
 	HANDLE a = 0;
 	Boring32::Raii::BasicHandle s;
 	s = a;
-	struct Entry
-	{
-		LIST_ENTRY Entry;
-	};
 
 	//LIST_ENTRY root;
 	//InitializeListHead(&root);
