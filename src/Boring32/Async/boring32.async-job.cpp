@@ -1,7 +1,7 @@
 module;
 
-#include <stdexcept>
 #include <source_location>
+#include <string>
 #include <Windows.h>
 #include <Jobapi2.h>
 
@@ -20,9 +20,7 @@ namespace Boring32::Async
 		m_job = nullptr;
 	}
 
-	Job::Job()
-	:	m_name(L"")
-	{ }
+	Job::Job() { }
 
 	Job::Job(const bool isInheritable)
 	:	m_name(L"")
@@ -84,14 +82,21 @@ namespace Boring32::Async
 		// See https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_basic_limit_information
 		// jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
 
-		bool bSuccess = SetInformationJobObject(
+		const bool succeeded = SetInformationJobObject(
 			m_job.GetHandle(),
 			JobObjectExtendedLimitInformation,
 			&jeli,
 			sizeof(jeli)
 		);
-		if (bSuccess == false)
-			throw Error::Win32Error(std::source_location::current(), "SetInformationJobObject failed", GetLastError());
+		if (!succeeded)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error(
+				std::source_location::current(),
+				"SetInformationJobObject() failed",
+				lastError
+			);
+		}
 	}
 
 	void Job::AssignProcessToThisJob(const HANDLE process)
@@ -134,20 +139,32 @@ namespace Boring32::Async
 			isInheritable,
 			m_name.c_str()
 		);
-		if (m_job == nullptr)
-			throw Error::Win32Error(std::source_location::source_location(), "OpenJobObjectW() failed", GetLastError());
+		if (!m_job)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error(
+				std::source_location::source_location(), 
+				"OpenJobObjectW() failed", 
+				lastError
+			);
+		}
 	}
 
 	void Job::Create(const bool isInheritable)
 	{
 		m_job = CreateJobObjectW(
 			nullptr, 
-			m_name.size() > 0 
-				? m_name.c_str() 
-				: nullptr
+			m_name.empty() ? nullptr : m_name.c_str()
 		);
-		if (m_job == nullptr)
-			throw Error::Win32Error(std::source_location::source_location(), "CreateJobObjectW() failed", GetLastError());
+		if (!m_job)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error(
+				std::source_location::source_location(),
+				"CreateJobObjectW() failed",
+				lastError
+			);
+		}
 		m_job.SetInheritability(isInheritable);
 	}
 }
