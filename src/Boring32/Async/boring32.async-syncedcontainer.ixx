@@ -54,9 +54,10 @@ export namespace Boring32::Async
 				// https://stackoverflow.com/questions/30756392/determining-return-type-of-stdfunction
 				constexpr bool IsElementSignature = requires(typename T::reference element)
 				{
-					// All three of the below work
+					// All the below work
 					//requires std::is_same_v<decltype(func(a)), void>;
 					//std::is_same_v<decltype(func(a)), void>;
+					//std::is_same_v<std::invoke_result<decltype(func), typename T::reference>::type, void>;
 					{ func(element) }->std::same_as<void>;
 				};
 				if constexpr (IsElementSignature)
