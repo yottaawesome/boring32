@@ -1,6 +1,7 @@
 ﻿#include <format>
 #include <iostream>
 #include <functional>
+#include <utility>
 #include <vector>
 #include <stdexcept>
 #include <source_location>
@@ -272,8 +273,20 @@ int TestStuff2() {
 	return 0;
 }
 
+template<typename T>
+concept IsFuncAcceptsIntReturnsVoid = requires(T& func, int x)
+{
+	// This will also work
+	//{ std::declval<T>()(x) }->std::same_as<void>;
+	{ func(x) }->std::same_as<void>;
+};
+
 int main(int argc, char** args) try
 {
+	auto m = [](int y) {};
+	constexpr bool yyy = IsFuncAcceptsIntReturnsVoid<decltype(m)>;
+
+
 	TestStuff();
 	TestStuff2();
 	std::vector<int> Y{ 1 };
