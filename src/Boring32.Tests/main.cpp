@@ -308,11 +308,29 @@ void templateStuff()
 	s = a;
 }
 
+class Y : public Boring32::Error::Boring32Error
+{
+	public:
+		virtual ~Y() {}
+		Y(
+			std::string s, 
+			DWORD lastError, 
+			std::source_location location = std::source_location::current()
+		)
+			: Boring32::Error::Boring32Error(location, "AA")
+		{
+
+		}
+
+	protected:
+};
+
 int main(int argc, char** args) try
 {
 	Boring32::COM::COMThreadScope scope(COINIT::COINIT_MULTITHREADED);
 	std::cout << Boring32::Util::IsConnectedToInternet();
 
+	throw Boring32::Error::Boring32Error("AA");
 
 	return 0;
 }

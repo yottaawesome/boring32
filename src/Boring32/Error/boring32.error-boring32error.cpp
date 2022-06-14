@@ -24,6 +24,14 @@ namespace Boring32::Error
 		GenerateErrorMessage(location, message);
 	}
 
+	Boring32Error::Boring32Error(
+		const std::string& message,
+		const std::source_location location
+	)
+	{
+		GenerateErrorMessage(location, message);
+	}
+
 	const char* Boring32Error::what() const noexcept
 	{
 		return m_message.c_str();
