@@ -22,10 +22,8 @@ namespace Boring32::XAudio2
 	MasteringVoice::MasteringVoice(IXAudio2MasteringVoice* voice)
 		: m_voice(voice)
 	{
-		if (!voice) throw XAudio2Error(
-			std::source_location::current(),
-			"voice cannot be nullptr"
-		);
+		if (!voice) 
+			throw XAudio2Error("voice cannot be nullptr");
 	}
 
 	MasteringVoice& MasteringVoice::operator=(MasteringVoice&&) noexcept = default;

@@ -14,8 +14,8 @@ export namespace Boring32::XAudio2
 		public:
 			virtual ~XAudio2Error();
 			XAudio2Error(
-				const std::source_location& location,
-				const std::string& message
+				const std::string& message,
+				const std::source_location location = std::source_location::current()
 			);
 	};
 }

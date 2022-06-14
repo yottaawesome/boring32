@@ -22,10 +22,8 @@ namespace Boring32::XAudio2
 	SourceVoice::SourceVoice(IXAudio2SourceVoice* voice)
 		: m_voice(voice)
 	{
-		if (!voice) throw XAudio2Error(
-			std::source_location::current(),
-			"voice cannot be nullptr"
-		);
+		if (!voice) 
+			throw XAudio2Error("voice cannot be nullptr");
 	}
 
 	void SourceVoice::Close()

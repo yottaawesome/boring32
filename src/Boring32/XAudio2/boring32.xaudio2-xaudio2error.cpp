@@ -10,8 +10,8 @@ namespace Boring32::XAudio2
 {
 	XAudio2Error::~XAudio2Error() = default;
 	XAudio2Error::XAudio2Error(
-		const std::source_location& location,
-		const std::string& message
+		const std::string& message,
+		const std::source_location location
 	) : Error::Boring32Error(location, message)
 	{ }
 }
