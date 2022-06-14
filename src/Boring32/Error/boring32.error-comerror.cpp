@@ -18,9 +18,9 @@ namespace Boring32::Error
 	ComError& ComError::operator=(ComError&& other) noexcept	= default;
 
 	ComError::ComError(
-		const std::source_location& location, 
 		const std::string& msg, 
-		const HRESULT hr
+		const HRESULT hr,
+		const std::source_location location
 	)
 		: std::runtime_error(""),
 		m_hresult(hr)

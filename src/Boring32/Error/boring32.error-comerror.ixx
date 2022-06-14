@@ -16,9 +16,9 @@ export namespace Boring32::Error
 			ComError(const ComError& other);
 			ComError(ComError&& other) noexcept;
 			ComError(
-				const std::source_location& location, 
 				const std::string& msg, 
-				const HRESULT hr
+				const HRESULT hr,
+				const std::source_location location = std::source_location::current()
 			);
 
 		public:

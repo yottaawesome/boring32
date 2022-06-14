@@ -29,7 +29,7 @@ namespace Boring32::XAudio2
 	{
 		const HRESULT hr = XAudio2Create(&m_engine, 0, XAUDIO2_DEFAULT_PROCESSOR);
 		if (FAILED(hr)) Error::ThrowNested(
-			Error::ComError(std::source_location::current(), "Failed to create XAudio2 engine", hr),
+			Error::ComError("Failed to create XAudio2 engine", hr),
 			XAudio2Error(std::source_location::current(), "An error occurred when initialising the XAudio2 engine")
 		);
 	}

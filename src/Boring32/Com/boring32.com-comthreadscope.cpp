@@ -84,7 +84,7 @@ namespace Boring32::COM
 		// Initialise COM for this thread
 		HRESULT hr = CoInitializeEx(nullptr, m_apartmentThreadingMode);
 		if (FAILED(hr))
-			throw Error::ComError(std::source_location::current(), "CoInitializeEx() failed", hr);
+			throw Error::ComError("CoInitializeEx() failed", hr);
 
 		m_isInitialised = true;
 		m_comInitialisedThreadId = GetCurrentThreadId();
@@ -118,7 +118,7 @@ namespace Boring32::COM
 			nullptr                         // Reserved
 		);
 		if (FAILED(hr))
-			throw Error::ComError(std::source_location::current(),"CoInitializeSecurity() failed", hr);
+			throw Error::ComError("CoInitializeSecurity() failed", hr);
 	}
 
 	void COMThreadScope::Uninitialise()
