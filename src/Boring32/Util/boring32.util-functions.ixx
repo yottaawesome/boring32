@@ -48,4 +48,5 @@ export namespace Boring32::Util
 	std::wstring GetGuidAsWString(const GUID& guid);
 	std::wstring GetGuidAsWString();
 	GUID GenerateGUID();
+	bool IsConnectedToInternet();
 }

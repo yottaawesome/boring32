@@ -8,6 +8,8 @@ module;
 #include <comdef.h>
 #include <pathcch.h>
 #include <Objbase.h>
+#include <netlistmgr.h>
+#include <wrl/client.h>
 
 module boring32.util:functions;
 import boring32.error;
@@ -97,6 +99,37 @@ namespace Boring32::Util
             throw Error::ComError(std::source_location::current(), "CoCreateGuid() failed", result);
         return guid;
     }
+
+    // TODO: find a better home for this function
+    bool IsConnectedToInternet()
+    {
+        // https://docs.microsoft.com/en-us/windows/win32/api/netlistmgr/nn-netlistmgr-inetworklistmanager
+        Microsoft::WRL::ComPtr<INetworkListManager> networkListManager;
+        // https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance
+        // https://docs.microsoft.com/en-us/windows/win32/learnwin32/creating-an-object-in-com
+        HRESULT result = CoCreateInstance(
+            CLSID_NetworkListManager,
+            nullptr,
+            CLSCTX_INPROC_SERVER,
+            IID_INetworkListManager,
+            reinterpret_cast<void**>(networkListManager.GetAddressOf())
+        );
+        if (FAILED(result))
+            throw Error::ComError(std::source_location::current(), "CoCreateGuid() failed", result);
+
+        // https://docs.microsoft.com/en-us/windows/win32/api/netlistmgr/ne-netlistmgr-nlm_connectivity
+        NLM_CONNECTIVITY connectivity;
+        result = networkListManager->GetConnectivity(&connectivity);
+        if (FAILED(result))
+            throw Error::ComError(std::source_location::current(), "GetConnectivity() failed", result);
+
+        if (connectivity & NLM_CONNECTIVITY::NLM_CONNECTIVITY_IPV4_INTERNET)
+            return true;
+        if (connectivity & NLM_CONNECTIVITY::NLM_CONNECTIVITY_IPV6_INTERNET)
+            return true;
+        return false;
+    }
+
 
     /*std::vector<std::byte> StringToByteVector(const std::wstring_view str)
     {

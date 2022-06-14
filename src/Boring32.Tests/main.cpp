@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <source_location>
 #include <windows.h>
+#include <objbase.h>
 #include "Experiments1Main.hpp"
 
 import boring32.raii;
@@ -13,6 +14,7 @@ import boring32.strings;
 import boring32.error;
 import boring32.raii;
 import boring32.security;
+import boring32.com;
 import boring32.filesystem;
 import boring32.winhttp;
 import boring32.winsock;
@@ -281,7 +283,7 @@ concept IsFuncAcceptsIntReturnsVoid = requires(T& func, int x)
 	{ func(x) }->std::same_as<void>;
 };
 
-int main(int argc, char** args) try
+void templateStuff()
 {
 	auto m = [](int y) {};
 	constexpr bool yyy = IsFuncAcceptsIntReturnsVoid<decltype(m)>;
@@ -300,13 +302,17 @@ int main(int argc, char** args) try
 	//BB.ForEach([](int& x) { });
 
 	Boring32::Async::Synced<int> AA(3);
-	std::wcout<<std::format(L"{}\n",AA());
+	std::wcout << std::format(L"{}\n", AA());
 	HANDLE a = 0;
 	Boring32::Raii::BasicHandle s;
 	s = a;
+}
 
-	//LIST_ENTRY root;
-	//InitializeListHead(&root);
+int main(int argc, char** args) try
+{
+	Boring32::COM::COMThreadScope scope(COINIT::COINIT_MULTITHREADED);
+	std::cout << Boring32::Util::IsConnectedToInternet();
+
 
 	return 0;
 }
