@@ -31,7 +31,7 @@ namespace Boring32::WinSock
 			const auto lastError = WSAGetLastError();
 			Error::ThrowNested(
 				Error::Win32Error(std::source_location::current(), "inet_ntop() failed", lastError, L"Ws2_32.dll"),
-				WinSockError(std::source_location::current(), "Could not convert IPv6 network address string")
+				WinSockError("Could not convert IPv6 network address string")
 			);
 		}
 		out = out.c_str();
@@ -58,7 +58,7 @@ namespace Boring32::WinSock
 			const auto lastError = WSAGetLastError();
 			Error::ThrowNested(
 				Error::Win32Error(std::source_location::current(), "inet_ntop() failed", lastError, L"Ws2_32.dll"),
-				WinSockError(std::source_location::current(), "Could not convert IPv4 network address string")
+				WinSockError("Could not convert IPv4 network address string")
 			);
 		}
 		out = out.c_str();
@@ -93,7 +93,7 @@ namespace Boring32::WinSock
 		{
 			Error::ThrowNested(
 				Error::Win32Error(std::source_location::current(), "GetAddrInfoW() failed", result, L"Ws2_32.dll"),
-				WinSockError(std::source_location::current(), "Could not get domain addr info")
+				WinSockError("Could not get domain addr info")
 			);
 		}
 
@@ -177,13 +177,13 @@ namespace Boring32::WinSock
 		);
 		if (error != WSA_IO_PENDING) Error::ThrowNested(
 			Error::Win32Error(std::source_location::current(), "GetAddrInfoExW() failed", error, L"Ws2_32.dll"),
-			WinSockError(std::source_location::current(), "Could not get domain addr info")
+			WinSockError("Could not get domain addr info")
 		);
 		e.WaitOnEvent();
 
 		if (ov.InternalHigh != NOERROR) Error::ThrowNested(
 			Error::Win32Error(std::source_location::current(), "GetAddrInfoExW() overlapped op failed", (DWORD)ov.InternalHigh),
-			WinSockError(std::source_location::current(), "Could not get domain addr info")
+			WinSockError("Could not get domain addr info")
 		);
 
 		std::vector<NetworkingAddress> names;
@@ -247,13 +247,13 @@ namespace Boring32::WinSock
 		);
 		if (error != WSA_IO_PENDING) Error::ThrowNested(
 			Error::Win32Error(std::source_location::current(), "GetAddrInfoExW() failed", error, L"Ws2_32.dll"),
-			WinSockError(std::source_location::current(), "Could not get domain addr info")
+			WinSockError("Could not get domain addr info")
 		);
 
 		opCompleted.WaitOnEvent();
 		if (ov.InternalHigh != NOERROR) Error::ThrowNested(
 			Error::Win32Error(std::source_location::current(), "GetAddrInfoExW() overlapped op failed", (DWORD)ov.InternalHigh),
-			WinSockError(std::source_location::current(), "Could not get domain addr info")
+			WinSockError("Could not get domain addr info")
 		);
 
 		std::vector<NetworkingAddress> names;

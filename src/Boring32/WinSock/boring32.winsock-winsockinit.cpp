@@ -43,7 +43,7 @@ namespace Boring32::WinSock
 		const int error = WSAStartup(MAKEWORD(m_highVersion, m_lowVersion), &m_wsaData);
 		if (error) Error::ThrowNested(
 			Error::Win32Error(std::source_location::current(), "WSAStartup() failed", error, L"Ws2_32.dll"),
-			WinSockError(std::source_location::current(), "Failed to initialise WinSock")
+			WinSockError("Failed to initialise WinSock")
 		);
 	}
 	
@@ -56,7 +56,7 @@ namespace Boring32::WinSock
 		const int error = WSACleanup();
 		if (error) Error::ThrowNested(
 			Error::Win32Error(std::source_location::current(), "WSACleanup() failed", error, L"Ws2_32.dll"),
-			WinSockError(std::source_location::current(), "Failed to cleanup WinSock")
+			WinSockError("Failed to cleanup WinSock")
 		);
 		m_lowVersion = 0;
 		m_highVersion = 0;
