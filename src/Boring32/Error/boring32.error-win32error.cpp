@@ -28,6 +28,15 @@ namespace Boring32::Error
 	{
 		m_errorString = Error::FormatErrorMessage("Win32", location, msg);
 	}
+
+	Win32Error::Win32Error(
+		const std::string& msg,
+		const std::source_location location
+	) : std::runtime_error(msg),
+		m_errorCode(0)
+	{
+		m_errorString = Error::FormatErrorMessage("Win32", location, msg);
+	}
 	
 	Win32Error::Win32Error(
 		const std::source_location& location, 
@@ -42,10 +51,35 @@ namespace Boring32::Error
 	}
 
 	Win32Error::Win32Error(
+		const std::string& msg,
+		const DWORD errorCode,
+		const std::source_location location
+	)
+		: std::runtime_error(msg),
+		m_errorCode(errorCode)
+	{
+		m_errorString = Boring32::Error::TranslateErrorCode<std::string>(errorCode);
+		m_errorString = Error::FormatErrorMessage("Win32", location, msg, errorCode, m_errorString);
+	}
+
+	Win32Error::Win32Error(
 		const std::source_location& location, 
 		const std::string& msg, 
 		const DWORD errorCode, 
 		const std::wstring& moduleName
+	)
+		: std::runtime_error(msg),
+		m_errorCode(errorCode)
+	{
+		m_errorString = Boring32::Error::TranslateErrorCode<std::string>(errorCode, moduleName);
+		m_errorString = Error::FormatErrorMessage("Win32", location, msg, errorCode, m_errorString);
+	}
+
+	Win32Error::Win32Error(
+		const std::string& msg,
+		const DWORD errorCode,
+		const std::wstring& moduleName,
+		const std::source_location location
 	)
 		: std::runtime_error(msg),
 		m_errorCode(errorCode)
