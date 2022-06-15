@@ -26,11 +26,30 @@ namespace Boring32::Error
 	{
 		GenerateErrorMessage(location, msg);
 	}
+
+	NtStatusError::NtStatusError(
+		const std::string& msg,
+		const std::source_location location
+	)
+		: m_errorCode(0), Boring32Error(location, msg)
+	{
+		GenerateErrorMessage(location, msg);
+	}
 	
 	NtStatusError::NtStatusError(
 		const std::source_location& location, 
 		const std::string& msg, 
 		const LONG errorCode
+	)
+		: m_errorCode(errorCode), Boring32Error(location, msg)
+	{
+		GenerateErrorMessage(location, msg);
+	}
+
+	NtStatusError::NtStatusError(
+		const std::string& msg,
+		const LONG errorCode,
+		const std::source_location location
 	)
 		: m_errorCode(errorCode), Boring32Error(location, msg)
 	{

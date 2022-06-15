@@ -25,6 +25,15 @@ export namespace Boring32::Error
 				const std::string& msg, 
 				const LONG errorCode
 			);
+			NtStatusError(
+				const std::string& msg,
+				const std::source_location location = std::source_location::current()
+			);
+			NtStatusError(
+				const std::string& msg,
+				const LONG errorCode,
+				const std::source_location location = std::source_location::current()
+			);
 
 		public:
 			virtual NtStatusError& operator=(const NtStatusError& other);
