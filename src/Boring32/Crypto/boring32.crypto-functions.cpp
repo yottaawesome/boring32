@@ -53,7 +53,7 @@ namespace Boring32::Crypto
 			&encryptedBlob				// Receives the encrypted information.
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(std::source_location::current(), "CryptProtectData() failed", GetLastError());
+			throw Error::Win32Error("CryptProtectData() failed", GetLastError());
 
 		// Should we really return std::byte instead of Windows' BYTE?
 		// Using std::byte means we'll need to cast at the API call.
@@ -116,7 +116,7 @@ namespace Boring32::Crypto
 			&decryptedBlob				// Receives the decrypted data
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(std::source_location::current(), "CryptUnprotectData() failed", GetLastError());
+			throw Error::Win32Error("CryptUnprotectData() failed", GetLastError());
 
 		if (descrOut)
 		{
@@ -373,7 +373,7 @@ namespace Boring32::Crypto
 			nullptr
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(std::source_location::current(), "CertStrToNameW() failed", GetLastError());
+			throw Error::Win32Error("CertStrToNameW() failed", GetLastError());
 
 		std::vector<std::byte> byte(encoded);
 		succeeded = CertStrToNameW(
@@ -386,7 +386,7 @@ namespace Boring32::Crypto
 			nullptr
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(std::source_location::current(), "CertStrToNameW() failed", GetLastError());
+			throw Error::Win32Error("CertStrToNameW() failed", GetLastError());
 		byte.resize(encoded);
 
 		return byte;
