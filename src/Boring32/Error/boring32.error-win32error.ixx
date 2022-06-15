@@ -16,10 +16,6 @@ export namespace Boring32::Error
 			Win32Error(const Win32Error& other);
 			Win32Error(Win32Error&& other) noexcept;
 			Win32Error(
-				const std::source_location& location, 
-				const std::string& msg
-			);
-			Win32Error(
 				const std::string& msg,
 				const std::source_location location = std::source_location::current()
 			);

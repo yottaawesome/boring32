@@ -107,7 +107,7 @@ namespace Boring32::Crypto
 			&status
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(std::source_location::current(), "CertVerifyCertificateChainPolicy() failed");
+			throw Error::Win32Error("CertVerifyCertificateChainPolicy() failed");
 	}
 	
 	PCCERT_CHAIN_CONTEXT CertificateChain::GetChainContext() const noexcept

@@ -20,16 +20,6 @@ namespace Boring32::Error
 	Win32Error& Win32Error::operator=(Win32Error&& other) noexcept	= default;
 
 	Win32Error::Win32Error(
-		const std::source_location& location, 
-		const std::string& msg
-	)
-		: std::runtime_error(msg),
-		m_errorCode(0)
-	{
-		m_errorString = Error::FormatErrorMessage("Win32", location, msg);
-	}
-
-	Win32Error::Win32Error(
 		const std::string& msg,
 		const std::source_location location
 	) : std::runtime_error(msg),
