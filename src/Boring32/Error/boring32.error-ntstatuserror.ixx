@@ -17,15 +17,6 @@ export namespace Boring32::Error
 			NtStatusError(const NtStatusError& other);
 			NtStatusError(NtStatusError&& other) noexcept;
 			NtStatusError(
-				const std::source_location& location, 
-				const std::string& msg
-			);
-			NtStatusError(
-				const std::source_location& location, 
-				const std::string& msg, 
-				const LONG errorCode
-			);
-			NtStatusError(
 				const std::string& msg,
 				const std::source_location location = std::source_location::current()
 			);

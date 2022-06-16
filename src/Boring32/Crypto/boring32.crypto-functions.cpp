@@ -172,7 +172,7 @@ namespace Boring32::Crypto
 			flags
 		);
 		if (BCRYPT_SUCCESS(status) == false)
-			throw Error::NtStatusError(std::source_location::current(), "BCryptEncrypt() failed to count bytes", status);
+			throw Error::NtStatusError("BCryptEncrypt() failed to count bytes", status);
 
 		// Actually do the encryption
 		std::vector<std::byte> cypherText(cbData, std::byte{ 0 });
@@ -189,7 +189,7 @@ namespace Boring32::Crypto
 			flags
 		);
 		if (BCRYPT_SUCCESS(status) == false)
-			throw Error::NtStatusError(std::source_location::current(), "BCryptEncrypt() failed to encrypt", status);
+			throw Error::NtStatusError("BCryptEncrypt() failed to encrypt", status);
 
 		return cypherText;
 	}
@@ -233,7 +233,7 @@ namespace Boring32::Crypto
 			flags
 		);
 		if (BCRYPT_SUCCESS(status) == false)
-			throw Error::NtStatusError(std::source_location::current(), "BCryptDecrypt() failed to count bytes", status);
+			throw Error::NtStatusError("BCryptDecrypt() failed to count bytes", status);
 
 		// Actually do the decryption
 		std::vector<std::byte> plainText(cbData, std::byte{ 0 });
@@ -250,7 +250,7 @@ namespace Boring32::Crypto
 			flags
 		);
 		if (BCRYPT_SUCCESS(status) == false)
-			throw Error::NtStatusError(std::source_location::current(), "BCryptDecrypt() failed to decrypt", status);
+			throw Error::NtStatusError("BCryptDecrypt() failed to decrypt", status);
 
 		plainText.resize(cbData);
 		return plainText;
