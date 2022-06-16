@@ -6,10 +6,11 @@ module;
 #include <Windows.h>
 
 export module boring32.error:comerror;
+import :boring32error;
 
 export namespace Boring32::Error
 {
-	class ComError : public std::runtime_error
+	class ComError : public Boring32Error
 	{
 		public:
 			virtual ~ComError();
@@ -28,6 +29,12 @@ export namespace Boring32::Error
 		public:
 			virtual HRESULT GetHResult() const noexcept;
 			virtual const char* what() const noexcept override;
+
+		protected:
+			virtual void GenerateErrorMessage(
+				const std::source_location& location,
+				const std::string& message
+			) override;
 
 		protected:
 			HRESULT m_hresult;

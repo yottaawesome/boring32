@@ -18,15 +18,14 @@ namespace Boring32::Error
 	ComError& ComError::operator=(ComError&& other) noexcept	= default;
 
 	ComError::ComError(
-		const std::string& msg, 
+		const std::string& msg,
 		const HRESULT hr,
 		const std::source_location location
 	)
-		: std::runtime_error(""),
+		: Boring32Error(),
 		m_hresult(hr)
 	{
-		m_errorString = Boring32::Error::TranslateErrorCode<std::string>(hr);
-		m_errorString = Error::FormatErrorMessage("COM", location, msg, hr, m_errorString);
+		GenerateErrorMessage(location, msg);
 	}
 
 	HRESULT ComError::GetHResult() const noexcept
@@ -37,5 +36,14 @@ namespace Boring32::Error
 	const char* ComError::what() const noexcept
 	{
 		return m_errorString.c_str();
+	}
+
+	void ComError::GenerateErrorMessage(
+		const std::source_location& location,
+		const std::string& message
+	)
+	{
+		m_errorString = Boring32::Error::TranslateErrorCode<std::string>(m_hresult);
+		m_errorString = Error::FormatErrorMessage("COM", location, message, m_hresult, m_errorString);
 	}
 }

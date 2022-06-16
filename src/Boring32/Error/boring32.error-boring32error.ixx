@@ -19,6 +19,10 @@ export namespace Boring32::Error
 				const std::source_location location = std::source_location::current()
 			);
 
+		protected:
+			// Protected default constructor for base class use
+			Boring32Error() = default;
+
 		public:
 			virtual Boring32Error& operator=(const Boring32Error& other);
 			virtual Boring32Error& operator=(Boring32Error&& other) noexcept;

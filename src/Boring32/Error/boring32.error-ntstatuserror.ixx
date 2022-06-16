@@ -32,6 +32,8 @@ export namespace Boring32::Error
 
 		public:
 			[[nodiscard]] virtual LONG GetErrorCode() const noexcept;
+
+		protected:
 			virtual void GenerateErrorMessage(
 				const std::source_location& location,
 				const std::string& message
