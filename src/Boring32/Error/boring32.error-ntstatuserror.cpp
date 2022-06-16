@@ -22,7 +22,7 @@ namespace Boring32::Error
 		const std::string& msg,
 		const std::source_location location
 	)
-		: m_errorCode(0), Boring32Error(location, msg)
+		: m_errorCode(0), Boring32Error(msg, location)
 	{
 		GenerateErrorMessage(location, msg);
 	}
@@ -32,7 +32,7 @@ namespace Boring32::Error
 		const LONG errorCode,
 		const std::source_location location
 	)
-		: m_errorCode(errorCode), Boring32Error(location, msg)
+		: m_errorCode(errorCode), Boring32Error(msg, location)
 	{
 		GenerateErrorMessage(location, msg);
 	}

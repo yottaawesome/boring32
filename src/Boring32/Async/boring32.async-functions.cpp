@@ -27,7 +27,7 @@ namespace Boring32::Async
 	bool WaitFor(const HANDLE handle, const DWORD timeout, const bool alertable)
 	{
 		if (!handle)
-			throw Error::Boring32Error(std::source_location::current(), "Handle is nullptr");
+			throw Error::Boring32Error("Handle is nullptr");
 		
 		// https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobjectex
 		switch (const DWORD status = WaitForSingleObjectEx(handle, timeout, alertable))
@@ -42,7 +42,7 @@ namespace Boring32::Async
 				return false;
 			
 			case WAIT_ABANDONED: 
-				throw Error::Boring32Error(std::source_location::current(), "The wait was abandoned");
+				throw Error::Boring32Error("The wait was abandoned");
 			
 			case WAIT_FAILED:
 			{
@@ -55,10 +55,7 @@ namespace Boring32::Async
 			}
 			
 			default: 
-				throw Error::Boring32Error(
-					std::source_location::current(), 
-					std::format("Unknown wait status: {}", status)
-				);
+				throw Error::Boring32Error(std::format("Unknown wait status: {}", status));
 		}
 	}
 
@@ -84,13 +81,10 @@ namespace Boring32::Async
 	)
 	{
 		if (handles.empty())
-			throw Error::Boring32Error(std::source_location::current(), "Handle is nullptr");
+			throw Error::Boring32Error("Handle is nullptr");
 		if (handles.size() > MAXIMUM_WAIT_OBJECTS)
 		{
-			throw Error::Boring32Error(
-				std::source_location::current(), 
-				std::format("Too many handles to wait on: {}", handles.size())
-			);
+			throw Error::Boring32Error(std::format("Too many handles to wait on: {}", handles.size()));
 		}
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitformultipleobjectsex
@@ -104,7 +98,7 @@ namespace Boring32::Async
 		switch (status)
 		{
 			case WAIT_ABANDONED:
-				throw Error::Boring32Error(std::source_location::current(), "The wait was abandoned.");
+				throw Error::Boring32Error("The wait was abandoned.");
 
 			case WAIT_TIMEOUT:
 			case WAIT_IO_COMPLETION:
@@ -132,7 +126,7 @@ namespace Boring32::Async
 	)
 	{
 		if (processName.empty())
-			throw Error::Boring32Error(std::source_location::current(), "ProcessName cannot be empty.");
+			throw Error::Boring32Error("ProcessName cannot be empty.");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-createtoolhelp32snapshot
 		Raii::Win32Handle processesSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);

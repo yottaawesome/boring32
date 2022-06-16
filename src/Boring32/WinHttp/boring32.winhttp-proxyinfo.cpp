@@ -108,7 +108,7 @@ namespace Boring32::WinHttp
 	void ProxyInfo::SetOnSession(HINTERNET session)
 	{
 		if (!m_info.lpszProxy)
-			throw Boring32::Error::Boring32Error(std::source_location::current(), "No proxy set");
+			throw Boring32::Error::Boring32Error("No proxy set");
 		// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpsetoption
 		if (!WinHttpSetOption(session, WINHTTP_OPTION_PROXY, &m_info, sizeof(m_info)))
 		{

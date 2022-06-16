@@ -29,7 +29,7 @@ namespace Boring32::Services
 	SERVICE_STATUS_PROCESS GetServiceStatus(const SC_HANDLE serviceHandle)
 	{
 		if (!serviceHandle)
-			throw Boring32::Error::Boring32Error(std::source_location::current(), "Service handle cannot be null");
+			throw Boring32::Error::Boring32Error("Service handle cannot be null");
 
 		DWORD bytesNeeded = 0;
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_status_process
@@ -58,7 +58,7 @@ namespace Boring32::Services
 	)
 	{
 		if (!scmHandle)
-			throw Boring32::Error::Boring32Error(std::source_location::current(), "SCM handle cannot be null");
+			throw Boring32::Error::Boring32Error("SCM handle cannot be null");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openservicew
 		const SC_HANDLE serviceHandle = OpenServiceW(

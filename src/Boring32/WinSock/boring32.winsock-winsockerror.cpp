@@ -12,7 +12,7 @@ namespace Boring32::WinSock
 	WinSockError::WinSockError(
 		const std::string& message,
 		const std::source_location location
-	) : Error::Boring32Error(location, message)
+	) : Error::Boring32Error(message, location)
 	{
 	}
 }

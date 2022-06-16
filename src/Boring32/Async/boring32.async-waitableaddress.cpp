@@ -53,7 +53,7 @@ namespace Boring32::Async
 				break;
 
 			default:
-				throw Error::Boring32Error(std::source_location::current(), "Unknown wakeType");
+				throw Error::Boring32Error("Unknown wakeType");
 		}
 	}
 

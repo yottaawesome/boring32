@@ -139,10 +139,7 @@ namespace Boring32::Async
 	void Process::Start()
 	{
 		if (m_executablePath.empty() && m_commandLine.empty())
-			throw Error::Boring32Error(
-				std::source_location::current(), 
-				"No executable path or command line set"
-			);
+			throw Error::Boring32Error("No executable path or command line set");
 
 		PROCESS_INFORMATION processInfo{ 0 };
 		m_dataSi.cb = sizeof(m_dataSi);
@@ -230,10 +227,8 @@ namespace Boring32::Async
 
 	DWORD Process::GetProcessExitCode() const
 	{
-		if (!m_process) throw Error::Boring32Error(
-			std::source_location::current(),
-			"No process handle to query"
-		);
+		if (!m_process) 
+			throw Error::Boring32Error("No process handle to query");
 
 		DWORD exitCode = 0;
 		if (!GetExitCodeProcess(m_process.GetHandle(), &exitCode))

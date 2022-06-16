@@ -14,7 +14,6 @@ export namespace Boring32::Error
 			virtual ~Boring32Error();
 			Boring32Error(const Boring32Error& other);
 			Boring32Error(Boring32Error&& other) noexcept;
-			Boring32Error(const std::source_location& location, const std::string& message);
 			Boring32Error(
 				const std::string& message, 
 				const std::source_location location = std::source_location::current()

@@ -19,7 +19,7 @@ namespace Boring32::Compression
 	CompressionError::CompressionError(
 		const std::source_location & location,
 		const std::string & message
-	) : Error::Boring32Error(location, message)
+	) : Error::Boring32Error(message, location)
 	{
 		GenerateErrorMessage(location, message);
 	}

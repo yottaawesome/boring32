@@ -17,14 +17,6 @@ namespace Boring32::Error
 	Boring32Error& Boring32Error::operator=(Boring32Error&& other) noexcept = default;
 
 	Boring32Error::Boring32Error(
-		const std::source_location& location,
-		const std::string& message
-	)
-	{
-		GenerateErrorMessage(location, message);
-	}
-
-	Boring32Error::Boring32Error(
 		const std::string& message,
 		const std::source_location location
 	)

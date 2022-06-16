@@ -83,7 +83,7 @@ namespace Boring32::Async
 		m_locked(false)
 	{
 		if(m_name.empty())
-			throw Error::Boring32Error(std::source_location::current(), "Cannot open mutex with empty name");
+			throw Error::Boring32Error("Cannot open mutex with empty name");
 		m_mutex = OpenMutexW(desiredAccess, isInheritable, m_name.c_str());
 		if (!m_mutex)
 			throw Error::Win32Error(std::source_location::current(), "failed to open mutex", GetLastError());
@@ -148,7 +148,7 @@ namespace Boring32::Async
 	bool Mutex::Lock(const DWORD waitTime, const bool isAlertable)
 	{
 		if (!m_mutex)
-			throw Error::Boring32Error(std::source_location::current(), "Cannot wait on null mutex");
+			throw Error::Boring32Error("Cannot wait on null mutex");
 		m_locked = WaitFor(m_mutex.GetHandle(), waitTime, isAlertable);
 		return m_locked;
 	}
@@ -166,7 +166,7 @@ namespace Boring32::Async
 	void Mutex::Unlock()
 	{
 		if (!m_mutex)
-			throw Error::Boring32Error(std::source_location::current(), "Cannot wait on null mutex");
+			throw Error::Boring32Error("Cannot wait on null mutex");
 		if (!ReleaseMutex(m_mutex.GetHandle()))
 			throw Error::Win32Error(std::source_location::current(), "Failed to release mutex", GetLastError());
 

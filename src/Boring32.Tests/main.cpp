@@ -317,7 +317,7 @@ class Y : public Boring32::Error::Boring32Error
 			DWORD lastError, 
 			std::source_location location = std::source_location::current()
 		)
-			: Boring32::Error::Boring32Error(location, "AA")
+			: Boring32::Error::Boring32Error("AA", location)
 		{
 
 		}
