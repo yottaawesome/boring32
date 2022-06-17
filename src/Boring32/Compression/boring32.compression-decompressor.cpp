@@ -85,12 +85,8 @@ namespace Boring32::Compression
 		{
 			const auto lastError = GetLastError();
 			Error::ThrowNested(
-				Error::Win32Error(
-					"CreateDecompressor() failed", 
-					lastError),
-				CompressionError(
-					std::source_location::current(), 
-					"An error occurred creating the decompressor")
+				Error::Win32Error("CreateDecompressor() failed", lastError),
+				CompressionError("An error occurred creating the decompressor")
 			);
 		}
 		m_decompressor = DecompressorUniquePtr(handle);
@@ -106,9 +102,9 @@ namespace Boring32::Compression
 	) const
 	{
 		if (!m_decompressor)
-			throw CompressionError(std::source_location::current(), "Decompressor handle is null");
+			throw CompressionError("Decompressor handle is null");
 		if (compressedBuffer.empty())
-			throw CompressionError(std::source_location::current(), "Buffer is empty");
+			throw CompressionError("Buffer is empty");
 
 		size_t decompressedBufferSize = 0;
 		//https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-decompress
@@ -126,12 +122,8 @@ namespace Boring32::Compression
 			return decompressedBufferSize;
 
 		Error::ThrowNested(
-			Error::Win32Error( 
-				"Decompress() failed", 
-				lastError),
-			CompressionError(
-				std::source_location::current(), 
-				"An error occurred while decompressing data")
+			Error::Win32Error( "Decompress() failed", lastError),
+			CompressionError("An error occurred while decompressing data")
 		);
 	}
 
@@ -140,9 +132,9 @@ namespace Boring32::Compression
 	)
 	{
 		if (!m_decompressor)
-			throw CompressionError(std::source_location::current(), "Decompressor handle is null");
+			throw CompressionError("Decompressor handle is null");
 		if (compressedBuffer.empty())
-			throw CompressionError(std::source_location::current(), "Buffer is empty");
+			throw CompressionError("Buffer is empty");
 
 		std::vector<std::byte> returnVal(GetDecompressedSize(compressedBuffer));
 		size_t decompressedBufferSize = 0;
@@ -159,13 +151,8 @@ namespace Boring32::Compression
 		{
 			const auto lastError = GetLastError();
 			Error::ThrowNested(
-				Error::Win32Error(
-					"CreateDecompressor() failed", 
-					lastError),
-				CompressionError(
-					std::source_location::current(), 
-					"An error occurred creating the decompressor")
-			);
+				Error::Win32Error("CreateDecompressor() failed", lastError),
+				CompressionError("An error occurred creating the decompressor"));
 		}
 
 		return returnVal;
@@ -179,14 +166,14 @@ namespace Boring32::Compression
 	void Decompressor::Reset()
 	{
 		if (!m_decompressor)
-			throw CompressionError(std::source_location::current(), "Decompressor handle is null");
+			throw CompressionError("Decompressor handle is null");
 		// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-resetdecompressor
 		if (!ResetDecompressor(m_decompressor.get()))
 		{
 			const auto lastError = GetLastError();
 			Error::ThrowNested(
 				Error::Win32Error("ResetDecompressor() failed", lastError),
-				CompressionError(std::source_location::current(), "An error occurred resetting the decompressor")
+				CompressionError("An error occurred resetting the decompressor")
 			);
 		}
 	}

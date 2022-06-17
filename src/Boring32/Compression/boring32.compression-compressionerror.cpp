@@ -17,8 +17,8 @@ namespace Boring32::Compression
 	CompressionError& CompressionError::operator=(CompressionError&& other) noexcept = default;
 
 	CompressionError::CompressionError(
-		const std::source_location & location,
-		const std::string & message
+		const std::string& message,
+		const std::source_location location
 	) : Error::Boring32Error(message, location)
 	{
 		GenerateErrorMessage(location, message);

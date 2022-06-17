@@ -17,8 +17,8 @@ export namespace Boring32::Compression
 			CompressionError(const CompressionError& other);
 			CompressionError(CompressionError&& other) noexcept;
 			CompressionError(
-				const std::source_location& location,
-				const std::string& message
+				const std::string& message,
+				const std::source_location location = std::source_location::current()
 			);
 
 		public:
