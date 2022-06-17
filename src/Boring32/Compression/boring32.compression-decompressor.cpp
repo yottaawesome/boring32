@@ -86,7 +86,6 @@ namespace Boring32::Compression
 			const auto lastError = GetLastError();
 			Error::ThrowNested(
 				Error::Win32Error(
-					std::source_location::current(), 
 					"CreateDecompressor() failed", 
 					lastError),
 				CompressionError(
@@ -127,8 +126,7 @@ namespace Boring32::Compression
 			return decompressedBufferSize;
 
 		Error::ThrowNested(
-			Error::Win32Error(
-				std::source_location::current(), 
+			Error::Win32Error( 
 				"Decompress() failed", 
 				lastError),
 			CompressionError(
@@ -162,7 +160,6 @@ namespace Boring32::Compression
 			const auto lastError = GetLastError();
 			Error::ThrowNested(
 				Error::Win32Error(
-					std::source_location::current(), 
 					"CreateDecompressor() failed", 
 					lastError),
 				CompressionError(
@@ -188,7 +185,7 @@ namespace Boring32::Compression
 		{
 			const auto lastError = GetLastError();
 			Error::ThrowNested(
-				Error::Win32Error(std::source_location::current(), "ResetDecompressor() failed", lastError),
+				Error::Win32Error("ResetDecompressor() failed", lastError),
 				CompressionError(std::source_location::current(), "An error occurred resetting the decompressor")
 			);
 		}

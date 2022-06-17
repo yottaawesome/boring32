@@ -43,7 +43,7 @@ namespace Boring32::Time
         if (!FileTimeToSystemTime(&ft, &st))
         {
             const auto lastError = GetLastError();
-            throw Error::Win32Error(std::source_location::current(), "FileTimeToSystemTime() failed", lastError);
+            throw Error::Win32Error("FileTimeToSystemTime() failed", lastError);
         }
         return st;
 	}
@@ -66,7 +66,7 @@ namespace Boring32::Time
         if (!status)
         {
             const auto lastError = GetLastError();
-            throw Error::Win32Error(std::source_location::current(), "GetDateFormatEx() failed", lastError);
+            throw Error::Win32Error("GetDateFormatEx() failed", lastError);
         }
 
         // Format time buffer
@@ -84,7 +84,7 @@ namespace Boring32::Time
         if (!status)
         {
             const auto lastError = GetLastError();
-            throw Error::Win32Error(std::source_location::current(), "GetTimeFormatEx() failed", lastError);
+            throw Error::Win32Error("GetTimeFormatEx() failed", lastError);
         }
 
         TIME_ZONE_INFORMATION tzi;
@@ -93,7 +93,7 @@ namespace Boring32::Time
         if(tziStatus == TIME_ZONE_ID_INVALID)
         {
             const auto lastError = GetLastError();
-            throw Error::Win32Error(std::source_location::current(), "GetTimeZoneInformation() failed", lastError);
+            throw Error::Win32Error("GetTimeZoneInformation() failed", lastError);
         }
 
         const long actualBias = tzi.Bias * -1; // should we do this?

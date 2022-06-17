@@ -81,9 +81,9 @@ namespace Boring32::IPC
 		if (m_handle == INVALID_HANDLE_VALUE)
 		{
 			if (GetLastError() != ERROR_PIPE_BUSY || timeout == 0)
-				throw Error::Win32Error(std::source_location::current(), "Failed to connect client pipe", GetLastError());
+				throw Error::Win32Error("Failed to connect client pipe", GetLastError());
 			if (WaitNamedPipeW(m_pipeName.c_str(), timeout) == false)
-				throw Error::Win32Error(std::source_location::current(), "Timed out trying to connect client pipe", GetLastError());
+				throw Error::Win32Error("Timed out trying to connect client pipe", GetLastError());
 		}
 	}
 
@@ -115,7 +115,7 @@ namespace Boring32::IPC
 			nullptr,     // don't set maximum bytes 
 			nullptr);    // don't set maximum time 
 		if (!succeeded)
-			throw Error::Win32Error(std::source_location::current(), "SetNamedPipeHandleState() failed", GetLastError());
+			throw Error::Win32Error("SetNamedPipeHandleState() failed", GetLastError());
 	}
 
 	void NamedPipeClientBase::Close()
@@ -137,7 +137,7 @@ namespace Boring32::IPC
 			&bytesLeft
 		);
 		if (!succeeded)
-			throw Error::Win32Error(std::source_location::current(), "PeekNamedPipe() failed", GetLastError());
+			throw Error::Win32Error("PeekNamedPipe() failed", GetLastError());
 
 		return bytesLeft / sizeof(wchar_t);
 	}
@@ -147,7 +147,7 @@ namespace Boring32::IPC
 		if (!m_handle)
 			throw std::runtime_error("No pipe to flush");
 		if (FlushFileBuffers(m_handle.GetHandle()) == false)
-			throw Error::Win32Error(std::source_location::current(), "FlushFileBuffers() failed", GetLastError());
+			throw Error::Win32Error("FlushFileBuffers() failed", GetLastError());
 	}
 
 	void NamedPipeClientBase::CancelCurrentThreadIo()
@@ -155,7 +155,7 @@ namespace Boring32::IPC
 		if (!m_handle)
 			throw std::runtime_error(__FUNCSIG__": pipe is nullptr");
 		if (!CancelIo(m_handle.GetHandle()))
-			throw Error::Win32Error(std::source_location::current(), "CancelIo failed", GetLastError());
+			throw Error::Win32Error("CancelIo failed", GetLastError());
 	}
 
 	bool NamedPipeClientBase::CancelCurrentThreadIo(std::nothrow_t) noexcept
@@ -177,7 +177,7 @@ namespace Boring32::IPC
 		if (m_handle == nullptr)
 			throw std::runtime_error(__FUNCSIG__": pipe is nullptr");
 		if (CancelIoEx(m_handle.GetHandle(), overlapped) == false)
-			throw Error::Win32Error(std::source_location::current(), "CancelIo() failed", GetLastError());
+			throw Error::Win32Error("CancelIo() failed", GetLastError());
 	}
 
 	bool NamedPipeClientBase::CancelCurrentProcessIo(OVERLAPPED* overlapped, std::nothrow_t) noexcept

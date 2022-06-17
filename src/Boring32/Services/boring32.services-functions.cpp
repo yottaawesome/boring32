@@ -20,7 +20,7 @@ namespace Boring32::Services
 		if (!scmHandle)
 		{
 			const auto lastError = GetLastError();
-			throw Error::Win32Error(std::source_location::current(), "OpenSCManagerW() failed", lastError);
+			throw Error::Win32Error("OpenSCManagerW() failed", lastError);
 		}
 
 		return scmHandle;
@@ -45,7 +45,7 @@ namespace Boring32::Services
 		if (!succeeded)
 		{
 			const auto lastError = GetLastError();
-			throw Error::Win32Error(std::source_location::current(), "QueryServiceStatusEx() failed", lastError);
+			throw Error::Win32Error("QueryServiceStatusEx() failed", lastError);
 		}
 
 		return serviceStatus;
@@ -69,7 +69,7 @@ namespace Boring32::Services
 		if (!serviceHandle)
 		{
 			const auto lastError = GetLastError();
-			throw Error::Win32Error(std::source_location::current(), "OpenServiceW() failed", lastError);
+			throw Error::Win32Error("OpenServiceW() failed", lastError);
 		}
 
 		return serviceHandle;

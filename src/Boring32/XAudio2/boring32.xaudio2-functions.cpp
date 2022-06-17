@@ -21,7 +21,6 @@ namespace Boring32::XAudio2
         DWORD result = SetFilePointer(hFile, 0, nullptr, FILE_BEGIN);
         if (result == INVALID_SET_FILE_POINTER)
             throw Error::Win32Error(
-                std::source_location::current(),
                 "SetFilePointer() failed",
                 GetLastError()
             );
@@ -39,14 +38,12 @@ namespace Boring32::XAudio2
             DWORD dwRead;
             if (!ReadFile(hFile, &dwChunkType, sizeof(DWORD), &dwRead, nullptr))
                 throw Error::Win32Error(
-                    std::source_location::current(),
                     "ReadFile() failed",
                     GetLastError()
                 );
 
             if (!ReadFile(hFile, &dwChunkDataSize, sizeof(DWORD), &dwRead, nullptr))
                 throw Error::Win32Error(
-                    std::source_location::current(),
                     "ReadFile() failed",
                     GetLastError()
                 );
@@ -58,7 +55,6 @@ namespace Boring32::XAudio2
                     dwChunkDataSize = 4;
                     if (!ReadFile(hFile, &dwFileType, sizeof(DWORD), &dwRead, nullptr))
                         throw Error::Win32Error(
-                            std::source_location::current(),
                             "ReadFile() failed",
                             GetLastError()
                         );
@@ -73,7 +69,6 @@ namespace Boring32::XAudio2
                     );
                     if (result == INVALID_SET_FILE_POINTER)
                         throw Error::Win32Error(
-                            std::source_location::current(),
                             "SetFilePointer() failed",
                             GetLastError()
                         );

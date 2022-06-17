@@ -203,7 +203,6 @@ namespace Boring32::Crypto
 		);
 		if (!succeeded)
 			throw Error::Win32Error(
-				std::source_location::source_location(), 
 				"CertGetCertificateContextProperty() failed (1)",
 				GetLastError()
 			);
@@ -217,7 +216,6 @@ namespace Boring32::Crypto
 		);
 		if (!succeeded)
 			throw Error::Win32Error(
-				std::source_location::source_location(), 
 				"CertGetCertificateContextProperty() failed (2)",
 				GetLastError()
 			);

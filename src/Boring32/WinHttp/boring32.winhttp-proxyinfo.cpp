@@ -33,7 +33,6 @@ namespace Boring32::WinHttp
 		{
 			const auto lastError = GetLastError();
 			throw Error::Win32Error(
-				std::source_location::current(), 
 				"WinHttpGetProxyForUrl() failed", 
 				lastError
 			);
@@ -84,7 +83,6 @@ namespace Boring32::WinHttp
 		{
 			const auto lastError = GetLastError();
 			throw Error::Win32Error(
-				std::source_location::current(), 
 				"WinHttpGetProxyForUrl() failed", 
 				lastError
 			);
@@ -114,7 +112,6 @@ namespace Boring32::WinHttp
 		{
 			const auto lastError = GetLastError();
 			throw Error::Win32Error(
-				std::source_location::current(), 
 				"WinHttpSetOption() failed", 
 				lastError
 			);

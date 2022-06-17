@@ -19,11 +19,8 @@ namespace Boring32::Computer
         {
             const auto lastError = GetLastError();
             // ERROR_MORE_DATA initially is the expected error from MSDN link. 
-            if (lastError != ERROR_MORE_DATA) throw Error::Win32Error(
-                std::source_location::current(),
-                "GetComputerNameExW() failed",
-                lastError
-            );
+            if (lastError != ERROR_MORE_DATA) 
+                throw Error::Win32Error("GetComputerNameExW() failed",lastError);
         }
         if (!bufferCharacterSize)
             return {};
@@ -32,11 +29,7 @@ namespace Boring32::Computer
         if (!GetComputerNameExW(format, &returnVal[0], &bufferCharacterSize))
         {
             const auto lastError = GetLastError();
-            throw Error::Win32Error(
-                std::source_location::current(),
-                "GetComputerNameExW() failed",
-                lastError
-            );
+            throw Error::Win32Error("GetComputerNameExW() failed",lastError);
         }
         // On output, receives the number of TCHARs copied to the destination buffer, 
         // not including the terminating null character.
@@ -51,10 +44,7 @@ namespace Boring32::Computer
         if (!GetPhysicallyInstalledSystemMemory(&memoryInKB))
         {
             const auto lastError = GetLastError();
-            throw Error::Win32Error(
-                std::source_location::current(),
-                "GetPhysicallyInstalledSystemMemory() failed",
-                lastError
+            throw Error::Win32Error("GetPhysicallyInstalledSystemMemory() failed",lastError
             );
         }
         return memoryInKB;
@@ -68,11 +58,7 @@ namespace Boring32::Computer
         if (!GlobalMemoryStatusEx(&memoryStatus))
         {
             const auto lastError = GetLastError();
-            throw Error::Win32Error(
-                std::source_location::current(),
-                "GlobalMemoryStatusEx() failed",
-                lastError
-            );
+            throw Error::Win32Error("GlobalMemoryStatusEx() failed", lastError);
         }
         return memoryStatus;
     }
@@ -95,11 +81,7 @@ namespace Boring32::Computer
         if (!succeeded)
         {
             const auto lastError = GetLastError();
-            throw Error::Win32Error(
-                std::source_location::current(),
-                "GetSystemTimeAdjustment() failed",
-                lastError
-            );
+            throw Error::Win32Error("GetSystemTimeAdjustment() failed",lastError);
         }
 
         // invert the bool since the semantics are the opposite
@@ -135,11 +117,7 @@ namespace Boring32::Computer
         if (lastError != ERROR_INSUFFICIENT_BUFFER)
         {
             lastError = GetLastError();
-            throw Error::Win32Error(
-                std::source_location::current(), 
-                "GetLogicalProcessorInformationEx() failed", 
-                lastError
-            );
+            throw Error::Win32Error("GetLogicalProcessorInformationEx() failed", lastError);
         }
 
         // https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-system_logical_processor_information_ex
@@ -154,11 +132,7 @@ namespace Boring32::Computer
         if (!succeeded)
         {
             lastError = GetLastError();
-            throw Error::Win32Error(
-                std::source_location::current(), 
-                "GetLogicalProcessorInformationEx() failed", 
-                lastError
-            );
+            throw Error::Win32Error("GetLogicalProcessorInformationEx() failed", lastError);
         }
         // In case it changes somehow
         returnValue.resize(lengthInBytes / sizeof(LOGICAL_PROCESSOR_RELATIONSHIP));

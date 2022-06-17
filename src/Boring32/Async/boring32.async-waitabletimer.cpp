@@ -65,7 +65,7 @@ namespace Boring32::Async
 		//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-openwaitabletimerw
 		m_handle = OpenWaitableTimerW(desiredAccess, isInheritable, m_name.c_str());
 		if (!m_handle)
-			throw Error::Win32Error(std::source_location::current(), "failed to open waitable timer", GetLastError());
+			throw Error::Win32Error("failed to open waitable timer", GetLastError());
 	}
 
 	// Copy constructor
@@ -183,7 +183,7 @@ namespace Boring32::Async
 			false
 		);
 		if (!succeeded)
-			throw Error::Win32Error(std::source_location::current(), "Failed to set timer", GetLastError());
+			throw Error::Win32Error("Failed to set timer", GetLastError());
 	}
 
 	bool WaitableTimer::WaitOnTimer(const DWORD millis)
@@ -206,7 +206,7 @@ namespace Boring32::Async
 			case WAIT_FAILED:
 			{
 				const auto lastError = GetLastError();
-				throw Error::Win32Error(std::source_location::current(), "WaitForSingleObject() failed", lastError);
+				throw Error::Win32Error("WaitForSingleObject() failed", lastError);
 			}
 		}
 
@@ -232,7 +232,7 @@ namespace Boring32::Async
 			throw Error::Boring32Error("Timer handle is null");
 
 		if (!CancelWaitableTimer(m_handle.GetHandle()))
-			throw Error::Win32Error(std::source_location::current(), "CancelWaitableTimer() failed", GetLastError());
+			throw Error::Win32Error("CancelWaitableTimer() failed", GetLastError());
 	}
 
 	bool WaitableTimer::CancelTimer(std::nothrow_t&) noexcept try
@@ -270,7 +270,7 @@ namespace Boring32::Async
 			m_name.empty() ? nullptr : m_name.c_str()
 		);
 		if (!m_handle)
-			throw Error::Win32Error(std::source_location::current(), "Failed to create waitable timer", GetLastError());
+			throw Error::Win32Error("Failed to create waitable timer", GetLastError());
 		m_handle.SetInheritability(isInheritable);
 	}
 }

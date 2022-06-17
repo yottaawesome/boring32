@@ -66,7 +66,7 @@ export namespace Boring32::Async::ThreadPools
 				{
 					const auto location = std::source_location::current();
 					// using current() directly causes a compiler internal error
-					throw Error::Win32Error(location, "CreateThreadpoolWork() failed", GetLastError());
+					throw Error::Win32Error("CreateThreadpoolWork() failed", GetLastError());
 				}
 			}
 

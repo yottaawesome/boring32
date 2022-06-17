@@ -162,7 +162,7 @@ namespace Boring32::WinHttp
 		{
 			const auto lastError = GetLastError();
 			Error::ThrowNested(
-				Error::Win32Error(std::source_location::current(), "WinHttpOpen() failed", lastError),
+				Error::Win32Error("WinHttpOpen() failed", lastError),
 				WinHttpError(std::source_location::current(), "Failed to open WinHttpSession handle")
 			);
 		}

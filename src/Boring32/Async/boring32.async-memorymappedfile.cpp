@@ -14,7 +14,7 @@ namespace Boring32::Async
 	void MemoryMappedFile::Close()
 	{
 		if (m_view && !UnmapViewOfFile(m_view))
-			throw Error::Win32Error(std::source_location::current(), "UnmapViewOfFile() failed", GetLastError());
+			throw Error::Win32Error("UnmapViewOfFile() failed", GetLastError());
 		m_view = nullptr;
 		m_mapFile = nullptr;
 	}
@@ -59,7 +59,7 @@ namespace Boring32::Async
 			m_name.c_str()				// m_name of mapping object
 		);			
 		if (!m_mapFile)
-			throw Error::Win32Error(std::source_location::current(), "CreateFileMappingW() failed", GetLastError());
+			throw Error::Win32Error("CreateFileMappingW() failed", GetLastError());
 
 		m_mapFile.SetInheritability(inheritable);
 		m_view = MapViewOfFile(
@@ -72,7 +72,7 @@ namespace Boring32::Async
 		if (!m_view)
 		{
 			Close();
-			throw Error::Win32Error(std::source_location::current(), "MapViewOfFile() failed", GetLastError());
+			throw Error::Win32Error("MapViewOfFile() failed", GetLastError());
 		}
 
 		RtlSecureZeroMemory(m_view, m_maxSize);
@@ -96,7 +96,7 @@ namespace Boring32::Async
 			m_name.c_str()	// name of mapping object
 		);
 		if (!m_mapFile)
-			throw Error::Win32Error(std::source_location::current(), "OpenFileMappingW() failed", GetLastError());
+			throw Error::Win32Error("OpenFileMappingW() failed", GetLastError());
 
 		m_view = MapViewOfFile(
 			m_mapFile.GetHandle(),	// handle to map object
@@ -108,7 +108,7 @@ namespace Boring32::Async
 		if (!m_view)
 		{
 			Close();
-			throw Error::Win32Error(std::source_location::current(), "MapViewOfFile() failed", GetLastError());
+			throw Error::Win32Error("MapViewOfFile() failed", GetLastError());
 		}
 	}
 
@@ -145,7 +145,7 @@ namespace Boring32::Async
 			if (!m_view)
 			{
 				Close();
-				throw Error::Win32Error(std::source_location::current(), "MapViewOfFile() failed", GetLastError());
+				throw Error::Win32Error("MapViewOfFile() failed", GetLastError());
 			}
 		}
 	}

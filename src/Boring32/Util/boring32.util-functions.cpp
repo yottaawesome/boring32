@@ -26,7 +26,7 @@ namespace Boring32::Util
             filePath.resize(filePath.size() + blockSize);
             status = GetModuleFileNameW(nullptr, &filePath[0], (DWORD)filePath.size());
             if(!status)
-                throw Error::Win32Error(std::source_location::current(), "GetModuleFileNameW() failed", GetLastError());
+                throw Error::Win32Error("GetModuleFileNameW() failed", GetLastError());
         }
 
         const HRESULT result = PathCchRemoveFileSpec(&filePath[0], filePath.size());
@@ -44,7 +44,7 @@ namespace Boring32::Util
         ft.dwHighDateTime = li.HighPart;
         SYSTEMTIME st{ 0 };
         if (FileTimeToSystemTime(&ft, &st) == false)
-            throw Error::Win32Error(std::source_location::current(), "FileTimeToSystemTime() failed", GetLastError());
+            throw Error::Win32Error("FileTimeToSystemTime() failed", GetLastError());
         return st;
     }
 

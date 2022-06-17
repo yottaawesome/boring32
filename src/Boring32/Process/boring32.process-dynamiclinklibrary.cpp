@@ -104,7 +104,6 @@ namespace Boring32::Process
 			return ptr;
 
 		throw Error::Win32Error(
-			std::source_location::current(),
 			std::format("{}: failed to resolve symbol: {}", __FUNCSIG__, symbolName), 
 			GetLastError());
 	}
@@ -123,7 +122,7 @@ namespace Boring32::Process
 
 		m_libraryHandle = LoadLibraryW(m_path.c_str());
 		if (m_libraryHandle == nullptr)
-			throw Error::Win32Error(std::source_location::current(), "failed to load library", GetLastError());
+			throw Error::Win32Error("failed to load library", GetLastError());
 	}
 
 	bool DynamicLinkLibrary::InternalLoad(const std::nothrow_t&) noexcept try

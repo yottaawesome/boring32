@@ -62,7 +62,7 @@ namespace Boring32::Security
 			&m_token
 		);
 		if (!succeeded)
-			throw Error::Win32Error(std::source_location::current(), "DuplicateTokenEx() failed", GetLastError());
+			throw Error::Win32Error("DuplicateTokenEx() failed", GetLastError());
 	}
 
 	Token& Token::operator=(const Token& other)
@@ -112,7 +112,7 @@ namespace Boring32::Security
 				&m_token
 			);
 			if (!succeeded)
-				throw Error::Win32Error(std::source_location::current(), "DuplicateTokenEx() failed", GetLastError());
+				throw Error::Win32Error("DuplicateTokenEx() failed", GetLastError());
 		}
 
 		return *this;

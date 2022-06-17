@@ -163,7 +163,7 @@ namespace Boring32::Crypto
 			// for additional resource notes under remarks
 			if (CertCloseStore(m_certStore, (DWORD)m_closeOptions) == false)
 			{
-				Error::Win32Error error(std::source_location::current(), "CertCloseStore() failed", GetLastError());
+				Error::Win32Error error("CertCloseStore() failed", GetLastError());
 				std::wcerr << error.what() << std::endl;
 			}
 			m_certStore = nullptr;
@@ -214,7 +214,7 @@ namespace Boring32::Crypto
 		}
 		
 		if (m_certStore == nullptr)
-			throw Error::Win32Error(std::source_location::current(), "CertOpenSystemStoreW() failed", GetLastError());
+			throw Error::Win32Error("CertOpenSystemStoreW() failed", GetLastError());
 	}
 
 	HCERTSTORE CertStore::GetHandle() const noexcept
@@ -240,7 +240,7 @@ namespace Boring32::Crypto
 		
 		const DWORD lastError = GetLastError();
 		if (lastError != CRYPT_E_NOT_FOUND && lastError != ERROR_NO_MORE_FILES)
-			throw Error::Win32Error(std::source_location::current(), "CertEnumCertificatesInStore() failed", lastError);
+			throw Error::Win32Error("CertEnumCertificatesInStore() failed", lastError);
 
 		return results;
 	}
@@ -263,7 +263,7 @@ namespace Boring32::Crypto
 		}
 		const DWORD lastError = GetLastError();
 		if (lastError != CRYPT_E_NOT_FOUND && lastError != ERROR_NO_MORE_FILES)
-			throw Error::Win32Error(std::source_location::current(), "CertEnumCertificatesInStore() failed", lastError);
+			throw Error::Win32Error("CertEnumCertificatesInStore() failed", lastError);
 
 		return Certificate();
 	}
@@ -287,7 +287,6 @@ namespace Boring32::Crypto
 		const DWORD lastError = GetLastError();
 		if (lastError != CRYPT_E_NOT_FOUND && lastError != ERROR_NO_MORE_FILES)
 			throw Error::Win32Error(
-				std::source_location::current(),
 				"CertEnumCertificatesInStore() failed", 
 				lastError
 			);
@@ -413,7 +412,7 @@ namespace Boring32::Crypto
 		{
 			const DWORD lastError = GetLastError();
 			if (lastError != CRYPT_E_NOT_FOUND)
-				throw Error::Win32Error(std::source_location::current(), "CertFindCertificateInStore() failed", lastError);
+				throw Error::Win32Error("CertFindCertificateInStore() failed", lastError);
 		}
 
 		return certContext;
@@ -433,7 +432,6 @@ namespace Boring32::Crypto
 
 		if (CertDeleteCertificateFromStore(cert) == false)
 			throw Error::Win32Error(
-				std::source_location::current(),
 				"CertDeleteCertificateFromStore() failed",
 				GetLastError()
 			);
@@ -482,7 +480,6 @@ namespace Boring32::Crypto
 			nullptr
 		);
 		if (!succeeded) throw Error::Win32Error(
-			std::source_location::current(),
 			"CertAddCertificateContextToStore() failed", 
 			GetLastError()
 		);
@@ -503,10 +500,7 @@ namespace Boring32::Crypto
 			&info,
 			m_certStore
 		);
-		if (!succeeded) throw Error::Win32Error(
-			std::source_location::current(),
-			"CryptUIWizImport() failed",
-			GetLastError()
-		);
+		if (!succeeded) 
+			throw Error::Win32Error("CryptUIWizImport() failed", GetLastError());
 	}
 }

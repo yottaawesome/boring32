@@ -122,7 +122,7 @@ namespace Boring32::Async
 				name					// m_name of mapping object
 			);
 			if (!m_fileMapping)
-				throw Error::Win32Error(std::source_location::current(),"CreateFileMappingW() failed", GetLastError());
+				throw Error::Win32Error("CreateFileMappingW() failed", GetLastError());
 			m_fileMapping.SetInheritability(isInheritable);
 		}
 		else
@@ -136,7 +136,7 @@ namespace Boring32::Async
 				m_name.c_str()						// name of mapping object
 			);
 			if (!m_fileMapping)
-				throw Error::Win32Error(std::source_location::current(), "OpenFileMappingW() failed", GetLastError());
+				throw Error::Win32Error("OpenFileMappingW() failed", GetLastError());
 		}
 	}
 

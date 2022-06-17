@@ -73,7 +73,7 @@ namespace Boring32::IPC
 			oio.GetOverlapped());							// overlapped 
 		oio.LastError(GetLastError());
 		if (succeeded == false && oio.LastError() != ERROR_IO_PENDING)
-			throw Error::Win32Error(std::source_location::current(), "WriteFile() failed", oio.LastError());
+			throw Error::Win32Error("WriteFile() failed", oio.LastError());
 	}
 
 	void OverlappedNamedPipeClient::Read(const DWORD noOfCharacters, Async::OverlappedIo& op)
@@ -110,6 +110,6 @@ namespace Boring32::IPC
 
 		if (succeeded == false)
 			if (oio.LastError() != ERROR_IO_PENDING && oio.LastError() != ERROR_MORE_DATA)
-				throw Error::Win32Error(std::source_location::current(), "ReadFile() failed", oio.LastError());
+				throw Error::Win32Error("ReadFile() failed", oio.LastError());
 	}
 }

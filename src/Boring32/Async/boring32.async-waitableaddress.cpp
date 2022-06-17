@@ -33,7 +33,7 @@ namespace Boring32::Async
 			const auto lastError = GetLastError();
 			if (lastError == ERROR_TIMEOUT)
 				return false;
-			throw Error::Win32Error(std::source_location::current(), "WaitOnAddress() failed", lastError);
+			throw Error::Win32Error("WaitOnAddress() failed", lastError);
 		}
 		return true;
 	}

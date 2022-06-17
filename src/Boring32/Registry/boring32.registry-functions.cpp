@@ -35,7 +35,6 @@ namespace Boring32::Registry
         );
         if (statusCode != ERROR_SUCCESS)
             throw Error::Win32Error(
-                std::source_location::current(),
                 "RegGetValueW() failed (1)",
                 statusCode
             );
@@ -52,7 +51,6 @@ namespace Boring32::Registry
         );
         if (statusCode != ERROR_SUCCESS)
             throw Error::Win32Error(
-                std::source_location::current(),
                 "RegGetValueW() failed (2)",
                 statusCode
             );
@@ -109,7 +107,7 @@ namespace Boring32::Registry
             true
         );
         if (status != ERROR_SUCCESS)
-            throw Error::Win32Error(std::source_location::current(), "failed to watch registry key for changes", status);
+            throw Error::Win32Error("failed to watch registry key for changes", status);
     }
 
     void DeleteKeyAndSubkey(const HKEY parent, const std::wstring& subkey)
@@ -123,7 +121,7 @@ namespace Boring32::Registry
             subkey.c_str()
         );
         if (status != ERROR_SUCCESS)
-            throw Error::Win32Error(std::source_location::current(), "SHDeleteKeyW() failed", GetLastError());
+            throw Error::Win32Error("SHDeleteKeyW() failed", GetLastError());
     }
 
     void DeleteSubkeys(const HKEY parent, const std::wstring& subkey)
@@ -137,6 +135,6 @@ namespace Boring32::Registry
             subkey.c_str()
         );
         if (status != ERROR_SUCCESS)
-            throw Error::Win32Error(std::source_location::current(), "RegDeleteTreeW() failed", GetLastError());
+            throw Error::Win32Error("RegDeleteTreeW() failed", GetLastError());
     }
 }

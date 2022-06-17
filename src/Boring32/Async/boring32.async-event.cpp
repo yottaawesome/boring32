@@ -72,7 +72,7 @@ namespace Boring32::Async
 	{
 		m_event = OpenEventW(m_access, isInheritable, m_name.c_str());
 		if (!m_event)
-			throw Error::Win32Error(std::source_location::current(), "Failed to create or open event", GetLastError());
+			throw Error::Win32Error("Failed to create or open event", GetLastError());
 	}
 
 	Event::Event(const Event& other) 
@@ -122,7 +122,7 @@ namespace Boring32::Async
 	{
 		if (m_isManualReset && m_event)
 			if(!ResetEvent(m_event.GetHandle()))
-				throw Error::Win32Error(std::source_location::current(), "ResetEvent() failed", GetLastError());
+				throw Error::Win32Error("ResetEvent() failed", GetLastError());
 	}
 
 	bool Event::Reset(std::nothrow_t) noexcept try
@@ -148,7 +148,7 @@ namespace Boring32::Async
 
 		const DWORD status = WaitForSingleObject(m_event.GetHandle(), INFINITE);
 		if (status == WAIT_FAILED)
-			throw Error::Win32Error(std::source_location::current(), "WaitForSingleObject failed", GetLastError());
+			throw Error::Win32Error("WaitForSingleObject failed", GetLastError());
 		if (status == WAIT_ABANDONED)
 			throw std::runtime_error(__FUNCSIG__ ": The wait was abandoned");
 	}
@@ -164,7 +164,7 @@ namespace Boring32::Async
 		if (status == WAIT_TIMEOUT)
 			return false;
 		if (status == WAIT_FAILED)
-			throw Error::Win32Error(std::source_location::current(), "WaitForSingleObject() failed", GetLastError());
+			throw Error::Win32Error("WaitForSingleObject() failed", GetLastError());
 		if (status == WAIT_ABANDONED)
 			throw std::runtime_error(__FUNCSIG__ ": The wait was abandoned");
 		return false;
@@ -192,7 +192,7 @@ namespace Boring32::Async
 		if (!m_event)
 			throw std::runtime_error(__FUNCSIG__ ": No Event to signal");
 		if (SetEvent(m_event.GetHandle()) == false)
-			throw Error::Win32Error(std::source_location::current(), "Failed to signal event", GetLastError());
+			throw Error::Win32Error("Failed to signal event", GetLastError());
 	}
 
 	bool Event::Signal(std::nothrow_t) noexcept try
@@ -220,7 +220,7 @@ namespace Boring32::Async
 			m_name.empty() ? nullptr : m_name.c_str() // name
 		);
 		if (!m_event)
-			throw Error::Win32Error(std::source_location::current(), "Failed to create or open event", GetLastError());
+			throw Error::Win32Error("Failed to create or open event", GetLastError());
 		m_event.SetInheritability(isInheritable);
 	}
 }

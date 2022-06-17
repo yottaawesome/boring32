@@ -92,7 +92,6 @@ namespace Boring32::Async
 		{
 			const auto lastError = GetLastError();
 			throw Error::Win32Error(
-				std::source_location::current(),
 				"SetInformationJobObject() failed",
 				lastError
 			);
@@ -110,7 +109,6 @@ namespace Boring32::Async
 		{
 			const auto lastError = GetLastError();
 			throw Error::Win32Error(
-				std::source_location::current(),
 				"Cannot assign process to job; AssignProcessToJobObject() failed.",
 				lastError
 			);
@@ -143,7 +141,6 @@ namespace Boring32::Async
 		{
 			const auto lastError = GetLastError();
 			throw Error::Win32Error(
-				std::source_location::source_location(), 
 				"OpenJobObjectW() failed", 
 				lastError
 			);
@@ -160,7 +157,6 @@ namespace Boring32::Async
 		{
 			const auto lastError = GetLastError();
 			throw Error::Win32Error(
-				std::source_location::source_location(),
 				"CreateJobObjectW() failed",
 				lastError
 			);

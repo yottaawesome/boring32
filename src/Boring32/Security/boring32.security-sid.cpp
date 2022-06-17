@@ -83,7 +83,7 @@ namespace Boring32::Security
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsididentifierauthority
 		if (PSID_IDENTIFIER_AUTHORITY identifier = GetSidIdentifierAuthority(m_sid))
 			return *identifier;
-		throw Error::Win32Error(std::source_location::current(), "GetSidIdentifierAuthority() failed", GetLastError());
+		throw Error::Win32Error("GetSidIdentifierAuthority() failed", GetLastError());
 	}
 	
 	DWORD Sid::GetSubAuthority(const DWORD index) const
@@ -93,7 +93,7 @@ namespace Boring32::Security
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsidsubauthority
 		if (PDWORD returnVal = GetSidSubAuthority(m_sid, index))
 			return *returnVal;
-		throw Error::Win32Error(std::source_location::current(), "GetSidSubAuthority() failed", GetLastError());
+		throw Error::Win32Error("GetSidSubAuthority() failed", GetLastError());
 	}
 
 	void Sid::operator=(const Sid& other)
@@ -112,7 +112,7 @@ namespace Boring32::Security
 		// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertsidtostringsidw
 		const bool succeeded = ConvertSidToStringSidW(m_sid, &string);
 		if (!succeeded)
-			throw Error::Win32Error(std::source_location::current(), "ConvertSidToStringSidW() failed", GetLastError());
+			throw Error::Win32Error("ConvertSidToStringSidW() failed", GetLastError());
 		Raii::LocalHeapUniquePtr ptr(string);
 		return string;
 	}
@@ -160,7 +160,7 @@ namespace Boring32::Security
 			&m_sid
 		);
 		if (!succeeded)
-			throw Error::Win32Error(std::source_location::current(), "failed to initialise SID", GetLastError());
+			throw Error::Win32Error("failed to initialise SID", GetLastError());
 	}
 
 	void Sid::Create(const std::wstring sidString)
@@ -169,7 +169,7 @@ namespace Boring32::Security
 			throw std::invalid_argument(__FUNCSIG__": sidString cannot be empty");
 		// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw
 		if (!ConvertStringSidToSidW(sidString.c_str(), &m_sid))
-			throw Error::Win32Error(std::source_location::current(), "ConvertStringSidToSidW() failed", GetLastError());
+			throw Error::Win32Error("ConvertStringSidToSidW() failed", GetLastError());
 	}
 	
 	std::vector<DWORD> Sid::GetAllSubAuthorities() const

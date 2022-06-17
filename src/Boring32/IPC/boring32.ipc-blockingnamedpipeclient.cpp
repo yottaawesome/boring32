@@ -92,7 +92,7 @@ namespace Boring32::IPC
 			nullptr				// not overlapped 
 		);           
 		if (successfulWrite == false)
-			throw Error::Win32Error(std::source_location::source_location(), "Failed to write to client pipe", GetLastError());
+			throw Error::Win32Error("Failed to write to client pipe", GetLastError());
 	}
 
 	std::wstring BlockingNamedPipeClient::ReadAsString()
@@ -138,7 +138,7 @@ namespace Boring32::IPC
 			
 			const DWORD lastError = GetLastError();
 			if (successfulRead == false && lastError != ERROR_MORE_DATA)
-				throw Error::Win32Error(std::source_location::source_location(), "Failed to read from pipe", GetLastError());
+				throw Error::Win32Error("Failed to read from pipe", GetLastError());
 			if (lastError == ERROR_MORE_DATA)
 				dataBuffer.resize(dataBuffer.size() + blockSize);
 			continueReading = !successfulRead;

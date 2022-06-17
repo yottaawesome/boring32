@@ -74,7 +74,7 @@ namespace Boring32::Async
 		//SEMAPHORE_ALL_ACCESS
 		m_handle = OpenSemaphoreW(desiredAccess, isInheritable, m_name.c_str());
 		if (m_handle == nullptr)
-			throw Error::Win32Error(std::source_location::current(), "failed to open semaphore", GetLastError());
+			throw Error::Win32Error("failed to open semaphore", GetLastError());
 	}
 
 	Semaphore::Semaphore(const Semaphore& other)
@@ -102,7 +102,7 @@ namespace Boring32::Async
 			name.empty() ? nullptr : name.c_str()
 		);
 		if (m_handle == nullptr)
-			throw Error::Win32Error(std::source_location::current(), "failed to create or open semaphore", GetLastError());
+			throw Error::Win32Error("Failed to create or open semaphore", GetLastError());
 
 		m_handle.SetInheritability(isInheritable);
 	}
@@ -156,7 +156,7 @@ namespace Boring32::Async
 
 		long previousCount;
 		if (!ReleaseSemaphore(m_handle.GetHandle(), countToRelease, &previousCount))
-			throw Error::Win32Error(std::source_location::current(), "Failed to release semaphore", GetLastError());
+			throw Error::Win32Error("Failed to release semaphore", GetLastError());
 		m_currentCount += countToRelease;
 
 		return previousCount;
@@ -190,7 +190,7 @@ namespace Boring32::Async
 				throw Error::Boring32Error("The wait was abandoned.");
 
 			case WAIT_FAILED:
-				throw Error::Win32Error(std::source_location::current(), "WaitForSingleObject() failed", GetLastError());
+				throw Error::Win32Error("WaitForSingleObject() failed", GetLastError());
 
 			default:
 				throw Error::Boring32Error(std::format(__FUNCSIG__": unknown WaitForSingleObjectEx() value {}", status));

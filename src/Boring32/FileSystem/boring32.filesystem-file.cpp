@@ -40,6 +40,6 @@ namespace Boring32::FileSystem
 			nullptr							// hTemplateFile
 		);
 		if (m_fileHandle == INVALID_HANDLE_VALUE)
-			throw Error::Win32Error(std::source_location::current(), "CreateFileW() failed", GetLastError());
+			throw Error::Win32Error("CreateFileW() failed", GetLastError());
 	}
 }

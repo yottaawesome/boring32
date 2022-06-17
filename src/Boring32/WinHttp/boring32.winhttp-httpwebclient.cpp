@@ -129,7 +129,7 @@ namespace Boring32::WinHttp
 			0
 		);
 		if (m_hSession == nullptr)
-			throw Error::Win32Error(std::source_location::current(), "WinHttpOpen() failed", GetLastError());
+			throw Error::Win32Error("WinHttpOpen() failed", GetLastError());
 
 		//if (m_proxy.empty() == false)
 		//{
@@ -144,7 +144,7 @@ namespace Boring32::WinHttp
 			0
 		);
 		if (m_hConnect == nullptr)
-			throw Error::Win32Error(std::source_location::current(), "WinHttpConnect() failed", GetLastError());
+			throw Error::Win32Error("WinHttpConnect() failed", GetLastError());
 	}
 	
 	HttpRequestResult HttpWebClient::Get(const std::wstring& path)
@@ -194,7 +194,7 @@ namespace Boring32::WinHttp
 			WINHTTP_FLAG_SECURE
 		);
 		if (hRequest == nullptr)
-			throw Error::Win32Error(std::source_location::current(), "WinHttpOpenRequest() failed", GetLastError());
+			throw Error::Win32Error("WinHttpOpenRequest() failed", GetLastError());
 
 		if (m_ignoreSslErrors)
 		{
@@ -210,7 +210,7 @@ namespace Boring32::WinHttp
 				sizeof(flags)
 			);
 			if (succeeded == false)
-				throw Error::Win32Error(std::source_location::current(), "WinHttpSetOption() failed", GetLastError());
+				throw Error::Win32Error("WinHttpSetOption() failed", GetLastError());
 		}
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpsendrequest
@@ -228,12 +228,12 @@ namespace Boring32::WinHttp
 			reinterpret_cast<DWORD_PTR>(this)
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(std::source_location::current(), "WinHttpSendRequest() failed", GetLastError());
+			throw Error::Win32Error("WinHttpSendRequest() failed", GetLastError());
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpreceiveresponse
 		succeeded = WinHttpReceiveResponse(hRequest.Get(), nullptr);
 		if (succeeded == false)
-			throw Error::Win32Error(std::source_location::current(), "WinHttpReceiveResponse() failed", GetLastError());
+			throw Error::Win32Error("WinHttpReceiveResponse() failed", GetLastError());
 
 		// Get the status code of the response
 		DWORD statusCode = 0;
@@ -253,7 +253,7 @@ namespace Boring32::WinHttp
 		{
 			// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpquerydataavailable
 			if (!WinHttpQueryDataAvailable(hRequest.Get(), &bytesOfDataAvailable))
-				throw Error::Win32Error(std::source_location::current(), "WinHttpQueryDataAvailable() failed", GetLastError());
+				throw Error::Win32Error("WinHttpQueryDataAvailable() failed", GetLastError());
 			if (bytesOfDataAvailable == 0)
 				continue;
 
@@ -269,7 +269,7 @@ namespace Boring32::WinHttp
 				&downloadedBytes
 			);
 			if (succeeded == false)
-				throw Error::Win32Error(std::source_location::current(), "WinHttpQueryDataAvailable() failed", GetLastError());
+				throw Error::Win32Error("WinHttpQueryDataAvailable() failed", GetLastError());
 
 			response.append(outBuffer.begin(), outBuffer.end());
 		} while (bytesOfDataAvailable > 0);

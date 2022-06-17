@@ -38,7 +38,7 @@ namespace Boring32::Async
 
 		DWORD result = WaitForMultipleObjectsEx((DWORD)m_events.size(), &m_events[0], waitAll, millis, true);
 		if (result == WAIT_FAILED)
-			throw Error::Win32Error(std::source_location::current(), "WaitForMultipleObjectsEx() failed", GetLastError());
+			throw Error::Win32Error("WaitForMultipleObjectsEx() failed", GetLastError());
 		if (result == WAIT_TIMEOUT)
 			return false;
 		if (result >= WAIT_ABANDONED && result <= (WAIT_ABANDONED + m_events.size() - 1))

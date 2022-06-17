@@ -47,8 +47,7 @@ namespace Boring32::Async
 			case WAIT_FAILED:
 			{
 				const auto lastError = GetLastError();
-				throw Error::Win32Error(
-					std::source_location::current(), 
+				throw Error::Win32Error( 
 					"WaitForSingleObjectEx() failed", 
 					lastError
 				);
@@ -108,7 +107,6 @@ namespace Boring32::Async
 			{
 				const auto lastError = GetLastError();
 				throw Error::Win32Error(
-					std::source_location::current(),
 					"WaitForSingleObjectEx() failed",
 					lastError
 				);
@@ -134,7 +132,6 @@ namespace Boring32::Async
 		{
 			const auto lastError = GetLastError();
 			throw Error::Win32Error(
-				std::source_location::current(),
 				"CreateToolhelp32Snapshot() failed",
 				lastError
 			);
@@ -146,7 +143,6 @@ namespace Boring32::Async
 		{
 			const auto lastError = GetLastError();
 			throw Error::Win32Error(
-				std::source_location::current(),
 				"Process32First() failed",
 				lastError
 			);
@@ -169,7 +165,6 @@ namespace Boring32::Async
 			{
 				const auto lastError = GetLastError();
 				throw Error::Win32Error(
-					std::source_location::current(),
 					"ProcessIdToSessionId() failed",
 					lastError
 				);

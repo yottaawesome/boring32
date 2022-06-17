@@ -51,7 +51,6 @@ namespace Boring32::Security
 		);
 		if (!succeeded)
 			throw Error::Win32Error(
-				std::source_location::current(),
 				"ConvertStringSecurityDescriptorToSecurityDescriptorW() failed",
 				GetLastError()
 			);

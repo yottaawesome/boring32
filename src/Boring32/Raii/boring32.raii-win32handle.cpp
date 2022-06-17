@@ -177,7 +177,7 @@ namespace Boring32::Raii
 		if (!IsValidValue())
 			throw std::runtime_error(__FUNCSIG__": handle is null or invalid.");
 		if (SetHandleInformation(*m_handle, HANDLE_FLAG_INHERIT, isInheritable) == false)
-			throw Error::Win32Error(std::source_location::current(), "SetHandleInformation() failed", GetLastError());
+			throw Error::Win32Error("SetHandleInformation() failed", GetLastError());
 	}
 
 	HANDLE Win32Handle::Detach() noexcept
@@ -196,7 +196,7 @@ namespace Boring32::Raii
 
 		DWORD flags = 0;
 		if (!GetHandleInformation(handle, &flags))
-			throw Error::Win32Error(std::source_location::current(), "GetHandleInformation() failed", GetLastError());
+			throw Error::Win32Error("GetHandleInformation() failed", GetLastError());
 		return flags & HANDLE_FLAG_INHERIT;
 	}
 
@@ -218,7 +218,7 @@ namespace Boring32::Raii
 			DUPLICATE_SAME_ACCESS
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(std::source_location::current(), "DuplicateHandle() failed", GetLastError());
+			throw Error::Win32Error("DuplicateHandle() failed", GetLastError());
 
 		return duplicateHandle;
 	}

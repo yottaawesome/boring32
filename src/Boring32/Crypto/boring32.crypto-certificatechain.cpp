@@ -297,10 +297,6 @@ namespace Boring32::Crypto
 			&m_chainContext
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(
-				std::source_location::current(),
-				"CertGetCertificateChain() failed", 
-				GetLastError()
-			);
+			throw Error::Win32Error("CertGetCertificateChain() failed", GetLastError());
 	}
 }

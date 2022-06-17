@@ -132,7 +132,7 @@ namespace Boring32::Crypto
 			(DWORD)m_encryptionType
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(std::source_location::current(), "CryptProtectMemory() failed", GetLastError());
+			throw Error::Win32Error("CryptProtectMemory() failed", GetLastError());
 		m_isEncrypted = true;
 	}
 
@@ -149,7 +149,7 @@ namespace Boring32::Crypto
 			(DWORD)m_encryptionType
 		);
 		if (succeeded == false)
-			throw Error::Win32Error(std::source_location::current(), "CryptUnprotectMemory() failed", GetLastError());
+			throw Error::Win32Error("CryptUnprotectMemory() failed", GetLastError());
 		m_isEncrypted = false;
 	}
 

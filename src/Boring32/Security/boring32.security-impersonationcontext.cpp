@@ -23,7 +23,6 @@ namespace Boring32::Security
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-impersonateloggedonuser
 		if (ImpersonateLoggedOnUser(token) == false)
 			throw Error::Win32Error(
-				std::source_location::current(),
 				"ImpersonateLoggedOnUser() failed",
 				GetLastError()
 			);

@@ -123,7 +123,7 @@ namespace Boring32::Async
 		if (m_threadHandle == nullptr)
 			throw std::runtime_error(__FUNCSIG__ ": no thread handle to terminate");
 		if (TerminateThread(m_threadHandle.GetHandle(), exitCode) == false)
-			throw Error::Win32Error(std::source_location::current(), "TerminateThread() failed", GetLastError());
+			throw Error::Win32Error("TerminateThread() failed", GetLastError());
 		m_status = ThreadStatus::Terminated;
 	}
 
@@ -135,7 +135,7 @@ namespace Boring32::Async
 			throw std::runtime_error(__FUNCSIG__ ": thread was not running when request to suspend occurred.");
 
 		if (SuspendThread(m_threadHandle.GetHandle()) == false)
-			throw Error::Win32Error(std::source_location::current(), "SuspendThread() failed", GetLastError());
+			throw Error::Win32Error("SuspendThread() failed", GetLastError());
 		m_status = ThreadStatus::Suspended;
 	}
 
@@ -147,7 +147,7 @@ namespace Boring32::Async
 			throw std::runtime_error(__FUNCSIG__ ": thread was not suspended when request to resume occurred.");
 
 		if (ResumeThread(m_threadHandle.GetHandle()) == false)
-			throw Error::Win32Error(std::source_location::current(), "ResumeThread() failed", GetLastError());
+			throw Error::Win32Error("ResumeThread() failed", GetLastError());
 		m_status = ThreadStatus::Running;
 	}
 
@@ -163,7 +163,7 @@ namespace Boring32::Async
 			return false;
 		if (waitResult == WAIT_ABANDONED)
 			throw std::runtime_error(__FUNCSIG__ ": wait was abandoned");
-		throw Error::Win32Error(std::source_location::current(), "WaitForSingleObject() failed", GetLastError());
+		throw Error::Win32Error("WaitForSingleObject() failed", GetLastError());
 	}
 
 	UINT Thread::Run()
@@ -178,7 +178,7 @@ namespace Boring32::Async
 
 		DWORD exitCode;
 		if (GetExitCodeThread(m_threadHandle.GetHandle(), &exitCode) == false)
-			throw Error::Win32Error(std::source_location::current(), "GetExitCodeThread() failed", GetLastError());
+			throw Error::Win32Error("GetExitCodeThread() failed", GetLastError());
 		return exitCode;
 	}
 

@@ -182,7 +182,7 @@ namespace Boring32::WinSock
 		e.WaitOnEvent();
 
 		if (ov.InternalHigh != NOERROR) Error::ThrowNested(
-			Error::Win32Error(std::source_location::current(), "GetAddrInfoExW() overlapped op failed", (DWORD)ov.InternalHigh),
+			Error::Win32Error("GetAddrInfoExW() overlapped op failed", (DWORD)ov.InternalHigh),
 			WinSockError("Could not get domain addr info")
 		);
 
@@ -252,7 +252,7 @@ namespace Boring32::WinSock
 
 		opCompleted.WaitOnEvent();
 		if (ov.InternalHigh != NOERROR) Error::ThrowNested(
-			Error::Win32Error(std::source_location::current(), "GetAddrInfoExW() overlapped op failed", (DWORD)ov.InternalHigh),
+			Error::Win32Error("GetAddrInfoExW() overlapped op failed", (DWORD)ov.InternalHigh),
 			WinSockError("Could not get domain addr info")
 		);
 

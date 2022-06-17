@@ -160,11 +160,8 @@ namespace Boring32::Async
 				&m_dataSi,				// Pointer to STARTUPINFO structure
 				&processInfo			// Pointer to PROCESS_INFORMATION structure
 			);
-		if (!successfullyCreatedProcess) throw Error::Win32Error(
-			std::source_location::current(), 
-			"Failed to create process", 
-			GetLastError()
-		);
+		if (!successfullyCreatedProcess) 
+			throw Error::Win32Error("Failed to create process", GetLastError());
 
 		m_process = processInfo.hProcess;
 		m_thread = processInfo.hThread;
@@ -234,11 +231,7 @@ namespace Boring32::Async
 		if (!GetExitCodeProcess(m_process.GetHandle(), &exitCode))
 		{
 			const auto lastError = GetLastError();
-			throw Error::Win32Error(
-				std::source_location::current(),
-				"Failed to determine process exit code",
-				lastError
-			);
+			throw Error::Win32Error("Failed to determine process exit code", lastError);
 		}
 
 		return exitCode;

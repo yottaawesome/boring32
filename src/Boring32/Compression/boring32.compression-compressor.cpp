@@ -97,9 +97,7 @@ namespace Boring32::Compression
 		if (!succeeded && lastError != ERROR_INSUFFICIENT_BUFFER)
 		{
 			Error::ThrowNested(
-				Error::Win32Error(
-					std::source_location::current(), 
-					"Compress() failed", lastError),
+				Error::Win32Error("Compress() failed", lastError),
 				CompressionError(
 					std::source_location::current(), 
 					"An error occurred calculating the compressed size")
@@ -137,7 +135,6 @@ namespace Boring32::Compression
 			const auto lastError = GetLastError();
 			Error::ThrowNested(
 				Error::Win32Error(
-					std::source_location::current(), 
 					"Compress() failed", 
 					lastError),
 				CompressionError(
@@ -165,7 +162,6 @@ namespace Boring32::Compression
 			const auto lastError = GetLastError();
 			Error::ThrowNested(
 				Error::Win32Error(
-					std::source_location::current(), 
 					"CreateCompressor() failed", 
 					lastError),
 				CompressionError(
@@ -191,7 +187,6 @@ namespace Boring32::Compression
 			const auto lastError = GetLastError();
 			Error::ThrowNested(
 				Error::Win32Error(
-					std::source_location::current(), 
 					"ResetCompressor() failed", 
 					lastError),
 				CompressionError(
