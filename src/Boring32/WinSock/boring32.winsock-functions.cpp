@@ -30,7 +30,7 @@ namespace Boring32::WinSock
 		{
 			const auto lastError = WSAGetLastError();
 			Error::ThrowNested(
-				Error::Win32Error(std::source_location::current(), "inet_ntop() failed", lastError, L"Ws2_32.dll"),
+				Error::Win32Error("inet_ntop() failed", lastError, L"Ws2_32.dll"),
 				WinSockError("Could not convert IPv6 network address string")
 			);
 		}
@@ -57,7 +57,7 @@ namespace Boring32::WinSock
 		{
 			const auto lastError = WSAGetLastError();
 			Error::ThrowNested(
-				Error::Win32Error(std::source_location::current(), "inet_ntop() failed", lastError, L"Ws2_32.dll"),
+				Error::Win32Error("inet_ntop() failed", lastError, L"Ws2_32.dll"),
 				WinSockError("Could not convert IPv4 network address string")
 			);
 		}
@@ -92,7 +92,7 @@ namespace Boring32::WinSock
 		if (result != 0)
 		{
 			Error::ThrowNested(
-				Error::Win32Error(std::source_location::current(), "GetAddrInfoW() failed", result, L"Ws2_32.dll"),
+				Error::Win32Error("GetAddrInfoW() failed", result, L"Ws2_32.dll"),
 				WinSockError("Could not get domain addr info")
 			);
 		}
@@ -176,7 +176,7 @@ namespace Boring32::WinSock
 			&cancelHandle
 		);
 		if (error != WSA_IO_PENDING) Error::ThrowNested(
-			Error::Win32Error(std::source_location::current(), "GetAddrInfoExW() failed", error, L"Ws2_32.dll"),
+			Error::Win32Error("GetAddrInfoExW() failed", error, L"Ws2_32.dll"),
 			WinSockError("Could not get domain addr info")
 		);
 		e.WaitOnEvent();
@@ -246,7 +246,7 @@ namespace Boring32::WinSock
 			nullptr
 		);
 		if (error != WSA_IO_PENDING) Error::ThrowNested(
-			Error::Win32Error(std::source_location::current(), "GetAddrInfoExW() failed", error, L"Ws2_32.dll"),
+			Error::Win32Error("GetAddrInfoExW() failed", error, L"Ws2_32.dll"),
 			WinSockError("Could not get domain addr info")
 		);
 

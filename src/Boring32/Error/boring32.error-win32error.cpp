@@ -53,19 +53,6 @@ namespace Boring32::Error
 	}
 
 	Win32Error::Win32Error(
-		const std::source_location& location, 
-		const std::string& msg, 
-		const DWORD errorCode, 
-		const std::wstring& moduleName
-	)
-		: std::runtime_error(msg),
-		m_errorCode(errorCode)
-	{
-		m_errorString = Boring32::Error::TranslateErrorCode<std::string>(errorCode, moduleName);
-		m_errorString = Error::FormatErrorMessage("Win32", location, msg, errorCode, m_errorString);
-	}
-
-	Win32Error::Win32Error(
 		const std::string& msg,
 		const DWORD errorCode,
 		const std::wstring& moduleName,

@@ -30,12 +30,6 @@ export namespace Boring32::Error
 				const std::source_location location = std::source_location::current()
 			);
 			Win32Error(
-				const std::source_location& location,
-				const std::string& msg,
-				const DWORD errorCode,
-				const std::wstring& moduleName
-			);
-			Win32Error(
 				const std::string& msg, 
 				const DWORD errorCode, 
 				const std::wstring& moduleName,

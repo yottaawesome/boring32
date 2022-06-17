@@ -96,7 +96,7 @@ namespace Boring32::WinSock
 		{
 			const auto lastError = WSAGetLastError();
 			Error::ThrowNested(
-				Error::Win32Error(std::source_location::current(), "getsockopt() failed", lastError, L"ws2_32.dll"),
+				Error::Win32Error("getsockopt() failed", lastError, L"ws2_32.dll"),
 				WinSockError("TTL option is not supported")
 			);
 		}
@@ -114,7 +114,7 @@ namespace Boring32::WinSock
 		{
 			const auto lastError = WSAGetLastError();
 			Error::ThrowNested(
-				Error::Win32Error(std::source_location::current(), "setsockopt() failed", lastError, L"ws2_32.dll"),
+				Error::Win32Error("setsockopt() failed", lastError, L"ws2_32.dll"),
 				WinSockError("Failed to set option")
 			);
 		}
@@ -146,7 +146,7 @@ namespace Boring32::WinSock
 			&addrInfoResult
 		);
 		if (status) Error::ThrowNested(
-			Error::Win32Error(std::source_location::current(), "GetAddrInfoW() failed", status, L"ws2_32.dll"),
+			Error::Win32Error("GetAddrInfoW() failed", status, L"ws2_32.dll"),
 			WinSockError("Failed to get address info")
 		);
 		if (!addrInfoResult) 
@@ -163,7 +163,7 @@ namespace Boring32::WinSock
 		{
 			const auto lastError = WSAGetLastError();
 			Error::ThrowNested(
-				Error::Win32Error(std::source_location::current(), "socket() failed", lastError, L"ws2_32.dll"),
+				Error::Win32Error("socket() failed", lastError, L"ws2_32.dll"),
 				WinSockError("Failed to open socket")
 			);
 		}
@@ -194,7 +194,7 @@ namespace Boring32::WinSock
 		{
 			const auto lastError = WSAGetLastError();
 			Error::ThrowNested(
-				Error::Win32Error(std::source_location::current(), "connect() failed", lastError, L"ws2_32.dll"),
+				Error::Win32Error("connect() failed", lastError, L"ws2_32.dll"),
 				WinSockError("Failed to connect socket")
 			);
 		}
@@ -227,7 +227,7 @@ namespace Boring32::WinSock
 		{
 			const auto lastError = WSAGetLastError();
 			Error::ThrowNested(
-				Error::Win32Error(std::source_location::current(), "send() failed", lastError, L"ws2_32.dll"),
+				Error::Win32Error("send() failed", lastError, L"ws2_32.dll"),
 				WinSockError("Failed to send data through socket")
 			);
 		}
@@ -245,7 +245,7 @@ namespace Boring32::WinSock
 		{
 			const auto lastError = WSAGetLastError();
 			Error::ThrowNested(
-				Error::Win32Error(std::source_location::current(), "recv() failed", lastError, L"ws2_32.dll"),
+				Error::Win32Error("recv() failed", lastError, L"ws2_32.dll"),
 				WinSockError("Failed to receive data through socket")
 			);
 		}
@@ -288,7 +288,7 @@ namespace Boring32::WinSock
 		{
 			const auto lastError = WSAGetLastError();
 			Error::ThrowNested(
-				Error::Win32Error(std::source_location::current(), "getsockopt() failed", lastError, L"ws2_32.dll"),
+				Error::Win32Error("getsockopt() failed", lastError, L"ws2_32.dll"),
 				WinSockError("RT option is not supported")
 			);
 		}
@@ -305,7 +305,7 @@ namespace Boring32::WinSock
 		{
 			const auto lastError = WSAGetLastError();
 			Error::ThrowNested(
-				Error::Win32Error(std::source_location::current(), "setsockopt() failed", lastError, L"ws2_32.dll"),
+				Error::Win32Error("setsockopt() failed", lastError, L"ws2_32.dll"),
 				WinSockError("Failed to set RT option")
 			);
 		}
