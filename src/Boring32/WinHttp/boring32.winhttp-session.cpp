@@ -140,9 +140,9 @@ namespace Boring32::WinHttp
 	void Session::InternalCreate()
 	{
 		if (m_userAgent.empty())
-			throw WinHttpError(std::source_location::current(), "UserAgent cannot be empty");
+			throw WinHttpError("UserAgent cannot be empty");
 		if (static_cast<DWORD>(m_proxyType) == WINHTTP_ACCESS_TYPE_NAMED_PROXY && m_namedProxy.empty())
-			throw WinHttpError(std::source_location::current(), "ProxyName parameter is required when access type is NamedProxy");
+			throw WinHttpError("ProxyName parameter is required when access type is NamedProxy");
 
 		const wchar_t* proxyType = static_cast<DWORD>(m_proxyType) == WINHTTP_ACCESS_TYPE_NAMED_PROXY
 			? m_namedProxy.c_str() 
@@ -163,7 +163,7 @@ namespace Boring32::WinHttp
 			const auto lastError = GetLastError();
 			Error::ThrowNested(
 				Error::Win32Error("WinHttpOpen() failed", lastError),
-				WinHttpError(std::source_location::current(), "Failed to open WinHttpSession handle")
+				WinHttpError("Failed to open WinHttpSession handle")
 			);
 		}
 		
