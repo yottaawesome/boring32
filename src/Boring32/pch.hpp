@@ -28,3 +28,4 @@
 #pragma comment(lib, "Shlwapi.lib")
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "Rpcrt4.lib")
+#pragma comment(lib, "wlanapi.lib")
