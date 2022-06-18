@@ -12,10 +12,7 @@ namespace Boring32::Crypto
 {
 	std::shared_ptr<void> Generate(BCRYPT_KEY_HANDLE ptr)
 	{
-		return std::shared_ptr<void>{
-			ptr,
-			[](BCRYPT_KEY_HANDLE ptr) { BCryptDestroyKey(ptr); }
-		};
+		return std::shared_ptr<void>{ ptr, BCryptDestroyKey };
 	}
 
 	void CryptoKey::Close()
