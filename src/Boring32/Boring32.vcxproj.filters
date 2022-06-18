@@ -447,5 +447,7 @@
     </ClCompile>
     <ClCompile Include="Async\boring32.async-synced.ixx" />
     <ClCompile Include="Async\boring32.async-syncedcontainer.ixx" />
+    <ClCompile Include="WirelessLAN\boring32.wirelesslan.ixx" />
+    <ClCompile Include="WirelessLAN\boring32.wirelesslan-session.ixx" />
   </ItemGroup>
 </Project>
