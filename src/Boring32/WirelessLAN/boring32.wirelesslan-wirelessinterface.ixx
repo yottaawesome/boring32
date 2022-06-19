@@ -4,7 +4,7 @@ module;
 #include <Windows.h>
 #include <wlanapi.h>
 
-export module boring32.wirelesslan:interfaces;
+export module boring32.wirelesslan:wirelessinterface;
 import boring32.util;
 
 export namespace Boring32::WirelessLAN
@@ -21,11 +21,11 @@ export namespace Boring32::WirelessLAN
 		authenticating = wlan_interface_state_authenticating
 	};
 
-	class Interface
+	class WirelessInterface
 	{
 		public:
-			virtual ~Interface();
-			Interface(
+			virtual ~WirelessInterface();
+			WirelessInterface(
 				const Util::GloballyUniqueID& id, 
 				std::wstring description
 			);

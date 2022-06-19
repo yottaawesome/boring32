@@ -4,16 +4,16 @@ module;
 #include <Windows.h>
 #include <wlanapi.h>
 
-module boring32.wirelesslan:interfaces;
+module boring32.wirelesslan:wirelessinterface;
 import boring32.util;
 
 namespace Boring32::WirelessLAN
 {
-	Interface::~Interface()
+	WirelessInterface::~Interface()
 	{
 	}
 
-	Interface::Interface(
+	WirelessInterface::Interface(
 		const Util::GloballyUniqueID& id,
 		std::wstring description
 	) : m_id(id), 
@@ -22,12 +22,12 @@ namespace Boring32::WirelessLAN
 
 	}
 
-	const Util::GloballyUniqueID& Interface::GUID() const noexcept
+	const Util::GloballyUniqueID& WirelessInterface::GUID() const noexcept
 	{
 		return m_id;
 	}
 
-	const std::wstring& Interface::Description() const noexcept
+	const std::wstring& WirelessInterface::Description() const noexcept
 	{
 		return m_description;
 	}
