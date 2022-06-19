@@ -4,6 +4,7 @@ module;
 
 export module boring32.wirelesslan:session;
 import :cleanup;
+import :wirelessinterfaces;
 
 export namespace Boring32::WirelessLAN
 {
@@ -23,6 +24,7 @@ export namespace Boring32::WirelessLAN
 			virtual void Close();
 			virtual DWORD GetMaxClientVersion() const noexcept;
 			virtual DWORD GetNegotiatedVersion() const noexcept;
+			virtual WirelessInterfaces Interfaces();
 
 		protected:
 			virtual void Open();

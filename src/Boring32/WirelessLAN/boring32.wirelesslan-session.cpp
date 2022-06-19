@@ -57,4 +57,9 @@ namespace Boring32::WirelessLAN
         m_maxClientVersion = 0;
         m_negotiatedVersion = 0;
     }
+
+    WirelessInterfaces Session::Interfaces()
+    {
+        return { m_wlanHandle };
+    }
 }
