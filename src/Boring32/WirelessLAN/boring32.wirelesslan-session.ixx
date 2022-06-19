@@ -13,9 +13,13 @@ export namespace Boring32::WirelessLAN
 			virtual ~Session(); 
 			Session();
 
+		public:
+			virtual DWORD GetMaxClientVersion() const noexcept;
+			virtual DWORD GetNegotiatedVersion() const noexcept;
+
 		protected:
 			virtual void Open();
-
+			
 		protected:
 			SharedWLANHandle m_wlanHandle;
 			DWORD m_maxClientVersion;

@@ -35,4 +35,14 @@ namespace Boring32::WirelessLAN
             throw Boring32::Error::Win32Error("WlanOpenHandle() failed", status);
         m_wlanHandle = CreateSharedWLANHandle(wlanHandle);
     }
+
+    DWORD Session::GetMaxClientVersion() const noexcept
+    {
+        return m_maxClientVersion;
+    }
+
+    DWORD Session::GetNegotiatedVersion() const noexcept
+    {
+        return m_negotiatedVersion;
+    }
 }

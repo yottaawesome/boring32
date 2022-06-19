@@ -25,6 +25,7 @@ import boring32.services;
 import boring32.time;
 import boring32.computer;
 import boring32.async;
+import boring32.wirelesslan;
 
 struct Test
 {
@@ -285,6 +286,8 @@ concept IsFuncAcceptsIntReturnsVoid = requires(T& func, int x)
 
 void templateStuff()
 {
+	Boring32::WirelessLAN::Session wlanSession;
+
 	auto m = [](int y) {};
 	constexpr bool yyy = IsFuncAcceptsIntReturnsVoid<decltype(m)>;
 
