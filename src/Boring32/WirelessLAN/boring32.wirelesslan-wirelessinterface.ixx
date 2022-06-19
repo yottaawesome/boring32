@@ -66,6 +66,8 @@ export namespace Boring32::WirelessLAN
 			virtual ULONG GetCurrentOperationMode() const;
 			[[nodiscard]]
 			virtual bool IsSafeModeSupported() const;
+			[[nodiscard]]
+			virtual bool IsCertifiedSafeMode() const;
 
 		protected:
 			Util::GloballyUniqueID m_id;
