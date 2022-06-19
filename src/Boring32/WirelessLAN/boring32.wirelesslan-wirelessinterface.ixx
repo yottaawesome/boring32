@@ -62,6 +62,8 @@ export namespace Boring32::WirelessLAN
 			virtual ULONG GetChannelNumber() const;
 			[[nodiscard]]
 			virtual bool IsInStreamingMediaMode() const;
+			[[nodiscard]]
+			virtual ULONG GetCurrentOperationMode() const;
 
 		protected:
 			Util::GloballyUniqueID m_id;

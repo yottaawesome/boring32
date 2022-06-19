@@ -142,6 +142,15 @@ namespace Boring32::WirelessLAN
 		);
 	}
 
+	ULONG WirelessInterface::GetCurrentOperationMode() const
+	{
+		return SimpleQueryInterface<ULONG>(
+			m_wlanHandle.get(),
+			m_id.Get(),
+			wlan_intf_opcode_current_operation_mode
+		);
+	}
+	
 	WLAN_INTERFACE_CAPABILITY WirelessInterface::GetCapability() const
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/wlanapi/ns-wlanapi-wlan_interface_capability
