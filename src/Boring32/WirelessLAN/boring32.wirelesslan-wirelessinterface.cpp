@@ -75,6 +75,7 @@ namespace Boring32::WirelessLAN
 
 	WLAN_CONNECTION_ATTRIBUTES WirelessInterface::GetAttributes() const
 	{
+		// https://docs.microsoft.com/en-us/windows/win32/api/wlanapi/ns-wlanapi-wlan_connection_attributes
 		return SimpleQueryInterface<WLAN_CONNECTION_ATTRIBUTES>(
 			m_wlanHandle.get(), 
 			m_id.Get(),
@@ -84,6 +85,7 @@ namespace Boring32::WirelessLAN
 
 	WLAN_STATISTICS WirelessInterface::GetStatistics() const
 	{
+		// https://docs.microsoft.com/en-us/windows/win32/api/wlanapi/ns-wlanapi-wlan_statistics
 		return SimpleQueryInterface<WLAN_STATISTICS>(
 			m_wlanHandle.get(),
 			m_id.Get(),
@@ -102,6 +104,7 @@ namespace Boring32::WirelessLAN
 
 	DOT11_BSS_TYPE WirelessInterface::GetBSSType() const
 	{
+		// https://docs.microsoft.com/en-us/windows/win32/nativewifi/dot11-bss-type
 		return SimpleQueryInterface<DOT11_BSS_TYPE>(
 			m_wlanHandle.get(),
 			m_id.Get(),
@@ -111,6 +114,7 @@ namespace Boring32::WirelessLAN
 
 	WLAN_INTERFACE_CAPABILITY WirelessInterface::GetCapability() const
 	{
+		// https://docs.microsoft.com/en-us/windows/win32/api/wlanapi/ns-wlanapi-wlan_interface_capability
 		WLAN_INTERFACE_CAPABILITY* capability;
 		const DWORD status = WlanGetInterfaceCapability(
 			m_wlanHandle.get(),
