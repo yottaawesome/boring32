@@ -20,7 +20,7 @@ namespace Boring32::WirelessLAN
 	)
 	{
 		// This will point to memory allocated by WLAN; we're responsible for freeing it.
-		PVOID pWlanAllocatedMemory;
+		void* pWlanAllocatedMemory;
 		WLAN_OPCODE_VALUE_TYPE opcodeType;
 		DWORD dataSize = sizeof(T);
 		// https://docs.microsoft.com/en-us/windows/win32/api/wlanapi/nf-wlanapi-wlanqueryinterface
