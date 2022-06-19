@@ -56,6 +56,8 @@ export namespace Boring32::WirelessLAN
 			virtual bool IsAutoConfEnabled() const;
 			[[nodiscard]]
 			virtual DOT11_BSS_TYPE GetBSSType() const;
+			[[nodiscard]]
+			virtual bool IsBackgroundScanEnabled() const;
 
 		protected:
 			Util::GloballyUniqueID m_id;

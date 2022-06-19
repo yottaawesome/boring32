@@ -111,6 +111,15 @@ namespace Boring32::WirelessLAN
 			wlan_intf_opcode_bss_type
 		);
 	}
+	
+	bool WirelessInterface::IsBackgroundScanEnabled() const
+	{
+		return SimpleQueryInterface<bool>(
+			m_wlanHandle.get(),
+			m_id.Get(),
+			wlan_intf_opcode_background_scan_enabled
+		);
+	}
 
 	WLAN_INTERFACE_CAPABILITY WirelessInterface::GetCapability() const
 	{
