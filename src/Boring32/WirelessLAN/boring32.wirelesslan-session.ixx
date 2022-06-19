@@ -12,6 +12,12 @@ export namespace Boring32::WirelessLAN
 		public:
 			virtual ~Session(); 
 			Session();
+			Session(const Session& other);
+			Session(Session&& other) noexcept;
+
+		public:
+			virtual Session& operator=(const Session& other);
+			virtual Session& operator=(Session&& other) noexcept;
 
 		public:
 			virtual void Close();

@@ -21,6 +21,11 @@ namespace Boring32::WirelessLAN
         Open();
 	}
 
+    Session::Session(const Session& other) = default;
+    Session::Session(Session&& other) noexcept = default;
+    Session& Session::operator=(const Session& other) = default;
+    Session& Session::operator=(Session&& other) noexcept = default;
+
     void Session::Open()
     {
         // Open a WLAN session
