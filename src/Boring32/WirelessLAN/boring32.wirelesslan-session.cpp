@@ -16,9 +16,9 @@ namespace Boring32::WirelessLAN
 
 	Session::Session()
         : m_maxClientVersion(2),
-        m_negotiatedVersion(0)
+        m_negotiatedVersion(0),
+        Interfaces(Open())
 	{
-        Open();
 	}
 
     Session::Session(const Session& other) = default;
@@ -26,11 +26,14 @@ namespace Boring32::WirelessLAN
     Session& Session::operator=(const Session& other) = default;
     Session& Session::operator=(Session&& other) noexcept = default;
 
-    void Session::Open()
+    SharedWLANHandle Session::Open()
     {
+        if (m_wlanHandle)
+            return m_wlanHandle;
+
         // Open a WLAN session
         HANDLE wlanHandle;
-        DWORD status = WlanOpenHandle(
+        const DWORD status = WlanOpenHandle(
             m_maxClientVersion,
             nullptr,
             &m_negotiatedVersion,
@@ -39,6 +42,7 @@ namespace Boring32::WirelessLAN
         if (status != ERROR_SUCCESS)
             throw Boring32::Error::Win32Error("WlanOpenHandle() failed", status);
         m_wlanHandle = CreateSharedWLANHandle(wlanHandle);
+        return m_wlanHandle;
     }
 
     DWORD Session::GetMaxClientVersion() const noexcept
@@ -58,8 +62,8 @@ namespace Boring32::WirelessLAN
         m_negotiatedVersion = 0;
     }
 
-    WirelessInterfaces Session::Interfaces()
+    /*WirelessInterfaces Session::Interfaces()
     {
         return { m_wlanHandle };
-    }
+    }*/
 }
