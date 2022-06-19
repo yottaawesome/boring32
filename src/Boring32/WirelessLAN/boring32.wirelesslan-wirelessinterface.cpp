@@ -133,6 +133,15 @@ namespace Boring32::WirelessLAN
 		);
 	}
 
+	bool WirelessInterface::IsInStreamingMediaMode() const
+	{
+		return SimpleQueryInterface<bool>(
+			m_wlanHandle.get(),
+			m_id.Get(),
+			wlan_intf_opcode_media_streaming_mode
+		);
+	}
+
 	WLAN_INTERFACE_CAPABILITY WirelessInterface::GetCapability() const
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/wlanapi/ns-wlanapi-wlan_interface_capability

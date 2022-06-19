@@ -60,6 +60,8 @@ export namespace Boring32::WirelessLAN
 			virtual bool IsBackgroundScanEnabled() const;
 			[[nodiscard]]
 			virtual ULONG GetChannelNumber() const;
+			[[nodiscard]]
+			virtual bool IsInStreamingMediaMode() const;
 
 		protected:
 			Util::GloballyUniqueID m_id;
