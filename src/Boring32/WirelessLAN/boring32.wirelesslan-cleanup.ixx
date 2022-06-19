@@ -6,9 +6,9 @@ module;
 #include <wlanapi.h>
 #include <wtypes.h>
 
-export module boring32.wirelesslan:types;
+export module boring32.wirelesslan:cleanup;
 
-export namespace Boring32::WirelessLAN
+namespace Boring32::WirelessLAN
 {
     struct WlanHandleDeleter
     {

@@ -1,5 +1,5 @@
 export module boring32.wirelesslan:session;
-import :types;
+import :cleanup;
 
 export namespace Boring32::WirelessLAN
 {
