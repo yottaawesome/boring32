@@ -21,9 +21,6 @@ export namespace Boring32::WirelessLAN
 			virtual Session& operator=(Session&& other) noexcept;
 
 		public:
-			WirelessInterfaces Interfaces;
-
-		public:
 			virtual void Close();
 			virtual DWORD GetMaxClientVersion() const noexcept;
 			virtual DWORD GetNegotiatedVersion() const noexcept;
@@ -36,5 +33,10 @@ export namespace Boring32::WirelessLAN
 			SharedWLANHandle m_wlanHandle;
 			DWORD m_maxClientVersion;
 			DWORD m_negotiatedVersion;
+
+			// declared here due to initialisation order
+			// may need to reconsider this approach
+		public:
+			WirelessInterfaces Interfaces;
 	};
 }

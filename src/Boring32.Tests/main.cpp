@@ -330,10 +330,9 @@ class Y : public Boring32::Error::Boring32Error
 
 int main(int argc, char** args) try
 {
-	Boring32::COM::COMThreadScope scope(COINIT::COINIT_MULTITHREADED);
-	std::cout << Boring32::Util::IsConnectedToInternet();
-
-	throw Boring32::Error::Boring32Error("AA");
+	Boring32::WirelessLAN::Session s;
+	auto x = s.Interfaces.GetAll();
+	std::cout << (int)x.at(0).GetState() << std::endl;
 
 	return 0;
 }
