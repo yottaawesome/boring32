@@ -54,6 +54,8 @@ export namespace Boring32::WirelessLAN
 			virtual WLAN_STATISTICS GetStatistics() const;
 			[[nodiscard]]
 			virtual bool IsAutoConfEnabled() const;
+			[[nodiscard]]
+			virtual DOT11_BSS_TYPE GetBSSType() const;
 
 		protected:
 			Util::GloballyUniqueID m_id;

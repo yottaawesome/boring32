@@ -100,6 +100,15 @@ namespace Boring32::WirelessLAN
 		);
 	}
 
+	DOT11_BSS_TYPE WirelessInterface::GetBSSType() const
+	{
+		return SimpleQueryInterface<DOT11_BSS_TYPE>(
+			m_wlanHandle.get(),
+			m_id.Get(),
+			wlan_intf_opcode_bss_type
+		);
+	}
+
 	WLAN_INTERFACE_CAPABILITY WirelessInterface::GetCapability() const
 	{
 		WLAN_INTERFACE_CAPABILITY* capability;
