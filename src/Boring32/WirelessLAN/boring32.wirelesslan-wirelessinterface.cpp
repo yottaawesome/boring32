@@ -81,4 +81,19 @@ namespace Boring32::WirelessLAN
 			wlan_intf_opcode_current_connection
 		);
 	}
+
+	WLAN_INTERFACE_CAPABILITY WirelessInterface::GetCapability() const
+	{
+		WLAN_INTERFACE_CAPABILITY* capability;
+		const DWORD status = WlanGetInterfaceCapability(
+			m_wlanHandle.get(),
+			&m_id.Get(),
+			nullptr,
+			&capability
+		);
+		if (status != ERROR_SUCCESS)
+			throw Error::Win32Error("WlanGetInterfaceCapability() failed", status);
+		UniqueWLANMemory cleanup(capability);
+		return *capability;
+	}
 }

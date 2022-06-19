@@ -34,10 +34,16 @@ export namespace Boring32::WirelessLAN
 			);
 
 		public:
+			[[nodiscard]]
 			const Util::GloballyUniqueID& GetGUID() const noexcept;
+			[[nodiscard]]
 			const std::wstring& GetDescription() const noexcept;
+			[[nodiscard]]
 			virtual InterfaceState GetState() const;
+			[[nodiscard]]
 			virtual WLAN_CONNECTION_ATTRIBUTES GetAttributes() const;
+			[[nodiscard]]
+			virtual WLAN_INTERFACE_CAPABILITY GetCapability() const;
 
 		protected:
 			Util::GloballyUniqueID m_id;
