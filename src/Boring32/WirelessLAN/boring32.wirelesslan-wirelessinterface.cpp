@@ -19,6 +19,9 @@ namespace Boring32::WirelessLAN
 		const WLAN_INTF_OPCODE opcode
 	)
 	{
+		if (!wlanHandle)
+			throw Error::Boring32Error("wlanHandle cannot be null");
+
 		// This will point to memory allocated by WLAN; we're responsible for freeing it.
 		void* pWlanAllocatedMemory;
 		WLAN_OPCODE_VALUE_TYPE opcodeType;
@@ -118,6 +121,15 @@ namespace Boring32::WirelessLAN
 			m_wlanHandle.get(),
 			m_id.Get(),
 			wlan_intf_opcode_background_scan_enabled
+		);
+	}
+
+	ULONG WirelessInterface::GetChannelNumber() const
+	{
+		return SimpleQueryInterface<ULONG>(
+			m_wlanHandle.get(),
+			m_id.Get(),
+			wlan_intf_opcode_channel_number
 		);
 	}
 
