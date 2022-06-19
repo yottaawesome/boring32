@@ -394,6 +394,8 @@
     <ClCompile Include="WinHttp\boring32.winhttp-httpwebclient.cpp" />
     <ClCompile Include="WinHttp\boring32.winhttp-websocket.cpp" />
     <ClCompile Include="WinSock\boring32.winsock.ixx" />
+    <ClCompile Include="WirelessLAN\boring32.wirelesslan-interface.cpp" />
+    <ClCompile Include="WirelessLAN\boring32.wirelesslan-interface.ixx" />
     <ClCompile Include="WirelessLAN\boring32.wirelesslan-wirelessinterfaces.cpp" />
     <ClCompile Include="WirelessLAN\boring32.wirelesslan-wirelessinterfaces.ixx" />
     <ClCompile Include="WirelessLAN\boring32.wirelesslan-session.cpp" />

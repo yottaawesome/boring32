@@ -1,8 +1,13 @@
+module;
+
+
 export module boring32.wirelesslan:wirelessinterfaces;
 import :cleanup;
 
 export namespace Boring32::WirelessLAN
 {
+	
+
 	class WirelessInterfaces
 	{
 		public:
