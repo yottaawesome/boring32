@@ -40,6 +40,10 @@ namespace Boring32::WirelessLAN
 	}
 
 	WirelessInterface::~WirelessInterface() { }
+	WirelessInterface::WirelessInterface(const WirelessInterface&) = default;
+	WirelessInterface::WirelessInterface(WirelessInterface&&) noexcept = default;
+	WirelessInterface& WirelessInterface::operator=(const WirelessInterface&) = default;
+	WirelessInterface& WirelessInterface::operator=(WirelessInterface&&)  noexcept = default;
 
 	WirelessInterface::WirelessInterface(
 		const SharedWLANHandle& wlanHandle,
@@ -48,9 +52,7 @@ namespace Boring32::WirelessLAN
 	) : m_wlanHandle(wlanHandle),
 		m_id(id),
 		m_description(std::move(m_description))
-	{
-
-	}
+	{ }
 
 	const Util::GloballyUniqueID& WirelessInterface::GetGUID() const noexcept
 	{

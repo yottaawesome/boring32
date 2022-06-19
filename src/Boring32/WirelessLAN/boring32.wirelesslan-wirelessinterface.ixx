@@ -27,11 +27,17 @@ export namespace Boring32::WirelessLAN
 	{
 		public:
 			virtual ~WirelessInterface();
+			WirelessInterface(const WirelessInterface&);
+			WirelessInterface(WirelessInterface&&) noexcept;
 			WirelessInterface(
 				const SharedWLANHandle& wlanHandle,
 				const Util::GloballyUniqueID& id,
 				std::wstring description
 			);
+
+		public:
+			virtual WirelessInterface& operator=(const WirelessInterface&);
+			virtual WirelessInterface& operator=(WirelessInterface&&) noexcept;
 
 		public:
 			[[nodiscard]]
