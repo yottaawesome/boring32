@@ -9,11 +9,11 @@ import boring32.util;
 
 namespace Boring32::WirelessLAN
 {
-	WirelessInterface::~Interface()
+	WirelessInterface::~WirelessInterface()
 	{
 	}
 
-	WirelessInterface::Interface(
+	WirelessInterface::WirelessInterface(
 		const Util::GloballyUniqueID& id,
 		std::wstring description
 	) : m_id(id), 
