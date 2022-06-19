@@ -64,6 +64,8 @@ export namespace Boring32::WirelessLAN
 			virtual bool IsInStreamingMediaMode() const;
 			[[nodiscard]]
 			virtual ULONG GetCurrentOperationMode() const;
+			[[nodiscard]]
+			virtual bool IsSafeModeSupported() const;
 
 		protected:
 			Util::GloballyUniqueID m_id;

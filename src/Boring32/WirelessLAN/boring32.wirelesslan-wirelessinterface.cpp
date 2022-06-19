@@ -150,7 +150,16 @@ namespace Boring32::WirelessLAN
 			wlan_intf_opcode_current_operation_mode
 		);
 	}
-	
+
+	bool WirelessInterface::IsSafeModeSupported() const
+	{
+		return SimpleQueryInterface<bool>(
+			m_wlanHandle.get(),
+			m_id.Get(),
+			wlan_intf_opcode_supported_safe_mode
+		);
+	}
+
 	WLAN_INTERFACE_CAPABILITY WirelessInterface::GetCapability() const
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/wlanapi/ns-wlanapi-wlan_interface_capability
