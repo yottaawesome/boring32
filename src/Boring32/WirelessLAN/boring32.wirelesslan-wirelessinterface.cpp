@@ -39,9 +39,7 @@ namespace Boring32::WirelessLAN
 		return T(*reinterpret_cast<T*>(pWlanAllocatedMemory));
 	}
 
-	WirelessInterface::~WirelessInterface()
-	{
-	}
+	WirelessInterface::~WirelessInterface() { }
 
 	WirelessInterface::WirelessInterface(
 		const SharedWLANHandle& wlanHandle,
@@ -82,6 +80,15 @@ namespace Boring32::WirelessLAN
 		);
 	}
 
+	WLAN_STATISTICS WirelessInterface::GetStatistics() const
+	{
+		return SimpleQueryInterface<WLAN_STATISTICS>(
+			m_wlanHandle.get(),
+			m_id.Get(),
+			wlan_intf_opcode_statistics
+		);
+	}
+
 	WLAN_INTERFACE_CAPABILITY WirelessInterface::GetCapability() const
 	{
 		WLAN_INTERFACE_CAPABILITY* capability;
@@ -96,4 +103,5 @@ namespace Boring32::WirelessLAN
 		UniqueWLANMemory cleanup(capability);
 		return *capability;
 	}
+
 }

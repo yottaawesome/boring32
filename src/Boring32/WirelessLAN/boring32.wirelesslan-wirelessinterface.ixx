@@ -44,6 +44,8 @@ export namespace Boring32::WirelessLAN
 			virtual WLAN_CONNECTION_ATTRIBUTES GetAttributes() const;
 			[[nodiscard]]
 			virtual WLAN_INTERFACE_CAPABILITY GetCapability() const;
+			[[nodiscard]]
+			virtual WLAN_STATISTICS GetStatistics() const;
 
 		protected:
 			Util::GloballyUniqueID m_id;
