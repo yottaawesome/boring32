@@ -88,6 +88,15 @@ namespace Boring32::WirelessLAN
 			wlan_intf_opcode_statistics
 		);
 	}
+	
+	bool WirelessInterface::IsAutoConfEnabled() const
+	{
+		return SimpleQueryInterface<bool>(
+			m_wlanHandle.get(),
+			m_id.Get(),
+			wlan_intf_opcode_autoconf_enabled
+		);
+	}
 
 	WLAN_INTERFACE_CAPABILITY WirelessInterface::GetCapability() const
 	{
@@ -103,5 +112,4 @@ namespace Boring32::WirelessLAN
 		UniqueWLANMemory cleanup(capability);
 		return *capability;
 	}
-
 }
