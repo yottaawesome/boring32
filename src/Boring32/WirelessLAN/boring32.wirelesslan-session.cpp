@@ -45,4 +45,11 @@ namespace Boring32::WirelessLAN
     {
         return m_negotiatedVersion;
     }
+    
+    void Session::Close()
+    {
+        m_wlanHandle = nullptr;
+        m_maxClientVersion = 0;
+        m_negotiatedVersion = 0;
+    }
 }
