@@ -1,6 +1,7 @@
 module;
 
 #include <string>
+#include <vector>
 #include <source_location>
 #include <Windows.h>
 #include <wlanapi.h>
@@ -21,6 +22,8 @@ namespace Boring32::WirelessLAN
 	{
 		if (!wlanHandle)
 			throw Error::Boring32Error("wlanHandle cannot be null");
+		if (opcode == wlan_intf_opcode_supported_infrastructure_auth_cipher_pairs)
+			throw Error::Boring32Error("wlan_intf_opcode_supported_infrastructure_auth_cipher_pairs not supported by this function.");
 
 		// This will point to memory allocated by WLAN; we're responsible for freeing it.
 		void* pWlanAllocatedMemory;
@@ -40,6 +43,42 @@ namespace Boring32::WirelessLAN
 			throw Error::Win32Error("WlanQueryInterface() failed", status);
 		UniqueWLANMemory cleanup(pWlanAllocatedMemory);
 		return T(*reinterpret_cast<T*>(pWlanAllocatedMemory));
+	}
+
+	// opcode parameter is ignored for this specialisation.
+	template<>
+	std::vector<DOT11_AUTH_CIPHER_PAIR> SimpleQueryInterface<std::vector<DOT11_AUTH_CIPHER_PAIR>>(
+		HANDLE wlanHandle,
+		const GUID& guid,
+		const WLAN_INTF_OPCODE opcode
+	)
+	{
+		if (!wlanHandle)
+			throw Error::Boring32Error("wlanHandle cannot be null");
+
+		// This will point to memory allocated by WLAN; we're responsible for freeing it.
+		void* pWlanAllocatedMemory;
+		WLAN_OPCODE_VALUE_TYPE opcodeType;
+		DWORD dataSize = sizeof(WLAN_AUTH_CIPHER_PAIR_LIST);
+		// https://docs.microsoft.com/en-us/windows/win32/api/wlanapi/nf-wlanapi-wlanqueryinterface
+		const DWORD status = WlanQueryInterface(
+			wlanHandle,
+			&guid,
+			wlan_intf_opcode_supported_infrastructure_auth_cipher_pairs,
+			nullptr,
+			&dataSize,
+			&pWlanAllocatedMemory,
+			&opcodeType
+		);
+		if (status != ERROR_SUCCESS)
+			throw Error::Win32Error("WlanQueryInterface() failed", status);
+		UniqueWLANMemory cleanup(pWlanAllocatedMemory);
+		auto results = reinterpret_cast<WLAN_AUTH_CIPHER_PAIR_LIST*>(pWlanAllocatedMemory);
+		std::vector<DOT11_AUTH_CIPHER_PAIR> returnVal;
+		for (DWORD i = 0; i < results->dwNumberOfItems; i++)
+			returnVal.push_back(results->pAuthCipherPairList[i]);
+
+		return returnVal;
 	}
 
 	WirelessInterface::~WirelessInterface() { }
