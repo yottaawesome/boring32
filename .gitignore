@@ -33,6 +33,7 @@
 
 # Custom
 Build/
+x64/
 .vs/
 *.log
 *.tlog
