@@ -227,13 +227,14 @@ namespace Boring32::WirelessLAN
 			m_wlanHandle.get(),
 			m_id.Get(),
 			wlan_intf_opcode_supported_infrastructure_auth_cipher_pairs
-			);
+		);
 	}
 
 	WLAN_INTERFACE_CAPABILITY WirelessInterface::GetCapability() const
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/wlanapi/ns-wlanapi-wlan_interface_capability
 		WLAN_INTERFACE_CAPABILITY* capability;
+		// https://docs.microsoft.com/en-us/windows/win32/api/wlanapi/nf-wlanapi-wlangetinterfacecapability
 		const DWORD status = WlanGetInterfaceCapability(
 			m_wlanHandle.get(),
 			&m_id.Get(),
