@@ -71,6 +71,8 @@ export namespace Boring32::WirelessLAN
 			virtual bool IsCertifiedSafeMode() const;
 			[[nodiscard]]
 			virtual std::vector<DOT11_AUTH_CIPHER_PAIR> GetInfrastructureCipherPairs() const;
+			[[nodiscard]]
+			virtual std::vector<DOT11_AUTH_CIPHER_PAIR> GetAdHocCipherPairs() const;
 
 		protected:
 			Util::GloballyUniqueID m_id;

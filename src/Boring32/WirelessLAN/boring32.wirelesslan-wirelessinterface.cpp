@@ -47,7 +47,6 @@ namespace Boring32::WirelessLAN
 		return T(*reinterpret_cast<T*>(pWlanAllocatedMemory));
 	}
 
-	// opcode parameter is ignored for this specialisation.
 	template<>
 	std::vector<DOT11_AUTH_CIPHER_PAIR> SimpleQueryInterface<std::vector<DOT11_AUTH_CIPHER_PAIR>>(
 		HANDLE wlanHandle,
@@ -218,8 +217,17 @@ namespace Boring32::WirelessLAN
 		return SimpleQueryInterface<std::vector<DOT11_AUTH_CIPHER_PAIR>>(
 			m_wlanHandle.get(),
 			m_id.Get(),
-			wlan_intf_opcode_supported_infrastructure_auth_cipher_pairs
+			wlan_intf_opcode_supported_adhoc_auth_cipher_pairs
 		);
+	}
+
+	std::vector<DOT11_AUTH_CIPHER_PAIR> WirelessInterface::GetAdHocCipherPairs() const
+	{
+		return SimpleQueryInterface<std::vector<DOT11_AUTH_CIPHER_PAIR>>(
+			m_wlanHandle.get(),
+			m_id.Get(),
+			wlan_intf_opcode_supported_infrastructure_auth_cipher_pairs
+			);
 	}
 
 	WLAN_INTERFACE_CAPABILITY WirelessInterface::GetCapability() const
