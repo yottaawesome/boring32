@@ -1,6 +1,7 @@
 module;
 
 #include <string>
+#include <vector>
 #include <Windows.h>
 #include <wlanapi.h>
 
@@ -68,6 +69,8 @@ export namespace Boring32::WirelessLAN
 			virtual bool IsSafeModeSupported() const;
 			[[nodiscard]]
 			virtual bool IsCertifiedSafeMode() const;
+			[[nodiscard]]
+			virtual std::vector<DOT11_AUTH_CIPHER_PAIR> GetInfrastructureCipherPairs() const;
 
 		protected:
 			Util::GloballyUniqueID m_id;

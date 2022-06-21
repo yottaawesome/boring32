@@ -24,6 +24,8 @@ namespace Boring32::WirelessLAN
 			throw Error::Boring32Error("wlanHandle cannot be null");
 		if (opcode == wlan_intf_opcode_supported_infrastructure_auth_cipher_pairs)
 			throw Error::Boring32Error("wlan_intf_opcode_supported_infrastructure_auth_cipher_pairs not supported by this function.");
+		if (opcode == wlan_intf_opcode_supported_adhoc_auth_cipher_pairs)
+			throw Error::Boring32Error("wlan_intf_opcode_supported_adhoc_auth_cipher_pairs not supported by this function.");
 
 		// This will point to memory allocated by WLAN; we're responsible for freeing it.
 		void* pWlanAllocatedMemory;
@@ -55,6 +57,9 @@ namespace Boring32::WirelessLAN
 	{
 		if (!wlanHandle)
 			throw Error::Boring32Error("wlanHandle cannot be null");
+		if (opcode != wlan_intf_opcode_supported_infrastructure_auth_cipher_pairs)
+			if (opcode != wlan_intf_opcode_supported_adhoc_auth_cipher_pairs)
+				throw Error::Boring32Error("Must be one of wlan_intf_opcode_supported_infrastructure_auth_cipher_pairs or wlan_intf_opcode_supported_adhoc_auth_cipher_pairs.");
 
 		// This will point to memory allocated by WLAN; we're responsible for freeing it.
 		void* pWlanAllocatedMemory;
@@ -64,7 +69,7 @@ namespace Boring32::WirelessLAN
 		const DWORD status = WlanQueryInterface(
 			wlanHandle,
 			&guid,
-			wlan_intf_opcode_supported_infrastructure_auth_cipher_pairs,
+			opcode,
 			nullptr,
 			&dataSize,
 			&pWlanAllocatedMemory,
@@ -205,6 +210,15 @@ namespace Boring32::WirelessLAN
 			m_wlanHandle.get(),
 			m_id.Get(),
 			wlan_intf_opcode_certified_safe_mode
+		);
+	}
+	
+	std::vector<DOT11_AUTH_CIPHER_PAIR> WirelessInterface::GetInfrastructureCipherPairs() const
+	{
+		return SimpleQueryInterface<std::vector<DOT11_AUTH_CIPHER_PAIR>>(
+			m_wlanHandle.get(),
+			m_id.Get(),
+			wlan_intf_opcode_supported_infrastructure_auth_cipher_pairs
 		);
 	}
 
