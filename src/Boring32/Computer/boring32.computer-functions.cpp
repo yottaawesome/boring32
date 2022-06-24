@@ -141,7 +141,7 @@ namespace Boring32::Computer
         return returnValue;
     }
 
-    std::vector<DWORD> GetAllProcessIDs()
+    std::vector<DWORD> EnumerateProcessIDs()
     {
         // Get the list of process identifiers.
         std::vector<DWORD> aProcesses(1024);

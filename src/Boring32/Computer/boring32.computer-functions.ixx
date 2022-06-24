@@ -28,5 +28,5 @@ export namespace Boring32::Computer
     );
 
     [[nodiscard]]
-    std::vector<DWORD> GetAllProcessIDs();
+    std::vector<DWORD> EnumerateProcessIDs();
 }
