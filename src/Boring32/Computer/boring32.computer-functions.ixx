@@ -22,7 +22,11 @@ export namespace Boring32::Computer
     SYSTEM_INFO GetSystemInfo();
 
     // See https://docs.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-logical_processor_relationship
-    [[nodiscard]] std::vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX> GetLogicalProcessorInfo(
+    [[nodiscard]] 
+    std::vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX> GetLogicalProcessorInfo(
         const LOGICAL_PROCESSOR_RELATIONSHIP relationship
     );
+
+    [[nodiscard]]
+    std::vector<DWORD> GetAllProcessIDs();
 }

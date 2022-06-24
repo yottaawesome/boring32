@@ -4,6 +4,7 @@ module;
 #include <vector>
 #include <source_location>
 #include <Windows.h>
+#include <psapi.h>
 
 module boring32.computer:functions;
 import boring32.error;
@@ -138,5 +139,21 @@ namespace Boring32::Computer
         returnValue.resize(lengthInBytes / sizeof(LOGICAL_PROCESSOR_RELATIONSHIP));
 
         return returnValue;
+    }
+
+    std::vector<DWORD> GetAllProcessIDs()
+    {
+        // Get the list of process identifiers.
+        std::vector<DWORD> aProcesses(1024);
+        DWORD cbNeeded;
+        // https://docs.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocesses
+        if (!EnumProcesses(&aProcesses[0], static_cast<DWORD>(aProcesses.size()), &cbNeeded))
+        {
+            const auto lastError = GetLastError();
+            throw Error::Win32Error("EnumProcesses() failed", lastError);
+        }
+
+        aProcesses.resize(cbNeeded / sizeof(DWORD));
+        return aProcesses;
     }
 }
