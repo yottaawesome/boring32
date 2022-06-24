@@ -33,14 +33,14 @@ namespace Computer
 		{
 			// Not sure how to reliably test this; just test it for now by making
 			// sure no exceptions are raised.
-			Boring32::Computer::GetSystemTimeAdjustmentInfo();
+			auto x = Boring32::Computer::GetSystemTimeAdjustmentInfo();
 		}
 
 		TEST_METHOD(TestGetSystemInfo)
 		{
 			// This function can't really fail, and we don't to test against the
 			// results which are hardware dependent, so just leave it as it.
-			Boring32::Computer::GetSystemInfo();
+			auto x = Boring32::Computer::GetSystemInfo();
 		}
 
 		TEST_METHOD(TestGetLogicalProcessorInfo)
