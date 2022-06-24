@@ -144,16 +144,42 @@ namespace Boring32::Computer
     std::vector<DWORD> EnumerateProcessIDs()
     {
         // Get the list of process identifiers.
-        std::vector<DWORD> aProcesses(1024);
-        DWORD cbNeeded;
+        std::vector<DWORD> processes(1024);
+        DWORD bytesNeeded;
         // https://docs.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocesses
-        if (!EnumProcesses(&aProcesses[0], static_cast<DWORD>(aProcesses.size()), &cbNeeded))
+        const bool succeeded = EnumProcesses(
+            &processes[0],
+            static_cast<DWORD>(processes.size()) * sizeof(DWORD),
+            &bytesNeeded
+        );
+        if (!succeeded)
         {
             const auto lastError = GetLastError();
             throw Error::Win32Error("EnumProcesses() failed", lastError);
         }
 
-        aProcesses.resize(cbNeeded / sizeof(DWORD));
-        return aProcesses;
+        processes.resize(bytesNeeded / sizeof(DWORD));
+        return processes;
+    }
+
+    std::vector<void*> EnumerateDeviceDriverLoadAddresses()
+    {
+        // Get the list of process identifiers.
+        std::vector<void*> deviceDriverAddresses(1024);
+        DWORD bytesNeeded;
+        // https://docs.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumdevicedrivers
+        const bool succeeded = EnumDeviceDrivers(
+            &deviceDriverAddresses[0],
+            static_cast<DWORD>(deviceDriverAddresses.size()) * sizeof(void*),
+            &bytesNeeded
+        );
+        if (!succeeded)
+        {
+            const auto lastError = GetLastError();
+            throw Error::Win32Error("EnumDeviceDrivers() failed", lastError);
+        }
+
+        deviceDriverAddresses.resize(bytesNeeded / sizeof(void*));
+        return deviceDriverAddresses;
     }
 }

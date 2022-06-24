@@ -29,4 +29,7 @@ export namespace Boring32::Computer
 
     [[nodiscard]]
     std::vector<DWORD> EnumerateProcessIDs();
+
+    [[nodiscard]]
+    std::vector<void*> EnumerateDeviceDriverLoadAddresses();
 }
