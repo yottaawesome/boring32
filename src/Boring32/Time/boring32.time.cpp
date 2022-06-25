@@ -99,4 +99,24 @@ namespace Boring32::Time
         const long actualBias = tzi.Bias * -1; // should we do this?
         return std::vformat(L"{}-{}.{}{:+}", std::make_wformat_args(dateString, timeString, st.wMilliseconds, actualBias));
     }
+
+    size_t GetSystemTimeAsUnixTime()
+    {
+        // Adapted from https://stackoverflow.com/a/46024468
+        // January 1, 1970 (start of Unix epoch) in "ticks"
+        const size_t UnixTimeStart = 0x019DB1DED53E8000; 
+        const size_t TicksPerSecond = 10000000; //a tick is 100ns
+
+        FILETIME ft;
+        GetSystemTimeAsFileTime(&ft); //returns ticks in UTC
+
+        //Copy the low and high parts of FILETIME into a LARGE_INTEGER
+        //This is so we can access the full 64-bits as an Int64 without causing an alignment fault
+        LARGE_INTEGER li;
+        li.LowPart = ft.dwLowDateTime;
+        li.HighPart = ft.dwHighDateTime;
+
+        //Convert ticks since 1/1/1970 into seconds
+        return (li.QuadPart - UnixTimeStart) / TicksPerSecond;
+    }
 }

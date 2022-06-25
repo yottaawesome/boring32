@@ -12,4 +12,5 @@ export namespace Boring32::Time
 	uint64_t FromFileTime(const FILETIME& ft);
 	DWORD SystemTimeToShortIsoDate(const SYSTEMTIME& st);
 	DWORD SystemTimeToShortIsoDate();
+	size_t GetSystemTimeAsUnixTime();
 }
