@@ -156,6 +156,6 @@ namespace Boring32::Time
             throw Error::Win32Error("GetTimeFormatEx() failed", lastError);
         }
 
-        return returnVal;
+        return returnVal.c_str(); // remove any trailing null
     }
 }
