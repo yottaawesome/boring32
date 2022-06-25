@@ -119,4 +119,43 @@ namespace Boring32::Time
         //Convert ticks since 1/1/1970 into seconds
         return (li.QuadPart - UnixTimeStart) / TicksPerSecond;
     }
+
+    std::wstring FormatTime(
+        const SYSTEMTIME& time, 
+        const std::wstring& format,
+        const std::wstring& locale
+    )
+    {
+        // https://docs.microsoft.com/en-us/windows/win32/api/datetimeapi/nf-datetimeapi-gettimeformatex
+        int charactersNeeded = GetTimeFormatEx(
+            locale.c_str(),
+            0,
+            &time,
+            &format[0],
+            nullptr,
+            0
+        );
+        if (!charactersNeeded)
+        {
+            const auto lastError = GetLastError();
+            throw Error::Win32Error("GetTimeFormatEx() failed", lastError);
+        }
+
+        std::wstring returnVal(charactersNeeded, '\0');
+        charactersNeeded = GetTimeFormatEx(
+            locale.c_str(),
+            0,
+            &time,
+            &format[0],
+            &returnVal[0],
+            static_cast<int>(returnVal.size())
+        );
+        if (!charactersNeeded)
+        {
+            const auto lastError = GetLastError();
+            throw Error::Win32Error("GetTimeFormatEx() failed", lastError);
+        }
+
+        return returnVal;
+    }
 }

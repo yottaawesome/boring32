@@ -13,4 +13,9 @@ export namespace Boring32::Time
 	DWORD SystemTimeToShortIsoDate(const SYSTEMTIME& st);
 	DWORD SystemTimeToShortIsoDate();
 	size_t GetSystemTimeAsUnixTime();
+	std::wstring FormatTime(
+		const SYSTEMTIME& time, 
+		const std::wstring& format,
+		const std::wstring& locale = LOCALE_NAME_INVARIANT
+	);
 }
