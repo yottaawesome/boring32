@@ -10,16 +10,16 @@ import boring32.error;
 
 namespace Boring32::Time
 {
-    DWORD SystemTimeToShortIsoDate(const SYSTEMTIME& st)
+    DWORD SystemTimeToShortISODate(const SYSTEMTIME& st)
     {
         return std::stoul(std::format(L"{}{}{}", st.wYear, st.wMonth, st.wDay));
     }
 
-    DWORD SystemTimeToShortIsoDate()
+    DWORD SystemTimeToShortISODate()
     {
         SYSTEMTIME st;
         GetSystemTime(&st);
-        return SystemTimeToShortIsoDate(st);
+        return SystemTimeToShortISODate(st);
     }
 
     uint64_t FromFileTime(const FILETIME& ft)
@@ -48,7 +48,7 @@ namespace Boring32::Time
         return st;
 	}
 
-    std::wstring GetTimeAsUtcString(const SYSTEMTIME& st)
+    std::wstring GetTimeAsUTCString(const SYSTEMTIME& st)
     {
         // Format date buffer
         constexpr UINT dateStringLength = 9;
