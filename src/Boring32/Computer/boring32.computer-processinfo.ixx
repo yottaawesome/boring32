@@ -1,6 +1,7 @@
 module;
 
 #include <string>
+#include <vector>
 #include <Windows.h>
 
 export module boring32.computer:processinfo;
@@ -26,6 +27,9 @@ export namespace Boring32::Computer
 		public:
 			virtual ProcessTimes GetTimes() const;
 			virtual std::wstring GetPath() const;
+
+		public:
+			static std::vector<ProcessInfo> FromCurrentProcesses();
 
 		protected:
 			Raii::Win32Handle m_processHandle;

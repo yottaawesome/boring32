@@ -2,12 +2,14 @@ module;
 
 #include <source_location>
 #include <string>
+#include <vector>
 #include <Windows.h>
 #include <psapi.h>
 
 module boring32.computer:processinfo;
 import boring32.raii;
 import boring32.error;
+import :functions;
 
 namespace Boring32::Computer
 {
@@ -77,5 +79,17 @@ namespace Boring32::Computer
 			throw Error::Win32Error("GetModuleFileNameExW() failed: {}", lastError);
 		}
 		return path.c_str();
+	}
+	
+	std::vector<ProcessInfo> ProcessInfo::FromCurrentProcesses()
+	{
+		const auto processIDs = EnumerateProcessIDs();
+		std::vector<ProcessInfo> allProcesses;
+		for (const auto id : processIDs)
+		{
+			if (HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION, false, id))
+				allProcesses.emplace_back(hProcess);
+		}
+		return allProcesses;
 	}
 }
