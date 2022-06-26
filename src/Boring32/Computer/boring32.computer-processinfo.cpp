@@ -2,6 +2,7 @@ module;
 
 #include <source_location>
 #include <string>
+#include <memory>
 #include <vector>
 #include <Windows.h>
 #include <psapi.h>
@@ -18,7 +19,9 @@ namespace Boring32::Computer
 	ProcessInfo::ProcessInfo(HANDLE hProcess)
 		: m_processHandle(hProcess)
 	{
-		if (!hProcess)
+		//std::shared_ptr<void> m(hProcess, CloseHandle);
+		//m_processHandle = std::shared_ptr<void>(hProcess, CloseHandle);
+		if (!m_processHandle)
 			throw Error::Boring32Error("hProcess cannot be null");
 	}
 

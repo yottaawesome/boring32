@@ -104,9 +104,8 @@ export namespace Boring32::Raii
 		protected:
 			virtual void Copy(const Win32Handle& other);
 			virtual void Move(Win32Handle& other) noexcept;
-			virtual void CloseHandleAndFreeMemory(HANDLE* pHandle);
-			virtual std::shared_ptr<HANDLE> CreateClosableHandle(HANDLE handle);
-			virtual void InternalCloseHandle(HANDLE handle);
+			virtual std::shared_ptr<HANDLE> CreateHandlePtr(HANDLE handle);
+			static void CloseHandleAndFreeMemory(HANDLE* pHandle);
 
 		protected:
 			std::shared_ptr<HANDLE> m_handle;

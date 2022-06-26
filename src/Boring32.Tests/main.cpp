@@ -26,6 +26,7 @@ import boring32.time;
 import boring32.computer;
 import boring32.async;
 import boring32.wirelesslan;
+import boring32.computer;
 
 struct Test
 {
@@ -330,6 +331,13 @@ class Y : public Boring32::Error::Boring32Error
 
 int main(int argc, char** args) try
 {
+	const auto procInfos = Boring32::Computer::ProcessInfo::FromCurrentProcesses();
+	for (const auto& proc : procInfos)
+	{
+		std::wcout << std::format(L"Process path: {}\n", proc.GetPath());
+	}
+	return 0;
+
 	Boring32::WirelessLAN::Session s;
 	auto x = s.Interfaces.GetAll();
 	std::cout << (int)x.at(0).GetState() << std::endl;
@@ -338,7 +346,6 @@ int main(int argc, char** args) try
 }
 catch (const std::exception& ex)
 {
-	
 	Boring32::Error::PrintExceptionInfo(ex);
 	return -1;
 }

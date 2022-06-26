@@ -12,28 +12,35 @@ import boring32.error;
 
 namespace Boring32::Raii
 {
-	void Win32Handle::InternalCloseHandle(HANDLE handle)
-	{
-		if (!handle)
-			return;
-		if (handle == INVALID_HANDLE_VALUE)
-			return;
-		if (!CloseHandle(handle))
-			std::wcerr << "Failed to close handle\n";
-	}
-
 	void Win32Handle::CloseHandleAndFreeMemory(HANDLE* pHandle)
 	{
 		if (!pHandle)
 			return;
-		InternalCloseHandle(*pHandle);
+		
+		HANDLE wrappedHandle = *pHandle;
+		if (wrappedHandle && wrappedHandle != INVALID_HANDLE_VALUE)
+			if (!CloseHandle(wrappedHandle))
+				std::wcerr << L"Failed to close handle\n";
+		
 		delete pHandle;
+		pHandle = nullptr;
 	}
 
-	std::shared_ptr<HANDLE> Win32Handle::CreateClosableHandle(HANDLE handle)
+	std::shared_ptr<HANDLE> Win32Handle::CreateHandlePtr(HANDLE handle)
 	{
-		//std::shared_ptr<HANDLE> x(new void* (handle), std::bind(&Win32Handle::CloseHandleAndFreeMemory, this, std::placeholders::_1));
-		return { new void* (handle), std::bind(&Win32Handle::CloseHandleAndFreeMemory, this, std::placeholders::_1) };
+		return { new void* (handle), &Win32Handle::CloseHandleAndFreeMemory };
+
+		// This doesn't work in cases where a Win32Handle gets copied/moved and the 
+		// original gets destroyed. This is because the lambda capture of "this"
+		// refers to the initial object, and when the shared_ptr goes to destroy 
+		// the memory, it will invoke CloseHandleAndFreeMemory bound to the original
+		// destroyed instance, even if the current object is live, causing an access
+		// violation. As such, CloseHandleAndFreeMemory() has been made static and 
+		// the bind() call has been removed.
+		/*return { 
+			new void* (handle), 
+			std::bind(&Win32Handle::CloseHandleAndFreeMemory, this, std::placeholders::_1) 
+		};*/
 	}
 
 	Win32Handle::~Win32Handle()
@@ -47,11 +54,11 @@ namespace Boring32::Raii
 	}
 
 	Win32Handle::Win32Handle()
-	:	m_handle(CreateClosableHandle(nullptr))
+	:	m_handle(CreateHandlePtr(nullptr))
 	{ }
 	
 	Win32Handle::Win32Handle(const Win32Handle& otherHandle)
-	:	m_handle(CreateClosableHandle(nullptr))
+	:	m_handle(CreateHandlePtr(nullptr))
 	{
 		Copy(otherHandle);
 	}
@@ -72,7 +79,7 @@ namespace Boring32::Raii
 	}
 
 	Win32Handle::Win32Handle(Win32Handle&& other) noexcept
-	:	m_handle(CreateClosableHandle(nullptr))
+	:	m_handle(CreateHandlePtr(nullptr))
 	{
 		Move(other);
 	}
@@ -91,13 +98,13 @@ namespace Boring32::Raii
 	}
 
 	Win32Handle::Win32Handle(const HANDLE handle)
-	:	m_handle(CreateClosableHandle(handle))
+	:	m_handle(CreateHandlePtr(handle))
 	{ }
 
 	Win32Handle& Win32Handle::operator=(const HANDLE other)
 	{
 		Close();
-		m_handle = CreateClosableHandle(other);
+		m_handle = CreateHandlePtr(other);
 		return *this;
 	}
 
@@ -119,7 +126,7 @@ namespace Boring32::Raii
 	HANDLE* Win32Handle::operator&()
 	{
 		if (m_handle == nullptr)
-			m_handle = CreateClosableHandle(nullptr);
+			m_handle = CreateHandlePtr(nullptr);
 		return m_handle.get();
 	}
 

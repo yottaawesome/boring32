@@ -2,6 +2,7 @@ module;
 
 #include <string>
 #include <vector>
+#include <memory>
 #include <Windows.h>
 
 export module boring32.computer:processinfo;
@@ -20,6 +21,7 @@ export namespace Boring32::Computer
 
 	class ProcessInfo
 	{
+		using PtrProcessHandle = std::shared_ptr<std::remove_pointer<HANDLE>>;
 		public:
 			virtual ~ProcessInfo();
 			ProcessInfo(HANDLE hProcess);
@@ -33,5 +35,7 @@ export namespace Boring32::Computer
 
 		protected:
 			Raii::Win32Handle m_processHandle;
+			//PtrProcessHandle m_processHandle;
+			//std::shared_ptr<void> m_processHandle;
 	};
 }
