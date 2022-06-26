@@ -15,7 +15,10 @@ import :functions;
 namespace Boring32::Computer
 {
 	ProcessInfo::~ProcessInfo() {}
-	
+
+	ProcessInfo::ProcessInfo(const ProcessInfo&) = default;
+	ProcessInfo& ProcessInfo::operator=(ProcessInfo&) = default;
+
 	ProcessInfo::ProcessInfo(HANDLE hProcess)
 		: m_processHandle(hProcess)
 	{

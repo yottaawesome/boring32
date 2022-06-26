@@ -23,7 +23,11 @@ export namespace Boring32::Computer
 	{
 		public:
 			virtual ~ProcessInfo();
+			ProcessInfo(const ProcessInfo&);
 			ProcessInfo(HANDLE hProcess);
+
+		public:
+			virtual ProcessInfo& operator=(ProcessInfo&);
 
 		public:
 			virtual ProcessTimes GetTimes() const;
