@@ -64,6 +64,9 @@ namespace Boring32::Computer
 
 	std::wstring ProcessInfo::GetPath() const
 	{
+		if (!m_processHandle)
+			throw Error::Boring32Error("m_processHandle cannot be null");
+
 		std::wstring path(2048, '\0');
 		// https://docs.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getmodulefilenameexw
 		// See also https://docs.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getprocessimagefilenamew
@@ -85,12 +88,13 @@ namespace Boring32::Computer
 	std::vector<ProcessInfo> ProcessInfo::FromCurrentProcesses()
 	{
 		const auto processIDs = EnumerateProcessIDs();
-		std::vector<ProcessInfo> allProcesses;
-		for (const auto id : processIDs)
-		{
+		std::vector<ProcessInfo> processes;
+		// Processes may not necessarily be openable due to permissions or
+		// they may have exited between getting the IDs and opening a handle
+		// to them, so all we can do is a best effort attempt to open them.
+		for (const DWORD id : processIDs)
 			if (HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION, false, id))
-				allProcesses.emplace_back(hProcess);
-		}
-		return allProcesses;
+				processes.emplace_back(hProcess);
+		return processes;
 	}
 }
