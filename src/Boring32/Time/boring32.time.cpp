@@ -205,13 +205,14 @@ namespace Boring32::Time
     std::wstring FormatTime(
         const SYSTEMTIME& time, 
         const std::wstring& format,
-        const std::wstring& locale
+        const std::wstring& locale,
+        const DWORD flags
     )
     {
         // https://docs.microsoft.com/en-us/windows/win32/api/datetimeapi/nf-datetimeapi-gettimeformatex
         int charactersNeeded = GetTimeFormatEx(
             locale.c_str(),
-            0,
+            flags,
             &time,
             &format[0],
             nullptr,
@@ -226,7 +227,7 @@ namespace Boring32::Time
         std::wstring returnVal(charactersNeeded, '\0');
         charactersNeeded = GetTimeFormatEx(
             locale.c_str(),
-            0,
+            flags,
             &time,
             &format[0],
             &returnVal[0],

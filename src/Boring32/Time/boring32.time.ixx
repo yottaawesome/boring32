@@ -16,7 +16,8 @@ export namespace Boring32::Time
 	std::wstring FormatTime(
 		const SYSTEMTIME& time, 
 		const std::wstring& format,
-		const std::wstring& locale = LOCALE_NAME_INVARIANT
+		const std::wstring& locale = LOCALE_NAME_INVARIANT,
+		const DWORD flags = 0
 	);
 	// https://docs.microsoft.com/en-us/windows/win32/intl/day--month--year--and-era-format-pictures
 	std::wstring FormatDate(
