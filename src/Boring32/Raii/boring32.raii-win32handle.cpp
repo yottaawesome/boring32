@@ -36,7 +36,7 @@ namespace Boring32::Raii
 		// the memory, it will invoke CloseHandleAndFreeMemory bound to the original
 		// destroyed instance, even if the current object is live, causing an access
 		// violation. As such, CloseHandleAndFreeMemory() has been made static and 
-		// the bind() call has been removed.
+		// the bind() call has been removed as per above.
 		/*return { 
 			new void* (handle), 
 			std::bind(&Win32Handle::CloseHandleAndFreeMemory, this, std::placeholders::_1) 
