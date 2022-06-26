@@ -2,3 +2,4 @@
 // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/
 export module boring32.computer;
 export import :functions;
+export import :processinfo;

@@ -461,5 +461,9 @@
     <ClCompile Include="WirelessLAN\boring32.wirelesslan-wirelessinterface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Computer\boring32.computer-processinfo.ixx" />
+    <ClCompile Include="Computer\boring32.computer-processinfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
