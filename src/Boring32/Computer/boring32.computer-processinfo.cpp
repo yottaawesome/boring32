@@ -37,6 +37,7 @@ namespace Boring32::Computer
 		FILETIME ftExitTime{ 0 };
 		FILETIME ftKernelTime{ 0 };
 		FILETIME ftUserTime{ 0 };
+		// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesstimes
 		const bool success = GetProcessTimes(
 			m_processHandle.GetHandle(),
 			&ftCreationTime,
@@ -98,6 +99,7 @@ namespace Boring32::Computer
 		// they may have exited between getting the IDs and opening a handle
 		// to them, so all we can do is a best effort attempt to open them.
 		for (const DWORD id : processIDs)
+			// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess
 			if (HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION, false, id))
 				processes.emplace_back(hProcess);
 		return processes;
