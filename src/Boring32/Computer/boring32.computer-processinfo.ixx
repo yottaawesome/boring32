@@ -34,6 +34,7 @@ export namespace Boring32::Computer
 		public:
 			virtual ProcessTimes GetTimes() const;
 			virtual std::wstring GetPath() const;
+			virtual DWORD GetID() const;
 
 		public:
 			static std::vector<ProcessInfo> FromCurrentProcesses();

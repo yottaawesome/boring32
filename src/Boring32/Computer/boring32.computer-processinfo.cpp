@@ -90,7 +90,20 @@ namespace Boring32::Computer
 		}
 		return path.c_str();
 	}
-	
+
+	DWORD ProcessInfo::GetID() const
+	{
+		if (!m_processHandle)
+			throw Error::Boring32Error("m_processHandle cannot be null");
+		const DWORD id = GetProcessId(m_processHandle.GetHandle());
+		if (!id)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("GetProcessId() failed: {}", lastError);
+		}
+		return id;
+	}
+
 	std::vector<ProcessInfo> ProcessInfo::FromCurrentProcesses()
 	{
 		const auto processIDs = EnumerateProcessIDs();
