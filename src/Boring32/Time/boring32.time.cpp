@@ -100,6 +100,88 @@ namespace Boring32::Time
         return std::vformat(L"{}-{}.{}{:+}", std::make_wformat_args(dateString, timeString, st.wMilliseconds, actualBias));
     }
 
+    std::wstring FormatDate(
+        const SYSTEMTIME& date,
+        const std::wstring& format,
+        const std::wstring& locale
+    )
+    {
+        // https://docs.microsoft.com/en-us/windows/win32/api/datetimeapi/nf-datetimeapi-getdateformatex
+        int charactersRequired = GetDateFormatEx(
+            locale.c_str(),
+            0,
+            &date,
+            format.c_str(),
+            nullptr,
+            0,
+            nullptr
+        );
+        if (!charactersRequired)
+        {
+            const auto lastError = GetLastError();
+            throw Error::Win32Error("GetDateFormatEx() failed", lastError);
+        }
+
+        std::wstring formattedString(charactersRequired, '\0');
+        charactersRequired = GetDateFormatEx(
+            locale.c_str(),
+            0,
+            &date,
+            format.c_str(),
+            &formattedString[0],
+            static_cast<int>(formattedString.size()),
+            nullptr
+        );
+        if (!charactersRequired)
+        {
+            const auto lastError = GetLastError();
+            throw Error::Win32Error("GetDateFormatEx() failed", lastError);
+        }
+
+        return formattedString.c_str();
+    }
+
+    std::wstring FormatDate(
+        const SYSTEMTIME& date,
+        const DWORD flags,
+        const std::wstring& locale
+    )
+    {
+        // https://docs.microsoft.com/en-us/windows/win32/api/datetimeapi/nf-datetimeapi-getdateformatex
+        int charactersRequired = GetDateFormatEx(
+            locale.c_str(),
+            flags,
+            &date,
+            nullptr,
+            nullptr,
+            0,
+            nullptr
+        );
+        if (!charactersRequired)
+        {
+            const auto lastError = GetLastError();
+            throw Error::Win32Error("GetDateFormatEx() failed", lastError);
+        }
+
+        std::wstring formattedString(charactersRequired, '\0');
+        charactersRequired = GetDateFormatEx(
+            locale.c_str(),
+            flags,
+            &date,
+            nullptr,
+            &formattedString[0],
+            static_cast<int>(formattedString.size()),
+            nullptr
+        );
+        if (!charactersRequired)
+        {
+            const auto lastError = GetLastError();
+            throw Error::Win32Error("GetDateFormatEx() failed", lastError);
+        }
+
+        return formattedString.c_str();
+    }
+
     size_t GetSystemTimeAsUnixTime()
     {
         // Adapted from https://stackoverflow.com/a/46024468

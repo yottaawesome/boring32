@@ -18,4 +18,15 @@ export namespace Boring32::Time
 		const std::wstring& format,
 		const std::wstring& locale = LOCALE_NAME_INVARIANT
 	);
+	// https://docs.microsoft.com/en-us/windows/win32/intl/day--month--year--and-era-format-pictures
+	std::wstring FormatDate(
+		const SYSTEMTIME& date,
+		const std::wstring& format,
+		const std::wstring& locale = LOCALE_NAME_INVARIANT
+	);
+	std::wstring FormatDate(
+		const SYSTEMTIME& date,
+		const DWORD flags,
+		const std::wstring& locale = LOCALE_NAME_INVARIANT
+	);
 }
