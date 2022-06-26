@@ -22,8 +22,8 @@ namespace Boring32::Raii
 			if (!CloseHandle(wrappedHandle))
 				std::wcerr << L"Failed to close handle\n";
 		
+		*pHandle = 0;
 		delete pHandle;
-		pHandle = nullptr;
 	}
 
 	std::shared_ptr<HANDLE> Win32Handle::CreateHandlePtr(HANDLE handle)
