@@ -104,6 +104,25 @@ namespace Boring32::Computer
 		return id;
 	}
 
+	DWORD ProcessInfo::GetHandleCount() const
+	{
+		if (!m_processHandle)
+			throw Error::Boring32Error("m_processHandle cannot be null");
+		
+		DWORD handleCount;
+		// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesshandlecount
+		const bool succeeded = GetProcessHandleCount(
+			m_processHandle.GetHandle(),
+			&handleCount
+		);
+		if (!succeeded)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("GetProcessHandleCount() failed: {}", lastError);
+		}
+		return handleCount;
+	}
+
 	std::vector<ProcessInfo> ProcessInfo::FromCurrentProcesses()
 	{
 		const auto processIDs = EnumerateProcessIDs();
