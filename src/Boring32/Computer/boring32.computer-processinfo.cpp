@@ -61,7 +61,7 @@ namespace Boring32::Computer
 		if (!success)
 		{
 			const auto lastError = GetLastError();
-			throw Error::Win32Error("GetProcessTimes() failed: {}", lastError);
+			throw Error::Win32Error("GetProcessTimes() failed", lastError);
 		}
 
 		const size_t startTime =
@@ -99,7 +99,7 @@ namespace Boring32::Computer
 		if (!charactersCopied)
 		{
 			const auto lastError = GetLastError();
-			throw Error::Win32Error("GetModuleFileNameExW() failed: {}", lastError);
+			throw Error::Win32Error("GetModuleFileNameExW() failed", lastError);
 		}
 		return path.c_str();
 	}
@@ -112,7 +112,7 @@ namespace Boring32::Computer
 		if (!id)
 		{
 			const auto lastError = GetLastError();
-			throw Error::Win32Error("GetProcessId() failed: {}", lastError);
+			throw Error::Win32Error("GetProcessId() failed", lastError);
 		}
 		return id;
 	}
@@ -131,7 +131,7 @@ namespace Boring32::Computer
 		if (!succeeded)
 		{
 			const auto lastError = GetLastError();
-			throw Error::Win32Error("GetProcessHandleCount() failed: {}", lastError);
+			throw Error::Win32Error("GetProcessHandleCount() failed", lastError);
 		}
 		return handleCount;
 	}
@@ -148,5 +148,23 @@ namespace Boring32::Computer
 			if (HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION, false, id))
 				processes.emplace_back(hProcess);
 		return processes;
+	}
+
+	DWORD ProcessInfo::GetExitCode() const
+	{
+		if (!m_processHandle)
+			throw Error::Boring32Error("m_processHandle cannot be null");
+
+		DWORD exitCode;
+		const bool succeeded = GetExitCodeProcess(
+			m_processHandle.GetHandle(),
+			&exitCode
+		);
+		if (!succeeded)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("GetExitCodeProcess() failed", lastError);
+		}
+		return exitCode;
 	}
 }

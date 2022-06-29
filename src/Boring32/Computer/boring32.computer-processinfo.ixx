@@ -37,6 +37,7 @@ export namespace Boring32::Computer
 			virtual std::wstring GetPath() const;
 			virtual DWORD GetID() const;
 			virtual DWORD GetHandleCount() const;
+			virtual DWORD GetExitCode() const;
 
 		public:
 			static std::vector<ProcessInfo> FromCurrentProcesses();
