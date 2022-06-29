@@ -33,6 +33,7 @@ namespace Boring32::Computer
 		if (!processId)
 			throw Error::Boring32Error("processId must be a non-zero value");
 
+		// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess
 		m_processHandle = OpenProcess(PROCESS_QUERY_INFORMATION, false, processId);
 		if (!m_processHandle)
 		{
@@ -108,6 +109,7 @@ namespace Boring32::Computer
 	{
 		if (!m_processHandle)
 			throw Error::Boring32Error("m_processHandle cannot be null");
+		// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessid
 		const DWORD id = GetProcessId(m_processHandle.GetHandle());
 		if (!id)
 		{
@@ -156,6 +158,7 @@ namespace Boring32::Computer
 			throw Error::Boring32Error("m_processHandle cannot be null");
 
 		DWORD exitCode;
+		// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodeprocess
 		const bool succeeded = GetExitCodeProcess(
 			m_processHandle.GetHandle(),
 			&exitCode
