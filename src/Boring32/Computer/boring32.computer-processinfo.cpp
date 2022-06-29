@@ -21,7 +21,7 @@ namespace Boring32::Computer
 	ProcessInfo& ProcessInfo::operator=(ProcessInfo&) = default;
 	ProcessInfo& ProcessInfo::operator=(ProcessInfo&&) noexcept = default;
 
-	ProcessInfo::ProcessInfo(HANDLE hProcess)
+	ProcessInfo::ProcessInfo(const HANDLE hProcess)
 		: m_processHandle(hProcess)
 	{
 		if (!m_processHandle)
