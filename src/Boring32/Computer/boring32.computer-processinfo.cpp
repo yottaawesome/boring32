@@ -28,6 +28,19 @@ namespace Boring32::Computer
 			throw Error::Boring32Error("hProcess cannot be null");
 	}
 
+	ProcessInfo::ProcessInfo(const DWORD processId)
+	{
+		if (!processId)
+			throw Error::Boring32Error("processId must be a non-zero value");
+
+		m_processHandle = OpenProcess(PROCESS_QUERY_INFORMATION, false, processId);
+		if (!m_processHandle)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("OpenProcess() failed", lastError);
+		}
+	}
+
 	ProcessTimes ProcessInfo::GetTimes() const
 	{
 		if (!m_processHandle)

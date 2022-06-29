@@ -26,6 +26,7 @@ export namespace Boring32::Computer
 			ProcessInfo(const ProcessInfo&);
 			ProcessInfo(ProcessInfo&&) noexcept;
 			ProcessInfo(HANDLE hProcess);
+			ProcessInfo(const DWORD processId);
 
 		public:
 			virtual ProcessInfo& operator=(ProcessInfo&);
