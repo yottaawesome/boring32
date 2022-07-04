@@ -144,19 +144,19 @@ namespace Boring32::Async
 	void Event::WaitOnEvent() const
 	{
 		if (!m_event)
-			throw std::runtime_error(__FUNCSIG__ ": No Event to wait on");
+			throw Error::Boring32Error("No Event to wait on");
 
 		const DWORD status = WaitForSingleObject(m_event.GetHandle(), INFINITE);
 		if (status == WAIT_FAILED)
 			throw Error::Win32Error("WaitForSingleObject failed", GetLastError());
 		if (status == WAIT_ABANDONED)
-			throw std::runtime_error(__FUNCSIG__ ": The wait was abandoned");
+			throw Error::Boring32Error("The wait was abandoned");
 	}
 
 	bool Event::WaitOnEvent(const DWORD millis, const bool alertable) const
 	{
 		if (!m_event)
-			throw std::runtime_error(__FUNCSIG__ ": No Event to wait on");
+			throw Error::Boring32Error("No Event to wait on");
 
 		const DWORD status = WaitForSingleObjectEx(m_event.GetHandle(), millis, alertable);
 		if (status == WAIT_OBJECT_0)
@@ -166,7 +166,7 @@ namespace Boring32::Async
 		if (status == WAIT_FAILED)
 			throw Error::Win32Error("WaitForSingleObject() failed", GetLastError());
 		if (status == WAIT_ABANDONED)
-			throw std::runtime_error(__FUNCSIG__ ": The wait was abandoned");
+			throw Error::Boring32Error("The wait was abandoned");
 		return false;
 	}
 
@@ -190,7 +190,7 @@ namespace Boring32::Async
 	void Event::Signal()
 	{
 		if (!m_event)
-			throw std::runtime_error(__FUNCSIG__ ": No Event to signal");
+			throw Error::Boring32Error("No Event to signal");
 		if (SetEvent(m_event.GetHandle()) == false)
 			throw Error::Win32Error("Failed to signal event", GetLastError());
 	}
