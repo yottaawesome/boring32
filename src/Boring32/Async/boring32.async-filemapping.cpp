@@ -128,7 +128,7 @@ namespace Boring32::Async
 		else
 		{
 			if (m_name.empty())
-				throw std::runtime_error(__FUNCSIG__": m_name cannot be empty when opening a file mapping");
+				throw Error::Boring32Error("m_name cannot be empty when opening a file mapping");
 			// https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-openfilemappingw
 			m_fileMapping = OpenFileMappingW(
 				static_cast<DWORD>(desiredAccess),	// read/write access
