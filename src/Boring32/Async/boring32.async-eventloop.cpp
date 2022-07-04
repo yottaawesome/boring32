@@ -32,17 +32,23 @@ namespace Boring32::Async
 	bool EventLoop::WaitOn(const DWORD millis, const bool waitAll)
 	{
 		if (m_events.empty())
-			throw std::runtime_error("EventLoop::WaitOn(): m_events is empty");
+			throw Error::Boring32Error("m_events is empty");
 
 		CriticalSectionLock cs(m_cs);
 
-		DWORD result = WaitForMultipleObjectsEx((DWORD)m_events.size(), &m_events[0], waitAll, millis, true);
+		const DWORD result = WaitForMultipleObjectsEx(
+			static_cast<DWORD>(m_events.size()), 
+			&m_events[0], 
+			waitAll, 
+			millis, 
+			true
+		);
 		if (result == WAIT_FAILED)
 			throw Error::Win32Error("WaitForMultipleObjectsEx() failed", GetLastError());
 		if (result == WAIT_TIMEOUT)
 			return false;
 		if (result >= WAIT_ABANDONED && result <= (WAIT_ABANDONED + m_events.size() - 1))
-			throw std::runtime_error("EventLoop::WaitOn(): a wait object was abandoned");
+			throw Error::Boring32Error("A wait object was abandoned");
 
 		if (waitAll)
 		{
