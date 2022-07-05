@@ -1,7 +1,6 @@
 module;
 
 #include <iostream>
-#include <stdexcept>
 #include <source_location>
 #include <Windows.h>
 #include <objbase.h>
@@ -127,7 +126,7 @@ namespace Boring32::COM
 			return;
 
 		if (m_comInitialisedThreadId != GetCurrentThreadId())
-			throw std::runtime_error(__FUNCSIG__ ": Attempt to uninitialise COM by a thread different to initialising one.");
+			throw Error::Boring32Error("Attempt to uninitialise COM by a thread different to initialising one.");
 
 		CoUninitialize();
 		m_isInitialised = false;
