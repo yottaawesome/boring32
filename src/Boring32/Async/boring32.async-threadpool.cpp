@@ -1,8 +1,10 @@
 module;
 
-#include "pch.hpp"
 #include <tuple>
+#include <iostream>
 #include <source_location>
+#include <Windows.h>
+#include <threadpoolapiset.h>
 
 module boring32.async:threadpool;
 import boring32.error;
@@ -75,7 +77,7 @@ namespace Boring32::Async::ThreadPools
 	void ThreadPool::SetMinAndMaxThreads(const DWORD min, const DWORD max)
 	{
 		if (m_pool == nullptr)
-			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
+			throw Error::Boring32Error("m_pool is nullptr");
 		ValidateArgs(min, max);
 		SetMinThreads(min);
 		SetMaxThreads(max);
@@ -84,7 +86,7 @@ namespace Boring32::Async::ThreadPools
 	void ThreadPool::SetMinThreads(const DWORD value)
 	{
 		if (m_pool == nullptr)
-			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
+			throw Error::Boring32Error("m_pool is nullptr");
 		ValidateArgs(value, m_maxThreads);
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-setthreadpoolthreadminimum
@@ -97,7 +99,7 @@ namespace Boring32::Async::ThreadPools
 	void ThreadPool::SetMaxThreads(const DWORD value)
 	{
 		if (m_pool == nullptr)
-			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
+			throw Error::Boring32Error("m_pool is nullptr");
 		ValidateArgs(m_minThreads, value);
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-setthreadpoolthreadmaximum
@@ -124,7 +126,7 @@ namespace Boring32::Async::ThreadPools
 	PTP_WORK ThreadPool::CreateWork(ThreadPoolCallback& callback, void* param)
 	{
 		if (m_pool == nullptr)
-			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
+			throw Error::Boring32Error("m_pool is nullptr");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-createthreadpoolwork
 		// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-submitthreadpoolwork
@@ -145,9 +147,9 @@ namespace Boring32::Async::ThreadPools
 	void ThreadPool::SubmitWork(PTP_WORK workItem)
 	{
 		if (m_pool == nullptr)
-			throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
+			throw Error::Boring32Error("m_pool is nullptr");
 		if (workItem == nullptr)
-			throw std::runtime_error(__FUNCSIG__": workItem is nullptr");
+			throw Error::Boring32Error("workItem is nullptr");
 		SubmitThreadpoolWork(workItem);
 	}
 	
