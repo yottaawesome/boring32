@@ -2,6 +2,7 @@ module;
 
 #include <stdexcept>
 #include <memory>
+#include <source_location>
 #include <Windows.h>
 //#include <winternl.h>
 //#include <ntstatus.h>
@@ -47,7 +48,7 @@ namespace Boring32::Async
 	bool OverlappedOp::WaitForCompletion(const DWORD timeout)
 	{
 		if (m_ioOverlapped == nullptr)
-			throw std::runtime_error("IoOverlapped is null");
+			throw Error::Boring32Error("IoOverlapped is null");
 		bool successfulWait = m_ioEvent.WaitOnEvent(timeout, true);
 		if (successfulWait)
 			OnSuccess();
@@ -62,14 +63,14 @@ namespace Boring32::Async
 	OVERLAPPED* OverlappedOp::GetOverlapped()
 	{
 		if (m_ioOverlapped == nullptr)
-			throw std::runtime_error("IoOverlapped is null");
+			throw Error::Boring32Error("IoOverlapped is null");
 		return m_ioOverlapped.get();
 	}
 
 	uint64_t OverlappedOp::GetStatus() const
 	{
 		if (m_ioOverlapped == nullptr)
-			throw std::runtime_error("IoOverlapped is null");
+			throw Error::Boring32Error("IoOverlapped is null");
 		//STATUS_PENDING,
 		//ERROR_IO_INCOMPLETE
 		return m_lastError == ERROR_IO_PENDING ? m_ioOverlapped->Internal : m_lastError;
