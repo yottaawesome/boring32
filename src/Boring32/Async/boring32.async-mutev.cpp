@@ -1,11 +1,13 @@
 module;
 
 #include <stdexcept>
+#include <source_location>
 #include <format>
 #include <string>
 #include <Windows.h>
 
 module boring32.async:mutev;
+import boring32.error;
 
 namespace Boring32::Async
 {
@@ -96,11 +98,12 @@ namespace Boring32::Async
 				break;
 
 			default:
-				throw std::runtime_error(
+				throw Error::Boring32Error(
 					std::format(
-						"{}: unknown active value {}", 
-						__FUNCSIG__, 
-						static_cast<unsigned>(currentActive)));
+						"Unknown active value {}",  
+						static_cast<unsigned>(currentActive)
+					)
+				);
 		}
 
 		m_currentActive = currentActive;
