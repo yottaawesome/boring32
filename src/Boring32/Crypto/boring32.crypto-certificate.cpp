@@ -2,7 +2,6 @@ module;
 
 #include <vector>
 #include <string>
-#include <stdexcept>
 #include <source_location>
 #include <Windows.h>
 #include <dpapi.h>
@@ -136,7 +135,7 @@ namespace Boring32::Crypto
 	std::vector<std::byte> Certificate::GetIssuer() const
 	{
 		if (!m_certContext)
-			throw std::runtime_error(__FUNCSIG__": m_certContext is nullptr");
+			throw Error::Boring32Error(__FUNCSIG__": m_certContext is nullptr");
 		if (!m_certContext->pCertInfo)
 			return {};
 		CERT_NAME_BLOB* blob = &m_certContext->pCertInfo->Issuer;
@@ -149,7 +148,7 @@ namespace Boring32::Crypto
 	std::vector<std::byte> Certificate::GetSubject() const
 	{
 		if (!m_certContext)
-			throw std::runtime_error(__FUNCSIG__": m_certContext is nullptr");
+			throw Error::Boring32Error(__FUNCSIG__": m_certContext is nullptr");
 		if (!m_certContext->pCertInfo)
 			return {};
 		CERT_NAME_BLOB* blob = &m_certContext->pCertInfo->Subject;
@@ -192,7 +191,7 @@ namespace Boring32::Crypto
 	std::vector<std::byte> Certificate::InternalCertGetProperty(const DWORD property) const
 	{
 		if (!m_certContext)
-			throw std::runtime_error(__FUNCSIG__ ": m_certContext is nullptr");
+			throw Error::Boring32Error(__FUNCSIG__ ": m_certContext is nullptr");
 
 		DWORD sizeInBytes = 0;
 		bool succeeded = CertGetCertificateContextProperty(
