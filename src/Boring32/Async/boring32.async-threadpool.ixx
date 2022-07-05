@@ -1,8 +1,6 @@
 module;
 
 #include <functional>
-#include <iostream>
-#include <stdexcept>
 #include <source_location>
 #include <memory>
 #include <Windows.h>
@@ -59,7 +57,7 @@ export namespace Boring32::Async::ThreadPools
 			void CreateWork(WorkItem<T>& outWorkItem)
 			{
 				if (m_pool == nullptr)
-					throw std::runtime_error(__FUNCSIG__": m_pool is nullptr");
+					throw Error::Boring32Error("m_pool is nullptr");
 
 				outWorkItem.Item = CreateThreadpoolWork(InternalCallback, &outWorkItem, &m_environ);
 				if (outWorkItem.Item == nullptr)
