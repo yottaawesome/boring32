@@ -1,7 +1,6 @@
 module;
 
 #include <iostream>
-#include <stdexcept>
 #include <source_location>
 #include <Windows.h>
 
@@ -44,7 +43,7 @@ namespace Boring32::Async
 		m_timerQueueTimer(nullptr)
 	{
 		if (m_timerQueue == nullptr || m_timerQueue == INVALID_HANDLE_VALUE)
-			throw std::runtime_error("TimerQueueTimer::TimerQueueTimer(): Invalid handle");
+			throw Error::Boring32Error("Invalid handle");
 		InternalCreate();
 	}
 
@@ -88,7 +87,7 @@ namespace Boring32::Async
 	void TimerQueueTimer::Update(const ULONG dueTime, const ULONG period)
 	{
 		if (m_timerQueueTimer == nullptr || m_timerQueueTimer == INVALID_HANDLE_VALUE)
-			throw std::runtime_error(__FUNCSIG__": m_timerQueueTimer is null");
+			throw Error::Boring32Error("m_timerQueueTimer is null");
 
 		bool success = ChangeTimerQueueTimer(
 			m_timerQueue,
@@ -148,7 +147,7 @@ namespace Boring32::Async
 	void TimerQueueTimer::InternalCreate()
 	{
 		if (m_timerQueue == nullptr || m_timerQueue == INVALID_HANDLE_VALUE)
-			throw std::runtime_error(__FUNCSIG__": m_timerQueue is null");
+			throw Error::Boring32Error("m_timerQueue is null");
 
 		//https://docs.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-createtimerqueuetimer
 		bool succeeded = CreateTimerQueueTimer(
