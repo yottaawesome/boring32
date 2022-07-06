@@ -4,7 +4,6 @@ module;
 //#include <ntstatus.h>
 #include <string>
 #include <vector>
-#include <stdexcept>
 #include <source_location>
 #include <Windows.h>
 #include <bcrypt.h>
@@ -84,7 +83,7 @@ namespace Boring32::Crypto
 	void AesEncryption::Create()
 	{
 		if (m_chainingMode == ChainingMode::NotSet)
-			throw std::runtime_error(__FUNCSIG__ ": m_chainingMode is not set");
+			throw Error::Boring32Error("m_chainingMode is not set");
 
 		//https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptopenalgorithmprovider
 		const NTSTATUS status = BCryptOpenAlgorithmProvider(
@@ -106,7 +105,7 @@ namespace Boring32::Crypto
 	DWORD AesEncryption::GetObjectByteSize() const
 	{
 		if (!m_algHandle)
-			throw std::runtime_error(__FUNCSIG__ ": cipher algorithm not initialised");
+			throw Error::Boring32Error("Cipher algorithm not initialised");
 
 		DWORD cbKeyObject = 0;
 		DWORD cbData = 0;
@@ -128,7 +127,7 @@ namespace Boring32::Crypto
 	DWORD AesEncryption::GetBlockByteLength() const
 	{
 		if (!m_algHandle)
-			throw std::runtime_error(__FUNCSIG__ ": cipher algorithm not initialised");
+			throw Error::Boring32Error("Cipher algorithm not initialised");
 
 		DWORD cbKeyObject = 0;
 		DWORD cbData = 0;
@@ -150,7 +149,7 @@ namespace Boring32::Crypto
 	void AesEncryption::SetChainingMode(const ChainingMode cm)
 	{
 		if (!m_algHandle)
-			throw std::runtime_error(__FUNCSIG__ ": cipher algorithm not initialised");
+			throw Error::Boring32Error("Cipher algorithm not initialised");
 		
 		const std::wstring& mode = ChainingModeString.at(cm);
 		// https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptsetproperty
@@ -169,9 +168,9 @@ namespace Boring32::Crypto
 	CryptoKey AesEncryption::GenerateSymmetricKey(const std::vector<std::byte>& rgbAES128Key)
 	{
 		if (!m_algHandle)
-			throw std::runtime_error(__FUNCSIG__ ": cipher algorithm not initialised");
+			throw Error::Boring32Error("Cipher algorithm not initialised");
 		if (rgbAES128Key.empty())
-			throw std::invalid_argument(__FUNCSIG__ ": rgbAES128Key is empty");
+			throw Error::Boring32Error("rgbAES128Key is empty");
 
 		BCRYPT_KEY_HANDLE hKey = nullptr;
 		DWORD cbKeyObject = GetObjectByteSize();
@@ -213,9 +212,9 @@ namespace Boring32::Crypto
 	)
 	{
 		if (!m_algHandle)
-			throw std::runtime_error(__FUNCSIG__ ": cipher algorithm not initialised");
+			throw Error::Boring32Error("Cipher algorithm not initialised");
 		if (!key.GetHandle())
-			throw std::invalid_argument(__FUNCSIG__ ": key is null");
+			throw Error::Boring32Error("Key is null");
 
 		// IV is optional
 		PUCHAR pIV = nullptr;
@@ -223,7 +222,7 @@ namespace Boring32::Crypto
 		if (iv.empty() == false)
 		{
 			if (iv.size() != GetBlockByteLength())
-				throw std::invalid_argument(__FUNCSIG__ ": IV must be the same size as the AES block lenth");
+				throw Error::Boring32Error("IV must be the same size as the AES block lenth");
 			pIV = reinterpret_cast<PUCHAR>(const_cast<std::byte*>(&iv[0]));
 			ivSize = static_cast<ULONG>(iv.size());
 		}
@@ -274,9 +273,9 @@ namespace Boring32::Crypto
 	)
 	{
 		if (!m_algHandle)
-			throw std::runtime_error(__FUNCSIG__ ": cipher algorithm not initialised");
+			throw Error::Boring32Error("Cipher algorithm not initialised");
 		if (!key.GetHandle())
-			throw std::invalid_argument(__FUNCSIG__ ": key is null");
+			throw Error::Boring32Error("Key is null");
 
 		// IV is optional
 		PUCHAR pIV = nullptr;
@@ -284,7 +283,7 @@ namespace Boring32::Crypto
 		if (iv.empty() == false)
 		{
 			if (iv.size() != GetBlockByteLength())
-				throw std::invalid_argument(__FUNCSIG__ ": IV must be the same size as the AES block lenth");
+				throw Error::Boring32Error("IV must be the same size as the AES block lenth");
 			pIV = reinterpret_cast<PUCHAR>(const_cast<std::byte*>(&iv[0]));
 			ivSize = static_cast<ULONG>(iv.size());
 		}
@@ -333,7 +332,7 @@ namespace Boring32::Crypto
 	{
 		// BCRYPT_BLOCK_PADDING must not be used with the authenticated encryption modes(AES - CCM and AES - GCM)
 		if (m_chainingMode == ChainingMode::NotSet)
-			throw std::runtime_error(__FUNCSIG__ ": m_chainingMode is not set");
+			throw Error::Boring32Error("m_chainingMode is not set");
 		if (m_chainingMode == ChainingMode::GaloisCounterMode)
 			return 0;
 		if (m_chainingMode == ChainingMode::CbcMac)
