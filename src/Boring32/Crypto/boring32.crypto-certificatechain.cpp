@@ -3,7 +3,6 @@ module;
 #include <vector>
 #include <string>
 #include <format>
-#include <stdexcept>
 #include <source_location>
 #include <Windows.h>
 #include <wincrypt.h>
@@ -89,7 +88,7 @@ namespace Boring32::Crypto
 	{
 		// TODO: need to verify this actually works
 		if (m_chainContext == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": m_chainContext is null");
+			throw Error::Boring32Error("m_chainContext is null");
 
 		CERT_CHAIN_POLICY_PARA para{
 			.cbSize = sizeof(para),
@@ -120,13 +119,12 @@ namespace Boring32::Crypto
 	) const
 	{
 		if (m_chainContext == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": m_chainContext is null");
+			throw Error::Boring32Error("m_chainContext is null");
 		
 		if (chainIndex >= m_chainContext->cChain)
-			throw std::invalid_argument(
+			throw Error::Boring32Error(
 				std::format(
-					"{}: expected index to be less than {} but got an index of {}",
-					__FUNCSIG__,
+					"Expected index to be less than {} but got an index of {}",
 					m_chainContext->cChain,
 					chainIndex
 				));
@@ -135,10 +133,9 @@ namespace Boring32::Crypto
 		CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
 		// This probably should never happen, but guard just in case
 		if (simpleChain == nullptr)
-			throw std::runtime_error(
+			throw Error::Boring32Error(
 				std::format(
-					"{}: the simpleChain at {} was unexpectedly null",
-					__FUNCSIG__,
+					"The simpleChain at {} was unexpectedly null",
 					chainIndex
 				));
 
@@ -161,12 +158,11 @@ namespace Boring32::Crypto
 	) const
 	{
 		if (m_chainContext == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": m_chainContext is null");
+			throw Error::Boring32Error("m_chainContext is null");
 		if (chainIndex >= m_chainContext->cChain)
-			throw std::invalid_argument(
+			throw Error::Boring32Error(
 				std::format(
-					"{}: expected chainIndex to be less than {} but got an index of {}",
-					__FUNCSIG__,
+					"Expected chainIndex to be less than {} but got an index of {}",
 					m_chainContext->cChain,
 					chainIndex
 				)
@@ -174,12 +170,11 @@ namespace Boring32::Crypto
 
 		CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
 		if (simpleChain == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": simpleChain is null");
+			throw Error::Boring32Error("simpleChain is null");
 		if (certIndex >= simpleChain->cElement)
-			throw std::invalid_argument(
+			throw Error::Boring32Error(
 				std::format(
-					"{}: expected certIndex to be less than {} but got an index of {}",
-					__FUNCSIG__,
+					"Expected certIndex to be less than {} but got an index of {}",
 					simpleChain->cElement,
 					certIndex
 				)
@@ -193,19 +188,18 @@ namespace Boring32::Crypto
 	) const
 	{
 		if (m_chainContext == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": m_chainContext is null");
+			throw Error::Boring32Error("m_chainContext is null");
 		if (chainIndex >= m_chainContext->cChain) 
-			throw std::invalid_argument(
+			throw Error::Boring32Error(
 				std::format(
-					"{}: expected index to be less than {} but got an index of {}",
-					__FUNCSIG__,
+					"Expected index to be less than {} but got an index of {}",
 					m_chainContext->cChain,
 					chainIndex
 			));
 
 		CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
 		if (simpleChain == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": simpleChain is null");
+			throw Error::Boring32Error("simpleChain is null");
 		if (simpleChain->cElement == 0)
 			return {};
 		return { simpleChain->rgpElement[0]->pCertContext, false };
@@ -216,19 +210,18 @@ namespace Boring32::Crypto
 	) const
 	{
 		if (m_chainContext == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": m_chainContext is null");
+			throw Error::Boring32Error("m_chainContext is null");
 		if (chainIndex >= m_chainContext->cChain)
-			throw std::invalid_argument(
+			throw Error::Boring32Error(
 				std::format(
-					"{}: expected index to be less than {} but got an index of {}",
-					__FUNCSIG__,
+					"Expected index to be less than {} but got an index of {}",
 					m_chainContext->cChain,
 					chainIndex
 				));
 
 		CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
 		if (simpleChain == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": simpleChain is null");
+			throw Error::Boring32Error("simpleChain is null");
 		if (simpleChain->cElement == 0)
 			return {};
 		return { simpleChain->rgpElement[simpleChain->cElement - 1]->pCertContext, false };
@@ -271,7 +264,7 @@ namespace Boring32::Crypto
 	)
 	{
 		if (contextToBuildFrom == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": m_chainContext is null");
+			throw Error::Boring32Error("m_chainContext is null");
 
 		CERT_ENHKEY_USAGE        EnhkeyUsage;
 		CERT_USAGE_MATCH         CertUsage;
