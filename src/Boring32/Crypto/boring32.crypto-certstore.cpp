@@ -1,6 +1,5 @@
 module;
 
-#include <stdexcept>
 #include <iostream>
 #include <vector>
 #include <string>
@@ -173,7 +172,7 @@ namespace Boring32::Crypto
 	void CertStore::InternalOpen()
 	{
 		if (m_storeType != CertStoreType::InMemory && m_storeName.empty())
-			throw std::invalid_argument(__FUNCSIG__ ": m_storeName is required for non-memory stores");
+			throw Error::Boring32Error("m_storeName is required for non-memory stores");
 		
 		switch (m_storeType)
 		{
@@ -210,7 +209,7 @@ namespace Boring32::Crypto
 			}
 
 			default:
-				throw std::runtime_error(__FUNCSIG__ ": unknown m_storeType");
+				throw Error::Boring32Error("unknown m_storeType");
 		}
 		
 		if (m_certStore == nullptr)
@@ -230,7 +229,7 @@ namespace Boring32::Crypto
 	std::vector<Certificate> CertStore::GetAll() const
 	{
 		if (m_certStore == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": m_certStore is null");
+			throw Error::Boring32Error("m_certStore is null");
 
 		std::vector<Certificate> results;
 		PCCERT_CONTEXT currentCert = nullptr;
@@ -440,7 +439,7 @@ namespace Boring32::Crypto
 	void CertStore::ImportCert(const CERT_CONTEXT* cert)
 	{
 		if (cert == nullptr)
-			throw std::invalid_argument(__FUNCSIG__ ": cert is nullptr");
+			throw Error::Boring32Error("cert is nullptr");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/ns-cryptuiapi-cryptui_wiz_import_src_info
 		CRYPTUI_WIZ_IMPORT_SRC_INFO info{
@@ -470,9 +469,9 @@ namespace Boring32::Crypto
 	void CertStore::AddCertificate(const CERT_CONTEXT* cert)
 	{
 		if (cert == nullptr)
-			throw std::invalid_argument(__FUNCSIG__ ": cert is null");
+			throw Error::Boring32Error("cert is null");
 		if (m_certStore == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": m_certStore is nullptr");
+			throw Error::Boring32Error("m_certStore is nullptr");
 		const bool succeeded = CertAddCertificateContextToStore(
 			m_certStore,
 			cert, 
@@ -488,7 +487,7 @@ namespace Boring32::Crypto
 	void CertStore::InternalImport(const CRYPTUI_WIZ_IMPORT_SRC_INFO& info)
 	{
 		if (m_certStore == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": m_certStore is nullptr");
+			throw Error::Boring32Error("m_certStore is nullptr");
 
 		const static DWORD CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS = 0x0002;
 
