@@ -38,11 +38,11 @@ namespace Boring32::Async
 		m_pageProtection(pageProtection)
 	{
 		if (m_name.empty())
-			throw std::invalid_argument(__FUNCSIG__": name cannot be an empty string");
+			throw Error::Boring32Error("Name cannot be an empty string");
 		if (m_maxSize == 0)
-			throw std::invalid_argument(__FUNCSIG__": maxSize cannot be 0");
+			throw Error::Boring32Error("maxSize cannot be 0");
 		if (m_pageProtection == 0)
-			throw std::invalid_argument(__FUNCSIG__": pageProtection cannot be 0");
+			throw Error::Boring32Error("pageProtection cannot be 0");
 		CreateOrOpen(true, FileMapAccess::All, isInheritable);
 	}
 
@@ -60,11 +60,11 @@ namespace Boring32::Async
 		m_pageProtection(0)
 	{
 		if (m_name.empty())
-			throw std::invalid_argument(__FUNCSIG__": name cannot be an empty string");
+			throw Error::Boring32Error("name cannot be an empty string");
 		if (m_maxSize == 0)
-			throw std::invalid_argument(__FUNCSIG__": maxSize cannot be 0");
+			throw Error::Boring32Error("maxSize cannot be 0");
 		if (m_pageProtection == 0)
-			throw std::invalid_argument(__FUNCSIG__": pageProtection cannot be 0");
+			throw Error::Boring32Error("pageProtection cannot be 0");
 		CreateOrOpen(false, desiredAccess, isInheritable);
 	}
 
