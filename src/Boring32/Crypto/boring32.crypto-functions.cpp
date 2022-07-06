@@ -1,7 +1,6 @@
 module;
 
 #include <vector>
-#include <stdexcept>
 #include <source_location>
 #include <string>
 #include <Windows.h>
@@ -143,7 +142,7 @@ namespace Boring32::Crypto
 	)
 	{
 		if (key.GetHandle() == nullptr)
-			throw std::invalid_argument(__FUNCSIG__ ": key is null");
+			throw Error::Boring32Error("key is null");
 
 		// IV is optional
 		PUCHAR pIV = nullptr;
@@ -151,7 +150,7 @@ namespace Boring32::Crypto
 		if (iv.empty() == false)
 		{
 			if (iv.size() != blockByteLength)
-				throw std::invalid_argument(__FUNCSIG__ ": IV must be the same size as the AES block lenth");
+				throw Error::Boring32Error("IV must be the same size as the AES block lenth");
 			pIV = (PUCHAR)&iv[0];
 			ivSize = (ULONG)iv.size();
 		}
@@ -203,7 +202,7 @@ namespace Boring32::Crypto
 	)
 	{
 		if (key.GetHandle() == nullptr)
-			throw std::invalid_argument(__FUNCSIG__ ": key is null");
+			throw Error::Boring32Error("key is null");
 
 		// IV is optional
 		PUCHAR pIV = nullptr;
@@ -212,7 +211,7 @@ namespace Boring32::Crypto
 		{
 			// Do all cipher algs require this?
 			if (iv.size() != blockByteLength)
-				throw std::invalid_argument(__FUNCSIG__ ": IV must be the same size as the AES block lenth");
+				throw Error::Boring32Error("IV must be the same size as the AES block length");
 			pIV = (PUCHAR)&iv[0];
 			ivSize = (ULONG)iv.size();
 		}
