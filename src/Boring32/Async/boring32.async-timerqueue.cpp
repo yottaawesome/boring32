@@ -1,7 +1,6 @@
 module;
 
 #include <iostream>
-#include <stdexcept>
 #include <source_location>
 #include <Windows.h>
 
@@ -28,9 +27,9 @@ namespace Boring32::Async
 		m_waitForAllCallbacks(true)
 	{
 		if (m_completionEvent == nullptr)
-			throw std::invalid_argument(__FUNCSIG__ ": completionEvent cannot be nullptr");
+			throw Error::Boring32Error("completionEvent cannot be nullptr");
 		if (m_completionEvent == INVALID_HANDLE_VALUE)
-			throw std::invalid_argument(__FUNCSIG__ ": completionEvent cannot be INVALID_HANDLE_VALUE");
+			throw Error::Boring32Error("completionEvent cannot be INVALID_HANDLE_VALUE");
 		InternalCreate();
 	}
 
