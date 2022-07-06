@@ -167,11 +167,11 @@ namespace Boring32::Async::ThreadPools
 	void ThreadPool::ValidateArgs(const DWORD minThreads, const DWORD maxThreads)
 	{
 		if (minThreads < 1)
-			throw std::invalid_argument(__FUNCSIG__": minThreads cannot be less than 1");
+			throw Error::Boring32Error("minThreads cannot be less than 1");
 		if (maxThreads < 1)
-			throw std::invalid_argument(__FUNCSIG__": maxThreads cannot be less than 1");
+			throw Error::Boring32Error("maxThreads cannot be less than 1");
 		if (maxThreads < minThreads)
-			throw std::invalid_argument(__FUNCSIG__": maxThreads cannot be less than minThreads");
+			throw Error::Boring32Error("maxThreads cannot be less than minThreads");
 	}
 
 	ThreadPool& ThreadPool::Copy(const ThreadPool& other)

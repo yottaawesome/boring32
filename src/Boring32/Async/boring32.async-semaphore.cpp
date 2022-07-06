@@ -193,7 +193,7 @@ namespace Boring32::Async
 				throw Error::Win32Error("WaitForSingleObject() failed", GetLastError());
 
 			default:
-				throw Error::Boring32Error(std::format(__FUNCSIG__": unknown WaitForSingleObjectEx() value {}", status));
+				throw Error::Boring32Error(std::format("Unknown WaitForSingleObjectEx() value {}", status));
 		}
 	}
 
