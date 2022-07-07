@@ -1,7 +1,7 @@
 module;
 
 #include <algorithm>
-#include <stdexcept>
+#include <string>
 #include <source_location>
 #include <Windows.h>
 #include <dpapi.h>
@@ -124,7 +124,7 @@ namespace Boring32::Crypto
 		if (m_isEncrypted)
 			return;
 		if (m_protectedString.empty())
-			throw std::runtime_error(__FUNCSIG__ ": nothing to decrypt");
+			throw Error::Boring32Error("Nothing to decrypt");
 
 		const bool succeeded = CryptProtectMemory(
 			(void*)&m_protectedString[0],
@@ -141,7 +141,7 @@ namespace Boring32::Crypto
 		if (m_isEncrypted == false)
 			return;
 		if (m_protectedString.empty())
-			throw std::runtime_error(__FUNCSIG__ ": nothing to decrypt");
+			throw Error::Boring32Error("Nothing to decrypt");
 
 		const bool succeeded = CryptUnprotectMemory(
 			(void*)&m_protectedString[0],
