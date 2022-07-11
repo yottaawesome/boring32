@@ -35,6 +35,15 @@ export namespace Boring32::Util
 		};
 	}
 
+	template<typename T, typename S>
+	std::vector<T> ReinterpretVector(const std::vector<S>& in)
+	{
+		return {
+			reinterpret_cast<const T*>(&in[0]),
+			reinterpret_cast<const T*>(&in[0]) + (in.size() * sizeof(S)) / sizeof(T)
+		};
+	}
+
 	typedef std::string(*blah)(const std::vector<std::byte>& vector);// = ByteVectorToString<std::string>;
 	//static blah m = ByteVectorToString<std::string>;
 
