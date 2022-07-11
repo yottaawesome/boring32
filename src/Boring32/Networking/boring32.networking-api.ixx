@@ -21,6 +21,7 @@ export namespace Boring32::Networking
 		{
 			buffer.resize(bufferSizeBytes);
 			// https://docs.microsoft.com/en-us/windows/win32/api/iphlpapi/nf-iphlpapi-getadaptersaddresses
+			// https://docs.microsoft.com/en-us/windows/win32/api/iptypes/ns-iptypes-ip_adapter_addresses_lh
 			status = GetAdaptersAddresses(
 				family,
 				flags,
@@ -28,9 +29,9 @@ export namespace Boring32::Networking
 				reinterpret_cast<IP_ADAPTER_ADDRESSES*>(buffer.data()),
 				&bufferSizeBytes
 			);
-			// bufferSizeBytes will give the correct buffer size in this case,m
+			// bufferSizeBytes will give the correct buffer size in this case,
 			// and will be used to resize the buffer in the next iteration.
-			if (status != ERROR_BUFFER_OVERFLOW)
+			if (status != ERROR_BUFFER_OVERFLOW && status != ERROR_SUCCESS)
 			{
 				const auto lastError = GetLastError();
 				throw Error::Win32Error("GetAdaptersAddresses() failed", lastError);
@@ -38,8 +39,8 @@ export namespace Boring32::Networking
 		}
 		if (!bufferSizeBytes)
 			return {};
-		// This is safe to do because the memory is moved to the calling site,
-		// so the linked-list next pointers are preserved correctly.
+		// This is safe to do because the heap pointer is moved to the calling site,
+		// so the linked-list next pointers are not modified and remain valid.
 		return buffer;
 	}
 }

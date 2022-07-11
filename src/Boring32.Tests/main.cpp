@@ -6,6 +6,9 @@
 #include <stdexcept>
 #include <source_location>
 #include <windows.h>
+#include <winsock2.h>
+#include <iphlpapi.h>
+#include <iptypes.h>
 #include <objbase.h>
 #include "Experiments1Main.hpp"
 
@@ -27,6 +30,7 @@ import boring32.computer;
 import boring32.async;
 import boring32.wirelesslan;
 import boring32.computer;
+import boring32.networking;
 
 struct Test
 {
@@ -329,19 +333,43 @@ class Y : public Boring32::Error::Boring32Error
 	protected:
 };
 
-int main(int argc, char** args) try
+void BlahBlah()
 {
 	const auto procInfos = Boring32::Computer::ProcessInfo::FromCurrentProcesses();
 	for (const auto& proc : procInfos)
 	{
 		std::wcout << std::format(L"Process path: {}\n", proc.GetPath());
 	}
-	return 0;
+	return;
 
 	Boring32::WirelessLAN::Session s;
 	auto x = s.Interfaces.GetAll();
 	std::cout << (int)x.at(0).GetState() << std::endl;
+}
 
+int main(int argc, char** args) try
+{
+	auto x = Boring32::Networking::GetAdapters(
+		AF_UNSPEC, 
+		GAA_FLAG_SKIP_MULTICAST
+		//GAA_FLAG_INCLUDE_ALL_INTERFACES
+	);
+	if (!x.empty())
+	{
+		IP_ADAPTER_ADDRESSES* y = reinterpret_cast<IP_ADAPTER_ADDRESSES*>(x.data());
+		while (y)
+		{
+			std::wcout 
+				<< y->AdapterName << " " 
+				<< y->FriendlyName << " " 
+				<< y->IfType << " "
+				<< y->Description << " "
+				<< y->OperStatus << " "
+				<< std::endl;
+			y = y->Next;
+		}
+	}
+	
 	return 0;
 }
 catch (const std::exception& ex)
