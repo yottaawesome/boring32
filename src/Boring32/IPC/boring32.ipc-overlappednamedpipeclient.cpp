@@ -61,7 +61,7 @@ namespace Boring32::IPC
 	void OverlappedNamedPipeClient::InternalWrite(std::wstring_view msg, Async::OverlappedIo& oio)
 	{
 		if (m_handle == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": no pipe to write to");
+			throw Error::Boring32Error("No pipe to write to");
 
 		oio = Async::OverlappedIo();
 		// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile
@@ -95,7 +95,7 @@ namespace Boring32::IPC
 	void OverlappedNamedPipeClient::InternalRead(const DWORD noOfCharacters, Async::OverlappedIo& oio)
 	{
 		if (m_handle == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": no pipe to read from");
+			throw Error::Boring32Error("No pipe to read from");
 
 		oio = Async::OverlappedIo();
 		oio.IoBuffer.resize(noOfCharacters);
