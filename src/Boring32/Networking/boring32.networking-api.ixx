@@ -37,8 +37,7 @@ export namespace Boring32::Networking
 				throw Error::Win32Error("GetAdaptersAddresses() failed", lastError);
 			}
 		}
-		if (!bufferSizeBytes)
-			return {};
+		buffer.resize(bufferSizeBytes);
 		// This is safe to do because the heap pointer is moved to the calling site,
 		// so the linked-list next pointers are not modified and remain valid.
 		return buffer;

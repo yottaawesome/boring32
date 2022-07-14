@@ -28,7 +28,7 @@ namespace Boring32::FileSystem
 	void File::InternalOpen()
 	{
 		if (m_fileName.empty())
-			throw std::runtime_error(__FUNCSIG__": filename must be specified");
+			throw Error::Boring32Error("Filename must be specified");
 
 		m_fileHandle = CreateFileW(
 			m_fileName.c_str(),				// lpFileName
@@ -40,6 +40,9 @@ namespace Boring32::FileSystem
 			nullptr							// hTemplateFile
 		);
 		if (m_fileHandle == INVALID_HANDLE_VALUE)
-			throw Error::Win32Error("CreateFileW() failed", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("CreateFileW() failed", lastError);
+		}
 	}
 }
