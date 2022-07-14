@@ -35,7 +35,7 @@ namespace Boring32::TaskScheduler
 	std::vector<RegisteredTask> TaskFolder::GetTasks()
 	{
 		if (m_taskFolder == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": m_taskFolder is nullptr");
+			throw Error::Boring32Error("m_taskFolder is nullptr");
 
 		ComPtr<IRegisteredTaskCollection> collection;
 		if (HRESULT hr = m_taskFolder->GetTasks(0, &collection); FAILED(hr))
@@ -77,7 +77,7 @@ namespace Boring32::TaskScheduler
 	)
 	{
 		if (m_taskFolder == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": m_taskFolder is null");
+			throw Error::Boring32Error("m_taskFolder is null");
 
 		ComPtr<IRegisteredTask> registeredTask;
 		const HRESULT hr = m_taskFolder->RegisterTaskDefinition(
