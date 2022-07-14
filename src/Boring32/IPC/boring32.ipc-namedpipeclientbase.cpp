@@ -126,7 +126,7 @@ namespace Boring32::IPC
 	DWORD NamedPipeClientBase::UnreadCharactersRemaining() const
 	{
 		if (!m_handle)
-			throw std::runtime_error(__FUNCSIG__ ": no pipe to read from");
+			throw Error::Boring32Error("No pipe to read from");
 		DWORD bytesLeft = 0;
 		const bool succeeded = PeekNamedPipe(
 			m_handle.GetHandle(),
@@ -153,7 +153,7 @@ namespace Boring32::IPC
 	void NamedPipeClientBase::CancelCurrentThreadIo()
 	{
 		if (!m_handle)
-			throw std::runtime_error(__FUNCSIG__": pipe is nullptr");
+			throw Error::Boring32Error("Pipe is nullptr");
 		if (!CancelIo(m_handle.GetHandle()))
 			throw Error::Win32Error("CancelIo failed", GetLastError());
 	}
@@ -175,7 +175,7 @@ namespace Boring32::IPC
 	void NamedPipeClientBase::CancelCurrentProcessIo(OVERLAPPED* overlapped)
 	{
 		if (m_handle == nullptr)
-			throw std::runtime_error(__FUNCSIG__": pipe is nullptr");
+			throw Error::Boring32Error("pipe is nullptr");
 		if (CancelIoEx(m_handle.GetHandle(), overlapped) == false)
 			throw Error::Win32Error("CancelIo() failed", GetLastError());
 	}
