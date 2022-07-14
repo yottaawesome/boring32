@@ -97,12 +97,12 @@ namespace Boring32::WinHttp::WebSockets
 	void WebSocket::InternalConnect(const std::wstring& path)
 	{
 		if (m_status != WebSocketStatus::NotInitialised)
-			throw std::runtime_error(__FUNCSIG__ ": WebSocket needs to be in NotInitialised state to connect");
+			throw Error::Boring32Error(__FUNCSIG__ "WebSocket needs to be in NotInitialised state to connect");
 
 		try
 		{
 			if (m_settings.WinHttpSession.GetSession() == nullptr)
-				throw std::runtime_error(__FUNCSIG__ ": WinHttp session cannot be null");
+				throw Error::Boring32Error("WinHttp session cannot be null");
 
 			m_winHttpConnection = WinHttpConnect(
 				m_settings.WinHttpSession.GetSession(),
@@ -201,9 +201,8 @@ namespace Boring32::WinHttp::WebSockets
 
 			if (statusCode != 101) // switching protocol
 			{
-				throw std::runtime_error(
-					__FUNCSIG__
-					": Received unexpected HTTP response code while upgrading to websocket: "
+				throw Error::Boring32Error(
+					"Received unexpected HTTP response code while upgrading to websocket: "
 					+ std::to_string(statusCode)
 				);
 			}
