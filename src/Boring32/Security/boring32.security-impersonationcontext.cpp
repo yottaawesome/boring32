@@ -18,14 +18,14 @@ namespace Boring32::Security
 	ImpersonationContext::ImpersonationContext(HANDLE const token)
 	:	m_registryHive(nullptr)
 	{
-		if (token == nullptr || token == INVALID_HANDLE_VALUE)
-			throw std::runtime_error(__FUNCSIG__ ": token is invalid");
+		if (!token || token == INVALID_HANDLE_VALUE)
+			throw Error::Boring32Error("token is invalid");
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-impersonateloggedonuser
-		if (ImpersonateLoggedOnUser(token) == false)
-			throw Error::Win32Error(
-				"ImpersonateLoggedOnUser() failed",
-				GetLastError()
-			);
+		if (!ImpersonateLoggedOnUser(token))
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("ImpersonateLoggedOnUser() failed", lastError);
+		}
 	}
 
 	ImpersonationContext::ImpersonationContext(ImpersonationContext&& other) noexcept
