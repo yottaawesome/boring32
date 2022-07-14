@@ -37,14 +37,14 @@ namespace Boring32::FileSystem
         LPBYTE lpBuffer = nullptr;
         // https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-verqueryvaluew
         if (!VerQueryValueW(&verData[0], L"\\", reinterpret_cast<void**>(&lpBuffer), &size))
-            throw std::runtime_error(__FUNCSIG__": could not determine version info (VerQueryValueW() failed)");
+            throw Error::Boring32Error("Could not determine version info (VerQueryValueW() failed)");
         if (!size)
-            throw std::runtime_error(__FUNCSIG__": could not determine version info (size was zero)");
+            throw Error::Boring32Error("Could not determine version info (size was zero)");
 
         //https://docs.microsoft.com/en-us/windows/win32/api/verrsrc/ns-verrsrc-vs_fixedfileinfo
         const VS_FIXEDFILEINFO* verInfo = reinterpret_cast<VS_FIXEDFILEINFO*>(lpBuffer);
         if (verInfo->dwSignature != 0xfeef04bd)
-            throw std::runtime_error(__FUNCSIG__": could not determine version info (invalid signature)");
+            throw Error::Boring32Error("Could not determine version info (invalid signature)");
 
         // Doesn't matter if you are on 32 bit or 64 bit,
         // DWORD is always 32 bits, so first two revision numbers
