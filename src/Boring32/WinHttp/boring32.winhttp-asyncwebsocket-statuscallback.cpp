@@ -131,9 +131,8 @@ namespace Boring32::WinHttp::WebSockets
 							return;
 
 						default: // Unexpected responses
-							throw std::runtime_error(
-								__FUNCSIG__
-								": Received unexpected HTTP response code while upgrading to websocket: "
+							throw Error::Boring32Error(
+								"Received unexpected HTTP response code while upgrading to websocket: "
 								+ std::to_string(statusCode)
 							);
 					}

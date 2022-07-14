@@ -78,9 +78,9 @@ namespace Boring32::WindowsImagingComponent
 	Microsoft::WRL::ComPtr<IWICBitmapDecoder> ImagingFactory::CreateDecoderFromFilename(const std::wstring& path)
 	{
 		if (path.empty())
-			throw std::invalid_argument(__FUNCSIG__": path cannot be empty");
+			throw Error::Boring32Error("path cannot be empty");
 		if (!m_imagingFactory)
-			throw std::runtime_error(__FUNCSIG__": m_imagingFactory is nullptr");
+			throw Error::Boring32Error("m_imagingFactory is nullptr");
 
 		Microsoft::WRL::ComPtr<IWICBitmapDecoder> result;
 		// https://docs.microsoft.com/en-us/windows/win32/api/wincodec/nf-wincodec-iwicimagingfactory-createdecoderfromfilename
@@ -100,7 +100,7 @@ namespace Boring32::WindowsImagingComponent
 	Microsoft::WRL::ComPtr<IWICFormatConverter> ImagingFactory::CreateFormatConverter()
 	{
 		if (!m_imagingFactory)
-			throw std::runtime_error(__FUNCSIG__": m_imagingFactory is nullptr");
+			throw Error::Boring32Error("m_imagingFactory is nullptr");
 
 		Microsoft::WRL::ComPtr<IWICFormatConverter> pConverter;
 		const HRESULT hr = m_imagingFactory->CreateFormatConverter(&pConverter);
