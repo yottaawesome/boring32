@@ -98,7 +98,7 @@ namespace Boring32::Process
 	void* DynamicLinkLibrary::Resolve(const std::string& symbolName)
 	{
 		if (m_libraryHandle == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": library handle is null");
+			throw Error::Boring32Error("Library handle is null");
 		
 		if (void* ptr = GetProcAddress(m_libraryHandle, symbolName.c_str()))
 			return ptr;
@@ -118,7 +118,7 @@ namespace Boring32::Process
 	void DynamicLinkLibrary::InternalLoad()
 	{
 		if (m_path.empty())
-			throw std::runtime_error(__FUNCSIG__ ": no library path specified");
+			throw Error::Boring32Error("No library path specified");
 
 		m_libraryHandle = LoadLibraryW(m_path.c_str());
 		if (m_libraryHandle == nullptr)
