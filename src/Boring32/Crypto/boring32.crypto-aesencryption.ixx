@@ -35,7 +35,7 @@ export namespace Boring32::Crypto
 			virtual std::vector<std::byte> Encrypt(
 				const CryptoKey& key,
 				const std::vector<std::byte>& iv,
-				const std::wstring& string
+				const std::wstring_view string
 			);
 
 			virtual std::vector<std::byte> Encrypt(

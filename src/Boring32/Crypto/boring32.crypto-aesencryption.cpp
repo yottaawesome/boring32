@@ -194,10 +194,10 @@ namespace Boring32::Crypto
 	std::vector<std::byte> AesEncryption::Encrypt(
 		const CryptoKey& key,
 		const std::vector<std::byte>& iv,
-		const std::wstring& string
+		const std::wstring_view string
 	)
 	{
-		const std::byte* buffer = (std::byte*)&string[0];
+		const std::byte* buffer = reinterpret_cast<const std::byte*>(&string[0]);
 		return Encrypt(
 			key,
 			iv,
