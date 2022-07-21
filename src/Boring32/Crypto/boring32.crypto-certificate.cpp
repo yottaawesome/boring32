@@ -170,7 +170,7 @@ namespace Boring32::Crypto
 			reinterpret_cast<wchar_t*>(&bytes[0]),
 			bytes.size() / sizeof(wchar_t)
 		);
-		if (result.size())
+		if (!result.empty())
 			result.pop_back(); // remove added terminal null
 		return result;
 	}
