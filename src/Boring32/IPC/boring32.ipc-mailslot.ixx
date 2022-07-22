@@ -11,12 +11,18 @@ export namespace Boring32::IPC
 	{
 		public:
 			virtual ~Mailslot();
+			Mailslot(const Mailslot&) = default;
+			Mailslot(Mailslot&&) noexcept = default;
 			Mailslot(
 				std::wstring name,
 				const unsigned long maxMessageSize,
 				const unsigned long readTimeoutMs,
 				const std::wstring& dacl
 			);
+
+		public:
+			virtual Mailslot& operator=(const Mailslot&) = default;
+			virtual Mailslot& operator=(Mailslot&&) noexcept = default;
 
 		public:
 			virtual void Close();
