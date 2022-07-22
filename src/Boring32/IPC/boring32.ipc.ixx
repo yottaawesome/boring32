@@ -7,4 +7,4 @@ export import :blockingnamedpipeclient;
 export import :blockingnamedpipeserver;
 export import :overlappednamedpipeserver;
 export import :overlappednamedpipeclient;
-export import :mailslot;
+export import :mailslotserver;

@@ -2,18 +2,18 @@ module;
 
 #include <string>
 
-export module boring32.ipc:mailslot;
+export module boring32.ipc:mailslotserver;
 import boring32.raii;
 
 export namespace Boring32::IPC
 {
-	class Mailslot
+	class MailslotServer
 	{
 		public:
-			virtual ~Mailslot();
-			Mailslot(const Mailslot&) = default;
-			Mailslot(Mailslot&&) noexcept = default;
-			Mailslot(
+			virtual ~MailslotServer();
+			MailslotServer(const MailslotServer&) = default;
+			MailslotServer(MailslotServer&&) noexcept = default;
+			MailslotServer(
 				std::wstring name,
 				const unsigned long maxMessageSize,
 				const unsigned long readTimeoutMs,
@@ -21,8 +21,8 @@ export namespace Boring32::IPC
 			);
 
 		public:
-			virtual Mailslot& operator=(const Mailslot&) = default;
-			virtual Mailslot& operator=(Mailslot&&) noexcept = default;
+			virtual MailslotServer& operator=(const MailslotServer&) = default;
+			virtual MailslotServer& operator=(MailslotServer&&) noexcept = default;
 
 		public:
 			virtual void Close();

@@ -4,17 +4,17 @@ module;
 #include <source_location>
 #include <Windows.h>
 
-module boring32.ipc:mailslot;
+module boring32.ipc:mailslotserver;
 import boring32.error;
 
 namespace Boring32::IPC
 {
-	Mailslot::~Mailslot()
+	MailslotServer::~MailslotServer()
 	{
 		Close();
 	}
 
-	Mailslot::Mailslot(
+	MailslotServer::MailslotServer(
 		std::wstring name,
 		const unsigned long maxMessageSize,
 		const unsigned long readTimeoutMs,
@@ -38,7 +38,7 @@ namespace Boring32::IPC
 		}
 	}
 
-	void Mailslot::Close()
+	void MailslotServer::Close()
 	{
 		m_name.clear();
 		m_maxMessageSize = 0;
