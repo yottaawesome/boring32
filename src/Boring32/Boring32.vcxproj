@@ -239,9 +239,11 @@
     <ClCompile Include="FileSystem\boring32.filesystem-functions.ixx" />
     <ClCompile Include="FileSystem\boring32.filesystem.ixx" />
     <ClCompile Include="FileSystem\boring32.filesystem-functions.cpp" />
+    <ClCompile Include="IPC\boring32.ipc-mailslot.cpp" />
     <ClCompile Include="IPC\boring32.ipc-blockingnamedpipeclient.ixx" />
     <ClCompile Include="IPC\boring32.ipc-blockingnamedpipeserver.ixx" />
     <ClCompile Include="IPC\boring32.ipc-anonymouspipe.ixx" />
+    <ClCompile Include="IPC\boring32.ipc-mailslot.ixx" />
     <ClCompile Include="IPC\boring32.ipc.ixx" />
     <ClCompile Include="IPC\boring32.ipc-namedpipeclientbase.ixx" />
     <ClCompile Include="IPC\boring32.ipc-namedpipeserverbase.ixx" />

@@ -467,5 +467,9 @@
     </ClCompile>
     <ClCompile Include="Networking\boring32.networking.ixx" />
     <ClCompile Include="Networking\boring32.networking-api.ixx" />
+    <ClCompile Include="IPC\boring32.ipc-mailslot.ixx" />
+    <ClCompile Include="IPC\boring32.ipc-mailslot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
