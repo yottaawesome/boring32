@@ -21,6 +21,9 @@ namespace Boring32::IPC
 		const std::wstring& dacl
 	)	: m_name(std::move(name))
 	{
+		if (m_name.empty())
+			throw Error::Boring32Error("Name cannot be empty.");
+
 		// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createmailslotw
 		m_handle = CreateMailslotW(
 			m_name.c_str(),
