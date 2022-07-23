@@ -472,5 +472,8 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Security\boring32.security-securityattributes.ixx" />
+    <ClCompile Include="Security\boring32.security-securityattributes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
