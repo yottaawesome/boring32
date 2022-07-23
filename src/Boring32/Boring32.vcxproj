@@ -263,6 +263,7 @@
     <ClCompile Include="Security\boring32.security-constants.ixx" />
     <ClCompile Include="Security\boring32.security-functions.ixx" />
     <ClCompile Include="Security\boring32.security-impersonationcontext.ixx" />
+    <ClCompile Include="Security\boring32.security-securityattributes.ixx" />
     <ClCompile Include="Security\boring32.security.ixx" />
     <ClCompile Include="Security\boring32.security-privatenamespace.ixx" />
     <ClCompile Include="Security\boring32.security-securitydescriptor.ixx" />
