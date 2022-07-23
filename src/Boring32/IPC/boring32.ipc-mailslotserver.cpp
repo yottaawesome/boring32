@@ -38,7 +38,7 @@ namespace Boring32::IPC
 		}
 	}
 
-	void MailslotServer::Close()
+	void MailslotServer::Close() noexcept
 	{
 		m_name.clear();
 		m_maxMessageSize = 0;

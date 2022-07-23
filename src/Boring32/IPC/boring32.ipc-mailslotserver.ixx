@@ -25,7 +25,7 @@ export namespace Boring32::IPC
 			virtual MailslotServer& operator=(MailslotServer&&) noexcept = default;
 
 		public:
-			virtual void Close();
+			virtual void Close() noexcept;
 
 		protected:
 			std::wstring m_name;
