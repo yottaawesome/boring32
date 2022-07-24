@@ -15,7 +15,8 @@ export namespace Boring32::Raii
 			LocalFree(ptr);
 		}
 	};
-	using LocalHeapUniquePtr = std::unique_ptr<void, LocalHeapDeleter>;
+	template<typename T>
+	using LocalHeapUniquePtr = std::unique_ptr<T, LocalHeapDeleter>;
 
 	struct DllDeleter final
 	{

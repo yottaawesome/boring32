@@ -34,6 +34,6 @@ export namespace Boring32::Security
 
 		protected:
 			std::wstring m_descriptorString;
-			Raii::LocalHeapUniquePtr m_descriptor;
+			Raii::LocalHeapUniquePtr<std::remove_pointer<PSECURITY_DESCRIPTOR>::type> m_descriptor;
 	};
 }
