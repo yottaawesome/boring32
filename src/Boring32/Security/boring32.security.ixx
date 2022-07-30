@@ -7,3 +7,4 @@ export import :securitydescriptor;
 export import :securityattributes;
 export import :sid;
 export import :token;
+export import :aliases;

@@ -113,7 +113,7 @@ namespace Boring32::Security
 		const bool succeeded = ConvertSidToStringSidW(m_sid, &string);
 		if (!succeeded)
 			throw Error::Win32Error("ConvertSidToStringSidW() failed", GetLastError());
-		Raii::LocalHeapUniquePtr<std::remove_pointer<PSID>::type> ptr(string);
+		Raii::LocalHeapUniquePtr<PSID> ptr(string);
 		return string;
 	}
 

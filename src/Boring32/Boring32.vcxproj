@@ -249,6 +249,7 @@
     <ClCompile Include="IPC\boring32.ipc-namedpipeserverbase.ixx" />
     <ClCompile Include="IPC\boring32.ipc-overlappednamedpipeclient.ixx" />
     <ClCompile Include="IPC\boring32.ipc-overlappednamedpipeserver.ixx" />
+    <ClCompile Include="Networking\boring32.networking-api.cpp" />
     <ClCompile Include="Networking\boring32.networking-api.ixx" />
     <ClCompile Include="Networking\boring32.networking.ixx" />
     <ClCompile Include="Process\boring32.process-dynamiclinklibrary.ixx" />
@@ -260,6 +261,7 @@
     <ClCompile Include="Registry\boring32.registry.ixx" />
     <ClCompile Include="Registry\boring32.registry-key.ixx" />
     <ClCompile Include="Registry\boring32.registry-value.ixx" />
+    <ClCompile Include="Security\boring32.security-aliases.ixx" />
     <ClCompile Include="Security\boring32.security-constants.ixx" />
     <ClCompile Include="Security\boring32.security-functions.ixx" />
     <ClCompile Include="Security\boring32.security-impersonationcontext.ixx" />
