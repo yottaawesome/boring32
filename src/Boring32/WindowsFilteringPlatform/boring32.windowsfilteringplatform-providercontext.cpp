@@ -1,1 +1,1 @@
-module boring32.windowsfilteringplatform.providercontext;
+module boring32.windowsfilteringplatform:providercontext;
