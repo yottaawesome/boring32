@@ -102,6 +102,9 @@
     <ClCompile Include="Computer\Computer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="COM\COMThreadScope.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">

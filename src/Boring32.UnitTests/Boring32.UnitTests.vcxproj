@@ -172,6 +172,7 @@
     <ClCompile Include="Async\Async\ThreadPool.cpp" />
     <ClCompile Include="Compression\Decompressor.cpp" />
     <ClCompile Include="Computer\Computer.cpp" />
+    <ClCompile Include="COM\COMThreadScope.cpp" />
     <ClCompile Include="Crypto\AesEncryption.cpp" />
     <ClCompile Include="Crypto\Certificate.cpp" />
     <ClCompile Include="Crypto\CertStore.cpp" />
