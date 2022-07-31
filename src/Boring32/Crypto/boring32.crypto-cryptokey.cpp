@@ -1,8 +1,9 @@
 module;
 
-#include "pch.hpp"
 #include <memory>
 #include <vector>
+#include <Windows.h>
+#include <bcrypt.h>
 //#include <ntstatus.h>
 
 module boring32.crypto:cryptokey;
