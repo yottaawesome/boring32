@@ -6,4 +6,4 @@ export import :filter;
 export import :callout;
 export import :provider;
 export import :providercontext;
-export import boring32.windowsfilteringplatform.functions;
+export import :functions;

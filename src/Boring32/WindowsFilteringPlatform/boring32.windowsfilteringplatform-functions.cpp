@@ -1,4 +1,4 @@
-module boring32.windowsfilteringplatform.functions;
+module boring32.windowsfilteringplatform:functions;
 
 namespace Boring32::WindowsFilteringPlatform
 {
