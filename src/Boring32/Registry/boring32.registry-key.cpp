@@ -1,9 +1,10 @@
 module;
 
-#include "pch.hpp"
 #include <source_location>
 #include <iostream>
+#include <memory>
 #include <utility>
+#include <Windows.h>
 
 module boring32.registry:key;
 import :functions;
