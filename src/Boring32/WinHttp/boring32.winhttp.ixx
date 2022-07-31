@@ -1,3 +1,5 @@
+#pragma comment(lib, "winhttp.lib")
+
 export module boring32.winhttp;
 export import :httpwebclient; 
 export import :proxyinfo;

@@ -205,6 +205,7 @@
     <ClCompile Include="Async\boring32.async-threadsafevector.ixx" />
     <ClCompile Include="Async\boring32.async-timerqueuetimer.ixx" />
     <ClCompile Include="Async\boring32.async-timerqueuetimercallback.ixx" />
+    <ClCompile Include="boring32.ixx" />
     <ClCompile Include="Compression\boring32.compression-compressionerror.cpp" />
     <ClCompile Include="Compression\boring32.compression-compressionerror.ixx" />
     <ClCompile Include="Compression\boring32.compression-deleters.ixx" />

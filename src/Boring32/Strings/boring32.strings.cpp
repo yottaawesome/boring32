@@ -1,10 +1,11 @@
 module;
 
-#include "pch.hpp"
 #include <stdexcept>
 #include <source_location>
 #include <algorithm>
 #include <vector>
+#include <string>
+#include <Windows.h>
 
 module boring32.strings;
 import boring32.error;

@@ -479,5 +479,6 @@
     <ClCompile Include="Networking\boring32.networking-api.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="boring32.ixx" />
   </ItemGroup>
 </Project>

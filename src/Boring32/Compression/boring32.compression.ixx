@@ -1,3 +1,5 @@
+#pragma comment(lib, "Cabinet.lib")
+
 export module boring32.compression;
 export import :compressiontype;
 export import :compressor;
