@@ -27,7 +27,7 @@ namespace Boring32::Time
 
 	void DateTime::AddSeconds(const int64_t seconds)
 	{
-		uint64_t nanoSecond100s = seconds * 1000 * 1000 * 10;
+		int64_t nanoSecond100s = seconds * 1000 * 1000 * 10;
 		uint64_t newTotal = To100NanoSecondIntervals() + nanoSecond100s;
 		LARGE_INTEGER li{
 			.QuadPart = static_cast<long long>(newTotal)
