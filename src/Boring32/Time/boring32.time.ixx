@@ -4,6 +4,7 @@ module;
 #include <Windows.h>
 
 export module boring32.time;
+export import :datetime;
 
 export namespace Boring32::Time
 {
