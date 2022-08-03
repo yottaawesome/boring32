@@ -196,6 +196,7 @@
     <ClCompile Include="Security\SecurityDescriptor.cpp" />
     <ClCompile Include="Security\SecurityFunctions.cpp" />
     <ClCompile Include="Strings\Strings.cpp" />
+    <ClCompile Include="Time\Time.cpp" />
     <ClCompile Include="Util\Util.cpp" />
     <ClCompile Include="Util\Util.GloballyUniqueID.cpp" />
     <ClCompile Include="WinHttp\Session.cpp" />
