@@ -19,4 +19,22 @@ namespace Boring32::Time
 	{
 		return FromFileTime(m_ft) * 10ull;
 	}
+	
+	uint64_t DateTime::To100NanoSecondIntervals() const noexcept
+	{
+		return FromFileTime(m_ft);
+	}
+
+	void DateTime::AddSeconds(const int64_t seconds)
+	{
+		uint64_t nanoSecond100s = seconds * 1000 * 1000 * 10;
+		uint64_t newTotal = To100NanoSecondIntervals() + nanoSecond100s;
+		LARGE_INTEGER li{
+			.QuadPart = static_cast<long long>(newTotal)
+		};
+		m_ft = {
+			.dwLowDateTime = li.LowPart,
+			.dwHighDateTime = static_cast<DWORD>(li.HighPart)
+		};
+	}
 }
