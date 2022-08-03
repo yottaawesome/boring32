@@ -5,7 +5,7 @@ module;
 #include <source_location>
 #include "Windows.h"
 
-module boring32.time;
+module boring32.time:functions;
 import boring32.error;
 
 namespace Boring32::Time
