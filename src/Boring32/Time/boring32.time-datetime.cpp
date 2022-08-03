@@ -1,10 +1,12 @@
 module;
 
 #include <cstdint>
+#include <source_location>
 #include <Windows.h>
 
 module boring32.time:datetime;
 import :functions;
+import boring32.error;
 
 namespace Boring32::Time
 {
@@ -36,5 +38,17 @@ namespace Boring32::Time
 			.dwLowDateTime = li.LowPart,
 			.dwHighDateTime = static_cast<DWORD>(li.HighPart)
 		};
+	}
+
+	SYSTEMTIME DateTime::ToSystemTime() const
+	{
+		SYSTEMTIME st;
+		// https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-filetimetosystemtime
+		if (!FileTimeToSystemTime(&m_ft, &st))
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("FileTimeToSystemTime() failed", lastError);
+		}
+		return st;
 	}
 }
