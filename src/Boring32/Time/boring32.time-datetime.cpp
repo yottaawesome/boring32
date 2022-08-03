@@ -17,6 +17,21 @@ namespace Boring32::Time
 		GetSystemTimeAsFileTime(&m_ft);
 	}
 
+	DateTime::DateTime(const SYSTEMTIME& st)
+	{
+		if (!SystemTimeToFileTime(&st, &m_ft))
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("SystemTimeToFileTime() failed", lastError);
+		}
+	}
+
+	DateTime::DateTime(const FILETIME& ft)
+		: m_ft(ft)
+	{
+
+	}
+
 	uint64_t DateTime::ToMicroSeconds() const noexcept
 	{
 		return FromFileTime(m_ft) * 10ull;

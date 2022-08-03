@@ -12,6 +12,8 @@ export namespace Boring32::Time
 		public:
 			virtual ~DateTime();
 			DateTime();
+			DateTime(const SYSTEMTIME& st);
+			DateTime(const FILETIME& ft);
 
 		public:
 			virtual uint64_t ToMicroSeconds() const noexcept;
