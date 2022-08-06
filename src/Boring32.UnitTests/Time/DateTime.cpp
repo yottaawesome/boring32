@@ -13,7 +13,7 @@ namespace Time
 		public:
 			TEST_METHOD(TestAddSeconds)
 			{
-				SYSTEMTIME st{
+				const SYSTEMTIME st{
 					.wYear = 2022,
 					.wMonth = 8,
 					.wDayOfWeek = 4,
@@ -24,10 +24,8 @@ namespace Time
 					.wMilliseconds = 500
 				};
 				Boring32::Time::DateTime dt(st);
-
 				dt.AddSeconds(1);
-				st = dt.ToSystemTime();
-				Assert::IsTrue(st.wSecond == 31);
+				Assert::IsTrue(dt.ToSystemTime().wSecond == 31);
 			}
 	};
 }

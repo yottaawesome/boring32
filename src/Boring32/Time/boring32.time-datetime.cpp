@@ -28,16 +28,14 @@ namespace Boring32::Time
 
 	DateTime::DateTime(const FILETIME& ft)
 		: m_ft(ft)
-	{
-
-	}
+	{ }
 
 	uint64_t DateTime::ToMicroSeconds() const noexcept
 	{
 		return FromFileTime(m_ft) * 10ull;
 	}
 	
-	uint64_t DateTime::To100NanoSecondIntervals() const noexcept
+	uint64_t DateTime::ToNanosecondTicks() const noexcept
 	{
 		return FromFileTime(m_ft);
 	}
@@ -45,7 +43,7 @@ namespace Boring32::Time
 	void DateTime::AddSeconds(const int64_t seconds)
 	{
 		const int64_t nanoSecond100s = seconds * 1000 * 1000 * 10;
-		const uint64_t newTotal = To100NanoSecondIntervals() + nanoSecond100s;
+		const uint64_t newTotal = ToNanosecondTicks() + nanoSecond100s;
 		const LARGE_INTEGER li{
 			.QuadPart = static_cast<long long>(newTotal)
 		};
