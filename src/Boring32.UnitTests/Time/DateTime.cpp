@@ -8,7 +8,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace Time
 {
-	TEST_CLASS(Time)
+	TEST_CLASS(DateTime)
 	{
 		public:
 			TEST_METHOD(TestAddSeconds)
