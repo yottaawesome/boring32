@@ -42,15 +42,15 @@ namespace Boring32::Time
 
 	void DateTime::AddSeconds(const int64_t seconds)
 	{
-		const int64_t nanoSecond100s = seconds * 1000 * 1000 * 10;
-		const uint64_t newTotal = ToNanosecondTicks() + nanoSecond100s;
-		const LARGE_INTEGER li{
-			.QuadPart = static_cast<long long>(newTotal)
-		};
-		m_ft = {
-			.dwLowDateTime = li.LowPart,
-			.dwHighDateTime = static_cast<DWORD>(li.HighPart)
-		};
+		const int64_t nsTicks = seconds * 1000 * 1000 * 10;
+		const uint64_t newTotal = ToNanosecondTicks() + nsTicks;
+		SetNewTotal(ToNanosecondTicks() + nsTicks);
+	}
+	
+	void DateTime::AddMillseconds(const int64_t milliseconds)
+	{
+		const int64_t nsTicks = milliseconds * 1000 * 10;
+		SetNewTotal(ToNanosecondTicks() + nsTicks);
 	}
 
 	SYSTEMTIME DateTime::ToSystemTime() const
@@ -63,5 +63,16 @@ namespace Boring32::Time
 			throw Error::Win32Error("FileTimeToSystemTime() failed", lastError);
 		}
 		return st;
+	}
+
+	void DateTime::SetNewTotal(const uint64_t newTotal)
+	{
+		const LARGE_INTEGER li{
+			.QuadPart = static_cast<long long>(newTotal)
+		};
+		m_ft = {
+			.dwLowDateTime = li.LowPart,
+			.dwHighDateTime = static_cast<DWORD>(li.HighPart)
+		};
 	}
 }

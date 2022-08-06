@@ -21,7 +21,11 @@ export namespace Boring32::Time
 			virtual uint64_t ToMicroSeconds() const noexcept;
 			virtual uint64_t ToNanosecondTicks() const noexcept;
 			virtual void AddSeconds(const int64_t seconds);
+			virtual void AddMillseconds(const int64_t milliseconds);
 			virtual SYSTEMTIME ToSystemTime() const;
+
+		protected:
+			virtual void SetNewTotal(const uint64_t newTotal);
 
 		protected:
 			FILETIME m_ft{ 0 };
