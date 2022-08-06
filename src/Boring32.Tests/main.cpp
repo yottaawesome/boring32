@@ -1,4 +1,6 @@
 ﻿#include <format>
+#include <memory>
+#include <atomic>
 #include <iostream>
 #include <functional>
 #include <utility>
@@ -347,8 +349,18 @@ void BlahBlah()
 	std::cout << (int)x.at(0).GetState() << std::endl;
 }
 
+struct O
+{
+	int P = 5;
+};
+
 int main(int argc, char** args) try
 {
+
+	std::atomic<std::shared_ptr<O>> m = std::make_shared<O>();
+	m.load()->P = 3;
+
+
 	auto x = Boring32::Networking::GetAdapters(
 		AF_UNSPEC, 
 		GAA_FLAG_SKIP_MULTICAST
