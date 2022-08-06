@@ -20,6 +20,7 @@ export namespace Boring32::Time
 		public:
 			virtual uint64_t ToMicroSeconds() const noexcept;
 			virtual uint64_t ToNanosecondTicks() const noexcept;
+			virtual void AddMinutes(const int64_t minutes);
 			virtual void AddSeconds(const int64_t seconds);
 			virtual void AddMillseconds(const int64_t milliseconds);
 			virtual SYSTEMTIME ToSystemTime() const;

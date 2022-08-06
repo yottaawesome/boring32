@@ -40,16 +40,21 @@ namespace Boring32::Time
 		return FromFileTime(m_ft);
 	}
 
+	void DateTime::AddMinutes(const int64_t minutes)
+	{
+		const int64_t nsTicks = minutes * 60ll * 1000ll * 1000ll * 10ll;
+		SetNewTotal(ToNanosecondTicks() + nsTicks);
+	}
+
 	void DateTime::AddSeconds(const int64_t seconds)
 	{
-		const int64_t nsTicks = seconds * 1000 * 1000 * 10;
-		const uint64_t newTotal = ToNanosecondTicks() + nsTicks;
+		const int64_t nsTicks = seconds * 1000ll * 1000ll * 10ll;
 		SetNewTotal(ToNanosecondTicks() + nsTicks);
 	}
 	
 	void DateTime::AddMillseconds(const int64_t milliseconds)
 	{
-		const int64_t nsTicks = milliseconds * 1000 * 10;
+		const int64_t nsTicks = milliseconds * 1000ll * 10ll;
 		SetNewTotal(ToNanosecondTicks() + nsTicks);
 	}
 
