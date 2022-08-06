@@ -186,8 +186,8 @@ namespace Boring32::Time
     {
         // Adapted from https://stackoverflow.com/a/46024468
         // January 1, 1970 (start of Unix epoch) in "ticks"
-        const size_t UnixTimeStart = 0x019DB1DED53E8000; 
-        const size_t TicksPerSecond = 10000000; //a tick is 100ns
+        static constexpr size_t UnixTimeStart = 0x019DB1DED53E8000; 
+        static constexpr size_t TicksPerSecond = 10000000; //a tick is 100ns
 
         FILETIME ft;
         GetSystemTimeAsFileTime(&ft); //returns ticks in UTC
