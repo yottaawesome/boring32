@@ -32,7 +32,7 @@ namespace Boring32::Time
 
 	uint64_t DateTime::ToMicroSeconds() const noexcept
 	{
-		return FromFileTime(m_ft) * 10ull;
+		return FromFileTime(m_ft) / 10ull;
 	}
 	
 	uint64_t DateTime::ToNanosecondTicks() const noexcept
