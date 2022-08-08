@@ -23,7 +23,7 @@ export namespace Boring32::Security
 			virtual HKEY GetUserRegistry();
 
 		protected:
-			virtual ImpersonationContext&  Move(ImpersonationContext& other) noexcept;
+			virtual ImpersonationContext& Move(ImpersonationContext& other) noexcept;
 
 		protected:
 			HKEY m_registryHive;

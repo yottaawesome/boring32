@@ -117,10 +117,9 @@ namespace Boring32::Async
 		}
 	}
 
-	bool GetProcessIdByName(
+	std::vector<DWORD> GetProcessIDsByName(
 		const std::wstring& processName,
-		const int sessionIdToMatch,
-		DWORD& outResult
+		const int sessionIdToMatch
 	)
 	{
 		if (processName.empty())
@@ -148,6 +147,7 @@ namespace Boring32::Async
 			);
 		}
 
+		std::vector<DWORD> results;
 		do
 		{
 			if (!Strings::DoCaseInsensitiveMatch(procEntry.szExeFile, processName))
@@ -155,8 +155,8 @@ namespace Boring32::Async
 
 			if (sessionIdToMatch < 0)
 			{
-				outResult = procEntry.th32ProcessID;
-				return true;
+				results.push_back(procEntry.th32ProcessID);
+				continue;
 			}
 
 			DWORD processSessionId = 0;
@@ -172,12 +172,11 @@ namespace Boring32::Async
 
 			if (processSessionId == sessionIdToMatch)
 			{
-				outResult = procEntry.th32ProcessID;
-				return true;
+				results.push_back(procEntry.th32ProcessID);
 			}
 		} while (Process32NextW(processesSnapshot.GetHandle(), &procEntry));
 		// https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-process32nextw
 
-		return false;
+		return results;
 	}
 }

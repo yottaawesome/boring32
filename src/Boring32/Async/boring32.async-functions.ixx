@@ -55,7 +55,7 @@ export namespace Boring32::Async
 	);
 
 	/// <summary>
-	///		Find a process' ID by its name.
+	///		Find a process IDs by process name.
 	/// </summary>
 	/// <param name="processName">
 	///		The name of the process to search for.
@@ -65,17 +65,11 @@ export namespace Boring32::Async
 	///		Pass a negative value for this argument
 	///		to be ignored.
 	/// </param>
-	/// <param name="outResult">
-	///		Set to the value of the matching process
-	///		ID. Otherwise, this argument is not
-	///		modified
-	/// </param>
 	/// <returns>
-	///		True if a match is found, false otherwise.
+	///		vector of IDs.
 	/// </returns>
-	bool GetProcessIdByName(
+	std::vector<DWORD> GetProcessIDsByName(
 		const std::wstring& processName,
-		const int sessionIdToMatch,
-		DWORD& outResult
+		const int sessionIdToMatch
 	);
 }
