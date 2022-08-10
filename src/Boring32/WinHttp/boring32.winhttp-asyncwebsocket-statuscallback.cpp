@@ -1,6 +1,7 @@
 module;
 
 #include <future>
+#include <string>
 #include <algorithm>
 #include <source_location>
 #include <map>

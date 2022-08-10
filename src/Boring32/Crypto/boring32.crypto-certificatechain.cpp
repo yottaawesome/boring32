@@ -87,7 +87,7 @@ namespace Boring32::Crypto
 	void CertificateChain::Verify()
 	{
 		// TODO: need to verify this actually works
-		if (m_chainContext == nullptr)
+		if (!m_chainContext)
 			throw Error::Boring32Error("m_chainContext is null");
 
 		CERT_CHAIN_POLICY_PARA para{
@@ -105,7 +105,7 @@ namespace Boring32::Crypto
 			&para,
 			&status
 		);
-		if (succeeded == false)
+		if (!succeeded)
 			throw Error::Win32Error("CertVerifyCertificateChainPolicy() failed");
 	}
 	
@@ -157,7 +157,7 @@ namespace Boring32::Crypto
 		const DWORD certIndex
 	) const
 	{
-		if (m_chainContext == nullptr)
+		if (!m_chainContext)
 			throw Error::Boring32Error("m_chainContext is null");
 		if (chainIndex >= m_chainContext->cChain)
 			throw Error::Boring32Error(
@@ -183,11 +183,9 @@ namespace Boring32::Crypto
 		return { simpleChain->rgpElement[certIndex]->pCertContext, false };
 	}
 
-	Certificate CertificateChain::GetFirstCertAt(
-		const DWORD chainIndex
-	) const
+	Certificate CertificateChain::GetFirstCertAt(const DWORD chainIndex) const
 	{
-		if (m_chainContext == nullptr)
+		if (!m_chainContext)
 			throw Error::Boring32Error("m_chainContext is null");
 		if (chainIndex >= m_chainContext->cChain) 
 			throw Error::Boring32Error(
@@ -198,18 +196,16 @@ namespace Boring32::Crypto
 			));
 
 		CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
-		if (simpleChain == nullptr)
+		if (!simpleChain)
 			throw Error::Boring32Error("simpleChain is null");
 		if (simpleChain->cElement == 0)
 			return {};
 		return { simpleChain->rgpElement[0]->pCertContext, false };
 	}
 
-	Certificate CertificateChain::GetLastCertAt(
-		const DWORD chainIndex
-	) const
+	Certificate CertificateChain::GetLastCertAt(const DWORD chainIndex) const
 	{
-		if (m_chainContext == nullptr)
+		if (!m_chainContext)
 			throw Error::Boring32Error("m_chainContext is null");
 		if (chainIndex >= m_chainContext->cChain)
 			throw Error::Boring32Error(
@@ -220,7 +216,7 @@ namespace Boring32::Crypto
 				));
 
 		CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
-		if (simpleChain == nullptr)
+		if (!simpleChain)
 			throw Error::Boring32Error("simpleChain is null");
 		if (simpleChain->cElement == 0)
 			return {};
@@ -263,7 +259,7 @@ namespace Boring32::Crypto
 		HCERTSTORE store
 	)
 	{
-		if (contextToBuildFrom == nullptr)
+		if (!contextToBuildFrom)
 			throw Error::Boring32Error("m_chainContext is null");
 
 		CERT_ENHKEY_USAGE        EnhkeyUsage;
@@ -289,7 +285,10 @@ namespace Boring32::Crypto
 			nullptr,
 			&m_chainContext
 		);
-		if (succeeded == false)
-			throw Error::Win32Error("CertGetCertificateChain() failed", GetLastError());
+		if (!succeeded)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("CertGetCertificateChain() failed", lastError);
+		}
 	}
 }
