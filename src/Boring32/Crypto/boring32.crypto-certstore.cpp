@@ -18,8 +18,6 @@ import boring32.error;
 
 namespace Boring32::Crypto
 {
-	constexpr DWORD CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS = 0x0002;
-
 	CertStore::~CertStore()
 	{
 		Close();
@@ -110,6 +108,9 @@ namespace Boring32::Crypto
 
 	CertStore& CertStore::Copy(const CertStore& other)
 	{
+		if (this == &other)
+			return *this;
+
 		Close();
 		m_storeName = other.m_storeName;
 		m_closeOptions = other.m_closeOptions;
@@ -142,6 +143,9 @@ namespace Boring32::Crypto
 	
 	CertStore& CertStore::Move(CertStore& other) noexcept
 	{
+		if (this == &other)
+			return *this;
+
 		Close();
 		m_storeName = std::move(other.m_storeName);
 		m_closeOptions = other.m_closeOptions;
@@ -156,17 +160,16 @@ namespace Boring32::Crypto
 
 	void CertStore::Close() noexcept
 	{
-		if (m_certStore)
+		if (!m_certStore)
+			return;
+		// See https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certclosestore
+		// for additional resource notes under remarks
+		if (CertCloseStore(m_certStore, (DWORD)m_closeOptions) == false)
 		{
-			// See https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certclosestore
-			// for additional resource notes under remarks
-			if (CertCloseStore(m_certStore, (DWORD)m_closeOptions) == false)
-			{
-				Error::Win32Error error("CertCloseStore() failed", GetLastError());
-				std::wcerr << error.what() << std::endl;
-			}
-			m_certStore = nullptr;
+			Error::Win32Error error("CertCloseStore() failed", GetLastError());
+			std::wcerr << error.what() << std::endl;
 		}
+		m_certStore = nullptr;
 	}
 
 	void CertStore::InternalOpen()
@@ -212,7 +215,7 @@ namespace Boring32::Crypto
 				throw Error::Boring32Error("unknown m_storeType");
 		}
 		
-		if (m_certStore == nullptr)
+		if (!m_certStore)
 			throw Error::Win32Error("CertOpenSystemStoreW() failed", GetLastError());
 	}
 
@@ -228,7 +231,7 @@ namespace Boring32::Crypto
 
 	std::vector<Certificate> CertStore::GetAll() const
 	{
-		if (m_certStore == nullptr)
+		if (!m_certStore)
 			throw Error::Boring32Error("m_certStore is null");
 
 		std::vector<Certificate> results;
@@ -285,10 +288,7 @@ namespace Boring32::Crypto
 		}
 		const DWORD lastError = GetLastError();
 		if (lastError != CRYPT_E_NOT_FOUND && lastError != ERROR_NO_MORE_FILES)
-			throw Error::Win32Error(
-				"CertEnumCertificatesInStore() failed", 
-				lastError
-			);
+			throw Error::Win32Error("CertEnumCertificatesInStore() failed", lastError);
 
 		return {};
 	}
@@ -407,7 +407,7 @@ namespace Boring32::Crypto
 			(void*)arg,
 			nullptr
 		);
-		if (certContext == nullptr)
+		if (!certContext)
 		{
 			const DWORD lastError = GetLastError();
 			if (lastError != CRYPT_E_NOT_FOUND)
@@ -424,21 +424,25 @@ namespace Boring32::Crypto
 
 	void CertStore::DeleteCert(const CERT_CONTEXT* cert)
 	{
-		if (cert == nullptr)
+		if (!cert)
 			throw std::invalid_argument("cert is nullptr");
-		if (m_certStore == nullptr)
+		if (!m_certStore)
 			throw std::runtime_error("m_certStore is nullptr");
 
-		if (CertDeleteCertificateFromStore(cert) == false)
+		if (!CertDeleteCertificateFromStore(cert))
+		{
+			const auto lastError = GetLastError();
 			throw Error::Win32Error(
 				"CertDeleteCertificateFromStore() failed",
-				GetLastError()
+				lastError
 			);
+		}
+			
 	}
 
 	void CertStore::ImportCert(const CERT_CONTEXT* cert)
 	{
-		if (cert == nullptr)
+		if (!cert)
 			throw Error::Boring32Error("cert is nullptr");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/ns-cryptuiapi-cryptui_wiz_import_src_info
@@ -455,7 +459,7 @@ namespace Boring32::Crypto
 	void CertStore::ImportCertsFromFile(const std::filesystem::path& path, const std::wstring& password)
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/ns-cryptuiapi-cryptui_wiz_import_src_info
-		std::wstring resolvedAbsolutePath = std::filesystem::absolute(path);
+		const std::wstring resolvedAbsolutePath = std::filesystem::absolute(path);
 		CRYPTUI_WIZ_IMPORT_SRC_INFO info{
 			.dwSize = sizeof(info),
 			.dwSubjectChoice = CRYPTUI_WIZ_IMPORT_SUBJECT_FILE,
@@ -468,9 +472,9 @@ namespace Boring32::Crypto
 
 	void CertStore::AddCertificate(const CERT_CONTEXT* cert)
 	{
-		if (cert == nullptr)
+		if (!cert)
 			throw Error::Boring32Error("cert is null");
-		if (m_certStore == nullptr)
+		if (!m_certStore)
 			throw Error::Boring32Error("m_certStore is nullptr");
 		const bool succeeded = CertAddCertificateContextToStore(
 			m_certStore,
@@ -486,13 +490,13 @@ namespace Boring32::Crypto
 
 	void CertStore::InternalImport(const CRYPTUI_WIZ_IMPORT_SRC_INFO& info)
 	{
-		if (m_certStore == nullptr)
+		if (!m_certStore)
 			throw Error::Boring32Error("m_certStore is nullptr");
 
-		const static DWORD CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS = 0x0002;
+		constexpr static DWORD CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS = 0x0002;
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/nf-cryptuiapi-cryptuiwizimport
-		bool succeeded = CryptUIWizImport(
+		const bool succeeded = CryptUIWizImport(
 			CRYPTUI_WIZ_NO_UI | CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS | CRYPTUI_WIZ_IMPORT_ALLOW_CERT,
 			nullptr,
 			nullptr,
