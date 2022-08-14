@@ -190,6 +190,16 @@ namespace Boring32::Async
 	{
 		return m_started.WaitOnEvent(millis, true);
 	}
+	
+	void Thread::SetThreadDescription(const std::wstring& description)
+	{
+		if (!m_threadHandle)
+			throw Error::Boring32Error("No thread created.");
+
+		const HRESULT hr = ::SetThreadDescription(m_threadHandle.GetHandle(), description.c_str());
+		if (FAILED(hr))
+			throw Error::ComError("SetThreadDescription() failed", hr);
+	}
 
 	UINT Thread::ThreadProc(void* param)
 	{
