@@ -10,21 +10,21 @@ import :boring32error;
 
 export namespace Boring32::Error
 {
-	class ComError : public Boring32Error
+	class COMError : public Boring32Error
 	{
 		public:
-			virtual ~ComError();
-			ComError(const ComError& other);
-			ComError(ComError&& other) noexcept;
-			ComError(
+			virtual ~COMError();
+			COMError(const COMError& other);
+			COMError(COMError&& other) noexcept;
+			COMError(
 				const std::string& msg, 
 				const HRESULT hr,
 				const std::source_location location = std::source_location::current()
 			);
 
 		public:
-			virtual ComError& operator=(const ComError& other);
-			virtual ComError& operator=(ComError&& other) noexcept;
+			virtual COMError& operator=(const COMError& other);
+			virtual COMError& operator=(COMError&& other) noexcept;
 
 		public:
 			virtual HRESULT GetHResult() const noexcept;

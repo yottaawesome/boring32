@@ -27,7 +27,7 @@ namespace Boring32::WindowsImagingComponent
 			IID_PPV_ARGS(&m_imagingFactory)
 		);
 		if (FAILED(hr))
-			throw Error::ComError("CoCreateInstance() failed", hr);
+			throw Error::COMError("CoCreateInstance() failed", hr);
 	}
 
 	ImagingFactory::ImagingFactory(const ImagingFactory& other)
@@ -92,7 +92,7 @@ namespace Boring32::WindowsImagingComponent
 			&result
 		);
 		if (FAILED(hr))
-			throw Error::ComError("CreateDecoderFromFilename() failed", hr);
+			throw Error::COMError("CreateDecoderFromFilename() failed", hr);
 
 		return result;
 	}
@@ -105,7 +105,7 @@ namespace Boring32::WindowsImagingComponent
 		Microsoft::WRL::ComPtr<IWICFormatConverter> pConverter;
 		const HRESULT hr = m_imagingFactory->CreateFormatConverter(&pConverter);
 		if (FAILED(hr))
-			throw Error::ComError("CreateFormatConverter() failed", hr);
+			throw Error::COMError("CreateFormatConverter() failed", hr);
 
 		return pConverter;
 	}

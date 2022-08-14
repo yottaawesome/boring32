@@ -201,7 +201,7 @@ namespace Boring32::Async
 			description.c_str()
 		);
 		if (FAILED(hr))
-			throw Error::ComError("SetThreadDescription() failed", hr);
+			throw Error::COMError("SetThreadDescription() failed", hr);
 	}
 	
 	std::wstring Thread::GetDescription()
@@ -216,7 +216,7 @@ namespace Boring32::Async
 			&pThreadDescription
 		);
 		if (FAILED(hr))
-			throw Error::ComError("GetThreadDescription() failed", hr);
+			throw Error::COMError("GetThreadDescription() failed", hr);
 		if (!pThreadDescription)
 			return {};
 		Raii::LocalHeapUniquePtr<wchar_t> deleter(pThreadDescription);

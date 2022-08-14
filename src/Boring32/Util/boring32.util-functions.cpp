@@ -31,7 +31,7 @@ namespace Boring32::Util
 
         const HRESULT result = PathCchRemoveFileSpec(&filePath[0], filePath.size());
         if (result != S_OK && result != S_FALSE)
-            throw Error::ComError("PathCchRemoveFileSpec() failed", result);
+            throw Error::COMError("PathCchRemoveFileSpec() failed", result);
         filePath = filePath.c_str();
         
         return filePath;
@@ -87,7 +87,7 @@ namespace Boring32::Util
         GUID guidReference;
         HRESULT result = CoCreateGuid(&guidReference);
         if (FAILED(result))
-            throw Error::ComError("CoCreateGuid() failed", result);
+            throw Error::COMError("CoCreateGuid() failed", result);
         return GetGuidAsWString(guidReference);
     }
 
@@ -96,7 +96,7 @@ namespace Boring32::Util
         GUID guid;
         HRESULT result = CoCreateGuid(&guid);
         if (FAILED(result))
-            throw Error::ComError("CoCreateGuid() failed", result);
+            throw Error::COMError("CoCreateGuid() failed", result);
         return guid;
     }
 
@@ -115,13 +115,13 @@ namespace Boring32::Util
             reinterpret_cast<void**>(networkListManager.GetAddressOf())
         );
         if (FAILED(result))
-            throw Error::ComError("CoCreateGuid() failed", result);
+            throw Error::COMError("CoCreateGuid() failed", result);
 
         // https://docs.microsoft.com/en-us/windows/win32/api/netlistmgr/ne-netlistmgr-nlm_connectivity
         NLM_CONNECTIVITY connectivity;
         result = networkListManager->GetConnectivity(&connectivity);
         if (FAILED(result))
-            throw Error::ComError("GetConnectivity() failed", result);
+            throw Error::COMError("GetConnectivity() failed", result);
 
         if (connectivity & NLM_CONNECTIVITY::NLM_CONNECTIVITY_IPV4_INTERNET)
             return true;

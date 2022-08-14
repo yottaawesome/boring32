@@ -10,14 +10,14 @@ import :functions;
 
 namespace Boring32::Error
 {
-	ComError::~ComError() {}
+	COMError::~COMError() {}
 
-	ComError::ComError(const ComError& other)					= default;
-	ComError::ComError(ComError&& other) noexcept				= default;
-	ComError& ComError::operator=(const ComError& other)		= default;
-	ComError& ComError::operator=(ComError&& other) noexcept	= default;
+	COMError::COMError(const COMError& other)					= default;
+	COMError::COMError(COMError&& other) noexcept				= default;
+	COMError& COMError::operator=(const COMError& other)		= default;
+	COMError& COMError::operator=(COMError&& other) noexcept	= default;
 
-	ComError::ComError(
+	COMError::COMError(
 		const std::string& msg,
 		const HRESULT hr,
 		const std::source_location location
@@ -28,17 +28,17 @@ namespace Boring32::Error
 		GenerateErrorMessage(location, msg);
 	}
 
-	HRESULT ComError::GetHResult() const noexcept
+	HRESULT COMError::GetHResult() const noexcept
 	{
 		return m_hresult;
 	}
 
-	const char* ComError::what() const noexcept
+	const char* COMError::what() const noexcept
 	{
 		return m_errorString.c_str();
 	}
 
-	void ComError::GenerateErrorMessage(
+	void COMError::GenerateErrorMessage(
 		const std::source_location& location,
 		const std::string& message
 	)
