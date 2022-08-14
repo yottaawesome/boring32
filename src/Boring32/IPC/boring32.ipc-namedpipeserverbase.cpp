@@ -168,7 +168,7 @@ namespace Boring32::IPC
             DisconnectNamedPipe(m_pipe.GetHandle());
     }
 
-    Raii::Win32Handle& NamedPipeServerBase::GetInternalHandle()
+    RAII::Win32Handle& NamedPipeServerBase::GetInternalHandle()
     {
         return m_pipe;
     }

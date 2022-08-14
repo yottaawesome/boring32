@@ -94,7 +94,7 @@ export namespace Boring32::Async
 			virtual void Move(Event& other) noexcept;
 
 		protected:
-			Raii::Win32Handle m_event;
+			RAII::Win32Handle m_event;
 			bool m_isManualReset;
 			bool m_createEventOnTrue;
 			std::wstring m_name;

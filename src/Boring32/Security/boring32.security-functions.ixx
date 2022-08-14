@@ -10,7 +10,7 @@ import :constants;
 
 export namespace Boring32::Security
 {
-	Raii::Win32Handle GetProcessToken(
+	RAII::Win32Handle GetProcessToken(
 		const HANDLE processHandle,
 		const DWORD desiredAccess
 	);

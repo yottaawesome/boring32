@@ -42,7 +42,7 @@ export namespace Boring32::IPC
 			virtual void Close();
 			virtual void Disconnect();
 			virtual void Flush();
-			virtual Raii::Win32Handle& GetInternalHandle();
+			virtual RAII::Win32Handle& GetInternalHandle();
 			virtual std::wstring GetName() const;
 			virtual DWORD GetSize() const;
 			virtual DWORD GetMaxInstances() const;
@@ -62,7 +62,7 @@ export namespace Boring32::IPC
 			virtual bool InternalUnreadCharactersRemaining(DWORD& charactersRemaining, const bool throwOnError) const;
 
 		protected:
-			Raii::Win32Handle m_pipe;
+			RAII::Win32Handle m_pipe;
 			std::wstring m_pipeName;
 			std::wstring m_sid;
 			DWORD m_size;

@@ -45,8 +45,8 @@ namespace Boring32::Async
 		Close();
 		m_processInfo.dwProcessId = other.m_processInfo.dwProcessId;
 		m_processInfo.dwThreadId = other.m_processInfo.dwThreadId;
-		m_processInfo.hProcess = Raii::Win32Handle::DuplicatePassedHandle(other.m_processInfo.hProcess, false);
-		m_processInfo.hThread = Raii::Win32Handle::DuplicatePassedHandle(other.m_processInfo.hThread, false);
+		m_processInfo.hProcess = RAII::Win32Handle::DuplicatePassedHandle(other.m_processInfo.hProcess, false);
+		m_processInfo.hThread = RAII::Win32Handle::DuplicatePassedHandle(other.m_processInfo.hThread, false);
 		return *this;
 	}
 

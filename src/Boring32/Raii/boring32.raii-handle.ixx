@@ -6,7 +6,7 @@ module;
 export module boring32.raii:handle;
 //https://docs.microsoft.com/en-us/windows/win32/sysinfo/kernel-objects
 
-export namespace Boring32::Raii
+export namespace Boring32::RAII
 {
 	template<class T>	
 	struct HandleTraits

@@ -60,8 +60,8 @@ export namespace Boring32::Async
 			std::wstring m_startingDirectory;
 			bool m_canInheritHandles;
 			DWORD m_creationFlags;
-			Boring32::Raii::Win32Handle m_process;
-			Boring32::Raii::Win32Handle m_thread;
+			Boring32::RAII::Win32Handle m_process;
+			Boring32::RAII::Win32Handle m_thread;
 			DWORD m_processId;
 			DWORD m_threadId;
 			STARTUPINFO m_dataSi;

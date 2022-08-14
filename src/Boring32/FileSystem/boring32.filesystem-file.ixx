@@ -22,6 +22,6 @@ export namespace Boring32::FileSystem
 
 		protected:
 			std::wstring m_fileName;
-			Raii::Win32Handle m_fileHandle;
+			RAII::Win32Handle m_fileHandle;
 	};
 }

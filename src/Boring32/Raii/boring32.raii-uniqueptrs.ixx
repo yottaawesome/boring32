@@ -6,7 +6,7 @@ module;
 
 export module boring32.raii:uniqueptrs;
 
-export namespace Boring32::Raii
+export namespace Boring32::RAII
 {
 	struct LocalHeapDeleter final
 	{

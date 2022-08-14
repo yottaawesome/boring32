@@ -21,12 +21,12 @@ namespace Boring32::Security
 		return handle && handle != INVALID_HANDLE_VALUE;
 	}
 
-	Raii::Win32Handle GetProcessToken(const HANDLE processHandle, const DWORD desiredAccess)
+	RAII::Win32Handle GetProcessToken(const HANDLE processHandle, const DWORD desiredAccess)
 	{
 		if (!IsHandleValid(processHandle))
 			throw std::invalid_argument(__FUNCSIG__ ": processHandle cannot be null");
 
-		Raii::Win32Handle handle;
+		RAII::Win32Handle handle;
 		// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocesstoken
 		const bool succeeded = OpenProcessToken(
 			processHandle,
@@ -94,7 +94,7 @@ namespace Boring32::Security
 		// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw
 		if (!ConvertStringSidToSidW(integritySidString.c_str(), &rawIntegritySid))
 			throw Error::Win32Error("ConvertStringSidToSidW() failed", GetLastError());
-		Raii::SidUniquePtr integritySid(rawIntegritySid);
+		RAII::SidUniquePtr integritySid(rawIntegritySid);
 
 		TOKEN_MANDATORY_LABEL tml = { 0 };
 		tml.Label.Attributes = SE_GROUP_INTEGRITY;

@@ -10,7 +10,7 @@ module;
 module boring32.raii:win32handle;
 import boring32.error;
 
-namespace Boring32::Raii
+namespace Boring32::RAII
 {
 	void Win32Handle::CloseHandleAndFreeMemory(HANDLE* pHandle)
 	{

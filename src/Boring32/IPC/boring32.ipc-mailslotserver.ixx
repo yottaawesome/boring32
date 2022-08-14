@@ -31,6 +31,6 @@ export namespace Boring32::IPC
 			std::wstring m_name;
 			unsigned long m_maxMessageSize;
 			unsigned long m_readTimeoutMs;
-			Raii::Win32Handle m_handle;
+			RAII::Win32Handle m_handle;
 	};
 }

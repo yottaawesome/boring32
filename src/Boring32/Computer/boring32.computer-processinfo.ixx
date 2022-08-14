@@ -43,6 +43,6 @@ export namespace Boring32::Computer
 			static std::vector<ProcessInfo> FromCurrentProcesses();
 
 		protected:
-			Raii::Win32Handle m_processHandle;
+			RAII::Win32Handle m_processHandle;
 	};
 }

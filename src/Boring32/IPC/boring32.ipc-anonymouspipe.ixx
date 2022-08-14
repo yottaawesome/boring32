@@ -60,7 +60,7 @@ export namespace Boring32::IPC
 			std::wstring m_delimiter;
 			DWORD m_size;
 			DWORD m_mode;
-			Raii::Win32Handle m_readHandle;
-			Raii::Win32Handle m_writeHandle;
+			RAII::Win32Handle m_readHandle;
+			RAII::Win32Handle m_writeHandle;
 	};
 }

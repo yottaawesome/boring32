@@ -59,7 +59,7 @@ export namespace Boring32::Async
 			);
 
 		protected:
-			Raii::Win32Handle m_handle;
+			RAII::Win32Handle m_handle;
 			std::wstring m_name;
 			std::atomic<long> m_currentCount;
 			long m_maxCount;

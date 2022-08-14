@@ -25,7 +25,7 @@ export namespace Boring32::Security
 
 		public:
 			virtual void Close();
-			virtual Raii::Win32Handle GetToken() const noexcept;
+			virtual RAII::Win32Handle GetToken() const noexcept;
 			/// <summary>
 			/// https://docs.microsoft.com/en-us/windows/win32/secauthz/privilege-constants
 			/// </summary>
@@ -37,6 +37,6 @@ export namespace Boring32::Security
 			virtual Token& Move(Token& other) noexcept;
 
 		protected:
-			Raii::Win32Handle m_token;
+			RAII::Win32Handle m_token;
 	};
 }

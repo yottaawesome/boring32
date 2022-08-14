@@ -48,7 +48,7 @@ void X()
 void SearchTokenForAdminGroup()
 {
 	// Open a handle to the access token for the calling process.
-	Boring32::Raii::Win32Handle hToken;
+	Boring32::RAII::Win32Handle hToken;
 	if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken))
 		throw Boring32::Error::Win32Error("OpenProcessToken() failed", GetLastError());
 
@@ -66,7 +66,7 @@ void SearchTokenForAdminGroup()
 	if (!succeeded) 
 		throw Boring32::Error::Win32Error("AllocateAndInitializeSid() failed", GetLastError());
 
-	Boring32::Raii::SidUniquePtr pSID(rawSID);
+	Boring32::RAII::SidUniquePtr pSID(rawSID);
 	if (Boring32::Security::SearchTokenGroupsForSID(hToken, pSID.get()))
 		std::wcout << "User is a member of BUILTIN\\Administrators\n";
 	else
@@ -76,7 +76,7 @@ void SearchTokenForAdminGroup()
 void EnumerateTokenGroups()
 {
 	// Open a handle to the access token for the calling process.
-	Boring32::Raii::Win32Handle hToken;
+	Boring32::RAII::Win32Handle hToken;
 	if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken))
 		throw Boring32::Error::Win32Error("OpenProcessToken() failed", GetLastError());
 	Boring32::Security::EnumerateTokenGroups(hToken);
@@ -85,7 +85,7 @@ void EnumerateTokenGroups()
 void EnumerateTokenPrivileges()
 {
 	// Open a handle to the access token for the calling process.
-	Boring32::Raii::Win32Handle hToken;
+	Boring32::RAII::Win32Handle hToken;
 	if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken))
 		throw Boring32::Error::Win32Error("OpenProcessToken() failed", GetLastError());
 	Boring32::Security::EnumerateTokenPrivileges(hToken);
@@ -314,7 +314,7 @@ void templateStuff()
 	Boring32::Async::Synced<int> AA(3);
 	std::wcout << std::format(L"{}\n", AA());
 	HANDLE a = 0;
-	Boring32::Raii::BasicHandle s;
+	Boring32::RAII::BasicHandle s;
 	s = a;
 }
 

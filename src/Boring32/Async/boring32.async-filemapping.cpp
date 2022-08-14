@@ -89,7 +89,7 @@ namespace Boring32::Async
 		return m_fileMapping.GetHandle();
 	}
 
-	const Raii::Win32Handle FileMapping::GetHandle() const noexcept
+	const RAII::Win32Handle FileMapping::GetHandle() const noexcept
 	{
 		return m_fileMapping;
 	}

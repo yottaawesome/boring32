@@ -53,7 +53,7 @@ export namespace Boring32::Async
 			virtual void Start(const std::function<int(void*)>& func);
 			virtual ThreadStatus GetStatus() const noexcept;
 			virtual UINT GetExitCode() const;
-			virtual Raii::Win32Handle GetHandle() noexcept;
+			virtual RAII::Win32Handle GetHandle() noexcept;
 			virtual bool WaitToStart(const DWORD millis);
 			virtual void SetDescription(const std::wstring& description);
 			virtual std::wstring GetDescription();
@@ -67,7 +67,7 @@ export namespace Boring32::Async
 
 		protected:
 			ThreadStatus m_status;
-			Raii::Win32Handle m_threadHandle;
+			RAII::Win32Handle m_threadHandle;
 			void* m_threadParam;
 			std::function<int(void*)> m_func;
 			Event m_started;

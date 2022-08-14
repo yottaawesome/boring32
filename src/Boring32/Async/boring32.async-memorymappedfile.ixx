@@ -141,7 +141,7 @@ export namespace Boring32::Async
 		protected:
 			std::wstring m_name;
 			UINT m_maxSize;
-			Raii::Win32Handle m_mapFile;
+			RAII::Win32Handle m_mapFile;
 			void* m_view;
 	};
 }

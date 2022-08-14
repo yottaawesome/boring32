@@ -65,7 +65,7 @@ export namespace Boring32::Async
 			virtual void Close();
 			virtual const std::wstring GetName() const noexcept final;
 			virtual HANDLE GetNativeHandle() const noexcept final;
-			virtual const Raii::Win32Handle GetHandle() const noexcept final;
+			virtual const RAII::Win32Handle GetHandle() const noexcept final;
 			virtual size_t GetFileSize() const final;
 			
 		protected:
@@ -78,7 +78,7 @@ export namespace Boring32::Async
 			virtual FileMapping& Move(FileMapping& other) noexcept;
 
 		protected:
-			Raii::Win32Handle m_fileMapping;
+			RAII::Win32Handle m_fileMapping;
 			size_t m_maxSize;
 			std::wstring m_name;
 			DWORD m_pageProtection;

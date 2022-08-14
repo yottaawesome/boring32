@@ -181,7 +181,7 @@ namespace Boring32::Async
 		return exitCode;
 	}
 
-	Raii::Win32Handle Thread::GetHandle() noexcept
+	RAII::Win32Handle Thread::GetHandle() noexcept
 	{
 		return m_threadHandle;
 	}
@@ -219,7 +219,7 @@ namespace Boring32::Async
 			throw Error::COMError("GetThreadDescription() failed", hr);
 		if (!pThreadDescription)
 			return {};
-		Raii::LocalHeapUniquePtr<wchar_t> deleter(pThreadDescription);
+		RAII::LocalHeapUniquePtr<wchar_t> deleter(pThreadDescription);
 		return pThreadDescription;
 	}
 

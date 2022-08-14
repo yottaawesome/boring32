@@ -5,7 +5,7 @@ module;
 
 export module boring32.raii:win32handle;
 
-export namespace Boring32::Raii
+export namespace Boring32::RAII
 {
 	class Win32Handle
 	{

@@ -89,7 +89,7 @@ namespace Boring32::Security
 			);
 			if (converted == false)
 				throw Error::Win32Error("Failed to convert security descriptor", GetLastError());
-			Raii::LocalHeapUniquePtr<void> securityDescriptor(sa.lpSecurityDescriptor);
+			RAII::LocalHeapUniquePtr<void> securityDescriptor(sa.lpSecurityDescriptor);
 
 			m_namespace = CreatePrivateNamespaceW(
 				&sa,

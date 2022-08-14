@@ -178,6 +178,6 @@ export namespace Boring32::Async
 			std::wstring m_name;
 			bool m_created;
 			bool m_locked;
-			Raii::Win32Handle m_mutex;
+			RAII::Win32Handle m_mutex;
 	};
 }

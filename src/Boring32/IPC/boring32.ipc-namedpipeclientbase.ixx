@@ -39,7 +39,7 @@ export namespace Boring32::IPC
 			virtual void Move(NamedPipeClientBase& other) noexcept;
 
 		protected:
-			Raii::Win32Handle m_handle;
+			RAII::Win32Handle m_handle;
 			std::wstring m_pipeName;
 			DWORD m_fileAttributes;
 	};

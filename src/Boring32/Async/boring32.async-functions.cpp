@@ -126,7 +126,7 @@ namespace Boring32::Async
 			throw Error::Boring32Error("ProcessName cannot be empty.");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-createtoolhelp32snapshot
-		Raii::Win32Handle processesSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+		RAII::Win32Handle processesSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 		if (processesSnapshot == INVALID_HANDLE_VALUE)
 		{
 			const auto lastError = GetLastError();

@@ -40,7 +40,7 @@ export namespace Boring32::Async
 			virtual void Move(Job& other) noexcept;
 
 		protected:
-			Raii::Win32Handle m_job;
+			RAII::Win32Handle m_job;
 			std::wstring m_name;
 	};
 }

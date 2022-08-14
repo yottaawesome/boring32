@@ -48,7 +48,7 @@ namespace Boring32::Security
 
 		if (ownOrDuplicate)
 		{
-			m_token = Raii::Win32Handle(token);
+			m_token = RAII::Win32Handle(token);
 			return;
 		}
 
@@ -80,7 +80,7 @@ namespace Boring32::Security
 		m_token = nullptr;
 	}
 
-	Raii::Win32Handle Token::GetToken() const noexcept
+	RAII::Win32Handle Token::GetToken() const noexcept
 	{
 		return m_token;
 	}
