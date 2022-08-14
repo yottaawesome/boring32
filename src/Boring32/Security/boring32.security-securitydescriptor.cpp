@@ -55,7 +55,7 @@ namespace Boring32::Security
 				GetLastError()
 			);
 		m_descriptor = std::move(
-			RAII::LocalHeapUniquePtr<PSECURITY_DESCRIPTOR>(sd)
+			RAII::LocalHeapUniquePtr<std::remove_pointer<PSECURITY_DESCRIPTOR>::type>(sd)
 		);
 	}
 	

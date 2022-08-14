@@ -16,7 +16,7 @@ export namespace Boring32::RAII
 		}
 	};
 	template<typename T>
-	using LocalHeapUniquePtr = std::unique_ptr<typename std::remove_pointer<T>::type, LocalHeapDeleter>;
+	using LocalHeapUniquePtr = std::unique_ptr<T, LocalHeapDeleter>;
 
 	struct DllDeleter final
 	{
