@@ -69,7 +69,7 @@ namespace Boring32::Security
 		if (!m_sid)
 			return 0;
 		if (!IsValidSid(m_sid))
-			throw std::runtime_error(__FUNCSIG__ ": invalid SID");
+			throw Error::Boring32Error("Invalid SID");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsidsubauthoritycount
 		PUCHAR authorityCount = GetSidSubAuthorityCount(m_sid);
@@ -79,7 +79,7 @@ namespace Boring32::Security
 	SID_IDENTIFIER_AUTHORITY Sid::GetIdentifierAuthority() const
 	{
 		if (!m_sid)
-			throw std::runtime_error(__FUNCSIG__": no valid SID");
+			throw Error::Boring32Error("No valid SID");
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsididentifierauthority
 		if (PSID_IDENTIFIER_AUTHORITY identifier = GetSidIdentifierAuthority(m_sid))
 			return *identifier;
@@ -89,7 +89,7 @@ namespace Boring32::Security
 	DWORD Sid::GetSubAuthority(const DWORD index) const
 	{
 		if (!m_sid)
-			throw std::runtime_error(__FUNCSIG__": no valid SID");
+			throw Error::Boring32Error("No valid SID");
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsidsubauthority
 		if (PDWORD returnVal = GetSidSubAuthority(m_sid, index))
 			return *returnVal;
@@ -163,10 +163,10 @@ namespace Boring32::Security
 			throw Error::Win32Error("failed to initialise SID", GetLastError());
 	}
 
-	void Sid::Create(const std::wstring sidString)
+	void Sid::Create(const std::wstring& sidString)
 	{
 		if (sidString.empty())
-			throw std::invalid_argument(__FUNCSIG__": sidString cannot be empty");
+			throw Error::Boring32Error("sidString cannot be empty");
 		// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw
 		if (!ConvertStringSidToSidW(sidString.c_str(), &m_sid))
 			throw Error::Win32Error("ConvertStringSidToSidW() failed", GetLastError());

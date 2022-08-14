@@ -37,7 +37,7 @@ export namespace Boring32::Security
 		protected:
 			virtual void Copy(const Sid& other);
 			virtual void Move(Sid& other) noexcept;
-			virtual void Create(const std::wstring sidString);
+			virtual void Create(const std::wstring& sidString);
 			virtual void Create(
 				const SID_IDENTIFIER_AUTHORITY& identifierAuthority,
 				const std::vector<DWORD>& subAuthorities
