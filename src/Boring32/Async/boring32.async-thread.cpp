@@ -191,14 +191,36 @@ namespace Boring32::Async
 		return m_started.WaitOnEvent(millis, true);
 	}
 	
-	void Thread::SetThreadDescription(const std::wstring& description)
+	void Thread::SetDescription(const std::wstring& description)
 	{
 		if (!m_threadHandle)
 			throw Error::Boring32Error("No thread created.");
 
-		const HRESULT hr = ::SetThreadDescription(m_threadHandle.GetHandle(), description.c_str());
+		const HRESULT hr = SetThreadDescription(
+			m_threadHandle.GetHandle(), 
+			description.c_str()
+		);
 		if (FAILED(hr))
 			throw Error::ComError("SetThreadDescription() failed", hr);
+	}
+	
+	std::wstring Thread::GetDescription(const std::wstring& description)
+	{
+		if (!m_threadHandle)
+			throw Error::Boring32Error("No thread created.");
+
+		wchar_t* pThreadDescription = nullptr;
+		// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreaddescription
+		const HRESULT hr = GetThreadDescription(
+			m_threadHandle,
+			&pThreadDescription
+		);
+		if (FAILED(hr))
+			throw Error::ComError("GetThreadDescription() failed", hr);
+		if (!pThreadDescription)
+			return {};
+		Raii::LocalHeapUniquePtr<wchar_t> deleter(pThreadDescription);
+		return pThreadDescription;
 	}
 
 	UINT Thread::ThreadProc(void* param)
