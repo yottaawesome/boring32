@@ -38,7 +38,7 @@
     <ClCompile Include="WinHttp\boring32.winhttp-winhttphandle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Raii\boring32.raii-win32handle.cpp">
+    <ClCompile Include="RAII\boring32.raii-win32handle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Security\boring32.security-sid.cpp">
@@ -229,7 +229,7 @@
     <ClCompile Include="FileSystem\boring32.filesystem-file.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Raii\boring32.raii-win32handle.ixx" />
+    <ClCompile Include="RAII\boring32.raii-win32handle.ixx" />
     <ClCompile Include="COM\boring32.com-comthreadscope.ixx" />
     <ClCompile Include="Compression\boring32.compression.ixx" />
     <ClCompile Include="Compression\boring32.compression-compressor.ixx" />
@@ -262,7 +262,7 @@
     <ClCompile Include="Async\boring32.async-criticalsectionlock.ixx" />
     <ClCompile Include="Async\boring32.async-waitabletimer.ixx" />
     <ClCompile Include="Async\boring32.async-event.ixx" />
-    <ClCompile Include="Raii\boring32.raii-uniqueptrs.ixx" />
+    <ClCompile Include="RAII\boring32.raii-uniqueptrs.ixx" />
     <ClCompile Include="Async\boring32.async-timerqueue.ixx" />
     <ClCompile Include="Async\boring32.async-mutev.ixx" />
     <ClCompile Include="Async\boring32.async-threadsafevector.ixx" />
@@ -335,7 +335,7 @@
     <ClCompile Include="Async\boring32.async-overlappedio.ixx" />
     <ClCompile Include="Async\boring32.async-overlappedop.ixx" />
     <ClCompile Include="Security\boring32.security.ixx" />
-    <ClCompile Include="Raii\boring32.raii.ixx" />
+    <ClCompile Include="RAII\boring32.raii.ixx" />
     <ClCompile Include="Process\boring32.process.ixx" />
     <ClCompile Include="FileSystem\boring32.filesystem-functions.ixx" />
     <ClCompile Include="COM\boring32.com.ixx" />
@@ -438,7 +438,7 @@
     <ClCompile Include="Services\boring32.services-functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Raii\boring32.raii-handle.ixx" />
+    <ClCompile Include="RAII\boring32.raii-handle.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-handles.ixx" />
     <ClCompile Include="Computer\boring32.computer.ixx" />
     <ClCompile Include="Computer\boring32.computer-functions.ixx" />

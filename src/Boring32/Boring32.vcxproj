@@ -255,9 +255,9 @@
     <ClCompile Include="Networking\boring32.networking.ixx" />
     <ClCompile Include="Process\boring32.process-dynamiclinklibrary.ixx" />
     <ClCompile Include="Process\boring32.process.ixx" />
-    <ClCompile Include="Raii\boring32.raii-handle.ixx" />
-    <ClCompile Include="Raii\boring32.raii.ixx" />
-    <ClCompile Include="Raii\boring32.raii-uniqueptrs.ixx" />
+    <ClCompile Include="RAII\boring32.raii-handle.ixx" />
+    <ClCompile Include="RAII\boring32.raii.ixx" />
+    <ClCompile Include="RAII\boring32.raii-uniqueptrs.ixx" />
     <ClCompile Include="Registry\boring32.registry-functions.ixx" />
     <ClCompile Include="Registry\boring32.registry.ixx" />
     <ClCompile Include="Registry\boring32.registry-key.ixx" />
@@ -382,11 +382,11 @@
     <ClCompile Include="IPC\boring32.ipc-anonymouspipe.cpp" />
     <ClCompile Include="Async\boring32.async-process.cpp" />
     <ClCompile Include="Async\boring32.async-processinfo.cpp" />
-    <ClCompile Include="Raii\boring32.raii-win32handle.ixx" />
+    <ClCompile Include="RAII\boring32.raii-win32handle.ixx" />
     <ClCompile Include="Strings\boring32.strings.ixx" />
     <ClCompile Include="Security\boring32.security-functions.cpp" />
     <ClCompile Include="Security\boring32.security-sid.cpp" />
-    <ClCompile Include="Raii\boring32.raii-win32handle.cpp" />
+    <ClCompile Include="RAII\boring32.raii-win32handle.cpp" />
     <ClCompile Include="Registry\boring32.registry-functions.cpp" />
     <ClCompile Include="Registry\boring32.registry-key.cpp" />
     <ClCompile Include="Security\boring32.security-impersonationcontext.cpp" />
