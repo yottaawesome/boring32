@@ -204,7 +204,7 @@ namespace Boring32::Async
 			throw Error::ComError("SetThreadDescription() failed", hr);
 	}
 	
-	std::wstring Thread::GetDescription(const std::wstring& description)
+	std::wstring Thread::GetDescription()
 	{
 		if (!m_threadHandle)
 			throw Error::Boring32Error("No thread created.");

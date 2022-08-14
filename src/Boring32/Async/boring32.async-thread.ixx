@@ -56,7 +56,7 @@ export namespace Boring32::Async
 			virtual Raii::Win32Handle GetHandle() noexcept;
 			virtual bool WaitToStart(const DWORD millis);
 			virtual void SetDescription(const std::wstring& description);
-			virtual std::wstring GetDescription(const std::wstring& description);
+			virtual std::wstring GetDescription();
 
 		protected:
 			virtual UINT Run();
