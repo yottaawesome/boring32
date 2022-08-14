@@ -18,21 +18,21 @@ export namespace Boring32::RAII
 	template<typename T>
 	using LocalHeapUniquePtr = std::unique_ptr<T, LocalHeapDeleter>;
 
-	struct DllDeleter final
+	struct DLLDeleter final
 	{
 		void operator()(HMODULE ptr)
 		{
 			FreeLibrary(ptr);
 		}
 	};
-	using DllUniquePtr = std::unique_ptr<std::remove_pointer<HMODULE>::type, DllDeleter>;
+	using DllUniquePtr = std::unique_ptr<std::remove_pointer<HMODULE>::type, DLLDeleter>;
 
-	struct SidDeleter final
+	struct SIDDeleter final
 	{
 		void operator()(PSID ptr)
 		{
 			FreeSid(ptr);
 		}
 	};
-	using SidUniquePtr = std::unique_ptr<std::remove_pointer<PSID>::type, SidDeleter>;
+	using SIDUniquePtr = std::unique_ptr<std::remove_pointer<PSID>::type, SIDDeleter>;
 }

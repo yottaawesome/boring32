@@ -94,7 +94,7 @@ namespace Boring32::Security
 		// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw
 		if (!ConvertStringSidToSidW(integritySidString.c_str(), &rawIntegritySid))
 			throw Error::Win32Error("ConvertStringSidToSidW() failed", GetLastError());
-		RAII::SidUniquePtr integritySid(rawIntegritySid);
+		RAII::SIDUniquePtr integritySid(rawIntegritySid);
 
 		TOKEN_MANDATORY_LABEL tml = { 0 };
 		tml.Label.Attributes = SE_GROUP_INTEGRITY;

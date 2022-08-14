@@ -66,7 +66,7 @@ void SearchTokenForAdminGroup()
 	if (!succeeded) 
 		throw Boring32::Error::Win32Error("AllocateAndInitializeSid() failed", GetLastError());
 
-	Boring32::RAII::SidUniquePtr pSID(rawSID);
+	Boring32::RAII::SIDUniquePtr pSID(rawSID);
 	if (Boring32::Security::SearchTokenGroupsForSID(hToken, pSID.get()))
 		std::wcout << "User is a member of BUILTIN\\Administrators\n";
 	else
