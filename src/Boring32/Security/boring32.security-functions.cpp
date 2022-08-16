@@ -374,4 +374,68 @@ namespace Boring32::Security
 
 		return result;
 	}
+
+	bool IsLocalSystem()
+	{
+		// Adapted from https://stackoverflow.com/a/4024388/7448661
+		RAII::Win32Handle hToken;
+		// open process token
+		bool success = OpenProcessToken(
+			GetCurrentProcess(),
+			TOKEN_QUERY,
+			&hToken
+		);
+		if (!success)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("OpenProcessToken() failed", lastError);
+		}
+
+		// retrieve user SID
+		// where does this come from?
+		std::byte bTokenUser[sizeof(TOKEN_USER) + 8 + 4 * SID_MAX_SUB_AUTHORITIES];
+		PTOKEN_USER pTokenUser = reinterpret_cast<PTOKEN_USER>(bTokenUser);
+		ULONG cbTokenUser;
+		success = GetTokenInformation(
+			hToken,
+			TokenUser,
+			pTokenUser,
+			sizeof(bTokenUser),
+			&cbTokenUser
+		);
+		if (!success)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("GetTokenInformation() failed", lastError);
+		}
+
+		// allocate LocalSystem well-known SID
+		PSID pSystemSid;
+		SID_IDENTIFIER_AUTHORITY siaNT = SECURITY_NT_AUTHORITY;
+		success = AllocateAndInitializeSid(
+			&siaNT,
+			1,
+			SECURITY_LOCAL_SYSTEM_RID,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			&pSystemSid
+		);
+		if (!success)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("GetTokenInformation() failed", lastError);
+		}
+
+		// compare the user SID from the token with the LocalSystem SID
+		bool bSystem = EqualSid(pTokenUser->User.Sid, pSystemSid);
+
+		FreeSid(pSystemSid);
+
+		return bSystem;
+	}
 }

@@ -51,4 +51,5 @@ export namespace Boring32::Security
 		const bool checkAll, 
 		const std::vector<LUID_AND_ATTRIBUTES>& privileges
 	);
+	bool IsLocalSystem();
 }

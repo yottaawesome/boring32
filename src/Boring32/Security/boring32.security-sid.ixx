@@ -8,6 +8,7 @@ export module boring32.security:sid;
 
 export namespace Boring32::Security
 {
+	// https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-sid
 	class Sid
 	{
 		public:
