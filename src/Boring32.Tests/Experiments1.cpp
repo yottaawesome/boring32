@@ -805,7 +805,7 @@ void Subauths()
 			SECURITY_BUILTIN_DOMAIN_RID,
 			DOMAIN_ALIAS_RID_ADMINS
 	};
-	Boring32::Security::Sid sid(
+	Boring32::Security::SecurityIdentifier sid(
 		SECURITY_NT_AUTHORITY,
 		subauths
 	);

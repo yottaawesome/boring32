@@ -5,6 +5,6 @@ export import :impersonationcontext;
 export import :privatenamespace;
 export import :securitydescriptor;
 export import :securityattributes;
-export import :sid;
+export import :securityidentifier;
 export import :token;
 export import :aliases;

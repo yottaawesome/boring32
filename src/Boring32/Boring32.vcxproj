@@ -271,7 +271,7 @@
     <ClCompile Include="Security\boring32.security.ixx" />
     <ClCompile Include="Security\boring32.security-privatenamespace.ixx" />
     <ClCompile Include="Security\boring32.security-securitydescriptor.ixx" />
-    <ClCompile Include="Security\boring32.security-sid.ixx" />
+    <ClCompile Include="Security\boring32.security-securityidentifier.ixx" />
     <ClCompile Include="Security\boring32.security-token.ixx" />
     <ClCompile Include="Security\boring32.security-securitydescriptor.cpp" />
     <ClCompile Include="Services\boring32.services-functions.cpp" />
@@ -385,7 +385,7 @@
     <ClCompile Include="RAII\boring32.raii-win32handle.ixx" />
     <ClCompile Include="Strings\boring32.strings.ixx" />
     <ClCompile Include="Security\boring32.security-functions.cpp" />
-    <ClCompile Include="Security\boring32.security-sid.cpp" />
+    <ClCompile Include="Security\boring32.security-securityidentifier.cpp" />
     <ClCompile Include="RAII\boring32.raii-win32handle.cpp" />
     <ClCompile Include="Registry\boring32.registry-functions.cpp" />
     <ClCompile Include="Registry\boring32.registry-key.cpp" />
