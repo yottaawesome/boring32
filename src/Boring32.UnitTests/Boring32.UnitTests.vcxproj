@@ -195,6 +195,7 @@
     <ClCompile Include="Registry\RegKey.cpp" />
     <ClCompile Include="Security\SecurityDescriptor.cpp" />
     <ClCompile Include="Security\SecurityFunctions.cpp" />
+    <ClCompile Include="Services\Services.cpp" />
     <ClCompile Include="Strings\Strings.cpp" />
     <ClCompile Include="Time\DateTime.cpp" />
     <ClCompile Include="Util\Util.cpp" />
