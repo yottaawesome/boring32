@@ -8,9 +8,10 @@ export namespace Boring32::Services
 		public:
 			virtual ~ServiceControlManager();
 			ServiceControlManager();
+			ServiceControlManager(const unsigned desiredAccess);
 
 		protected:
-			virtual void Open();
+			virtual void Open(const unsigned desiredAccess);
 			virtual void Close();
 
 		protected:

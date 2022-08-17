@@ -12,19 +12,21 @@ namespace Boring32::Services
 
 	ServiceControlManager::ServiceControlManager()
 	{
-		Open();
+		Open(SC_MANAGER_ALL_ACCESS);
 	}
 
-	void ServiceControlManager::Open()
+    ServiceControlManager::ServiceControlManager(const unsigned desiredAccess)
+    {
+        Open(desiredAccess);
+    }
+
+	void ServiceControlManager::Open(const unsigned desiredAccess)
 	{
-        SC_HANDLE schSCManager;
-
-        // Get a handle to the SCM database. 
-
-        schSCManager = OpenSCManagerW(
-            nullptr,                // local computer
-            nullptr,                // ServicesActive database 
-            SC_MANAGER_ALL_ACCESS   // full access rights
+        // https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openscmanagerw
+         SC_HANDLE schSCManager = OpenSCManagerW(
+            nullptr,        // local computer
+            nullptr,        // ServicesActive database 
+            desiredAccess   // full access rights
         );  
         if (!schSCManager)
         {
