@@ -1,5 +1,10 @@
+module;
+
+#include <string>
+
 export module boring32.services:servicecontrolmanager;
 import :raii;
+import :service;
 
 export namespace Boring32::Services
 {
@@ -18,6 +23,13 @@ export namespace Boring32::Services
 
 		public:
 			virtual void Close();
+			virtual Service AccessService(
+				const std::wstring& name
+			);
+			virtual Service AccessService(
+				const std::wstring& name,
+				const unsigned desiredAccess
+			);
 
 		protected:
 			virtual void Open(const unsigned desiredAccess);

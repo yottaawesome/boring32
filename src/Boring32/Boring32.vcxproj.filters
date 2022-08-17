@@ -490,5 +490,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Services\boring32.services-raii.ixx" />
+    <ClCompile Include="Services\boring32.services-service.ixx" />
+    <ClCompile Include="Services\boring32.services-service.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

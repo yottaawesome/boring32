@@ -1,5 +1,6 @@
 module;
 
+#include <string>
 #include <source_location>
 #include <Windows.h>
 
@@ -39,5 +40,31 @@ namespace Boring32::Services
     void ServiceControlManager::Close()
     {
         m_scm = nullptr;
+    }
+
+    Service ServiceControlManager::AccessService(const std::wstring& name)
+    {
+        return AccessService(name, SERVICE_ALL_ACCESS);
+    }
+
+    Service ServiceControlManager::AccessService(
+        const std::wstring& name,
+        const unsigned desiredAccess
+    )
+    {
+        if (!m_scm)
+            throw Error::Boring32Error("m_scm is null");
+
+        SC_HANDLE serviceHandle = OpenServiceW(
+            m_scm.get(),
+            name.c_str(),
+            desiredAccess
+        );
+        if (serviceHandle)
+        {
+            const auto lastError = GetLastError();
+            throw Error::Win32Error("OpenServiceW() failed", lastError);
+        }
+        return { CreateSharedPtr (serviceHandle)};
     }
 }
