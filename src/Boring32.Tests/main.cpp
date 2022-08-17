@@ -12,6 +12,7 @@
 #include <iphlpapi.h>
 #include <iptypes.h>
 #include <objbase.h>
+#include "versionhelpers.h"
 #include "Experiments1Main.hpp"
 
 import boring32.raii;
@@ -354,35 +355,234 @@ struct O
 	int P = 5;
 };
 
+enum class Mask : int
+{
+	ServicePackMinor = 1,
+	ServicePackMajor = 2,
+	Build = 4,
+	Minor = 8,
+	Major = 16
+};
+//DEFINE_ENUM_FLAG_OPERATORS(Mask)
+bool operator&(const int i, const Mask m)
+{
+	return i & static_cast<int>(m);
+}
+bool operator&(const Mask m, const int i)
+{
+	return i & static_cast<int>(m);
+}
+int operator|(const Mask a, const Mask b)
+{
+	return static_cast<int>(a) | static_cast<int>(b);
+}
+int operator|(const int a, const Mask b)
+{
+	return static_cast<int>(a) | static_cast<int>(b);
+}
+
+// This requires a manifest file in the binary that 
+// specifies Win10 version support, or it will always 
+// fail on Win10 checks.
+bool MeetsMinimumOSVersion(
+	const unsigned major,
+	const unsigned minor,
+	const unsigned build,
+	const unsigned short spMajor,
+	const unsigned short spMinor,
+	unsigned fieldMask
+)
+{
+	// According to https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-verifyversioninfow
+	// you also need to test the Minor and ServicePack* fields when testing Major version.
+	if (fieldMask & Mask::Major)
+	{
+		fieldMask |= static_cast<int>(Mask::Minor);
+		fieldMask |= static_cast<int>(Mask::ServicePackMajor);
+		fieldMask |= static_cast<int>(Mask::ServicePackMinor);
+	}
+
+	DWORDLONG condition = 0;
+	DWORD flags = 0;
+	if (fieldMask & Mask::Major)
+	{
+		condition = VerSetConditionMask(
+			condition,
+			VER_MAJORVERSION,
+			VER_GREATER_EQUAL
+		);
+		flags |= VER_MAJORVERSION;
+	}
+	if (fieldMask & Mask::Minor)
+	{
+		condition = VerSetConditionMask(
+			condition,
+			VER_MINORVERSION,
+			VER_GREATER_EQUAL
+		);
+		flags |= VER_MINORVERSION;
+	}
+	if (fieldMask & Mask::Build)
+	{
+		condition = VerSetConditionMask(
+			condition,
+			VER_BUILDNUMBER,
+			VER_GREATER_EQUAL
+		);
+		flags |= VER_BUILDNUMBER;
+	}
+	if (fieldMask & Mask::ServicePackMinor)
+	{
+		condition = VerSetConditionMask(
+			condition,
+			VER_SERVICEPACKMINOR,
+			VER_GREATER_EQUAL
+		);
+		flags |= VER_SERVICEPACKMINOR;
+	}
+	if (fieldMask & Mask::ServicePackMajor)
+	{
+		condition = VerSetConditionMask(
+			condition,
+			VER_SERVICEPACKMAJOR,
+			VER_GREATER_EQUAL
+		);
+		flags |= VER_SERVICEPACKMAJOR;
+	}
+
+	OSVERSIONINFOEXW versionInfo
+	{
+		.dwOSVersionInfoSize = sizeof(versionInfo),
+		.dwMajorVersion = (fieldMask & Mask::Major) ? major : 0,
+		.dwMinorVersion = (fieldMask & Mask::Minor) ? minor : 0,
+		.dwBuildNumber = (fieldMask & Mask::Build) ? build : 0,
+		.wServicePackMajor = (fieldMask & Mask::ServicePackMajor) ? spMajor : 0ui16,
+		.wServicePackMinor = (fieldMask & Mask::ServicePackMinor) ? spMinor : 0ui16
+	};
+	const bool succeeded = VerifyVersionInfoW(
+		&versionInfo,
+		flags,
+		condition
+	);
+	const auto lastError = GetLastError();
+	if (!succeeded && lastError != ERROR_OLD_WIN_VERSION)
+		throw Boring32::Error::Win32Error("VerifyVersionInfoW() failed", lastError);
+
+	return succeeded;
+}
+
+BOOL Is_WinXP_SP2_or_Later()
+{
+	OSVERSIONINFOEX osvi;
+	DWORDLONG dwlConditionMask = 0;
+	int op = VER_GREATER_EQUAL;
+
+	// Initialize the OSVERSIONINFOEX structure.
+
+	ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
+	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+	osvi.dwMajorVersion = 10;
+	osvi.dwMinorVersion = 0;
+	osvi.wServicePackMajor = 0;
+	osvi.wServicePackMinor = 0;
+
+	// Initialize the condition mask.
+
+	VER_SET_CONDITION(dwlConditionMask, VER_MAJORVERSION, op);
+	VER_SET_CONDITION(dwlConditionMask, VER_MINORVERSION, op);
+	VER_SET_CONDITION(dwlConditionMask, VER_SERVICEPACKMAJOR, op);
+	VER_SET_CONDITION(dwlConditionMask, VER_SERVICEPACKMINOR, op);
+
+	// Perform the test.
+
+	return VerifyVersionInfo(
+		&osvi,
+		VER_MAJORVERSION | VER_MINORVERSION |
+		VER_SERVICEPACKMAJOR | VER_SERVICEPACKMINOR,
+		dwlConditionMask);
+}
+
 int main(int argc, char** args) try
 {
+	//std::wcout << MeetsVersion(10, 0, 1809, Mask::Major | Mask::Build) << std::endl;
 
-	std::atomic<std::shared_ptr<O>> m = std::make_shared<O>();
-	m.load()->P = 3;
-
-
-	auto x = Boring32::Networking::GetAdapters(
-		AF_UNSPEC, 
-		GAA_FLAG_SKIP_MULTICAST
-		//GAA_FLAG_INCLUDE_ALL_INTERFACES
-	);
-	if (!x.empty())
+	OSVERSIONINFOEXW vi
 	{
-		IP_ADAPTER_ADDRESSES* y = reinterpret_cast<IP_ADAPTER_ADDRESSES*>(x.data());
-		while (y)
-		{
-			std::wcout 
-				<< y->AdapterName << " " 
-				<< y->FriendlyName << " " 
-				<< y->IfType << " "
-				<< y->Description << " "
-				<< y->OperStatus << " "
-				<< std::endl;
-			y = y->Next;
-		}
+		.dwOSVersionInfoSize = sizeof(vi),
+		.dwMajorVersion = 10,
+		.dwMinorVersion = 0,
+		.dwBuildNumber = 1809,
+		.wServicePackMajor = 0,
+		.wServicePackMinor = 0
+	};
+	DWORDLONG condition = 0;
+	condition = VerSetConditionMask(
+		condition, 
+		VER_MAJORVERSION,
+		VER_GREATER_EQUAL
+	);
+	condition = VerSetConditionMask(
+		condition,
+		VER_MINORVERSION,
+		VER_GREATER_EQUAL
+	);
+	condition = VerSetConditionMask(
+		condition, 
+		VER_BUILDNUMBER,
+		VER_GREATER_EQUAL
+	);
+	condition = VerSetConditionMask(
+		condition,
+		VER_SERVICEPACKMAJOR,
+		VER_GREATER_EQUAL
+	);
+	condition = VerSetConditionMask(
+		condition,
+		VER_SERVICEPACKMINOR,
+		VER_GREATER_EQUAL
+	);
+	bool succeeded = VerifyVersionInfoW(
+		&vi, 
+		VER_MAJORVERSION 
+		| VER_MINORVERSION 
+		| VER_SERVICEPACKMAJOR 
+		| VER_SERVICEPACKMINOR
+		| VER_BUILDNUMBER
+		, condition
+	);
+	const auto lastError = GetLastError();
+	if (!succeeded && lastError != ERROR_OLD_WIN_VERSION)
+	{
+		throw Boring32::Error::Win32Error(__FUNCSIG__": VerifyVersionInfoW()", lastError);
 	}
 	
-	return 0;
+	std::wcout
+		<< std::format(
+			L"{}:{}\n", 
+			MeetsMinimumOSVersion(
+				10,
+				0,
+				1809,
+				0,
+				0,
+				Mask::Build | Mask::Major
+			), 
+			IsWindows10OrGreater());
+
+	/*OSVERSIONINFOEX v{
+		.dwOSVersionInfoSize = sizeof(v)
+	};
+	GetVersionExW(
+		&v,
+		VER_MAJORVERSION | VER_BUILDNUMBER,
+	);
+	std::wcout << std::format(
+		L"{}.{}.{}\n",
+		v.dwMajorVersion, 
+		v.dwMinorVersion, 
+		v.dwBuildNumber
+	);*/
+	//GetProductInfo();
 }
 catch (const std::exception& ex)
 {

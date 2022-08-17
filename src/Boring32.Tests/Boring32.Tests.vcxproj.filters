@@ -33,4 +33,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="Boring32.Tests.manifest" />
+  </ItemGroup>
 </Project>
