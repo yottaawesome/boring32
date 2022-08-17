@@ -485,5 +485,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Time\boring32.time-functions.ixx" />
+    <ClCompile Include="Services\boring32.services-servicecontrolmanager.ixx" />
+    <ClCompile Include="Services\boring32.services-servicecontrolmanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Services\boring32.services-raii.ixx" />
   </ItemGroup>
 </Project>
