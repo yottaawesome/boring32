@@ -459,6 +459,7 @@ bool MeetsMinimumOSVersion(
 		.wServicePackMajor = (fieldMask & Mask::ServicePackMajor) ? spMajor : 0ui16,
 		.wServicePackMinor = (fieldMask & Mask::ServicePackMinor) ? spMinor : 0ui16
 	};
+	// This function is deprecated as of Win10
 	const bool succeeded = VerifyVersionInfoW(
 		&versionInfo,
 		flags,
