@@ -7,12 +7,20 @@ export namespace Boring32::Services
 	{
 		public:
 			virtual ~ServiceControlManager();
+			ServiceControlManager(const ServiceControlManager&) = default;
+			ServiceControlManager(ServiceControlManager&&) noexcept = default;
 			ServiceControlManager();
 			ServiceControlManager(const unsigned desiredAccess);
 
+		public:
+			virtual ServiceControlManager& operator=(const ServiceControlManager&) = default;
+			virtual ServiceControlManager& operator=(ServiceControlManager&&) noexcept = default;
+
+		public:
+			virtual void Close();
+
 		protected:
 			virtual void Open(const unsigned desiredAccess);
-			virtual void Close();
 
 		protected:
 			ServiceHandleSharedPtr m_scm;
