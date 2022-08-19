@@ -6,7 +6,13 @@ export namespace Boring32::Services
 	class Service
 	{
 		public:
+			virtual ~Service();
 			Service(ServiceHandleSharedPtr service);
+
+		public:
+			virtual void Start(); 
+			virtual void Stop();
+			virtual void Delete();
 
 		protected:
 			ServiceHandleSharedPtr m_service;

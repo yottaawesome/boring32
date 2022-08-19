@@ -557,6 +557,8 @@ int main(int argc, char** args) try
 		throw Boring32::Error::Win32Error(__FUNCSIG__": VerifyVersionInfoW()", lastError);
 	}
 	
+	IsWindowsVersionOrGreater(10, 0, 1809);
+
 	std::wcout
 		<< std::format(
 			L"{}:{}\n", 
