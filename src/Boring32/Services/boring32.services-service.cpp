@@ -1,6 +1,7 @@
 module;
 
 #include <source_location>
+#include <utility>
 #include <Windows.h>
 
 module boring32.services:service;
@@ -15,7 +16,7 @@ namespace Boring32::Services
 		: m_service(std::move(service))
 	{
 		if (!m_service)
-			throw Boring32:Error("service parameter cannot be null");
+			throw Error::Boring32Error("service parameter cannot be null");
 	}
 
 	void Service::Start()
@@ -30,10 +31,10 @@ namespace Boring32::Services
 
 	void Service::Delete()
 	{
-		if (!DeleteService(m_service.get())
+		if (!DeleteService(m_service.get()))
 		{
 			const auto lastError = GetLastError();
-			throw Boring32:Error("service parameter cannot be null", lastError);
+			throw Error::Win32Error("service parameter cannot be null", lastError);
 		}
 	}
 }

@@ -503,6 +503,11 @@ BOOL Is_WinXP_SP2_or_Later()
 		dwlConditionMask);
 }
 
+void Blah(int [[out]]blah)
+{
+
+}
+
 int main(int argc, char** args) try
 {
 	//std::wcout << MeetsVersion(10, 0, 1809, Mask::Major | Mask::Build) << std::endl;
