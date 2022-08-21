@@ -57,6 +57,13 @@ namespace Boring32::Services
 
 	std::wstring Service::GetDisplayName() const
 	{
+		std::vector<std::byte> buffer = GetConfigBuffer();
+		auto config = reinterpret_cast<QUERY_SERVICE_CONFIGW*>(&buffer[0]);
+		return config->lpDisplayName;
+	}
+
+	std::vector<std::byte> Service::GetConfigBuffer() const
+	{
 		DWORD bytesNeeded = 0;
 		bool succeeded = QueryServiceConfigW(
 			m_service.get(),
@@ -67,7 +74,7 @@ namespace Boring32::Services
 		const auto lastError = GetLastError();
 		if (lastError != ERROR_INSUFFICIENT_BUFFER)
 			throw Error::Win32Error("QueryServiceConfigW() failed", lastError);
-		
+
 		std::vector<std::byte> buffer(bytesNeeded);
 		succeeded = QueryServiceConfigW(
 			m_service.get(),
@@ -80,8 +87,6 @@ namespace Boring32::Services
 			const auto lastError = GetLastError();
 			throw Error::Win32Error("QueryServiceConfigW() failed", lastError);
 		}
-
-		QUERY_SERVICE_CONFIGW* config = reinterpret_cast<QUERY_SERVICE_CONFIGW*>(&buffer[0]);
-		return config->lpDisplayName;
+		return buffer;
 	}
 }

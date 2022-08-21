@@ -21,6 +21,9 @@ export namespace Boring32::Services
 			virtual std::wstring GetDisplayName() const;
 
 		protected:
+			virtual std::vector<std::byte> GetConfigBuffer() const;
+
+		protected:
 			ServiceHandleSharedPtr m_service;
 	};
 }
