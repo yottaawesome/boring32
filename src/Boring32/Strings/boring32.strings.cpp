@@ -252,4 +252,18 @@ namespace Boring32::Strings
 		std::transform(str2.begin(), str2.end(), str2.begin(), ::tolower);
 		return str1 == str2;
 	}
+
+	ArgInfo StringsToArgVector(const std::vector<std::wstring>&args)
+	{
+		ArgInfo info{};
+		for (const std::wstring& arg : args)
+		{
+			if (arg.empty())
+				continue;
+			info.Argv.insert(info.Argv.end(), arg.begin(), arg.end());
+			info.Argv.push_back('\0');
+			info.Argc++;
+		}
+		return info;
+	}
 }

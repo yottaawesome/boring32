@@ -1,3 +1,8 @@
+module;
+
+#include <vector>
+#include <string>
+
 export module boring32.services:service;
 import :raii;
 
@@ -10,7 +15,7 @@ export namespace Boring32::Services
 			Service(ServiceHandleSharedPtr service);
 
 		public:
-			virtual void Start(); 
+			virtual void Start(std::vector<std::wstring>& args); 
 			virtual void Stop();
 			virtual void Delete();
 

@@ -21,4 +21,10 @@ export namespace Boring32::Strings
 	std::wstring Erase(std::wstring source, const wchar_t what);
 	bool DoCaseInsensitiveMatch(std::string str1, std::string str2);
 	bool DoCaseInsensitiveMatch(std::wstring str1, std::wstring str2);
+	struct ArgInfo
+	{
+		std::vector<wchar_t> Argv;
+		unsigned Argc = 0;;
+	};
+	ArgInfo StringsToArgVector(const std::vector<std::wstring>& args);
 }
