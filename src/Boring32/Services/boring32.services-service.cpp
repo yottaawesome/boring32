@@ -78,8 +78,8 @@ namespace Boring32::Services
 		std::vector<std::byte> buffer(bytesNeeded);
 		succeeded = QueryServiceConfigW(
 			m_service.get(),
-			nullptr,
-			0,
+			reinterpret_cast<QUERY_SERVICE_CONFIGW*>(&buffer[0]),
+			static_cast<DWORD>(buffer.size()),
 			&bytesNeeded
 		);
 		if (!succeeded)
