@@ -54,4 +54,34 @@ namespace Boring32::Services
 			throw Error::Win32Error("service parameter cannot be null", lastError);
 		}
 	}
+
+	std::wstring Service::GetDisplayName() const
+	{
+		DWORD bytesNeeded = 0;
+		bool succeeded = QueryServiceConfigW(
+			m_service.get(),
+			nullptr,
+			0,
+			&bytesNeeded
+		);
+		const auto lastError = GetLastError();
+		if (lastError != ERROR_INSUFFICIENT_BUFFER)
+			throw Error::Win32Error("QueryServiceConfigW() failed", lastError);
+		
+		std::vector<std::byte> buffer(bytesNeeded);
+		succeeded = QueryServiceConfigW(
+			m_service.get(),
+			nullptr,
+			0,
+			&bytesNeeded
+		);
+		if (!succeeded)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("QueryServiceConfigW() failed", lastError);
+		}
+
+		QUERY_SERVICE_CONFIGW* config = reinterpret_cast<QUERY_SERVICE_CONFIGW*>(&buffer[0]);
+		return config->lpDisplayName;
+	}
 }

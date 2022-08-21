@@ -503,7 +503,12 @@ BOOL Is_WinXP_SP2_or_Later()
 		dwlConditionMask);
 }
 
-void Blah(int [[out]]blah)
+namespace x
+{
+	struct blah {};
+}
+
+void Blah(int [[x::blah]]blah)
 {
 
 }

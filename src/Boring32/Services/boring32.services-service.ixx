@@ -18,6 +18,7 @@ export namespace Boring32::Services
 			virtual void Start(std::vector<std::wstring>& args); 
 			virtual void Stop();
 			virtual void Delete();
+			virtual std::wstring GetDisplayName() const;
 
 		protected:
 			ServiceHandleSharedPtr m_service;
