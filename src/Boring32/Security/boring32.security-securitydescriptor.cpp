@@ -50,13 +50,15 @@ namespace Boring32::Security
 			nullptr
 		);
 		if (!succeeded)
+		{
+			const auto lastError = GetLastError();
 			throw Error::Win32Error(
 				"ConvertStringSecurityDescriptorToSecurityDescriptorW() failed",
-				GetLastError()
+				lastError
 			);
-		m_descriptor = std::move(
-			RAII::LocalHeapUniquePtr<std::remove_pointer<PSECURITY_DESCRIPTOR>::type>(sd)
-		);
+		}
+		m_descriptor = 
+			RAII::LocalHeapUniquePtr<std::remove_pointer<PSECURITY_DESCRIPTOR>::type>(sd);
 	}
 	
 	SecurityDescriptor::operator std::wstring() const noexcept
