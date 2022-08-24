@@ -20,6 +20,8 @@ export namespace Boring32::Security
 		public:
 			virtual SecurityDescriptor& operator=(const SecurityDescriptor&) = delete;
 			virtual SecurityDescriptor& operator=(SecurityDescriptor&&) noexcept;
+
+		public:
 			[[nodiscard]] virtual operator std::wstring() const noexcept;
 			[[nodiscard]] virtual operator PSECURITY_DESCRIPTOR() const noexcept;
 

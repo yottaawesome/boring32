@@ -3,10 +3,12 @@ module;
 #include <string>
 #include <format>
 #include <vector>
+#include <memory>
 #include <stdexcept>
 #include <source_location>
 #include <filesystem>
 #include <Windows.h>
+#include <sddl.h>
 
 module boring32.filesystem:functions;
 import boring32.error;
@@ -57,4 +59,48 @@ namespace Boring32::FileSystem
             (verInfo->dwFileVersionLS >> 0) & 0xffff
         );
 	}
+    
+    void CreateFileDirectory(const std::wstring& path)
+    {
+        const bool succeeded = CreateDirectoryW(
+            path.c_str(),
+            nullptr
+        );
+        if (!succeeded)
+        {
+            const auto lastError = GetLastError();
+            throw Error::Win32Error("CreateDirectoryW() failed", lastError);
+        }
+    }
+
+    void CreateFileDirectory(const std::wstring& path, const std::wstring& dacl)
+    {
+        void* sd = nullptr;
+        bool succeeded = ConvertStringSecurityDescriptorToSecurityDescriptorW(
+            dacl.c_str(),
+            SDDL_REVISION_1, // Must be SDDL_REVISION_1
+            &sd,
+            nullptr
+        );
+        if (!succeeded)
+        {
+            const auto lastError = GetLastError();
+            throw Error::Win32Error("ConvertStringSecurityDescriptorToSecurityDescriptorW() failed", lastError);
+        }
+        std::unique_ptr<void, void(*)(void*)> sdDeleter(sd, [](void* ptr) { LocalFree(ptr); });
+
+        SECURITY_ATTRIBUTES sa{
+            .nLength = sizeof(SECURITY_ATTRIBUTES),
+            .lpSecurityDescriptor = sd
+        };
+        succeeded = CreateDirectoryW(
+            path.c_str(),
+            &sa
+        );
+        if (!succeeded)
+        {
+            const auto lastError = GetLastError();
+            throw Error::Win32Error("CreateDirectoryW() failed", lastError);
+        }
+    }
 }
