@@ -62,6 +62,8 @@ namespace Boring32::FileSystem
     
     void CreateFileDirectory(const std::wstring& path)
     {
+        if (path.empty())
+            throw Error::Boring32Error("path cannot be empty");
         const bool succeeded = CreateDirectoryW(
             path.c_str(),
             nullptr
@@ -75,8 +77,13 @@ namespace Boring32::FileSystem
 
     void CreateFileDirectory(const std::wstring& path, const std::wstring& dacl)
     {
+        if (path.empty())
+            throw Error::Boring32Error("path cannot be empty");
+        if (dacl.empty())
+            throw Error::Boring32Error("dacl cannot be empty");
+
         void* sd = nullptr;
-        bool succeeded = ConvertStringSecurityDescriptorToSecurityDescriptorW(
+        const bool succeeded = ConvertStringSecurityDescriptorToSecurityDescriptorW(
             dacl.c_str(),
             SDDL_REVISION_1, // Must be SDDL_REVISION_1
             &sd,
@@ -93,11 +100,7 @@ namespace Boring32::FileSystem
             .nLength = sizeof(SECURITY_ATTRIBUTES),
             .lpSecurityDescriptor = sd
         };
-        succeeded = CreateDirectoryW(
-            path.c_str(),
-            &sa
-        );
-        if (!succeeded)
+        if (!CreateDirectoryW(path.c_str(), &sa))
         {
             const auto lastError = GetLastError();
             throw Error::Win32Error("CreateDirectoryW() failed", lastError);

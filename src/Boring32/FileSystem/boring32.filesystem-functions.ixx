@@ -8,6 +8,7 @@ export namespace Boring32::FileSystem
 {
 	// Requires linking with Version.lib
 	std::wstring GetFileVersion(const std::wstring& filePath);
+	// Requires the parent directories to exist
 	void CreateFileDirectory(const std::wstring& path);
 	void CreateFileDirectory(const std::wstring& path, const std::wstring& dacl);
 }
