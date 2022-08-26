@@ -130,7 +130,8 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>../build/$(Platform)/$(Configuration)/Boring32.lib;Dbghelp.lib;Version.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <StackReserveSize>4194304 </StackReserveSize>
+      <StackReserveSize>
+      </StackReserveSize>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>
@@ -180,7 +181,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>../build/$(Platform)/$(Configuration)/Boring32.lib;Dbghelp.lib;Version.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <StackReserveSize>4194304 </StackReserveSize>
+      <StackReserveSize>
+      </StackReserveSize>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>
@@ -190,6 +192,8 @@
   <ItemGroup>
     <ClInclude Include="Boring32.Tests.h" />
     <ClInclude Include="Experiments1Main.hpp" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="Version.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -206,6 +210,12 @@
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="Boring32.Tests.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Boring32.Tests.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Test.rc2" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -32,8 +32,24 @@
     <ClInclude Include="Experiments1Main.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="Boring32.Tests.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Boring32.Tests.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Test.rc2">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
