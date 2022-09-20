@@ -22,10 +22,18 @@ namespace Boring32::IO
 
 	void CompletionPort::Associate(HANDLE device, const ULONG_PTR completionKey)
 	{
+		if (!device)
+			throw Error::Boring32Error("device cannot be null");
+
 		if (!CreateIoCompletionPort(device, m_completionPort.GetHandle(), completionKey, 0))
 		{
 			const auto lastError = GetLastError();
 			throw Error::Win32Error("CreateIoCompletionPort() failed", lastError);
 		}
+	}
+
+	HANDLE CompletionPort::GetHandle() const noexcept
+	{
+		return m_completionPort;
 	}
 }
