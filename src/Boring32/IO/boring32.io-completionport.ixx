@@ -17,6 +17,7 @@ export namespace Boring32::IO
 		public:
 			virtual void Associate(HANDLE device, const ULONG_PTR completionKey);
 			virtual HANDLE GetHandle() const noexcept;
+			virtual bool GetCompletionStatus();
 
 		protected:
 			RAII::Win32Handle m_completionPort;
