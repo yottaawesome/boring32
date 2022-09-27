@@ -475,7 +475,6 @@
     <ClCompile Include="Security\boring32.security-securityattributes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Security\boring32.security-aliases.ixx" />
     <ClCompile Include="Networking\boring32.networking-api.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -497,6 +496,10 @@
     <ClCompile Include="IO\boring32.io.ixx" />
     <ClCompile Include="IO\boring32.io-completionport.ixx" />
     <ClCompile Include="IO\boring32.io-completionport.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Security\boring32.security-policy.ixx" />
+    <ClCompile Include="Security\boring32.security-policy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

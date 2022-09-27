@@ -7,4 +7,4 @@ export import :securitydescriptor;
 export import :securityattributes;
 export import :securityidentifier;
 export import :token;
-export import :aliases;
+export import :policy;

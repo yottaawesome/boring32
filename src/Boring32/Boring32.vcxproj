@@ -265,10 +265,11 @@
     <ClCompile Include="Registry\boring32.registry.ixx" />
     <ClCompile Include="Registry\boring32.registry-key.ixx" />
     <ClCompile Include="Registry\boring32.registry-value.ixx" />
-    <ClCompile Include="Security\boring32.security-aliases.ixx" />
     <ClCompile Include="Security\boring32.security-constants.ixx" />
     <ClCompile Include="Security\boring32.security-functions.ixx" />
     <ClCompile Include="Security\boring32.security-impersonationcontext.ixx" />
+    <ClCompile Include="Security\boring32.security-policy.cpp" />
+    <ClCompile Include="Security\boring32.security-policy.ixx" />
     <ClCompile Include="Security\boring32.security-securityattributes.cpp" />
     <ClCompile Include="Security\boring32.security-securityattributes.ixx" />
     <ClCompile Include="Security\boring32.security.ixx" />
