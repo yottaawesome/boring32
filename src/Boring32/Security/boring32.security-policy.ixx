@@ -24,6 +24,12 @@ namespace Boring32::Security
 
 	export class Policy
 	{
+		public:
+			virtual ~Policy();
+
+		public:
+			virtual void Close();
+
 		private:
 			LSAHandleUniquePtr m_handle;
 	};
