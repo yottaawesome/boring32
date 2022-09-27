@@ -26,6 +26,9 @@ namespace Boring32::Security
 	{
 		public:
 			virtual ~Policy();
+			Policy(
+				ACCESS_MASK desiredAccess
+			);
 
 		public:
 			virtual void Close();
