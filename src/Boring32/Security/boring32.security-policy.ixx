@@ -22,13 +22,12 @@ namespace Boring32::Security
 		return LSAHandleSharedPtr(handle, LsaClose);
 	}
 
+	// See https://learn.microsoft.com/en-us/windows/win32/secmgmt/opening-a-policy-object-handle
 	export class Policy
 	{
 		public:
 			virtual ~Policy();
-			Policy(
-				ACCESS_MASK desiredAccess
-			);
+			Policy(const ACCESS_MASK desiredAccess);
 
 		public:
 			virtual void Close();
