@@ -14,9 +14,9 @@ import boring32.error;
 
 namespace Boring32::Security
 {
-	inline bool NT_SUCCESS(const NTSTATUS Status) 
+	inline bool NT_SUCCESS(const NTSTATUS status) noexcept
 	{ 
-		return Status >= 0;
+		return status >= 0;
 	}
 
 	Policy::~Policy() {}
