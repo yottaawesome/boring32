@@ -12,6 +12,13 @@ export namespace Boring32::Security
 	class SecurityDescriptor
 	{
 		public:
+			struct Control
+			{
+				SECURITY_DESCRIPTOR_CONTROL Control;
+				DWORD Revision;
+			};
+
+		public:
 			virtual ~SecurityDescriptor();
 			SecurityDescriptor(SecurityDescriptor&& other) noexcept;
 			SecurityDescriptor(const SecurityDescriptor&) = delete;
@@ -29,6 +36,7 @@ export namespace Boring32::Security
 			virtual void Close();
 			[[nodiscard]] virtual PSECURITY_DESCRIPTOR GetDescriptor() const noexcept;
 			[[nodiscard]] virtual const std::wstring& GetDescriptorString() const noexcept;
+			[[nodiscard]] virtual Control GetControl() const;
 
 		protected:
 			virtual void Create();

@@ -84,4 +84,21 @@ namespace Boring32::Security
 		m_descriptor = std::move(other.m_descriptor);
 		return *this;
 	}
+
+	SecurityDescriptor::Control SecurityDescriptor::GetControl() const
+	{
+		SecurityDescriptor::Control c{0};
+		// https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsecuritydescriptorcontrol
+		const bool success = GetSecurityDescriptorControl(
+			m_descriptor.get(),
+			&c.Control,
+			&c.Revision
+		);
+		if (!success)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("GetSecurityDescriptorControl() failed", lastError);
+		}
+		return c;
+	}
 }
