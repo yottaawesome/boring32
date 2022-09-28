@@ -28,14 +28,17 @@ namespace Boring32::Security
 	{
 		public:
 			virtual ~Policy();
+			// See https://learn.microsoft.com/en-us/windows/win32/secmgmt/policy-object-access-rights
 			Policy(const ACCESS_MASK desiredAccess);
 
 		public:
 			virtual void Close();
+			// Policy handle requires POLICY_LOOKUP_NAMES, and optionally POLICY_CREATE_ACCOUNT.
 			virtual void AddAccountPrivilege(
 				const PSID accountSid,
 				const std::wstring& privilege
 			);
+			// Policy handle requires POLICY_LOOKUP_NAMES.
 			virtual void RemoveAccountPrivilege(
 				const PSID accountSid,
 				const std::wstring& privilege
