@@ -55,6 +55,8 @@ namespace Boring32::Security
 	{
 		if (!accountSid)
 			throw Error::Boring32Error("accountSid cannot be null");
+		if (privilege.empty())
+			throw Error::Boring32Error("Invalid empty privilege");
 
 		// Based on https://github.com/microsoft/Windows-classic-samples/blob/main/Samples/Win7Samples/security/lsapolicy/lsaprivs/LsaPrivs.c
 		// https://learn.microsoft.com/en-us/windows/win32/api/lsalookup/ns-lsalookup-lsa_unicode_string
@@ -86,6 +88,8 @@ namespace Boring32::Security
 	{
 		if (!accountSid)
 			throw Error::Boring32Error("accountSid cannot be null");
+		if (privilege.empty())
+			throw Error::Boring32Error("Invalid empty privilege");
 
 		// Based on https://github.com/microsoft/Windows-classic-samples/blob/main/Samples/Win7Samples/security/lsapolicy/lsaprivs/LsaPrivs.c
 		// https://learn.microsoft.com/en-us/windows/win32/api/lsalookup/ns-lsalookup-lsa_unicode_string
