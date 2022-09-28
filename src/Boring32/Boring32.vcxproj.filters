@@ -502,5 +502,9 @@
     <ClCompile Include="Security\boring32.security-policy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Security\boring32.security-lsaunicodestring.ixx" />
+    <ClCompile Include="Security\boring32.security-lsaunicodestring.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
