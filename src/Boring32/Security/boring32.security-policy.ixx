@@ -32,10 +32,13 @@ namespace Boring32::Security
 
 		public:
 			virtual void Close();
-			virtual void SetPrivilege(
+			virtual void AddAccountPrivilege(
 				const PSID accountSid,
-				const std::wstring& privilege,
-				const bool enabled
+				const std::wstring& privilege
+			);
+			virtual void RemoveAccountPrivilege(
+				const PSID accountSid,
+				const std::wstring& privilege
 			);
 
 		private:
