@@ -15,7 +15,7 @@ namespace Boring32::Security
 		m_lsaStr = {
 			.Length = static_cast<unsigned short>(m_string.size() * sizeof(wchar_t)),
 			.MaximumLength = static_cast<unsigned short>(m_string.size() * sizeof(wchar_t)),
-			.Buffer = const_cast<wchar_t*>(m_string.c_str())
+			.Buffer = m_string.data()
 		};
 	}
 	
