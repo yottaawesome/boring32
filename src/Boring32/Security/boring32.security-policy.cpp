@@ -1,5 +1,6 @@
 module;
 
+#include <string>
 #include <source_location>
 // https://www.mschaef.com/windows_h_is_wierd
 //#define WIN32_NO_STATUS
@@ -45,5 +46,55 @@ namespace Boring32::Security
 	void Policy::Close()
 	{
 		m_handle.reset();
+	}
+
+	void Policy::SetPrivilege(
+		const PSID accountSid,
+		const std::wstring& privilege,
+		const bool enabled
+	)
+	{
+		if (!accountSid)
+			throw Error::Boring32Error("accountSid cannot be null");
+
+		// Based on https://github.com/microsoft/Windows-classic-samples/blob/main/Samples/Win7Samples/security/lsapolicy/lsaprivs/LsaPrivs.c
+		// https://learn.microsoft.com/en-us/windows/win32/api/lsalookup/ns-lsalookup-lsa_unicode_string
+		LSA_UNICODE_STRING lsaPrivStr{
+			.Length = static_cast<unsigned short>(privilege.size() * sizeof(wchar_t)),
+			.MaximumLength = static_cast<unsigned short>(privilege.size() * sizeof(wchar_t)),
+			.Buffer = const_cast<wchar_t*>(privilege.c_str())
+		};
+		if (enabled) 
+		{
+			// https://learn.microsoft.com/en-us/windows/win32/api/ntsecapi/nf-ntsecapi-lsaaddaccountrights
+			const NTSTATUS status = LsaAddAccountRights(
+				m_handle.get(), // open policy handle
+				accountSid,     // target SID
+				&lsaPrivStr,	// privileges
+				1               // privilege count
+			);
+			if (!NT_SUCCESS(status))
+			{
+				// https://learn.microsoft.com/en-us/windows/win32/api/ntsecapi/nf-ntsecapi-lsantstatustowinerror
+				const ULONG win32Error = LsaNtStatusToWinError(status);
+				throw Error::Win32Error("LsaAddAccountRights() failed", win32Error);
+			}
+		}
+		else 
+		{
+			const NTSTATUS status = LsaRemoveAccountRights(
+				m_handle.get(), // open policy handle
+				accountSid,     // target SID
+				false,          // do not disable all rights
+				&lsaPrivStr,	// privileges
+				1               // privilege count
+			);
+			if (!NT_SUCCESS(status))
+			{
+				// https://learn.microsoft.com/en-us/windows/win32/api/ntsecapi/nf-ntsecapi-lsantstatustowinerror
+				const ULONG win32Error = LsaNtStatusToWinError(status);
+				throw Error::Win32Error("LsaRemoveAccountRights() failed", win32Error);
+			}
+		}
 	}
 }

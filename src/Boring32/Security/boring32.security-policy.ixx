@@ -1,6 +1,7 @@
 module;
 
 #include <memory>
+#include <string>
 #include <Windows.h>
 #include <Ntsecapi.h>
 
@@ -31,6 +32,11 @@ namespace Boring32::Security
 
 		public:
 			virtual void Close();
+			virtual void SetPrivilege(
+				const PSID accountSid,
+				const std::wstring& privilege,
+				const bool enabled
+			);
 
 		private:
 			LSAHandleUniquePtr m_handle;
