@@ -12,6 +12,7 @@ module;
 
 module boring32.security:policy;
 import boring32.error;
+import :lsaunicodestring;
 
 namespace Boring32::Security
 {
@@ -28,6 +29,7 @@ namespace Boring32::Security
 		LSA_OBJECT_ATTRIBUTES obj{ 0 };
 		LSA_HANDLE handle;
 		// https://learn.microsoft.com/en-us/windows/win32/api/ntsecapi/nf-ntsecapi-lsaopenpolicy
+		// See also https://learn.microsoft.com/en-us/windows/win32/secmgmt/opening-a-policy-object-handle
 		const NTSTATUS status = LsaOpenPolicy(
 			nullptr,
 			&obj,
@@ -59,18 +61,13 @@ namespace Boring32::Security
 			throw Error::Boring32Error("Invalid empty privilege");
 
 		// Based on https://github.com/microsoft/Windows-classic-samples/blob/main/Samples/Win7Samples/security/lsapolicy/lsaprivs/LsaPrivs.c
-		// https://learn.microsoft.com/en-us/windows/win32/api/lsalookup/ns-lsalookup-lsa_unicode_string
 		// See also the return values for LSA: https://learn.microsoft.com/en-us/windows/win32/secmgmt/management-return-values
-		LSA_UNICODE_STRING lsaPrivStr{
-			.Length = static_cast<unsigned short>(privilege.size() * sizeof(wchar_t)),
-			.MaximumLength = static_cast<unsigned short>(privilege.size() * sizeof(wchar_t)),
-			.Buffer = const_cast<wchar_t*>(privilege.c_str())
-		};
+		LSAUnicodeString lsaPrivStr(privilege);
 		// https://learn.microsoft.com/en-us/windows/win32/api/ntsecapi/nf-ntsecapi-lsaaddaccountrights
 		const NTSTATUS status = LsaAddAccountRights(
 			m_handle.get(), // open policy handle
 			accountSid,     // target SID
-			&lsaPrivStr,	// privileges
+			lsaPrivStr,		// privileges
 			1               // privilege count
 		);
 		if (!NT_SUCCESS(status))
@@ -92,18 +89,13 @@ namespace Boring32::Security
 			throw Error::Boring32Error("Invalid empty privilege");
 
 		// Based on https://github.com/microsoft/Windows-classic-samples/blob/main/Samples/Win7Samples/security/lsapolicy/lsaprivs/LsaPrivs.c
-		// https://learn.microsoft.com/en-us/windows/win32/api/lsalookup/ns-lsalookup-lsa_unicode_string
-		LSA_UNICODE_STRING lsaPrivStr{
-			.Length = static_cast<unsigned short>(privilege.size() * sizeof(wchar_t)),
-			.MaximumLength = static_cast<unsigned short>(privilege.size() * sizeof(wchar_t)),
-			.Buffer = const_cast<wchar_t*>(privilege.c_str())
-		};
+		LSAUnicodeString lsaPrivStr(privilege);
 		// https://learn.microsoft.com/en-us/windows/win32/api/ntsecapi/nf-ntsecapi-lsaremoveaccountrights
 		const NTSTATUS status = LsaRemoveAccountRights(
 			m_handle.get(), // open policy handle
 			accountSid,     // target SID
 			false,          // do not disable all rights
-			&lsaPrivStr,	// privileges
+			lsaPrivStr,	// privileges
 			1               // privilege count
 		);
 		if (!NT_SUCCESS(status))

@@ -14,7 +14,7 @@ namespace Boring32::Security
 			LSAUnicodeString(std::wstring str);
 
 		public:
-			operator LSA_UNICODE_STRING* ();
+			operator LSA_UNICODE_STRING* () noexcept;
 
 		private:
 			std::wstring m_string;
