@@ -438,4 +438,33 @@ namespace Boring32::Security
 
 		return bSystem;
 	}
+	
+	bool LookupSID(PSID sid, SIDInfo& outSidInfo)
+	{
+		DWORD size = 256;
+		std::wstring name(size, '\0');
+		SID_NAME_USE nameUse;
+		// https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupaccountsidw
+		const bool success = LookupAccountSidW(
+			nullptr,
+			sid,
+			&name[0],
+			&size,
+			nullptr,
+			0,
+			&nameUse
+		);
+		if (success)
+		{
+			outSidInfo.Type = nameUse;
+			outSidInfo.Name = name.c_str(); // trims to size
+			return true;
+		}
+
+		const auto lastError = GetLastError();
+		if (lastError == ERROR_NONE_MAPPED)
+			return false;
+
+		throw Error::Win32Error("LookupAccountSidW() failed", lastError);
+	}
 }

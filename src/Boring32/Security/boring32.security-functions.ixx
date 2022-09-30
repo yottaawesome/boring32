@@ -52,4 +52,10 @@ export namespace Boring32::Security
 		const std::vector<LUID_AND_ATTRIBUTES>& privileges
 	);
 	bool IsLocalSystem();
+	struct SIDInfo
+	{
+		SID_NAME_USE Type = SID_NAME_USE::SidTypeUser;
+		std::wstring Name;
+	};
+	bool LookupSID(PSID sid, SIDInfo& outSidInfo);
 }
