@@ -12,16 +12,18 @@ namespace Boring32::Security
 	{
 		public:
 			LSAUnicodeString(std::wstring str);
-			// Disable copy and move semantics for now.
-			LSAUnicodeString(const LSAUnicodeString&) = delete;
-			LSAUnicodeString(LSAUnicodeString&&) = delete;
+			LSAUnicodeString(const LSAUnicodeString& other);
+			LSAUnicodeString(LSAUnicodeString&& other);
 
 		public:
-			LSAUnicodeString& operator=(const LSAUnicodeString&) = delete;
-			LSAUnicodeString& operator=(LSAUnicodeString&&) = delete;
+			LSAUnicodeString& operator=(const LSAUnicodeString& other);
+			LSAUnicodeString& operator=(LSAUnicodeString&& other);
 
 		public:
 			operator LSA_UNICODE_STRING* () noexcept;
+
+		private:
+			void Init();
 
 		private:
 			// We need this so the buffer pointed to by m_lsaStr is valid
