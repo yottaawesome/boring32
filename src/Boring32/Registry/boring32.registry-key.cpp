@@ -215,4 +215,53 @@ namespace Boring32::Registry
 		if (status != ERROR_SUCCESS)
 			throw Error::Win32Error("RegSaveKeyExW() failed", status);
 	}
+
+	std::vector<KeyValues> Key::GetValues()
+	{
+		if (!m_key)
+		{
+			throw Error::Boring32Error("Key not initialised.");
+		}
+
+		// See: https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-element-size-limits
+		constexpr unsigned maxValueNameCharacterLength = 32767 / sizeof(wchar_t);
+		std::wstring valueNameBuffer(maxValueNameCharacterLength, '\0');
+		std::vector<KeyValues> values;
+		// Essentially, this works by requesting the value at the index, which is incremented
+		// per successful iteration. Once the end is reached, RegEnumValueW() will fail with
+		// ERROR_NO_MORE_ITEMS, at which point we can terminate the loop. Note that the order 
+		// of the enumeration is unspecified and will probably differ to what appears in 
+		// Registry Editor.
+		for (DWORD index = 0;; index++)
+		{
+			DWORD valueNameCharacterLength = maxValueNameCharacterLength;
+			KeyValues valueToAdd{};
+			// https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regenumvaluew
+			const DWORD status = RegEnumValueW(
+				m_key.get(),
+				index,
+				&valueNameBuffer[0],
+				&valueNameCharacterLength,
+				0,
+				reinterpret_cast<DWORD*>(&valueToAdd.DataType),
+				nullptr,
+				&valueToAdd.DataSizeBytes
+			);
+			if (status == ERROR_NO_MORE_ITEMS)
+			{
+				break;
+			}
+			if (status != ERROR_SUCCESS)
+			{
+				throw Error::Win32Error("RegEnumValueW() failed.", status);
+			}
+			valueToAdd.Name = std::wstring(
+				valueNameBuffer.begin(), 
+				valueNameBuffer.begin() + valueNameCharacterLength
+			);
+			values.push_back(std::move(valueToAdd));
+		}
+
+		return values;
+	}
 }

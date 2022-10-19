@@ -9,8 +9,9 @@ export module boring32.registry:value;
 export namespace Boring32::Registry
 {
 	// https://docs.microsoft.com/en-us/windows/win32/sysinfo/registry-value-types
-	enum class ValueTypes
+	enum class ValueTypes : DWORD
 	{
+		None = REG_NONE,
 		Binary = REG_BINARY,
 		DWord = REG_DWORD,
 		DWordLittleEndian = REG_DWORD_LITTLE_ENDIAN,
@@ -18,7 +19,6 @@ export namespace Boring32::Registry
 		ExpandableString = REG_EXPAND_SZ,
 		Link = REG_LINK,
 		MultiString = REG_MULTI_SZ,
-		None = REG_NONE,
 		QWord = REG_QWORD,
 		QWordLittleEndian = REG_QWORD_LITTLE_ENDIAN,
 		String = REG_SZ,

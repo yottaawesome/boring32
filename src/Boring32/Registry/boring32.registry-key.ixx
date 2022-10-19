@@ -2,12 +2,21 @@ module;
 
 #include <stdexcept>
 #include <memory>
+#include <vector>
 #include <Windows.h>
 
 export module boring32.registry:key;
+import :value;
 
 export namespace Boring32::Registry
 {
+	struct KeyValues
+	{
+		std::wstring Name;
+		ValueTypes DataType = ValueTypes::None;
+		DWORD DataSizeBytes = 0;
+	};
+
 	class Key
 	{
 		public:
@@ -59,6 +68,7 @@ export namespace Boring32::Registry
 				const size_t value
 			);
 			virtual void Export(const std::wstring& path, const DWORD flags);
+			virtual std::vector<KeyValues> GetValues();
 
 		protected:
 			virtual Key& Copy(const Key& other);
