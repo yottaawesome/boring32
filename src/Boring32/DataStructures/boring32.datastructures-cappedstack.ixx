@@ -8,6 +8,9 @@ export module boring32.datastructures:cappedstack;
 
 export namespace Boring32::DataStructures
 {
+	// TODO: use Boring32Error instead of std-derived exceptions. 
+	// Can't currently use it as MSVC encounters an internal 
+	// compiler error.
 	template<typename T>
 	class CappedStack
 	{
