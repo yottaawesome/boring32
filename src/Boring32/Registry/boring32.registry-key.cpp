@@ -120,8 +120,8 @@ namespace Boring32::Registry
 
 	void Key::GetValue(const std::wstring& valueName, std::wstring& out)
 	{
-		if (m_key == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": m_key is null");
+		if (!m_key)
+			throw Error::Boring32Error("m_key is null");
 
 		Registry::GetValue(m_key.get(), valueName, out);
 	}
@@ -141,8 +141,8 @@ namespace Boring32::Registry
 		const std::wstring& value
 	)
 	{
-		if (m_key == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": m_key is null");
+		if (!m_key)
+			throw Error::Boring32Error("m_key is null");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw
 		const LSTATUS status = RegSetValueExW(
@@ -203,8 +203,8 @@ namespace Boring32::Registry
 
 	void Key::Export(const std::wstring& path, const DWORD flags)
 	{
-		if (m_key == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": m_key is null");
+		if (!m_key)
+			throw Error::Boring32Error("m_key is null");
 
 		const LSTATUS status = RegSaveKeyExW(
 			m_key.get(),
