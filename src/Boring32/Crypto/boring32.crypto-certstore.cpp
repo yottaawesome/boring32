@@ -267,7 +267,7 @@ namespace Boring32::Crypto
 		if (lastError != CRYPT_E_NOT_FOUND && lastError != ERROR_NO_MORE_FILES)
 			throw Error::Win32Error("CertEnumCertificatesInStore() failed", lastError);
 
-		return Certificate();
+		return {};
 	}
 
 	Certificate CertStore::GetCertBySubjectCn(const std::wstring& subjectCn) const
@@ -425,9 +425,9 @@ namespace Boring32::Crypto
 	void CertStore::DeleteCert(const CERT_CONTEXT* cert)
 	{
 		if (!cert)
-			throw std::invalid_argument("cert is nullptr");
+			throw Error::Boring32Error("cert is nullptr");
 		if (!m_certStore)
-			throw std::runtime_error("m_certStore is nullptr");
+			throw Error::Boring32Error("m_certStore is nullptr");
 
 		if (!CertDeleteCertificateFromStore(cert))
 		{
