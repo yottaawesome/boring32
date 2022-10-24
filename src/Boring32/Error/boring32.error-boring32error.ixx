@@ -2,6 +2,7 @@ module;
 
 #include <stdexcept>
 #include <string>
+#include <format>
 #include <source_location>
 
 export module boring32.error:boring32error;
@@ -18,6 +19,21 @@ export namespace Boring32::Error
 				const std::string& message, 
 				const std::source_location location = std::source_location::current()
 			);
+			template<typename...Args>
+			Boring32Error(
+				const std::string& message,
+				const std::source_location location,
+				Args...args
+			)
+			{
+				GenerateErrorMessage(
+					location,
+					std::vformat(
+						message, 
+						std::make_format_args(args...)
+					)
+				);
+			}
 
 		protected:
 			// Protected default constructor for base class use

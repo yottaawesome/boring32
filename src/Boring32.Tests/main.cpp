@@ -513,7 +513,7 @@ void Blah(int [[x::blah]]blah)
 
 }
 
-int main(int argc, char** args) try
+void RandomCrap()
 {
 	//std::wcout << MeetsVersion(10, 0, 1809, Mask::Major | Mask::Build) << std::endl;
 
@@ -528,7 +528,7 @@ int main(int argc, char** args) try
 	};
 	DWORDLONG condition = 0;
 	condition = VerSetConditionMask(
-		condition, 
+		condition,
 		VER_MAJORVERSION,
 		VER_GREATER_EQUAL
 	);
@@ -538,7 +538,7 @@ int main(int argc, char** args) try
 		VER_GREATER_EQUAL
 	);
 	condition = VerSetConditionMask(
-		condition, 
+		condition,
 		VER_BUILDNUMBER,
 		VER_GREATER_EQUAL
 	);
@@ -553,10 +553,10 @@ int main(int argc, char** args) try
 		VER_GREATER_EQUAL
 	);
 	bool succeeded = VerifyVersionInfoW(
-		&vi, 
-		VER_MAJORVERSION 
-		| VER_MINORVERSION 
-		| VER_SERVICEPACKMAJOR 
+		&vi,
+		VER_MAJORVERSION
+		| VER_MINORVERSION
+		| VER_SERVICEPACKMAJOR
 		| VER_SERVICEPACKMINOR
 		| VER_BUILDNUMBER
 		, condition
@@ -566,12 +566,12 @@ int main(int argc, char** args) try
 	{
 		throw Boring32::Error::Win32Error(__FUNCSIG__": VerifyVersionInfoW()", lastError);
 	}
-	
+
 	IsWindowsVersionOrGreater(10, 0, 1809);
 
 	std::wcout
 		<< std::format(
-			L"{}:{}\n", 
+			L"{}:{}\n",
 			MeetsMinimumOSVersion(
 				10,
 				0,
@@ -579,7 +579,7 @@ int main(int argc, char** args) try
 				0,
 				0,
 				Mask::Build | Mask::Major
-			), 
+			),
 			IsWindows10OrGreater());
 
 	/*OSVERSIONINFOEX v{
@@ -591,11 +591,16 @@ int main(int argc, char** args) try
 	);
 	std::wcout << std::format(
 		L"{}.{}.{}\n",
-		v.dwMajorVersion, 
-		v.dwMinorVersion, 
+		v.dwMajorVersion,
+		v.dwMinorVersion,
 		v.dwBuildNumber
 	);*/
 	//GetProductInfo();
+}
+
+int main(int argc, char** args) try
+{
+	throw Boring32::Error::Boring32Error("A {}", std::source_location::current(), 1);	
 }
 catch (const std::exception& ex)
 {
