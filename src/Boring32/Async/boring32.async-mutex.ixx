@@ -117,9 +117,8 @@ export namespace Boring32::Async
 			///		Returns true if the mutex was successfully acquired,
 			///		or false if the timeout occurred.
 			/// </returns>
-			/// <exception cref="std::runtime_error">
-			///		Failed to acquire the mutex for reasons other than the
-			///		timeout was reached.
+			/// <exception cref="Error::Boring32Error">
+			///		Mutex not initialised.
 			/// </exception>
 			virtual bool Lock(const DWORD waitTime, const bool isAlertable);
 
@@ -136,12 +135,16 @@ export namespace Boring32::Async
 			///		Returns true if the mutex was successfully acquired,
 			///		or false if the timeout occurred, or if an error occurred.
 			/// </returns>
-			virtual bool Lock(const DWORD waitTime, const bool isAlertable, const std::nothrow_t&) noexcept;
+			virtual bool Lock(
+				const DWORD waitTime, 
+				const bool isAlertable, 
+				const std::nothrow_t&
+			) noexcept;
 
 			/// <summary>
 			///		Frees the mutex, allowing another process to acquire it.
 			/// </summary>
-			/// <exception cref="std::runtime_error">
+			/// <exception cref="Error::Win32Error">
 			///		Failed to release the mutex.
 			/// </exception>
 			virtual void Unlock();

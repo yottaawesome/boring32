@@ -153,7 +153,11 @@ namespace Boring32::Async
 		return m_locked;
 	}
 
-	bool Mutex::Lock(const DWORD waitTime, const bool isAlertable, const std::nothrow_t&) noexcept try
+	bool Mutex::Lock(
+		const DWORD waitTime, 
+		const bool isAlertable, 
+		const std::nothrow_t&
+	) noexcept try
 	{
 		return Lock(waitTime, isAlertable);
 	}
