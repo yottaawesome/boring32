@@ -4,7 +4,6 @@ module;
 #include <format>
 #include <vector>
 #include <memory>
-#include <stdexcept>
 #include <source_location>
 #include <filesystem>
 #include <Windows.h>
@@ -21,8 +20,12 @@ namespace Boring32::FileSystem
         // Adapted from https://stackoverflow.com/questions/940707/how-do-i-programmatically-get-the-version-of-a-dll-or-exe-file
         // See also https://docs.microsoft.com/en-us/windows/win32/menurc/version-information
         if (!std::filesystem::exists(filePath))
-            throw std::runtime_error(
-                std::format("{}: file {} does not exist", __FUNCSIG__, Strings::ConvertString(filePath)));
+            throw Error::Boring32Error(
+                std::format(
+                    "File {} does not exist", 
+                    Strings::ConvertString(filePath)
+                )
+            );
 
         DWORD verHandle = 0;
         // https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfosizew
