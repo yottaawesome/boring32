@@ -84,7 +84,7 @@ namespace Boring32::Crypto
 		}
 	}
 	
-	void CertificateChain::Verify()
+	bool CertificateChain::Verify(const ChainVerificationPolicy policy)
 	{
 		// TODO: need to verify this actually works
 		if (!m_chainContext)
@@ -100,13 +100,14 @@ namespace Boring32::Crypto
 		};
 		// https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certverifycertificatechainpolicy
 		const bool succeeded = CertVerifyCertificateChainPolicy(
-			CERT_CHAIN_POLICY_SSL,
+			reinterpret_cast<PCSTR>(policy),
 			m_chainContext,
 			&para,
 			&status
 		);
 		if (!succeeded)
 			throw Error::Win32Error("CertVerifyCertificateChainPolicy() failed");
+		return status.dwError == 0;
 	}
 	
 	PCCERT_CHAIN_CONTEXT CertificateChain::GetChainContext() const noexcept
