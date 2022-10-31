@@ -222,4 +222,17 @@ namespace Boring32::Crypto
 
 		return returnValue;
 	}
+
+	Certificate::CertTimeValidity Certificate::GetTimeValidity() const
+	{
+		if (!m_certContext)
+			throw Error::Boring32Error("m_certContext is nullptr");
+
+		// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certverifytimevalidity
+		const long value = CertVerifyTimeValidity(
+			nullptr,               // Use current time.
+			m_certContext->pCertInfo
+		);
+		return static_cast<Certificate::CertTimeValidity>(value);
+	}
 }

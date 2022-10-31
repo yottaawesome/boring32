@@ -27,7 +27,7 @@ export namespace Boring32::Crypto
 	{
 		public:
 			virtual ~CertificateChain();
-			CertificateChain();
+			CertificateChain() = default;
 			CertificateChain(const CertificateChain& other);
 			CertificateChain(CertificateChain&& other) noexcept;
 
@@ -74,6 +74,6 @@ export namespace Boring32::Crypto
 			);
 
 		protected:
-			PCCERT_CHAIN_CONTEXT m_chainContext;
+			PCCERT_CHAIN_CONTEXT m_chainContext = nullptr;
 	};
 }

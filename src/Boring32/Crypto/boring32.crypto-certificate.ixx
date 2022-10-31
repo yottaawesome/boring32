@@ -13,6 +13,14 @@ export namespace Boring32::Crypto
 	class Certificate
 	{
 		public:
+			enum class CertTimeValidity : long
+			{
+				NotYetValid = -1,
+				Valid,
+				Expired
+			};
+
+		public:
 			virtual ~Certificate();
 			Certificate();
 			Certificate(const Certificate& other);
@@ -36,6 +44,7 @@ export namespace Boring32::Crypto
 			virtual std::wstring GetSignatureHashCngAlgorithm() const;
 			virtual void Attach(PCCERT_CONTEXT attachTo);
 			virtual PCCERT_CONTEXT Detach() noexcept;
+			virtual CertTimeValidity GetTimeValidity() const;
 
 		public:
 			//virtual std::wstring _GetSubjectName() const;

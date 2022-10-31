@@ -17,10 +17,6 @@ namespace Boring32::Crypto
 		Close();
 	}
 
-	CertificateChain::CertificateChain()
-	:	m_chainContext(nullptr)
-	{ }
-
 	CertificateChain::CertificateChain(const CertificateChain& other)
 	:	m_chainContext(nullptr)
 	{
