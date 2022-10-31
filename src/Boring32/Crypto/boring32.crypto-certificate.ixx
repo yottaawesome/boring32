@@ -60,6 +60,7 @@ export namespace Boring32::Crypto
 			) const;
 
 		protected:
+			// See https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context
 			PCCERT_CONTEXT m_certContext;
 	};
 }
