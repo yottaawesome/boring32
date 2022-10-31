@@ -22,6 +22,11 @@ namespace Boring32::Security
 		return status >= 0;
 	}
 
+	inline bool NT_ERROR(const NTSTATUS status) noexcept
+	{
+		return status < 0;
+	}
+
 	Policy::~Policy() {}
 	
 	Policy::Policy(const ACCESS_MASK desiredAccess)
@@ -36,7 +41,7 @@ namespace Boring32::Security
 			desiredAccess,
 			&handle
 		);
-		if (!NT_SUCCESS(status))
+		if (NT_ERROR(status))
 		{
 			// https://learn.microsoft.com/en-us/windows/win32/api/ntsecapi/nf-ntsecapi-lsantstatustowinerror
 			const ULONG win32Error = LsaNtStatusToWinError(status);
@@ -70,7 +75,7 @@ namespace Boring32::Security
 			lsaPrivStr,		// privileges
 			1               // privilege count
 		);
-		if (!NT_SUCCESS(status))
+		if (NT_ERROR(status))
 		{
 			// https://learn.microsoft.com/en-us/windows/win32/api/ntsecapi/nf-ntsecapi-lsantstatustowinerror
 			const ULONG win32Error = LsaNtStatusToWinError(status);
@@ -98,7 +103,7 @@ namespace Boring32::Security
 			lsaPrivStr,	// privileges
 			1               // privilege count
 		);
-		if (!NT_SUCCESS(status))
+		if (NT_ERROR(status))
 		{
 			// https://learn.microsoft.com/en-us/windows/win32/api/ntsecapi/nf-ntsecapi-lsantstatustowinerror
 			const ULONG win32Error = LsaNtStatusToWinError(status);
