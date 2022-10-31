@@ -250,4 +250,18 @@ namespace Boring32::Crypto
 		);
 		return static_cast<Certificate::CertTimeValidity>(value);
 	}
+
+	const FILETIME& Certificate::GetNotBefore() const
+	{
+		if (!m_certContext)
+			throw Error::Boring32Error("m_certContext is nullptr");
+		return m_certContext->pCertInfo->NotBefore;
+	}
+
+	const FILETIME& Certificate::GetNotAfter() const
+	{
+		if (!m_certContext)
+			throw Error::Boring32Error("m_certContext is nullptr");
+		return m_certContext->pCertInfo->NotAfter;
+	}
 }
