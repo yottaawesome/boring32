@@ -16,13 +16,13 @@ export namespace Boring32::Crypto
 			enum class CertTimeValidity : long
 			{
 				NotYetValid = -1,
-				Valid,
-				Expired
+				Valid = 0,
+				Expired = 1
 			};
 
 		public:
 			virtual ~Certificate();
-			Certificate();
+			Certificate() = default;
 			Certificate(const Certificate& other);
 			Certificate(Certificate&& other) noexcept;
 			Certificate(PCCERT_CONTEXT m_certContext, const bool ownedExclusively);
@@ -32,6 +32,7 @@ export namespace Boring32::Crypto
 			virtual Certificate& operator=(Certificate&& other) noexcept;
 			virtual bool operator==(PCCERT_CONTEXT const other) const noexcept;
 			virtual operator bool() const noexcept;
+			virtual operator PCCERT_CONTEXT() const noexcept;
 
 		public:
 			virtual void Close() noexcept;
@@ -61,6 +62,6 @@ export namespace Boring32::Crypto
 
 		protected:
 			// See https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context
-			PCCERT_CONTEXT m_certContext;
+			PCCERT_CONTEXT m_certContext = nullptr;
 	};
 }

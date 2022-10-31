@@ -18,10 +18,6 @@ namespace Boring32::Crypto
 		Close();
 	}
 
-	Certificate::Certificate()
-	:	m_certContext(nullptr)
-	{ }
-
 	Certificate::Certificate(PCCERT_CONTEXT certContext, const bool ownedExclusively)
 	:	m_certContext(nullptr)
 	{
@@ -70,6 +66,11 @@ namespace Boring32::Crypto
 	Certificate::operator bool() const noexcept
 	{
 		return m_certContext != nullptr;
+	}
+
+	Certificate::operator PCCERT_CONTEXT() const noexcept
+	{
+		return m_certContext;
 	}
 
 	Certificate& Certificate::Move(Certificate& other) noexcept
