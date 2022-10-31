@@ -223,14 +223,29 @@ namespace Boring32::Crypto
 		return returnValue;
 	}
 
-	Certificate::CertTimeValidity Certificate::GetTimeValidity() const
+	bool Certificate::IsValidForCurrentDate() const
+	{
+		if (!m_certContext)
+			throw Error::Boring32Error("m_certContext is nullptr");
+		SYSTEMTIME st{ 0 };
+		GetSystemTime(&st);
+		FILETIME ft{0};
+		if (!SystemTimeToFileTime(&st, &ft))
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("SystemTimeToFileTime() failed", lastError);
+		}
+		return GetTimeValidity(ft) == Certificate::CertTimeValidity::Valid;
+	}
+
+	Certificate::CertTimeValidity Certificate::GetTimeValidity(const FILETIME& ft) const
 	{
 		if (!m_certContext)
 			throw Error::Boring32Error("m_certContext is nullptr");
 
 		// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certverifytimevalidity
 		const long value = CertVerifyTimeValidity(
-			nullptr,               // Use current time.
+			const_cast<FILETIME*>(&ft),
 			m_certContext->pCertInfo
 		);
 		return static_cast<Certificate::CertTimeValidity>(value);

@@ -44,7 +44,8 @@ export namespace Boring32::Crypto
 			virtual std::wstring GetSignatureHashCngAlgorithm() const;
 			virtual void Attach(PCCERT_CONTEXT attachTo);
 			virtual PCCERT_CONTEXT Detach() noexcept;
-			virtual CertTimeValidity GetTimeValidity() const;
+			virtual bool IsValidForCurrentDate() const;
+			virtual CertTimeValidity GetTimeValidity(const FILETIME& ft) const;
 
 		public:
 			//virtual std::wstring _GetSubjectName() const;
