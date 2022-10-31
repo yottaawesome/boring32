@@ -45,7 +45,7 @@ export namespace Boring32::Crypto
 			virtual void Attach(PCCERT_CONTEXT attachTo);
 			virtual PCCERT_CONTEXT Detach() noexcept;
 			virtual bool IsValidForCurrentDate() const;
-			virtual CertTimeValidity GetTimeValidity(const FILETIME& ft) const;
+			virtual CertTimeValidity GetTimeValidity(FILETIME* const ft) const;
 			virtual const FILETIME& GetNotBefore() const;
 			virtual const FILETIME& GetNotAfter() const;
 
