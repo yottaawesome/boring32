@@ -1,6 +1,7 @@
 module;
 
 #include <functional>
+#include <string>
 #include <Windows.h>
 
 export module boring32.async:thread;
