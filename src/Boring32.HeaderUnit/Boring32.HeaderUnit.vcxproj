@@ -19,9 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="boring32.headerunit.com.ixx" />
-    <ClCompile Include="boring32.headerunit.ixx" />
-    <ClCompile Include="boring32.headerunit.stl.ixx" />
+    <ClCompile Include="TranslateInclude.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -120,6 +118,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <TranslateIncludes>true</TranslateIncludes>
       <CompileAs>CompileAsHeaderUnit</CompileAs>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
     </ClCompile>
     <Link>
       <SubSystem>

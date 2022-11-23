@@ -15,13 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="boring32.headerunit.ixx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="boring32.headerunit.com.ixx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="boring32.headerunit.stl.ixx">
+    <ClCompile Include="TranslateInclude.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

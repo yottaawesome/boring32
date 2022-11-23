@@ -123,6 +123,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <EnableModules>true</EnableModules>
+      <ErrorReporting>Send</ErrorReporting>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
