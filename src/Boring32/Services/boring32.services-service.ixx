@@ -12,7 +12,13 @@ export namespace Boring32::Services
 	{
 		public:
 			virtual ~Service();
+			Service(const Service&) = default;
+			Service(Service&&) noexcept = default;
 			Service(ServiceHandleSharedPtr service);
+
+		public:
+			virtual Service& operator=(const Service&) = default;
+			virtual Service& operator=(Service&&) noexcept = default;
 
 		public:
 			virtual void Start(std::vector<std::wstring>& args); 
