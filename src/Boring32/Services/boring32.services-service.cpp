@@ -44,6 +44,23 @@ namespace Boring32::Services
 
 	void Service::Stop()
 	{
+		// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_control_status_reason_paramsw
+		SERVICE_CONTROL_STATUS_REASON_PARAMS params
+		{
+			.dwReason = SERVICE_STOP_REASON_FLAG_PLANNED & SERVICE_STOP_REASON_MAJOR_NONE & SERVICE_STOP_REASON_MINOR_NONE,
+		};
+		// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-controlserviceexw
+		const bool succeeded = ControlServiceExW(
+			m_service.get(),
+			SERVICE_CONTROL_STOP,
+			SERVICE_CONTROL_STATUS_REASON_INFO,
+			&params
+		);
+		if (!succeeded)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("ControlServiceExW() failed", lastError);
+		}
 	}
 
 	void Service::Delete()
