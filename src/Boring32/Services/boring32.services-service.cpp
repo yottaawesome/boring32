@@ -111,4 +111,9 @@ namespace Boring32::Services
 		}
 		return status.dwCurrentState == SERVICE_RUNNING;
 	}
+	
+	SC_HANDLE__* Service::GetHandle() const noexcept
+	{
+		return m_service.get();
+	}
 }
