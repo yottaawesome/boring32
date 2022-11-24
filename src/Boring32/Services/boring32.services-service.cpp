@@ -89,4 +89,26 @@ namespace Boring32::Services
 		}
 		return buffer;
 	}
+
+	bool Service::IsRunning() const
+	{
+		// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_status_process
+		SERVICE_STATUS_PROCESS status{ 0 };
+		DWORD bufSize;
+		// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-queryservicestatusex
+		const bool succeeded = QueryServiceStatusEx(
+			m_service.get(),
+			// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-scmr/a7de3a4b-0b9e-4b9b-8863-b3dbc9bbe02b
+			SC_STATUS_TYPE::SC_STATUS_PROCESS_INFO,
+			reinterpret_cast<LPBYTE>(&status),
+			sizeof(status),
+			&bufSize
+		);
+		if (!succeeded)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("QueryServiceStatusEx() failed", lastError);
+		}
+		return status.dwCurrentState == SERVICE_RUNNING;
+	}
 }

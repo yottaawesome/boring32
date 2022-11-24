@@ -19,6 +19,7 @@ export namespace Boring32::Services
 			virtual void Stop();
 			virtual void Delete();
 			virtual std::wstring GetDisplayName() const;
+			virtual bool IsRunning() const;
 
 		protected:
 			virtual std::vector<std::byte> GetConfigBuffer() const;

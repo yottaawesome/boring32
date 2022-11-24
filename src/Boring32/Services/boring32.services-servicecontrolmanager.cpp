@@ -55,12 +55,13 @@ namespace Boring32::Services
         if (!m_scm)
             throw Error::Boring32Error("m_scm is null");
 
+        // https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openservicew
         SC_HANDLE serviceHandle = OpenServiceW(
             m_scm.get(),
             name.c_str(),
             desiredAccess
         );
-        if (serviceHandle)
+        if (!serviceHandle)
         {
             const auto lastError = GetLastError();
             throw Error::Win32Error("OpenServiceW() failed", lastError);
