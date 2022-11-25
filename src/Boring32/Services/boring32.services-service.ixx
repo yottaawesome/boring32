@@ -27,6 +27,10 @@ export namespace Boring32::Services
 			virtual std::wstring GetDisplayName() const;
 			virtual bool IsRunning() const;
 			virtual SC_HANDLE__* GetHandle() const noexcept;
+			virtual void SendControlCode(
+				const unsigned long controlCode,
+				const std::wstring& comment
+			);
 
 		protected:
 			virtual std::vector<std::byte> GetConfigBuffer() const;

@@ -63,6 +63,30 @@ namespace Boring32::Services
 		}
 	}
 
+	void Service::SendControlCode(
+		const unsigned long controlCode,
+		const std::wstring& comment
+	)
+	{
+		// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_control_status_reason_paramsw
+		SERVICE_CONTROL_STATUS_REASON_PARAMS params
+		{
+			.pszComment = const_cast<wchar_t*>(comment.c_str())
+		};
+		// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-controlserviceexw
+		const bool succeeded = ControlServiceExW(
+			m_service.get(),
+			controlCode,
+			SERVICE_CONTROL_STATUS_REASON_INFO,
+			&params
+		);
+		if (!succeeded)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("ControlServiceExW() failed", lastError);
+		}
+	}
+
 	void Service::Delete()
 	{
 		if (!DeleteService(m_service.get()))
