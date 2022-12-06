@@ -1,6 +1,7 @@
 module;
 
 #include <string>
+#include <Windows.h>
 
 export module boring32.services:servicecontrolmanager;
 import :raii;
@@ -30,6 +31,7 @@ export namespace Boring32::Services
 				const std::wstring& name,
 				const unsigned desiredAccess
 			);
+			virtual SC_HANDLE GetHandle() const noexcept;
 
 		protected:
 			virtual void Open(const unsigned desiredAccess);

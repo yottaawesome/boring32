@@ -9,6 +9,12 @@ export module boring32.error:errorbase;
 
 namespace Boring32::Error
 {
+	template<typename T>
+	concept CheckStringConstructor = requires()
+	{
+		T("dummy-value");
+	};
+
 	template<typename T> requires std::is_base_of<std::exception, T>::value
 	[[deprecated("This is just here for possible repurposing.")]]
 	class ErrorBase : public T
@@ -16,8 +22,9 @@ namespace Boring32::Error
 		public:
 			virtual ~ErrorBase() {}
 
-			template <std::enable_if<std::is_default_constructible<T>::value, bool> = true>
-			ErrorBase(const std::source_location& location) 
+			//template <std::enable_if<std::is_default_constructible<T>::value, bool> = true>
+			ErrorBase(const std::source_location& location)
+				requires std::is_default_constructible_v<T>
 				: T(),
 				m_location(location)
 			{

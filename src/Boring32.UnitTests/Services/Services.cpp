@@ -10,9 +10,11 @@ namespace Services
 	TEST_CLASS(ServiceControlManager)
 	{
 		public:
-			TEST_METHOD(TestTokeniseString1)
+			TEST_METHOD(TestConstructor)
 			{
 				Boring32::Services::ServiceControlManager scm(SC_MANAGER_CONNECT);
 			}
+
+
 	};
 }

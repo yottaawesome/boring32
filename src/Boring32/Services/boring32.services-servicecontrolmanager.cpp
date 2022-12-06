@@ -47,6 +47,11 @@ namespace Boring32::Services
         return AccessService(name, SERVICE_ALL_ACCESS);
     }
 
+    SC_HANDLE ServiceControlManager::GetHandle() const noexcept
+    {
+        return m_scm.get();
+    }
+
     Service ServiceControlManager::AccessService(
         const std::wstring& name,
         const unsigned desiredAccess

@@ -3,6 +3,7 @@
 #include <atomic>
 #include <iostream>
 #include <functional>
+#include <tuple>
 #include <utility>
 #include <vector>
 #include <stdexcept>
@@ -598,8 +599,40 @@ void RandomCrap()
 	//GetProductInfo();
 }
 
+struct message_and_location
+{
+	std::string_view message;
+	std::source_location loc;
+
+	template<typename T>
+	message_and_location(T&& msg, std::source_location loc = std::source_location::current())
+		: message{ std::forward<T>(msg) }
+		, loc{ loc }
+	{}
+};
+
+template<typename... Args>
+void foo(message_and_location ml, Args&&... args) {}
+
+template<typename...T>
+struct OP
+{
+	OP(const T&... t){}
+};
+
+template<typename...Args>
+//void ArgsTest(Args... a)
+void ArgsTest(message_and_location m1, Args...args)
+{
+	//OP b(a...);
+	std::wcout << m1.loc.line() << std::endl;
+}
+
 int main(int argc, char** args) try
 {
+	//OP i(1,1);
+	ArgsTest("HAHAHA what", 7);
+
 	throw Boring32::Error::Boring32Error("A {}", std::source_location::current(), 1);	
 }
 catch (const std::exception& ex)

@@ -8,9 +8,12 @@ module;
 #include <malloc.h>
 
 export module boring32.datastructures:singlylinkedlist;
+import boring32.error;
 
 export namespace Boring32::DataStructures
 {
+	// Make sure to #include <source_location> in files where you use this template,
+	// or MSVC will encounter an internal compiler error.
 	template<typename T>
 	struct ListElement 
 	{
@@ -39,7 +42,7 @@ export namespace Boring32::DataStructures
 				m_listHeader = reinterpret_cast<PSLIST_HEADER>(_aligned_malloc(sizeof(SLIST_HEADER), MEMORY_ALLOCATION_ALIGNMENT));
 				// Using boring32error causes an internal compiler error. No idea why.
 				if (!m_listHeader)
-					throw std::runtime_error(__FUNCSIG__ ": _aligned_malloc() failed");
+					throw Error::Boring32Error("_aligned_malloc() failed", std::source_location::current());
 				InitializeSListHead(m_listHeader);
 			}
 
@@ -99,7 +102,7 @@ export namespace Boring32::DataStructures
 			{
 				// Using boring32error causes an internal compiler error. No idea why.
 				if (!m_listHeader)
-					throw std::runtime_error("Cannot pop null list header");
+					throw Error::Boring32Error("Cannot pop null list header", std::source_location::current());
 
 				PSLIST_ENTRY listEntry = InterlockedPopEntrySList(m_listHeader);
 				if (!listEntry)
@@ -160,7 +163,7 @@ export namespace Boring32::DataStructures
 				const auto newEntry = reinterpret_cast<ListElement<T>*>(
 					_aligned_malloc(sizeof(ListElement<T>), MEMORY_ALLOCATION_ALIGNMENT));
 				if (!newEntry)
-					throw std::runtime_error(__FUNCSIG__ ": _aligned_malloc() failed");
+					throw Error::Boring32Error("_aligned_malloc() failed", std::source_location::current());
 				if (!m_firstEntry)
 					m_firstEntry = newEntry;
 
