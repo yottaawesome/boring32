@@ -37,6 +37,16 @@ namespace Services
 				Assert::IsNotNull(s.GetHandle());
 			}
 
+			TEST_METHOD(TestMoveConstruction)
+			{
+				Boring32::Services::ServiceControlManager scm1(
+					SC_MANAGER_CONNECT
+				);
+				Boring32::Services::ServiceControlManager scm2(std::move(scm1));
+				Assert::IsNull(scm1.GetHandle());
+				Assert::IsNotNull(scm2.GetHandle());
+			}
+
 			TEST_METHOD(TestMoveAssignment)
 			{
 				Boring32::Services::ServiceControlManager scm1(
