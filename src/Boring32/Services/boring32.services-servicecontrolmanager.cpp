@@ -73,4 +73,9 @@ namespace Boring32::Services
         }
         return { CreateSharedPtr (serviceHandle)};
     }
+    
+    ServiceControlManager::operator bool() const noexcept
+    {
+        return m_scm.get() != nullptr;
+    }
 }

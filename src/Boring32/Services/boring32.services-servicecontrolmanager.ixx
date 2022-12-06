@@ -21,6 +21,7 @@ export namespace Boring32::Services
 		public:
 			virtual ServiceControlManager& operator=(const ServiceControlManager&) = default;
 			virtual ServiceControlManager& operator=(ServiceControlManager&&) noexcept = default;
+			virtual operator bool() const noexcept;
 
 		public:
 			virtual void Close();
