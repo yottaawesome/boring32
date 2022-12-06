@@ -13,8 +13,14 @@ namespace Services
 			TEST_METHOD(TestConstructor)
 			{
 				Boring32::Services::ServiceControlManager scm(SC_MANAGER_CONNECT);
+				Assert::IsNotNull(scm.GetHandle());
 			}
 
-
+			TEST_METHOD(TestClose)
+			{
+				Boring32::Services::ServiceControlManager scm(SC_MANAGER_CONNECT);
+				scm.Close();
+				Assert::IsNull(scm.GetHandle());
+			}
 	};
 }

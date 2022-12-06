@@ -108,7 +108,7 @@
     <ClCompile Include="Time\DateTime.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Services\Services.cpp">
+    <ClCompile Include="Services\services-servicecontrolmanager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
