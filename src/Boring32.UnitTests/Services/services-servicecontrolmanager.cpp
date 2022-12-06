@@ -1,5 +1,4 @@
 ﻿#include "pch.h"
-#include <string>
 #include "CppUnitTest.h"
 
 import boring32.services;
@@ -21,6 +20,12 @@ namespace Services
 				Boring32::Services::ServiceControlManager scm(SC_MANAGER_CONNECT);
 				scm.Close();
 				Assert::IsNull(scm.GetHandle());
+			}
+
+			TEST_METHOD(TestOperatorBool)
+			{
+				Boring32::Services::ServiceControlManager scm(SC_MANAGER_CONNECT);
+				Assert::IsTrue(scm);
 			}
 	};
 }
