@@ -15,5 +15,6 @@
 #include <format>
 #include <source_location>
 #include <Windows.h>
+#include "CppUnitTest.h"
 
 #endif //PCH_H

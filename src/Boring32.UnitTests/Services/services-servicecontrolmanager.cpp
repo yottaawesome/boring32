@@ -1,5 +1,4 @@
 ﻿#include "pch.h"
-#include "CppUnitTest.h"
 
 import boring32.services;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -26,6 +25,16 @@ namespace Services
 			{
 				Boring32::Services::ServiceControlManager scm(SC_MANAGER_CONNECT);
 				Assert::IsTrue(scm);
+			}
+
+			TEST_METHOD(TestGetService)
+			{
+				Boring32::Services::ServiceControlManager scm(SC_MANAGER_CONNECT);
+				Boring32::Services::Service s = scm.AccessService(
+					L"DcomLaunch",
+					SERVICE_QUERY_STATUS
+				);
+				Assert::IsNotNull(s.GetHandle());
 			}
 	};
 }
