@@ -22,6 +22,9 @@ namespace Boring32::Services
 
 	void Service::Start(std::vector<std::wstring>& args)
 	{
+		if (!m_service)
+			throw Error::Boring32Error("m_service is nullptr");
+
 		std::vector<LPCWSTR> argv;
 		for (std::wstring& arg : args)
 		{
@@ -44,6 +47,9 @@ namespace Boring32::Services
 
 	void Service::Stop()
 	{
+		if (!m_service)
+			throw Error::Boring32Error("m_service is nullptr");
+
 		// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_control_status_reason_paramsw
 		SERVICE_CONTROL_STATUS_REASON_PARAMS params
 		{
@@ -68,6 +74,10 @@ namespace Boring32::Services
 		const std::wstring& comment
 	)
 	{
+
+		if (!m_service)
+			throw Error::Boring32Error("m_service is nullptr");
+
 		// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_control_status_reason_paramsw
 		SERVICE_CONTROL_STATUS_REASON_PARAMS params
 		{
@@ -89,11 +99,15 @@ namespace Boring32::Services
 
 	void Service::Delete()
 	{
+		if (!m_service)
+			throw Error::Boring32Error("m_service is nullptr");
+
 		if (!DeleteService(m_service.get()))
 		{
 			const auto lastError = GetLastError();
 			throw Error::Win32Error("service parameter cannot be null", lastError);
 		}
+		m_service = nullptr;
 	}
 
 	std::wstring Service::GetDisplayName() const
@@ -105,6 +119,9 @@ namespace Boring32::Services
 
 	std::vector<std::byte> Service::GetConfigBuffer() const
 	{
+		if (!m_service)
+			throw Error::Boring32Error("m_service is nullptr");
+
 		DWORD bytesNeeded = 0;
 		bool succeeded = QueryServiceConfigW(
 			m_service.get(),
@@ -133,6 +150,9 @@ namespace Boring32::Services
 
 	bool Service::IsRunning() const
 	{
+		if (!m_service)
+			throw Error::Boring32Error("m_service is nullptr");
+
 		// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_status_process
 		SERVICE_STATUS_PROCESS status{ 0 };
 		DWORD bufSize;
@@ -153,7 +173,7 @@ namespace Boring32::Services
 		return status.dwCurrentState == SERVICE_RUNNING;
 	}
 	
-	SC_HANDLE__* Service::GetHandle() const noexcept
+	SC_HANDLE Service::GetHandle() const noexcept
 	{
 		return m_service.get();
 	}

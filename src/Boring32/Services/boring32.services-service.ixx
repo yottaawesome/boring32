@@ -2,6 +2,7 @@ module;
 
 #include <vector>
 #include <string>
+#include <Windows.h>
 
 export module boring32.services:service;
 import :raii;
@@ -12,6 +13,7 @@ export namespace Boring32::Services
 	{
 		public:
 			virtual ~Service();
+			Service() = default;
 			Service(const Service&) = default;
 			Service(Service&&) noexcept = default;
 			Service(ServiceHandleSharedPtr service);
@@ -26,7 +28,7 @@ export namespace Boring32::Services
 			virtual void Delete();
 			virtual std::wstring GetDisplayName() const;
 			virtual bool IsRunning() const;
-			virtual SC_HANDLE__* GetHandle() const noexcept;
+			virtual SC_HANDLE GetHandle() const noexcept;
 			virtual void SendControlCode(
 				const unsigned long controlCode,
 				const std::wstring& comment
