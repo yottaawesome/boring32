@@ -20,13 +20,13 @@ namespace Boring32::Services
 			throw Error::Boring32Error("service parameter cannot be null");
 	}
 
-	void Service::Start(std::vector<std::wstring>& args)
+	void Service::Start(const std::vector<std::wstring>& args)
 	{
 		if (!m_service)
 			throw Error::Boring32Error("m_service is nullptr");
 
 		std::vector<LPCWSTR> argv;
-		for (std::wstring& arg : args)
+		for (const std::wstring& arg : args)
 		{
 			if (arg.empty())
 				continue;
@@ -41,7 +41,7 @@ namespace Boring32::Services
 		if (!succeeded)
 		{
 			const auto lastError = GetLastError();
-			throw Error::Win32Error("StartServiceW()", lastError);
+			throw Error::Win32Error("StartServiceW() failed", lastError);
 		}
 	}
 

@@ -23,7 +23,7 @@ export namespace Boring32::Services
 			virtual Service& operator=(Service&&) noexcept = default;
 
 		public:
-			virtual void Start(std::vector<std::wstring>& args); 
+			virtual void Start(const std::vector<std::wstring>& args);
 			virtual void Stop();
 			virtual void Delete();
 			virtual std::wstring GetDisplayName() const;
