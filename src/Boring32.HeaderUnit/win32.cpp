@@ -17,3 +17,4 @@ import <netlistmgr.h>;
 import <wrl/client.h>;
 import <Rpc.h>;
 import <shlwapi.h>;
+// import <compressapi.h>; unfortunately, not importable

@@ -1,14 +1,13 @@
 module;
 
 #include <source_location>
-#include <vector>
-#include <iostream>
 #include <Windows.h>
 #include <compressapi.h>
 
 module boring32.compression:compressor;
 import :compressionerror;
 import boring32.error;
+import <iostream>;
 
 // For reference see: https://docs.microsoft.com/en-us/windows/win32/cmpapi/using-the-compression-api-in-block-mode
 namespace Boring32::Compression
