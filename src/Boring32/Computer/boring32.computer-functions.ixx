@@ -1,10 +1,7 @@
-module;
-
-#include <string>
-#include <vector>
-#include <Windows.h>
-
 export module boring32.computer:functions;
+import <string>;
+import <vector>;
+import <Windows.h>;
 
 export namespace Boring32::Computer
 {

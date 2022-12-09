@@ -1,7 +1,5 @@
 module;
 
-#include <string>
-#include <vector>
 #include <source_location>
 #include <Windows.h>
 #include <psapi.h>

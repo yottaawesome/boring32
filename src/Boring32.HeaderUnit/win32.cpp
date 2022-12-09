@@ -18,3 +18,4 @@ import <wrl/client.h>;
 import <Rpc.h>;
 import <shlwapi.h>;
 // import <compressapi.h>; unfortunately, not importable
+// import <psapi.h>; module file mapping is invalid.
