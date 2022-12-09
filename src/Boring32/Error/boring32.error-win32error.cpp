@@ -1,14 +1,11 @@
 module;
 
-#include <stdexcept>
 #include <source_location>
-#include <string>
-#include <format>
 // See #include <winnt.h> for FAST_FAIL error codes
-#include "Windows.h"
 
 module boring32.error:win32error;
 import :functions;
+import <format>;
 
 namespace Boring32::Error
 {
