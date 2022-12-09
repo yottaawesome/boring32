@@ -1,14 +1,11 @@
 module;
 
-#include <stdexcept>
-#include <string>
 #include <source_location>
-#include <Windows.h>
-#include <shlwapi.h>
 
 module boring32.registry:functions;
 import boring32.error;
 import boring32.async;
+import <shlwapi.h>;
 
 namespace Boring32::Registry
 {
@@ -19,7 +16,7 @@ namespace Boring32::Registry
         )
     {
         if (key == nullptr)
-            throw std::runtime_error(__FUNCSIG__ ": m_key is null");
+            throw Error::Boring32Error("m_key is null");
 
         std::wstring out;
         DWORD sizeInBytes = 0;

@@ -1,11 +1,8 @@
-module;
-
-#include <string>
-#include <stdexcept>
-#include <Windows.h>
-
 export module boring32.registry:functions;
 import boring32.error;
+import <string>;
+import <stdexcept>;
+import <Windows.h>;
 
 export namespace Boring32::Registry
 {
