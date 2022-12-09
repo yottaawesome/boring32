@@ -1,13 +1,14 @@
+module;
+
+#include <source_location>
+
 export module boring32.datastructures:cappedstack;
+import boring32.error;
 import <deque>;
 import <algorithm>;
-import <stdexcept>;
 
 export namespace Boring32::DataStructures
 {
-	// TODO: use Boring32Error instead of std-derived exceptions. 
-	// Can't currently use it as MSVC encounters an internal 
-	// compiler error.
 	template<typename T>
 	class CappedStack
 	{
@@ -24,7 +25,7 @@ export namespace Boring32::DataStructures
 				m_uniqueOnly(uniqueOnly)
 			{
 				if (m_maxSize == 0)
-					throw std::invalid_argument(__FUNCSIG__ ": maxSize is 0");
+					throw Error::Boring32Error("maxSize is 0");
 			}
 
 			virtual CappedStack<T>& Push(const T value)
@@ -47,7 +48,7 @@ export namespace Boring32::DataStructures
 			virtual T Pop()
 			{
 				if (m_stack.empty())
-					throw std::runtime_error(__FUNCSIG__ ": Cannot pop empty stack");
+					throw Error::Boring32Error("Cannot pop empty stack");
 				T value = m_stack.back();
 				m_stack.pop_back();
 				return value;
@@ -79,23 +80,23 @@ export namespace Boring32::DataStructures
 			virtual T GetFirst()
 			{
 				if (m_stack.empty())
-					throw std::runtime_error(__FUNCSIG__ ": Cannot get from empty stack");
+					throw Error::Boring32Error("Cannot get from empty stack");
 				return m_stack.front();
 			}
 
 			virtual T GetCurrent()
 			{
 				if (m_stack.empty())
-					throw std::runtime_error(__FUNCSIG__ ": Cannot get from empty stack");
+					throw Error::Boring32Error("Cannot get from empty stack");
 				return m_stack.back();
 			}
 
 			virtual T GetFromBack(const size_t backIndex)
 			{
 				if (m_stack.empty())
-					throw std::runtime_error(__FUNCSIG__ ": Cannot get from empty stack");
+					throw Error::Boring32Error("Cannot get from empty stack");
 				if((backIndex+1) >= m_stack.size())
-					throw std::runtime_error(__FUNCSIG__ ": invalid index");
+					throw Error::Boring32Error("Invalid index");
 				return m_stack.at(m_stack.size()-1-backIndex);
 			}
 
@@ -119,7 +120,7 @@ export namespace Boring32::DataStructures
 			virtual T operator[](const size_t index) const
 			{
 				if (m_stack.empty())
-					throw std::runtime_error(__FUNCSIG__ ": stack is empty");
+					throw Error::Boring32Error("Stack is empty");
 				return m_stack[index];
 			}
 
