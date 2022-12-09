@@ -1,12 +1,9 @@
-module;
-
-#include <stdexcept>
-#include <memory>
-#include <vector>
-#include <Windows.h>
-
 export module boring32.registry:key;
 import :value;
+import <stdexcept>;
+import <memory>;
+import <vector>;
+import <Windows.h>;
 
 export namespace Boring32::Registry
 {

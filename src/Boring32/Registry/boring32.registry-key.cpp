@@ -1,14 +1,12 @@
 module;
 
 #include <source_location>
-#include <iostream>
-#include <memory>
-#include <utility>
-#include <Windows.h>
 
 module boring32.registry:key;
 import :functions;
 import boring32.error;
+import <utility>;
+import <iostream>;
 
 namespace Boring32::Registry
 {

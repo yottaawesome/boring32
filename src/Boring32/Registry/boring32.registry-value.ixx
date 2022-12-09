@@ -1,10 +1,7 @@
-module;
-
-#include <string>
-#include <tuple>
-#include <Windows.h>
-
 export module boring32.registry:value;
+import <string>;
+import <tuple>;
+import <Windows.h>;
 
 export namespace Boring32::Registry
 {

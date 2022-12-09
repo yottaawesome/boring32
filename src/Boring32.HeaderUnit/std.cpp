@@ -7,7 +7,7 @@
 // No idea when this will get fixed, MS seems to be taking their time with it.
 import <vector>;
 import <string>;
-//import <source_location>;
+//import <source_location>; // errors with an ICE, not clear why. Maybe the whole codebase needs to move across to importing it.
 import <utility>;
 import <memory>;
 import <format>;
@@ -17,3 +17,4 @@ import <type_traits>;
 import <functional>;
 import <iostream>;
 import <chrono>;
+import <tuple>;
