@@ -1,12 +1,9 @@
-module;
-
-#include <string>
-#include <stdexcept>
-#include <vector>
-#include <Windows.h>
-#include <guiddef.h>
-
 export module boring32.util:functions;
+import <string>;
+import <stdexcept>;
+import <vector>;
+import <Windows.h>;
+import <guiddef.h>;
 
 export namespace Boring32::Util
 {

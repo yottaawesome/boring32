@@ -10,3 +10,8 @@ import <Comdef.h>;
 import <sddl.h>;
 //import <wlanapi.h>; // unfortunately, not importable
 import <wtypes.h>;
+import <guiddef.h>;
+// import <pathcch.h>; // unfortunately, not importable
+import <Objbase.h>;
+import <netlistmgr.h>;
+import <wrl/client.h>;
