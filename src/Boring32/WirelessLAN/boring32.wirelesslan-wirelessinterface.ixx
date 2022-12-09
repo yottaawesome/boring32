@@ -1,13 +1,13 @@
 module;
 
-#include <string>
-#include <vector>
 #include <Windows.h>
 #include <wlanapi.h>
 
 export module boring32.wirelesslan:wirelessinterface;
 import boring32.util;
 import :cleanup;
+import <string>;
+import <vector>;
 
 export namespace Boring32::WirelessLAN
 {
