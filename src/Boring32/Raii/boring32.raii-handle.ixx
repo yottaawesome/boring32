@@ -1,9 +1,6 @@
-module;
-
-#include <Windows.h>
-#include <type_traits>
-
 export module boring32.raii:handle;
+import <type_traits>;
+import <Windows.h>;
 //https://docs.microsoft.com/en-us/windows/win32/sysinfo/kernel-objects
 
 export namespace Boring32::RAII
