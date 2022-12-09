@@ -1,17 +1,16 @@
 module;
 
-#include <vector>
-#include <iostream>
 #include <source_location>
-#include <format>
 #include <Windows.h>
 #include <wlanapi.h>
-#include <wtypes.h>
 
 module boring32.wirelesslan:wirelessinterfaces;
 import boring32.error;
 import :cleanup;
 import :wirelessinterface;
+import <iostream>;
+import <format>;
+import <wtypes.h>;
 
 namespace Boring32::WirelessLAN
 {

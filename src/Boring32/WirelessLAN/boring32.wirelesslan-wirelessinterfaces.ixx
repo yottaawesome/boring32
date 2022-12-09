@@ -1,10 +1,7 @@
-module;
-
-#include <vector>
-
 export module boring32.wirelesslan:wirelessinterfaces;
 import :cleanup;
 import :wirelessinterface;
+import <vector>;
 
 export namespace Boring32::WirelessLAN
 {
