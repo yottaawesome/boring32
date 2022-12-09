@@ -1,7 +1,5 @@
 module;
 
-#include <stdexcept>
-#include <string>
 #include <source_location>
 
 module boring32.error:boring32error;
