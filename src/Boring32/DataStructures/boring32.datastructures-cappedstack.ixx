@@ -1,10 +1,7 @@
-module;
-
-#include <deque>
-#include <algorithm>
-#include <stdexcept>
-
 export module boring32.datastructures:cappedstack;
+import <deque>;
+import <algorithm>;
+import <stdexcept>;
 
 export namespace Boring32::DataStructures
 {
