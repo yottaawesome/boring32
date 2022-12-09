@@ -1,12 +1,10 @@
 module;
 
-#include <string>
-#include <format>
 #include <source_location>
-#include <Windows.h>
 
 module boring32.error:ntstatuserror;
 import :functions;
+import <format>;
 
 namespace Boring32::Error
 {

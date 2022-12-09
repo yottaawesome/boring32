@@ -1,12 +1,12 @@
 module;
 
-#include <string>
-#include <stdexcept>
 #include <source_location>
-#include <Windows.h>
 
 export module boring32.error:ntstatuserror;
 import :boring32error;
+import <string>;
+import <stdexcept>;
+import <Windows.h>;
 
 export namespace Boring32::Error
 {
