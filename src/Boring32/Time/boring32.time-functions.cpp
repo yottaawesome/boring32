@@ -1,12 +1,11 @@
 module;
 
-#include <sstream>
-#include <format>
 #include <source_location>
-#include "Windows.h"
 
 module boring32.time:functions;
 import boring32.error;
+import <sstream>;
+import <format>;
 
 namespace Boring32::Time
 {
