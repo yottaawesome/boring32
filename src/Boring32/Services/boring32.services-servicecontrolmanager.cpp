@@ -1,11 +1,11 @@
 module;
 
-#include <string>
 #include <source_location>
-#include <Windows.h>
 
 module boring32.services:servicecontrolmanager;
 import boring32.error;
+import <string>;
+import <Windows.h>;
 
 namespace Boring32::Services
 {
