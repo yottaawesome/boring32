@@ -1,8 +1,6 @@
 module;
 
-#include <cstdint>
 #include <source_location>
-#include <Windows.h>
 
 module boring32.time:datetime;
 import :functions;
