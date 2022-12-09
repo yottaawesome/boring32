@@ -7,3 +7,4 @@
 // No idea when this will get fixed, MS seems to be taking their time with it.
 import <Windows.h>;
 import <Comdef.h>;
+import <sddl.h>;

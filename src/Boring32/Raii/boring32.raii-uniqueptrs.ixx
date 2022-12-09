@@ -1,10 +1,7 @@
-module;
-
-#include <memory>
-#include <Windows.h>
-#include <sddl.h>
-
 export module boring32.raii:uniqueptrs;
+import <memory>;
+import <Windows.h>;
+import <sddl.h>;
 
 export namespace Boring32::RAII
 {
