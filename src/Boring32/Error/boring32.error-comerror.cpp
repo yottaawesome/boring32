@@ -1,12 +1,10 @@
 module;
 
-#include <format>
-#include <string>
 #include <source_location>
-#include <Windows.h>
 
 module boring32.error:comerror;
 import :functions;
+import <format>;
 
 namespace Boring32::Error
 {
