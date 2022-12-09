@@ -1,14 +1,13 @@
 module;
 
-#include <stdexcept>
-#include <format>
 #include <source_location>
-#include <functional>
-#include <iostream>
-#include <Windows.h>
 
 module boring32.raii:win32handle;
 import boring32.error;
+import <functional>;
+import <iostream>;
+import <stdexcept>;
+import <format>;
 
 namespace Boring32::RAII
 {

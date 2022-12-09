@@ -8,3 +8,5 @@
 import <Windows.h>;
 import <Comdef.h>;
 import <sddl.h>;
+//import <wlanapi.h>; // unfortunately, not importable
+import <wtypes.h>;

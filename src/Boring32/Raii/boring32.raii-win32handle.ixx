@@ -1,9 +1,6 @@
-module;
-
-#include <Windows.h>
-#include <memory>
-
 export module boring32.raii:win32handle;
+import <memory>;
+import <Windows.h>;
 
 export namespace Boring32::RAII
 {

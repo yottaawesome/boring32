@@ -1,12 +1,13 @@
 module;
 
-#include <iostream>
-#include <format>
-#include <Windows.h>
-#include <wlanapi.h>
-#include <wtypes.h>
+#include <Windows.h> 
+#include <wlanapi.h> // unfortunately, not importable
 
 export module boring32.wirelesslan:cleanup;
+import <iostream>;
+import <format>;
+import <memory>;
+import <wtypes.h>;
 
 namespace Boring32::WirelessLAN
 {
