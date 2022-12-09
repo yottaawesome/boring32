@@ -1,10 +1,10 @@
 module;
 
-#include <memory>
 #include <Windows.h>
 #include <compressapi.h>
 
 export module boring32.compression:deleters;
+import <memory>;
 
 export namespace Boring32::Compression 
 {
