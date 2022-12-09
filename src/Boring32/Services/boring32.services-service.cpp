@@ -6,9 +6,7 @@ module boring32.services:service;
 import boring32.error;
 import :raii;
 //import <source_location>;
-import <string>;
 import <utility>;
-import <Windows.h>;
 
 namespace Boring32::Services
 {
