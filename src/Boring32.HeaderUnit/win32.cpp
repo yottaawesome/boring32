@@ -5,7 +5,5 @@
 // The above need to be disabled because of
 // https://developercommunity.visualstudio.com/t/warning-C4005:-Outptr:-macro-redefinit/1546919
 // No idea when this will get fixed, MS seems to be taking their time with it.
-import <vector>;
-import <string>;
 import <Windows.h>;
 import <Comdef.h>;

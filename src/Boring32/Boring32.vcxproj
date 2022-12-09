@@ -124,6 +124,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <EnableModules>true</EnableModules>
       <ErrorReporting>Send</ErrorReporting>
+      <DisableSpecificWarnings>4005;5106</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -165,6 +166,7 @@
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnableModules>true</EnableModules>
+      <DisableSpecificWarnings>4005;5106</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -443,6 +445,11 @@
     <ClCompile Include="XAudio2\boring32.xaudio2-voice.ixx" />
     <ClCompile Include="XAudio2\boring32.xaudio2-xaudio2error.cpp" />
     <ClCompile Include="XAudio2\boring32.xaudio2-xaudio2error.ixx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Boring32.HeaderUnit\Boring32.HeaderUnit.vcxproj">
+      <Project>{396081f6-fee6-4a1a-b057-6a29b66fcaa6}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

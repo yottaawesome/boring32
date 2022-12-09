@@ -1,11 +1,8 @@
-module;
-
-#include <vector>
-#include <string>
-#include <Windows.h>
-
 export module boring32.services:service;
 import :raii;
+import <vector>;
+import <string>;
+import <Windows.h>;
 
 export namespace Boring32::Services
 {
