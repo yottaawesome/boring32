@@ -1,12 +1,11 @@
 module;
 
-#include <iostream>
 #include <source_location>
-#include <Windows.h>
-#include <objbase.h>
 
 module boring32.com:comthreadscope;
 import boring32.error;
+import <iostream>;
+import <Windows.h>;
 
 namespace Boring32::COM
 {

@@ -1,9 +1,6 @@
-module;
-
-#include <atomic>
-#include <objbase.h>
-
 export module boring32.com:comthreadscope;
+import <atomic>;
+import <objbase.h>;
 
 export namespace Boring32::COM
 {
