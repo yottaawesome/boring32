@@ -1,12 +1,9 @@
-module;
-
-#include <string>
-#include <vector>
-#include <memory>
-#include <Windows.h>
-
 export module boring32.computer:processinfo;
 import boring32.raii;
+import <string>;
+import <vector>;
+import <memory>;
+import <Windows.h>;
 
 export namespace Boring32::Computer
 {

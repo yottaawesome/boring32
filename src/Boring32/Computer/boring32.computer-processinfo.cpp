@@ -1,9 +1,6 @@
 module;
 
 #include <source_location>
-#include <string>
-#include <memory>
-#include <vector>
 #include <Windows.h>
 #include <psapi.h>
 
