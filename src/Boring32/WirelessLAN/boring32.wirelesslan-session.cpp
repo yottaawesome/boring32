@@ -1,14 +1,14 @@
 module;
 
-#include <format>
-#include <iostream>
 #include <source_location>
 #include <Windows.h>
 #include <wlanapi.h>
-#include <wtypes.h>
 
 module boring32.wirelesslan:session;
 import boring32.error;
+import <format>;
+import <iostream>;
+import <wtypes.h>;
 
 namespace Boring32::WirelessLAN
 {

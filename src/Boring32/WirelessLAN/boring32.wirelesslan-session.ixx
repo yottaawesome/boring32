@@ -1,10 +1,7 @@
-module;
-
-#include <Windows.h>
-
 export module boring32.wirelesslan:session;
 import :cleanup;
 import :wirelessinterfaces;
+import <Windows.h>;
 
 export namespace Boring32::WirelessLAN
 {
