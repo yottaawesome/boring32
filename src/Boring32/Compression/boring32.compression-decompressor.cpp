@@ -1,6 +1,5 @@
 module;
 
-#include <vector>
 #include <source_location>
 #include <Windows.h>
 #include <compressapi.h>

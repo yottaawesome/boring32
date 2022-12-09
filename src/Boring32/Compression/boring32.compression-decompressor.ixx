@@ -1,12 +1,12 @@
 module;
 
-#include <vector>
 #include <Windows.h>
 #include <compressapi.h>
 
 export module boring32.compression:decompressor;
 import :compressiontype;
 import :deleters;
+import <vector>;
 
 export namespace Boring32::Compression
 {
