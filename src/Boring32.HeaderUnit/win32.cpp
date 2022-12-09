@@ -15,3 +15,4 @@ import <guiddef.h>;
 import <Objbase.h>;
 import <netlistmgr.h>;
 import <wrl/client.h>;
+import <Rpc.h>;

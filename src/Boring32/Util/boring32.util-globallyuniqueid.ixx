@@ -1,9 +1,6 @@
-module;
-
-#include <string>
-#include <Windows.h>
-
 export module boring32.util:guid;
+import <string>;
+import <Windows.h>;
 
 export namespace Boring32::Util
 {
