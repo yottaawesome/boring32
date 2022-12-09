@@ -1,14 +1,12 @@
 module;
 
-#include <stdexcept>
 #include <source_location>
-#include <algorithm>
-#include <vector>
-#include <string>
-#include <Windows.h>
 
 module boring32.strings;
 import boring32.error;
+import <algorithm>;
+import <stdexcept>;
+import <Windows.h>;
 
 namespace Boring32::Strings
 {

@@ -1,9 +1,6 @@
-module;
-
-#include <string>
-#include <vector>
-
 export module boring32.strings;
+import <string>;
+import <vector>;
 
 export namespace Boring32::Strings
 {
