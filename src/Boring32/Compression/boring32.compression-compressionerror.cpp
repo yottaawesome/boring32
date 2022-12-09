@@ -1,8 +1,6 @@
 module;
 
 #include <source_location>
-#include <stdexcept>
-#include <string>
 
 module boring32.compression:compressionerror;
 import boring32.error;
