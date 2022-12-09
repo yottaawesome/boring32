@@ -1,12 +1,12 @@
 module;
 
-#include <string>
-#include <iostream>
 #include <source_location>
-#include <memory>
-#include <Windows.h>
 
 export module boring32.error:functions;
+import <string>;
+import <iostream>;
+import <memory>;
+import <Windows.h>;
 
 export namespace Boring32::Error
 {

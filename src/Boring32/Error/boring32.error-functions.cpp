@@ -1,15 +1,12 @@
 module;
 
-#include <string>
-#include <iostream>
-#include <stdexcept>
-#include <sstream>
 #include <source_location>
-#include <algorithm>
-#include <format>
-#include <Windows.h>
 
 module boring32.error:functions;
+import <stdexcept>;
+import <sstream>;
+import <algorithm>;
+import <format>;
 
 namespace Boring32::Error
 {
