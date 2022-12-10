@@ -1,11 +1,8 @@
-module;
-
-#include <string>
-#include <Windows.h>
-
 export module boring32.ipc:overlappednamedpipeclient;
 import :namedpipeclientbase;
 import boring32.async;
+import <string>;
+import <win32.hpp>;
 
 export namespace Boring32::IPC
 {
