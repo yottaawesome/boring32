@@ -1,12 +1,8 @@
-module;
-
-#include <source_location>
-
 export module boring32.error:ntstatuserror;
 import :boring32error;
 import <string>;
 import <stdexcept>;
-import <win32.hpp>;
+import <source_location>;
 
 export namespace Boring32::Error
 {
@@ -22,7 +18,7 @@ export namespace Boring32::Error
 			);
 			NtStatusError(
 				const std::string& msg,
-				const LONG errorCode,
+				const long errorCode,
 				const std::source_location location = std::source_location::current()
 			);
 
@@ -31,7 +27,7 @@ export namespace Boring32::Error
 			virtual NtStatusError& operator=(NtStatusError&& other) noexcept;
 
 		public:
-			[[nodiscard]] virtual LONG GetErrorCode() const noexcept;
+			[[nodiscard]] virtual long GetErrorCode() const noexcept;
 
 		protected:
 			virtual void GenerateErrorMessage(
@@ -40,6 +36,6 @@ export namespace Boring32::Error
 			) override;
 
 		protected:
-			LONG m_errorCode;
+			long m_errorCode;
 	};
 }

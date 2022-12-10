@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.error:ntstatuserror;
 import :functions;
 import <format>;
@@ -19,23 +15,21 @@ namespace Boring32::Error
 	NtStatusError::NtStatusError(
 		const std::string& msg,
 		const std::source_location location
-	)
-		: m_errorCode(0), Boring32Error(msg, location)
+	) : m_errorCode(0), Boring32Error(msg, location)
 	{
 		GenerateErrorMessage(location, msg);
 	}
 
 	NtStatusError::NtStatusError(
 		const std::string& msg,
-		const LONG errorCode,
+		const long errorCode,
 		const std::source_location location
-	)
-		: m_errorCode(errorCode), Boring32Error(msg, location)
+	) : m_errorCode(errorCode), Boring32Error(msg, location)
 	{
 		GenerateErrorMessage(location, msg);
 	}
 
-	LONG NtStatusError::GetErrorCode() const noexcept
+	long NtStatusError::GetErrorCode() const noexcept
 	{
 		return m_errorCode;
 	}
