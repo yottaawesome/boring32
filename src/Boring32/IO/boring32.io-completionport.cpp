@@ -1,7 +1,6 @@
 module;
 
 #include <source_location>
-#include <Windows.h>
 
 module boring32.io:completionport;
 import boring32.error;
