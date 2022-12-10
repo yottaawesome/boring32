@@ -2,7 +2,6 @@ module;
 
 #include <iostream>
 #include <string>
-#include <Windows.h>
 
 module boring32.crypto:tempcertimport;
 

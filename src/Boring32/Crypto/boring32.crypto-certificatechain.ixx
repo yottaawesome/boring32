@@ -1,12 +1,11 @@
 module;
 
 #include <vector>
-#include <Windows.h>
-#include <wincrypt.h>
 
 export module boring32.crypto:certificatechain;
 import :certificate;
 import :certstore;
+import <win32.hpp>;
 
 export namespace Boring32::Crypto
 {

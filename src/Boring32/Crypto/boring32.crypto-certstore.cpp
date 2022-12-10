@@ -5,11 +5,11 @@ module;
 #include <string>
 #include <filesystem>
 #include <source_location>
-#include <Windows.h>
-#include <dpapi.h> // not including this header causes symbol has already been defined error
-#include <wincrypt.h>
-#include <cryptuiapi.h>
-#include <winnt.h>
+//#include <Windows.h>
+//#include <dpapi.h> // not including this header causes symbol has already been defined error
+//#include <wincrypt.h>
+//#include <cryptuiapi.h>
+//#include <winnt.h>
 
 module boring32.crypto:certstore;
 import :functions;

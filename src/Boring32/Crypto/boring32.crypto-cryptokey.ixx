@@ -3,10 +3,9 @@ module;
 #include <string>
 #include <vector>
 #include <memory>
-#include <Windows.h>
-#include <bcrypt.h>
 
 export module boring32.crypto:cryptokey;
+import <win32.hpp>;
 
 export namespace Boring32::Crypto
 {

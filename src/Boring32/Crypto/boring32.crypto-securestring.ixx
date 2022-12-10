@@ -2,10 +2,9 @@ module;
 
 #include <string>
 #include <vector>
-#include <Windows.h>
-#include <dpapi.h>
 
 export module boring32.crypto:securestring;
+import <win32.hpp>;
 
 export namespace Boring32::Crypto
 {

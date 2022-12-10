@@ -3,8 +3,6 @@ module;
 #include <algorithm>
 #include <string>
 #include <source_location>
-#include <Windows.h>
-#include <dpapi.h>
 
 module boring32.crypto:securestring;
 import boring32.error;

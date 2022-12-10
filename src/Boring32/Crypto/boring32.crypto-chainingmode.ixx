@@ -2,10 +2,9 @@ module;
 
 #include <map>
 #include <string>
-#include <Windows.h>
-#include <bcrypt.h>
 
 export module boring32.crypto:chainingmode;
+import <win32.hpp>;
 
 export namespace Boring32::Crypto
 {

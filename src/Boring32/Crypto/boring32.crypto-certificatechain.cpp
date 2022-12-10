@@ -4,8 +4,6 @@ module;
 #include <string>
 #include <format>
 #include <source_location>
-#include <Windows.h>
-#include <wincrypt.h>
 
 module boring32.crypto:certificatechain;
 import boring32.error;

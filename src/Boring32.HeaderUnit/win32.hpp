@@ -30,3 +30,8 @@
 #include <Jobapi2.h>
 #include <threadpoolapiset.h>
 #include <process.h>
+#include <bcrypt.h>
+#include <dpapi.h>
+#include <wincrypt.h>
+#include <cryptuiapi.h>
+#include <winnt.h>

@@ -3,9 +3,6 @@ module;
 #include <vector>
 #include <string>
 #include <source_location>
-#include <Windows.h>
-#include <dpapi.h>
-#include <wincrypt.h>
 
 module boring32.crypto:certificate;
 import boring32.error;

@@ -2,11 +2,9 @@ module;
 
 #include <string>
 #include <vector>
-#include <Windows.h>
-//#include <bcrypt.h>
-#include <dpapi.h>
 
 export module boring32.crypto:functions;
+import <win32.hpp>;
 import :cryptokey;
 
 export namespace Boring32::Crypto

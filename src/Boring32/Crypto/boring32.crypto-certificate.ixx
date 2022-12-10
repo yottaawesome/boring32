@@ -2,11 +2,9 @@ module;
 
 #include <vector>
 #include <string>
-#include <Windows.h>
-#include <dpapi.h>
-#include <wincrypt.h>
 
 export module boring32.crypto:certificate;
+import <win32.hpp>;
 
 export namespace Boring32::Crypto
 {

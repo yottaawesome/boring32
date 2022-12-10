@@ -4,8 +4,6 @@ module;
 #include <string>
 #include <vector>
 #include <source_location>
-#include <Windows.h>
-#include <bcrypt.h>
 
 module boring32.crypto:aesencryption;
 import :chainingmode;
