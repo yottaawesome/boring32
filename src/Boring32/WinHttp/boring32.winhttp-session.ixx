@@ -1,14 +1,10 @@
-module;
-
-#include <string>
-#include <memory>
-#include <windows.h>
-#include <winhttp.h>
-
 export module boring32.winhttp:session;
 import :winhttphandle;
 import :proxytype;
 import :handles;
+import <win32.hpp>;
+import <string>;
+import <memory>;
 
 export namespace Boring32::WinHttp
 {

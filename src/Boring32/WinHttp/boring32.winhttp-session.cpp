@@ -1,15 +1,11 @@
 module;
 
-#include <string>
-#include <memory>
-#include <stdexcept>
 #include <source_location>
-#include <Windows.h>
-#include <winhttp.h>
 
 module boring32.winhttp:session;
 import boring32.error;
 import :winhttperror;
+import <stdexcept>;
 
 namespace Boring32::WinHttp
 {
