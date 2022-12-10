@@ -1,16 +1,12 @@
 module;
 
-#include <stdexcept>
-#include <vector>
-#include <string>
-#include <functional>
 #include <source_location>
-#include <sstream>
-#include <Windows.h>
-#include <winhttp.h>
 
 module boring32.winhttp:httpwebclient;
 import boring32.error;
+import <stdexcept>;
+import <functional>;
+import <sstream>;
 
 namespace Boring32::WinHttp
 {
