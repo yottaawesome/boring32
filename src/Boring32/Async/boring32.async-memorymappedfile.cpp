@@ -1,12 +1,12 @@
 module;
 
-#include <stdexcept>
-#include <format>
-#include <iostream>
 #include <source_location>
 
 module boring32.async:memorymappedfile;
 import boring32.error;
+import <stdexcept>;
+import <format>;
+import <iostream>;
 
 namespace Boring32::Async
 {
