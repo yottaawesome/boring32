@@ -1,11 +1,6 @@
-module;
-
-#include <memory>
-#include <Windows.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
-
 export module boring32.winsock:uniqueptrs;
+import <memory>;
+import <win32.hpp>;
 
 export namespace Boring32::WinSock
 {
