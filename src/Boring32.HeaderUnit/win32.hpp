@@ -36,3 +36,4 @@
 #include <cryptuiapi.h>
 #include <winnt.h>
 #include <wincodec.h>
+#include <xaudio2.h>

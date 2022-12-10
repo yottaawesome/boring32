@@ -1,13 +1,7 @@
-module;
-
-#include <stdexcept>
-#include <Windows.h>
-#include <xaudio2.h>
-#include <wrl/client.h>
-
 module boring32.xaudio2:engine;
 import :xaudio2error;
 import boring32.error;
+import <stdexcept>;
 
 namespace Boring32::XAudio2
 {

@@ -1,10 +1,5 @@
-module;
-
-#include <Windows.h>
-#include <xaudio2.h>
-#include <wrl/client.h>
-
 export module boring32.xaudio2:engine;
+import <win32.hpp>;
 
 export namespace Boring32::XAudio2
 {
