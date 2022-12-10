@@ -1,10 +1,6 @@
-module;
-
-#include <string>
-#include <Windows.h>
-#include <winhttp.h>
-
 export module boring32.winhttp:proxyinfo;
+import <string>;
+import <win32.hpp>;
 
 export namespace Boring32::WinHttp
 {
