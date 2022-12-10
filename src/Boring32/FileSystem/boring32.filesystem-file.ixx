@@ -1,9 +1,6 @@
-module;
-
-#include <string>
-
 export module boring32.filesystem:file;
 import boring32.raii;
+import <string>;
 
 export namespace Boring32::FileSystem
 {

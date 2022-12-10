@@ -1,12 +1,11 @@
 module;
 
-#include <string>
-#include <stdexcept>
 #include <source_location>
-#include <windows.h>
 
 module boring32.filesystem:file;
 import boring32.error;
+import <stdexcept>;
+import <win32.hpp>;
 
 namespace Boring32::FileSystem
 {

@@ -1,8 +1,5 @@
-module;
-
-#include <string>
-
 export module boring32.filesystem:functions;
+import <string>;
 
 export namespace Boring32::FileSystem
 {

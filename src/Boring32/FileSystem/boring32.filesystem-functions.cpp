@@ -1,17 +1,16 @@
 module;
 
-#include <string>
-#include <format>
-#include <vector>
-#include <memory>
 #include <source_location>
-#include <filesystem>
-#include <Windows.h>
-#include <sddl.h>
 
 module boring32.filesystem:functions;
 import boring32.error;
 import boring32.strings;
+import <filesystem>;
+import <string>;
+import <format>;
+import <vector>;
+import <memory>;
+import <win32.hpp>;
 
 namespace Boring32::FileSystem
 {
