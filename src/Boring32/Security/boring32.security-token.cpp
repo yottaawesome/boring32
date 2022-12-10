@@ -1,12 +1,11 @@
 module;
 
-#include <string>
 #include <source_location>
-#include <stdexcept>
 
 module boring32.security:token;
 import boring32.error;
 import :functions;
+import <stdexcept>;
 
 namespace Boring32::Security
 {
