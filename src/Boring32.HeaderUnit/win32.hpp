@@ -38,3 +38,4 @@
 #include <wincodec.h>
 #include <xaudio2.h>
 #include <winhttp.h>
+#include <ws2tcpip.h>

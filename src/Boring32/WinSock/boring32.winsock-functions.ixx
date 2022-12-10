@@ -1,11 +1,8 @@
-module;
-
-#include <iostream>
-#include <vector>
-#include <string>
-#include <stdexcept>
-
 export module boring32.winsock:functions;
+import <iostream>;
+import <vector>;
+import <string>;
+import <stdexcept>;
 
 export namespace Boring32::WinSock
 {

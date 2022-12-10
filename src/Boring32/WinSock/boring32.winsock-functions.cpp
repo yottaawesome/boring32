@@ -1,13 +1,6 @@
 module;
 
-#include <string>
-#include <vector>
-#include <stdexcept>
 #include <source_location>
-#include <ostream>
-#include <iostream>
-#include <Windows.h>
-#include <ws2tcpip.h>
 
 module boring32.winsock:functions;
 import :winsockerror;
@@ -15,6 +8,8 @@ import boring32.raii;
 import boring32.error;
 import boring32.async;
 import boring32.strings;
+import <ostream>;
+import <win32.hpp>;
 
 namespace Boring32::WinSock
 {
