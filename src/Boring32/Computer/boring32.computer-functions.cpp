@@ -1,8 +1,6 @@
 module;
 
 #include <source_location>
-#include <Windows.h>
-#include <psapi.h>
 
 module boring32.computer:functions;
 import boring32.error;
