@@ -1,10 +1,7 @@
-module;
-
-#include <string>
-
 export module boring32.crypto:tempcertimport;
 import :certificate;
 import :certstore;
+import <string>;
 import <win32.hpp>;
 
 export namespace Boring32::Crypto

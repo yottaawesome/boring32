@@ -1,9 +1,5 @@
-module;
-
-#include <iostream>
-#include <string>
-
 module boring32.crypto:tempcertimport;
+import <iostream>;
 
 namespace Boring32::Crypto
 {
