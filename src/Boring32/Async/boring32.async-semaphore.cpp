@@ -1,12 +1,11 @@
 module;
 
-#include <stdexcept>
 #include <source_location>
-#include <string>
-#include <format>
 
 module boring32.async:semaphore;
 import boring32.error;
+import <stdexcept>;
+import <format>;
 
 namespace Boring32::Async
 {
