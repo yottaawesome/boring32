@@ -1,9 +1,6 @@
-module;
-
-#include <memory>
-
 export module boring32.async:overlappedop;
 import :event;
+import <memory>;
 import <win32.hpp>;
 
 export namespace Boring32::Async
