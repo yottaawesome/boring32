@@ -1,10 +1,7 @@
-module;
-
-#include <vector>
-#include <string>
-
 export module boring32.ipc:blockingnamedpipeclient;
 import :namedpipeclientbase;
+import <vector>;
+import <string>;
 
 export namespace Boring32::IPC
 {
