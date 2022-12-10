@@ -5,9 +5,6 @@ module;
 #include <iostream>
 #include <string>
 #include <source_location>
-#include <Windows.h>
-#include <winhttp.h>
-#include <wincrypt.h>
 
 module boring32.winhttp:asyncwebsocket;
 import boring32.error;

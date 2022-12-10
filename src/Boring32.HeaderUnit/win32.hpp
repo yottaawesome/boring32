@@ -37,3 +37,4 @@
 #include <winnt.h>
 #include <wincodec.h>
 #include <xaudio2.h>
+#include <winhttp.h>

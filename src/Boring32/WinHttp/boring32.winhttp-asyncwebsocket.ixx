@@ -4,14 +4,13 @@ module;
 #include <string>
 #include <future>
 #include <memory>
-#include <Windows.h>
-#include <winhttp.h>
 
 export module boring32.winhttp:asyncwebsocket;
 import :websocketstatus;
 import :asyncwebsocketsettings;
 import boring32.async;
 import :winhttphandle;
+import <win32.hpp>;
 
 export namespace Boring32::WinHttp::WebSockets
 {
