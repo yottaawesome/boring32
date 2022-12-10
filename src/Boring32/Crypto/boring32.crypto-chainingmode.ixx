@@ -1,9 +1,6 @@
-module;
-
-#include <map>
-#include <string>
-
 export module boring32.crypto:chainingmode;
+import <map>;
+import <string>;
 import <win32.hpp>;
 
 export namespace Boring32::Crypto
