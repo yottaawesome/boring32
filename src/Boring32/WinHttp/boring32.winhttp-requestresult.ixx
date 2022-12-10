@@ -1,8 +1,5 @@
-module;
-
-#include <string>
-
 export module boring32.winhttp:requestresult;
+import <string>;
 
 export namespace Boring32::WinHttp
 {
