@@ -1,11 +1,11 @@
 module;
 
-#include <functional>
 #include <source_location>
-#include <memory>
 
 export module boring32.async:threadpool;
 import boring32.error;
+import <functional>;
+import <memory>;
 import <win32.hpp>;
 
 export namespace Boring32::Async::ThreadPools
