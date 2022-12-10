@@ -1,13 +1,14 @@
 module;
 
-#include <vector>
-#include <functional>
-#include <algorithm>
+
 #include <source_location>
 
 export module boring32.async:syncedcontainer;
 import :criticalsectionlock;
 import boring32.error;
+import <vector>;
+import <functional>;
+import <algorithm>;
 import <win32.hpp>;
 
 export namespace Boring32::Async
