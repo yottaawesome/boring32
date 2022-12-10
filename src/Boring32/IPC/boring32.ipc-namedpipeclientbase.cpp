@@ -1,13 +1,11 @@
 module;
 
-#include <string>
-#include <iostream>
-#include <stdexcept>
 #include <source_location>
-#include <Windows.h>
 
 module boring32.ipc:namedpipeclientbase;
 import boring32.error;
+import <iostream>;
+import <stdexcept>;
 
 namespace Boring32::IPC
 {

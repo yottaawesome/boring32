@@ -1,10 +1,7 @@
-module;
-
-#include <string>
-#include <Windows.h>
-
 export module boring32.ipc:namedpipeclientbase;
 import boring32.raii;
+import <string>;
+import <win32.hpp>;
 
 export namespace Boring32::IPC
 {
