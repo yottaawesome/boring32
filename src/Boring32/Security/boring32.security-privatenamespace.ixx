@@ -1,9 +1,6 @@
-module;
-
-#include <string>
-#include <vector>
-
 export module boring32.security:privatenamespace;
+import <string>;
+import <vector>;
 import <win32.hpp>;
 
 export namespace Boring32::Security
