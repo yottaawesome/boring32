@@ -1,17 +1,13 @@
-module;
-
-#include <future>
-#include <string>
-#include <algorithm>
-#include <source_location>
-#include <map>
-#include <iostream>
-#include <Windows.h>
-#include <winhttp.h>
-
 module boring32.winhttp:asyncwebsocket;
 import boring32.strings;
 import boring32.error;
+import <future>;
+import <string>;
+import <algorithm>;
+import <source_location>;
+import <map>;
+import <iostream>;
+import <win32.hpp>;
 
 namespace Boring32::WinHttp::WebSockets
 {
