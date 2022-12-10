@@ -1,11 +1,8 @@
-module;
-
-#include <string>
-#include <Windows.h>
-
 export module boring32.winhttp:websocketsettings;
 import boring32.crypto;
 import :session;
+import <string>;
+import <Windows.h>;
 
 export namespace Boring32::WinHttp::WebSockets
 {
