@@ -1,9 +1,6 @@
 
-module;
-
-#include <stdexcept>
-
 module boring32.async:slimreadwritelock;
+import <stdexcept>;
 
 namespace Boring32::Async
 {
