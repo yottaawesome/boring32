@@ -1,11 +1,10 @@
 module;
 
-#include <stdexcept>
-#include <string>
 #include <source_location>
 
 module boring32.async:process;
 import boring32.error;
+import <stdexcept>;
 
 namespace Boring32::Async
 {
