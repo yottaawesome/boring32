@@ -1,9 +1,6 @@
-module;
-
-#include <string>
-#include <vector>
-
 export module boring32.crypto:securestring;
+import <string>;
+import <vector>;
 import <win32.hpp>;
 
 export namespace Boring32::Crypto
