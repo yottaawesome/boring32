@@ -2,7 +2,6 @@ module;
 
 #include <stdexcept>
 #include <iostream>
-#include <Windows.h>
 
 module boring32.ipc:anonymouspipe;
 import boring32.strings;
