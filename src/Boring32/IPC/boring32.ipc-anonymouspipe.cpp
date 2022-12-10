@@ -1,10 +1,7 @@
-module;
-
-#include <stdexcept>
-#include <iostream>
-
 module boring32.ipc:anonymouspipe;
 import boring32.strings;
+import <stdexcept>;
+import <iostream>;
 
 namespace Boring32::IPC
 {

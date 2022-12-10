@@ -1,10 +1,7 @@
-module;
-
-#include <string>
-#include <vector>
-
 export module boring32.ipc:anonymouspipe;
 import boring32.raii;
+import <string>;
+import <vector>;
 import <win32.hpp>;
 
 export namespace Boring32::IPC
