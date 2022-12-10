@@ -1,6 +1,4 @@
 #include "pch.h"
-#include <stdexcept>
-#include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 

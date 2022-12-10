@@ -1,7 +1,4 @@
 #include "pch.h"
-#include <vector>
-#include "CppUnitTest.h"
-
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 import boring32.util;
