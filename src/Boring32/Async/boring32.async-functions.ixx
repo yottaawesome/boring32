@@ -1,9 +1,6 @@
-module;
-
-#include <vector>
-#include <string>
-
 export module boring32.async:functions;
+import <vector>;
+import <string>;
 import <win32.hpp>;
 
 export namespace Boring32::Async

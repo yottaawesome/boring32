@@ -1,14 +1,13 @@
 module;
 
-#include <stdexcept>
-#include <vector>
 #include <source_location>
-#include <format>
 
 module boring32.async:functions;
 import boring32.raii;
 import boring32.strings;
 import boring32.error;
+import <stdexcept>;
+import <format>;
 
 namespace Boring32::Async
 {
