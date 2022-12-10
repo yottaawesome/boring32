@@ -1,13 +1,11 @@
 module;
 
-#include <stdexcept>
-#include <string>
-#include <iostream>
 #include <source_location>
-#include <Windows.h>
 
 module boring32.ipc:overlappednamedpipeserver;
 import boring32.error;
+import <stdexcept>;
+import <iostream>;
 
 namespace Boring32::IPC
 {
