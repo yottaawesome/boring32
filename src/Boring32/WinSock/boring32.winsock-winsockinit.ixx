@@ -1,10 +1,6 @@
-module;
-
-#include <stdexcept>
-#include <windows.h>
-#include <winsock2.h>
-
 export module boring32.winsock:winsockinit;
+import <stdexcept>;
+import <win32.hpp>;
 
 export namespace Boring32::WinSock
 {

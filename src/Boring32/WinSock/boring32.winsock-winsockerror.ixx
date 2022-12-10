@@ -1,12 +1,12 @@
 module;
 
-#include <string>
 #include <source_location>
-#include <stdexcept>
-#include <Windows.h>
 
 export module boring32.winsock:winsockerror;
 import boring32.error;
+import <string>;
+import <stdexcept>;
+import <win32.hpp>;
 
 export namespace Boring32::WinSock
 {

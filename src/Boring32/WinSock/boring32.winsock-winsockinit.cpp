@@ -1,9 +1,6 @@
 module;
 
-#include <stdexcept>
 #include <source_location>
-#include <windows.h>
-#include <winsock2.h>
 
 module boring32.winsock:winsockinit;
 import boring32.error;
