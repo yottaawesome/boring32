@@ -1,11 +1,8 @@
-module;
-
-#include <source_location>
-
 export module boring32.error:errorbase;
 import <stdexcept>;
 import <format>;
 import <string>;
+import <source_location>;
 
 namespace Boring32::Error
 {
