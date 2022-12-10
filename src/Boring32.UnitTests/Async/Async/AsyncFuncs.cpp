@@ -1,6 +1,4 @@
 #include "pch.h"
-#include <thread>
-#include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 import boring32.async;

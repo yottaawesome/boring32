@@ -1,7 +1,4 @@
 #include "pch.h"
-#include <thread>
-#include <windows.h>
-#include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
