@@ -1,10 +1,10 @@
 module;
 
-#include <iostream>
 #include <source_location>
 
 module boring32.async:timerqueuetimer;
 import boring32.error;
+import <iostream>;
 import <win32.hpp>;
 
 namespace Boring32::Async
