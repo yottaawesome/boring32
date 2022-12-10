@@ -1,10 +1,6 @@
-module;
-
-#include <Windows.h>
-#include <xaudio2.h>
-
 export module boring32.xaudio2:sourcevoice;
 import :voice;
+import <win32.hpp>;
 
 export namespace Boring32::XAudio2
 {
