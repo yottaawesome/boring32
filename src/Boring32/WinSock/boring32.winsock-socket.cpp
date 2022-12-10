@@ -1,19 +1,14 @@
 module;
 
-#include <string>
-#include <vector>
-#include <iostream>
-#include <format>
 #include <source_location>
-#include <stdexcept>
-#include <Windows.h>
-#include <winsock2.h>
-#include <Ws2tcpip.h>
 
 module boring32.winsock:socket;
 import :winsockerror;
 import boring32.error;
 import boring32.strings;
+import <iostream>;
+import <format>;
+import <stdexcept>;
 
 namespace Boring32::WinSock
 {	
