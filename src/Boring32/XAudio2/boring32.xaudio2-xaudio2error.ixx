@@ -1,11 +1,10 @@
 module;
 
 #include <source_location>
-#include <string>
 
 export module boring32.xaudio2:xaudio2error;
-
 import boring32.error;
+import <string>;
 
 export namespace Boring32::XAudio2
 {
