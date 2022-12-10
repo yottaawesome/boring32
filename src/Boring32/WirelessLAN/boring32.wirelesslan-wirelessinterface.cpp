@@ -81,7 +81,7 @@ namespace Boring32::WirelessLAN
 		return returnVal;
 	}
 
-	WirelessInterface::~WirelessInterface() { }
+	WirelessInterface::~WirelessInterface() = default;
 	WirelessInterface::WirelessInterface(const WirelessInterface&) = default;
 	WirelessInterface::WirelessInterface(WirelessInterface&&) noexcept = default;
 	WirelessInterface& WirelessInterface::operator=(const WirelessInterface&) = default;
