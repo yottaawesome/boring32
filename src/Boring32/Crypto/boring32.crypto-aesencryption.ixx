@@ -1,11 +1,8 @@
-module;
-
-#include <string>
-#include <vector>
-
 export module boring32.crypto:aesencryption;
 import :cryptokey;
 import :chainingmode;
+import <string>;
+import <vector>;
 import <win32.hpp>;
 
 export namespace Boring32::Crypto
