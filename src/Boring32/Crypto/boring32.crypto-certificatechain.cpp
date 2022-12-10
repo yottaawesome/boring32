@@ -1,12 +1,11 @@
 module;
 
-#include <vector>
-#include <string>
-#include <format>
 #include <source_location>
 
 module boring32.crypto:certificatechain;
 import boring32.error;
+import <string>;
+import <format>;
 
 namespace Boring32::Crypto
 {
