@@ -1,11 +1,7 @@
-module;
-
-#include <source_location>
-
 export module boring32.error:win32error;
 import <string>;
 import <stdexcept>;
-import <win32.hpp>;
+import <source_location>;
 
 export namespace Boring32::Error
 {
@@ -21,12 +17,12 @@ export namespace Boring32::Error
 			);
 			Win32Error(
 				const std::string& msg,
-				const DWORD errorCode,
+				const unsigned long errorCode,
 				const std::source_location location = std::source_location::current()
 			);
 			Win32Error(
 				const std::string& msg, 
-				const DWORD errorCode, 
+				const unsigned long errorCode,
 				const std::wstring& moduleName,
 				const std::source_location location = std::source_location::current()
 			);
@@ -36,11 +32,11 @@ export namespace Boring32::Error
 			virtual Win32Error& operator=(Win32Error&& other) noexcept;
 
 		public:
-			virtual DWORD GetErrorCode() const noexcept;
+			virtual unsigned long GetErrorCode() const noexcept;
 			virtual const char* what() const noexcept override;
 
 		protected:
-			DWORD m_errorCode;
+			unsigned long m_errorCode;
 			std::string m_errorString;
 	};
 }
