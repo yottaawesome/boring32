@@ -1,9 +1,4 @@
-module;
-
-#include <memory>
-#include <vector>
 //#include <ntstatus.h>
-
 module boring32.crypto:cryptokey;
 
 // See: https://docs.microsoft.com/en-us/windows/win32/seccng/encrypting-data-with-cng

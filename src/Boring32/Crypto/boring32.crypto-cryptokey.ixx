@@ -1,10 +1,7 @@
-module;
-
-#include <string>
-#include <vector>
-#include <memory>
-
 export module boring32.crypto:cryptokey;
+import <string>;
+import <vector>;
+import <memory>;
 import <win32.hpp>;
 
 export namespace Boring32::Crypto
