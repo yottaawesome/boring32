@@ -1,14 +1,10 @@
 module;
 
 #include <source_location>
-// Not able to import, as iphlpapi and iptypes screw up.
-#include <Windows.h>
-#include <winsock2.h>
-#include <iphlpapi.h>
-#include <iptypes.h>
 
 module boring32.networking:api;
 import boring32.error;
+import <win32.hpp>;
 
 namespace Boring32::Networking
 {
