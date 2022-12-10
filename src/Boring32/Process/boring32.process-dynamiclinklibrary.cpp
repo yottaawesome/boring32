@@ -1,12 +1,11 @@
 module;
 
-#include <format>
-#include <iostream>
 #include <source_location>
-#include <Windows.h>
 
 module boring32.process:dynamiclinklibrary;
 import boring32.error;
+import <format>;
+import <iostream>;
 
 namespace Boring32::Process
 {
