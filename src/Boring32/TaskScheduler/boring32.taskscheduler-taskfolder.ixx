@@ -1,14 +1,9 @@
-module;
-
-#include <string>
-#include <vector>
-#include <optional>
-#include <windows.h>
-#include <taskschd.h>
-#include <wrl/client.h>
-
 export module boring32.taskscheduler:taskfolder;
 import :registeredtask;
+import <string>;
+import <vector>;
+import <optional>;
+import <win32.hpp>;
 
 export namespace Boring32::TaskScheduler
 {

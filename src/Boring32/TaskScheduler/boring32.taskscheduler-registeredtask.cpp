@@ -1,16 +1,10 @@
 module;
 
 #include <source_location>
-#include <iostream>
-#include <string>
-#include <vector>
-#include <windows.h>
-#include <comdef.h>
-#include <taskschd.h>
-#include <wrl/client.h>
 
 module boring32.taskscheduler:registeredtask;
 import boring32.error;
+import <iostream>;
 
 namespace Boring32::TaskScheduler
 {

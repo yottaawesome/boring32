@@ -1,15 +1,10 @@
 module;
 
-#include <string>
-#include <iostream>
 #include <source_location>
-#include <windows.h>
-#include <comdef.h>
-#include <taskschd.h>
-#include <wrl/client.h>
 
 module boring32.taskscheduler:taskservice;
 import boring32.error;
+import <iostream>;
 
 namespace Boring32::TaskScheduler
 {

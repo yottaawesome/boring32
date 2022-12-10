@@ -1,17 +1,10 @@
 module;
 
-#include <string>
-#include <vector>
 #include <source_location>
-#include <optional>
-#include <stdexcept>
-#include <windows.h>
-#include <comdef.h>
-#include <taskschd.h>
-#include <wrl/client.h>
 
 module boring32.taskscheduler:taskfolder;
 import boring32.error;
+import <stdexcept>;
 
 namespace Boring32::TaskScheduler
 {

@@ -7,6 +7,7 @@
 // https://developercommunity.visualstudio.com/t/warning-C4005:-Outptr:-macro-redefinit/1546919
 // No idea when this will get fixed, MS seems to be taking their time with it.
 #include <Windows.h>
+#include <memoryapi.h>
 #include <Comdef.h>
 #include <sddl.h>
 #include <wlanapi.h> // unfortunately, not importable
@@ -15,7 +16,6 @@
 #include <pathcch.h> // unfortunately, not importable
 #include <Objbase.h>
 #include <netlistmgr.h>
-#include <wrl/client.h>
 #include <Rpc.h>
 #include <shlwapi.h>
 #include <compressapi.h> //unfortunately, not importable
@@ -24,3 +24,5 @@
 #include <iphlpapi.h> // module file mapping is invalid.
 #include <iptypes.h> // module file mapping is invalid.
 #include <Ntsecapi.h>
+#include <taskschd.h>
+#include <wrl/client.h>
