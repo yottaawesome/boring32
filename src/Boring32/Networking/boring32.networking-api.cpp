@@ -1,7 +1,7 @@
 module;
 
-#include <vector>
 #include <source_location>
+// Not able to import, as iphlpapi and iptypes screw up.
 #include <Windows.h>
 #include <winsock2.h>
 #include <iphlpapi.h>

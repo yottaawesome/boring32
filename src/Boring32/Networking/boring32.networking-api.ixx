@@ -1,8 +1,5 @@
-module;
-
-#include <vector>
-
 export module boring32.networking:api;
+import <vector>;
 
 export namespace Boring32::Networking
 {
