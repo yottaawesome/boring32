@@ -1,13 +1,12 @@
 module;
 
-#include <algorithm>
-#include <functional>
 #include <source_location>
-#include <stdexcept>
 
 module boring32.async:eventloop;
 import boring32.error;
 import :criticalsectionlock;
+import <stdexcept>;
+import <algorithm>;
 
 namespace Boring32::Async
 {

@@ -1,9 +1,6 @@
-module;
-
-#include <vector>
-#include <functional>
-
 export module boring32.async:eventloop;
+import <vector>;
+import <functional>;
 import <win32.hpp>;
 
 export namespace Boring32::Async
