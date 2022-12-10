@@ -1,12 +1,9 @@
-module;
-
-#include <source_location>
-
 export module boring32.error:functions;
 import <string>;
 import <iostream>;
 import <memory>;
 import <win32.hpp>;
+import <source_location>;
 
 export namespace Boring32::Error
 {
