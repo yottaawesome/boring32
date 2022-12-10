@@ -4,11 +4,11 @@ module;
 #include <source_location>
 // https://www.mschaef.com/windows_h_is_wierd
 //#define WIN32_NO_STATUS
-#include <Windows.h>
+//#include <Windows.h>
 //#undef WIN32_NO_STATUS
 //#include <ntstatus.h>
 //#include <winnt.h>
-#include <Ntsecapi.h>
+//#include <Ntsecapi.h>
 
 module boring32.security:policy;
 import boring32.error;

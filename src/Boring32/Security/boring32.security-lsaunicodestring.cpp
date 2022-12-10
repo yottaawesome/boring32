@@ -1,8 +1,6 @@
 module;
 
 #include <string>
-#include <Windows.h>
-#include <Ntsecapi.h>
 
 module boring32.security:lsaunicodestring;
 

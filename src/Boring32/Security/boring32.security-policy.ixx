@@ -2,10 +2,9 @@ module;
 
 #include <memory>
 #include <string>
-#include <Windows.h>
-#include <Ntsecapi.h>
 
 export module boring32.security:policy;
+import <win32.hpp>;
 
 namespace Boring32::Security
 {

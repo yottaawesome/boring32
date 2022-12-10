@@ -2,9 +2,9 @@ module;
 
 #include <vector>
 #include <string>
-#include <Windows.h>
 
 export module boring32.security:securityidentifier;
+import <win32.hpp>;
 
 export namespace Boring32::Security
 {

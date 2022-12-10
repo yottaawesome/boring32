@@ -1,12 +1,9 @@
-module;
-
-#include <string>
-#include <vector>
-#include <Windows.h>
-
 export module boring32.security:functions;
 import boring32.raii;
 import :constants;
+import <string>;
+import <vector>;
+import <win32.hpp>;
 
 export namespace Boring32::Security
 {

@@ -3,8 +3,6 @@ module;
 #include <string>
 #include <source_location>
 #include <stdexcept>
-#include <Windows.h>
-#include <sddl.h>
 
 module boring32.security:token;
 import boring32.error;

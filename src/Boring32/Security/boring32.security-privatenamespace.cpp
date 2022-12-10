@@ -2,9 +2,6 @@ module;
 
 #include <string>
 #include <source_location>
-#include <Windows.h>
-#include <Sddl.h>          // for SID management
-
 
 module boring32.security:privatenamespace;
 import boring32.error;

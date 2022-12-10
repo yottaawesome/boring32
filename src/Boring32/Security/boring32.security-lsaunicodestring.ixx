@@ -1,10 +1,9 @@
 module;
 
 #include <string>
-#include <Windows.h>
-#include <Ntsecapi.h>
 
 export module boring32.security:lsaunicodestring;
+import <win32.hpp>;
 
 namespace Boring32::Security
 {

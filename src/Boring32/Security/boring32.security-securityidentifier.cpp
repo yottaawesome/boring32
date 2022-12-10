@@ -4,8 +4,6 @@ module;
 #include <stdexcept>
 #include <source_location>
 #include <iostream>
-#include <Windows.h>
-#include <sddl.h>
 
 module boring32.security:securityidentifier;
 import boring32.error;

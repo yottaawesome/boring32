@@ -2,7 +2,6 @@ module;
 
 #include <stdexcept>
 #include <source_location>
-#include <Windows.h>
 
 module boring32.security:impersonationcontext;
 import boring32.error;

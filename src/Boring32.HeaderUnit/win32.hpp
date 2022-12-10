@@ -23,3 +23,4 @@
 #include <winsock2.h>
 #include <iphlpapi.h> // module file mapping is invalid.
 #include <iptypes.h> // module file mapping is invalid.
+#include <Ntsecapi.h>

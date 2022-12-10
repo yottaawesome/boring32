@@ -2,8 +2,6 @@ module;
 
 #include <string>
 #include <source_location>
-#include <Windows.h>
-#include <sddl.h>
 
 module boring32.security:securitydescriptor;
 import boring32.error;
