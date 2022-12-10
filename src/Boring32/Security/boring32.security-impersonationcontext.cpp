@@ -1,10 +1,10 @@
 module;
 
-#include <stdexcept>
 #include <source_location>
 
 module boring32.security:impersonationcontext;
 import boring32.error;
+import <stdexcept>;
 
 namespace Boring32::Security
 {

@@ -1,6 +1,5 @@
 module;
 
-#include <string>
 #include <source_location>
 // https://www.mschaef.com/windows_h_is_wierd
 //#define WIN32_NO_STATUS
@@ -13,6 +12,7 @@ module;
 module boring32.security:policy;
 import boring32.error;
 import :lsaunicodestring;
+import <string>;
 
 namespace Boring32::Security
 {
