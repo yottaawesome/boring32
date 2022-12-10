@@ -1,14 +1,11 @@
 module;
 
-#include <stdexcept>
 #include <source_location>
-#include <Windows.h>
-#include <xaudio2.h>
-#include <wrl/client.h>
 
 module boring32.xaudio2:masteringvoice;
 import boring32.error;
 import :xaudio2error;
+import <stdexcept>;
 
 namespace Boring32::XAudio2
 {
