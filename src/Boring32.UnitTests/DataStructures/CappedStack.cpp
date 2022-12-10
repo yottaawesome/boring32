@@ -3,6 +3,7 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 import boring32.datastructures;
+import boring32.error;
 
 namespace DataStructures
 {
@@ -18,7 +19,7 @@ namespace DataStructures
 
 			TEST_METHOD(TestInvalidSizeConstructor)
 			{
-				Assert::ExpectException<std::invalid_argument>(
+				Assert::ExpectException<Boring32::Error::Boring32Error>(
 					[]()
 					{
 						Boring32::DataStructures::CappedStack<int> stack(0, true);
@@ -70,7 +71,7 @@ namespace DataStructures
 
 			TEST_METHOD(TestInvalidPop)
 			{
-				Assert::ExpectException<std::runtime_error>(
+				Assert::ExpectException<Boring32::Error::Boring32Error>(
 					[]()
 					{
 						Boring32::DataStructures::CappedStack<int> stack(5, true);
