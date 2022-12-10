@@ -1,8 +1,6 @@
 module;
 
 #include <source_location>
-#include <Windows.h>
-#include <compressapi.h>
 
 module boring32.compression:decompressor;
 import :compressionerror;

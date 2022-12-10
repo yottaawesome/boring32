@@ -1,12 +1,8 @@
-module;
-
-#include <Windows.h>
-#include <compressapi.h>
-
 export module boring32.compression:compressor;
 import :compressiontype;
 import :deleters;
 import <vector>;
+import <win32.hpp>;
 
 /// <summary>
 /// For reference of the Compression API, see: https://docs.microsoft.com/en-us/windows/win32/cmpapi/using-the-compression-api
