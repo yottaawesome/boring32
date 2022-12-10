@@ -1,6 +1,6 @@
 module;
 
-#include <source_location>
+#include <source_location> // import causes ICE
 
 module boring32.io:completionport;
 import boring32.error;
