@@ -1,8 +1,3 @@
-module;
-
-#include <string>
-#include <filesystem>
-#include <vector>
 //#include <Windows.h>
 //#include <dpapi.h> // not including this header causes symbol has already been defined error
 //#include <wincrypt.h>
@@ -11,6 +6,9 @@ module;
 
 export module boring32.crypto:certstore;
 import :certificate;
+import <string>;
+import <filesystem>;
+import <vector>;
 import <win32.hpp>;
 
 export namespace Boring32::Crypto
