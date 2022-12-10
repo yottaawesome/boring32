@@ -1,13 +1,12 @@
 module;
 
-#include <stdexcept>
-#include <string>
-#include <iostream>
-#include <format>
 #include <source_location>
 
 module boring32.async:waitabletimer;
 import boring32.error;
+import <stdexcept>;
+import <iostream>;
+import <format>;
 
 //https://docs.microsoft.com/en-us/windows/win32/sync/using-a-waitable-timer-with-an-asynchronous-procedure-call
 namespace Boring32::Async
