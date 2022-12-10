@@ -1,14 +1,10 @@
 module;
 
-#include <stdexcept>
-#include <string>
 #include <source_location>
-#include <Windows.h>
-#include <wincodec.h>
-#include <wrl/client.h>
 
 module boring32.windowsimagingcomponent:imagingfactory;
 import boring32.error;
+import <stdexcept>;
 
 namespace Boring32::WindowsImagingComponent
 {

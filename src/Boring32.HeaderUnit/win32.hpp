@@ -35,3 +35,4 @@
 #include <wincrypt.h>
 #include <cryptuiapi.h>
 #include <winnt.h>
+#include <wincodec.h>

@@ -1,11 +1,6 @@
-module;
-
-#include <string>
-#include <Windows.h>
-#include <wincodec.h>
-#include <wrl/client.h>
-
 export module boring32.windowsimagingcomponent:imagingfactory;
+import <string>;
+import <win32.hpp>;
 
 export namespace Boring32::WindowsImagingComponent
 {
