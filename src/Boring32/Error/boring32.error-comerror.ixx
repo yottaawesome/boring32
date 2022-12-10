@@ -1,12 +1,9 @@
-module;
-
-#include <source_location>
-
 export module boring32.error:comerror;
 import :boring32error;
-import <win32.hpp>;
 import <stdexcept>;
 import <string>;
+import <source_location>;
+import <win32.hpp>;
 
 export namespace Boring32::Error
 {
