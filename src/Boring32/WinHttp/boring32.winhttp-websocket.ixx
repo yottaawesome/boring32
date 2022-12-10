@@ -1,18 +1,15 @@
-module;
-
-#include <Windows.h>
-#include <string>
-#include <vector>
-#include <atomic>
-#include <memory>
-#include <future>
-
 export module boring32.winhttp:websocket;
 import :websocketstatus;
 import :websocketsettings;
 import boring32.async;
 import :winhttphandle;
 import :session;
+import <string>;
+import <vector>;
+import <atomic>;
+import <memory>;
+import <future>;
+import <win32.hpp>;
 
 export namespace Boring32::WinHttp::WebSockets
 {

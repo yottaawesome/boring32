@@ -1,14 +1,6 @@
 module;
 
-#include <Windows.h>
-#include <winhttp.h>
-#include <stdexcept>
-#include <vector>
-#include <future>
-#include <sstream>
 #include <source_location>
-#include <iostream>
-#include <wincrypt.h>
 
 module boring32.winhttp:websocket;
 import boring32.error;
@@ -16,6 +8,9 @@ import :winhttphandle;
 import :proxyinfo;
 import :session;
 import boring32.util;
+import <stdexcept>;
+import <sstream>;
+import <iostream>;
 
 namespace Boring32::WinHttp::WebSockets
 {
