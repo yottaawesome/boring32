@@ -1,9 +1,6 @@
-module;
-
-#include <memory>
-#include <string>
-
 export module boring32.security:policy;
+import <string>;
+import <memory>;
 import <win32.hpp>;
 
 namespace Boring32::Security

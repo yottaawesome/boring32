@@ -12,7 +12,6 @@ module;
 module boring32.security:policy;
 import boring32.error;
 import :lsaunicodestring;
-import <string>;
 
 namespace Boring32::Security
 {
