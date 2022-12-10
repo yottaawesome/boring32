@@ -1,11 +1,10 @@
 module;
 
 #include <source_location>
-#include <stdexcept>
-#include <Windows.h>
 
 module boring32.xaudio2:functions;
 import boring32.error;
+import <stdexcept>;
 
 constexpr DWORD fourccRIFF = 'FFIR';
 constexpr DWORD fourccDATA = 'atad';
@@ -16,7 +15,12 @@ constexpr DWORD fourccDPDS = 'sdpd';
 
 namespace Boring32::XAudio2
 {
-	void FindChunk(HANDLE hFile, DWORD fourcc, DWORD& dwChunkSize, DWORD& dwChunkDataPosition)
+	void FindChunk(
+        HANDLE hFile, 
+        DWORD fourcc, 
+        DWORD& dwChunkSize, 
+        DWORD& dwChunkDataPosition
+    )
 	{
         DWORD result = SetFilePointer(hFile, 0, nullptr, FILE_BEGIN);
         if (result == INVALID_SET_FILE_POINTER)
