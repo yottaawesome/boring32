@@ -1,9 +1,6 @@
-module;
-
-#include <stdexcept>
-
 export module boring32.async:timerqueue;
 import :event;
+import <stdexcept>;
 import <win32.hpp>;
 
 export namespace Boring32::Async
