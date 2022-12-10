@@ -1,9 +1,6 @@
-module;
-
-#include <iostream>
-
 module boring32.async:timerqueuetimercallback;
 import boring32.error;
+import <iostream>;
 
 namespace Boring32::Async
 {
