@@ -92,7 +92,7 @@ namespace Boring32::WinHttp::WebSockets
 	void WebSocket::InternalConnect(const std::wstring& path)
 	{
 		if (m_status != WebSocketStatus::NotInitialised)
-			throw Error::Boring32Error(__FUNCSIG__ "WebSocket needs to be in NotInitialised state to connect");
+			throw Error::Boring32Error("WebSocket needs to be in NotInitialised state to connect");
 
 		try
 		{
@@ -105,7 +105,7 @@ namespace Boring32::WinHttp::WebSockets
 				m_settings.Port,
 				0
 			);
-			if (m_winHttpConnection == nullptr)
+			if (!m_winHttpConnection)
 				throw Error::Win32Error("WinHttpConnect() failed", GetLastError());
 
 			// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpopenrequest
@@ -143,7 +143,7 @@ namespace Boring32::WinHttp::WebSockets
 				nullptr,
 				0
 			);
-			if (success == false)
+			if (!success)
 				throw Error::Win32Error("WinHttpSetOption() failed", GetLastError());
 
 			if (m_settings.ClientCert.GetCert())
@@ -155,7 +155,7 @@ namespace Boring32::WinHttp::WebSockets
 					(void*)m_settings.ClientCert.GetCert(),
 					sizeof(CERT_CONTEXT)
 				);
-				if (setCertOption == false)
+				if (!setCertOption)
 					throw Error::Win32Error("WinHttpSetOption() failed for client certificate", GetLastError());
 			}
 			const wchar_t* connectionHeaders = m_settings.ConnectionHeaders.empty()

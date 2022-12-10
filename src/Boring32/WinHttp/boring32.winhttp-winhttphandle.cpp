@@ -10,41 +10,14 @@ namespace Boring32::WinHttp
 		};
 	}
 
-	WinHttpHandle::~WinHttpHandle()
-	{
-		Close();
-	}
-
-	WinHttpHandle::WinHttpHandle()
-		: m_handle(nullptr)
-	{ }
-
 	WinHttpHandle::WinHttpHandle(HINTERNET handle)
 		: m_handle(CreateCloseableWinHttpHandle(handle))
 	{ }
 
-	WinHttpHandle::WinHttpHandle(const WinHttpHandle& other)
+	WinHttpHandle& WinHttpHandle::operator=(const HINTERNET handle)
 	{
-		Copy(other);
-	}
-
-	WinHttpHandle::WinHttpHandle(WinHttpHandle&& other) noexcept
-	{
-		m_handle = other.m_handle;
-		other.m_handle = nullptr;
-	}
-
-	void WinHttpHandle::operator=(WinHttpHandle&& other) noexcept
-	{
-		Close();
-		m_handle = other.m_handle;
-		other.m_handle = nullptr;
-	}
-
-	void WinHttpHandle::operator=(const HINTERNET handle)
-	{
-		Close();
 		m_handle = CreateCloseableWinHttpHandle(handle);
+		return *this;
 	}
 
 	void WinHttpHandle::Close()
@@ -52,18 +25,18 @@ namespace Boring32::WinHttp
 		m_handle = nullptr;
 	}
 
-	HINTERNET WinHttpHandle::Get() const
+	HINTERNET WinHttpHandle::Get() const noexcept
 	{
 		return m_handle.get();
 	}
 
-	bool WinHttpHandle::operator==(const HINTERNET other)
+	bool WinHttpHandle::operator==(const HINTERNET other) const noexcept
 	{
 		return m_handle.get() == other;
 	}
 
-	void WinHttpHandle::Copy(const WinHttpHandle& other)
+	WinHttpHandle::operator bool() const noexcept
 	{
-		m_handle = other.m_handle;
+		return m_handle.get() != nullptr;
 	}
 }
