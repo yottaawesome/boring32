@@ -1,14 +1,14 @@
 module;
 
-#include <stdexcept>
-#include <string>
-#include <iostream>
-#include <format>
 #include <source_location>
 
 module boring32.async:mutex;
 import boring32.error;
 import :functions;
+import <stdexcept>;
+import <string>;
+import <iostream>;
+import <format>;
 
 namespace Boring32::Async
 {
