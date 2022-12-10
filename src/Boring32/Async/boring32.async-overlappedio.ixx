@@ -1,9 +1,6 @@
-module;
-
-#include <vector>
-
 export module boring32.async:overlappedio;
 import :overlappedop;
+import <vector>;
 
 export namespace Boring32::Async
 {
