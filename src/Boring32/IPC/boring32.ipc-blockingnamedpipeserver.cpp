@@ -1,12 +1,7 @@
-module;
-
-#include <string>
-#include <stdexcept>
-#include <vector>
-#include <Windows.h>
-
 module boring32.ipc:blockingnamedpipeserver;
 import boring32.util;
+import <string>;
+import <stdexcept>;
 
 namespace Boring32::IPC
 {
