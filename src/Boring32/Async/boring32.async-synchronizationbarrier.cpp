@@ -1,11 +1,12 @@
 module;
 
-#include <string>
-#include <stdexcept>
+
 #include <source_location>
 
 module boring32.async:synchronizationbarrier;
 import boring32.error;
+import <string>;
+import <stdexcept>;
 
 namespace Boring32::Async
 {
