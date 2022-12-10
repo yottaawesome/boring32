@@ -1,9 +1,6 @@
-module;
-
-#include <string>
-
 export module boring32.security:securitydescriptor;
 import boring32.raii;
+import <string>;
 import <win32.hpp>;
 
 export namespace Boring32::Security
