@@ -2,7 +2,6 @@ module;
 
 #include <iostream>
 #include <source_location>
-#include <Windows.h>
 
 module boring32.async:timerqueue;
 import boring32.error;

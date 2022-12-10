@@ -4,8 +4,6 @@ module;
 #include <vector>
 #include <source_location>
 #include <format>
-#include <Windows.h>
-#include <TlHelp32.h>
 
 module boring32.async:functions;
 import boring32.raii;

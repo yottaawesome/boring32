@@ -4,7 +4,6 @@ module;
 #include <functional>
 #include <source_location>
 #include <stdexcept>
-#include <Windows.h>
 
 module boring32.async:eventloop;
 import boring32.error;

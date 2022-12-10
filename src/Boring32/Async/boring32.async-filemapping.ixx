@@ -1,10 +1,10 @@
 module;
 
 #include <string>
-#include <Windows.h>
 
 export module boring32.async:filemapping;
 import boring32.raii;
+import <win32.hpp>;
 
 export namespace Boring32::Async
 {

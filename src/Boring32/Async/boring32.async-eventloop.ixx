@@ -2,9 +2,9 @@ module;
 
 #include <vector>
 #include <functional>
-#include <Windows.h>
 
 export module boring32.async:eventloop;
+import <win32.hpp>;
 
 export namespace Boring32::Async
 {

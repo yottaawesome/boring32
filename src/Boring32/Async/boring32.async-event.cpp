@@ -1,14 +1,12 @@
 module;
 
-#include <stdexcept>
 #include <source_location>
-#include <string>
-#include <iostream>
-#include <format>
-#include <Windows.h>
 
 module boring32.async:event;
 import boring32.error;
+import <stdexcept>;
+import <iostream>;
+import <format>;
 
 namespace Boring32::Async
 {

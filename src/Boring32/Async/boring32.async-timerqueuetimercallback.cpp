@@ -1,7 +1,6 @@
 module;
 
 #include <iostream>
-#include <Windows.h>
 
 module boring32.async:timerqueuetimercallback;
 import boring32.error;

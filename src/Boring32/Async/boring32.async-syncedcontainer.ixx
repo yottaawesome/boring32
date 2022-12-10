@@ -4,11 +4,11 @@ module;
 #include <functional>
 #include <algorithm>
 #include <source_location>
-#include <Windows.h>
 
 export module boring32.async:syncedcontainer;
 import :criticalsectionlock;
 import boring32.error;
+import <win32.hpp>;
 
 export namespace Boring32::Async
 {

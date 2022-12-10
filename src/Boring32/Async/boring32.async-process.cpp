@@ -3,7 +3,6 @@ module;
 #include <stdexcept>
 #include <string>
 #include <source_location>
-#include <Windows.h>
 
 module boring32.async:process;
 import boring32.error;

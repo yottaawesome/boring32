@@ -2,7 +2,6 @@
 module;
 
 #include <stdexcept>
-#include <Windows.h>
 
 module boring32.async:slimreadwritelock;
 

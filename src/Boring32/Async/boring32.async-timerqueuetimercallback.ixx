@@ -1,9 +1,6 @@
-module;
-
-#include <Windows.h>
-
 export module boring32.async:timerqueuetimercallback;
 import :timerqueuetimer;
+import <win32.hpp>;
 
 export namespace Boring32::Async
 {

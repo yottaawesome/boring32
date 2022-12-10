@@ -2,8 +2,6 @@ module;
 
 #include <source_location>
 #include <string>
-#include <Windows.h>
-#include <Jobapi2.h>
 
 module boring32.async:job;
 import boring32.error;

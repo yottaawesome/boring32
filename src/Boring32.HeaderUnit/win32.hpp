@@ -26,3 +26,6 @@
 #include <Ntsecapi.h>
 #include <taskschd.h>
 #include <wrl/client.h>
+#include <TlHelp32.h>
+#include <Jobapi2.h>
+#include <threadpoolapiset.h>

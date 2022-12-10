@@ -1,6 +1,5 @@
 module;
 
-#include <Windows.h>
 #include <string>
 #include <stdexcept>
 #include <source_location>

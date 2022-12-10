@@ -1,7 +1,3 @@
-module;
-
-#include <Windows.h>
-
 module boring32.async:criticalsectionlock;
 
 namespace Boring32::Async

@@ -3,7 +3,6 @@ module;
 #include <string>
 #include <stdexcept>
 #include <source_location>
-#include <Windows.h>
 
 module boring32.async:filemapping;
 import boring32.error;

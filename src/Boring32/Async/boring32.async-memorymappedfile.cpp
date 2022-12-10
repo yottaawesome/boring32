@@ -4,7 +4,6 @@ module;
 #include <format>
 #include <iostream>
 #include <source_location>
-#include <Windows.h>
 
 module boring32.async:memorymappedfile;
 import boring32.error;

@@ -4,7 +4,6 @@ module;
 #include <source_location>
 #include <string>
 #include <format>
-#include <Windows.h>
 
 module boring32.async:semaphore;
 import boring32.error;

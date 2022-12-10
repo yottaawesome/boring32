@@ -4,10 +4,10 @@ module;
 #include <source_location>
 #include <format>
 #include <string>
-#include <Windows.h>
 
 module boring32.async:mutev;
 import boring32.error;
+import <win32.hpp>;
 
 namespace Boring32::Async
 {

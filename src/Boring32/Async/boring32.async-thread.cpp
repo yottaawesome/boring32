@@ -3,7 +3,6 @@ module;
 #include <iostream>
 #include <string>
 #include <source_location>
-#include <Windows.h>
 #include <process.h>
 
 module boring32.async:thread;

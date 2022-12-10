@@ -3,7 +3,6 @@ module;
 #include <stdexcept>
 #include <memory>
 #include <source_location>
-#include <Windows.h>
 //#include <winternl.h>
 //#include <ntstatus.h>
 

@@ -1,10 +1,10 @@
 module;
 
-#include <Windows.h>
 #include <string>
 
 export module boring32.async:process;
 import boring32.raii;
+import <win32.hpp>;
 
 export namespace Boring32::Async
 {

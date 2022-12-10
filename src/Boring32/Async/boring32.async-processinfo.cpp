@@ -1,7 +1,3 @@
-module;
-
-#include <Windows.h>
-
 module boring32.async:processinfo;
 import boring32.raii;
 
