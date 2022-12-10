@@ -1,11 +1,8 @@
-module;
-
-#include <functional>
-#include <string>
-
 export module boring32.async:thread;
 import boring32.raii;
 import :event;
+import <functional>;
+import <string>;
 import <win32.hpp>;
 
 export namespace Boring32::Async

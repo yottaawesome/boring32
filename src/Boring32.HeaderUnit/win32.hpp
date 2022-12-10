@@ -29,3 +29,4 @@
 #include <TlHelp32.h>
 #include <Jobapi2.h>
 #include <threadpoolapiset.h>
+#include <process.h>
