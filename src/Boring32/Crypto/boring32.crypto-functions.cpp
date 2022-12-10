@@ -1,8 +1,6 @@
 module;
 
-#include <vector>
 #include <source_location>
-#include <string>
 //#include <Windows.h>
 //#include <dpapi.h> // not including this header causes symbol has already been defined error
 //#include <Wincrypt.h>
