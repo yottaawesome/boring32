@@ -1,7 +1,6 @@
 module;
 
 #include <source_location>
-#include <string>
 
 module boring32.async:job;
 import boring32.error;
