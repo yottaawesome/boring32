@@ -1,8 +1,6 @@
 module;
 
 #include <source_location>
-#include <Windows.h>
-#include <wlanapi.h>
 
 module boring32.wirelesslan:wirelessinterface;
 import boring32.util;
