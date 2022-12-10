@@ -1,8 +1,9 @@
 #pragma warning(disable: 4005)
 #pragma warning(disable: 5106)
 import <string>;
-import <Windows.h>;
-import <comdef.h>;
+import <win32.hpp>;
+//import <Windows.h>;
+//import <comdef.h>;
 
 // https://developercommunity.visualstudio.com/t/warning-C4005:-Outptr:-macro-redefinit/1546919
 //import boring32.headerunit;

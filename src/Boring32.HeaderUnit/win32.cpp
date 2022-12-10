@@ -5,20 +5,5 @@
 // The above need to be disabled because of
 // https://developercommunity.visualstudio.com/t/warning-C4005:-Outptr:-macro-redefinit/1546919
 // No idea when this will get fixed, MS seems to be taking their time with it.
-import <Windows.h>;
-import <Comdef.h>;
-import <sddl.h>;
-//import <wlanapi.h>; // unfortunately, not importable
-import <wtypes.h>;
-import <guiddef.h>;
-// import <pathcch.h>; // unfortunately, not importable
-import <Objbase.h>;
-import <netlistmgr.h>;
-import <wrl/client.h>;
-import <Rpc.h>;
-import <shlwapi.h>;
-// import <compressapi.h>; unfortunately, not importable
-// import <psapi.h>; module file mapping is invalid.
-import <winsock2.h>;
-//import <iphlpapi.h>; module file mapping is invalid.
-//import <iptypes.h>; module file mapping is invalid.
+import "win32.hpp";
+

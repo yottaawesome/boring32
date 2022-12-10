@@ -5,7 +5,6 @@ module;
 module boring32.com:comthreadscope;
 import boring32.error;
 import <iostream>;
-import <Windows.h>;
 
 namespace Boring32::COM
 {

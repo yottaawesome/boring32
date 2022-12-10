@@ -6,7 +6,7 @@ export module boring32.error:ntstatuserror;
 import :boring32error;
 import <string>;
 import <stdexcept>;
-import <Windows.h>;
+import <win32.hpp>;
 
 export namespace Boring32::Error
 {

@@ -1,6 +1,6 @@
 export module boring32.time:datetime;
 import <cstdint>;
-import <Windows.h>;
+import <win32.hpp>;
 
 export namespace Boring32::Time
 {

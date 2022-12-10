@@ -1,6 +1,6 @@
 export module boring32.io:completionport;
 import boring32.raii;
-import <Windows.h>;
+import <win32.hpp>;
 
 export namespace Boring32::IO
 {

@@ -5,7 +5,7 @@ module;
 export module boring32.error:win32error;
 import <string>;
 import <stdexcept>;
-import <Windows.h>;
+import <win32.hpp>;
 
 export namespace Boring32::Error
 {

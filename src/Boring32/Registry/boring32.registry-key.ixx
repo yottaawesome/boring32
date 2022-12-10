@@ -3,7 +3,7 @@ import :value;
 import <stdexcept>;
 import <memory>;
 import <vector>;
-import <Windows.h>;
+import <win32.hpp>;
 
 export namespace Boring32::Registry
 {

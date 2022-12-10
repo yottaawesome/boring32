@@ -2,8 +2,7 @@ export module boring32.util:functions;
 import <string>;
 import <stdexcept>;
 import <vector>;
-import <Windows.h>;
-import <guiddef.h>;
+import <win32.hpp>;
 
 export namespace Boring32::Util
 {

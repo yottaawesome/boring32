@@ -22,6 +22,9 @@
     <ClCompile Include="std.cpp" />
     <ClCompile Include="win32.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="win32.hpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

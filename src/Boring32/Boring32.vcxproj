@@ -124,7 +124,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <EnableModules>true</EnableModules>
       <ErrorReporting>Send</ErrorReporting>
-      <DisableSpecificWarnings>4005;5106</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4005;5106;4067</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -166,7 +166,7 @@
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnableModules>true</EnableModules>
-      <DisableSpecificWarnings>4005;5106</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4005;5106;4067</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

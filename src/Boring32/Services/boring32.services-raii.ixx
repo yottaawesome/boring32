@@ -1,6 +1,6 @@
 export module boring32.services:raii;
 import <memory>;
-import <Windows.h>;
+import <win32.hpp>;
 
 namespace Boring32::Services
 {

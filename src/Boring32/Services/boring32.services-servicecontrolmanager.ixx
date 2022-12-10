@@ -2,7 +2,7 @@ export module boring32.services:servicecontrolmanager;
 import :raii;
 import :service;
 import <string>;
-import <Windows.h>;
+import <win32.hpp>;
 
 export namespace Boring32::Services
 {

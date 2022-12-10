@@ -1,7 +1,7 @@
 export module boring32.wirelesslan:session;
 import :cleanup;
 import :wirelessinterfaces;
-import <Windows.h>;
+import <win32.hpp>;
 
 export namespace Boring32::WirelessLAN
 {

@@ -4,7 +4,7 @@ module;
 
 export module boring32.error:comerror;
 import :boring32error;
-import <Windows.h>;
+import <win32.hpp>;
 import <stdexcept>;
 import <string>;
 

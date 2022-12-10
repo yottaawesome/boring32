@@ -6,7 +6,7 @@ export module boring32.error:functions;
 import <string>;
 import <iostream>;
 import <memory>;
-import <Windows.h>;
+import <win32.hpp>;
 
 export namespace Boring32::Error
 {

@@ -6,7 +6,7 @@ module boring32.strings;
 import boring32.error;
 import <algorithm>;
 import <stdexcept>;
-import <Windows.h>;
+import <win32.hpp>;
 
 namespace Boring32::Strings
 {

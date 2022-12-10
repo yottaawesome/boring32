@@ -3,7 +3,7 @@ import boring32.raii;
 import <string>;
 import <vector>;
 import <memory>;
-import <Windows.h>;
+import <win32.hpp>;
 
 export namespace Boring32::Computer
 {

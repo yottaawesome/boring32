@@ -2,7 +2,7 @@ export module boring32.registry:functions;
 import boring32.error;
 import <string>;
 import <stdexcept>;
-import <Windows.h>;
+import <win32.hpp>;
 
 export namespace Boring32::Registry
 {

@@ -1,16 +1,10 @@
 module;
 
 #include <source_location>
-#include <Windows.h>
-#include <pathcch.h>
 
 module boring32.util:functions;
 import boring32.error;
 import <chrono>;
-import <comdef.h>;
-import <Objbase.h>;
-import <netlistmgr.h>;
-import <wrl/client.h>;
 
 namespace Boring32::Util
 {

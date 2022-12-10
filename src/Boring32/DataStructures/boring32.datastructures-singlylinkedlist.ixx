@@ -4,7 +4,7 @@ import <stdexcept>;
 import <utility>;
 import <source_location>;
 import <memory>;
-import <windows.h>;
+import <win32.hpp>;
 import <malloc.h>;
 
 export namespace Boring32::DataStructures
