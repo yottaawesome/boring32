@@ -18,97 +18,97 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\Async\AsyncFuncs.cpp">
+    <ClCompile Include="Async\Async\boring32.async-functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\Async\Event.cpp">
+    <ClCompile Include="Async\Async\boring32.async-event.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\Async\EventLoop.cpp">
+    <ClCompile Include="Async\Async\boring32.async-eventloop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\Async\FileMappingTests.cpp">
+    <ClCompile Include="Async\Async\boring32.async-filemapping.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\Async\Mutex.cpp">
+    <ClCompile Include="Async\Async\boring32.async-mutex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\Async\Semaphore.cpp">
+    <ClCompile Include="Async\Async\boring32.async-semaphore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\Async\ThreadPool.cpp">
+    <ClCompile Include="Async\Async\boring32.async-threadpool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\Async\WaitableTimer.cpp">
+    <ClCompile Include="Async\Async\boring32.async-waitabletimer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="COM\COMThreadScope.cpp">
+    <ClCompile Include="COM\boring32.com-comthreadscope.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Compression\Compressor.cpp">
+    <ClCompile Include="Compression\boring32.compression-compressor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Compression\Decompressor.cpp">
+    <ClCompile Include="Compression\boring32.compression-decompressor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Computer\Computer.cpp">
+    <ClCompile Include="Computer\boring32.computer-functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\AesEncryption.cpp">
+    <ClCompile Include="Crypto\boring32.crypto-aesencryption.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\Certificate.cpp">
+    <ClCompile Include="Crypto\boring32.crypto-certificate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\CertStore.cpp">
+    <ClCompile Include="Crypto\boring32.crypto-certstore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\Crypto.cpp">
+    <ClCompile Include="Crypto\boring32.crypto-crypto.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\SecureString.cpp">
+    <ClCompile Include="Crypto\boring32.crypto-securestring.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DataStructures\CappedStack.cpp">
+    <ClCompile Include="DataStructures\boring32.datastructures-cappedstack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DataStructures\SinglyLinkedList.cpp">
+    <ClCompile Include="DataStructures\boring32.datastructures-singlylinkedlist.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Error\Error.cpp">
+    <ClCompile Include="Error\boring32.error-functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Registry\RegKey.cpp">
+    <ClCompile Include="Registry\boring32.registry-key.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Security\SecurityDescriptor.cpp">
+    <ClCompile Include="Security\boring32.security-securitydescriptor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Security\SecurityFunctions.cpp">
+    <ClCompile Include="Security\boring32.security-functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Services\services-servicecontrolmanager.cpp">
+    <ClCompile Include="Services\boring32.services-servicecontrolmanager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Strings\Strings.cpp">
+    <ClCompile Include="Strings\boring32.strings-functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Time\DateTime.cpp">
+    <ClCompile Include="Time\boring32.time-datetime.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Util\Util.cpp">
+    <ClCompile Include="Util\boring32.util-functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Util\Util.GloballyUniqueID.cpp">
+    <ClCompile Include="Util\boring32.util-globallyuniqueid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinHttp\Session.cpp">
+    <ClCompile Include="WinHttp\boring32.winhttp-session.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinSock\Socket.cpp">
+    <ClCompile Include="WinSock\boring32.winsock-socket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinSock\WinSockInit.cpp">
+    <ClCompile Include="WinSock\boring32.winsock-winsockinit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

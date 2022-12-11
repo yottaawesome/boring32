@@ -2,12 +2,11 @@ module boring32.winhttp:winhttphandle;
 
 namespace Boring32::WinHttp
 {
+
 	std::shared_ptr<void> CreateCloseableWinHttpHandle(HINTERNET handle)
 	{
-		return {
-			handle,
-			[](HINTERNET handle) { WinHttpCloseHandle(handle); }
-		};
+		constexpr auto closeFunc = WinHttpCloseHandle;
+		return { handle, closeFunc };
 	}
 
 	WinHttpHandle::WinHttpHandle(HINTERNET handle)
