@@ -6,6 +6,10 @@
 // The above need to be disabled because of
 // https://developercommunity.visualstudio.com/t/warning-C4005:-Outptr:-macro-redefinit/1546919
 // No idea when this will get fixed, MS seems to be taking their time with it.
+// Including SDKDDKVer.h defines the highest available Windows platform.
+// If you wish to build your application for a previous Windows platform, include WinSDKVer.h and
+// set the _WIN32_WINNT macro to the platform you wish to support before including SDKDDKVer.h.
+#include <SDKDDKVer.h>
 #include <Windows.h>
 #include <memoryapi.h>
 #include <Comdef.h>
