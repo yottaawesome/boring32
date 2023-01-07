@@ -111,6 +111,9 @@
     <ClCompile Include="WinSock\boring32.winsock-winsockinit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Win32\boring32.win32-ntdll.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
