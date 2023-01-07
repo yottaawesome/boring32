@@ -7,6 +7,10 @@
 
 `Boring32` is a small static module-only library framework developed as a hobby that provides a number of convenience classes around the Win32 API, with a particular emphasis on asynchronous primitives and functions. `Boring32` provides wrapper classes for Win32 IPC and synchronisation primitives, such as events, mutexes, semaphores, timers, processes, threads, and thread pools, but also provides some additional classes for other things, such as compression, security, WinSock, and more.
 
+## Using
+
+`Boring32` is built as a hobby and isn't intended to be an actual framework for production use. However, it's a useful practical reference for how to use Win32 functions and primitives (including some obscure ones), or how you might go about constructing your own wrappers around Win32 primitives. Some of the classes, e.g. `Event`, can be copied over into your own codebases with relatively minor changes. You can also use Boring32 as a launch point to explore some of the more obscure Win32 APIs, such as Windows Imaging Component and Windows Filtering Platform.
+
 ## Building
 
 Building requires Visual Studio 2022 with the _Desktop development with C++_ workload installed. Simply clone this repository and open `src\Boring32.sln` and you should be able to build the project immediately and run the test project `Boring32.Tests`. The built static library is `src\Build\x64\Debug`. Boring32 is built with pure C++20 modules, so any dependent projects need to be able to find the module files. At the moment, these modules are not packaged into a release, but I might do this eventually.
