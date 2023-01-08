@@ -3,6 +3,7 @@ import <win32.hpp>;
 
 namespace Boring32::Win32
 {
+	// https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/managing-memory-sections
 	// https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/nf-wdm-zwmapviewofsection
 	using MapViewOfSection = NTSTATUS(*)(
 		HANDLE          SectionHandle,
