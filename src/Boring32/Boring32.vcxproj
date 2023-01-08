@@ -303,6 +303,7 @@
     <ClCompile Include="Util\boring32.util.ixx" />
     <ClCompile Include="Util\boring32.util-switcher.ixx" />
     <ClCompile Include="Util\boring32.util-switcher.cpp" />
+    <ClCompile Include="Win32\boring32.win32-defs.ixx" />
     <ClCompile Include="Win32\boring32.win32-ntdll.cpp" />
     <ClCompile Include="Win32\boring32.win32-ntdll.ixx" />
     <ClCompile Include="Win32\boring32.win32.ixx" />

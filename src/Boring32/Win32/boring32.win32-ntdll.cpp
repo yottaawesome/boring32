@@ -4,14 +4,15 @@ module;
 
 module boring32.win32:ntdll;
 import boring32.error;
+import <win32.hpp>;
 
 namespace Boring32::Win32
 {
 	NTDLL::NTDLL() 
-	{ 
+	{
 		Map(); 
 	}
-		
+
 	void NTDLL::Map()
 	{
 		HMODULE ntdll = GetModuleHandleW(L"ntdll.dll");
