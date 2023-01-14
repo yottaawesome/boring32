@@ -501,5 +501,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Win32\boring32.win32-defs.ixx" />
+    <ClCompile Include="Logging\boring32.logging.ixx" />
+    <ClCompile Include="Logging\boring32.logging-functions.ixx" />
   </ItemGroup>
 </Project>
