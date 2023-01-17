@@ -2,7 +2,7 @@ export module boring32.sspi:credential;
 import <memory>;
 import <win32.hpp>;
 
-export namespace Boring32::SSPI
+namespace Boring32::SSPI
 {
 	struct CredentialDeleter final
 	{
@@ -14,7 +14,7 @@ export namespace Boring32::SSPI
 	};
 	using CredentialUniquePtr = std::unique_ptr<std::remove_pointer<PCredHandle>::type, CredentialDeleter>;
 
-	class Credential
+	export class Credential
 	{
 		public:
 			virtual ~Credential() = default;

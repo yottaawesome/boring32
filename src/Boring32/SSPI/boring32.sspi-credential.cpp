@@ -20,13 +20,6 @@ namespace Boring32::SSPI
 			.dwVersion = SCHANNEL_CRED_VERSION,
 			.grbitEnabledProtocols = SP_PROT_TLS1,
 			.dwFlags = SCH_CRED_NO_DEFAULT_CREDS | SCH_CRED_MANUAL_CRED_VALIDATION
-			// The SCH_CRED_MANUAL_CRED_VALIDATION flag is specified because
-			// this sample verifies the server certificate manually.
-			// Applications that expect to run on WinNT, Win9x, or WinME
-			// should specify this flag and also manually verify the server
-			// certificate. Applications running on newer versions of Windows can
-			// leave off this flag, in which case the InitializeSecurityContext
-			// function will validate the server certificate automatically.
 		};
 		TimeStamp tsExpiry;
 
@@ -45,7 +38,11 @@ namespace Boring32::SSPI
 		);
 		if (status != SEC_E_OK)
 		{
-			throw Error::Boring32Error("AcquireCredentialsHandleW() failed");
+			throw Error::Boring32Error(
+				"AcquireCredentialsHandleW() failed with code {:#X}",
+				std::source_location::current(),
+				status
+			);
 		}
 		m_credHandle = std::move(creds);
 	}
