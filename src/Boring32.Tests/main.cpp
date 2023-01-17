@@ -35,6 +35,7 @@ import boring32.async;
 import boring32.wirelesslan;
 import boring32.computer;
 import boring32.networking;
+import boring32.sspi;
 
 struct Test
 {
@@ -631,9 +632,9 @@ void ArgsTest(message_and_location m1, Args...args)
 int main(int argc, char** args) try
 {
 	//OP i(1,1);
-	ArgsTest("HAHAHA what", 7);
-
-	throw Boring32::Error::Boring32Error("A {}", std::source_location::current(), 1);	
+	/*ArgsTest("HAHAHA what", 7);
+	throw Boring32::Error::Boring32Error("A {}", std::source_location::current(), 1);	*/
+	Boring32::SSPI::Credential c;
 }
 catch (const std::exception& ex)
 {

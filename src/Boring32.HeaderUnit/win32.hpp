@@ -43,3 +43,8 @@
 #include <xaudio2.h>
 #include <winhttp.h>
 #include <ws2tcpip.h>
+#include <Schnlsp.h>
+// Must be defined for security.h
+// see https://stackoverflow.com/questions/11561475/sspi-header-file-fatal-error
+#define SECURITY_WIN32
+#include <security.h>

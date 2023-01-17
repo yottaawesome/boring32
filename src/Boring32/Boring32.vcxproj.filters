@@ -503,5 +503,10 @@
     <ClCompile Include="Win32\boring32.win32-defs.ixx" />
     <ClCompile Include="Logging\boring32.logging.ixx" />
     <ClCompile Include="Logging\boring32.logging-functions.ixx" />
+    <ClCompile Include="SSPI\boring32.sspi.ixx" />
+    <ClCompile Include="SSPI\boring32.sspi-credential.ixx" />
+    <ClCompile Include="SSPI\boring32.sspi-credential.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
