@@ -12,25 +12,24 @@ namespace Boring32::SSPI
 			FreeCredentialsHandle(handle);
 		}
 	};
-	using CredentialUniquePtr = std::unique_ptr<std::remove_pointer<PCredHandle>::type, CredentialDeleter>;
+	using CredentialUniquePtr = std::unique_ptr<CredHandle, CredentialDeleter>;
 
 	export class Credential
 	{
 		public:
 			virtual ~Credential() = default;
-			Credential();
 			Credential(const Credential&) = delete;
 			Credential(Credential&&) noexcept = default;
+			Credential();
 
 		public:
 			virtual Credential& operator=(const Credential&) = delete;
 			virtual Credential& operator=(Credential&&) noexcept = default;
 
 		protected:
-			void Create();
+			virtual void Create();
 
 		protected:
 			CredentialUniquePtr m_credHandle;
-
 	};
 }
