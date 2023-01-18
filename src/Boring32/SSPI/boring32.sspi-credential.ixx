@@ -28,6 +28,7 @@ namespace Boring32::SSPI
 
 		protected:
 			virtual void Create();
+			virtual void Create2();
 
 		protected:
 			CredentialUniquePtr m_credHandle;

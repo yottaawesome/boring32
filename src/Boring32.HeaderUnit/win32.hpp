@@ -43,6 +43,9 @@
 #include <xaudio2.h>
 #include <winhttp.h>
 #include <ws2tcpip.h>
+// See https://learn.microsoft.com/en-us/windows/win32/api/schannel/ns-schannel-sch_credentials
+#define SCHANNEL_USE_BLACKLISTS
+#include <schannel.h>
 #include <Schnlsp.h>
 // Must be defined for security.h
 // see https://stackoverflow.com/questions/11561475/sspi-header-file-fatal-error
