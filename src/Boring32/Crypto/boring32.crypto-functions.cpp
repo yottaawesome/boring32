@@ -19,12 +19,13 @@ namespace Boring32::Crypto
 		const std::wstring& description
 	)
 	{
-		DATA_BLOB dataIn;
-		dataIn.pbData = reinterpret_cast<BYTE*>(const_cast<std::byte*>(&data[0]));
-		dataIn.cbData = static_cast<DWORD>(data.size());
-
+		DATA_BLOB dataIn{
+			.cbData = static_cast<DWORD>(data.size()),
+			.pbData = reinterpret_cast<BYTE*>(const_cast<std::byte*>(&data[0]))
+		};
+		
 		DATA_BLOB additionalEntropy{ 0 };
-		if (password.empty() == false)
+		if (!password.empty())
 		{
 			additionalEntropy.pbData = reinterpret_cast<BYTE*>(const_cast<wchar_t*>(&password[0]));
 			additionalEntropy.cbData = static_cast<DWORD>(password.size()*sizeof(wchar_t));
@@ -49,8 +50,11 @@ namespace Boring32::Crypto
 			0,							// Flags.
 			&encryptedBlob				// Receives the encrypted information.
 		);
-		if (succeeded == false)
-			throw Error::Win32Error("CryptProtectData() failed", GetLastError());
+		if (!succeeded)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("CryptProtectData() failed", lastError);
+		}
 
 		// Should we really return std::byte instead of Windows' BYTE?
 		// Using std::byte means we'll need to cast at the API call.
@@ -89,10 +93,10 @@ namespace Boring32::Crypto
 		encryptedBlob.cbData = (DWORD)encryptedData.size();
 
 		DATA_BLOB additionalEntropy{ 0 };
-		if (password.empty() == false)
+		if (!password.empty())
 		{
-			additionalEntropy.pbData = (BYTE*)&password[0];
-			additionalEntropy.cbData = (DWORD)password.size() * sizeof(wchar_t);
+			additionalEntropy.pbData = reinterpret_cast<BYTE*>(const_cast<wchar_t*>(&password[0]));
+			additionalEntropy.cbData = static_cast<DWORD>(password.size() * sizeof(wchar_t));
 		}
 
 		DATA_BLOB decryptedBlob;
@@ -112,8 +116,11 @@ namespace Boring32::Crypto
 			0,							// Flags
 			&decryptedBlob				// Receives the decrypted data
 		);
-		if (succeeded == false)
-			throw Error::Win32Error("CryptUnprotectData() failed", GetLastError());
+		if (!succeeded)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("CryptUnprotectData() failed", lastError);
+		}
 
 		if (descrOut)
 		{
@@ -369,24 +376,30 @@ namespace Boring32::Crypto
 			&encoded,
 			nullptr
 		);
-		if (succeeded == false)
-			throw Error::Win32Error("CertStrToNameW() failed", GetLastError());
+		if (!succeeded)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("CertStrToNameW() failed", lastError);
+		}
 
-		std::vector<std::byte> byte(encoded);
+		std::vector<std::byte> bytes(encoded);
 		succeeded = CertStrToNameW(
 			X509_ASN_ENCODING,
 			name.c_str(),
 			flags,
 			nullptr,
-			(BYTE*)&byte[0],
+			reinterpret_cast<BYTE*>(&bytes[0]),
 			&encoded,
 			nullptr
 		);
-		if (succeeded == false)
-			throw Error::Win32Error("CertStrToNameW() failed", GetLastError());
-		byte.resize(encoded);
-
-		return byte;
+		if (!succeeded)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("CertStrToNameW() failed", lastError);
+		}
+			
+		bytes.resize(encoded);
+		return bytes;
 	}
 
 	std::wstring FormatAsnNameBlob(
