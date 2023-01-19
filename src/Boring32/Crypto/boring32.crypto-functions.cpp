@@ -206,19 +206,19 @@ namespace Boring32::Crypto
 		const DWORD flags
 	)
 	{
-		if (key.GetHandle() == nullptr)
+		if (!key.GetHandle())
 			throw Error::Boring32Error("key is null");
 
 		// IV is optional
 		PUCHAR pIV = nullptr;
 		ULONG ivSize = 0;
-		if (iv.empty() == false)
+		if (!iv.empty())
 		{
 			// Do all cipher algs require this?
 			if (iv.size() != blockByteLength)
 				throw Error::Boring32Error("IV must be the same size as the AES block length");
-			pIV = (PUCHAR)&iv[0];
-			ivSize = (ULONG)iv.size();
+			pIV = reinterpret_cast<PUCHAR>(const_cast<std::byte*>(&iv[0]));
+			ivSize = static_cast<ULONG>(iv.size());
 		}
 
 		// Determine the byte size of the decrypted data
@@ -226,8 +226,8 @@ namespace Boring32::Crypto
 		// https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptdecrypt
 		NTSTATUS status = BCryptDecrypt(
 			key.GetHandle(),
-			(PUCHAR)&cypherText[0],
-			(ULONG)cypherText.size(),
+			reinterpret_cast<PUCHAR>(const_cast<std::byte*>(&cypherText[0])),
+			static_cast<ULONG>(cypherText.size()),
 			nullptr,
 			pIV,
 			ivSize,
@@ -236,24 +236,24 @@ namespace Boring32::Crypto
 			&cbData,
 			flags
 		);
-		if (BCRYPT_SUCCESS(status) == false)
+		if (!BCRYPT_SUCCESS(status))
 			throw Error::NtStatusError("BCryptDecrypt() failed to count bytes", status);
 
 		// Actually do the decryption
 		std::vector<std::byte> plainText(cbData, std::byte{ 0 });
 		status = BCryptDecrypt(
 			key.GetHandle(),
-			(PUCHAR)&cypherText[0],
-			(ULONG)cypherText.size(),
+			reinterpret_cast<PUCHAR>(const_cast<std::byte*>(&cypherText[0])),
+			static_cast<ULONG>(cypherText.size()),
 			nullptr,
 			pIV,
 			ivSize,
-			(PUCHAR)&plainText[0],
-			(ULONG)plainText.size(),
+			reinterpret_cast<PUCHAR>(&plainText[0]),
+			static_cast<ULONG>(plainText.size()),
 			&cbData,
 			flags
 		);
-		if (BCRYPT_SUCCESS(status) == false)
+		if (!BCRYPT_SUCCESS(status))
 			throw Error::NtStatusError("BCryptDecrypt() failed to decrypt", status);
 
 		plainText.resize(cbData);
