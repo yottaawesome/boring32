@@ -339,7 +339,7 @@ namespace Boring32::Crypto
 			nullptr,
 			nullptr
 		);
-		if (succeeded == false)
+		if (!succeeded)
 			throw Error::Win32Error("CryptStringToBinaryW() failed when calculating size");
 
 		std::vector<std::byte> returnVal(byteSize);
@@ -347,12 +347,12 @@ namespace Boring32::Crypto
 			&base64[0],
 			0,
 			CRYPT_STRING_BASE64,
-			(BYTE*)&returnVal[0],
+			reinterpret_cast<BYTE*>(&returnVal[0]),
 			&byteSize,
 			nullptr,
 			nullptr
 		);
-		if (succeeded == false)
+		if (!succeeded)
 			throw Error::Win32Error("CryptStringToBinaryW() failed when decoding");
 
 		returnVal.resize(byteSize);
@@ -410,7 +410,7 @@ namespace Boring32::Crypto
 		// https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certnametostrw
 		DWORD characterSize = CertNameToStrW(
 			X509_ASN_ENCODING,
-			(CERT_NAME_BLOB*)&certName,
+			const_cast<CERT_NAME_BLOB*>(&certName),
 			format,
 			nullptr,
 			0
@@ -421,10 +421,10 @@ namespace Boring32::Crypto
 		std::wstring name(characterSize, '\0');
 		characterSize = CertNameToStrW(
 			X509_ASN_ENCODING,
-			(CERT_NAME_BLOB*)&certName,
+			const_cast<CERT_NAME_BLOB*>(&certName),
 			format,
 			&name[0],
-			(DWORD)name.size()
+			static_cast<DWORD>(name.size())
 		);
 		name.pop_back(); // remove excess null character
 
