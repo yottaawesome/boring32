@@ -19,5 +19,8 @@ export namespace Boring32::Win32
 
 		private:
 			MapViewOfSection m_mapViewOfSection;
+			QuerySystemInformation m_querySystemInformation;
+			DuplicateObject m_duplicateObject;
+			QueryObject m_queryObject;
 	};
 }

@@ -57,4 +57,32 @@ namespace Boring32::Win32
 	using Close = NTSTATUS (*)(
 		HANDLE Handle
 	);
+	
+	// https://learn.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntquerysysteminformation
+	using QuerySystemInformation = NTSTATUS(NTAPI*)(
+		ULONG SystemInformationClass,
+		PVOID SystemInformation,
+		ULONG SystemInformationLength,
+		PULONG ReturnLength
+	);
+
+	// https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/ntifs/nf-ntifs-zwduplicateobject
+	using DuplicateObject = NTSTATUS(NTAPI*)(
+		HANDLE SourceProcessHandle,
+		HANDLE SourceHandle,
+		HANDLE TargetProcessHandle,
+		PHANDLE TargetHandle,
+		ACCESS_MASK DesiredAccess,
+		ULONG Attributes,
+		ULONG Options
+	);
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntqueryobject
+	using QueryObject = NTSTATUS(NTAPI*)(
+		HANDLE ObjectHandle,
+		ULONG ObjectInformationClass,
+		PVOID ObjectInformation,
+		ULONG ObjectInformationLength,
+		PULONG ReturnLength
+	);
 }

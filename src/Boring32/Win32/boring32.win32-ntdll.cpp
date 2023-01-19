@@ -28,5 +28,26 @@ namespace Boring32::Win32
 			const auto lastError = GetLastError();
 			throw Error::Win32Error("GetProcAddress() failed", lastError);
 		}
+
+		m_querySystemInformation = (QuerySystemInformation)GetProcAddress(ntdll, "NtQuerySystemInformation");
+		if (!m_querySystemInformation)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("GetProcAddress() failed", lastError);
+		}
+		
+		m_duplicateObject = (DuplicateObject)GetProcAddress(ntdll, "NtDuplicateObject");
+		if (!m_duplicateObject)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("GetProcAddress() failed", lastError);
+		}
+
+		m_queryObject = (QueryObject)GetProcAddress(ntdll, "NtQueryObject");
+		if (!m_queryObject)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("GetProcAddress() failed", lastError);
+		}
 	}
 }
