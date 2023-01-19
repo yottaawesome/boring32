@@ -200,12 +200,17 @@ namespace Boring32::RAII
 
 	bool Win32Handle::HandleIsInheritable(const HANDLE handle)
 	{
-		if (handle == nullptr || handle == INVALID_HANDLE_VALUE)
+		if (!handle)
+			return false;
+		if (handle == INVALID_HANDLE_VALUE)
 			return false;
 
 		DWORD flags = 0;
 		if (!GetHandleInformation(handle, &flags))
-			throw Error::Win32Error("GetHandleInformation() failed", GetLastError());
+		{
+			const DWORD lastError = GetLastError();
+			throw Error::Win32Error("GetHandleInformation() failed", lastError);
+		}
 		return flags & HANDLE_FLAG_INHERIT;
 	}
 
@@ -217,7 +222,7 @@ namespace Boring32::RAII
 			return INVALID_HANDLE_VALUE;
 
 		HANDLE duplicateHandle = nullptr;
-		bool succeeded = DuplicateHandle(
+		const bool succeeded = DuplicateHandle(
 			GetCurrentProcess(),
 			handle,
 			GetCurrentProcess(),
