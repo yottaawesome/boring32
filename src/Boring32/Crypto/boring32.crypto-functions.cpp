@@ -265,29 +265,29 @@ namespace Boring32::Crypto
 		// Determine the required size -- this includes the null terminator
 		DWORD size = 0;
 		bool succeeded = CryptBinaryToStringA(
-			(BYTE*)&bytes[0],
-			(DWORD)bytes.size(),
+			reinterpret_cast<BYTE*>(const_cast<std::byte*>(&bytes[0])),
+			static_cast<DWORD>(bytes.size()),
 			CRYPT_STRING_BASE64 | CRYPT_STRING_NOCRLF,
 			nullptr,
 			&size
 		);
-		if (succeeded == false)
+		if (!succeeded)
 			throw Error::Win32Error("CryptBinaryToStringA() failed when calculating size");
 		if (size == 0)
 			return "";
 
 		std::string returnVal(size, L'\0');
 		succeeded = CryptBinaryToStringA(
-			(BYTE*)&bytes[0],
-			(DWORD)bytes.size(),
+			reinterpret_cast<BYTE*>(const_cast<std::byte*>(&bytes[0])),
+			static_cast<DWORD>(bytes.size()),
 			CRYPT_STRING_BASE64 | CRYPT_STRING_NOCRLF,
-			(LPSTR)&returnVal[0],
+			static_cast<LPSTR>(&returnVal[0]),
 			&size
 		);
-		if (succeeded == false)
+		if (!succeeded)
 			throw Error::Win32Error("CryptBinaryToStringA() failed when encoding");
 		// Remove terminating null character
-		if (returnVal.empty() == false)
+		if (!returnVal.empty())
 			returnVal.pop_back();
 
 		return returnVal;
