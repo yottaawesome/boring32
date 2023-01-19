@@ -146,18 +146,18 @@ namespace Boring32::Crypto
 		const DWORD flags
 	)
 	{
-		if (key.GetHandle() == nullptr)
+		if (!key.GetHandle())
 			throw Error::Boring32Error("key is null");
 
 		// IV is optional
 		PUCHAR pIV = nullptr;
 		ULONG ivSize = 0;
-		if (iv.empty() == false)
+		if (!iv.empty())
 		{
 			if (iv.size() != blockByteLength)
 				throw Error::Boring32Error("IV must be the same size as the AES block lenth");
-			pIV = (PUCHAR)&iv[0];
-			ivSize = (ULONG)iv.size();
+			pIV = reinterpret_cast<PUCHAR>(const_cast<std::byte*>(&iv[0]));
+			ivSize = static_cast<ULONG>(iv.size());
 		}
 
 		// Determine the byte size of the encrypted data
@@ -165,8 +165,8 @@ namespace Boring32::Crypto
 		// https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptencrypt
 		NTSTATUS status = BCryptEncrypt(
 			key.GetHandle(),
-			(PUCHAR)&plainText[0],
-			(ULONG)plainText.size(),
+			reinterpret_cast<PUCHAR>(const_cast<std::byte*>(&plainText[0])),
+			static_cast<ULONG>(plainText.size()),
 			nullptr,
 			pIV,
 			ivSize,
@@ -175,24 +175,24 @@ namespace Boring32::Crypto
 			&cbData,
 			flags
 		);
-		if (BCRYPT_SUCCESS(status) == false)
+		if (!BCRYPT_SUCCESS(status))
 			throw Error::NtStatusError("BCryptEncrypt() failed to count bytes", status);
 
 		// Actually do the encryption
 		std::vector<std::byte> cypherText(cbData, std::byte{ 0 });
 		status = BCryptEncrypt(
 			key.GetHandle(),
-			(PUCHAR)&plainText[0],
-			(ULONG)plainText.size(),
+			reinterpret_cast<PUCHAR>(const_cast<std::byte*>(&plainText[0])),
+			static_cast<ULONG>(plainText.size()),
 			nullptr,
 			pIV,
 			ivSize,
-			(PUCHAR)&cypherText[0],
-			(ULONG)cypherText.size(),
+			reinterpret_cast<PUCHAR>(&cypherText[0]),
+			static_cast<ULONG>(cypherText.size()),
 			&cbData,
 			flags
 		);
-		if (BCRYPT_SUCCESS(status) == false)
+		if (!BCRYPT_SUCCESS(status))
 			throw Error::NtStatusError("BCryptEncrypt() failed to encrypt", status);
 
 		return cypherText;
