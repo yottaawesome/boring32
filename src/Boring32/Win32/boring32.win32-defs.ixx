@@ -77,7 +77,20 @@ namespace Boring32::Win32
 		ULONG Options
 	);
 
-	// https://learn.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntqueryobject
+	// See https://learn.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntqueryobject
+	struct PUBLIC_OBJECT_BASIC_INFORMATION
+	{
+		ULONG Attributes;
+		ACCESS_MASK GrantedAccess;
+		ULONG HandleCount;
+		ULONG PointerCount;
+		ULONG Reserved[10];    // reserved for internal use
+	};
+	struct PUBLIC_OBJECT_TYPE_INFORMATION
+	{
+		UNICODE_STRING TypeName;
+		ULONG Reserved[22];    // reserved for internal use
+	};
 	using QueryObject = NTSTATUS(NTAPI*)(
 		HANDLE ObjectHandle,
 		ULONG ObjectInformationClass,
