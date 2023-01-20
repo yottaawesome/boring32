@@ -23,6 +23,11 @@ namespace Boring32::FileSystem
 		m_fileHandle = nullptr;
 	}
 
+	HANDLE File::GetHandle() const noexcept
+	{
+		return *m_fileHandle;
+	}
+
 	void File::InternalOpen()
 	{
 		if (m_fileName.empty())
@@ -31,6 +36,9 @@ namespace Boring32::FileSystem
 		m_fileHandle = CreateFileW(
 			m_fileName.c_str(),				// lpFileName
 			GENERIC_READ | GENERIC_WRITE,	// dwDesiredAccess
+											// https://learn.microsoft.com/en-us/windows/win32/secauthz/generic-access-rights
+											// https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights
+											// https://learn.microsoft.com/en-us/windows/win32/fileio/file-access-rights-constants
 			0,								// dwShareMode
 			nullptr,						// lpSecurityAttributes
 			OPEN_ALWAYS,					// dwCreationDisposition

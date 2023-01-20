@@ -107,4 +107,23 @@ namespace Boring32::FileSystem
 			throw Error::Win32Error("CreateDirectoryW() failed", lastError);
 		}
 	}
+
+	void MoveNamedFile(
+		const std::wstring& oldFile,
+		const std::wstring& newFile,
+		unsigned flags
+	)
+	{
+		if (oldFile.empty())
+			throw Error::Boring32Error("oldFile cannot be empty");
+		if (newFile.empty())
+			throw Error::Boring32Error("newFile cannot be empty");
+
+		// https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-movefileexw
+		if (!MoveFileEx(oldFile.c_str(), newFile.c_str(), flags))
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("MoveFileEx() failed", lastError);
+		}
+	}
 }

@@ -1,6 +1,7 @@
 export module boring32.filesystem:file;
 import boring32.raii;
 import <string>;
+import <win32.hpp>;
 
 export namespace Boring32::FileSystem
 {
@@ -13,6 +14,7 @@ export namespace Boring32::FileSystem
 
 		public:
 			virtual void Close();
+			virtual HANDLE GetHandle() const noexcept;
 
 		protected:
 			virtual void InternalOpen();
