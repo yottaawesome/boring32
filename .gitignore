@@ -47,3 +47,4 @@ Intermediate/
 
 node_modules/
 *.pem
+/src/x64
