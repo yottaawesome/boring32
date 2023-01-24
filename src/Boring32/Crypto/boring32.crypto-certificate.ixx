@@ -44,6 +44,7 @@ export namespace Boring32::Crypto
 			virtual CertTimeValidity GetTimeValidity(FILETIME* const ft) const;
 			virtual const FILETIME& GetNotBefore() const;
 			virtual const FILETIME& GetNotAfter() const;
+			virtual DWORD GetPublicKeyBitLength() const;
 
 		public:
 			//virtual std::wstring _GetSubjectName() const;

@@ -252,4 +252,21 @@ namespace Boring32::Crypto
 			throw Error::Boring32Error("m_certContext is nullptr");
 		return m_certContext->pCertInfo->NotAfter;
 	}
+
+	DWORD Certificate::GetPublicKeyBitLength() const
+	{
+		if (!m_certContext)
+			throw Error::Boring32Error("m_certContext is nullptr");
+		// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certgetpublickeylength
+		const DWORD length = CertGetPublicKeyLength(
+			X509_ASN_ENCODING | PKCS_7_ASN_ENCODING,
+			&m_certContext->pCertInfo->SubjectPublicKeyInfo
+		);
+		if (length == 0)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("CertGetPublicKeyLength() failed", lastError);
+		}
+		return length;
+	}
 }
