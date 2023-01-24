@@ -430,4 +430,53 @@ namespace Boring32::Crypto
 
 		return name;
 	}
+
+	std::vector<PCCERT_CHAIN_CONTEXT> FindChainInStore(
+		HCERTSTORE hCertStore,
+		const std::wstring& issuer
+	)
+	{
+		if (!hCertStore)
+			throw Error::Boring32Error("hCertStore cannot be null");
+		if (issuer.empty())
+			throw Error::Boring32Error("issuer cannot be empty string");
+
+		std::vector<PCCERT_CHAIN_CONTEXT> returnValue;
+		std::vector<std::byte> encodedIssuer = EncodeAsnString(issuer);
+		CERT_NAME_BLOB nameBlob{
+			.cbData = static_cast<DWORD>(encodedIssuer.size()),
+			.pbData = reinterpret_cast<BYTE*>(&encodedIssuer[0])
+		};
+		// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_chain_find_by_issuer_para
+		CERT_CHAIN_FIND_BY_ISSUER_PARA findParams{
+			.cbSize = sizeof(findParams),
+			.pszUsageIdentifier = 0, //szOID_PKIX_KP_CLIENT_AUTH,
+			.dwKeySpec = 0,
+			.cIssuer = 1,
+			.rgIssuer = &nameBlob
+		};
+		PCCERT_CHAIN_CONTEXT chain = nullptr;
+		while (true)
+		{
+			// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindchaininstore
+			chain = CertFindChainInStore(
+				hCertStore,
+				X509_ASN_ENCODING,
+				0, // dwFindFlags,
+				CERT_CHAIN_FIND_BY_ISSUER, // dwFindType,
+				&findParams,
+				chain
+			);
+			if (!chain)
+				break;
+			// CertFindChainInStore frees the chain in each call, so we need
+			// to duplicate it to retain a valid handle.
+			PCCERT_CHAIN_CONTEXT duplicate = CertDuplicateCertificateChain(chain);
+			if (!duplicate)
+				throw Error::Win32Error("CertDuplicateCertificateChain() failed");
+			returnValue.push_back(duplicate);
+		}
+
+		return returnValue;
+	}
 }

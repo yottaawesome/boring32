@@ -48,13 +48,13 @@ namespace Boring32::Crypto
 
 	CertificateChain::CertificateChain(
 		const Certificate& contextToBuildFrom,
-		const CertStore& store
+		HCERTSTORE store
 	)
 	:	m_chainContext(nullptr)
 	{
 		GenerateFrom(
 			contextToBuildFrom.GetCert(), 
-			store.GetHandle()
+			store
 		);
 	}
 
@@ -115,34 +115,30 @@ namespace Boring32::Crypto
 		if (m_chainContext == nullptr)
 			throw Error::Boring32Error("m_chainContext is null");
 		
-		if (chainIndex >= m_chainContext->cChain)
-			throw Error::Boring32Error(
-				std::format(
-					"Expected index to be less than {} but got an index of {}",
-					m_chainContext->cChain,
-					chainIndex
-				));
+		if (chainIndex >= m_chainContext->cChain) throw Error::Boring32Error(
+			std::format(
+				"Expected index to be less than {} but got an index of {}",
+				m_chainContext->cChain,
+				chainIndex
+			)
+		);
 
 		std::vector<Certificate> certsInChain;
 		CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
 		// This probably should never happen, but guard just in case
-		if (simpleChain == nullptr)
-			throw Error::Boring32Error(
-				std::format(
-					"The simpleChain at {} was unexpectedly null",
-					chainIndex
-				));
+		if (!simpleChain) throw Error::Boring32Error(
+			std::format(
+				"The simpleChain at {} was unexpectedly null",
+				chainIndex
+			)
+		);
 
-		for (
-			DWORD certIndexInChain = 0;
-			certIndexInChain < simpleChain->cElement;
-			certIndexInChain++
-		)
+		for (DWORD certIndexInChain = 0; certIndexInChain < simpleChain->cElement; certIndexInChain++)
 			certsInChain.emplace_back(
 				simpleChain->rgpElement[certIndexInChain]->pCertContext,
 				false
 			);
-
+			
 		return certsInChain;
 	}
 
@@ -217,7 +213,7 @@ namespace Boring32::Crypto
 		return { simpleChain->rgpElement[simpleChain->cElement - 1]->pCertContext, false };
 	}
 
-	CertStore CertificateChain::ChainToStore(const DWORD chainIndex) const
+	/*CertStore CertificateChain::ChainToStore(const DWORD chainIndex) const
 	{
 		std::vector<Certificate> certificatesInChain = GetCertChainAt(chainIndex);
 		CertStore temporaryStore(L"", CertStoreType::InMemory);
@@ -225,7 +221,7 @@ namespace Boring32::Crypto
 			temporaryStore.ImportCert(cert.GetCert());
 		
 		return temporaryStore;
-	}
+	}*/
 
 	CertificateChain& CertificateChain::Copy(const CertificateChain& other)
 	{

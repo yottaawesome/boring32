@@ -61,4 +61,8 @@ export namespace Boring32::Crypto
 		const CERT_NAME_BLOB& certName,
 		const DWORD format
 	);
+	std::vector<PCCERT_CHAIN_CONTEXT> FindChainInStore(
+		HCERTSTORE hCertStore,
+		const std::wstring& issuer
+	);
 }

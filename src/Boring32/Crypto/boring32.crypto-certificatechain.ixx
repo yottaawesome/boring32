@@ -1,6 +1,5 @@
 export module boring32.crypto:certificatechain;
 import :certificate;
-import :certstore;
 import <vector>;
 import <win32.hpp>;
 
@@ -37,7 +36,7 @@ export namespace Boring32::Crypto
 			);
 			CertificateChain(
 				const Certificate& contextToBuildFrom, 
-				const CertStore& store
+				HCERTSTORE store
 			);
 
 		public:
@@ -59,7 +58,7 @@ export namespace Boring32::Crypto
 			virtual Certificate GetLastCertAt(
 				const DWORD chainIndex
 			) const;
-			virtual CertStore ChainToStore(const DWORD chainIndex) const;
+			/*virtual CertStore ChainToStore(const DWORD chainIndex) const;*/
 
 		protected:
 			virtual CertificateChain& Copy(const CertificateChain& other);
