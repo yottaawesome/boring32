@@ -65,4 +65,8 @@ export namespace Boring32::Crypto
 		HCERTSTORE hCertStore,
 		const std::wstring& issuer
 	);
+	PCCERT_CHAIN_CONTEXT GenerateChainFrom(
+		PCCERT_CONTEXT contextToBuildFrom,
+		HCERTSTORE store
+	);
 }

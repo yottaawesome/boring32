@@ -4,6 +4,7 @@ module;
 
 module boring32.crypto:certificatechain;
 import boring32.error;
+import :functions;
 import <string>;
 import <format>;
 
@@ -15,13 +16,11 @@ namespace Boring32::Crypto
 	}
 
 	CertificateChain::CertificateChain(const CertificateChain& other)
-	:	m_chainContext(nullptr)
 	{
 		Copy(other);
 	}
 
 	CertificateChain::CertificateChain(CertificateChain&& other) noexcept
-	:	m_chainContext(nullptr)
 	{
 		Move(other);
 	}
@@ -30,7 +29,6 @@ namespace Boring32::Crypto
 		PCCERT_CHAIN_CONTEXT chainContext,
 		const bool takeExclusiveOwnership
 	)
-	:	m_chainContext(nullptr)
 	{
 		m_chainContext = takeExclusiveOwnership
 			? chainContext
@@ -38,10 +36,9 @@ namespace Boring32::Crypto
 	}
 
 	CertificateChain::CertificateChain(const Certificate& contextToBuildFrom)
-	:	m_chainContext(nullptr)
 	{
-		GenerateFrom(
-			contextToBuildFrom.GetCert(), 
+		m_chainContext = GenerateChainFrom(
+			contextToBuildFrom.GetCert(),
 			nullptr
 		);
 	}
@@ -50,10 +47,9 @@ namespace Boring32::Crypto
 		const Certificate& contextToBuildFrom,
 		HCERTSTORE store
 	)
-	:	m_chainContext(nullptr)
 	{
-		GenerateFrom(
-			contextToBuildFrom.GetCert(), 
+		m_chainContext = GenerateChainFrom(
+			contextToBuildFrom.GetCert(),
 			store
 		);
 	}
@@ -242,43 +238,5 @@ namespace Boring32::Crypto
 		other.m_chainContext = nullptr;
 
 		return *this;
-	}
-
-	void CertificateChain::GenerateFrom(
-		PCCERT_CONTEXT contextToBuildFrom,
-		HCERTSTORE store
-	)
-	{
-		if (!contextToBuildFrom)
-			throw Error::Boring32Error("m_chainContext is null");
-
-		CERT_ENHKEY_USAGE        EnhkeyUsage;
-		CERT_USAGE_MATCH         CertUsage;
-		EnhkeyUsage.cUsageIdentifier = 0;
-		EnhkeyUsage.rgpszUsageIdentifier = nullptr;
-		CertUsage.dwType = USAGE_MATCH_TYPE_AND;
-		CertUsage.Usage = EnhkeyUsage;
-		CERT_CHAIN_PARA certChainParams{
-			.cbSize = sizeof(certChainParams),
-			.RequestedUsage = CertUsage
-		};
-
-		// https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certgetcertificatechain
-		// https://docs.microsoft.com/en-us/windows/win32/seccrypto/example-c-program-creating-a-certificate-chain
-		const bool succeeded = CertGetCertificateChain(
-			nullptr,
-			contextToBuildFrom,
-			nullptr,
-			store,
-			&certChainParams,
-			CERT_CHAIN_REVOCATION_CHECK_CHAIN_EXCLUDE_ROOT,
-			nullptr,
-			&m_chainContext
-		);
-		if (!succeeded)
-		{
-			const auto lastError = GetLastError();
-			throw Error::Win32Error("CertGetCertificateChain() failed", lastError);
-		}
 	}
 }

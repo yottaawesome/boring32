@@ -468,15 +468,61 @@ namespace Boring32::Crypto
 				chain
 			);
 			if (!chain)
-				break;
+				return returnValue;
 			// CertFindChainInStore frees the chain in each call, so we need
 			// to duplicate it to retain a valid handle.
+			// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certduplicatecertificatechain
 			PCCERT_CHAIN_CONTEXT duplicate = CertDuplicateCertificateChain(chain);
 			if (!duplicate)
+			{
+				// For some reason, we've failed to duplicate the chain;
+				// delete the current chain and bail.
+				CertFreeCertificateChain(chain);
 				throw Error::Win32Error("CertDuplicateCertificateChain() failed");
+			}
 			returnValue.push_back(duplicate);
 		}
+	}
 
-		return returnValue;
+	PCCERT_CHAIN_CONTEXT GenerateChainFrom(
+		PCCERT_CONTEXT contextToBuildFrom,
+		HCERTSTORE store
+	)
+	{
+		if (!contextToBuildFrom)
+			throw Error::Boring32Error("contextToBuildFrom is null");
+
+		PCCERT_CHAIN_CONTEXT chainContext = nullptr;
+		CERT_ENHKEY_USAGE enhkeyUsage{
+			.cUsageIdentifier = 0,
+			.rgpszUsageIdentifier = nullptr
+		};
+		CERT_USAGE_MATCH certUsage{
+			.dwType = USAGE_MATCH_TYPE_AND,
+			.Usage = enhkeyUsage
+		};
+		CERT_CHAIN_PARA certChainParams{
+			.cbSize = sizeof(certChainParams),
+			.RequestedUsage = certUsage
+		};
+
+		// https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certgetcertificatechain
+		// https://docs.microsoft.com/en-us/windows/win32/seccrypto/example-c-program-creating-a-certificate-chain
+		const bool succeeded = CertGetCertificateChain(
+			nullptr,
+			contextToBuildFrom,
+			nullptr,
+			store,
+			&certChainParams,
+			CERT_CHAIN_REVOCATION_CHECK_CHAIN_EXCLUDE_ROOT,
+			nullptr,
+			&chainContext
+		);
+		if (!succeeded)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("CertGetCertificateChain() failed", lastError);
+		}
+		return chainContext;
 	}
 }

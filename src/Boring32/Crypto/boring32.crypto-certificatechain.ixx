@@ -63,10 +63,6 @@ export namespace Boring32::Crypto
 		protected:
 			virtual CertificateChain& Copy(const CertificateChain& other);
 			virtual CertificateChain& Move(CertificateChain& other) noexcept;
-			virtual void GenerateFrom(
-				PCCERT_CONTEXT contextToBuildFrom, 
-				HCERTSTORE store
-			);
 
 		protected:
 			PCCERT_CHAIN_CONTEXT m_chainContext = nullptr;
