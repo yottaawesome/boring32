@@ -467,6 +467,8 @@ namespace Boring32::Crypto
 				&findParams,
 				chain
 			);
+			// We assume no further matches were found. CertFindChainInStore() 
+			// does not give any specific indication if it failed or not.
 			if (!chain)
 				return returnValue;
 			// CertFindChainInStore frees the chain in each call, so we need
@@ -475,8 +477,10 @@ namespace Boring32::Crypto
 			PCCERT_CHAIN_CONTEXT duplicate = CertDuplicateCertificateChain(chain);
 			if (!duplicate)
 			{
-				// For some reason, we've failed to duplicate the chain;
-				// delete the current chain and bail.
+				// For some reason, we've failed to duplicate the chain; delete 
+				// the current chain and bail. Like CertFindChainInStore(),
+				// CertDuplicateCertificateChain() does not appear to provide any 
+				// mechanism to determine why it failed.
 				CertFreeCertificateChain(chain);
 				throw Error::Win32Error("CertDuplicateCertificateChain() failed");
 			}
