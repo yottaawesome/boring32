@@ -14,7 +14,6 @@ namespace Boring32::Crypto
 	}
 
 	Certificate::Certificate(PCCERT_CONTEXT certContext, const bool ownedExclusively)
-	:	m_certContext(nullptr)
 	{
 		if (!certContext)
 			return; 
@@ -24,7 +23,6 @@ namespace Boring32::Crypto
 	}
 
 	Certificate::Certificate(const Certificate& other)
-	:	m_certContext(nullptr)
 	{
 		Copy(other);
 	}
@@ -43,7 +41,6 @@ namespace Boring32::Crypto
 	}
 
 	Certificate::Certificate(Certificate&& other) noexcept
-	:	m_certContext(nullptr)
 	{
 		Move(other);
 	}
