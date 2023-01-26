@@ -95,6 +95,9 @@ export namespace Boring32::Crypto
 				const std::wstring& thumbprint
 			) const;
 			virtual CertStoreType GetStoreType() const noexcept;
+			// Note that this function frees the cert. Increase the
+			// cert's reference count if this is not the wanted
+			// behaviour.
 			virtual void DeleteCert(const CERT_CONTEXT* cert);
 			virtual void ImportCert(const CERT_CONTEXT* cert);
 			virtual void ImportCertsFromFile(

@@ -426,6 +426,7 @@ namespace Boring32::Crypto
 		if (!m_certStore)
 			throw Error::Boring32Error("m_certStore is nullptr");
 
+		// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certdeletecertificatefromstore
 		if (!CertDeleteCertificateFromStore(cert))
 		{
 			const auto lastError = GetLastError();

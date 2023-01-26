@@ -8,11 +8,6 @@ import :functions;
 
 namespace Boring32::Crypto
 {
-	Certificate::~Certificate()
-	{
-		Close();
-	}
-
 	Certificate::Certificate(PCCERT_CONTEXT certContext, const bool ownedExclusively)
 	{
 		if (!certContext)
@@ -265,5 +260,20 @@ namespace Boring32::Crypto
 			throw Error::Win32Error("CertGetPublicKeyLength() failed", lastError);
 		}
 		return length;
+	}
+
+	void Certificate::IncreaseRefCount() const noexcept
+	{
+		if (m_certContext)
+		{
+			CertDuplicateCertificateContext(m_certContext);
+		}
+	}
+
+	PCCERT_CONTEXT Certificate::Duplicate() const noexcept
+	{
+		return m_certContext 
+			? CertDuplicateCertificateContext(m_certContext)
+			: nullptr;
 	}
 }
