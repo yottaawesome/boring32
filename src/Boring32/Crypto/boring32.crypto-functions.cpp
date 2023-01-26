@@ -529,4 +529,32 @@ namespace Boring32::Crypto
 		}
 		return chainContext;
 	}
+
+	void ImportCertToStore(const HCERTSTORE store, const CRYPTUI_WIZ_IMPORT_SRC_INFO& info)
+	{
+		if (!store)
+			throw Error::Boring32Error("store is nullptr");
+
+		constexpr DWORD CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS = 0x0002;
+		constexpr DWORD flags = CRYPTUI_WIZ_NO_UI 
+			| CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS
+			| CRYPTUI_WIZ_IMPORT_ALLOW_CERT;
+
+		// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/nf-cryptuiapi-cryptuiwizimport
+		const bool succeeded = CryptUIWizImport(
+			flags,
+			nullptr,
+			nullptr,
+			&info,
+			store
+		);
+		if (!succeeded)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error(
+				"CryptUIWizImport() failed",
+				lastError
+			);
+		}
+	}
 }

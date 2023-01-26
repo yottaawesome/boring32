@@ -117,7 +117,6 @@ export namespace Boring32::Crypto
 				const DWORD searchFlag, 
 				const void* arg
 			) const;
-			virtual void InternalImport(const CRYPTUI_WIZ_IMPORT_SRC_INFO& info);
 
 		protected:
 			HCERTSTORE m_certStore = nullptr;

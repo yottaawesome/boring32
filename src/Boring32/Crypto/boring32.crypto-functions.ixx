@@ -69,4 +69,8 @@ export namespace Boring32::Crypto
 		PCCERT_CONTEXT contextToBuildFrom,
 		HCERTSTORE store
 	);
+	void ImportCertToStore(
+		const HCERTSTORE store, 
+		const CRYPTUI_WIZ_IMPORT_SRC_INFO& info
+	);
 }
