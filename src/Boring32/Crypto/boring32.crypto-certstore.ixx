@@ -67,34 +67,34 @@ export namespace Boring32::Crypto
 
 		public:
 			virtual void Close() noexcept;
-			virtual HCERTSTORE GetHandle() const noexcept;
-			virtual const std::wstring& GetName() const noexcept;
-			virtual std::vector<Certificate> GetAll() const;
-			virtual Certificate GetCertByFormattedSubject(
+			virtual [[nodiscard]] HCERTSTORE GetHandle() const noexcept;
+			virtual [[nodiscard]] const std::wstring& GetName() const noexcept;
+			virtual [[nodiscard]] std::vector<Certificate> GetAll() const;
+			virtual [[nodiscard]] Certificate GetCertByFormattedSubject(
 				const std::wstring& subjectRdn
 			) const;
-			virtual Certificate GetCertBySubjectCn(
+			virtual [[nodiscard]] Certificate GetCertBySubjectCn(
 				const std::wstring& subjectCn
 			) const;
-			virtual Certificate GetCertBySubstringSubject(
+			virtual [[nodiscard]] Certificate GetCertBySubstringSubject(
 				const std::wstring& subjectName
 			) const;
-			virtual Certificate GetCertByExactSubject(
+			virtual [[nodiscard]] Certificate GetCertByExactSubject(
 				const std::wstring& subjectName
 			) const;
-			virtual Certificate GetCertByExactSubject(
+			virtual [[nodiscard]] Certificate GetCertByExactSubject(
 				const std::vector<std::byte>& subjectName
 			) const;
-			virtual Certificate GetCertByExactIssuer(
+			virtual [[nodiscard]] Certificate GetCertByExactIssuer(
 				const std::wstring& subjectName
 			) const;
-			virtual Certificate GetCertBySubstringIssuerName(
+			virtual [[nodiscard]] Certificate GetCertBySubstringIssuerName(
 				const std::wstring& issuerName
 			) const;
-			virtual Certificate GetCertByByBase64Signature(
+			virtual [[nodiscard]] Certificate GetCertByByBase64Signature(
 				const std::wstring& thumbprint
 			) const;
-			virtual CertStoreType GetStoreType() const noexcept;
+			virtual [[nodiscard]] CertStoreType GetStoreType() const noexcept;
 			// Note that this function frees the cert. Increase the
 			// cert's reference count if this is not the wanted
 			// behaviour.
