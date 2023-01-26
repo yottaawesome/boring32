@@ -31,25 +31,22 @@ export namespace Boring32::Crypto
 
 		public:
 			virtual void Close() noexcept;
-			virtual PCCERT_CONTEXT GetCert() const noexcept;
-			virtual std::wstring GetFormattedSubject(const DWORD format) const;
-			virtual std::wstring GetFormattedIssuer(const DWORD format) const;
-			virtual std::vector<std::byte> GetIssuer() const;
-			virtual std::vector<std::byte> GetSubject() const;
-			virtual std::wstring GetSignature() const;
-			virtual std::wstring GetSignatureHashCngAlgorithm() const;
 			virtual void Attach(PCCERT_CONTEXT attachTo);
-			virtual [[nodiscard]] PCCERT_CONTEXT Detach() noexcept;
-			virtual bool IsValidForCurrentDate() const;
-			virtual CertTimeValidity GetTimeValidity(FILETIME* const ft) const;
-			virtual const FILETIME& GetNotBefore() const;
-			virtual const FILETIME& GetNotAfter() const;
-			virtual DWORD GetPublicKeyBitLength() const;
 			virtual void IncreaseRefCount() const noexcept;
+			virtual [[nodiscard]] PCCERT_CONTEXT GetCert() const noexcept;
+			virtual [[nodiscard]] std::wstring GetFormattedSubject(const DWORD format) const;
+			virtual [[nodiscard]] std::wstring GetFormattedIssuer(const DWORD format) const;
+			virtual [[nodiscard]] std::vector<std::byte> GetIssuer() const;
+			virtual [[nodiscard]] std::vector<std::byte> GetSubject() const;
+			virtual [[nodiscard]] std::wstring GetSignature() const;
+			virtual [[nodiscard]] std::wstring GetSignatureHashCngAlgorithm() const;
+			virtual [[nodiscard]] PCCERT_CONTEXT Detach() noexcept;
+			virtual [[nodiscard]] bool IsValidForCurrentDate() const;
+			virtual [[nodiscard]] CertTimeValidity GetTimeValidity(FILETIME* const ft) const;
+			virtual [[nodiscard]] const FILETIME& GetNotBefore() const;
+			virtual [[nodiscard]] const FILETIME& GetNotAfter() const;
+			virtual [[nodiscard]] DWORD GetPublicKeyBitLength() const;
 			virtual [[nodiscard]] PCCERT_CONTEXT Duplicate() const noexcept;
-
-		public:
-			//virtual std::wstring _GetSubjectName() const;
 
 		protected:
 			virtual Certificate& Copy(const Certificate& other);
