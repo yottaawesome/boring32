@@ -29,6 +29,8 @@ namespace Boring32::Crypto
 
 	Certificate& Certificate::Copy(const Certificate& other)
 	{
+		if (this == &other)
+			return *this;
 		Close();
 		if (other.m_certContext)
 			m_certContext = CertDuplicateCertificateContext(other.m_certContext);
