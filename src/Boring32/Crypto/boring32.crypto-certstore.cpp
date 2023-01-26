@@ -20,19 +20,12 @@ namespace Boring32::Crypto
 		Close();
 	}
 
-	CertStore::CertStore()
-	:	m_certStore(nullptr),
-		m_closeOptions(CertStoreCloseOptions::Default),
-		m_storeType(CertStoreType::CurrentUser)
-	{ }
-
 	CertStore::CertStore(
 		const HCERTSTORE certStore, 
 		const CertStoreType storeType,
 		const bool ownedExclusively
 	)
 	:	m_certStore(certStore),
-		m_closeOptions(CertStoreCloseOptions::Default),
 		m_storeType(storeType)
 	{
 		if (certStore)
@@ -62,18 +55,13 @@ namespace Boring32::Crypto
 	}
 
 	CertStore::CertStore(std::wstring storeName)
-	:	m_certStore(nullptr),
-		m_storeName(std::move(storeName)),
-		m_closeOptions(CertStoreCloseOptions::Default),
-		m_storeType(CertStoreType::CurrentUser)
+	:	m_storeName(std::move(storeName))
 	{
 		InternalOpen();
 	}
 
 	CertStore::CertStore(std::wstring storeName, const CertStoreType storeType)
-	:	m_certStore(nullptr),
-		m_storeName(std::move(storeName)),
-		m_closeOptions(CertStoreCloseOptions::Default),
+	:	m_storeName(std::move(storeName)),
 		m_storeType(storeType)
 	{
 		InternalOpen();
@@ -84,8 +72,7 @@ namespace Boring32::Crypto
 		const CertStoreType storeType,
 		const CertStoreCloseOptions closeOptions
 	)
-	:	m_certStore(nullptr),
-		m_storeName(std::move(storeName)),
+	:	m_storeName(std::move(storeName)),
 		m_closeOptions(closeOptions),
 		m_storeType(storeType)
 	{
@@ -93,7 +80,6 @@ namespace Boring32::Crypto
 	}
 
 	CertStore::CertStore(const CertStore& other)
-	:	m_certStore(nullptr)
 	{
 		Copy(other);
 	}
@@ -161,9 +147,10 @@ namespace Boring32::Crypto
 			return;
 		// See https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certclosestore
 		// for additional resource notes under remarks
-		if (CertCloseStore(m_certStore, (DWORD)m_closeOptions) == false)
+		if (!CertCloseStore(m_certStore, (DWORD)m_closeOptions))
 		{
-			Error::Win32Error error("CertCloseStore() failed", GetLastError());
+			const auto lastError = GetLastError();
+			Error::Win32Error error("CertCloseStore() failed", lastError);
 			std::wcerr << error.what() << std::endl;
 		}
 		m_certStore = nullptr;
@@ -213,7 +200,10 @@ namespace Boring32::Crypto
 		}
 		
 		if (!m_certStore)
-			throw Error::Win32Error("CertOpenSystemStoreW() failed", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("CertOpenSystemStoreW() failed", lastError);
+		}
 	}
 
 	HCERTSTORE CertStore::GetHandle() const noexcept
@@ -290,7 +280,9 @@ namespace Boring32::Crypto
 		return {};
 	}
 
-	Certificate CertStore::GetCertByExactSubject(const std::vector<std::byte>& subjectName) const
+	Certificate CertStore::GetCertByExactSubject(
+		const std::vector<std::byte>& subjectName
+	) const
 	{
 		CERT_NAME_BLOB blob{
 			.cbData = (DWORD)subjectName.size(),
@@ -454,7 +446,10 @@ namespace Boring32::Crypto
 		InternalImport(info);
 	}
 
-	void CertStore::ImportCertsFromFile(const std::filesystem::path& path, const std::wstring& password)
+	void CertStore::ImportCertsFromFile(
+		const std::filesystem::path& path, 
+		const std::wstring& password
+	)
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/ns-cryptuiapi-cryptui_wiz_import_src_info
 		const std::wstring resolvedAbsolutePath = std::filesystem::absolute(path);
@@ -480,10 +475,14 @@ namespace Boring32::Crypto
 			CERT_STORE_ADD_REPLACE_EXISTING, 
 			nullptr
 		);
-		if (!succeeded) throw Error::Win32Error(
-			"CertAddCertificateContextToStore() failed", 
-			GetLastError()
-		);
+		if (!succeeded) 
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error(
+				"CertAddCertificateContextToStore() failed",
+				lastError
+			);
+		}
 	}
 
 	void CertStore::InternalImport(const CRYPTUI_WIZ_IMPORT_SRC_INFO& info)
@@ -491,17 +490,25 @@ namespace Boring32::Crypto
 		if (!m_certStore)
 			throw Error::Boring32Error("m_certStore is nullptr");
 
-		constexpr static DWORD CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS = 0x0002;
+		constexpr DWORD CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS = 0x0002;
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/nf-cryptuiapi-cryptuiwizimport
 		const bool succeeded = CryptUIWizImport(
-			CRYPTUI_WIZ_NO_UI | CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS | CRYPTUI_WIZ_IMPORT_ALLOW_CERT,
+			CRYPTUI_WIZ_NO_UI 
+				| CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS 
+				| CRYPTUI_WIZ_IMPORT_ALLOW_CERT,
 			nullptr,
 			nullptr,
 			&info,
 			m_certStore
 		);
-		if (!succeeded) 
-			throw Error::Win32Error("CryptUIWizImport() failed", GetLastError());
+		if (!succeeded)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error(
+				"CryptUIWizImport() failed", 
+				lastError
+			);
+		}
 	}
 }

@@ -32,7 +32,7 @@ export namespace Boring32::Crypto
 	{
 		public:
 			virtual ~CertStore();
-			CertStore();
+			CertStore() = default;
 			CertStore(const CertStore& other);
 			CertStore(CertStore&& other) noexcept;
 		
@@ -120,9 +120,9 @@ export namespace Boring32::Crypto
 			virtual void InternalImport(const CRYPTUI_WIZ_IMPORT_SRC_INFO& info);
 
 		protected:
-			HCERTSTORE m_certStore;
+			HCERTSTORE m_certStore = nullptr;
 			std::wstring m_storeName;
-			CertStoreCloseOptions m_closeOptions;
-			CertStoreType m_storeType;
+			CertStoreCloseOptions m_closeOptions = CertStoreCloseOptions::Default;
+			CertStoreType m_storeType = CertStoreType::CurrentUser;
 	};
 }
