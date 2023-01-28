@@ -5,7 +5,7 @@
 
 ## Introduction
 
-`Boring32` is a small C++20 module-only static library framework developed as a hobby that provides a number of C++ convenience classes and functions around the Win32 (x64) API, with a particular emphasis on asynchronous primitives and functions. `Boring32` provides wrapper classes for Win32 IPC and synchronisation primitives, such as events, mutexes, semaphores, timers, processes, threads, and thread pools, but also provides some additional classes for other things, such as compression, security, WinSock, and more. `Boring32` embraces modern C++ and is written with the latest C++ features and conventions in mind.
+`Boring32` is a small C++23 module-only static library framework developed as a hobby that provides a number of C++ convenience classes and functions around the Win32 (x64) API, with a particular emphasis on asynchronous primitives and functions. `Boring32` provides wrapper classes for Win32 IPC and synchronisation primitives, such as events, mutexes, semaphores, timers, processes, threads, and thread pools, but also provides some additional classes for other things, such as compression, security, WinSock, and more. `Boring32` embraces modern C++ and is written with the latest C++ features and conventions in mind.
 
 ## Using
 
