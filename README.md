@@ -9,7 +9,7 @@
 
 ## Using
 
-`Boring32` is built as a hobby and isn't intended to be an actual framework for production use. However, it's a useful practical reference for how to use Win32 functions and primitives (including some obscure ones), or how you might go about constructing your own wrappers around Win32 primitives. Some of the classes, e.g. `Event`, can be copied over into your own codebases with relatively minor changes. You can also use Boring32 as a launch point to explore some of the more obscure Win32 APIs, such as Windows Imaging Component and Windows Filtering Platform.
+`Boring32` is built as a hobby and isn't intended to be an actual framework for production use. However, it's a useful practical reference for how to use Win32 functions and primitives (including some obscure ones), or how you might go about constructing your own wrappers around Win32 primitives. Some of the classes, e.g. `Event`, can be copied over into your own codebases with relatively minor changes. You can also use `Boring32` as a launch point to explore some of the more obscure Win32 APIs, such as Windows Imaging Component and Windows Filtering Platform.
 
 ## Building
 
