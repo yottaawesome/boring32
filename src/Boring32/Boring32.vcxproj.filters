@@ -508,5 +508,9 @@
     <ClCompile Include="SSPI\boring32.sspi-credential.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SSPI\boring32.sspi-securitycontext.ixx" />
+    <ClCompile Include="SSPI\boring32.sspi-securitycontext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

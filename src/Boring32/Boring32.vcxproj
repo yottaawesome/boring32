@@ -293,7 +293,9 @@
     <ClCompile Include="Services\boring32.services.ixx" />
     <ClCompile Include="SSPI\boring32.sspi-credential.cpp" />
     <ClCompile Include="SSPI\boring32.sspi-credential.ixx" />
+    <ClCompile Include="SSPI\boring32.sspi-securitycontext.cpp" />
     <ClCompile Include="SSPI\boring32.sspi.ixx" />
+    <ClCompile Include="SSPI\boring32.sspi-securitycontext.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-registeredtask.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskfolder.ixx" />
