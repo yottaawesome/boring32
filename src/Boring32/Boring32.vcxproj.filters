@@ -512,5 +512,6 @@
     <ClCompile Include="SSPI\boring32.sspi-securitycontext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MediaFoundation\boring32.mediafoundation.ixx" />
   </ItemGroup>
 </Project>
