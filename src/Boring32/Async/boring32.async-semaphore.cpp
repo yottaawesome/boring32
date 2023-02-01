@@ -17,8 +17,8 @@ namespace Boring32::Async
 
 	Semaphore::Semaphore(
 		const bool isInheritable,
-		const ULONG initialCount,
-		const ULONG maxCount
+		const unsigned long initialCount,
+		const unsigned long maxCount
 	)
 		: m_currentCount(initialCount),
 		m_maxCount(maxCount)
@@ -29,8 +29,8 @@ namespace Boring32::Async
 	Semaphore::Semaphore(
 		std::wstring name,
 		const bool isInheritable,
-		const ULONG initialCount,
-		const ULONG maxCount
+		const unsigned long initialCount,
+		const unsigned long maxCount
 	)
 		: m_name(std::move(name)),
 		m_currentCount(initialCount),
@@ -46,7 +46,7 @@ namespace Boring32::Async
 		const bool isInheritable,
 		const long initialCount,
 		const long maxCount,
-		const DWORD desiredAccess
+		const unsigned long desiredAccess
 	)
 		: m_name(std::move(name)),
 		m_currentCount(initialCount),
@@ -71,8 +71,8 @@ namespace Boring32::Async
 
 	void Semaphore::InternalCreate(
 		const std::wstring& name,
-		const ULONG initialCount,
-		const ULONG maxCount,
+		const unsigned long initialCount,
+		const unsigned long maxCount,
 		const bool isInheritable
 	)
 	{
@@ -155,12 +155,12 @@ namespace Boring32::Async
 		return Acquire(INFINITE, false);
 	}
 
-	bool Semaphore::Acquire(const DWORD millisTimeout)
+	bool Semaphore::Acquire(const unsigned long millisTimeout)
 	{
 		return Acquire(millisTimeout, false);
 	}
 	
-	bool Semaphore::Acquire(const DWORD millisTimeout, const bool isAlertable)
+	bool Semaphore::Acquire(const unsigned long millisTimeout, const bool isAlertable)
 	{
 		if (m_handle == nullptr)
 			throw Error::Boring32Error("m_handle is nullptr.");
@@ -185,7 +185,10 @@ namespace Boring32::Async
 		}
 	}
 
-	bool Semaphore::AcquireMany(const long countToAcquire, const DWORD millisTimeout)
+	bool Semaphore::AcquireMany(
+		const long countToAcquire, 
+		const unsigned long millisTimeout
+	)
 	{
 		if (m_handle == nullptr)
 			throw Error::Boring32Error("m_handle is nullptr.");
