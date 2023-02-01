@@ -150,7 +150,10 @@ namespace Boring32::Async
 			throw Error::Boring32Error("The wait was abandoned");
 	}
 
-	bool Event::WaitOnEvent(const DWORD millis, const bool alertable) const
+	bool Event::WaitOnEvent(
+		const DWORD millis, 
+		const bool alertable
+	) const
 	{
 		if (!m_event)
 			throw Error::Boring32Error("No Event to wait on");
@@ -170,7 +173,11 @@ namespace Boring32::Async
 		return false;
 	}
 
-	bool Event::WaitOnEvent(const DWORD millis, const bool alertable, std::nothrow_t) const noexcept try
+	bool Event::WaitOnEvent(
+		const DWORD millis, 
+		const bool alertable, 
+		std::nothrow_t
+	) const noexcept try
 	{
 		//https://codeyarns.com/tech/2018-08-22-how-to-get-function-name-in-c.html
 		WaitOnEvent();
