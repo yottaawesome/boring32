@@ -8,8 +8,8 @@ export namespace Boring32::Async
 	class Semaphore
 	{
 		public:
-			virtual ~Semaphore();
-			Semaphore();
+			virtual ~Semaphore() = default;
+			Semaphore() = default;
 			Semaphore(const Semaphore& other);
 			Semaphore(Semaphore&& other) noexcept;
 			Semaphore(
@@ -31,6 +31,7 @@ export namespace Boring32::Async
 		public:
 			virtual void operator=(const Semaphore& other);
 			virtual void operator=(Semaphore&& other) noexcept;
+			virtual operator bool() const noexcept;
 
 		public:
 			virtual void Close();
@@ -58,7 +59,7 @@ export namespace Boring32::Async
 		protected:
 			RAII::Win32Handle m_handle;
 			std::wstring m_name;
-			std::atomic<long> m_currentCount;
-			long m_maxCount;
+			std::atomic<long> m_currentCount = 0;
+			long m_maxCount = 0;
 	};
 }

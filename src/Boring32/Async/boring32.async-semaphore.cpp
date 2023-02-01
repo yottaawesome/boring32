@@ -9,22 +9,11 @@ import <format>;
 
 namespace Boring32::Async
 {
-	Semaphore::~Semaphore()
-	{
-		Close();
-	}
-
 	void Semaphore::Close()
 	{
 		m_handle = nullptr;
 		m_name.clear();
 	}
-
-	Semaphore::Semaphore()
-		: m_name(L""),
-		m_currentCount(0),
-		m_maxCount(0)
-	{ }
 
 	Semaphore::Semaphore(
 		const bool isInheritable,
@@ -129,6 +118,11 @@ namespace Boring32::Async
 	void Semaphore::operator=(Semaphore&& other) noexcept
 	{
 		Move(other);
+	}
+	
+	Semaphore::operator bool() const noexcept
+	{
+		return m_handle != nullptr;
 	}
 
 	void Semaphore::Move(Semaphore& other) noexcept
