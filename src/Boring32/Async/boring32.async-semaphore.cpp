@@ -65,8 +65,6 @@ namespace Boring32::Async
 	}
 
 	Semaphore::Semaphore(const Semaphore& other)
-		: m_currentCount(0),
-		m_maxCount(0)
 	{
 		Copy(other);
 	}
@@ -109,8 +107,6 @@ namespace Boring32::Async
 	}
 
 	Semaphore::Semaphore(Semaphore&& other) noexcept
-		: m_currentCount(0),
-		m_maxCount(0)
 	{
 		Move(other);
 	}
