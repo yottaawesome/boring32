@@ -13,7 +13,7 @@ export namespace Boring32::Async
 		// Constructors
 		public:
 			virtual ~Event();
-			Event();
+			Event() = default;
 			Event(const Event& other);
 			Event(Event&& other) noexcept;
 
@@ -86,15 +86,16 @@ export namespace Boring32::Async
 			virtual const std::wstring& GetName() const noexcept;
 
 		protected:
-			virtual void InternalCreate(const bool isSignaled, const bool isInheritable);
+			virtual void InternalCreate(
+				const bool isSignaled, 
+				const bool isInheritable
+			);
 			virtual void Copy(const Event& other);
 			virtual void Move(Event& other) noexcept;
 
 		protected:
 			RAII::Win32Handle m_event;
-			bool m_isManualReset;
-			bool m_createEventOnTrue;
+			bool m_isManualReset = false;
 			std::wstring m_name;
-			DWORD m_access;
 	};
 }

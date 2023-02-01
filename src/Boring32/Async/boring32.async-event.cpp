@@ -20,23 +20,12 @@ namespace Boring32::Async
 		m_event = nullptr;
 	}
 
-	Event::Event()
-	:	m_event(nullptr),
-		m_isManualReset(false),
-		m_name(L""),
-		m_createEventOnTrue(false),
-		m_access(0)
-	{ }
-
 	Event::Event(
 		const bool isInheritable,
 		const bool manualReset,
 		const bool isSignaled
 	)
-	:	m_event(nullptr),
-		m_isManualReset(manualReset),
-		m_createEventOnTrue(true),
-		m_access(EVENT_ALL_ACCESS)
+	:	m_isManualReset(manualReset)
 	{
 		InternalCreate(isSignaled, isInheritable);
 	}
@@ -47,11 +36,8 @@ namespace Boring32::Async
 		const bool isSignaled,
 		std::wstring name
 	)
-	:	m_event(nullptr),
-		m_isManualReset(manualReset),
-		m_name(std::move(name)),
-		m_createEventOnTrue(true),
-		m_access(EVENT_ALL_ACCESS)
+	:	m_isManualReset(manualReset),
+		m_name(std::move(name))
 	{
 		InternalCreate(isSignaled, isInheritable);
 	}
@@ -62,15 +48,15 @@ namespace Boring32::Async
 		std::wstring name,
 		const DWORD desiredAccess
 	)
-	:	m_event(nullptr),
-		m_isManualReset(manualReset),
-		m_name(std::move(name)),
-		m_createEventOnTrue(false),
-		m_access(desiredAccess)
+	:	m_isManualReset(manualReset),
+		m_name(std::move(name))
 	{
-		m_event = OpenEventW(m_access, isInheritable, m_name.c_str());
+		m_event = OpenEventW(desiredAccess, isInheritable, m_name.c_str());
 		if (!m_event)
-			throw Error::Win32Error("Failed to create or open event", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("Failed to create or open event", lastError);
+		}
 	}
 
 	Event::Event(const Event& other) 
@@ -118,9 +104,15 @@ namespace Boring32::Async
 
 	void Event::Reset()
 	{
-		if (m_isManualReset && m_event)
-			if(!ResetEvent(m_event.GetHandle()))
-				throw Error::Win32Error("ResetEvent() failed", GetLastError());
+		if (!m_isManualReset)
+			return;
+		if (!m_event)
+			return;
+		if (!ResetEvent(m_event.GetHandle()))
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("ResetEvent() failed", lastError);
+		}
 	}
 
 	bool Event::Reset(std::nothrow_t) noexcept try
@@ -130,7 +122,11 @@ namespace Boring32::Async
 	}
 	catch (const std::exception& ex)
 	{
-		std::wcerr << std::format("{}: Reset() failed: {}", __FUNCSIG__, ex.what()).c_str();
+		std::wcerr << std::format(
+			"{}: Reset() failed: {}", 
+			std::source_location::current().function_name(),
+			ex.what()
+		).c_str();
 		return false;
 	}
 
@@ -146,7 +142,10 @@ namespace Boring32::Async
 
 		const DWORD status = WaitForSingleObject(m_event.GetHandle(), INFINITE);
 		if (status == WAIT_FAILED)
-			throw Error::Win32Error("WaitForSingleObject failed", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("WaitForSingleObject failed", lastError);
+		}
 		if (status == WAIT_ABANDONED)
 			throw Error::Boring32Error("The wait was abandoned");
 	}
@@ -162,7 +161,10 @@ namespace Boring32::Async
 		if (status == WAIT_TIMEOUT)
 			return false;
 		if (status == WAIT_FAILED)
-			throw Error::Win32Error("WaitForSingleObject() failed", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("WaitForSingleObject() failed", lastError);
+		}
 		if (status == WAIT_ABANDONED)
 			throw Error::Boring32Error("The wait was abandoned");
 		return false;
@@ -176,7 +178,11 @@ namespace Boring32::Async
 	}
 	catch (const std::exception& ex)
 	{
-		std::wcerr << std::format("{}: WaitOnEvent() failed: {}", __FUNCSIG__, ex.what()).c_str();
+		std::wcerr << std::format(
+			"{}: WaitOnEvent() failed: {}", 
+			std::source_location::current().function_name(),
+			ex.what()
+		).c_str();
 		return false;
 	}
 
@@ -189,8 +195,11 @@ namespace Boring32::Async
 	{
 		if (!m_event)
 			throw Error::Boring32Error("No Event to signal");
-		if (SetEvent(m_event.GetHandle()) == false)
-			throw Error::Win32Error("Failed to signal event", GetLastError());
+		if (!SetEvent(m_event.GetHandle()))
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("Failed to signal event", lastError);
+		}
 	}
 
 	bool Event::Signal(std::nothrow_t) noexcept try
@@ -200,7 +209,11 @@ namespace Boring32::Async
 	}
 	catch (const std::exception& ex)
 	{
-		std::wcerr << std::format("{}: Signal() failed: {}", __FUNCSIG__, ex.what()).c_str();
+		std::wcerr << std::format(
+			"{}: Signal() failed: {}", 
+			std::source_location::current().function_name(),
+			ex.what()
+		).c_str();
 		return false;
 	}
 
@@ -218,7 +231,10 @@ namespace Boring32::Async
 			m_name.empty() ? nullptr : m_name.c_str() // name
 		);
 		if (!m_event)
-			throw Error::Win32Error("Failed to create or open event", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("Failed to create or open event", lastError);
+		}
 		m_event.SetInheritability(isInheritable);
 	}
 }
