@@ -86,8 +86,11 @@ namespace Boring32::Async
 			maxCount,
 			name.empty() ? nullptr : name.c_str()
 		);
-		if (m_handle == nullptr)
-			throw Error::Win32Error("Failed to create or open semaphore", GetLastError());
+		if (!m_handle)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("Failed to create or open semaphore", lastError);
+		}
 
 		m_handle.SetInheritability(isInheritable);
 	}
@@ -139,12 +142,15 @@ namespace Boring32::Async
 	{
 		if (countToRelease == 0)
 			return m_currentCount;
-		if (m_handle == nullptr)
+		if (!m_handle)
 			throw Error::Boring32Error("m_handle is nullptr.");
 
 		long previousCount;
 		if (!ReleaseSemaphore(m_handle.GetHandle(), countToRelease, &previousCount))
-			throw Error::Win32Error("Failed to release semaphore", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("Failed to release semaphore", lastError);
+		}
 		m_currentCount += countToRelease;
 
 		return previousCount;
@@ -162,10 +168,15 @@ namespace Boring32::Async
 	
 	bool Semaphore::Acquire(const unsigned long millisTimeout, const bool isAlertable)
 	{
-		if (m_handle == nullptr)
+		if (!m_handle)
 			throw Error::Boring32Error("m_handle is nullptr.");
-
-		switch (const DWORD status = WaitForSingleObjectEx(*m_handle, millisTimeout, isAlertable))
+		
+		const DWORD status = WaitForSingleObjectEx(
+			*m_handle,
+			millisTimeout,
+			isAlertable
+		);
+		switch (status)
 		{
 			case WAIT_OBJECT_0:
 				m_currentCount--;
@@ -178,10 +189,17 @@ namespace Boring32::Async
 				throw Error::Boring32Error("The wait was abandoned.");
 
 			case WAIT_FAILED:
-				throw Error::Win32Error("WaitForSingleObject() failed", GetLastError());
+			{
+				const auto lastError = GetLastError();
+				throw Error::Win32Error("WaitForSingleObject() failed", lastError);
+			}
 
 			default:
-				throw Error::Boring32Error(std::format("Unknown WaitForSingleObjectEx() value {}", status));
+				throw Error::Boring32Error(
+					"Unknown WaitForSingleObjectEx() value {}",
+					std::source_location::current(),
+					status
+				);
 		}
 	}
 
@@ -190,7 +208,7 @@ namespace Boring32::Async
 		const unsigned long millisTimeout
 	)
 	{
-		if (m_handle == nullptr)
+		if (!m_handle)
 			throw Error::Boring32Error("m_handle is nullptr.");
 		if (countToAcquire > m_maxCount)
 			throw Error::Boring32Error("Cannot acquire more than the maximum of the semaphore.");
