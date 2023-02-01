@@ -14,8 +14,8 @@ export namespace Boring32::Async
 		public:
 			virtual ~Event() = default;
 			Event() = default;
-			Event(const Event& other);
-			Event(Event&& other) noexcept;
+			Event(const Event& other) = default;
+			Event(Event&& other) noexcept = default;
 
 			/// <summary>
 			///		Constructor for an anonymous Event object.
@@ -67,8 +67,8 @@ export namespace Boring32::Async
 			);
 
 		public:
-			virtual Event& operator=(const Event& other);
-			virtual Event& operator=(Event&& other) noexcept;
+			virtual Event& operator=(const Event& other) = default;
+			virtual Event& operator=(Event&& other) noexcept = default;
 			virtual operator HANDLE() const noexcept;
 			virtual operator bool() const noexcept;
 
@@ -99,8 +99,6 @@ export namespace Boring32::Async
 				const bool isSignaled, 
 				const bool isInheritable
 			);
-			virtual void Copy(const Event& other);
-			virtual void Move(Event& other) noexcept;
 
 		protected:
 			RAII::Win32Handle m_event;

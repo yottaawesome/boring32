@@ -54,37 +54,6 @@ namespace Boring32::Async
 		}
 	}
 
-	Event::Event(const Event& other) 
-	{ 
-		Copy(other);
-	}
-
-	Event& Event::operator=(const Event& other)
-	{
-		Copy(other);
-		return *this;
-	}
-
-	void Event::Copy(const Event& other)
-	{
-		Close();
-		m_isManualReset = other.m_isManualReset;
-		m_name = other.m_name;
-		m_event = other.m_event;
-	}
-
-	Event::Event(Event&& other) noexcept
-	{
-		Move(other);
-	}
-
-	Event& Event::operator=(Event&& other) noexcept
-	{
-		Close();
-		Move(other);
-		return *this;
-	}
-
 	Event::operator HANDLE() const noexcept
 	{
 		return *m_event;
@@ -93,13 +62,6 @@ namespace Boring32::Async
 	Event::operator bool() const noexcept
 	{
 		return m_event != nullptr;
-	}
-
-	void Event::Move(Event& other) noexcept
-	{
-		m_isManualReset = other.m_isManualReset;
-		m_name = std::move(other.m_name);
-		m_event = std::move(other.m_event);
 	}
 
 	void Event::Reset()
