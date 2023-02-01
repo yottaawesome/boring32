@@ -12,7 +12,7 @@ export namespace Boring32::Async
 	{
 		// Constructors
 		public:
-			virtual ~Event();
+			virtual ~Event() = default;
 			Event() = default;
 			Event(const Event& other);
 			Event(Event&& other) noexcept;
@@ -70,6 +70,7 @@ export namespace Boring32::Async
 			virtual Event& operator=(const Event& other);
 			virtual Event& operator=(Event&& other) noexcept;
 			virtual operator HANDLE() const noexcept;
+			virtual operator bool() const noexcept;
 
 			// API
 		public:
@@ -84,6 +85,7 @@ export namespace Boring32::Async
 			virtual HANDLE GetHandle() const noexcept;
 			virtual void Close();
 			virtual const std::wstring& GetName() const noexcept;
+			virtual bool IsManualReset() const noexcept;
 
 		protected:
 			virtual void InternalCreate(

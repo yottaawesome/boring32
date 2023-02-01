@@ -9,12 +9,7 @@ import <iostream>;
 import <format>;
 
 namespace Boring32::Async
-{
-	Event::~Event()
-	{
-		Close();
-	}
-	
+{	
 	void Event::Close()
 	{
 		m_event = nullptr;
@@ -93,6 +88,11 @@ namespace Boring32::Async
 	Event::operator HANDLE() const noexcept
 	{
 		return *m_event;
+	}
+
+	Event::operator bool() const noexcept
+	{
+		return m_event != nullptr;
 	}
 
 	void Event::Move(Event& other) noexcept
@@ -220,6 +220,11 @@ namespace Boring32::Async
 	const std::wstring& Event::GetName() const noexcept
 	{
 		return m_name;
+	}
+	
+	bool Event::IsManualReset() const noexcept
+	{
+		return m_isManualReset;
 	}
 
 	void Event::InternalCreate(const bool isSignaled, const bool isInheritable)
