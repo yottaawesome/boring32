@@ -29,6 +29,7 @@ export namespace Boring32::TaskScheduler
 				const TASK_LOGON_TYPE logonType
 			);
 			virtual std::wstring GetName() const;
+			virtual std::wstring GetPath() const;
 
 		protected:
 			// https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-itaskfolder

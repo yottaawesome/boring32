@@ -103,4 +103,17 @@ namespace Boring32::TaskScheduler
 
 		return { name, name.length() };
 	}
+
+	std::wstring TaskFolder::GetPath() const
+	{
+		if (!m_taskFolder)
+			throw Error::Boring32Error("m_taskFolder is null");
+
+		bstr_t path;
+		const HRESULT hr = m_taskFolder->get_Path(path.GetAddress());
+		if (FAILED(hr))
+			throw Error::COMError("Failed to get TaskFolder path", hr);
+
+		return { path, path.length() };
+	}
 }
