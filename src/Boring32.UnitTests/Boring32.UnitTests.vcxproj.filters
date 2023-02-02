@@ -114,6 +114,15 @@
     <ClCompile Include="Win32\boring32.win32-ntdll.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TaskScheduler\boring32.taskscheduler-registeredtask.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskfolder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskservice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
