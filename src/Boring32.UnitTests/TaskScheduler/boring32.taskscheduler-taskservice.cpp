@@ -37,5 +37,23 @@ namespace TaskScheduler
 				Assert::IsTrue(service1);
 				Assert::IsTrue(service2);
 			}
+
+			TEST_METHOD(TestMoveConstructor)
+			{
+				Boring32::TaskScheduler::TaskService service1;
+				service1.Connect();
+				Boring32::TaskScheduler::TaskService service2(std::move(service1));
+				Assert::IsFalse(service1);
+				Assert::IsTrue(service2);
+			}
+
+			TEST_METHOD(TestMoveAssignment)
+			{
+				Boring32::TaskScheduler::TaskService service1;
+				service1.Connect();
+				Boring32::TaskScheduler::TaskService service2 = std::move(service1);
+				Assert::IsFalse(service1);
+				Assert::IsTrue(service2);
+			}
 	};
 }
