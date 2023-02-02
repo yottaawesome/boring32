@@ -65,5 +65,12 @@ namespace TaskScheduler
 				service.Close();
 				Assert::IsFalse(service);
 			}
+
+			TEST_METHOD(TestGetRootFolder)
+			{
+				Boring32::TaskScheduler::TaskService service;
+				service.Connect();
+				Boring32::TaskScheduler::TaskFolder rootFolder = service.GetRootFolder();
+			}
 	};
 }
