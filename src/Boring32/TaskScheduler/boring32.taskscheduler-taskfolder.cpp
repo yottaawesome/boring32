@@ -14,6 +14,11 @@ namespace Boring32::TaskScheduler
 	:	m_taskFolder(std::move(taskFolder))
 	{ }
 
+	bool TaskFolder::operator==(const TaskFolder& other) const noexcept
+	{
+		return m_taskFolder == other.m_taskFolder;
+	}
+
 	void TaskFolder::Close() noexcept
 	{
 		if (m_taskFolder)
