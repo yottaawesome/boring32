@@ -131,4 +131,20 @@ namespace Boring32::TaskScheduler
 		if (FAILED(hr))
 			throw Error::COMError("Failed to delete task folder", hr);
 	}
+
+	std::wstring TaskFolder::GetDACL() const
+	{
+		if (!m_taskFolder)
+			throw Error::Boring32Error("m_taskFolder is null");
+		
+		bstr_t sddl;
+		const HRESULT hr = m_taskFolder->GetSecurityDescriptor(
+			DACL_SECURITY_INFORMATION, // https://learn.microsoft.com/en-us/windows/win32/secauthz/security-information
+			sddl.GetAddress()
+		);
+		if (FAILED(hr))
+			throw Error::COMError("Failed to get task folder DACL", hr);
+
+		return { sddl, sddl.length() };
+	}
 }

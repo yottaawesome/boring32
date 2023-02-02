@@ -31,6 +31,7 @@ export namespace Boring32::TaskScheduler
 			virtual std::wstring GetName() const;
 			virtual std::wstring GetPath() const;
 			virtual void DeleteFolder(const std::wstring& folderPath);
+			virtual std::wstring GetDACL() const;
 
 		protected:
 			// https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-itaskfolder
