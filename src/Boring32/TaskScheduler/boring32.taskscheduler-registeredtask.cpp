@@ -33,7 +33,7 @@ namespace Boring32::TaskScheduler
 		if (HRESULT hr = m_registeredTask->get_Name(taskName.GetAddress()); FAILED(hr))
 			throw Error::COMError("Failed to get Task name", hr);
 
-		return std::wstring(taskName, taskName.length());
+		return { taskName, taskName.length() };
 	}
 
 	void RegisteredTask::SetEnabled(const bool isEnabled)

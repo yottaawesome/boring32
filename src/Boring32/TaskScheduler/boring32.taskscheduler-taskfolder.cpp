@@ -116,4 +116,19 @@ namespace Boring32::TaskScheduler
 
 		return { path, path.length() };
 	}
+
+	void TaskFolder::DeleteFolder(const std::wstring& folderPath)
+	{
+		if (!m_taskFolder)
+			throw Error::Boring32Error("m_taskFolder is null");
+		if (folderPath.empty())
+			throw Error::Boring32Error("folderPath is empty");
+
+		const HRESULT hr = m_taskFolder->DeleteFolder(
+			_bstr_t(folderPath.c_str()),
+			0
+		);
+		if (FAILED(hr))
+			throw Error::COMError("Failed to delete task folder", hr);
+	}
 }
