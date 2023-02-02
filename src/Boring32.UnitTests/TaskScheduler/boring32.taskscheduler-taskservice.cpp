@@ -27,7 +27,7 @@ namespace TaskScheduler
 				service1.Connect();
 				Boring32::TaskScheduler::TaskService service2(service1);
 				Assert::IsTrue(service1);
-				Assert::IsTrue(service2);
+				Assert::IsTrue(service1 == service2);
 			}
 
 			TEST_METHOD(TestCopyAssignment)
@@ -36,7 +36,7 @@ namespace TaskScheduler
 				service1.Connect();
 				Boring32::TaskScheduler::TaskService service2 = service1;
 				Assert::IsTrue(service1);
-				Assert::IsTrue(service2);
+				Assert::IsTrue(service1 == service2);
 			}
 
 			TEST_METHOD(TestMoveConstructor)
