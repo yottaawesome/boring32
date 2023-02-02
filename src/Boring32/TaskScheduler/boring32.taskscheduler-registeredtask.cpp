@@ -14,9 +14,11 @@ namespace Boring32::TaskScheduler
 	RegisteredTask::RegisteredTask(ComPtr<IRegisteredTask> registeredTask)
 	:	m_registeredTask(std::move(registeredTask))
 	{
-		if (m_registeredTask)
-			if (HRESULT hr = m_registeredTask->get_Definition(&m_taskDefinition); FAILED(hr))
-				throw Error::COMError("Failed to get ITaskDefinition", hr);
+		if (!m_registeredTask)
+			return;
+		const HRESULT hr = m_registeredTask->get_Definition(&m_taskDefinition);
+		if (FAILED(hr))
+			throw Error::COMError("Failed to get ITaskDefinition", hr);
 	}
 
 	void RegisteredTask::Close() noexcept
@@ -30,7 +32,8 @@ namespace Boring32::TaskScheduler
 		CheckIsValid();
 
 		bstr_t taskName;
-		if (HRESULT hr = m_registeredTask->get_Name(taskName.GetAddress()); FAILED(hr))
+		const HRESULT hr = m_registeredTask->get_Name(taskName.GetAddress());
+		if (FAILED(hr))
 			throw Error::COMError("Failed to get Task name", hr);
 
 		return { taskName, taskName.length() };
@@ -40,7 +43,12 @@ namespace Boring32::TaskScheduler
 	{
 		CheckIsValid();
 
-		if (HRESULT hr = m_registeredTask->put_Enabled(isEnabled ? VARIANT_TRUE : VARIANT_FALSE); FAILED(hr))
+		const HRESULT hr = m_registeredTask->put_Enabled(
+			isEnabled 
+				? VARIANT_TRUE 
+				: VARIANT_FALSE
+		);
+		if (FAILED(hr))
 			throw Error::COMError("Failed to set task enabled property", hr);
 
 		/*std::vector<ComPtr<ITrigger>> triggers = GetTriggers();
@@ -68,11 +76,13 @@ namespace Boring32::TaskScheduler
 		for (auto& trigger : triggers)
 		{
 			ComPtr<IRepetitionPattern> pattern;
-			if (HRESULT hr = trigger->get_Repetition(&pattern); FAILED(hr))
+			HRESULT hr = trigger->get_Repetition(&pattern);
+			if (FAILED(hr))
 				throw Error::COMError("Failed to get task repetition pattern", hr);
 
 			std::wstring interval = L"PT" + std::to_wstring(intervalMinutes) + L"M";
-			if (HRESULT hr = pattern->put_Interval(bstr_t(interval.c_str())); FAILED(hr))
+			hr = pattern->put_Interval(bstr_t(interval.c_str()));
+			if (FAILED(hr))
 				throw Error::COMError("Failed to set trigger repetition pattern interval", hr);
 		}
 	}
@@ -86,7 +96,8 @@ namespace Boring32::TaskScheduler
 		// conditions, but COM does it for us and the error is descriptive, so no 
 		// need to bother.
 		ComPtr<IRunningTask> runningTask;
-		if (HRESULT hr = m_registeredTask->Run(_variant_t(VT_NULL), &runningTask); FAILED(hr))
+		const HRESULT hr = m_registeredTask->Run(_variant_t(VT_NULL), &runningTask);
+		if (FAILED(hr))
 			throw Error::COMError("Failed to start task", hr);
 	}
 	
@@ -130,18 +141,21 @@ namespace Boring32::TaskScheduler
 		CheckIsValid();
 
 		ComPtr<ITriggerCollection> triggers;
-		if (HRESULT hr = m_taskDefinition->get_Triggers(&triggers); FAILED(hr))
+		HRESULT hr = m_taskDefinition->get_Triggers(&triggers);
+		if (FAILED(hr))
 			throw Error::COMError("Failed to get trigger collection", hr);
 
 		long count = 0;
-		if (HRESULT hr = triggers->get_Count(&count); FAILED(hr))
+		hr = triggers->get_Count(&count);
+		if (FAILED(hr))
 			throw Error::COMError("Failed to get trigger collection count", hr);
 
 		std::vector<ComPtr<ITrigger>> returnVal;
 		for (int i = 1; i <= count; i++) // Collections start at 1
 		{
 			ComPtr<ITrigger> trigger = nullptr;
-			if (HRESULT hr = triggers->get_Item(i, &trigger); FAILED(hr))
+			hr = triggers->get_Item(i, &trigger);
+			if (FAILED(hr))
 				throw Error::COMError("Failed to get trigger", hr);
 			returnVal.push_back(std::move(trigger));
 		}
