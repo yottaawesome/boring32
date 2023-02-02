@@ -9,15 +9,18 @@ export namespace Boring32::TaskScheduler
 	{
 		public:
 			virtual ~RegisteredTask() = default;
-
+			RegisteredTask(const RegisteredTask&) = default;
+			RegisteredTask(RegisteredTask&&) noexcept = default;
 			RegisteredTask(Microsoft::WRL::ComPtr<IRegisteredTask> registeredTask);
 
 		public:
 			virtual void Close() noexcept;
 			virtual std::wstring GetName() const;
 			virtual void SetEnabled(const bool isEnabled);
-			virtual Microsoft::WRL::ComPtr<IRegisteredTask> GetRegisteredTask() const noexcept final;
-			virtual Microsoft::WRL::ComPtr<ITaskDefinition> GetTaskDefinition() const noexcept final;
+			virtual Microsoft::WRL::ComPtr<IRegisteredTask> GetRegisteredTask() 
+				const noexcept final;
+			virtual Microsoft::WRL::ComPtr<ITaskDefinition> GetTaskDefinition() 
+				const noexcept final;
 			virtual void SetRepetitionInterval(const DWORD intervalMinutes);
 
 			/// <summary>
@@ -52,7 +55,7 @@ export namespace Boring32::TaskScheduler
 			///		Thrown when a COM operation fails.
 			/// </exception>
 			/// <returns>The number of triggers updated.</returns>
-			virtual UINT SetRandomDelay(const DWORD minutes);
+			virtual unsigned SetRandomDelay(const DWORD minutes);
 
 		protected:
 			virtual std::vector<Microsoft::WRL::ComPtr<ITrigger>> GetTriggers();

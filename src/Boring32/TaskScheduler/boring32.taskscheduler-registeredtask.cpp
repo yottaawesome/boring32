@@ -90,11 +90,11 @@ namespace Boring32::TaskScheduler
 			throw Error::COMError("Failed to start task", hr);
 	}
 	
-	UINT RegisteredTask::SetRandomDelay(const DWORD minutes)
+	unsigned RegisteredTask::SetRandomDelay(const DWORD minutes)
 	{
 		std::vector<ComPtr<ITrigger>> triggers = GetTriggers();
 		const std::wstring delay = L"PT" + std::to_wstring(minutes) + L"M";
-		UINT triggersUpdated = 0;
+		unsigned triggersUpdated = 0;
 
 		for (const auto& trigger : triggers)
 		{
