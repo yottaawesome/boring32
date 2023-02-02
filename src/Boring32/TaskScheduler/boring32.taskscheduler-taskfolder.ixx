@@ -17,6 +17,7 @@ export namespace Boring32::TaskScheduler
 			TaskFolder(Microsoft::WRL::ComPtr<ITaskFolder> taskFolder);
 
 		public:
+			virtual operator bool() const noexcept;
 			virtual bool operator==(const TaskFolder& other) const noexcept;
 
 		public:
