@@ -99,7 +99,7 @@ namespace Boring32::TaskScheduler
 		bstr_t name;
 		const HRESULT hr = m_taskFolder->get_Name(name.GetAddress());
 		if (FAILED(hr))
-			throw Error::COMError("Failed to get Task name", hr);
+			throw Error::COMError("Failed to get TaskFolder name", hr);
 
 		return { name, name.length() };
 	}
