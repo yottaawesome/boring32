@@ -10,11 +10,6 @@ namespace Boring32::TaskScheduler
 {
 	using Microsoft::WRL::ComPtr;
 
-	TaskFolder::~TaskFolder()
-	{
-		Close();
-	}
-
 	TaskFolder::TaskFolder(ComPtr<ITaskFolder> taskFolder)
 	:	m_taskFolder(std::move(taskFolder))
 	{ }

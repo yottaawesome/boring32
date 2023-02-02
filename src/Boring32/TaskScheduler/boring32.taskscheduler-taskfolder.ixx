@@ -10,8 +10,10 @@ export namespace Boring32::TaskScheduler
 	class TaskFolder
 	{
 		public:
-			virtual ~TaskFolder();
-
+			virtual ~TaskFolder() = default;
+			TaskFolder() = default;
+			TaskFolder(const TaskFolder&) = default;
+			TaskFolder(TaskFolder&&) noexcept = default;
 			TaskFolder(Microsoft::WRL::ComPtr<ITaskFolder> taskFolder);
 
 		public:
