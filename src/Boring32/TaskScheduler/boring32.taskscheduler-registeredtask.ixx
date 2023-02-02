@@ -62,7 +62,9 @@ export namespace Boring32::TaskScheduler
 			virtual void CheckIsValid() const;
 
 		protected:
+			// https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-iregisteredtask
 			Microsoft::WRL::ComPtr<IRegisteredTask> m_registeredTask;
+			// https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-itaskdefinition
 			Microsoft::WRL::ComPtr<ITaskDefinition> m_taskDefinition;
 	};
 }

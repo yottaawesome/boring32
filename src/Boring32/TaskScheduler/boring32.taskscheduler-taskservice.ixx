@@ -26,6 +26,7 @@ export namespace Boring32::TaskScheduler
 			virtual Microsoft::WRL::ComPtr<ITaskService> Get() const noexcept;
 
 		protected:
+			// https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-itaskservice
 			Microsoft::WRL::ComPtr<ITaskService> m_taskService;
 	};
 }
