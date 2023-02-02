@@ -10,6 +10,8 @@ export namespace Boring32::TaskScheduler
 		public:
 			virtual ~TaskService() = default;
 			TaskService() = default;
+			TaskService(const TaskService&) = default;
+			TaskService(TaskService&&) = default;
 
 		public:
 			virtual operator bool() const noexcept;

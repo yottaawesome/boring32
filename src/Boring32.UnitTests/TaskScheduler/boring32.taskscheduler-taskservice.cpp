@@ -19,5 +19,23 @@ namespace TaskScheduler
 				service.Connect();
 				Assert::IsTrue(service);
 			}
+
+			TEST_METHOD(TestCopyConstructor)
+			{
+				Boring32::TaskScheduler::TaskService service1;
+				service1.Connect();
+				Boring32::TaskScheduler::TaskService service2(service1);
+				Assert::IsTrue(service1);
+				Assert::IsTrue(service2);
+			}
+
+			TEST_METHOD(TestCopyAssignment)
+			{
+				Boring32::TaskScheduler::TaskService service1;
+				service1.Connect();
+				Boring32::TaskScheduler::TaskService service2 = service1;
+				Assert::IsTrue(service1);
+				Assert::IsTrue(service2);
+			}
 	};
 }
