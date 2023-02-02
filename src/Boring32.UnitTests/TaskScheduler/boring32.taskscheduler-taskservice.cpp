@@ -12,5 +12,12 @@ namespace TaskScheduler
 			{
 				Boring32::TaskScheduler::TaskService service;
 			}
+
+			TEST_METHOD(TestConnect)
+			{
+				Boring32::TaskScheduler::TaskService service;
+				service.Connect();
+				Assert::IsTrue(service);
+			}
 	};
 }
