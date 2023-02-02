@@ -11,6 +11,7 @@ namespace TaskScheduler
 			TEST_METHOD(TestDefaultConstructor)
 			{
 				Boring32::TaskScheduler::TaskService service;
+				Assert::IsFalse(service);
 			}
 
 			TEST_METHOD(TestConnect)
@@ -54,6 +55,15 @@ namespace TaskScheduler
 				Boring32::TaskScheduler::TaskService service2 = std::move(service1);
 				Assert::IsFalse(service1);
 				Assert::IsTrue(service2);
+			}
+
+			TEST_METHOD(TestClose)
+			{
+				Boring32::TaskScheduler::TaskService service;
+				service.Connect();
+				Assert::IsTrue(service);
+				service.Close();
+				Assert::IsFalse(service);
 			}
 	};
 }
