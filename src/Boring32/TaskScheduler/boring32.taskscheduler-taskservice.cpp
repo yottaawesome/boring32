@@ -8,17 +8,14 @@ import <iostream>;
 
 namespace Boring32::TaskScheduler
 {
-	TaskService::~TaskService()
+	TaskService::operator bool() const noexcept
 	{
-		Close();
+		return m_taskService != nullptr;
 	}
-
-	TaskService::TaskService()
-	{ }
 
 	void TaskService::Connect()
 	{
-		if (m_taskService != nullptr)
+		if (m_taskService)
 			return;
 
 		HRESULT hr = CoCreateInstance(
@@ -64,5 +61,10 @@ namespace Boring32::TaskScheduler
 		if (FAILED(hr))
 			throw Error::COMError("Failed to connect to Task Service", hr);
 		return folder;
+	}
+
+	Microsoft::WRL::ComPtr<ITaskService> TaskService::Get() const noexcept
+	{
+		return m_taskService;
 	}
 }
