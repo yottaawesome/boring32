@@ -104,7 +104,7 @@ namespace Boring32::TaskScheduler
 	unsigned RegisteredTask::SetRandomDelay(const DWORD minutes)
 	{
 		std::vector<ComPtr<ITrigger>> triggers = GetTriggers();
-		const std::wstring delay = L"PT" + std::to_wstring(minutes) + L"M";
+		const std::wstring delay = std::format(L"PT{}M", minutes);
 		unsigned triggersUpdated = 0;
 
 		for (const auto& trigger : triggers)
