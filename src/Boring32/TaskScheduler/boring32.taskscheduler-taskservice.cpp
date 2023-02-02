@@ -54,6 +54,11 @@ namespace Boring32::TaskScheduler
 			m_taskService = nullptr;
 	}
 
+	TaskFolder TaskService::GetRootFolder()
+	{
+		return GetFolder(L"\\");
+	}
+
 	TaskFolder TaskService::GetFolder(const std::wstring& path)
 	{
 		Microsoft::WRL::ComPtr<ITaskFolder> folder = nullptr;

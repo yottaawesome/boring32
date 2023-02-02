@@ -20,6 +20,7 @@ export namespace Boring32::TaskScheduler
 			virtual void Connect();
 			virtual bool Connect(const std::nothrow_t&) noexcept;
 			virtual void Close() noexcept;
+			virtual TaskFolder GetRootFolder();
 			virtual TaskFolder GetFolder(const std::wstring& path);
 			virtual Microsoft::WRL::ComPtr<ITaskService> Get() const noexcept;
 
