@@ -15,6 +15,7 @@ export namespace Boring32::TaskScheduler
 
 		public:
 			virtual operator bool() const noexcept;
+			virtual bool operator==(const TaskService& other) const noexcept;
 
 		public:
 			virtual void Connect();

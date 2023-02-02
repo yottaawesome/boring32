@@ -12,6 +12,11 @@ namespace Boring32::TaskScheduler
 	{
 		return m_taskService != nullptr;
 	}
+	
+	bool TaskService::operator==(const TaskService& other) const noexcept
+	{
+		return m_taskService == other.m_taskService;
+	}
 
 	void TaskService::Connect()
 	{
