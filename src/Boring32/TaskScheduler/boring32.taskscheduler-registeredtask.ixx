@@ -8,7 +8,7 @@ export namespace Boring32::TaskScheduler
 	class RegisteredTask
 	{
 		public:
-			virtual ~RegisteredTask();
+			virtual ~RegisteredTask() = default;
 
 			RegisteredTask(Microsoft::WRL::ComPtr<IRegisteredTask> registeredTask);
 

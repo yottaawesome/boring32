@@ -629,8 +629,16 @@ void ArgsTest(message_and_location m1, Args...args)
 	std::wcout << m1.loc.line() << std::endl;
 }
 
+template<int N>
+struct Number
+{
+	char blah[N];
+};
+
 int main(int argc, char** args) try
 {
+	Number<5> n;
+
 	//OP i(1,1);
 	/*ArgsTest("HAHAHA what", 7);
 	throw Boring32::Error::Boring32Error("A {}", std::source_location::current(), 1);	*/

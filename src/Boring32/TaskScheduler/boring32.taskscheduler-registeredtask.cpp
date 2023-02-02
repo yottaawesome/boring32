@@ -5,15 +5,11 @@ module;
 module boring32.taskscheduler:registeredtask;
 import boring32.error;
 import <iostream>;
+import <format>;
 
 namespace Boring32::TaskScheduler
 {
 	using Microsoft::WRL::ComPtr;
-
-	RegisteredTask::~RegisteredTask()
-	{
-		Close();
-	}
 
 	RegisteredTask::RegisteredTask(ComPtr<IRegisteredTask> registeredTask)
 	:	m_registeredTask(std::move(registeredTask))
@@ -121,9 +117,8 @@ namespace Boring32::TaskScheduler
 					break;
 				}
 
-				default: std::wcerr
-					<< L"Did not set random delay for a trigger as it's not supported"
-					<< std::endl;
+				default: 
+					std::wcerr << L"Did not set random delay for a trigger as it's not supported\n";
 			}
 		}
 
@@ -156,8 +151,8 @@ namespace Boring32::TaskScheduler
 	void RegisteredTask::CheckIsValid() const
 	{
 		if (!m_registeredTask)
-			throw std::runtime_error(__FUNCSIG__ ": m_registeredTask is nullptr");
+			throw Error::Boring32Error("m_registeredTask is nullptr");
 		if (!m_taskDefinition)
-			throw std::runtime_error(__FUNCSIG__ ": m_taskDefinition is nullptr");
+			throw Error::Boring32Error("m_taskDefinition is nullptr");
 	}
 }
