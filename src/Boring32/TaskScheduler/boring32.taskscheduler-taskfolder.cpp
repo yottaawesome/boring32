@@ -73,7 +73,7 @@ namespace Boring32::TaskScheduler
 		const TASK_LOGON_TYPE logonType
 	)
 	{
-		if (m_taskFolder == nullptr)
+		if (!m_taskFolder)
 			throw Error::Boring32Error("m_taskFolder is null");
 
 		ComPtr<IRegisteredTask> registeredTask;
@@ -89,5 +89,18 @@ namespace Boring32::TaskScheduler
 		);
 		if (FAILED(hr))
 			throw Error::COMError("Failed to save or update task", hr);
+	}
+
+	std::wstring TaskFolder::GetName() const
+	{
+		if (!m_taskFolder)
+			throw Error::Boring32Error("m_taskFolder is null");
+
+		bstr_t name;
+		const HRESULT hr = m_taskFolder->get_Name(name.GetAddress());
+		if (FAILED(hr))
+			throw Error::COMError("Failed to get Task name", hr);
+
+		return { name, name.length() };
 	}
 }

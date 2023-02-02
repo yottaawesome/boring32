@@ -28,8 +28,10 @@ export namespace Boring32::TaskScheduler
 				const RegisteredTask& task,
 				const TASK_LOGON_TYPE logonType
 			);
+			virtual std::wstring GetName() const;
 
 		protected:
+			// https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-itaskfolder
 			Microsoft::WRL::ComPtr<ITaskFolder> m_taskFolder;
 	};
 }
