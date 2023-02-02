@@ -80,7 +80,7 @@ namespace Boring32::TaskScheduler
 			if (FAILED(hr))
 				throw Error::COMError("Failed to get task repetition pattern", hr);
 
-			std::wstring interval = L"PT" + std::to_wstring(intervalMinutes) + L"M";
+			std::wstring interval = std::format(L"PT{}M", intervalMinutes);
 			hr = pattern->put_Interval(bstr_t(interval.c_str()));
 			if (FAILED(hr))
 				throw Error::COMError("Failed to set trigger repetition pattern interval", hr);
