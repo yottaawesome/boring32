@@ -635,9 +635,56 @@ struct Number
 	char blah[N];
 };
 
+template<bool N>
+struct Throw
+{
+
+};
+
+template<>
+struct Throw<false>
+{
+	using Type = bool;
+};
+
+template<>
+struct Throw<true>
+{
+	using Type = void;
+};
+
+template<bool THROW>
+auto TestConstexpr() noexcept(!THROW)
+{
+	bool succeeded = true;
+
+	/*if (succeeded)
+		if constexpr (!THROW)
+			return true;
+		else
+			return;
+
+	if constexpr (THROW)
+		throw std::runtime_error("Some error");
+	else 
+		return false;*/
+
+	// or use the above
+	if (!succeeded)
+		if constexpr (THROW)
+			throw std::runtime_error("Some error");
+		else
+			return false;
+	
+	if constexpr (!THROW)
+		return true;
+}
+
 int main(int argc, char** args) try
 {
 	Number<5> n;
+	TestConstexpr<true>();
+	TestConstexpr<false>();
 
 	//OP i(1,1);
 	/*ArgsTest("HAHAHA what", 7);
