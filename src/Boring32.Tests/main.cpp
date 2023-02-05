@@ -664,6 +664,23 @@ auto TestOptionalThrow() noexcept(!THROW)
 		throw std::runtime_error("Some error");
 }
 
+enum class Lum
+{
+	One,
+	Two
+};
+
+template<Lum VAL>
+void Run(Lum v = VAL) 
+{
+
+}
+
+template<>
+void Run<Lum::One>(Lum v) {}
+template<>
+void Run<Lum::Two>(Lum v) {}
+
 int main(int argc, char** args) try
 {
 	Number<5> n;
