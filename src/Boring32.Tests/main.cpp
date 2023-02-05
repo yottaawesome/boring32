@@ -656,7 +656,7 @@ struct Throw<true>
 template<bool THROW>
 auto TestOptionalThrow() noexcept(!THROW)
 {
-	bool succeeded = true; // some native api call
+	bool succeeded = true; // result of some native api call
 
 	if constexpr (!THROW)
 		return succeeded;		
