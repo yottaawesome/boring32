@@ -654,37 +654,21 @@ struct Throw<true>
 };
 
 template<bool THROW>
-auto TestConstexpr() noexcept(!THROW)
+auto TestOptionalThrow() noexcept(!THROW)
 {
-	bool succeeded = true;
+	bool succeeded = true; // some native api call
 
-	/*if (succeeded)
-		if constexpr (!THROW)
-			return true;
-		else
-			return;
-
-	if constexpr (THROW)
-		throw std::runtime_error("Some error");
-	else 
-		return false;*/
-
-	// or use the above
-	if (!succeeded)
-		if constexpr (THROW)
-			throw std::runtime_error("Some error");
-		else
-			return false;
-	
 	if constexpr (!THROW)
-		return true;
+		return succeeded;		
+	else if (!succeeded)
+		throw std::runtime_error("Some error");
 }
 
 int main(int argc, char** args) try
 {
 	Number<5> n;
-	TestConstexpr<true>();
-	TestConstexpr<false>();
+	TestOptionalThrow<true>();
+	TestOptionalThrow<false>();
 
 	//OP i(1,1);
 	/*ArgsTest("HAHAHA what", 7);
