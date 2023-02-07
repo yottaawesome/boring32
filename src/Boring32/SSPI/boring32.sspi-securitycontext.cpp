@@ -4,6 +4,18 @@ namespace Boring32::SSPI
 {
 	void SecurityContext::Init()
 	{
+		SecBufferDesc outBufferDesc{
+			.ulVersion = 0,
+			.cBuffers = static_cast<unsigned>(m_outBuffers.size()),
+			.pBuffers = &m_outBuffers[0]
+		};
+		SecBufferDesc inBufferDesc{
+			.ulVersion = 0,
+			.cBuffers = static_cast<unsigned>(m_inBuffers.size()),
+			.pBuffers = &m_inBuffers[0]
+		};
+
+
 		// https://learn.microsoft.com/en-us/windows/win32/secauthn/initializesecuritycontext--schannel
 		/*SECURITY_STATUS SEC_Entry = InitializeSecurityContext(
 			_In_opt_    PCredHandle    phCredential,
@@ -19,5 +31,26 @@ namespace Boring32::SSPI
 			_Out_       PULONG         pfContextAttr,
 			_Out_opt_   PTimeStamp     ptsExpiry
 		);*/
+	}
+
+	void SecurityContext::AddInBuffer(
+		const BufferType type,
+		const unsigned size
+	)
+	{
+		m_inBuffers.push_back({
+			.cbBuffer = 0,
+			.BufferType = static_cast<unsigned>(type)
+		});
+	}
+
+	void SecurityContext::AddOutBuffer(
+		const BufferType type,
+		const unsigned size)
+	{
+		m_outBuffers.push_back({
+			.cbBuffer = 0,
+			.BufferType = static_cast<unsigned>(type)
+		});
 	}
 }
