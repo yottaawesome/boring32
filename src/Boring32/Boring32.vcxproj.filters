@@ -514,5 +514,6 @@
     </ClCompile>
     <ClCompile Include="MediaFoundation\boring32.mediafoundation.ixx" />
     <ClCompile Include="SSPI\boring32.sspi-types.ixx" />
+    <ClCompile Include="SSPI\boring32.sspi-contextbuffer.ixx" />
   </ItemGroup>
 </Project>

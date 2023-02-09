@@ -292,6 +292,7 @@
     <ClCompile Include="Services\boring32.services-servicecontrolmanager.cpp" />
     <ClCompile Include="Services\boring32.services-servicecontrolmanager.ixx" />
     <ClCompile Include="Services\boring32.services.ixx" />
+    <ClCompile Include="SSPI\boring32.sspi-contextbuffer.ixx" />
     <ClCompile Include="SSPI\boring32.sspi-credential.cpp" />
     <ClCompile Include="SSPI\boring32.sspi-credential.ixx" />
     <ClCompile Include="SSPI\boring32.sspi-securitycontext.cpp" />
