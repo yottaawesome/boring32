@@ -2,6 +2,13 @@ module boring32.sspi:securitycontext;
 
 namespace Boring32::SSPI
 {
+	SecurityContext::SecurityContext(
+		const bool sspiAllocatedBuffers,
+		const unsigned flags
+	) : m_sspiAllocatedBuffers(sspiAllocatedBuffers),
+		m_flags(flags)
+	{ }
+
 	void SecurityContext::Init()
 	{
 		SecBufferDesc outBufferDesc{
@@ -46,7 +53,8 @@ namespace Boring32::SSPI
 
 	void SecurityContext::AddOutBuffer(
 		const BufferType type,
-		const unsigned size)
+		const unsigned size
+	)
 	{
 		m_outBuffers.push_back({
 			.cbBuffer = 0,

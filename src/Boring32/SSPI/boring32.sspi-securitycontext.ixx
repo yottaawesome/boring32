@@ -21,6 +21,10 @@ export namespace Boring32::SSPI
 			SecurityContext() = default;
 			SecurityContext(const SecurityContext&) = delete;
 			SecurityContext(SecurityContext&&) noexcept = delete;
+			SecurityContext(
+				const bool sspiAllocatedBuffers,
+				const unsigned flags
+			);
 
 		public:
 			virtual void Init();
@@ -38,5 +42,7 @@ export namespace Boring32::SSPI
 			bool m_initialised = false;
 			std::vector<SecBuffer> m_inBuffers;
 			std::vector<SecBuffer> m_outBuffers;
+			unsigned m_flags = 0;
+			bool m_sspiAllocatedBuffers = false;
 	};
 }
