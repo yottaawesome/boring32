@@ -519,5 +519,6 @@
     <ClCompile Include="SSPI\boring32.sspi-sizedcontextbuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SSPI\boring32.sspi-buffertype.ixx" />
   </ItemGroup>
 </Project>
