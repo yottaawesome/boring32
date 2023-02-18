@@ -35,31 +35,7 @@ export namespace Boring32::SSPI
 			SecBufferDesc m_desc{ 0 };
 	};
 
-	struct SizedContextBuffer
-	{
-		~SizedContextBuffer()
-		{
-			Destroy();
-		}
-
-		void** GetAddress() noexcept
-		{
-			return reinterpret_cast<void**>(&m_buffer[0]);
-		}
-
-		void* Get() const noexcept
-		{
-			return reinterpret_cast<void*>(const_cast<std::byte*>(&m_buffer[0]));
-		}
-
-		void Destroy()
-		{
-			m_buffer.clear();
-		}
-
-		private:
-			std::vector<std::byte> m_buffer;
-	};
+	
 
 	class ContextBuffers
 	{

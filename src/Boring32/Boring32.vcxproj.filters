@@ -515,5 +515,9 @@
     <ClCompile Include="MediaFoundation\boring32.mediafoundation.ixx" />
     <ClCompile Include="SSPI\boring32.sspi-types.ixx" />
     <ClCompile Include="SSPI\boring32.sspi-contextbuffer.ixx" />
+    <ClCompile Include="SSPI\boring32.sspi-sizedcontextbuffer.ixx" />
+    <ClCompile Include="SSPI\boring32.sspi-sizedcontextbuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
