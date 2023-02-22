@@ -71,7 +71,7 @@ namespace Boring32::Security
 		const NTSTATUS status = LsaAddAccountRights(
 			m_handle.get(), // open policy handle
 			accountSid,     // target SID
-			lsaPrivStr,		// privileges
+			lsaPrivStr.Get(),		// privileges
 			1               // privilege count
 		);
 		if (NT_ERROR(status))
@@ -99,7 +99,7 @@ namespace Boring32::Security
 			m_handle.get(), // open policy handle
 			accountSid,     // target SID
 			false,          // do not disable all rights
-			lsaPrivStr,	// privileges
+			lsaPrivStr.Get(),	// privileges
 			1               // privilege count
 		);
 		if (NT_ERROR(status))

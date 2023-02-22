@@ -14,9 +14,10 @@ namespace Boring32::Security
 		public:
 			LSAUnicodeString& operator=(const LSAUnicodeString& other);
 			LSAUnicodeString& operator=(LSAUnicodeString&& other);
+			LSA_UNICODE_STRING* Get() noexcept;
 
 		public:
-			operator LSA_UNICODE_STRING* () noexcept;
+			//operator LSA_UNICODE_STRING* () noexcept;
 
 		private:
 			void Init();

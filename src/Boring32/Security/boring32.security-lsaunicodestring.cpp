@@ -38,7 +38,12 @@ namespace Boring32::Security
 		return *this;
 	}
 
-	LSAUnicodeString::operator LSA_UNICODE_STRING* () noexcept
+	/*LSAUnicodeString::operator LSA_UNICODE_STRING* () noexcept
+	{
+		return &m_lsaStr;
+	}*/
+
+	LSA_UNICODE_STRING* LSAUnicodeString::Get() noexcept
 	{
 		return &m_lsaStr;
 	}
