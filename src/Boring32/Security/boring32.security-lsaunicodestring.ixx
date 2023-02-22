@@ -17,7 +17,9 @@ namespace Boring32::Security
 			LSA_UNICODE_STRING* Get() noexcept;
 
 		public:
-			//operator LSA_UNICODE_STRING* () noexcept;
+			// Weirdly, this fails to compile in 17.5.0
+			// No error if only LSA_UNICODE_STRING is returned (no pointer) 
+			//operator LSA_UNICODE_STRING* ();
 
 		private:
 			void Init();
