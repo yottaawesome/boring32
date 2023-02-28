@@ -520,5 +520,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SSPI\boring32.sspi-buffertype.ixx" />
+    <ClCompile Include="COM\boring32.com-functions.ixx" />
   </ItemGroup>
 </Project>
