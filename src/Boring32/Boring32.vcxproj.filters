@@ -521,5 +521,12 @@
     </ClCompile>
     <ClCompile Include="SSPI\boring32.sspi-buffertype.ixx" />
     <ClCompile Include="COM\boring32.com-functions.ixx" />
+    <ClCompile Include="SSPI\Credential\boring32.sspi-credentialprovider.ixx" />
+    <ClCompile Include="SSPI\Digest\boring32.sspi-digestprovider.ixx" />
+    <ClCompile Include="SSPI\Kerberos\boring32.sspi-kerberosprovider.ixx" />
+    <ClCompile Include="SSPI\Negotiate\boring32.sspi-negotiateprovider.ixx" />
+    <ClCompile Include="SSPI\NTLM\boring32.sspi-ntlmprovider.ixx" />
+    <ClCompile Include="SSPI\PKU2U\boring32.sspi-pku2uprovider.ixx" />
+    <ClCompile Include="SSPI\Schannel\boring32.sspi-schannelprovider.ixx" />
   </ItemGroup>
 </Project>

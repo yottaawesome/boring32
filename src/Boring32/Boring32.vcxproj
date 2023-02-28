@@ -303,6 +303,13 @@
     <ClCompile Include="SSPI\boring32.sspi-types.ixx" />
     <ClCompile Include="SSPI\boring32.sspi.ixx" />
     <ClCompile Include="SSPI\boring32.sspi-securitycontext.ixx" />
+    <ClCompile Include="SSPI\Credential\boring32.sspi-credentialprovider.ixx" />
+    <ClCompile Include="SSPI\Digest\boring32.sspi-digestprovider.ixx" />
+    <ClCompile Include="SSPI\Kerberos\boring32.sspi-kerberosprovider.ixx" />
+    <ClCompile Include="SSPI\Negotiate\boring32.sspi-negotiateprovider.ixx" />
+    <ClCompile Include="SSPI\NTLM\boring32.sspi-ntlmprovider.ixx" />
+    <ClCompile Include="SSPI\PKU2U\boring32.sspi-pku2uprovider.ixx" />
+    <ClCompile Include="SSPI\Schannel\boring32.sspi-schannelprovider.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-registeredtask.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskfolder.ixx" />
