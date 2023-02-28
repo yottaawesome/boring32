@@ -7,7 +7,7 @@ namespace Boring32::SSPI
 	SecurityContext::SecurityContext(
 		const bool sspiAllocatedBuffers,
 		const unsigned flags,
-		const std::wstring target
+		std::wstring target
 	) : m_sspiAllocatedBuffers(sspiAllocatedBuffers),
 		m_flags(flags),
 		m_target(std::move(target))
