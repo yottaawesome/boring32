@@ -9,6 +9,8 @@ export namespace Boring32::SSPI
 	// https://learn.microsoft.com/en-us/windows/win32/api/sspi/nf-sspi-initializesecuritycontextw
 	// https://learn.microsoft.com/en-us/windows/win32/secauthn/initializesecuritycontext--schannel
 	// Should this be SchannelSecurityContext, or should we subclass it?
+	// This should really be split up -- the security context function's
+	// accpetable parameters are different for the different SSPI providers.
 	class SecurityContext
 	{
 		public:
