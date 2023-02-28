@@ -22,7 +22,7 @@ export namespace Boring32::SSPI
 			);
 
 		public:
-			virtual void Init();
+			virtual void Init(PCredHandle credHandle);
 			virtual void AddInBuffer(
 				const BufferType type,
 				const unsigned size,
@@ -35,11 +35,12 @@ export namespace Boring32::SSPI
 			);
 
 		protected:
-			SecHandle m_context = { 0 };
+			SecHandle m_context { 0 };
 			bool m_initialised = false;
 			std::vector<SecBuffer> m_inBuffers;
 			std::vector<SecBuffer> m_outBuffers;
 			unsigned m_flags = 0;
 			bool m_sspiAllocatedBuffers = false;
+			CtxtHandle m_ctxHandle { 0 };
 	};
 }

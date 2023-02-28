@@ -1,4 +1,5 @@
 module boring32.sspi:securitycontext;
+import <string>;
 
 namespace Boring32::SSPI
 {
@@ -9,7 +10,7 @@ namespace Boring32::SSPI
 		m_flags(flags)
 	{ }
 
-	void SecurityContext::Init()
+	void SecurityContext::Init(PCredHandle credHandle)
 	{
 		SecBufferDesc outBufferDesc{
 			.ulVersion = 0,
@@ -22,24 +23,32 @@ namespace Boring32::SSPI
 			.pBuffers = &m_inBuffers[0]
 		};
 
+		m_flags |= ISC_REQ_CONFIDENTIALITY;
 		if (m_sspiAllocatedBuffers)
 			m_flags |= ISC_REQ_ALLOCATE_MEMORY;
 
+		// Where do we put this?
+		std::wstring serverName = L"www.microsoft.com";
+
+		TimeStamp Lifetime;
+		ULONG contextAttributes;
+		// https://learn.microsoft.com/en-us/windows/win32/secauthn/initializesecuritycontext--general
 		// https://learn.microsoft.com/en-us/windows/win32/secauthn/initializesecuritycontext--schannel
-		/*SECURITY_STATUS SEC_Entry = InitializeSecurityContext(
-			_In_opt_    PCredHandle    phCredential,
-			_In_opt_    PCtxtHandle    phContext,
-			_In_opt_    SEC_CHAR * pszTargetName,
-			_In_        ULONG          fContextReq,
-			_In_        ULONG          Reserved1,
-			_In_        ULONG          TargetDataRep,
-			_In_opt_    PSecBufferDesc pInput,
-			_In_        ULONG          Reserved2,
-			_Inout_opt_ PCtxtHandle    phNewContext,
-			_Inout_opt_ PSecBufferDesc pOutput,
-			_Out_       PULONG         pfContextAttr,
-			_Out_opt_   PTimeStamp     ptsExpiry
-		);*/
+		// https://learn.microsoft.com/en-us/windows/win32/api/sspi/nf-sspi-initializesecuritycontextw
+		SECURITY_STATUS SEC_Entry = InitializeSecurityContextW(
+			credHandle,
+			&m_ctxHandle,
+			&serverName[0],
+			m_flags,
+			0,
+			0, // SECURITY_NATIVE_DREP ... not used with Schannel
+			&inBufferDesc,
+			0,
+			&m_ctxHandle,
+			&outBufferDesc,
+			&Lifetime,
+			&contextAttributes	//_Out_opt_   PTimeStamp     ptsExpiry
+		);
 	}
 
 	void SecurityContext::AddInBuffer(
