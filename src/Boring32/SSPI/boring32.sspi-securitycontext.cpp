@@ -5,9 +5,11 @@ namespace Boring32::SSPI
 {
 	SecurityContext::SecurityContext(
 		const bool sspiAllocatedBuffers,
-		const unsigned flags
+		const unsigned flags,
+		const std::wstring target
 	) : m_sspiAllocatedBuffers(sspiAllocatedBuffers),
-		m_flags(flags)
+		m_flags(flags),
+		m_target(std::move(target))
 	{ }
 
 	void SecurityContext::Init(PCredHandle credHandle)
@@ -27,10 +29,7 @@ namespace Boring32::SSPI
 		if (m_sspiAllocatedBuffers)
 			m_flags |= ISC_REQ_ALLOCATE_MEMORY;
 
-		// Where do we put this?
-		std::wstring serverName = L"www.microsoft.com";
-
-		TimeStamp Lifetime;
+		TimeStamp lifetime;
 		ULONG contextAttributes;
 		// https://learn.microsoft.com/en-us/windows/win32/secauthn/initializesecuritycontext--general
 		// https://learn.microsoft.com/en-us/windows/win32/secauthn/initializesecuritycontext--schannel
@@ -38,7 +37,7 @@ namespace Boring32::SSPI
 		SECURITY_STATUS SEC_Entry = InitializeSecurityContextW(
 			credHandle,
 			&m_ctxHandle,
-			&serverName[0],
+			&m_target[0],
 			m_flags,
 			0,
 			0, // SECURITY_NATIVE_DREP ... not used with Schannel
@@ -46,8 +45,8 @@ namespace Boring32::SSPI
 			0,
 			&m_ctxHandle,
 			&outBufferDesc,
-			&Lifetime,
-			&contextAttributes	//_Out_opt_   PTimeStamp     ptsExpiry
+			&contextAttributes,
+			&lifetime
 		);
 	}
 

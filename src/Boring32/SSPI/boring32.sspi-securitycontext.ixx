@@ -1,5 +1,6 @@
 export module boring32.sspi:securitycontext;
 import <vector>;
+import <string>;
 import <win32.hpp>;
 import :buffertype;
 
@@ -21,7 +22,8 @@ export namespace Boring32::SSPI
 			SecurityContext(SecurityContext&&) noexcept = delete;
 			SecurityContext(
 				const bool sspiAllocatedBuffers,
-				const unsigned flags
+				const unsigned flags,
+				std::wstring target
 			);
 
 		public:
@@ -45,5 +47,6 @@ export namespace Boring32::SSPI
 			unsigned m_flags = 0;
 			bool m_sspiAllocatedBuffers = false;
 			CtxtHandle m_ctxHandle { 0 };
+			std::wstring m_target;
 	};
 }
