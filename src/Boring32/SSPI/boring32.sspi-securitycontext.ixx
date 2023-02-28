@@ -25,11 +25,13 @@ export namespace Boring32::SSPI
 			virtual void Init();
 			virtual void AddInBuffer(
 				const BufferType type,
-				const unsigned size
+				const unsigned size,
+				void* const ptr
 			);
 			virtual void AddOutBuffer(
 				const BufferType type,
-				const unsigned size
+				const unsigned size,
+				void* const ptr
 			);
 
 		protected:

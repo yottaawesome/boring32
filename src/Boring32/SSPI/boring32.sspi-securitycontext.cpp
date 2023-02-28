@@ -22,6 +22,8 @@ namespace Boring32::SSPI
 			.pBuffers = &m_inBuffers[0]
 		};
 
+		if (m_sspiAllocatedBuffers)
+			m_flags |= ISC_REQ_ALLOCATE_MEMORY;
 
 		// https://learn.microsoft.com/en-us/windows/win32/secauthn/initializesecuritycontext--schannel
 		/*SECURITY_STATUS SEC_Entry = InitializeSecurityContext(
@@ -42,23 +44,27 @@ namespace Boring32::SSPI
 
 	void SecurityContext::AddInBuffer(
 		const BufferType type,
-		const unsigned size
+		const unsigned size,
+		void* const ptr
 	)
 	{
 		m_inBuffers.push_back({
 			.cbBuffer = 0,
-			.BufferType = static_cast<unsigned>(type)
+			.BufferType = static_cast<unsigned>(type),
+			.pvBuffer = ptr
 		});
 	}
 
 	void SecurityContext::AddOutBuffer(
 		const BufferType type,
-		const unsigned size
+		const unsigned size,
+		void* const ptr
 	)
 	{
 		m_outBuffers.push_back({
 			.cbBuffer = 0,
-			.BufferType = static_cast<unsigned>(type)
+			.BufferType = static_cast<unsigned>(type),
+			.pvBuffer = ptr
 		});
 	}
 }
