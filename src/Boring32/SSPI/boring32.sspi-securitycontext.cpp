@@ -1,6 +1,7 @@
 module boring32.sspi:securitycontext;
 import <string>;
 import boring32.error;
+import boring32.com;
 
 namespace Boring32::SSPI
 {
@@ -35,7 +36,7 @@ namespace Boring32::SSPI
 		// https://learn.microsoft.com/en-us/windows/win32/secauthn/initializesecuritycontext--general
 		// https://learn.microsoft.com/en-us/windows/win32/secauthn/initializesecuritycontext--schannel
 		// https://learn.microsoft.com/en-us/windows/win32/api/sspi/nf-sspi-initializesecuritycontextw
-		SECURITY_STATUS status = InitializeSecurityContextW(
+		const SECURITY_STATUS status = InitializeSecurityContextW(
 			credHandle,
 			&m_ctxHandle,
 			&m_target[0],
@@ -49,11 +50,11 @@ namespace Boring32::SSPI
 			&contextAttributes,
 			&lifetime
 		);
-		if (FAILED(status))
+		if (COM::Failed(status))
 		{
 			// Need to throw some kind of exception here
 			// https://learn.microsoft.com/en-us/windows/win32/secauthn/schannel-error-codes-for-tls-and-ssl-alerts
-			// These look like HRESULTs
+			// These look like HRESULTs, but not sure
 		}
 	}
 
