@@ -5,8 +5,16 @@ import boring32.com;
 
 namespace COM
 {
+	constexpr HRESULT TestHr = CS_E_PACKAGE_NOTFOUND;
+
 	TEST_CLASS(HResult)
 	{
+		void TestCopyOrMove(Boring32::COM::HResult& from, Boring32::COM::HResult to)
+		{
+			Assert::IsTrue(from.Get() == TestHr);
+			Assert::IsTrue(to.Get() == TestHr);
+		}
+
 		public:
 			TEST_METHOD(TestDefaultConstructor)
 			{
@@ -15,10 +23,9 @@ namespace COM
 
 			TEST_METHOD(TestMoveConstructor)
 			{
-				Boring32::COM::HResult hr1(CS_E_PACKAGE_NOTFOUND);
+				Boring32::COM::HResult hr1(TestHr);
 				Boring32::COM::HResult hr2(std::move(hr1));
-				Assert::IsTrue(hr1.Get() == CS_E_PACKAGE_NOTFOUND);
-				Assert::IsTrue(hr2.Get() == CS_E_PACKAGE_NOTFOUND);
+				TestCopyOrMove(hr1, hr2);
 			}
 	};
 }
