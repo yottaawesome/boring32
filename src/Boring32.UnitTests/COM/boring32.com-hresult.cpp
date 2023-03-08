@@ -28,6 +28,13 @@ namespace COM
 				TestCopyOrMove(hr1, hr2);
 			}
 
+			TEST_METHOD(TestCopyAssignment)
+			{
+				Boring32::COM::HResult hr1(TestHr);
+				Boring32::COM::HResult hr2 = hr1;
+				TestCopyOrMove(hr1, hr2);
+			}
+
 			TEST_METHOD(TestMoveConstructor)
 			{
 				Boring32::COM::HResult hr1(TestHr);
