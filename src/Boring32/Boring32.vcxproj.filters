@@ -528,5 +528,9 @@
     <ClCompile Include="SSPI\NTLM\boring32.sspi-ntlmprovider.ixx" />
     <ClCompile Include="SSPI\PKU2U\boring32.sspi-pku2uprovider.ixx" />
     <ClCompile Include="SSPI\Schannel\boring32.sspi-schannelprovider.ixx" />
+    <ClCompile Include="COM\boring32.com-hresult.ixx" />
+    <ClCompile Include="COM\boring32.com-hresult.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
