@@ -123,6 +123,9 @@
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskservice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="COM\boring32.com-hresult.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
