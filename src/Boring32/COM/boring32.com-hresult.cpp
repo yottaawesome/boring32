@@ -64,4 +64,14 @@ namespace Boring32::COM
 			throw Error::COMError(msg, m_hr, loc);
 		throw Error::COMError("HRESULT check failed", m_hr, loc);
 	}
+
+	bool HResult::operator==(const HRESULT hr) const noexcept
+	{
+		return m_hr == hr;
+	}
+
+	bool HResult::operator==(const HResult& hr) const noexcept
+	{
+		return m_hr == hr.m_hr;
+	}
 }

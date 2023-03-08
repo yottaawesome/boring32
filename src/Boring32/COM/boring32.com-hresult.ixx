@@ -26,6 +26,8 @@ export namespace Boring32::COM
 			virtual operator HRESULT() const noexcept;
 			virtual HResult& operator=(const HRESULT hr) noexcept;
 			virtual operator bool() const noexcept;
+			virtual bool operator==(const HRESULT hr) const noexcept;
+			virtual bool operator==(const HResult& hr) const noexcept;
 
 		// See https://learn.microsoft.com/en-us/windows/win32/com/using-macros-for-error-handling
 		public:
