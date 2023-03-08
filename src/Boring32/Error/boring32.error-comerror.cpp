@@ -15,9 +15,7 @@ namespace Boring32::Error
 		const std::string& msg,
 		const HRESULT hr,
 		const std::source_location location
-	)
-		: Boring32Error(),
-		m_hresult(hr)
+	) : m_hresult(hr)
 	{
 		GenerateErrorMessage(location, msg);
 	}
