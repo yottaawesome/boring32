@@ -36,5 +36,17 @@
     <ClCompile Include="TLS\sspiserver.tls-functions.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NTLM\sspiserver.ntlm-functions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NTLM\sspiserver.ntlm-main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TLS\sspiserver.tls-functions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TLS\sspiserver.tls-main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
