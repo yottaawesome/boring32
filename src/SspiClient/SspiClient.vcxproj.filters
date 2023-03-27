@@ -24,5 +24,11 @@
     <ClCompile Include="NTLM\sspiclient.ntlm.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NTLM\sspiclient.ntlm-main.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TLS\sspiclient.tls-main.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

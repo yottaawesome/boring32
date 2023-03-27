@@ -130,7 +130,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NTLM\sspiclient.ntlm-main.ixx" />
     <ClCompile Include="NTLM\sspiclient.ntlm.ixx" />
+    <ClCompile Include="TLS\sspiclient.tls-main.ixx" />
     <ClCompile Include="TLS\sspiclient.tls.ixx" />
   </ItemGroup>
   <ItemGroup>
