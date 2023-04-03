@@ -11,7 +11,12 @@ export namespace SSPIClient::NTLM
         const char* ServerName,
         const unsigned g_usPort
     );
-    BOOL DoAuthentication(SOCKET s);
+    BOOL DoAuthentication(
+        SOCKET s,
+        CredHandle* hCred,
+        SecHandle* hcText,
+        const char* TargetName
+    );
     BOOL SendMsg(
         SOCKET  s,
         PBYTE   pBuf,

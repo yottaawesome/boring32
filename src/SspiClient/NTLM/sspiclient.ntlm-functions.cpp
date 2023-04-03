@@ -115,7 +115,12 @@ namespace SSPIClient::NTLM
         return(TRUE);
     }
 
-    BOOL DoAuthentication(SOCKET s)
+    BOOL DoAuthentication(
+        SOCKET s,
+        CredHandle* hCred,
+        SecHandle* hcText,
+        const char* TargetName
+    )
     {
         BOOL        fDone = FALSE;
         DWORD       cbOut = 0;
@@ -135,19 +140,19 @@ namespace SSPIClient::NTLM
         }
 
         cbOut = cbMaxMessage;
-        /*if (!GenClientContext(
+        if (!GenClientContext(
             NULL,
             0,
             pOutBuf,
             &cbOut,
             &fDone,
             (SEC_WCHAR*)TargetName,
-            &hCred,
-            &hcText
+            hCred,
+            hcText
         ))
         {
             return(FALSE);
-        }*/
+        }
 
         if (!SendMsg(s, pOutBuf, cbOut))
         {
@@ -167,18 +172,18 @@ namespace SSPIClient::NTLM
 
             cbOut = cbMaxMessage;
 
-            /*if (!GenClientContext(
+            if (!GenClientContext(
                 pInBuf,
                 cbIn,
                 pOutBuf,
                 &cbOut,
                 &fDone,
                 (SEC_WCHAR*)TargetName,
-                &hCred,
-                &hcText))
+                hCred,
+                hcText))
             {
                 MyHandleError("GenClientContext failed");
-            }*/
+            }
             if (!SendMsg(
                 s,
                 pOutBuf,
