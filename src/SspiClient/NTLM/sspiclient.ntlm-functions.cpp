@@ -3,9 +3,10 @@ import <string>;
 
 namespace SSPIClient::NTLM
 {
+    constexpr unsigned cbMaxMessage = 12000;
+
     void MyHandleError(const char* s)
     {
-
         fprintf(stderr, "%s error. Exiting.\n", s);
         exit(EXIT_FAILURE);
     }
@@ -107,4 +108,218 @@ namespace SSPIClient::NTLM
 
         return(TRUE);
     }
+
+    BOOL DoAuthentication(SOCKET s)
+    {
+        BOOL        fDone = FALSE;
+        DWORD       cbOut = 0;
+        DWORD       cbIn = 0;
+        PBYTE       pInBuf;
+        PBYTE       pOutBuf;
+
+
+        if (!(pInBuf = (PBYTE)malloc(cbMaxMessage)))
+        {
+            MyHandleError("Memory allocation ");
+        }
+
+        if (!(pOutBuf = (PBYTE)malloc(cbMaxMessage)))
+        {
+            MyHandleError("Memory allocation ");
+        }
+
+        cbOut = cbMaxMessage;
+        /*if (!GenClientContext(
+            NULL,
+            0,
+            pOutBuf,
+            &cbOut,
+            &fDone,
+            (SEC_WCHAR*)TargetName,
+            &hCred,
+            &hcText
+        ))
+        {
+            return(FALSE);
+        }*/
+
+        if (!SendMsg(s, pOutBuf, cbOut))
+        {
+            MyHandleError("Send message failed ");
+        }
+
+        while (!fDone)
+        {
+            if (!ReceiveMsg(
+                s,
+                pInBuf,
+                cbMaxMessage,
+                &cbIn))
+            {
+                MyHandleError("Receive message failed ");
+            }
+
+            cbOut = cbMaxMessage;
+
+            /*if (!GenClientContext(
+                pInBuf,
+                cbIn,
+                pOutBuf,
+                &cbOut,
+                &fDone,
+                (SEC_WCHAR*)TargetName,
+                &hCred,
+                &hcText))
+            {
+                MyHandleError("GenClientContext failed");
+            }*/
+            if (!SendMsg(
+                s,
+                pOutBuf,
+                cbOut))
+            {
+                MyHandleError("Send message 2  failed ");
+            }
+        }
+
+        free(pInBuf);
+        free(pOutBuf);
+        return(TRUE);
+    }
+
+    BOOL SendMsg(
+        SOCKET  s,
+        PBYTE   pBuf,
+        DWORD   cbBuf)
+    {
+        if (0 == cbBuf)
+            return(TRUE);
+
+        //----------------------------------------------------------
+        //  Send the size of the message.
+
+        if (!SendBytes(s, (PBYTE)&cbBuf, sizeof(cbBuf)))
+            return(FALSE);
+
+        //----------------------------------------------------------
+        //  Send the body of the message.
+
+        if (!SendBytes(
+            s,
+            pBuf,
+            cbBuf))
+        {
+            return(FALSE);
+        }
+
+        return(TRUE);
+    }
+
+    BOOL ReceiveMsg(
+        SOCKET  s,
+        PBYTE   pBuf,
+        DWORD   cbBuf,
+        DWORD* pcbRead)
+
+    {
+        DWORD cbRead;
+        DWORD cbData;
+
+        //----------------------------------------------------------
+        //  Receive the number of bytes in the message.
+
+        if (!ReceiveBytes(
+            s,
+            (PBYTE)&cbData,
+            sizeof(cbData),
+            &cbRead))
+        {
+            return(FALSE);
+        }
+
+        if (sizeof(cbData) != cbRead)
+            return(FALSE);
+        //----------------------------------------------------------
+        //  Read the full message.
+
+        if (!ReceiveBytes(
+            s,
+            pBuf,
+            cbData,
+            &cbRead))
+        {
+            return(FALSE);
+        }
+
+        if (cbRead != cbData)
+            return(FALSE);
+
+        *pcbRead = cbRead;
+        return(TRUE);
+    }  // end ReceiveMessage  
+
+    BOOL SendBytes(
+        SOCKET  s,
+        PBYTE   pBuf,
+        DWORD   cbBuf)
+    {
+        PBYTE pTemp = pBuf;
+        int   cbSent;
+        int   cbRemaining = cbBuf;
+
+        if (0 == cbBuf)
+            return(TRUE);
+
+        while (cbRemaining)
+        {
+            cbSent = send(
+                s,
+                (const char*)pTemp,
+                cbRemaining,
+                0);
+            if (SOCKET_ERROR == cbSent)
+            {
+                fprintf(stderr, "send failed: %u\n", GetLastError());
+                return FALSE;
+            }
+
+            pTemp += cbSent;
+            cbRemaining -= cbSent;
+        }
+
+        return TRUE;
+    }
+
+    BOOL ReceiveBytes(
+        SOCKET  s,
+        PBYTE   pBuf,
+        DWORD   cbBuf,
+        DWORD* pcbRead)
+    {
+        PBYTE pTemp = pBuf;
+        int cbRead, cbRemaining = cbBuf;
+
+        while (cbRemaining)
+        {
+            cbRead = recv(
+                s,
+                (char*)pTemp,
+                cbRemaining,
+                0);
+            if (0 == cbRead)
+                break;
+            if (SOCKET_ERROR == cbRead)
+            {
+                fprintf(stderr, "recv failed: %u\n", GetLastError());
+                return FALSE;
+            }
+
+            cbRemaining -= cbRead;
+            pTemp += cbRead;
+        }
+
+        *pcbRead = cbBuf - cbRemaining;
+
+        return TRUE;
+    }  // end ReceiveBytes
 }

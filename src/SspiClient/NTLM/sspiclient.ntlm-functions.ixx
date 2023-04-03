@@ -11,4 +11,27 @@ export namespace SSPIClient::NTLM
         const char* ServerName,
         const unsigned g_usPort
     );
+    BOOL DoAuthentication(SOCKET s);
+    BOOL SendMsg(
+        SOCKET  s,
+        PBYTE   pBuf,
+        DWORD   cbBuf
+    );
+    BOOL ReceiveMsg(
+        SOCKET  s,
+        PBYTE   pBuf,
+        DWORD   cbBuf,
+        DWORD* pcbRead
+    );
+    BOOL SendBytes(
+        SOCKET  s,
+        PBYTE   pBuf,
+        DWORD   cbBuf
+    );
+    BOOL ReceiveBytes(
+        SOCKET  s,
+        PBYTE   pBuf,
+        DWORD   cbBuf,
+        DWORD* pcbRead
+    );
 }
