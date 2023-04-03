@@ -34,4 +34,18 @@ export namespace SSPIClient::NTLM
         DWORD   cbBuf,
         DWORD* pcbRead
     );
+    BOOL GenClientContext(
+        BYTE* pIn,
+        DWORD       cbIn,
+        BYTE* pOut,
+        DWORD* pcbOut,
+        BOOL* pfDone,
+        SEC_WCHAR* pszTarget,
+        CredHandle* hCred,
+        SecHandle* hcText
+    );
+    void PrintHexDump(
+        DWORD length,
+        PBYTE buffer
+    );
 }

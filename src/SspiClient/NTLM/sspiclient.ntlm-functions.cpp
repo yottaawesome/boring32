@@ -4,6 +4,12 @@ import <string>;
 namespace SSPIClient::NTLM
 {
     constexpr unsigned cbMaxMessage = 12000;
+    constexpr unsigned MessageAttribute = ISC_REQ_CONFIDENTIALITY;
+
+    inline bool SEC_SUCCESS(const DWORD Status) 
+    {
+        return Status >= 0;
+    }
 
     void MyHandleError(const char* s)
     {
@@ -322,4 +328,184 @@ namespace SSPIClient::NTLM
 
         return TRUE;
     }  // end ReceiveBytes
+
+    BOOL GenClientContext(
+        BYTE* pIn,
+        DWORD       cbIn,
+        BYTE* pOut,
+        DWORD* pcbOut,
+        BOOL* pfDone,
+        SEC_WCHAR* pszTarget,
+        CredHandle* hCred,
+        SecHandle* hcText)
+    {
+        SECURITY_STATUS   ss;
+        TimeStamp         Lifetime;
+        SecBufferDesc     OutBuffDesc;
+        SecBuffer         OutSecBuff;
+        SecBufferDesc     InBuffDesc;
+        SecBuffer         InSecBuff;
+        ULONG             ContextAttributes;
+        static PTCHAR     lpPackageName = (PTCHAR)NEGOSSP_NAME;
+
+        if (NULL == pIn)
+        {
+            ss = AcquireCredentialsHandle(
+                NULL,
+                lpPackageName,
+                SECPKG_CRED_OUTBOUND,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                hCred,
+                &Lifetime);
+
+            if (!(SEC_SUCCESS(ss)))
+            {
+                MyHandleError("AcquireCreds failed ");
+            }
+        }
+
+        //--------------------------------------------------------------------
+        //  Prepare the buffers.
+
+        OutBuffDesc.ulVersion = 0;
+        OutBuffDesc.cBuffers = 1;
+        OutBuffDesc.pBuffers = &OutSecBuff;
+
+        OutSecBuff.cbBuffer = *pcbOut;
+        OutSecBuff.BufferType = SECBUFFER_TOKEN;
+        OutSecBuff.pvBuffer = pOut;
+
+        //-------------------------------------------------------------------
+        //  The input buffer is created only if a message has been received 
+        //  from the server.
+
+        if (pIn)
+        {
+            InBuffDesc.ulVersion = 0;
+            InBuffDesc.cBuffers = 1;
+            InBuffDesc.pBuffers = &InSecBuff;
+
+            InSecBuff.cbBuffer = cbIn;
+            InSecBuff.BufferType = SECBUFFER_TOKEN;
+            InSecBuff.pvBuffer = pIn;
+
+            ss = InitializeSecurityContext(
+                hCred,
+                hcText,
+                (SEC_WCHAR*)pszTarget,
+                MessageAttribute,
+                0,
+                SECURITY_NATIVE_DREP,
+                &InBuffDesc,
+                0,
+                hcText,
+                &OutBuffDesc,
+                &ContextAttributes,
+                &Lifetime);
+        }
+        else
+        {
+            ss = InitializeSecurityContext(
+                hCred,
+                NULL,
+                (SEC_WCHAR*)pszTarget,
+                MessageAttribute,
+                0,
+                SECURITY_NATIVE_DREP,
+                NULL,
+                0,
+                hcText,
+                &OutBuffDesc,
+                &ContextAttributes,
+                &Lifetime);
+        }
+
+        if (!SEC_SUCCESS(ss))
+        {
+            MyHandleError("InitializeSecurityContext failed ");
+        }
+
+        //-------------------------------------------------------------------
+        //  If necessary, complete the token.
+
+        if ((SEC_I_COMPLETE_NEEDED == ss)
+            || (SEC_I_COMPLETE_AND_CONTINUE == ss))
+        {
+            ss = CompleteAuthToken(hcText, &OutBuffDesc);
+            if (!SEC_SUCCESS(ss))
+            {
+                fprintf(stderr, "complete failed: 0x%08x\n", ss);
+                return FALSE;
+            }
+        }
+
+        *pcbOut = OutSecBuff.cbBuffer;
+
+        *pfDone = !((SEC_I_CONTINUE_NEEDED == ss) ||
+            (SEC_I_COMPLETE_AND_CONTINUE == ss));
+
+        printf("Token buffer generated (%lu bytes):\n", OutSecBuff.cbBuffer);
+        PrintHexDump(OutSecBuff.cbBuffer, (PBYTE)OutSecBuff.pvBuffer);
+        return TRUE;
+
+    }
+
+    void PrintHexDump(
+        DWORD length,
+        PBYTE buffer)
+    {
+        DWORD i, count, index;
+        CHAR rgbDigits[] = "0123456789abcdef";
+        CHAR rgbLine[100];
+        char cbLine;
+
+        for (index = 0; length;
+            length -= count, buffer += count, index += count)
+        {
+            count = (length > 16) ? 16 : length;
+
+            sprintf_s(rgbLine, 100, "%4.4x  ", index);
+            cbLine = 6;
+
+            for (i = 0; i < count; i++)
+            {
+                rgbLine[cbLine++] = rgbDigits[buffer[i] >> 4];
+                rgbLine[cbLine++] = rgbDigits[buffer[i] & 0x0f];
+                if (i == 7)
+                {
+                    rgbLine[cbLine++] = ':';
+                }
+                else
+                {
+                    rgbLine[cbLine++] = ' ';
+                }
+            }
+            for (; i < 16; i++)
+            {
+                rgbLine[cbLine++] = ' ';
+                rgbLine[cbLine++] = ' ';
+                rgbLine[cbLine++] = ' ';
+            }
+
+            rgbLine[cbLine++] = ' ';
+
+            for (i = 0; i < count; i++)
+            {
+                if (buffer[i] < 32 || buffer[i] > 126)
+                {
+                    rgbLine[cbLine++] = '.';
+                }
+                else
+                {
+                    rgbLine[cbLine++] = buffer[i];
+                }
+            }
+
+            rgbLine[cbLine++] = 0;
+            printf("%s\n", rgbLine);
+        }
+    }
 }
