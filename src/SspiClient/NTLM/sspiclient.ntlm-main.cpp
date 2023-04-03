@@ -34,10 +34,10 @@ namespace SSPIClient::NTLM
 
         ConnectSocket(
             &Client_Socket,
-            &hcText,
             ServerName,
             g_usPort
         );
+        //  Authenticate the connection. 
         DoAuthentication(
             Client_Socket,
             &hCred,

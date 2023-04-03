@@ -6,7 +6,6 @@ export namespace SSPIClient::NTLM
     void MyHandleError(const char* s);
     BOOL ConnectSocket(
         SOCKET* s,
-        SecHandle* hcText,
         const char* ServerName,
         const unsigned g_usPort
     );

@@ -19,7 +19,6 @@ namespace SSPIClient::NTLM
 
     BOOL ConnectSocket(
         SOCKET* s,
-        SecHandle* hcText,
         const char* ServerName,
         const unsigned g_usPort
     )
@@ -53,15 +52,6 @@ namespace SSPIClient::NTLM
                 MyHandleError("Unable to resolve host name ");
                 return(FALSE);
             }
-            //ulAddress = pHost->ai_addr.S_un.S_addr
-            //pHost->
-            ;
-            /*memcpy(
-                (char FAR*)&ulAddress, 
-                pHost->ai_addr->sa_data,
-                14
-            );
-            FreeAddrInfoA(pHost);*/
         }
 
         //--------------------------------------------------------------------
@@ -100,16 +90,6 @@ namespace SSPIClient::NTLM
             closesocket(*s);
             MyHandleError("Connect failed ");
         }
-        
-
-        //--------------------------------------------------------------------
-        //  Authenticate the connection. 
-        // This can be moved to the parent scope
-        /*if (!DoAuthentication(*s))
-        {
-            closesocket(*s);
-            MyHandleError("Authentication ");
-        }*/
 
         return(TRUE);
     }
