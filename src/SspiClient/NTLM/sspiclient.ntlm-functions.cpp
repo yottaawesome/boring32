@@ -17,9 +17,8 @@ namespace SSPIClient::NTLM
         exit(EXIT_FAILURE);
     }
 
-    BOOL ConnectAuthSocket(
+    BOOL ConnectSocket(
         SOCKET* s,
-        CredHandle* hCred,
         SecHandle* hcText,
         const char* ServerName,
         const unsigned g_usPort
@@ -105,7 +104,7 @@ namespace SSPIClient::NTLM
 
         //--------------------------------------------------------------------
         //  Authenticate the connection. 
-        // TODO
+        // This can be moved to the parent scope
         /*if (!DoAuthentication(*s))
         {
             closesocket(*s);

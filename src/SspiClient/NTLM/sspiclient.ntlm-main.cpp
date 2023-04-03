@@ -32,12 +32,17 @@ namespace SSPIClient::NTLM
 
         SecHandle  hcText;
 
-        ConnectAuthSocket(
+        ConnectSocket(
             &Client_Socket,
-            &hCred,
             &hcText,
             ServerName,
             g_usPort
+        );
+        DoAuthentication(
+            Client_Socket,
+            &hCred,
+            &hcText,
+            TargetName
         );
 	}
 }
