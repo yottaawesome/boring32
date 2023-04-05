@@ -100,24 +100,14 @@ namespace SSPIClient::NTLM
         const char* targetName
     )
     {
-        bool        fDone = false;
-        DWORD       cbOut = 0;
-        DWORD       cbIn = 0;
-        PBYTE       pInBuf;
-        PBYTE       pOutBuf;
-
-
-        if (!(pInBuf = (PBYTE)malloc(cbMaxMessage)))
-        {
-            MyHandleError("Memory allocation ");
-        }
-
+        PBYTE pOutBuf;
         if (!(pOutBuf = (PBYTE)malloc(cbMaxMessage)))
         {
             MyHandleError("Memory allocation ");
         }
 
-        cbOut = cbMaxMessage;
+        bool fDone = false;
+        DWORD cbOut = cbMaxMessage;
         if (!GenClientContext(
             nullptr,
             0,
@@ -137,6 +127,12 @@ namespace SSPIClient::NTLM
             MyHandleError("Send message failed ");
         }
 
+        PBYTE pInBuf;
+        if (!(pInBuf = (PBYTE)malloc(cbMaxMessage)))
+        {
+            MyHandleError("Memory allocation ");
+        }
+        DWORD cbIn = 0;
         while (!fDone)
         {
             if (!ReceiveMsg(
