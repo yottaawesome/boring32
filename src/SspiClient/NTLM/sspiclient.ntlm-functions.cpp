@@ -17,24 +17,24 @@ namespace SSPIClient::NTLM
         exit(EXIT_FAILURE);
     }
 
-    BOOL ConnectSocket(
+    bool ConnectSocket(
         SOCKET* s,
-        const char* ServerName,
-        const unsigned g_usPort
+        const char* serverName,
+        const unsigned usPort
     )
     {
-        unsigned long  ulAddress;
+        unsigned long ulAddress;
         ADDRINFOA* pHost = nullptr;
-        SOCKADDR_IN    sin;
+        SOCKADDR_IN sin;
 
         //--------------------------------------------------------------------
         //  Lookup the server's address.
         int returnVal = inet_pton(
             AF_INET,
-            ServerName,
+            serverName,
             reinterpret_cast<void*>(&ulAddress)
         );
-        if (0 == returnVal)
+        if (returnVal == 0)
         {
             ADDRINFOA hints{
                 .ai_family = AF_INET,
@@ -42,15 +42,15 @@ namespace SSPIClient::NTLM
                 .ai_protocol = IPPROTO_TCP
             };
             const int status = GetAddrInfoA(
-                ServerName,
-                std::to_string(g_usPort).c_str(),
+                serverName,
+                std::to_string(usPort).c_str(),
                 &hints,
                 &pHost
             );
-            if (NULL == pHost)
+            if (pHost == nullptr)
             {
                 MyHandleError("Unable to resolve host name ");
-                return(FALSE);
+                return false;
             }
         }
 
@@ -62,7 +62,7 @@ namespace SSPIClient::NTLM
             SOCK_STREAM,
             0);
 
-        if (INVALID_SOCKET == *s)
+        if (*s == INVALID_SOCKET)
         {
             MyHandleError("Unable to create socket");
         }
@@ -80,7 +80,7 @@ namespace SSPIClient::NTLM
         {
             sin.sin_family = AF_INET;
             sin.sin_addr.S_un.S_addr = ulAddress;
-            sin.sin_port = htons(g_usPort);
+            sin.sin_port = htons(usPort);
         }
         
         //--------------------------------------------------------------------
@@ -91,7 +91,7 @@ namespace SSPIClient::NTLM
             MyHandleError("Connect failed ");
         }
 
-        return(TRUE);
+        return true;
     }
 
     BOOL DoAuthentication(

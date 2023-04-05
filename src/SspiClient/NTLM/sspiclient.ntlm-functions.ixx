@@ -4,10 +4,10 @@ import <win32.hpp>;
 export namespace SSPIClient::NTLM
 {
     void MyHandleError(const char* s);
-    BOOL ConnectSocket(
+    bool ConnectSocket(
         SOCKET* s,
-        const char* ServerName,
-        const unsigned g_usPort
+        const char* serverName,
+        const unsigned usPort
     );
     BOOL DoAuthentication(
         SOCKET s,
