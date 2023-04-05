@@ -9,11 +9,11 @@ export namespace SSPIClient::NTLM
         const char* serverName,
         const unsigned usPort
     );
-    BOOL DoAuthentication(
+    bool DoAuthentication(
         SOCKET s,
         CredHandle* hCred,
         SecHandle* hcText,
-        const char* TargetName
+        const char* targetName
     );
     BOOL SendMsg(
         SOCKET  s,
@@ -42,7 +42,7 @@ export namespace SSPIClient::NTLM
         DWORD       cbIn,
         BYTE* pOut,
         DWORD* pcbOut,
-        BOOL* pfDone,
+        bool* pfDone,
         SEC_WCHAR* pszTarget,
         CredHandle* hCred,
         SecHandle* hcText

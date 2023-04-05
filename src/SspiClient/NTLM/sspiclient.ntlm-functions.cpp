@@ -93,14 +93,14 @@ namespace SSPIClient::NTLM
         return true;
     }
 
-    BOOL DoAuthentication(
+    bool DoAuthentication(
         SOCKET s,
         CredHandle* hCred,
         SecHandle* hcText,
-        const char* TargetName
+        const char* targetName
     )
     {
-        BOOL        fDone = FALSE;
+        bool        fDone = false;
         DWORD       cbOut = 0;
         DWORD       cbIn = 0;
         PBYTE       pInBuf;
@@ -119,17 +119,17 @@ namespace SSPIClient::NTLM
 
         cbOut = cbMaxMessage;
         if (!GenClientContext(
-            NULL,
+            nullptr,
             0,
             pOutBuf,
             &cbOut,
             &fDone,
-            (SEC_WCHAR*)TargetName,
+            (SEC_WCHAR*)targetName,
             hCred,
             hcText
         ))
         {
-            return(FALSE);
+            return false;
         }
 
         if (!SendMsg(s, pOutBuf, cbOut))
@@ -156,7 +156,7 @@ namespace SSPIClient::NTLM
                 pOutBuf,
                 &cbOut,
                 &fDone,
-                (SEC_WCHAR*)TargetName,
+                (SEC_WCHAR*)targetName,
                 hCred,
                 hcText))
             {
@@ -173,7 +173,7 @@ namespace SSPIClient::NTLM
 
         free(pInBuf);
         free(pOutBuf);
-        return(TRUE);
+        return true;
     }
 
     BOOL SendMsg(
@@ -317,7 +317,7 @@ namespace SSPIClient::NTLM
         DWORD       cbIn,
         BYTE* pOut,
         DWORD* pcbOut,
-        BOOL* pfDone,
+        bool* pfDone,
         SEC_WCHAR* pszTarget,
         CredHandle* hCred,
         SecHandle* hcText)
