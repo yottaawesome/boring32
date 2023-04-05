@@ -56,7 +56,6 @@ namespace SSPIClient::NTLM
 
         //--------------------------------------------------------------------
         //  Create the socket.
-
         *s = socket(
             PF_INET,
             SOCK_STREAM,
