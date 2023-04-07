@@ -15,7 +15,7 @@ export namespace SSPIClient::NTLM
         SecHandle* hcText,
         const char* targetName
     );
-    BOOL SendMsg(
+    bool SendMsg(
         SOCKET  s,
         PBYTE   pBuf,
         DWORD   cbBuf

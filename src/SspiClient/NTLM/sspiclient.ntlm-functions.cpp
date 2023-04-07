@@ -172,19 +172,19 @@ namespace SSPIClient::NTLM
         return true;
     }
 
-    BOOL SendMsg(
+    bool SendMsg(
         SOCKET  s,
         PBYTE   pBuf,
         DWORD   cbBuf)
     {
         if (0 == cbBuf)
-            return(TRUE);
+            return true;
 
         //----------------------------------------------------------
         //  Send the size of the message.
 
         if (!SendBytes(s, (PBYTE)&cbBuf, sizeof(cbBuf)))
-            return(FALSE);
+            return false;
 
         //----------------------------------------------------------
         //  Send the body of the message.
@@ -194,10 +194,10 @@ namespace SSPIClient::NTLM
             pBuf,
             cbBuf))
         {
-            return(FALSE);
+            return false;
         }
 
-        return(TRUE);
+        return true;
     }
 
     BOOL ReceiveMsg(
