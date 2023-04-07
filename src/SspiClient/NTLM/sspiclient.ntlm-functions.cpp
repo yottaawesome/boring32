@@ -200,7 +200,7 @@ namespace SSPIClient::NTLM
         return true;
     }
 
-    BOOL ReceiveMsg(
+    bool ReceiveMsg(
         SOCKET  s,
         PBYTE   pBuf,
         DWORD   cbBuf,
@@ -219,11 +219,11 @@ namespace SSPIClient::NTLM
             sizeof(cbData),
             &cbRead))
         {
-            return(FALSE);
+            return false;
         }
 
         if (sizeof(cbData) != cbRead)
-            return(FALSE);
+            return false;
         //----------------------------------------------------------
         //  Read the full message.
 
@@ -233,14 +233,14 @@ namespace SSPIClient::NTLM
             cbData,
             &cbRead))
         {
-            return(FALSE);
+            return false;
         }
 
         if (cbRead != cbData)
-            return(FALSE);
+            return false;
 
         *pcbRead = cbRead;
-        return(TRUE);
+        return true;
     }  // end ReceiveMessage  
 
     BOOL SendBytes(
