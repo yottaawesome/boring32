@@ -243,7 +243,7 @@ namespace SSPIClient::NTLM
         return true;
     }  // end ReceiveMessage  
 
-    BOOL SendBytes(
+    bool SendBytes(
         SOCKET  s,
         PBYTE   pBuf,
         DWORD   cbBuf)
@@ -253,7 +253,7 @@ namespace SSPIClient::NTLM
         int   cbRemaining = cbBuf;
 
         if (0 == cbBuf)
-            return(TRUE);
+            return true;
 
         while (cbRemaining)
         {
@@ -265,14 +265,14 @@ namespace SSPIClient::NTLM
             if (SOCKET_ERROR == cbSent)
             {
                 fprintf(stderr, "send failed: %u\n", GetLastError());
-                return FALSE;
+                return false;
             }
 
             pTemp += cbSent;
             cbRemaining -= cbSent;
         }
 
-        return TRUE;
+        return true;
     }
 
     BOOL ReceiveBytes(

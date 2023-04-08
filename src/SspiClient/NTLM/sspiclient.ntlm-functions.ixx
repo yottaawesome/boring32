@@ -26,7 +26,7 @@ export namespace SSPIClient::NTLM
         DWORD   cbBuf,
         DWORD* pcbRead
     );
-    BOOL SendBytes(
+    bool SendBytes(
         SOCKET  s,
         PBYTE   pBuf,
         DWORD   cbBuf
