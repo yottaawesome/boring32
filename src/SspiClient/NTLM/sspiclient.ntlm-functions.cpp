@@ -327,16 +327,16 @@ namespace SSPIClient::NTLM
         ULONG             ContextAttributes;
         static PTCHAR     lpPackageName = (PTCHAR)NEGOSSP_NAME;
 
-        if (NULL == pIn)
+        if (nullptr == pIn)
         {
             ss = AcquireCredentialsHandle(
-                NULL,
+                nullptr,
                 lpPackageName,
                 SECPKG_CRED_OUTBOUND,
-                NULL,
-                NULL,
-                NULL,
-                NULL,
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
                 hCred,
                 &Lifetime);
 
@@ -389,12 +389,12 @@ namespace SSPIClient::NTLM
         {
             ss = InitializeSecurityContext(
                 hCred,
-                NULL,
+                nullptr,
                 (SEC_WCHAR*)pszTarget,
                 MessageAttribute,
                 0,
                 SECURITY_NATIVE_DREP,
-                NULL,
+                nullptr,
                 0,
                 hcText,
                 &OutBuffDesc,
