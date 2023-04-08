@@ -308,7 +308,7 @@ namespace SSPIClient::NTLM
         return true;
     }  // end ReceiveBytes
 
-    BOOL GenClientContext(
+    bool GenClientContext(
         BYTE* pIn,
         DWORD       cbIn,
         BYTE* pOut,
@@ -417,7 +417,7 @@ namespace SSPIClient::NTLM
             if (!SEC_SUCCESS(ss))
             {
                 fprintf(stderr, "complete failed: 0x%08x\n", ss);
-                return FALSE;
+                return false;
             }
         }
 
@@ -428,7 +428,7 @@ namespace SSPIClient::NTLM
 
         printf("Token buffer generated (%lu bytes):\n", OutSecBuff.cbBuffer);
         PrintHexDump(OutSecBuff.cbBuffer, (PBYTE)OutSecBuff.pvBuffer);
-        return TRUE;
+        return true;
 
     }
 

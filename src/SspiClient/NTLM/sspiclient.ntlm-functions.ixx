@@ -37,7 +37,7 @@ export namespace SSPIClient::NTLM
         DWORD   cbBuf,
         DWORD* pcbRead
     );
-    BOOL GenClientContext(
+    bool GenClientContext(
         BYTE* pIn,
         DWORD       cbIn,
         BYTE* pOut,
