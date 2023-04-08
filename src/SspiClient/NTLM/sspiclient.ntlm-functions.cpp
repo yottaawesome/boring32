@@ -275,7 +275,7 @@ namespace SSPIClient::NTLM
         return true;
     }
 
-    BOOL ReceiveBytes(
+    bool ReceiveBytes(
         SOCKET  s,
         PBYTE   pBuf,
         DWORD   cbBuf,
@@ -296,7 +296,7 @@ namespace SSPIClient::NTLM
             if (SOCKET_ERROR == cbRead)
             {
                 fprintf(stderr, "recv failed: %u\n", GetLastError());
-                return FALSE;
+                return false;
             }
 
             cbRemaining -= cbRead;
@@ -305,7 +305,7 @@ namespace SSPIClient::NTLM
 
         *pcbRead = cbBuf - cbRemaining;
 
-        return TRUE;
+        return true;
     }  // end ReceiveBytes
 
     BOOL GenClientContext(

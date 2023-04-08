@@ -31,7 +31,7 @@ export namespace SSPIClient::NTLM
         PBYTE   pBuf,
         DWORD   cbBuf
     );
-    BOOL ReceiveBytes(
+    bool ReceiveBytes(
         SOCKET  s,
         PBYTE   pBuf,
         DWORD   cbBuf,
