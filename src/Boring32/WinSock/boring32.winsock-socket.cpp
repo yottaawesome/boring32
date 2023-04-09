@@ -211,20 +211,24 @@ namespace Boring32::WinSock
 		if (!m_socket || m_socket == InvalidSocket)
 			throw Error::Boring32Error("Socket is not valid");
 
-		// https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-send
-		const int sentBytes = send(
-			m_socket, 
-			reinterpret_cast<char*>(const_cast<std::byte*>(&data[0])),
-			static_cast<int>(data.size()), 
-			0
-		);
-		if (sentBytes == SOCKET_ERROR)
+		for (size_t totalBytesSent = 0; totalBytesSent < data.size();)
 		{
-			const auto lastError = WSAGetLastError();
-			Error::ThrowNested(
-				Error::Win32Error("send() failed", lastError, L"ws2_32.dll"),
-				WinSockError("Failed to send data through socket")
+			// https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-send
+			const int sentBytes = send(
+				m_socket,
+				reinterpret_cast<char*>(const_cast<std::byte*>(&data[totalBytesSent])),
+				static_cast<int>(data.size()),
+				0
 			);
+			if (sentBytes == SOCKET_ERROR)
+			{
+				const auto lastError = WSAGetLastError();
+				Error::ThrowNested(
+					Error::Win32Error("send() failed", lastError, L"ws2_32.dll"),
+					WinSockError("Failed to send data through socket")
+				);
+			}
+			totalBytesSent += sentBytes;
 		}
 	}
 
