@@ -217,7 +217,7 @@ namespace Boring32::WinSock
 			const int sentBytes = send(
 				m_socket,
 				reinterpret_cast<char*>(const_cast<std::byte*>(&data[totalBytesSent])),
-				static_cast<int>(data.size()),
+				static_cast<int>(data.size()) - totalBytesSent,
 				0
 			);
 			if (sentBytes == SOCKET_ERROR)
