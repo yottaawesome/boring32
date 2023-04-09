@@ -213,13 +213,18 @@ namespace Boring32::WinSock
 		if (data.empty())
 			return;
 
-		for (size_t totalBytesSent = 0; totalBytesSent < data.size();)
+		size_t totalSentBytes = 0;
+		const size_t totalBytesToSend = data.size();
+		while (totalSentBytes < totalBytesToSend)
 		{
+			const char* bufferStart = reinterpret_cast<const char*>(&data[totalSentBytes]);
+			const size_t remainingBytes = totalBytesToSend - totalSentBytes;
+
 			// https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-send
 			const int sentBytes = send(
 				m_socket,
-				reinterpret_cast<char*>(const_cast<std::byte*>(&data[totalBytesSent])),
-				static_cast<int>(data.size() - totalBytesSent),
+				bufferStart,
+				remainingBytes,
 				0
 			);
 			if (sentBytes == SOCKET_ERROR)
@@ -230,7 +235,7 @@ namespace Boring32::WinSock
 					WinSockError("Failed to send data through socket")
 				);
 			}
-			totalBytesSent += sentBytes;
+			totalSentBytes += sentBytes;
 		}
 	}
 
