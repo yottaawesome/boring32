@@ -210,6 +210,8 @@ namespace Boring32::WinSock
 	{
 		if (!m_socket || m_socket == InvalidSocket)
 			throw Error::Boring32Error("Socket is not valid");
+		if (data.empty())
+			return;
 
 		for (size_t totalBytesSent = 0; totalBytesSent < data.size();)
 		{
@@ -217,7 +219,7 @@ namespace Boring32::WinSock
 			const int sentBytes = send(
 				m_socket,
 				reinterpret_cast<char*>(const_cast<std::byte*>(&data[totalBytesSent])),
-				static_cast<int>(data.size()) - totalBytesSent,
+				static_cast<int>(data.size() - totalBytesSent),
 				0
 			);
 			if (sentBytes == SOCKET_ERROR)
@@ -236,6 +238,8 @@ namespace Boring32::WinSock
 	{
 		if (!m_socket || m_socket == InvalidSocket)
 			throw WinSockError("Socket is not valid");
+		if (!bytesToRead)
+			return {};
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-recv
 		std::vector<std::byte> recvbuf(bytesToRead);
