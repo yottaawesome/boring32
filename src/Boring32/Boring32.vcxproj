@@ -242,6 +242,8 @@
     <ClCompile Include="Error\boring32.error-win32error.ixx" />
     <ClCompile Include="Error\boring32.error-functions.cpp" />
     <ClCompile Include="FileSystem\boring32.filesystem-functions.ixx" />
+    <ClCompile Include="FileSystem\boring32.filesystem-win32.cpp" />
+    <ClCompile Include="FileSystem\boring32.filesystem-win32.ixx" />
     <ClCompile Include="FileSystem\boring32.filesystem.ixx" />
     <ClCompile Include="FileSystem\boring32.filesystem-functions.cpp" />
     <ClCompile Include="IO\boring32.io-completionport.cpp" />
