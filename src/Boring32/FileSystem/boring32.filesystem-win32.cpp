@@ -60,7 +60,6 @@ namespace Boring32::FileSystem::Win32
 		if (!lpBuffer)
 			throw Error::Boring32Error("Buffer cannot be null", location);
 		
-
 		// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile
 		const bool success = ::WriteFile(
 			file,
@@ -75,6 +74,44 @@ namespace Boring32::FileSystem::Win32
 			throw Error::Win32Error(
 				"WriteFile() failed", 
 				lastError, 
+				location
+			);
+		}
+	}
+
+	void WriteFile(
+		const HANDLE file,
+		const void* lpBuffer,
+		const DWORD numberOfBytesToWrite,
+		const OVERLAPPED& overlapped,
+		const std::source_location& location
+	)
+	{
+		if (!file)
+			throw Error::Boring32Error("File handle cannot be null", location);
+		if (file == INVALID_HANDLE_VALUE)
+			throw Error::Boring32Error("File handle cannot be INVALID_HANDLE_VALUE", location);
+		if (numberOfBytesToWrite == 0)
+		{
+			return;
+		}
+		if (!lpBuffer)
+			throw Error::Boring32Error("Buffer cannot be null", location);
+
+		// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile
+		const bool success = ::WriteFile(
+			file,
+			lpBuffer,
+			numberOfBytesToWrite,
+			nullptr,
+			const_cast<OVERLAPPED*>(&overlapped)
+		);
+		if (!success)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error(
+				"WriteFile() failed",
+				lastError,
 				location
 			);
 		}

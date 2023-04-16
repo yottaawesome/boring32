@@ -26,4 +26,11 @@ export namespace Boring32::FileSystem::Win32
 		DWORD* const numberOfBytesWritten,
 		const std::source_location& location = std::source_location::current()
 	);
+	void WriteFile(
+		const HANDLE file,
+		const void* lpBuffer,
+		const DWORD numberOfBytesToWrite,
+		const OVERLAPPED& overlapped,
+		const std::source_location& location = std::source_location::current()
+	);
 }
