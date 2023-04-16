@@ -18,6 +18,7 @@ namespace Boring32::FileSystem::Win32
 		if (fileName.empty())
 			throw Error::Boring32Error("Filename must be specified");
 
+		// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew
 		const HANDLE fileHandle = CreateFileW(
 			fileName.c_str(),				// lpFileName
 			desiredAccess,	// dwDesiredAccess
