@@ -15,6 +15,7 @@ export namespace Boring32::WinSock
 		public:
 			Socket& operator=(Socket&&) noexcept;
 			Socket& operator=(const Socket&) = delete;
+			operator SOCKET() const noexcept;
 
 		public:
 			void Close();

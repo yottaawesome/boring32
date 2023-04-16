@@ -38,4 +38,9 @@ namespace Boring32::WinSock
 		other.m_socket = INVALID_SOCKET;
 		return *this;
 	}
+
+	Socket::operator SOCKET() const noexcept
+	{
+		return m_socket;
+	}
 }
