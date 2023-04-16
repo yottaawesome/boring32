@@ -15,6 +15,7 @@ export namespace Boring32::FileSystem::Win32
 		SECURITY_ATTRIBUTES* securityAttributes,
 		const DWORD creationDisposition,
 		const DWORD flagsAndAttributes,
-		const HANDLE templateFile
+		const HANDLE templateFile,
+		const std::source_location& location = std::source_location::current()
 	);
 }

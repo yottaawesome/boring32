@@ -10,7 +10,8 @@ namespace Boring32::FileSystem::Win32
 		SECURITY_ATTRIBUTES* securityAttributes,
 		const DWORD creationDisposition,
 		const DWORD flagsAndAttributes,
-		const HANDLE templateFile
+		const HANDLE templateFile,
+		const std::source_location& location
 	)
 	{
 		if (fileName.empty())
@@ -32,7 +33,7 @@ namespace Boring32::FileSystem::Win32
 		if (fileHandle == INVALID_HANDLE_VALUE)
 		{
 			const auto lastError = GetLastError();
-			throw Error::Win32Error("CreateFileW() failed", lastError);
+			throw Error::Win32Error("CreateFileW() failed", lastError, location);
 		}
 		return fileHandle;
 	}
