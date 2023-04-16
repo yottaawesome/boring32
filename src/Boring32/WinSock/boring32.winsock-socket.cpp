@@ -48,4 +48,14 @@ namespace Boring32::WinSock
 	{
 		return m_socket;
 	}
+
+	SOCKET* Socket::operator& () noexcept
+	{
+		return &m_socket;
+	}
+
+	SOCKET Socket::operator*() noexcept
+	{
+		return m_socket;
+	}
 }
