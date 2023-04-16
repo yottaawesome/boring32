@@ -25,6 +25,11 @@ namespace Boring32::WinSock
 			m_socket = INVALID_SOCKET;
 		}
 	}
+	
+	SOCKET Socket::GetHandle() const noexcept
+	{
+		return m_socket;
+	}
 
 	Socket& Socket::operator=(Socket&& other) noexcept
 	{

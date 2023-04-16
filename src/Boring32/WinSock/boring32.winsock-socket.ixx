@@ -19,6 +19,7 @@ export namespace Boring32::WinSock
 
 		public:
 			void Close();
+			SOCKET GetHandle() const noexcept;
 
 		private:
 			Socket& Move(Socket& other);
