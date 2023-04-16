@@ -224,7 +224,7 @@ namespace Boring32::WinSock
 			const int sentBytes = send(
 				m_socket,
 				bufferStart,
-				remainingBytes,
+				static_cast<int>(remainingBytes),
 				0
 			);
 			if (sentBytes == SOCKET_ERROR)
