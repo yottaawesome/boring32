@@ -11,6 +11,11 @@ export namespace Boring32::WinSock
 			Socket(const Socket&) = delete;
 			Socket(Socket&&) noexcept;
 			Socket(const SOCKET socket);
+			Socket(
+				const int addressFamily,
+				const int type,
+				const int protocol
+			);
 
 		public:
 			Socket& operator=(Socket&&) noexcept;
