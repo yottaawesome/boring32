@@ -19,10 +19,11 @@ export namespace Boring32::FileSystem::Win32
 		const std::source_location& location = std::source_location::current()
 	);
 
-	DWORD WriteFile(
+	void WriteFile(
 		const HANDLE file,
 		const void* lpBuffer,
 		const DWORD numberOfBytesToWrite,
+		DWORD* const numberOfBytesWritten,
 		const std::source_location& location = std::source_location::current()
 	);
 }

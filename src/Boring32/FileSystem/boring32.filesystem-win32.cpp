@@ -38,10 +38,11 @@ namespace Boring32::FileSystem::Win32
 		return fileHandle;
 	}
 
-	DWORD WriteFile(
+	void WriteFile(
 		const HANDLE file,
 		const void* lpBuffer,
 		const DWORD numberOfBytesToWrite,
+		DWORD* const numberOfBytesWritten,
 		const std::source_location& location
 	)
 	{
@@ -49,17 +50,23 @@ namespace Boring32::FileSystem::Win32
 			throw Error::Boring32Error("File handle cannot be null", location);
 		if (file == INVALID_HANDLE_VALUE)
 			throw Error::Boring32Error("File handle cannot be INVALID_HANDLE_VALUE", location);
+		if (!numberOfBytesWritten)
+			throw Error::Boring32Error("numberOfBytesWritten cannot be null", location);
 		if (numberOfBytesToWrite == 0)
-			return 0;
+		{
+			*numberOfBytesWritten = 0;
+			return;
+		}
 		if (!lpBuffer)
 			throw Error::Boring32Error("Buffer cannot be null", location);
+		
 
-		DWORD numberOfBytesWritten;
+		// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile
 		const bool success = ::WriteFile(
 			file,
 			lpBuffer,
 			numberOfBytesToWrite,
-			&numberOfBytesWritten,
+			numberOfBytesWritten,
 			nullptr
 		);
 		if (!success)
@@ -71,7 +78,5 @@ namespace Boring32::FileSystem::Win32
 				location
 			);
 		}
-
-		return numberOfBytesWritten;
 	}
 }
