@@ -9,8 +9,7 @@ namespace Boring32::WinSock
 
 	Socket::Socket(Socket&& other) noexcept
 	{
-		m_socket = other.m_socket;
-		other.m_socket = INVALID_SOCKET;
+		Move(other);
 	}
 
 	Socket::Socket(const SOCKET socket)
@@ -25,5 +24,18 @@ namespace Boring32::WinSock
 			closesocket(m_socket);
 			m_socket = INVALID_SOCKET;
 		}
+	}
+
+	Socket& Socket::operator=(Socket&& other) noexcept
+	{
+		return Move(other);
+	}
+
+	Socket& Socket::Move(Socket& other)
+	{
+		Close();
+		m_socket = other.m_socket;
+		other.m_socket = INVALID_SOCKET;
+		return *this;
 	}
 }
