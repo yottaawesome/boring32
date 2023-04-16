@@ -2,7 +2,7 @@ module;
 
 #include <source_location>
 
-module boring32.winsock:socket;
+module boring32.winsock:tcpsocket;
 import :winsockerror;
 import boring32.error;
 import boring32.strings;
@@ -12,37 +12,37 @@ import <stdexcept>;
 
 namespace Boring32::WinSock
 {	
-	const SOCKET Socket::InvalidSocket = INVALID_SOCKET;
+	const SOCKET TCPSocket::InvalidSocket = INVALID_SOCKET;
 
-	Socket::~Socket()
+	TCPSocket::~TCPSocket()
 	{
 		Close();
 	}
 
-	Socket::Socket()
+	TCPSocket::TCPSocket()
 		: m_portNumber(0),
 		m_socket(InvalidSocket),
 		m_addressFamily(0)
 	{ }
 
-	Socket::Socket(const std::wstring host, const unsigned portNumber)
+	TCPSocket::TCPSocket(const std::wstring host, const unsigned portNumber)
 		: m_host(std::move(host)),
 		m_portNumber(portNumber),
 		m_socket(InvalidSocket),
 		m_addressFamily(0)
 	{ }
 
-	Socket::Socket(Socket&& other) noexcept
+	TCPSocket::TCPSocket(TCPSocket&& other) noexcept
 	{
 		Move(other);
 	}
 
-	Socket& Socket::operator=(Socket&& other) noexcept
+	TCPSocket& TCPSocket::operator=(TCPSocket&& other) noexcept
 	{
 		return Move(other);
 	}
 
-	Socket& Socket::Move(Socket& other) noexcept
+	TCPSocket& TCPSocket::Move(TCPSocket& other) noexcept
 	{
 		Close();
 		m_host = std::move(other.m_host);
@@ -54,7 +54,7 @@ namespace Boring32::WinSock
 		return *this;
 	}
 
-	void Socket::SetSocketTTL(const DWORD ttl)
+	void TCPSocket::SetSocketTTL(const DWORD ttl)
 	{
 		if (!m_socket || m_socket == InvalidSocket) 
 			throw WinSockError("Not in a valid state to set TTL support");
@@ -115,12 +115,12 @@ namespace Boring32::WinSock
 		}
 	}
 	
-	void Socket::Connect()
+	void TCPSocket::Connect()
 	{
 		Connect(0, 0);
 	}
 
-	void Socket::Open()
+	void TCPSocket::Open()
 	{
 		if (m_socket && m_socket != InvalidSocket)
 			return;
@@ -166,7 +166,7 @@ namespace Boring32::WinSock
 		m_addressFamily = addrInfoResult->ai_family;
 	}
 
-	void Socket::Connect(const DWORD socketTTL, const DWORD maxRetryTimeout)
+	void TCPSocket::Connect(const DWORD socketTTL, const DWORD maxRetryTimeout)
 	{
 		Open();
 		if (socketTTL)
@@ -195,7 +195,7 @@ namespace Boring32::WinSock
 		}
 	}
 
-	void Socket::Close()
+	void TCPSocket::Close()
 	{
 		if (!m_socket)
 			return;
@@ -206,7 +206,7 @@ namespace Boring32::WinSock
 		m_socket = InvalidSocket;
 	}
 
-	void Socket::Send(const std::vector<std::byte>& data)
+	void TCPSocket::Send(const std::vector<std::byte>& data)
 	{
 		if (!m_socket || m_socket == InvalidSocket)
 			throw Error::Boring32Error("Socket is not valid");
@@ -239,7 +239,7 @@ namespace Boring32::WinSock
 		}
 	}
 
-	std::vector<std::byte> Socket::Receive(const unsigned bytesToRead)
+	std::vector<std::byte> TCPSocket::Receive(const unsigned bytesToRead)
 	{
 		if (!m_socket || m_socket == InvalidSocket)
 			throw WinSockError("Socket is not valid");
@@ -262,22 +262,22 @@ namespace Boring32::WinSock
 		return recvbuf;
 	}
 
-	const std::wstring& Socket::GetHost() const noexcept
+	const std::wstring& TCPSocket::GetHost() const noexcept
 	{
 		return m_host;
 	}
 
-	unsigned Socket::GetPort() const noexcept
+	unsigned TCPSocket::GetPort() const noexcept
 	{
 		return m_portNumber;
 	}
 
-	SOCKET Socket::GetHandle() const noexcept
+	SOCKET TCPSocket::GetHandle() const noexcept
 	{
 		return m_socket;
 	}
 
-	void Socket::SetMaxRetryTimeout(const DWORD timeoutSeconds)
+	void TCPSocket::SetMaxRetryTimeout(const DWORD timeoutSeconds)
 	{
 		if (!m_socket || m_socket == InvalidSocket) 
 			throw WinSockError("Not in a valid state to set TTL support");

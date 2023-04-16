@@ -402,10 +402,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WinSock\boring32.winsock-functions.ixx" />
-    <ClCompile Include="WinSock\boring32.winsock-socket.cpp">
+    <ClCompile Include="WinSock\boring32.winsock-tcpsocket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinSock\boring32.winsock-socket.ixx" />
+    <ClCompile Include="WinSock\boring32.winsock-tcpsocket.ixx" />
     <ClCompile Include="WinSock\boring32.winsock-uniqueptrs.ixx" />
     <ClCompile Include="WinSock\boring32.winsock-winsockerror.cpp">
       <Filter>Source Files</Filter>

@@ -1,4 +1,4 @@
-export module boring32.winsock:socket;
+export module boring32.winsock:tcpsocket;
 import :uniqueptrs;
 import <string>;
 import <vector>;
@@ -7,21 +7,21 @@ import <win32.hpp>;
 export namespace Boring32::WinSock
 {
 	// Based on https://docs.microsoft.com/en-us/windows/win32/winsock/winsock-client-application
-	class Socket
+	class TCPSocket
 	{
 		public:
 			static const SOCKET InvalidSocket;
 
 		public:
-			virtual ~Socket();
-			Socket();
-			Socket(const Socket& other) = delete;
-			Socket(Socket&& other) noexcept;
-			Socket(const std::wstring host, const unsigned portNumber);
+			virtual ~TCPSocket();
+			TCPSocket();
+			TCPSocket(const TCPSocket& other) = delete;
+			TCPSocket(TCPSocket&& other) noexcept;
+			TCPSocket(const std::wstring host, const unsigned portNumber);
 
 		public:
-			virtual Socket& operator=(const Socket& other) = delete;
-			virtual Socket& operator=(Socket&& other) noexcept;
+			virtual TCPSocket& operator=(const TCPSocket& other) = delete;
+			virtual TCPSocket& operator=(TCPSocket&& other) noexcept;
 
 		public:
 			virtual void Open();
@@ -39,7 +39,7 @@ export namespace Boring32::WinSock
 			virtual SOCKET GetHandle() const noexcept;
 
 		protected:
-			virtual Socket& Move(Socket& other) noexcept;
+			virtual TCPSocket& Move(TCPSocket& other) noexcept;
 
 		protected:
 			std::wstring m_host;

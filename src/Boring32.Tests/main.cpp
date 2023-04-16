@@ -189,7 +189,7 @@ void Compression()
 void SocketTest()
 {
 	Boring32::WinSock::WinSockInit init(2, 2);
-	Boring32::WinSock::Socket socket(L"142.250.70.164", 1215);
+	Boring32::WinSock::TCPSocket socket(L"142.250.70.164", 1215);
 	socket.Open();
 	socket.Connect();
 	socket.Send({ std::byte(0x5) });
