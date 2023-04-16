@@ -37,4 +37,41 @@ namespace Boring32::FileSystem::Win32
 		}
 		return fileHandle;
 	}
+
+	DWORD WriteFile(
+		HANDLE file,
+		void* lpBuffer,
+		const DWORD numberOfBytesToWrite,
+		const std::source_location& location
+	)
+	{
+		if (!file)
+			throw Error::Boring32Error("File handle cannot be null", location);
+		if (file == INVALID_HANDLE_VALUE)
+			throw Error::Boring32Error("File handle cannot be INVALID_HANDLE_VALUE", location);
+		if (numberOfBytesToWrite == 0)
+			return 0;
+		if (!lpBuffer)
+			throw Error::Boring32Error("Buffer cannot be null", location);
+
+		DWORD numberOfBytesWritten;
+		const bool success = ::WriteFile(
+			file,
+			lpBuffer,
+			numberOfBytesToWrite,
+			&numberOfBytesWritten,
+			nullptr
+		);
+		if (!success)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error(
+				"WriteFile() failed", 
+				lastError, 
+				location
+			);
+		}
+
+		return numberOfBytesWritten;
+	}
 }
