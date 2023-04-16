@@ -363,6 +363,8 @@
     <ClCompile Include="WinHttp\boring32.winhttp-winhttperror.cpp" />
     <ClCompile Include="WinSock\boring32.winsock-functions.cpp" />
     <ClCompile Include="WinSock\boring32.winsock-functions.ixx" />
+    <ClCompile Include="WinSock\boring32.winsock-socket.cpp" />
+    <ClCompile Include="WinSock\boring32.winsock-socket.ixx" />
     <ClCompile Include="WinSock\boring32.winsock-tcpsocket.cpp" />
     <ClCompile Include="WinSock\boring32.winsock-tcpsocket.ixx" />
     <ClCompile Include="WinSock\boring32.winsock-uniqueptrs.ixx" />
