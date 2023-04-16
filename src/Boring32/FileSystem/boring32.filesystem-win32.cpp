@@ -1,6 +1,4 @@
 module boring32.filesystem:win32;
-import "win32.hpp";
-import <string>;
 import boring32.error;
 
 namespace Boring32::FileSystem::Win32
