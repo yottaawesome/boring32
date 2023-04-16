@@ -39,8 +39,8 @@ namespace Boring32::FileSystem::Win32
 	}
 
 	DWORD WriteFile(
-		HANDLE file,
-		void* lpBuffer,
+		const HANDLE file,
+		const void* lpBuffer,
 		const DWORD numberOfBytesToWrite,
 		const std::source_location& location
 	)
