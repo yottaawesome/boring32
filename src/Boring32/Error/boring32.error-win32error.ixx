@@ -2,10 +2,11 @@ export module boring32.error:win32error;
 import <string>;
 import <stdexcept>;
 import <source_location>;
+import :boring32error;
 
 export namespace Boring32::Error
 {
-	class Win32Error : public std::runtime_error
+	class Win32Error : public Boring32Error
 	{
 		public:
 			virtual ~Win32Error();
@@ -37,6 +38,5 @@ export namespace Boring32::Error
 
 		protected:
 			unsigned long m_errorCode;
-			std::string m_message;
 	};
 }
