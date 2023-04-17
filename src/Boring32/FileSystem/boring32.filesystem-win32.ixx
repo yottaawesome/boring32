@@ -8,7 +8,7 @@ import <string>;
 
 export namespace Boring32::FileSystem::Win32
 {
-	HANDLE CreateFile(
+	HANDLE FileCreate(
 		const std::wstring& fileName,
 		const DWORD desiredAccess = GENERIC_READ | GENERIC_WRITE,
 		const DWORD shareMode = 0,

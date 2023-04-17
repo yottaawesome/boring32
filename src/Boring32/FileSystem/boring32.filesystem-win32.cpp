@@ -3,7 +3,7 @@ import boring32.error;
 
 namespace Boring32::FileSystem::Win32
 {
-	HANDLE CreateFile(
+	HANDLE FileCreate(
 		const std::wstring& fileName,
 		const DWORD desiredAccess,
 		const DWORD shareMode,
