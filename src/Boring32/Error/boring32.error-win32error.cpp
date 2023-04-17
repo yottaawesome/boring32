@@ -8,9 +8,12 @@ namespace Boring32::Error
 	Win32Error::Win32Error(
 		const std::string& msg,
 		const std::source_location location
-	)
+	) 
 	{
-		m_message = Error::FormatErrorMessage("Win32", location, msg);
+		m_message = Error::FormatErrorMessage(
+			"Win32", 
+			location, msg
+		);
 	}
 
 	Win32Error::Win32Error(
