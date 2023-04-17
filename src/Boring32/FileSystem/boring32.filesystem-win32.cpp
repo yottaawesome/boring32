@@ -7,7 +7,7 @@ namespace Boring32::FileSystem::Win32
 		const std::wstring& fileName,
 		const DWORD desiredAccess,
 		const DWORD shareMode,
-		SECURITY_ATTRIBUTES* securityAttributes,
+		SECURITY_ATTRIBUTES* const securityAttributes,
 		const DWORD creationDisposition,
 		const DWORD flagsAndAttributes,
 		const HANDLE templateFile,
@@ -134,7 +134,6 @@ namespace Boring32::FileSystem::Win32
 		}
 		if (!lpBuffer)
 			throw Error::Boring32Error("Buffer cannot be null", location);
-
 
 		const bool success = ::ReadFile(
 			file,

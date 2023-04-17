@@ -12,7 +12,7 @@ export namespace Boring32::FileSystem::Win32
 		const std::wstring& fileName,
 		const DWORD desiredAccess = GENERIC_READ | GENERIC_WRITE,
 		const DWORD shareMode = 0,
-		SECURITY_ATTRIBUTES* securityAttributes = nullptr,
+		SECURITY_ATTRIBUTES* const securityAttributes = nullptr,
 		const DWORD creationDisposition = OPEN_ALWAYS,
 		const DWORD flagsAndAttributes = FILE_ATTRIBUTE_NORMAL,
 		const HANDLE templateFile = nullptr,
