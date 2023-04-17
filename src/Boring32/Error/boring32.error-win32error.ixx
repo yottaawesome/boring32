@@ -9,9 +9,9 @@ export namespace Boring32::Error
 	class Win32Error : public Boring32Error
 	{
 		public:
-			virtual ~Win32Error();
-			Win32Error(const Win32Error& other);
-			Win32Error(Win32Error&& other) noexcept;
+			virtual ~Win32Error() = default;
+			Win32Error(const Win32Error& other) = default;
+			Win32Error(Win32Error&& other) noexcept = default;
 			Win32Error(
 				const std::string& msg,
 				const std::source_location location = std::source_location::current()
@@ -29,14 +29,13 @@ export namespace Boring32::Error
 			);
 
 		public:
-			virtual Win32Error& operator=(const Win32Error& other);
-			virtual Win32Error& operator=(Win32Error&& other) noexcept;
+			virtual Win32Error& operator=(const Win32Error& other) = default;
+			virtual Win32Error& operator=(Win32Error&& other) noexcept = default;
 
 		public:
 			virtual unsigned long GetErrorCode() const noexcept;
-			virtual const char* what() const noexcept override;
 
 		protected:
-			unsigned long m_errorCode;
+			unsigned long m_errorCode = 0;
 	};
 }
