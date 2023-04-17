@@ -37,6 +37,6 @@ export namespace Boring32::Error
 
 		protected:
 			unsigned long m_errorCode;
-			std::string m_errorString;
+			std::string m_message;
 	};
 }
