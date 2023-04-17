@@ -116,4 +116,41 @@ namespace Boring32::FileSystem::Win32
 			);
 		}
 	}
+	void ReadFile(
+		const HANDLE file,
+		void* const lpBuffer,
+		const DWORD nNumberOfBytesToRead,
+		DWORD& lpNumberOfBytesRead,
+		const std::source_location& location
+	)
+	{
+		if (!file)
+			throw Error::Boring32Error("File handle cannot be null", location);
+		if (file == INVALID_HANDLE_VALUE)
+			throw Error::Boring32Error("File handle cannot be INVALID_HANDLE_VALUE", location);
+		if (nNumberOfBytesToRead == 0)
+		{
+			return;
+		}
+		if (!lpBuffer)
+			throw Error::Boring32Error("Buffer cannot be null", location);
+
+
+		const bool success = ::ReadFile(
+			file,
+			lpBuffer,
+			nNumberOfBytesToRead,
+			&lpNumberOfBytesRead,
+			nullptr
+		);
+		if (!success)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error(
+				"ReadFile() failed",
+				lastError,
+				location
+			);
+		}
+	}
 }

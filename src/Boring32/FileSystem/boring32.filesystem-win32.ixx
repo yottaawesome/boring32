@@ -33,4 +33,11 @@ export namespace Boring32::FileSystem::Win32
 		const OVERLAPPED& overlapped,
 		const std::source_location& location = std::source_location::current()
 	);
+	void ReadFile(
+		const HANDLE file,
+		void* const lpBuffer,
+		const DWORD nNumberOfBytesToRead,
+		DWORD& lpNumberOfBytesRead,
+		const std::source_location& location = std::source_location::current()
+	);
 }
