@@ -2,7 +2,6 @@ export module boring32.datastructures:singlylinkedlist;
 import boring32.error;
 import <stdexcept>;
 import <utility>;
-import <source_location>;
 import <memory>;
 import <win32.hpp>;
 import <malloc.h>;
@@ -36,10 +35,15 @@ export namespace Boring32::DataStructures
 				: m_firstEntry(nullptr),
 				m_listHeader(nullptr)
 			{
-				m_listHeader = reinterpret_cast<PSLIST_HEADER>(_aligned_malloc(sizeof(SLIST_HEADER), MEMORY_ALLOCATION_ALIGNMENT));
+				m_listHeader = reinterpret_cast<PSLIST_HEADER>(
+					_aligned_malloc(
+						sizeof(SLIST_HEADER), 
+						MEMORY_ALLOCATION_ALIGNMENT
+					)
+				);
 				// Using boring32error causes an internal compiler error. No idea why.
 				if (!m_listHeader)
-					throw Error::Boring32Error("_aligned_malloc() failed", std::source_location::current());
+					throw Error::Boring32Error("_aligned_malloc() failed");
 				InitializeSListHead(m_listHeader);
 			}
 
@@ -99,7 +103,7 @@ export namespace Boring32::DataStructures
 			{
 				// Using boring32error causes an internal compiler error. No idea why.
 				if (!m_listHeader)
-					throw Error::Boring32Error("Cannot pop null list header", std::source_location::current());
+					throw Error::Boring32Error("Cannot pop null list header");
 
 				PSLIST_ENTRY listEntry = InterlockedPopEntrySList(m_listHeader);
 				if (!listEntry)
@@ -160,7 +164,7 @@ export namespace Boring32::DataStructures
 				const auto newEntry = reinterpret_cast<ListElement<T>*>(
 					_aligned_malloc(sizeof(ListElement<T>), MEMORY_ALLOCATION_ALIGNMENT));
 				if (!newEntry)
-					throw Error::Boring32Error("_aligned_malloc() failed", std::source_location::current());
+					throw Error::Boring32Error("_aligned_malloc() failed");
 				if (!m_firstEntry)
 					m_firstEntry = newEntry;
 
