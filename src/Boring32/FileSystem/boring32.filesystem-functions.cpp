@@ -1,6 +1,3 @@
-module;
-
-
 module boring32.filesystem:functions;
 import boring32.error;
 import boring32.strings;
