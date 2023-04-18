@@ -9,7 +9,7 @@ export namespace Boring32::FileSystem
 	{
 		public:
 			virtual ~File();
-			File();
+			File() = default;
 			File(std::wstring file);
 
 		public:

@@ -1,13 +1,10 @@
 module boring32.filesystem:file;
 import boring32.error;
-import <source_location>; // importing causes ICE
 import <win32.hpp>;
 
 namespace Boring32::FileSystem
 {
 	File::~File() { Close(); }
-
-	File::File(){}
 
 	File::File(std::wstring fileName)
 		:m_fileName(std::move(fileName))
