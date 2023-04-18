@@ -8,8 +8,6 @@ import <malloc.h>;
 
 export namespace Boring32::DataStructures
 {
-	// Make sure to #include <source_location> in files where you use this template,
-	// or MSVC will encounter an internal compiler error.
 	template<typename T>
 	struct ListElement 
 	{
@@ -32,8 +30,6 @@ export namespace Boring32::DataStructures
 			}
 
 			SinglyLinkedList()
-				: m_firstEntry(nullptr),
-				m_listHeader(nullptr)
 			{
 				m_listHeader = reinterpret_cast<PSLIST_HEADER>(
 					_aligned_malloc(
@@ -182,7 +178,7 @@ export namespace Boring32::DataStructures
 			}
 
 		protected:
-			PSLIST_HEADER m_listHeader;
-			ListElement<T>* m_firstEntry;
+			PSLIST_HEADER m_listHeader = nullptr;
+			ListElement<T>* m_firstEntry = nullptr;
 	};
 }
