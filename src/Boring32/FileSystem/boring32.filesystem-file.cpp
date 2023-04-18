@@ -1,9 +1,6 @@
-module;
-
-#include <source_location>; // importing causes ICE
-
 module boring32.filesystem:file;
 import boring32.error;
+import <source_location>; // importing causes ICE
 import <win32.hpp>;
 
 namespace Boring32::FileSystem
