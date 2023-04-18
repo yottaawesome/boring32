@@ -1,10 +1,7 @@
-module;
-
-#include <source_location>
-
 export module boring32.filesystem:win32;
 import "win32.hpp";
 import <string>;
+import <source_location>;
 
 export namespace Boring32::FileSystem::Win32
 {
