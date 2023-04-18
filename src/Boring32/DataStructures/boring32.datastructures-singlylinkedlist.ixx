@@ -37,7 +37,6 @@ export namespace Boring32::DataStructures
 						MEMORY_ALLOCATION_ALIGNMENT
 					)
 				);
-				// Using boring32error causes an internal compiler error. No idea why.
 				if (!m_listHeader)
 					throw Error::Boring32Error("_aligned_malloc() failed");
 				InitializeSListHead(m_listHeader);
