@@ -536,9 +536,5 @@
     <ClCompile Include="WinSock\boring32.winsock-socket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileSystem\boring32.filesystem-win32.ixx" />
-    <ClCompile Include="FileSystem\boring32.filesystem-win32.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>
