@@ -1,11 +1,8 @@
-module;
-
-#include <source_location>
-
 export module boring32.compression:compressionerror;
 import boring32.error;
 import <stdexcept>;
 import <string>;
+import <source_location>;
 
 export namespace Boring32::Compression
 {
