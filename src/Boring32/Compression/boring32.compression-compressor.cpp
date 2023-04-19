@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.compression:compressor;
 import :compressionerror;
 import boring32.error;
@@ -143,7 +139,7 @@ namespace Boring32::Compression
 		COMPRESSOR_HANDLE handle;
 		// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-createcompressor
 		const bool succeeded = CreateCompressor(
-			(DWORD)m_type,	// Algorithm
+			static_cast<DWORD>(m_type),	// Algorithm
 			nullptr,		// AllocationRoutines
 			&handle			// CompressorHandle
 		);
