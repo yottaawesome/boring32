@@ -12,10 +12,6 @@ namespace Boring32::Compression
 		m_type = CompressionType::NotSet;
 	}
 
-	Compressor::Compressor()
-	:	m_type(CompressionType::NotSet)
-	{ }
-
 	Compressor::~Compressor()
 	{
 		Close();
@@ -28,7 +24,6 @@ namespace Boring32::Compression
 	}
 
 	Compressor::Compressor(const Compressor& other)
-	:	m_type(CompressionType::NotSet)
 	{
 		Copy(other);
 	}

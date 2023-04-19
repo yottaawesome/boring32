@@ -13,7 +13,7 @@ export namespace Boring32::Compression
 	{
 		public:
 			virtual ~Compressor();
-			Compressor();
+			Compressor() = default;
 			Compressor(const Compressor& other);
 			Compressor(Compressor&& other) noexcept;
 			Compressor(const CompressionType type);
@@ -63,7 +63,7 @@ export namespace Boring32::Compression
 			virtual void Copy(const Compressor& other);
 
 		protected:
-			CompressionType m_type;
+			CompressionType m_type = CompressionType::NotSet;
 			CompressorUniquePtr m_compressor;
 	};
 }
