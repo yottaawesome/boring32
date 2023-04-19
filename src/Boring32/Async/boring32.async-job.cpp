@@ -1,23 +1,12 @@
-module;
-
-#include <source_location>
-
 module boring32.async:job;
 import boring32.error;
 
 namespace Boring32::Async
 {
-	Job::~Job()
-	{ 
-		Close();
-	}
-
 	void Job::Close()
 	{
 		m_job = nullptr;
 	}
-
-	Job::Job() { }
 
 	Job::Job(const bool isInheritable)
 	:	m_name(L"")
@@ -35,43 +24,6 @@ namespace Boring32::Async
 	:	m_name(std::move(name))
 	{
 		Open(isInheritable);
-	}
-
-	Job::Job(const Job& other)
-	{
-		Copy(other);
-	}
-
-	Job& Job::operator=(const Job& other)
-	{
-		Close();
-		Copy(other);
-		return *this;
-	}
-
-	void Job::Copy(const Job& other)
-	{
-		m_name = other.m_name;
-		if (other.m_job != nullptr)
-			m_job = other.m_job;
-	}
-
-	Job::Job(Job&& other) noexcept
-	{
-		Move(other);
-	}
-
-	Job& Job::operator=(Job&& other) noexcept
-	{
-		Close();
-		Move(other);
-		return *this;
-	}
-
-	void Job::Move(Job& other) noexcept
-	{
-		m_name = std::move(other.m_name);
-		m_job = std::move(other.m_job);
 	}
 
 	void Job::SetInformation(JOBOBJECT_EXTENDED_LIMIT_INFORMATION& jeli)
@@ -112,17 +64,17 @@ namespace Boring32::Async
 		}			
 	}
 
-	HANDLE Job::GetHandle()
+	HANDLE Job::GetHandle() const noexcept
 	{
 		return m_job.GetHandle();
 	}
 
-	const std::wstring& Job::GetName() const
+	const std::wstring& Job::GetName() const noexcept
 	{
 		return m_name;
 	}
 	
-	bool Job::IsInheritable() const
+	bool Job::IsInheritable() const noexcept
 	{
 		return m_job.IsInheritable();
 	}
