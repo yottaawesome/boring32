@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.async:functions;
 import boring32.raii;
 import boring32.strings;
