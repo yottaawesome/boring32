@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.async:filemapping;
 import boring32.error;
 import <stdexcept>;
@@ -12,11 +8,6 @@ namespace Boring32::Async
 	{
 		Close();
 	}
-
-	FileMapping::FileMapping()
-		: m_maxSize(0),
-		m_pageProtection(0)
-	{}
 
 	FileMapping::FileMapping(const bool isInheritable, const size_t maxSize, const DWORD pageProtection)
 		: m_maxSize(maxSize),

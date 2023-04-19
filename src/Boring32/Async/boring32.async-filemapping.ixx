@@ -17,7 +17,7 @@ export namespace Boring32::Async
 	{
 		public:
 			virtual ~FileMapping();
-			FileMapping();
+			FileMapping() = default;
 			FileMapping(
 				const bool isInheritable, 
 				const size_t maxSize, 
@@ -76,8 +76,8 @@ export namespace Boring32::Async
 
 		protected:
 			RAII::Win32Handle m_fileMapping;
-			size_t m_maxSize;
+			size_t m_maxSize = 0;
 			std::wstring m_name;
-			DWORD m_pageProtection;
+			DWORD m_pageProtection = 0;
 	};
 }
