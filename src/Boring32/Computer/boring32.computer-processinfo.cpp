@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.computer:processinfo;
 import boring32.raii;
 import boring32.error;
@@ -9,13 +5,6 @@ import :functions;
 
 namespace Boring32::Computer
 {
-	ProcessInfo::~ProcessInfo() {}
-
-	ProcessInfo::ProcessInfo(const ProcessInfo&) = default;
-	ProcessInfo::ProcessInfo(ProcessInfo&&) noexcept = default;
-	ProcessInfo& ProcessInfo::operator=(ProcessInfo&) = default;
-	ProcessInfo& ProcessInfo::operator=(ProcessInfo&&) noexcept = default;
-
 	ProcessInfo::ProcessInfo(const HANDLE hProcess)
 		: m_processHandle(hProcess)
 	{

@@ -19,15 +19,15 @@ export namespace Boring32::Computer
 	class ProcessInfo
 	{
 		public:
-			virtual ~ProcessInfo();
-			ProcessInfo(const ProcessInfo&);
-			ProcessInfo(ProcessInfo&&) noexcept;
+			virtual ~ProcessInfo() = default;
+			ProcessInfo(const ProcessInfo&) = default;
+			ProcessInfo(ProcessInfo&&) noexcept = default;
 			ProcessInfo(const HANDLE hProcess);
 			ProcessInfo(const DWORD processId);
 
 		public:
-			virtual ProcessInfo& operator=(ProcessInfo&);
-			virtual ProcessInfo& operator=(ProcessInfo&&) noexcept;
+			virtual ProcessInfo& operator=(ProcessInfo&) = default;
+			virtual ProcessInfo& operator=(ProcessInfo&&) noexcept = default;
 
 		public:
 			virtual ProcessTimes GetTimes() const;
