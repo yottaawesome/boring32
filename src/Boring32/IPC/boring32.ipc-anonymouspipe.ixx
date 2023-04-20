@@ -39,8 +39,8 @@ export namespace Boring32::IPC
 			virtual void CloseRead();
 			virtual void CloseWrite();
 			virtual void SetMode(const DWORD mode);
-			virtual HANDLE GetRead();
-			virtual HANDLE GetWrite();
+			virtual HANDLE GetRead() const noexcept;
+			virtual HANDLE GetWrite() const noexcept;
 			virtual std::wstring GetDelimiter() const;
 			virtual DWORD GetSize() const;
 			virtual DWORD GetUsedSize() const;

@@ -1,5 +1,6 @@
 module boring32.ipc:anonymouspipe;
 import boring32.strings;
+import boring32.error;
 import <stdexcept>;
 import <iostream>;
 
@@ -167,12 +168,12 @@ namespace Boring32::IPC
 		m_writeHandle.Close();
 	}
 
-	HANDLE AnonymousPipe::GetRead()
+	HANDLE AnonymousPipe::GetRead() const noexcept
 	{
 		return m_readHandle.GetHandle();
 	}
 
-	HANDLE AnonymousPipe::GetWrite()
+	HANDLE AnonymousPipe::GetWrite() const noexcept
 	{
 		return m_writeHandle.GetHandle();
 	}
@@ -199,7 +200,7 @@ namespace Boring32::IPC
 			handleToDetermineBytesAvailable = m_writeHandle.GetHandle();
 		if (handleToDetermineBytesAvailable)
 		{
-			PeekNamedPipe(
+			bool success = PeekNamedPipe(
 				m_readHandle.GetHandle(),
 				nullptr,
 				0,
@@ -207,6 +208,11 @@ namespace Boring32::IPC
 				&charactersInPipe,
 				nullptr
 			);
+			if (!success)
+			{
+				const auto lastError = GetLastError();
+				throw Error::Win32Error("PeekNamedPipe() failed", lastError);
+			}
 			charactersInPipe /= sizeof(wchar_t);
 		}
 
