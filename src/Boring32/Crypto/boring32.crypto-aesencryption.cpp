@@ -1,8 +1,4 @@
-module;
-
 //#include <ntstatus.h>
-#include <source_location>
-
 module boring32.crypto:aesencryption;
 import :chainingmode;
 import boring32.error;
