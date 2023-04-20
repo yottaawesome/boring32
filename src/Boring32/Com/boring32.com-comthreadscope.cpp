@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.com:comthreadscope;
 import boring32.error;
 import <iostream>;
@@ -14,12 +10,6 @@ namespace Boring32::COM
 	{
 		Uninitialise();
 	}
-
-	COMThreadScope::COMThreadScope()
-	:	m_isInitialised(false),
-		m_comInitialisedThreadId(0),
-		m_apartmentThreadingMode(COINIT_MULTITHREADED)
-	{}
 
 	COMThreadScope::COMThreadScope(const COINIT apartmentThreadingMode)
 	:	m_isInitialised(false),

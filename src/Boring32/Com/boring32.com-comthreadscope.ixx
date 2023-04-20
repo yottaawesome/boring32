@@ -18,7 +18,7 @@ export namespace Boring32::COM
 			/// <summary>
 			///		Default constructor. Does not initialise COM.
 			/// </summary>
-			COMThreadScope();
+			COMThreadScope() = default;
 			
 			/// <summary>
 			///		Initialises COM for the creating thread with the specified
@@ -103,9 +103,9 @@ export namespace Boring32::COM
 			void Move(COMThreadScope& other);
 
 		protected:
-			bool m_isInitialised;
+			bool m_isInitialised = false;
 			static std::atomic<unsigned> m_isSecurityInitialised;
-			DWORD m_comInitialisedThreadId;
-			COINIT m_apartmentThreadingMode;
+			DWORD m_comInitialisedThreadId = 0;
+			COINIT m_apartmentThreadingMode = COINIT_MULTITHREADED;
 	};
 }
