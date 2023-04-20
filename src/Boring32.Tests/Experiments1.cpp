@@ -131,22 +131,6 @@ void TestThreadSafeVector()
 		throw std::runtime_error("Unexpected element at index 0");
 }
 
-void TestAnonPipes()
-{
-	std::wstring msg1(L"message1");
-	std::wstring msg2(L"message2");
-	Boring32::IPC::AnonymousPipe pipe(true, 512, L"||");
-	pipe.DelimitedWrite(msg1);
-	pipe.DelimitedWrite(msg2);
-
-	std::vector<std::wstring> response = pipe.DelimitedRead();
-	if (response.size() != 2)
-		throw std::runtime_error("Unexpected number of tokens");
-	std::wcout << response[0] << L" " << response[1] << std::endl;
-	if (msg1 != response[0] || msg2 != response[1])
-		throw std::runtime_error("Failed to match input to output");
-}
-
 void TestProcessBlockingNamedPipe()
 {
 	std::wstring directory;
@@ -227,45 +211,6 @@ void TestProcessOverlappedNamedPipe()
 	serverPipe.Read(1024, writeOp2);
 	writeOp2.WaitForCompletion(INFINITE);
 	std::wcout << Boring32::Util::ByteVectorToString<std::wstring>(writeOp2.IoBuffer) << std::endl;
-}
-
-void TestProcessAnonPipe()
-{
-	std::wstring directory;
-	directory.resize(2048);
-	GetModuleFileName(nullptr, &directory[0], directory.size());
-	PathCchRemoveFileSpec(&directory[0], directory.size());
-	directory.erase(std::find(directory.begin(), directory.end(), '\0'), directory.end());
-	std::wstring filePath = directory + L"\\TestProcess.exe";
-
-	Boring32::Async::Event evt(true, true, false, L"TestEvent");
-	Boring32::IPC::AnonymousPipe childWrite;
-	Boring32::IPC::AnonymousPipe childRead;
-	childRead = Boring32::IPC::AnonymousPipe(true, 2048, L"||");
-	childWrite = Boring32::IPC::AnonymousPipe(true, 2048, L"||");
-	std::wstringstream ss;
-	ss << "TestProcess.exe"
-		<< L" 3 "
-		<< (int)childWrite.GetWrite()
-		<< L" "
-		<< (int)childRead.GetRead();
-	Boring32::Async::Process testProcess(filePath, ss.str(), directory, true);
-
-	Boring32::Async::Job job(false);
-	JOBOBJECT_EXTENDED_LIMIT_INFORMATION jeli{ 0 };
-	jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
-	job.SetInformation(jeli);
-	testProcess.Start();
-	job.AssignProcessToThisJob(testProcess.GetProcessHandle());
-
-	childRead.DelimitedWrite(L"Hello from parent!");
-	Sleep(500);
-
-	std::wcout
-		<< childWrite.Read()
-		<< std::endl;
-	evt.Signal();
-	WaitForSingleObject(testProcess.GetProcessHandle(), INFINITE);
 }
 
 void TestCompression()
@@ -507,14 +452,10 @@ int OldJunk()
 				TestConversions();
 			if (i == 7)
 				TestMemoryMappedFile();
-			if (i == 8)
-				TestAnonPipes();
 			if (i == 9)
 				TestLibraryLoad();
 			if (i == 10)
 				TestProcessBlockingNamedPipe();
-			if (i == 11)
-				TestProcessAnonPipe();
 			if (i == 12)
 				TestCompression();
 			if (i == 13)

@@ -8,24 +8,6 @@ import boring32.security;
 import boring32.util;
 import test;
 
-int MainAnon(int argc, char** args)
-{
-    if (argc != 4)
-        throw std::runtime_error("MainAnon(): required arguments missing");
-
-    int writeHandle = std::stoi(args[2]);
-    int readHandle = std::stoi(args[3]);
-    Boring32::IPC::AnonymousPipe pipe(2048, L"||", (HANDLE)readHandle, (HANDLE)writeHandle);
-    std::wcout << pipe.Read() << std::endl;
-    pipe.DelimitedWrite(L"Hello from child!");
-
-    Boring32::Async::Event evt(false, false, L"TestEvent", SYNCHRONIZE);
-    evt.WaitOnEvent();
-    std::wcout << L"Exiting after wait!" << std::endl;
-
-    return 0;
-}
-
 int MainBlocking(int argc, char** args)
 {
     Sleep(1000);
@@ -108,8 +90,6 @@ int main(int argc, char** args)
             MainBlocking(argc, args);
         if (testType == "2")
             MainOverlapped(argc, args);
-        if (testType == "3")
-            MainAnon(argc, args);
 
         //return ConnectToPrivateNamespace();
         //return ConnectAndWriteToElevatedPipe();

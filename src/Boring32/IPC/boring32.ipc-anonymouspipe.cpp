@@ -15,14 +15,8 @@ namespace Boring32::IPC
 
 	AnonymousPipe::AnonymousPipe(
 		const bool inheritable, 
-		const DWORD size,
-		const std::wstring& delimiter
-	)
-	:	m_readHandle(nullptr),
-		m_writeHandle(nullptr),
-		m_size(size),
-		m_delimiter(delimiter),
-		m_mode(0)
+		const DWORD size
+	) :	m_size(size)
 	{
 		SECURITY_ATTRIBUTES secAttrs{ 0 };
 		secAttrs.nLength = sizeof(secAttrs);
@@ -34,15 +28,12 @@ namespace Boring32::IPC
 
 	AnonymousPipe::AnonymousPipe(
 		const DWORD size,
-		const std::wstring& delimiter,
 		const HANDLE readHandle,
 		const HANDLE writeHandle
 	)
-	:	m_delimiter(delimiter),
-		m_size(size),
+	:	m_size(size),
 		m_readHandle(readHandle),
-		m_writeHandle(writeHandle),
-		m_mode(0)
+		m_writeHandle(writeHandle)
 	{ }
 
 	void AnonymousPipe::Close()
@@ -51,48 +42,27 @@ namespace Boring32::IPC
 		m_writeHandle.Close();
 	}
 
-	void AnonymousPipe::DelimitedWrite(const std::wstring& msg)
-	{
-		if (m_writeHandle == nullptr)
-			throw std::runtime_error("No active write handle.");
-
-		std::wstring delimitedMsg(msg);
-		if (m_delimiter != L"")
-			delimitedMsg = m_delimiter + delimitedMsg + m_delimiter;
-
-		if ((GetUsedSize() + delimitedMsg.size()) >= m_size)
-			throw std::runtime_error("Pipe cannot fit message");
-
-		DWORD bytesWritten = 0;
-		bool success = WriteFile(
-			m_writeHandle.GetHandle(),
-			delimitedMsg.data(),
-			(DWORD)(delimitedMsg.size()*sizeof(wchar_t)),
-			&bytesWritten,
-			nullptr
-		);
-		if (success == false)
-			throw std::runtime_error("Write operation failed.");
-	}
-
 	void AnonymousPipe::Write(const std::wstring& msg)
 	{
-		if (m_writeHandle == nullptr)
-			throw std::runtime_error("No active write handle.");
+		if (!m_writeHandle)
+			throw Error::Boring32Error("No active write handle.");
 
 		if ((GetUsedSize() + msg.size()) >= m_size)
-			throw std::runtime_error("Pipe cannot fit message");
+			throw Error::Boring32Error("Pipe cannot fit message");
 
 		DWORD bytesWritten = 0;
-		bool success = WriteFile(
+		const bool success = WriteFile(
 			m_writeHandle.GetHandle(),
 			msg.data(),
-			(DWORD)(msg.size()*sizeof(wchar_t)),
+			static_cast<DWORD>(msg.size()*sizeof(wchar_t)),
 			&bytesWritten,
 			nullptr
 		);
-		if (success == false)
-			throw std::runtime_error("Write operation failed.");
+		if (!success)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("Write operation failed.", lastError);
+		}
 	}
 
 	std::wstring AnonymousPipe::Read()
@@ -138,26 +108,6 @@ namespace Boring32::IPC
 			throw std::runtime_error("Failed to create set pipe handle state");
 	}
 
-	std::vector<std::wstring> AnonymousPipe::DelimitedRead()
-	{
-		std::wstring rawString = Read();
-		if (m_delimiter == L"")
-			return std::vector<std::wstring>{rawString};
-
-		std::vector<std::wstring> strings = Strings::TokeniseString(rawString, m_delimiter+m_delimiter);
-		if (strings.size() > 0)
-		{
-			strings[0] = Strings::Replace(strings[0], m_delimiter, L"");
-			if (strings.size() > 1)
-			{
-				size_t lastIndex = strings.size() - 1;
-				strings[lastIndex] = Strings::Replace(strings[lastIndex], m_delimiter, L"");
-			}
-		}
-
-		return strings;
-	}
-
 	void AnonymousPipe::CloseRead()
 	{
 		m_readHandle.Close();
@@ -176,11 +126,6 @@ namespace Boring32::IPC
 	HANDLE AnonymousPipe::GetWrite() const noexcept
 	{
 		return m_writeHandle.GetHandle();
-	}
-
-	std::wstring AnonymousPipe::GetDelimiter() const
-	{
-		return m_delimiter;
 	}
 
 	DWORD AnonymousPipe::GetSize() const
