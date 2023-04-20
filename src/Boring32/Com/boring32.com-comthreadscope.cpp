@@ -120,17 +120,17 @@ namespace Boring32::COM
 		m_isInitialised = false;
 	}
 
-	bool COMThreadScope::IsInitialised() const
+	bool COMThreadScope::IsInitialised() const noexcept
 	{
 		return m_isInitialised;
 	}
 
-	DWORD COMThreadScope::GetComInitialisedThreadId() const
+	DWORD COMThreadScope::GetComInitialisedThreadId() const noexcept
 	{
 		return m_comInitialisedThreadId;
 	}
 
-	COINIT COMThreadScope::GetApartmentThreadingMode() const
+	COINIT COMThreadScope::GetApartmentThreadingMode() const noexcept
 	{
 		return m_apartmentThreadingMode;
 	}

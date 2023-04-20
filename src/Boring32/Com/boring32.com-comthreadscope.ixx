@@ -83,20 +83,20 @@ export namespace Boring32::COM
 			///		Returns whether this COM scope object has been initialised.
 			/// </summary>
 			/// <returns>A bool indicating whether this scope is active.</returns>
-			virtual bool IsInitialised() const;
+			virtual bool IsInitialised() const noexcept;
 
 			/// <summary>
 			///		Returns the thread ID that initialised this COM object scope.
 			/// </summary>
 			/// <returns>The thread ID that initialsed the COM scope.</returns>
-			virtual DWORD GetComInitialisedThreadId() const;
+			virtual DWORD GetComInitialisedThreadId() const noexcept;
 
 			/// <summary>
 			///		Returns the current COM threading apartment mode held by
 			///		this object.
 			/// </summary>
 			/// <returns>The current COM threading apartment mode </returns>
-			virtual COINIT GetApartmentThreadingMode() const;
+			virtual COINIT GetApartmentThreadingMode() const noexcept;
 
 		protected:
 			void Copy(const COMThreadScope& other);
