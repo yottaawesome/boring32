@@ -37,7 +37,7 @@ export namespace Boring32::IPC
 			virtual void SetMode(const DWORD mode);
 			virtual HANDLE GetRead() const noexcept;
 			virtual HANDLE GetWrite() const noexcept;
-			virtual DWORD GetSize() const;
+			virtual DWORD GetSize() const noexcept;
 			virtual DWORD GetUsedSize() const;
 			virtual DWORD GetRemainingSize() const;
 			virtual void Close();

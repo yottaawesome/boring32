@@ -18,20 +18,28 @@ namespace Boring32::IPC
 		const DWORD size
 	) :	m_size(size)
 	{
-		SECURITY_ATTRIBUTES secAttrs{ 0 };
-		secAttrs.nLength = sizeof(secAttrs);
-		secAttrs.bInheritHandle = inheritable;
-		bool succeeded = CreatePipe(&m_readHandle, &m_writeHandle, &secAttrs, size);
-		if (succeeded == false)
-			throw std::runtime_error("Failed to create anonymous pipe");
+		SECURITY_ATTRIBUTES secAttrs{ 
+			.nLength = sizeof(SECURITY_ATTRIBUTES),
+			.bInheritHandle = inheritable
+		};
+		const bool success = CreatePipe(
+			&m_readHandle, 
+			&m_writeHandle, 
+			&secAttrs, 
+			size
+		);
+		if (!success)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("Failed creating anonymous pipe: CreatePipe() failed.", lastError);
+		}
 	}
 
 	AnonymousPipe::AnonymousPipe(
 		const DWORD size,
 		const HANDLE readHandle,
 		const HANDLE writeHandle
-	)
-	:	m_size(size),
+	) :	m_size(size),
 		m_readHandle(readHandle),
 		m_writeHandle(writeHandle)
 	{ }
@@ -67,45 +75,64 @@ namespace Boring32::IPC
 
 	std::wstring AnonymousPipe::Read()
 	{
-		if (m_readHandle == nullptr)
-			throw std::runtime_error("No active read handle.");
+		if (!m_readHandle)
+			throw Error::Boring32Error("No active read handle.");
 
 		std::wstring msg;
 		DWORD bytesRead = 0;
 		msg.resize(m_size);
-		bool success = ReadFile(
+		const bool success = ReadFile(
 			m_readHandle.GetHandle(),
 			&msg[0],
-			(DWORD)(msg.size() * sizeof(wchar_t)),
+			static_cast<DWORD>(msg.size() * sizeof(wchar_t)),
 			&bytesRead,
 			nullptr
 		);
-		if (success == false)
-			throw std::runtime_error("Read operation failed");
+		if (!success)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("ReadFile() failed", lastError);
+		}
 
-		msg.erase(std::find(msg.begin(), msg.end(), '\0'), msg.end());
+		msg.erase(
+			std::find(
+				msg.begin(), 
+				msg.end(), 
+				'\0'
+			), 
+			msg.end()
+		);
 
 		return msg;
 	}
 
 	void AnonymousPipe::SetMode(const DWORD mode)
 	{
-		if(m_readHandle == nullptr && m_writeHandle == nullptr)
-			throw std::runtime_error("Cannot set pipe mode on null pipes");
+		if(!m_readHandle && !m_writeHandle)
+			throw Error::Boring32Error("Cannot set pipe mode on null pipes");
 
 		HANDLE handleToSet = nullptr;
-		if (m_readHandle != nullptr)
+		if (m_readHandle)
 			handleToSet = m_readHandle.GetHandle();
-		else if (m_writeHandle != nullptr)
+		else if (m_writeHandle)
 			handleToSet = m_writeHandle.GetHandle();
-		if (handleToSet == nullptr)
-			throw std::runtime_error("No handleToSet");
+		if (!handleToSet)
+			throw Error::Boring32Error("No handleToSet");
 
 		// Do not pass PIPE_READMODE_MESSAGE, as anonymous pipes are created in
 		// byte mode, and cannot be changed.
-		bool succeeded = SetNamedPipeHandleState(handleToSet, &m_mode, nullptr, nullptr);
-		if (succeeded == false)
-			throw std::runtime_error("Failed to create set pipe handle state");
+		// https://learn.microsoft.com/en-us/windows/win32/api/namedpipeapi/nf-namedpipeapi-setnamedpipehandlestate
+		const bool succeeded = SetNamedPipeHandleState(
+			handleToSet, 
+			&m_mode, 
+			nullptr, 
+			nullptr
+		);
+		if (!succeeded)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("SetNamedPipeHandleState() failed.", lastError);
+		}
 	}
 
 	void AnonymousPipe::CloseRead()
@@ -128,7 +155,7 @@ namespace Boring32::IPC
 		return m_writeHandle.GetHandle();
 	}
 
-	DWORD AnonymousPipe::GetSize() const
+	DWORD AnonymousPipe::GetSize() const noexcept
 	{
 		return m_size;
 	}
@@ -139,13 +166,14 @@ namespace Boring32::IPC
 		// We do this sequence of actions to determine how much space
 		// is used in the passed pipe handles, if any.
 		HANDLE handleToDetermineBytesAvailable = nullptr;
-		if (m_readHandle != nullptr)
+		if (m_readHandle)
 			handleToDetermineBytesAvailable = m_readHandle.GetHandle();
-		else if (m_writeHandle != nullptr)
+		else if (m_writeHandle)
 			handleToDetermineBytesAvailable = m_writeHandle.GetHandle();
+
 		if (handleToDetermineBytesAvailable)
 		{
-			bool success = PeekNamedPipe(
+			const bool success = PeekNamedPipe(
 				m_readHandle.GetHandle(),
 				nullptr,
 				0,
