@@ -12,6 +12,8 @@ export namespace Boring32::IPC
 		public:
 			virtual ~AnonymousPipe();
 			AnonymousPipe();
+			AnonymousPipe(const AnonymousPipe& other);
+			AnonymousPipe(AnonymousPipe&& other) noexcept;
 			AnonymousPipe(
 				const bool inheritable,
 				const DWORD size,
@@ -24,11 +26,9 @@ export namespace Boring32::IPC
 				const HANDLE writeHandle
 			);
 
-			AnonymousPipe(const AnonymousPipe& other);
-			virtual void operator=(const AnonymousPipe& other);
-
-			AnonymousPipe(AnonymousPipe&& other) noexcept;
-			virtual void operator=(AnonymousPipe&& other) noexcept;
+		public:
+			virtual AnonymousPipe& operator=(const AnonymousPipe& other);
+			virtual AnonymousPipe& operator=(AnonymousPipe&& other) noexcept;
 
 			// API
 		public:
@@ -45,18 +45,13 @@ export namespace Boring32::IPC
 			virtual DWORD GetSize() const;
 			virtual DWORD GetUsedSize() const;
 			virtual DWORD GetRemainingSize() const;
-
-			// Internal methods
-		protected:
-			virtual void Cleanup();
-			virtual void Move(AnonymousPipe& other) noexcept;
-			virtual void Copy(const AnonymousPipe& other);
+			virtual void Close();
 
 			// Internal variables
 		protected:
 			std::wstring m_delimiter;
-			DWORD m_size;
-			DWORD m_mode;
+			DWORD m_size = 0;
+			DWORD m_mode = 0;
 			RAII::Win32Handle m_readHandle;
 			RAII::Win32Handle m_writeHandle;
 	};

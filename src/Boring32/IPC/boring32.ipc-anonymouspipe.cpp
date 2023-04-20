@@ -5,59 +5,12 @@ import <iostream>;
 
 namespace Boring32::IPC
 {
-	AnonymousPipe::~AnonymousPipe()
-	{
-		Cleanup();
-	}
-
-	AnonymousPipe::AnonymousPipe()
-	:	m_size(0),
-		m_readHandle(nullptr),
-		m_writeHandle(nullptr),
-		m_mode(0)
-	{ }
-
-	AnonymousPipe::AnonymousPipe(const AnonymousPipe& other)
-	{ 
-		Copy(other);
-	}
-
-	void AnonymousPipe::operator=(const AnonymousPipe& other)
-	{
-		Copy(other);
-	}
-
-	void AnonymousPipe::Copy(const AnonymousPipe& other)
-	{
-		Cleanup();
-		m_delimiter = other.m_delimiter;
-		m_size = other.m_size;
-		m_readHandle = other.m_readHandle;
-		m_writeHandle = other.m_writeHandle;
-		m_mode = other.m_mode;
-	}
-
-	AnonymousPipe::AnonymousPipe(AnonymousPipe&& other) noexcept
-	{
-		Move(other);
-	}
-
-	void AnonymousPipe::operator=(AnonymousPipe&& other) noexcept
-	{
-		Move(other);
-	}
-
-	void AnonymousPipe::Move(AnonymousPipe& other) noexcept
-	{
-		Cleanup();
-		m_size = other.m_size;
-		m_delimiter = std::move(other.m_delimiter);
-		m_mode = other.m_mode;
-		if (other.m_readHandle != nullptr)
-			m_readHandle = std::move(other.m_readHandle);
-		if (other.m_writeHandle != nullptr)
-			m_writeHandle = std::move(other.m_writeHandle);
-	}
+	AnonymousPipe::~AnonymousPipe() = default;
+	AnonymousPipe::AnonymousPipe() = default;
+	AnonymousPipe::AnonymousPipe(const AnonymousPipe& other) = default;
+	AnonymousPipe::AnonymousPipe(AnonymousPipe&& other) noexcept = default;
+	AnonymousPipe& AnonymousPipe::operator=(const AnonymousPipe& other) = default;
+	AnonymousPipe& AnonymousPipe::operator=(AnonymousPipe&& other) noexcept = default;
 
 	AnonymousPipe::AnonymousPipe(
 		const bool inheritable, 
@@ -91,7 +44,7 @@ namespace Boring32::IPC
 		m_mode(0)
 	{ }
 
-	void AnonymousPipe::Cleanup()
+	void AnonymousPipe::Close()
 	{
 		m_readHandle.Close();
 		m_writeHandle.Close();
