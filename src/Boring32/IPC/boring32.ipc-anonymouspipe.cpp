@@ -31,7 +31,10 @@ namespace Boring32::IPC
 		if (!success)
 		{
 			const auto lastError = GetLastError();
-			throw Error::Win32Error("Failed creating anonymous pipe: CreatePipe() failed.", lastError);
+			throw Error::Win32Error(
+				"Failed creating anonymous pipe: CreatePipe() failed.", 
+				lastError
+			);
 		}
 	}
 
@@ -69,7 +72,10 @@ namespace Boring32::IPC
 		if (!success)
 		{
 			const auto lastError = GetLastError();
-			throw Error::Win32Error("Write operation failed.", lastError);
+			throw Error::Win32Error(
+				"Write operation failed.", 
+				lastError
+			);
 		}
 	}
 
@@ -91,7 +97,10 @@ namespace Boring32::IPC
 		if (!success)
 		{
 			const auto lastError = GetLastError();
-			throw Error::Win32Error("ReadFile() failed", lastError);
+			throw Error::Win32Error(
+				"ReadFile() failed", 
+				lastError
+			);
 		}
 
 		msg.erase(
@@ -131,7 +140,10 @@ namespace Boring32::IPC
 		if (!succeeded)
 		{
 			const auto lastError = GetLastError();
-			throw Error::Win32Error("SetNamedPipeHandleState() failed.", lastError);
+			throw Error::Win32Error(
+				"SetNamedPipeHandleState() failed.", 
+				lastError
+			);
 		}
 	}
 
@@ -184,7 +196,10 @@ namespace Boring32::IPC
 			if (!success)
 			{
 				const auto lastError = GetLastError();
-				throw Error::Win32Error("PeekNamedPipe() failed", lastError);
+				throw Error::Win32Error(
+					"PeekNamedPipe() failed", 
+					lastError
+				);
 			}
 			charactersInPipe /= sizeof(wchar_t);
 		}
