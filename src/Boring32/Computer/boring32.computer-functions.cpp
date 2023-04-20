@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.computer:functions;
 import boring32.error;
 
@@ -41,7 +37,9 @@ namespace Boring32::Computer
         if (!GetPhysicallyInstalledSystemMemory(&memoryInKB))
         {
             const auto lastError = GetLastError();
-            throw Error::Win32Error("GetPhysicallyInstalledSystemMemory() failed",lastError
+            throw Error::Win32Error(
+                "GetPhysicallyInstalledSystemMemory() failed",
+                lastError
             );
         }
         return memoryInKB;
@@ -78,7 +76,10 @@ namespace Boring32::Computer
         if (!succeeded)
         {
             const auto lastError = GetLastError();
-            throw Error::Win32Error("GetSystemTimeAdjustment() failed",lastError);
+            throw Error::Win32Error(
+                "GetSystemTimeAdjustment() failed", 
+                lastError
+            );
         }
 
         // invert the bool since the semantics are the opposite
@@ -108,13 +109,16 @@ namespace Boring32::Computer
             nullptr,
             &lengthInBytes
         );
-        auto lastError = GetLastError();
+        DWORD lastError = GetLastError();
         if (lastError == ERROR_SUCCESS)
             return {};
         if (lastError != ERROR_INSUFFICIENT_BUFFER)
         {
             lastError = GetLastError();
-            throw Error::Win32Error("GetLogicalProcessorInformationEx() failed", lastError);
+            throw Error::Win32Error(
+                "GetLogicalProcessorInformationEx() failed", 
+                lastError
+            );
         }
 
         // https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-system_logical_processor_information_ex
@@ -129,7 +133,10 @@ namespace Boring32::Computer
         if (!succeeded)
         {
             lastError = GetLastError();
-            throw Error::Win32Error("GetLogicalProcessorInformationEx() failed", lastError);
+            throw Error::Win32Error(
+                "GetLogicalProcessorInformationEx() failed", 
+                lastError
+            );
         }
         // In case it changes somehow
         returnValue.resize(lengthInBytes / sizeof(LOGICAL_PROCESSOR_RELATIONSHIP));
