@@ -15,7 +15,7 @@ export namespace Boring32::Async
 			/// <summary>
 			/// Default constructor. Does not initialise any underlying mutex.
 			/// </summary>
-			Mutex();
+			Mutex() = default;
 
 			/// <summary>
 			///		Clones a mutex.
@@ -176,8 +176,8 @@ export namespace Boring32::Async
 
 		protected:
 			std::wstring m_name;
-			bool m_created;
-			bool m_locked;
+			bool m_created = false;
+			bool m_locked = false;
 			RAII::Win32Handle m_mutex;
 	};
 }

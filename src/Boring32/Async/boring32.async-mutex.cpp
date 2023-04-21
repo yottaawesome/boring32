@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.async:mutex;
 import boring32.error;
 import :functions;
@@ -27,16 +23,8 @@ namespace Boring32::Async
 		}
 	}
 
-	Mutex::Mutex()
-	:	m_created(false),
-		m_mutex(nullptr),
-		m_locked(false)
-	{ }
-
 	Mutex::Mutex(const bool acquire, const bool inheritable)
-	:	m_created(false),
-		m_locked(acquire),
-		m_mutex(nullptr)
+	: m_locked(acquire)
 	{
 		m_mutex = CreateMutexW(
 			nullptr,
@@ -53,10 +41,8 @@ namespace Boring32::Async
 		const bool inheritable,
 		std::wstring name
 	)
-	:	m_name(std::move(name)),
-		m_created(true),
-		m_mutex(nullptr),
-		m_locked(false)
+	: m_name(std::move(name)),
+	m_created(true)
 	{
 		m_mutex = CreateMutexW(
 			nullptr,
@@ -76,10 +62,7 @@ namespace Boring32::Async
 		std::wstring name,
 		const DWORD desiredAccess
 	)
-	:	m_name(name),
-		m_created(false),
-		m_mutex(nullptr),
-		m_locked(false)
+	:	m_name(name)
 	{
 		if(m_name.empty())
 			throw Error::Boring32Error("Cannot open mutex with empty name");
