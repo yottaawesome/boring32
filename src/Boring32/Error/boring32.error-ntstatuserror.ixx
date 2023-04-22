@@ -9,9 +9,9 @@ export namespace Boring32::Error
 	class NtStatusError : public Boring32Error
 	{
 		public:
-			virtual ~NtStatusError();
-			NtStatusError(const NtStatusError& other);
-			NtStatusError(NtStatusError&& other) noexcept;
+			virtual ~NtStatusError() = default;
+			NtStatusError(const NtStatusError& other) = default;
+			NtStatusError(NtStatusError&& other) noexcept = default;
 			NtStatusError(
 				const std::string& msg,
 				const std::source_location location = std::source_location::current()
@@ -23,8 +23,8 @@ export namespace Boring32::Error
 			);
 
 		public:
-			virtual NtStatusError& operator=(const NtStatusError& other);
-			virtual NtStatusError& operator=(NtStatusError&& other) noexcept;
+			virtual NtStatusError& operator=(const NtStatusError& other) = default;
+			virtual NtStatusError& operator=(NtStatusError&& other) noexcept = default;
 
 		public:
 			[[nodiscard]] virtual long GetErrorCode() const noexcept;
@@ -36,6 +36,6 @@ export namespace Boring32::Error
 			) override;
 
 		protected:
-			long m_errorCode;
+			long m_errorCode = 0;
 	};
 }
