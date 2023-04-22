@@ -6,13 +6,6 @@ import <iostream>;
 
 namespace Boring32::IPC
 {
-	AnonymousPipe::~AnonymousPipe() = default;
-	AnonymousPipe::AnonymousPipe() = default;
-	AnonymousPipe::AnonymousPipe(const AnonymousPipe& other) = default;
-	AnonymousPipe::AnonymousPipe(AnonymousPipe&& other) noexcept = default;
-	AnonymousPipe& AnonymousPipe::operator=(const AnonymousPipe& other) = default;
-	AnonymousPipe& AnonymousPipe::operator=(AnonymousPipe&& other) noexcept = default;
-
 	AnonymousPipe::AnonymousPipe(
 		const bool inheritable, 
 		const DWORD size

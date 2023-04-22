@@ -10,10 +10,10 @@ export namespace Boring32::IPC
 	{
 		// Constructors
 		public:
-			virtual ~AnonymousPipe();
-			AnonymousPipe();
-			AnonymousPipe(const AnonymousPipe& other);
-			AnonymousPipe(AnonymousPipe&& other) noexcept;
+			virtual ~AnonymousPipe() = default;
+			AnonymousPipe() = default;
+			AnonymousPipe(const AnonymousPipe& other) = default;
+			AnonymousPipe(AnonymousPipe&& other) noexcept = default;
 			AnonymousPipe(
 				const bool inheritable,
 				const DWORD size
@@ -25,8 +25,8 @@ export namespace Boring32::IPC
 			);
 
 		public:
-			virtual AnonymousPipe& operator=(const AnonymousPipe& other);
-			virtual AnonymousPipe& operator=(AnonymousPipe&& other) noexcept;
+			virtual AnonymousPipe& operator=(const AnonymousPipe& other) = default;
+			virtual AnonymousPipe& operator=(AnonymousPipe&& other) noexcept = default;
 
 			// API
 		public:
