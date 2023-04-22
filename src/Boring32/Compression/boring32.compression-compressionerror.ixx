@@ -9,17 +9,17 @@ export namespace Boring32::Compression
 	class CompressionError : public Error::Boring32Error
 	{
 		public:
-			virtual ~CompressionError();
-			CompressionError(const CompressionError& other);
-			CompressionError(CompressionError&& other) noexcept;
+			virtual ~CompressionError() = default;
+			CompressionError(const CompressionError& other) = default;
+			CompressionError(CompressionError&& other) noexcept = default;
 			CompressionError(
 				const std::string& message,
 				const std::source_location location = std::source_location::current()
 			);
 
 		public:
-			virtual CompressionError& operator=(const CompressionError& other);
-			virtual CompressionError& operator=(CompressionError&& other) noexcept;
+			virtual CompressionError& operator=(const CompressionError& other) = default;
+			virtual CompressionError& operator=(CompressionError&& other) noexcept = default;
 
 		protected:
 			virtual void GenerateErrorMessage(
