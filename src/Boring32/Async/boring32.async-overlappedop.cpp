@@ -3,16 +3,10 @@
 module boring32.async:overlappedop;
 import boring32.error;
 import <stdexcept>;
-import <memory>;
 
 namespace Boring32::Async
 {
-	OverlappedOp::~OverlappedOp() { }
-
 	OverlappedOp::OverlappedOp()
-	:	m_ioOverlapped(std::make_shared<OVERLAPPED>()),
-		m_ioEvent(false, true, false, L""),
-		m_lastError(0)
 	{
 		m_ioOverlapped->hEvent = m_ioEvent.GetHandle();
 	}
@@ -50,7 +44,7 @@ namespace Boring32::Async
 		return successfulWait;
 	}
 
-	HANDLE OverlappedOp::GetWaitableHandle() const
+	HANDLE OverlappedOp::GetWaitableHandle() const noexcept
 	{
 		return m_ioEvent.GetHandle();
 	}

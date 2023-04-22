@@ -9,7 +9,7 @@ export namespace Boring32::Async
 	class OverlappedOp [[nodiscard("This object must remain live while the I/O operation is in progress")]]
 	{
 		public:
-			virtual ~OverlappedOp();
+			virtual ~OverlappedOp() = default;
 			OverlappedOp();
 			
 		// Shareable, moveable
@@ -21,7 +21,7 @@ export namespace Boring32::Async
 
 		public:
 			virtual bool WaitForCompletion(const DWORD timeout);
-			virtual HANDLE GetWaitableHandle() const;
+			virtual HANDLE GetWaitableHandle() const noexcept;
 			virtual OVERLAPPED* GetOverlapped();
 			virtual uint64_t GetStatus() const;
 			virtual uint64_t GetBytesTransferred() const;
@@ -39,8 +39,8 @@ export namespace Boring32::Async
 			virtual void OnSuccess();
 
 		protected:
-			Event m_ioEvent;
-			std::shared_ptr<OVERLAPPED> m_ioOverlapped;
-			DWORD m_lastError;
+			Event m_ioEvent{ false, true, false, L"" };
+			std::shared_ptr<OVERLAPPED> m_ioOverlapped = std::make_shared<OVERLAPPED>();
+			DWORD m_lastError = 0;
 	};
 }
