@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.util:guid;
 import :functions;
 import boring32.error;
@@ -10,7 +6,6 @@ import <win32.hpp>;
 
 namespace Boring32::Util
 {
-	GloballyUniqueID::~GloballyUniqueID() {}
 	GloballyUniqueID::GloballyUniqueID() 
 		: m_guid(GenerateGUID())
 	{}
@@ -35,11 +30,6 @@ namespace Boring32::Util
 		if (status != RPC_S_OK)
 			throw Error::Win32Error("UuidFromStringW() failed", status);
 	}
-
-	GloballyUniqueID::GloballyUniqueID(const GloballyUniqueID& other) = default;
-	GloballyUniqueID::GloballyUniqueID(GloballyUniqueID&& other) noexcept = default;
-	GloballyUniqueID& GloballyUniqueID::operator=(const GloballyUniqueID& other) = default;
-	GloballyUniqueID& GloballyUniqueID::operator=(GloballyUniqueID&& other) noexcept = default;
 	
 	GloballyUniqueID& GloballyUniqueID::operator=(const GUID& other) noexcept
 	{

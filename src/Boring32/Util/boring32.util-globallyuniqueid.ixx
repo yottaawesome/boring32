@@ -7,18 +7,18 @@ export namespace Boring32::Util
 	class GloballyUniqueID
 	{
 		public:
-			virtual ~GloballyUniqueID();
+			virtual ~GloballyUniqueID() = default;
 			GloballyUniqueID();
 			GloballyUniqueID(const std::wstring& guidString);
-			GloballyUniqueID(const GloballyUniqueID& other);
-			GloballyUniqueID(GloballyUniqueID&& other) noexcept;
+			GloballyUniqueID(const GloballyUniqueID& other) = default;
+			GloballyUniqueID(GloballyUniqueID&& other) noexcept = default;
 
 			GloballyUniqueID(const GUID& guid);
 
 		public:
 			virtual GloballyUniqueID& operator=(const GUID& other) noexcept;
-			virtual GloballyUniqueID& operator=(const GloballyUniqueID& other);
-			virtual GloballyUniqueID& operator=(GloballyUniqueID&& other) noexcept;
+			virtual GloballyUniqueID& operator=(const GloballyUniqueID& other) = default;
+			virtual GloballyUniqueID& operator=(GloballyUniqueID&& other) noexcept = default;
 			virtual bool operator==(const GloballyUniqueID& other) const noexcept;
 			virtual bool operator==(const GUID& other) const noexcept;
 
