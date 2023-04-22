@@ -1,18 +1,9 @@
-module;
-
-#include <source_location>
-
 module boring32.async:overlappedio;
 import boring32.error;
 import <stdexcept>;
 
 namespace Boring32::Async
 {
-	OverlappedIo::~OverlappedIo() { }
-
-	OverlappedIo::OverlappedIo()
-	{ }
-
 	OverlappedIo::OverlappedIo(OverlappedIo&& other) noexcept
 	{
 		Move(other);

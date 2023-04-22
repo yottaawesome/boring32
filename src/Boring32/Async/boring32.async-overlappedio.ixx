@@ -7,8 +7,8 @@ export namespace Boring32::Async
 	class OverlappedIo : public OverlappedOp
 	{
 		public:
-			virtual ~OverlappedIo();
-			OverlappedIo();
+			virtual ~OverlappedIo() = default;
+			OverlappedIo() = default;
 			OverlappedIo(OverlappedIo&& other) noexcept;
 			virtual OverlappedIo& operator=(OverlappedIo&& other) noexcept;
 
