@@ -10,9 +10,9 @@ export namespace Boring32::Error
 	class COMError : public Boring32Error
 	{
 		public:
-			virtual ~COMError();
-			COMError(const COMError& other);
-			COMError(COMError&& other) noexcept;
+			virtual ~COMError() = default;
+			COMError(const COMError& other) = default;
+			COMError(COMError&& other) noexcept = default;
 			COMError(
 				const std::string& msg, 
 				const HRESULT hr,
@@ -20,8 +20,8 @@ export namespace Boring32::Error
 			);
 
 		public:
-			virtual COMError& operator=(const COMError& other);
-			virtual COMError& operator=(COMError&& other) noexcept;
+			virtual COMError& operator=(const COMError& other) = default;
+			virtual COMError& operator=(COMError&& other) noexcept = default;
 
 		public:
 			virtual HRESULT GetHResult() const noexcept;
@@ -34,7 +34,7 @@ export namespace Boring32::Error
 			) override;
 
 		protected:
-			HRESULT m_hresult;
+			HRESULT m_hresult = 0;
 			std::string m_errorString;
 	};
 }

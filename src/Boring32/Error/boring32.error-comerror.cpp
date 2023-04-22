@@ -4,13 +4,6 @@ import <format>;
 
 namespace Boring32::Error
 {
-	COMError::~COMError() {}
-
-	COMError::COMError(const COMError& other)					= default;
-	COMError::COMError(COMError&& other) noexcept				= default;
-	COMError& COMError::operator=(const COMError& other)		= default;
-	COMError& COMError::operator=(COMError&& other) noexcept	= default;
-
 	COMError::COMError(
 		const std::string& msg,
 		const HRESULT hr,
