@@ -24,7 +24,7 @@ export namespace Boring32::Async
 			virtual HANDLE GetWaitableHandle() const noexcept;
 			virtual OVERLAPPED* GetOverlapped();
 			virtual uint64_t GetStatus() const;
-			virtual uint64_t GetBytesTransferred() const;
+			virtual uint64_t GetBytesTransferred() const noexcept;
 			virtual bool IsReady() const;
 			virtual bool IsComplete() const;
 			virtual bool IsSuccessful() const;

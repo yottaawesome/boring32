@@ -65,7 +65,7 @@ namespace Boring32::Async
 		return m_lastError == ERROR_IO_PENDING ? m_ioOverlapped->Internal : m_lastError;
 	}
 
-	uint64_t OverlappedOp::GetBytesTransferred() const
+	uint64_t OverlappedOp::GetBytesTransferred() const noexcept
 	{
 		if (m_ioOverlapped == nullptr)
 			return 0;
@@ -109,7 +109,7 @@ namespace Boring32::Async
 			m_ioEvent.Reset();
 	}
 
-	DWORD OverlappedOp::LastError() const
+	DWORD OverlappedOp::LastError() const 
 	{
 		return m_lastError;
 	}
