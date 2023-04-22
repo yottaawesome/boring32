@@ -9,9 +9,9 @@ export namespace Boring32::Error
 	class Boring32Error : public std::exception
 	{
 		public:
-			virtual ~Boring32Error();
-			Boring32Error(const Boring32Error& other);
-			Boring32Error(Boring32Error&& other) noexcept;
+			virtual ~Boring32Error() = default;
+			Boring32Error(const Boring32Error& other) = default;
+			Boring32Error(Boring32Error&& other) noexcept = default;
 			Boring32Error();
 			Boring32Error(
 				const std::string& message, 
@@ -34,8 +34,10 @@ export namespace Boring32::Error
 			}
 
 		public:
-			virtual Boring32Error& operator=(const Boring32Error& other);
-			virtual Boring32Error& operator=(Boring32Error&& other) noexcept;
+			virtual Boring32Error& operator=(const Boring32Error& other) = default;
+			virtual Boring32Error& operator=(Boring32Error&& other) noexcept = default;
+
+		public:
 			virtual const char* what() const noexcept override;
 
 		protected:

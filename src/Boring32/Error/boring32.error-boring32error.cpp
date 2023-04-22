@@ -3,15 +3,9 @@ import :functions;
 
 namespace Boring32::Error
 {
-	Boring32Error::~Boring32Error() = default;
 	Boring32Error::Boring32Error()
 		: m_message("Boring32 encountered an error")
 	{ }
-
-	Boring32Error::Boring32Error(const Boring32Error& other) = default;
-	Boring32Error::Boring32Error(Boring32Error&& other) noexcept = default;
-	Boring32Error& Boring32Error::operator=(const Boring32Error& other) = default;
-	Boring32Error& Boring32Error::operator=(Boring32Error&& other) noexcept = default;
 
 	Boring32Error::Boring32Error(
 		const std::string& message,
