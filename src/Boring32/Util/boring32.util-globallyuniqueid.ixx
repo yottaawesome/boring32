@@ -1,6 +1,6 @@
 export module boring32.util:guid;
 import <string>;
-import <Windows.h>;
+import <win32.hpp>;
 
 export namespace Boring32::Util
 {

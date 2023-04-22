@@ -2,7 +2,6 @@ module boring32.util:guid;
 import :functions;
 import boring32.error;
 import boring32.strings;
-import <win32.hpp>;
 
 namespace Boring32::Util
 {
