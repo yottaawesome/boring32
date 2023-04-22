@@ -12,7 +12,7 @@ export namespace Boring32::WinHttp
 	class WinHttpError : public Error::Boring32Error
 	{
 		public:
-			virtual ~WinHttpError();
+			virtual ~WinHttpError() = default;
 			WinHttpError(
 				const std::string& msg,
 				const std::source_location location = std::source_location::current()
