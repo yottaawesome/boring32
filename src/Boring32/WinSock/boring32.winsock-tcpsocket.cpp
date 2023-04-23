@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.winsock:tcpsocket;
 import :winsockerror;
 import boring32.error;

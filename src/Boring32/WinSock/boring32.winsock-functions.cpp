@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.winsock:functions;
 import :winsockerror;
 import boring32.raii;
