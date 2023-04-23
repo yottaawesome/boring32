@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.security:functions;
 import boring32.error;
 import boring32.raii;
@@ -20,7 +16,7 @@ namespace Boring32::Security
 	RAII::Win32Handle GetProcessToken(const HANDLE processHandle, const DWORD desiredAccess)
 	{
 		if (!IsHandleValid(processHandle))
-			throw std::invalid_argument(__FUNCSIG__ ": processHandle cannot be null");
+			throw Error::Boring32Error(__FUNCSIG__ ": processHandle cannot be null");
 
 		RAII::Win32Handle handle;
 		// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocesstoken
@@ -39,7 +35,7 @@ namespace Boring32::Security
 	{
 		// See also: https://docs.microsoft.com/en-us/windows/win32/secauthz/enabling-and-disabling-privileges-in-c--
 		if (!IsHandleValid(token))
-			throw std::invalid_argument(__FUNCSIG__ ": token cannot be null");
+			throw Error::Boring32Error(__FUNCSIG__ ": token cannot be null");
 
 		// https://docs.microsoft.com/en-us/windows/win32/secauthz/privilege-constants
 		LUID luidPrivilege;
@@ -83,7 +79,7 @@ namespace Boring32::Security
 	)
 	{
 		if (!IsHandleValid(token))
-			throw std::invalid_argument(__FUNCSIG__ ": token cannot be null");
+			throw Error::Boring32Error("token cannot be null");
 
 		const std::wstring& integritySidString = Constants::GetIntegrity(integrity);
 		PSID rawIntegritySid = nullptr;
@@ -111,7 +107,7 @@ namespace Boring32::Security
     bool SearchTokenGroupsForSID(const HANDLE token, const PSID pSID)
     {
 		if (!IsHandleValid(token) || !pSID)
-			throw std::invalid_argument(__FUNCSIG__ "hToken and pSID cannot be nullptr");
+			throw Error::Boring32Error("hToken and pSID cannot be nullptr");
 
         // Call GetTokenInformation to get the buffer size.
 		constexpr unsigned MAX_NAME = 256;
@@ -139,7 +135,7 @@ namespace Boring32::Security
 	void EnumerateTokenGroups(const HANDLE token)
 	{
 		if (!IsHandleValid(token))
-			throw std::invalid_argument(__FUNCSIG__ "hToken cannot be nullptr");
+			throw Error::Boring32Error("hToken cannot be nullptr");
 
 		// Call GetTokenInformation to get the buffer size.
 		constexpr unsigned MAX_NAME = 256;
@@ -204,7 +200,7 @@ namespace Boring32::Security
 	void EnumerateTokenPrivileges(const HANDLE token)
 	{
 		if (!IsHandleValid(token))
-			throw std::invalid_argument(__FUNCSIG__ "hToken cannot be nullptr");
+			throw Error::Boring32Error("hToken cannot be nullptr");
 
 		DWORD bytesNeeded = 0;
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-gettokeninformation
@@ -265,7 +261,7 @@ namespace Boring32::Security
 	)
 	{
 		if (!IsHandleValid(token))
-			throw std::invalid_argument(__FUNCSIG__ "hToken cannot be nullptr");
+			throw Error::Boring32Error("hToken cannot be nullptr");
 
 		// See https://docs.microsoft.com/en-us/windows/win32/secauthz/enabling-and-disabling-privileges-in-c--
 		LUID luid;
@@ -329,9 +325,9 @@ namespace Boring32::Security
 	bool CheckMembership(const HANDLE token, const PSID sidToCheck)
 	{
 		if (!IsHandleValid(token))
-			throw std::invalid_argument(__FUNCSIG__ "hToken cannot be nullptr");
+			throw Error::Boring32Error("hToken cannot be nullptr");
 		if (!sidToCheck)
-			throw std::invalid_argument(__FUNCSIG__ "sidToCheck and pSID cannot be nullptr");
+			throw Error::Boring32Error("sidToCheck and pSID cannot be nullptr");
 
 		BOOL result = false;
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-checktokenmembership
@@ -347,7 +343,7 @@ namespace Boring32::Security
 	)
 	{
 		if (!IsHandleValid(token))
-			throw std::invalid_argument(__FUNCSIG__ "token cannot be nullptr");
+			throw Error::Boring32Error("token cannot be nullptr");
 
 		// See also https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-privilege_set
 		std::vector<std::byte> privilegesBytes(sizeof(PRIVILEGE_SET) + sizeof(LUID_AND_ATTRIBUTES) * privileges.size());
