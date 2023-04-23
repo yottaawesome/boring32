@@ -23,9 +23,9 @@ export namespace Boring32::WirelessLAN
 	class WirelessInterface
 	{
 		public:
-			virtual ~WirelessInterface();
-			WirelessInterface(const WirelessInterface&);
-			WirelessInterface(WirelessInterface&&) noexcept;
+			virtual ~WirelessInterface() = default;
+			WirelessInterface(const WirelessInterface&) = default;
+			WirelessInterface(WirelessInterface&&) noexcept = default;
 			WirelessInterface(
 				const SharedWLANHandle& wlanHandle,
 				const Util::GloballyUniqueID& id,
@@ -33,8 +33,8 @@ export namespace Boring32::WirelessLAN
 			);
 
 		public:
-			virtual WirelessInterface& operator=(const WirelessInterface&);
-			virtual WirelessInterface& operator=(WirelessInterface&&) noexcept;
+			virtual WirelessInterface& operator=(const WirelessInterface&) = default;
+			virtual WirelessInterface& operator=(WirelessInterface&&) noexcept = default;
 
 		public:
 			[[nodiscard]]
