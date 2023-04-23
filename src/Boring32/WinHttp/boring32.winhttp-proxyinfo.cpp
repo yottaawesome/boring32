@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.winhttp:proxyinfo;
 import boring32.error;
 
