@@ -48,7 +48,7 @@ namespace Boring32::Security
 			return;
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-freesid
 		if (FreeSid(m_sid))
-			std::wcerr << TEXT(__FUNCSIG__) L": failed to release SID" << std::endl;
+			std::wcerr << L"Failed to release SID\n";
 		m_sid = nullptr;
 	}
 
@@ -66,7 +66,7 @@ namespace Boring32::Security
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsidsubauthoritycount
 		PUCHAR authorityCount = GetSidSubAuthorityCount(m_sid);
-		return (BYTE)*authorityCount;
+		return static_cast<BYTE>(*authorityCount);
 	}
 
 	SID_IDENTIFIER_AUTHORITY SecurityIdentifier::GetIdentifierAuthority() const
