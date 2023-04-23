@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.registry:key;
 import :functions;
 import boring32.error;
