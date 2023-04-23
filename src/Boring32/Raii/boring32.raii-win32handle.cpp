@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.raii:win32handle;
 import boring32.error;
 import <functional>;
