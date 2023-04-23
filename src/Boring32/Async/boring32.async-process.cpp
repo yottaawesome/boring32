@@ -1,29 +1,9 @@
-module;
-
-#include <source_location>
-
 module boring32.async:process;
 import boring32.error;
 import <stdexcept>;
 
 namespace Boring32::Async
 {
-	Process::~Process()
-	{
-		CloseHandles();
-	}
-
-	Process::Process()
-	:	m_executablePath(L""),
-		m_commandLine(L""),
-		m_startingDirectory(L""),
-		m_canInheritHandles(false),
-		m_creationFlags(0),
-		m_processId(0),
-		m_threadId(0),
-		m_dataSi{0}
-	{ }
-
 	Process::Process(
 		std::wstring executablePath,
 		std::wstring commandLine,
@@ -33,13 +13,7 @@ namespace Boring32::Async
 	:	m_executablePath(std::move(executablePath)),
 		m_commandLine(std::move(commandLine)),
 		m_startingDirectory(std::move(startingDirectory)),
-		m_canInheritHandles(canInheritHandles),
-		m_creationFlags(0),
-		m_processId(0),
-		m_threadId(0),
-		m_process(nullptr),
-		m_thread(nullptr),
-		m_dataSi({0})
+		m_canInheritHandles(canInheritHandles)
 	{ }
 
 	Process::Process(
@@ -55,84 +29,8 @@ namespace Boring32::Async
 		m_startingDirectory(std::move(startingDirectory)),
 		m_canInheritHandles(canInheritHandles),
 		m_creationFlags(creationFlags),
-		m_processId(0),
-		m_threadId(0),
-		m_process(nullptr),
-		m_thread(nullptr),
 		m_dataSi(dataSi)
 	{ }
-
-	Process::Process(const Process& other)
-	:	m_executablePath(L""),
-		m_commandLine(L""),
-		m_startingDirectory(L""),
-		m_canInheritHandles(false),
-		m_creationFlags(0),
-		m_processId(0),
-		m_threadId(0),
-		m_dataSi{ 0 }
-	{
-		Copy(other);
-	}
-
-	Process& Process::operator=(Process& other)
-	{
-		return Copy(other);
-	}
-
-	Process::Process(Process&& other) noexcept
-	:	m_executablePath(L""),
-		m_commandLine(L""),
-		m_startingDirectory(L""),
-		m_canInheritHandles(false),
-		m_creationFlags(0),
-		m_processId(0),
-		m_threadId(0),
-		m_dataSi{ 0 }
-	{
-		Move(other);
-	}
-
-	Process& Process::operator=(Process&& other) noexcept
-	{
-		return Move(other);
-	}
-
-	Process& Process::Move(Process& other) noexcept
-	{
-		if (this == &other)
-			return *this;
-
-		CloseHandles();
-		m_executablePath = std::move(other.m_executablePath);
-		m_commandLine = std::move(other.m_commandLine);
-		m_startingDirectory = std::move(other.m_startingDirectory);
-		m_canInheritHandles = other.m_canInheritHandles;
-		m_creationFlags = other.m_creationFlags;
-		m_processId = other.m_processId;
-		m_threadId = other.m_threadId;
-		m_process = std::move(other.m_process);
-		m_thread = std::move(other.m_thread);
-		return *this;
-	}
-
-	Process& Process::Copy(const Process& other)
-	{
-		if (this == &other)
-			return *this;
-
-		CloseHandles();
-		m_executablePath = other.m_executablePath;
-		m_commandLine = other.m_commandLine;
-		m_startingDirectory = other.m_startingDirectory;
-		m_canInheritHandles = other.m_canInheritHandles;
-		m_creationFlags = other.m_creationFlags;
-		m_processId = other.m_processId;
-		m_threadId = other.m_threadId;
-		m_process = other.m_process;
-		m_thread = other.m_thread;
-		return *this;
-	}
 
 	void Process::Start()
 	{
@@ -158,8 +56,11 @@ namespace Boring32::Async
 				&m_dataSi,				// Pointer to STARTUPINFO structure
 				&processInfo			// Pointer to PROCESS_INFORMATION structure
 			);
-		if (!successfullyCreatedProcess) 
-			throw Error::Win32Error("Failed to create process", GetLastError());
+		if (!successfullyCreatedProcess)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("Failed to create process", lastError);
+		}
 
 		m_process = processInfo.hProcess;
 		m_thread = processInfo.hThread;
@@ -176,13 +77,11 @@ namespace Boring32::Async
 	void Process::CloseProcessHandle()
 	{
 		m_process.Close();
-		m_process = nullptr;
 	}
 
 	void Process::CloseThreadHandle()
 	{
 		m_thread.Close();
-		m_thread = nullptr;
 	}
 
 	HANDLE Process::GetProcessHandle() const noexcept
