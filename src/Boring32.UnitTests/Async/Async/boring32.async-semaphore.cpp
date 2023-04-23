@@ -87,14 +87,5 @@ namespace Async
 			Boring32::Async::Semaphore semaphore(false, 10, 10);
 			semaphore.Release(0);
 		}
-
-		TEST_METHOD(TestGetCurrentCount)
-		{
-			Boring32::Async::Semaphore semaphore(false, 10, 10);
-			semaphore.Acquire();
-			Assert::IsTrue(semaphore.GetCurrentCount() == 9);
-			semaphore.Release();
-			Assert::IsTrue(semaphore.GetCurrentCount() == 10);
-		}
 	};
 }

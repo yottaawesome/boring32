@@ -35,8 +35,8 @@ export namespace Boring32::Async
 
 		public:
 			virtual void Close();
-			virtual long Release();
-			virtual long Release(const long countToRelease);
+			virtual void Release();
+			virtual void Release(const long countToRelease);
 			virtual bool Acquire();
 			virtual bool Acquire(const unsigned long millisTimeout);
 			virtual bool AcquireMany(
@@ -45,7 +45,6 @@ export namespace Boring32::Async
 			);
 			virtual bool Acquire(const unsigned long millisTimeout, const bool isAlertable);
 			virtual const std::wstring& GetName() const noexcept final;
-			virtual long GetCurrentCount() const noexcept final;
 			virtual long GetMaxCount() const noexcept final;
 			virtual HANDLE GetHandle() const noexcept final;
 
@@ -62,7 +61,6 @@ export namespace Boring32::Async
 		protected:
 			RAII::Win32Handle m_handle;
 			std::wstring m_name;
-			std::atomic<long> m_currentCount = 0;
 			long m_maxCount = 0;
 	};
 }

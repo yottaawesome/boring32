@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.async:semaphore;
 import boring32.error;
 import <stdexcept>;
@@ -19,9 +15,7 @@ namespace Boring32::Async
 		const bool isInheritable,
 		const unsigned long initialCount,
 		const unsigned long maxCount
-	)
-		: m_currentCount(initialCount),
-		m_maxCount(maxCount)
+	) : m_maxCount(maxCount)
 	{
 		InternalCreate(m_name, initialCount, maxCount, isInheritable);
 	}
@@ -31,9 +25,7 @@ namespace Boring32::Async
 		const bool isInheritable,
 		const unsigned long initialCount,
 		const unsigned long maxCount
-	)
-		: m_name(std::move(name)),
-		m_currentCount(initialCount),
+	) : m_name(std::move(name)),
 		m_maxCount(maxCount)
 	{
 		if (m_name.empty())
@@ -47,9 +39,7 @@ namespace Boring32::Async
 		const long initialCount,
 		const long maxCount,
 		const unsigned long desiredAccess
-	)
-		: m_name(std::move(name)),
-		m_currentCount(initialCount),
+	) : m_name(std::move(name)),
 		m_maxCount(maxCount)
 	{
 		if (initialCount > maxCount)
@@ -105,7 +95,6 @@ namespace Boring32::Async
 		Close();
 		m_handle = other.m_handle;
 		m_name = other.m_name;
-		m_currentCount = other.m_currentCount.load();
 		m_maxCount = other.m_maxCount;
 	}
 
@@ -129,19 +118,18 @@ namespace Boring32::Async
 		Close();
 		m_handle = std::move(other.m_handle);
 		m_name = std::move(other.m_name);
-		m_currentCount = other.m_currentCount.load();
 		m_maxCount = other.m_maxCount;
 	}
 
-	long Semaphore::Release()
+	void Semaphore::Release()
 	{
-		return Release(1);
+		Release(1);
 	}
 
-	long Semaphore::Release(const long countToRelease)
+	void Semaphore::Release(const long countToRelease)
 	{
 		if (countToRelease == 0)
-			return m_currentCount;
+			return;
 		if (!m_handle)
 			throw Error::Boring32Error("m_handle is nullptr.");
 
@@ -151,9 +139,6 @@ namespace Boring32::Async
 			const auto lastError = GetLastError();
 			throw Error::Win32Error("Failed to release semaphore", lastError);
 		}
-		m_currentCount += countToRelease;
-
-		return previousCount;
 	}
 
 	bool Semaphore::Acquire()
@@ -179,7 +164,6 @@ namespace Boring32::Async
 		switch (status)
 		{
 			case WAIT_OBJECT_0:
-				m_currentCount--;
 				return true;
 
 			case WAIT_TIMEOUT:
@@ -228,11 +212,6 @@ namespace Boring32::Async
 	const std::wstring& Semaphore::GetName() const noexcept
 	{
 		return m_name;
-	}
-
-	long Semaphore::GetCurrentCount() const noexcept
-	{
-		return m_currentCount;
 	}
 
 	long Semaphore::GetMaxCount() const noexcept
