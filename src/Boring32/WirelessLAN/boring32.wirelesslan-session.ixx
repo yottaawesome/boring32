@@ -8,14 +8,14 @@ export namespace Boring32::WirelessLAN
 	class Session
 	{
 		public:
-			virtual ~Session(); 
+			virtual ~Session() = default; 
 			Session();
-			Session(const Session& other);
-			Session(Session&& other) noexcept;
+			Session(const Session& other) = default;
+			Session(Session&& other) noexcept = default;
 
 		public:
-			virtual Session& operator=(const Session& other);
-			virtual Session& operator=(Session&& other) noexcept;
+			virtual Session& operator=(const Session& other) = default;
+			virtual Session& operator=(Session&& other) noexcept = default;
 
 		public:
 			virtual void Close();

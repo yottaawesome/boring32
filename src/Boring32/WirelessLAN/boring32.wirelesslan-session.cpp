@@ -5,19 +5,12 @@ import <iostream>;
 
 namespace Boring32::WirelessLAN
 {
-	Session::~Session() {}
-
 	Session::Session()
         : m_maxClientVersion(2),
         m_negotiatedVersion(0),
         Interfaces(Open())
 	{
 	}
-
-    Session::Session(const Session& other) = default;
-    Session::Session(Session&& other) noexcept = default;
-    Session& Session::operator=(const Session& other) = default;
-    Session& Session::operator=(Session&& other) noexcept = default;
 
     SharedWLANHandle Session::Open()
     {
