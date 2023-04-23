@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.services:service;
 import boring32.error;
 import :raii;
