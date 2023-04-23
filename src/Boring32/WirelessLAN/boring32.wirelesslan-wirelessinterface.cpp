@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.wirelesslan:wirelessinterface;
 import boring32.util;
 import boring32.error;
