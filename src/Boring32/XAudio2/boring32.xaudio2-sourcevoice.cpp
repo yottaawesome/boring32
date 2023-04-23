@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.xaudio2:sourcevoice;
 import boring32.error;
 import :xaudio2error;
