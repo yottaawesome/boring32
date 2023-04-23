@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.ipc:namedpipeserverbase;
 import boring32.error;
 import boring32.raii;
