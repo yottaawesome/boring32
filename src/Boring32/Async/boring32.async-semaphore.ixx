@@ -10,8 +10,8 @@ export namespace Boring32::Async
 		public:
 			virtual ~Semaphore() = default;
 			Semaphore() = default;
-			Semaphore(const Semaphore& other);
-			Semaphore(Semaphore&& other) noexcept;
+			Semaphore(const Semaphore& other) = default;
+			Semaphore(Semaphore&& other) noexcept = default;
 			Semaphore(
 				const bool isInheritable,
 				const unsigned long initialCount,
@@ -29,8 +29,8 @@ export namespace Boring32::Async
 				const unsigned long desiredAccess);
 			
 		public:
-			virtual void operator=(const Semaphore& other);
-			virtual void operator=(Semaphore&& other) noexcept;
+			virtual Semaphore& operator=(const Semaphore& other) = default;
+			virtual Semaphore& operator=(Semaphore&& other) noexcept = default;
 			virtual operator bool() const noexcept;
 
 		public:
@@ -49,8 +49,6 @@ export namespace Boring32::Async
 			virtual HANDLE GetHandle() const noexcept final;
 
 		protected:
-			virtual void Copy(const Semaphore& other);
-			virtual void Move(Semaphore& other) noexcept;
 			virtual void InternalCreate(
 				const std::wstring& name,
 				const unsigned long initialCount,

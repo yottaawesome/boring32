@@ -50,13 +50,11 @@ namespace Boring32::Async
 			throw Error::Boring32Error("MaxCount cannot be 0.");
 		//SEMAPHORE_ALL_ACCESS
 		m_handle = OpenSemaphoreW(desiredAccess, isInheritable, m_name.c_str());
-		if (m_handle == nullptr)
-			throw Error::Win32Error("failed to open semaphore", GetLastError());
-	}
-
-	Semaphore::Semaphore(const Semaphore& other)
-	{
-		Copy(other);
+		if (!m_handle)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("failed to open semaphore", lastError);
+		}
 	}
 
 	void Semaphore::InternalCreate(
@@ -79,46 +77,18 @@ namespace Boring32::Async
 		if (!m_handle)
 		{
 			const auto lastError = GetLastError();
-			throw Error::Win32Error("Failed to create or open semaphore", lastError);
+			throw Error::Win32Error(
+				"Failed to create or open semaphore", 
+				lastError
+			);
 		}
 
 		m_handle.SetInheritability(isInheritable);
-	}
-
-	void Semaphore::operator=(const Semaphore& other)
-	{
-		Copy(other);
-	}
-
-	void Semaphore::Copy(const Semaphore& other)
-	{
-		Close();
-		m_handle = other.m_handle;
-		m_name = other.m_name;
-		m_maxCount = other.m_maxCount;
-	}
-
-	Semaphore::Semaphore(Semaphore&& other) noexcept
-	{
-		Move(other);
-	}
-
-	void Semaphore::operator=(Semaphore&& other) noexcept
-	{
-		Move(other);
 	}
 	
 	Semaphore::operator bool() const noexcept
 	{
 		return m_handle != nullptr;
-	}
-
-	void Semaphore::Move(Semaphore& other) noexcept
-	{
-		Close();
-		m_handle = std::move(other.m_handle);
-		m_name = std::move(other.m_name);
-		m_maxCount = other.m_maxCount;
 	}
 
 	void Semaphore::Release()
