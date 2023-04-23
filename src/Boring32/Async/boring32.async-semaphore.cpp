@@ -104,7 +104,7 @@ namespace Boring32::Async
 			throw Error::Boring32Error("m_handle is nullptr.");
 
 		long previousCount;
-		if (!ReleaseSemaphore(m_handle.GetHandle(), countToRelease, &previousCount))
+		if (!ReleaseSemaphore(*m_handle, countToRelease, &previousCount))
 		{
 			const auto lastError = GetLastError();
 			throw Error::Win32Error("Failed to release semaphore", lastError);
