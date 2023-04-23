@@ -1,11 +1,8 @@
-module;
-
-#include <source_location>
-
 export module boring32.async:threadpool;
 import boring32.error;
 import <functional>;
 import <memory>;
+import <source_location>;
 import <win32.hpp>;
 
 export namespace Boring32::Async::ThreadPools
@@ -20,13 +17,17 @@ export namespace Boring32::Async::ThreadPools
 	class ThreadPool
 	{
 		public:
-			using LambdaCallback = std::function<void(PTP_CALLBACK_INSTANCE Instance, void*, PTP_WORK)>;
+			using LambdaCallback = std::function<
+				void(PTP_CALLBACK_INSTANCE Instance, void*, PTP_WORK)
+			>;
 			using WorkParamTuple = std::tuple<LambdaCallback&, void*>;
 
 			template<typename T>
 			struct WorkItem
 			{
-				using Lambda = std::function<void(PTP_CALLBACK_INSTANCE Instance, T, PTP_WORK)>;
+				using Lambda = std::function<
+					void(PTP_CALLBACK_INSTANCE Instance, T, PTP_WORK)
+				>;
 				Lambda Callback;
 				T Parameter = nullptr;
 				PTP_WORK Item = nullptr;
@@ -59,7 +60,11 @@ export namespace Boring32::Async::ThreadPools
 				if (m_pool == nullptr)
 					throw Error::Boring32Error("m_pool is nullptr");
 
-				outWorkItem.Item = CreateThreadpoolWork(InternalCallback, &outWorkItem, &m_environ);
+				outWorkItem.Item = CreateThreadpoolWork(
+					InternalCallback, 
+					&outWorkItem, 
+					&m_environ
+				);
 				if (outWorkItem.Item == nullptr)
 				{
 					const auto location = std::source_location::current();
@@ -76,7 +81,11 @@ export namespace Boring32::Async::ThreadPools
 			virtual std::shared_ptr<TP_POOL> GetPoolHandle() const noexcept final;
 
 		protected:
-			static void InternalCallback(PTP_CALLBACK_INSTANCE instance, void* parameter, PTP_WORK work);
+			static void InternalCallback(
+				PTP_CALLBACK_INSTANCE instance, 
+				void* parameter, 
+				PTP_WORK work
+			);
 			static void ValidateArgs(const DWORD minThreads, const DWORD maxThreads);
 
 			virtual ThreadPool& Copy(const ThreadPool& other);
