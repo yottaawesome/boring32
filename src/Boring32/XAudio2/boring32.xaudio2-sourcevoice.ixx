@@ -10,12 +10,12 @@ export namespace Boring32::XAudio2
 		public:
 			virtual ~SourceVoice();
 			SourceVoice(const SourceVoice&) = delete;
-			SourceVoice(SourceVoice&&) noexcept;
+			SourceVoice(SourceVoice&&) noexcept = default;
 			SourceVoice(IXAudio2SourceVoice* voice);
 
 		public:
 			virtual SourceVoice& operator=(const SourceVoice&) = delete;
-			virtual SourceVoice& operator=(SourceVoice&&) noexcept;
+			virtual SourceVoice& operator=(SourceVoice&&) noexcept = default;
 
 		public:
 			virtual void Close();

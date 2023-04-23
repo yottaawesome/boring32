@@ -8,7 +8,7 @@ export namespace Boring32::XAudio2
 	class XAudio2Error : public Error::Boring32Error
 	{
 		public:
-			virtual ~XAudio2Error();
+			virtual ~XAudio2Error() = default;
 			XAudio2Error(
 				const std::string& message,
 				const std::source_location location = std::source_location::current()
