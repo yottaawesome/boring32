@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.async:waitableaddress;
 import boring32.error;
 
