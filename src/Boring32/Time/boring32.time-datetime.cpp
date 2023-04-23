@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.time:datetime;
 import :functions;
 import boring32.error;
