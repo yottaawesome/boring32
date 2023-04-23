@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 export module boring32.datastructures:cappedstack;
 import boring32.error;
 import <deque>;
@@ -13,12 +9,9 @@ export namespace Boring32::DataStructures
 	class CappedStack
 	{
 		public:
-			virtual ~CappedStack() {}
+			virtual ~CappedStack() = default;
 
-			CappedStack()
-			:	m_maxSize(0),
-				m_uniqueOnly(false)
-			{ }
+			CappedStack() = default;
 
 			CappedStack(const size_t maxSize, const bool uniqueOnly)
 			:	m_maxSize(maxSize),
@@ -145,8 +138,8 @@ export namespace Boring32::DataStructures
 			}
 
 		protected:
-			size_t m_maxSize;
+			size_t m_maxSize = 0;
 			std::deque<T> m_stack;
-			bool m_uniqueOnly;
+			bool m_uniqueOnly = false;
 	};
 }
