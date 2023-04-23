@@ -1,8 +1,3 @@
-module;
-
-
-#include <source_location>
-
 export module boring32.async:syncedcontainer;
 import :criticalsectionlock;
 import boring32.error;
