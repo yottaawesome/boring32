@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.ipc:blockingnamedpipeclient;
 import boring32.error;
 import boring32.util;
@@ -10,10 +6,6 @@ import <win32.hpp>;
 
 namespace Boring32::IPC
 {
-	BlockingNamedPipeClient::~BlockingNamedPipeClient() { }
-
-	BlockingNamedPipeClient::BlockingNamedPipeClient() { }
-
 	BlockingNamedPipeClient::BlockingNamedPipeClient(const std::wstring& name)
 	: NamedPipeClientBase(name, 0)
 	{ }

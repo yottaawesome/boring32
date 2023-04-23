@@ -8,8 +8,8 @@ export namespace Boring32::IPC
 	class BlockingNamedPipeClient : public NamedPipeClientBase
 	{
 		public:
-			virtual ~BlockingNamedPipeClient();
-			BlockingNamedPipeClient();
+			virtual ~BlockingNamedPipeClient() = default;
+			BlockingNamedPipeClient() = default;
 			BlockingNamedPipeClient(const BlockingNamedPipeClient& other);
 			BlockingNamedPipeClient(BlockingNamedPipeClient&& other) noexcept;
 			BlockingNamedPipeClient(const std::wstring& name);
