@@ -1,6 +1,3 @@
-module;
-
-#include <source_location>
 // https://www.mschaef.com/windows_h_is_wierd
 //#define WIN32_NO_STATUS
 //#include <Windows.h>
@@ -25,8 +22,6 @@ namespace Boring32::Security
 	{
 		return status < 0;
 	}
-
-	Policy::~Policy() {}
 	
 	Policy::Policy(const ACCESS_MASK desiredAccess)
 	{

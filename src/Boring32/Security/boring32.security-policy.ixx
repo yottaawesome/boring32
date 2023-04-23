@@ -23,7 +23,7 @@ namespace Boring32::Security
 	export class Policy
 	{
 		public:
-			virtual ~Policy();
+			virtual ~Policy() = default;
 			// See https://learn.microsoft.com/en-us/windows/win32/secmgmt/policy-object-access-rights
 			Policy(const ACCESS_MASK desiredAccess);
 
