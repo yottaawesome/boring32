@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.security:securityidentifier;
 import boring32.error;
 import boring32.raii;
