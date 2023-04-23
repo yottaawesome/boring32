@@ -94,17 +94,17 @@ namespace Boring32::Async
 		return m_thread.GetHandle();
 	}
 
-	std::wstring Process::GetExecutablePath() const noexcept
+	const std::wstring& Process::GetExecutablePath() const noexcept
 	{
 		return m_executablePath;
 	}
 
-	std::wstring Process::GetCommandLineStr() const noexcept
+	const std::wstring& Process::GetCommandLineStr() const noexcept
 	{
 		return m_commandLine;
 	}
 
-	std::wstring Process::GetStartingDirectory() const noexcept
+	const std::wstring& Process::GetStartingDirectory() const noexcept
 	{
 		return m_startingDirectory;
 	}

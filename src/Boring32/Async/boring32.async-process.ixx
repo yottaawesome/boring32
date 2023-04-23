@@ -38,9 +38,9 @@ export namespace Boring32::Async
 			virtual void CloseThreadHandle();
 			virtual HANDLE GetProcessHandle() const noexcept;
 			virtual HANDLE GetThreadHandle() const noexcept;
-			virtual std::wstring GetExecutablePath() const noexcept;
-			virtual std::wstring GetCommandLineStr() const noexcept;
-			virtual std::wstring GetStartingDirectory() const noexcept;
+			virtual const std::wstring& GetExecutablePath() const noexcept;
+			virtual const std::wstring& GetCommandLineStr() const noexcept;
+			virtual const std::wstring& GetStartingDirectory() const noexcept;
 			virtual bool GetHandlesInheritability() const noexcept;
 			virtual DWORD GetCreationFlags() const noexcept;
 			virtual DWORD GetProcessExitCode() const;
