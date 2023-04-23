@@ -5,21 +5,12 @@ import <stdexcept>;
 
 namespace Boring32::XAudio2
 {
-	MasteringVoice::~MasteringVoice()
-	{
-		Close();
-	}
-
-	MasteringVoice::MasteringVoice(MasteringVoice&&) noexcept = default;
-
 	MasteringVoice::MasteringVoice(IXAudio2MasteringVoice* voice)
 		: m_voice(voice)
 	{
 		if (!voice) 
 			throw XAudio2Error("voice cannot be nullptr");
 	}
-
-	MasteringVoice& MasteringVoice::operator=(MasteringVoice&&) noexcept = default;
 
 	void MasteringVoice::Close()
 	{

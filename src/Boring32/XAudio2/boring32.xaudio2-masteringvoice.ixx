@@ -9,14 +9,14 @@ export namespace Boring32::XAudio2
 	class MasteringVoice : public Voice
 	{
 		public:
-			virtual ~MasteringVoice();
+			virtual ~MasteringVoice() = default;
 			MasteringVoice(const MasteringVoice&) = delete;
-			MasteringVoice(MasteringVoice&&) noexcept;
+			MasteringVoice(MasteringVoice&&) noexcept = default;
 			MasteringVoice(IXAudio2MasteringVoice* voice);
 
 		public:
 			virtual MasteringVoice& operator=(const MasteringVoice&) = delete;
-			virtual MasteringVoice& operator=(MasteringVoice&&) noexcept;
+			virtual MasteringVoice& operator=(MasteringVoice&&) noexcept = default;
 
 		public:
 			virtual void Close() override;
