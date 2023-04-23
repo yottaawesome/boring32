@@ -17,7 +17,7 @@ namespace Boring32::IPC
 	
 	bool BlockingNamedPipeClient::Write(
 		const std::wstring& msg, 
-		const std::nothrow_t
+		const std::nothrow_t&
 	) noexcept try
 	{
 		InternalWrite(Util::StringToByteVector(msg));
@@ -35,7 +35,7 @@ namespace Boring32::IPC
 
 	bool BlockingNamedPipeClient::Write(
 		const std::vector<std::byte>& data, 
-		const std::nothrow_t
+		const std::nothrow_t&
 	) noexcept try
 	{
 		InternalWrite(data);
@@ -71,7 +71,7 @@ namespace Boring32::IPC
 
 	bool BlockingNamedPipeClient::ReadAsString(
 		std::wstring& out, 
-		const std::nothrow_t
+		const std::nothrow_t&
 	) noexcept try
 	{
 		out = Util::ByteVectorToString<std::wstring>(InternalRead());

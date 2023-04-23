@@ -15,7 +15,11 @@ namespace Boring32::IPC
 		InternalWrite(msg, oio);
 	}
 
-	bool OverlappedNamedPipeClient::Write(std::wstring_view msg, Async::OverlappedIo& op, const std::nothrow_t&) noexcept try
+	bool OverlappedNamedPipeClient::Write(
+		std::wstring_view msg, 
+		Async::OverlappedIo& op, 
+		const std::nothrow_t&
+	) noexcept try
 	{
 		InternalWrite(msg, op);
 		return true;
