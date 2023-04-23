@@ -10,7 +10,7 @@ export namespace Boring32::Async
 	{
 		public:
 			virtual ~TimerQueue();
-			TimerQueue();
+			TimerQueue() = default;
 			TimerQueue(TimerQueue&& other) noexcept;
 			TimerQueue(const TimerQueue& other) = delete;
 
@@ -23,7 +23,7 @@ export namespace Boring32::Async
 
 		public:
 			virtual void Close();
-			virtual bool Close(const std::nothrow_t) noexcept;
+			virtual bool Close(const std::nothrow_t&) noexcept;
 			virtual HANDLE GetHandle() const noexcept final;
 
 		protected:
@@ -31,8 +31,8 @@ export namespace Boring32::Async
 			virtual void Move(TimerQueue& other) noexcept;
 
 		protected:
-			HANDLE m_timer;
+			HANDLE m_timer = nullptr;
 			Async::Event m_completionEvent;
-			bool m_waitForAllCallbacks;
+			bool m_waitForAllCallbacks = false;
 	};
 }
