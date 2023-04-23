@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.taskscheduler:taskfolder;
 import boring32.error;
 import <stdexcept>;

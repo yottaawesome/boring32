@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.taskscheduler:registeredtask;
 import boring32.error;
 import <iostream>;
