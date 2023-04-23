@@ -8,16 +8,19 @@ export namespace Boring32::IPC
 	class NamedPipeClientBase
 	{
 		public:
-			virtual ~NamedPipeClientBase();
-			NamedPipeClientBase();
-			NamedPipeClientBase(const std::wstring& name, const DWORD fileAttributes);
+			virtual ~NamedPipeClientBase() = default;
+			NamedPipeClientBase() = default;
+			NamedPipeClientBase(
+				const std::wstring& name, 
+				const DWORD fileAttributes
+			);
 
 		// Moveable, copyable
 		public:
-			NamedPipeClientBase(const NamedPipeClientBase& other);
-			virtual void operator=(const NamedPipeClientBase& other);
-			NamedPipeClientBase(NamedPipeClientBase&& other) noexcept;
-			virtual void operator=(NamedPipeClientBase&& other) noexcept;
+			NamedPipeClientBase(const NamedPipeClientBase& other) = default;
+			virtual NamedPipeClientBase& operator=(const NamedPipeClientBase& other) = default;
+			NamedPipeClientBase(NamedPipeClientBase&& other) noexcept = default;
+			virtual NamedPipeClientBase& operator=(NamedPipeClientBase&& other) noexcept = default;
 
 		public:
 			virtual void SetMode(const DWORD pipeMode);
@@ -32,12 +35,8 @@ export namespace Boring32::IPC
 			virtual bool CancelCurrentProcessIo(OVERLAPPED* overlapped, std::nothrow_t) noexcept;
 
 		protected:
-			virtual void Copy(const NamedPipeClientBase& other);
-			virtual void Move(NamedPipeClientBase& other) noexcept;
-
-		protected:
 			RAII::Win32Handle m_handle;
 			std::wstring m_pipeName;
-			DWORD m_fileAttributes;
+			DWORD m_fileAttributes = 0;
 	};
 }

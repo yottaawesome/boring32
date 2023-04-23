@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.ipc:overlappednamedpipeclient;
 import boring32.error;
 import <stdexcept>;
@@ -10,35 +6,9 @@ import <iostream>;
 
 namespace Boring32::IPC
 {
-	OverlappedNamedPipeClient::~OverlappedNamedPipeClient() { }
-
-	OverlappedNamedPipeClient::OverlappedNamedPipeClient() { }
-
 	OverlappedNamedPipeClient::OverlappedNamedPipeClient(const std::wstring& name)
 		: NamedPipeClientBase(name, FILE_FLAG_OVERLAPPED)
 	{ }
-
-	OverlappedNamedPipeClient::OverlappedNamedPipeClient(const OverlappedNamedPipeClient& other)
-		: NamedPipeClientBase(other)
-	{
-		Copy(other);
-	}
-
-	void OverlappedNamedPipeClient::operator=(const OverlappedNamedPipeClient& other)
-	{
-		Copy(other);
-	}
-
-	OverlappedNamedPipeClient::OverlappedNamedPipeClient(OverlappedNamedPipeClient&& other) noexcept
-		: NamedPipeClientBase(std::move(other))
-	{
-		Move(other);
-	}
-
-	void OverlappedNamedPipeClient::operator=(OverlappedNamedPipeClient&& other) noexcept
-	{
-		Move(other);
-	}
 
 	void OverlappedNamedPipeClient::Write(std::wstring_view msg, Async::OverlappedIo& oio)
 	{

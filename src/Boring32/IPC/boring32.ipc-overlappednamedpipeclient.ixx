@@ -9,15 +9,15 @@ export namespace Boring32::IPC
 	class OverlappedNamedPipeClient : public NamedPipeClientBase
 	{
 		public:
-			virtual ~OverlappedNamedPipeClient();
-			OverlappedNamedPipeClient();
-			OverlappedNamedPipeClient(const OverlappedNamedPipeClient& other);
-			OverlappedNamedPipeClient(OverlappedNamedPipeClient&& other) noexcept;
+			virtual ~OverlappedNamedPipeClient() = default;
+			OverlappedNamedPipeClient() = default;
+			OverlappedNamedPipeClient(const OverlappedNamedPipeClient& other) = default;
+			OverlappedNamedPipeClient(OverlappedNamedPipeClient&& other) noexcept = default;
 			OverlappedNamedPipeClient(const std::wstring& name);
 
 		public:
-			virtual void operator=(const OverlappedNamedPipeClient& other);
-			virtual void operator=(OverlappedNamedPipeClient&& other) noexcept;
+			virtual OverlappedNamedPipeClient& operator=(const OverlappedNamedPipeClient& other) = default;
+			virtual OverlappedNamedPipeClient& operator=(OverlappedNamedPipeClient&& other) noexcept = default;
 
 		public:
 			virtual void Write(std::wstring_view msg, Async::OverlappedIo& op);

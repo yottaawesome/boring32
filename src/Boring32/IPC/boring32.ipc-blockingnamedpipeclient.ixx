@@ -10,13 +10,17 @@ export namespace Boring32::IPC
 		public:
 			virtual ~BlockingNamedPipeClient() = default;
 			BlockingNamedPipeClient() = default;
-			BlockingNamedPipeClient(const BlockingNamedPipeClient& other);
-			BlockingNamedPipeClient(BlockingNamedPipeClient&& other) noexcept;
+			BlockingNamedPipeClient(const BlockingNamedPipeClient& other) = default;
+			BlockingNamedPipeClient(BlockingNamedPipeClient&& other) noexcept = default;
 			BlockingNamedPipeClient(const std::wstring& name);
 
 		public:
-			virtual void operator=(const BlockingNamedPipeClient& other);
-			virtual void operator=(BlockingNamedPipeClient&& other) noexcept;
+			virtual BlockingNamedPipeClient& operator=(
+				const BlockingNamedPipeClient& other
+			) = default;
+			virtual BlockingNamedPipeClient& operator=(
+				BlockingNamedPipeClient&& other
+			) noexcept = default;
 
 		public:
 			virtual void Write(const std::wstring& msg);

@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.ipc:namedpipeclientbase;
 import boring32.error;
 import <iostream>;
@@ -9,56 +5,12 @@ import <stdexcept>;
 
 namespace Boring32::IPC
 {
-	NamedPipeClientBase::~NamedPipeClientBase()
-	{
-		Close();
-	}
-
-	NamedPipeClientBase::NamedPipeClientBase()
-		: m_pipeName(L""),
-		m_fileAttributes(0)
-	{ }
-
-	NamedPipeClientBase::NamedPipeClientBase(const std::wstring& name, const DWORD fileAttributes)
-	:	m_pipeName(name),
+	NamedPipeClientBase::NamedPipeClientBase(
+		const std::wstring& name, 
+		const DWORD fileAttributes
+	) :	m_pipeName(name),
 		m_fileAttributes(fileAttributes)
 	{ }
-
-	NamedPipeClientBase::NamedPipeClientBase(const NamedPipeClientBase& other)
-	{
-		Copy(other);
-	}
-
-	void NamedPipeClientBase::operator=(const NamedPipeClientBase& other)
-	{
-		Copy(other);
-	}
-
-	void NamedPipeClientBase::Copy(const NamedPipeClientBase& other)
-	{
-		Close();
-		m_handle = other.m_handle;
-		m_pipeName = other.m_pipeName;
-		m_fileAttributes = other.m_fileAttributes;
-	}
-
-	NamedPipeClientBase::NamedPipeClientBase(NamedPipeClientBase&& other) noexcept
-	{
-		Move(other);
-	}
-
-	void NamedPipeClientBase::operator=(NamedPipeClientBase&& other) noexcept
-	{
-		Move(other);
-	}
-
-	void NamedPipeClientBase::Move(NamedPipeClientBase& other) noexcept
-	{
-		Close();
-		m_handle = std::move(other.m_handle);
-		m_pipeName = std::move(other.m_pipeName);
-		m_fileAttributes = other.m_fileAttributes;
-	}
 
 	void NamedPipeClientBase::Connect(const DWORD timeout)
 	{

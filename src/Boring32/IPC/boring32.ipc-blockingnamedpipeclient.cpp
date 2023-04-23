@@ -10,28 +10,6 @@ namespace Boring32::IPC
 	: NamedPipeClientBase(name, 0)
 	{ }
 
-	BlockingNamedPipeClient::BlockingNamedPipeClient(const BlockingNamedPipeClient& other)
-		: NamedPipeClientBase(other)
-	{
-		Copy(other);
-	}
-
-	void BlockingNamedPipeClient::operator=(const BlockingNamedPipeClient& other)
-	{
-		Copy(other);
-	}
-
-	BlockingNamedPipeClient::BlockingNamedPipeClient(BlockingNamedPipeClient&& other) noexcept
-		: NamedPipeClientBase(std::move(other))
-	{
-		Move(other);
-	}
-
-	void BlockingNamedPipeClient::operator=(BlockingNamedPipeClient&& other) noexcept
-	{
-		Move(other);
-	}
-
 	void BlockingNamedPipeClient::Write(const std::wstring& msg)
 	{
 		InternalWrite(Util::StringToByteVector(msg));
