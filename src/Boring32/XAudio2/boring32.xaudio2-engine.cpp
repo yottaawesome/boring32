@@ -5,15 +5,6 @@ import <stdexcept>;
 
 namespace Boring32::XAudio2
 {
-	Engine::~Engine()
-	{
-		Close();
-	}
-
-	Engine::Engine() = default;
-	Engine::Engine(Engine&&) noexcept = default;
-	Engine& Engine::operator=(Engine&&) noexcept = default;
-
 	void Engine::Close() 
 	{
 		m_engine = nullptr;

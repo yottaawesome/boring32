@@ -6,14 +6,14 @@ export namespace Boring32::XAudio2
 	class Engine
 	{
 		public:
-			virtual ~Engine();
-			Engine();
+			virtual ~Engine() = default;
+			Engine() = default;
 			Engine(const Engine&) = delete;
-			Engine(Engine&&) noexcept;
+			Engine(Engine&&) noexcept = default;
 
 		public:
 			virtual Engine& operator=(const Engine&) = delete;
-			virtual Engine& operator=(Engine&&) noexcept;
+			virtual Engine& operator=(Engine&&) noexcept = default;
 
 		public:
 			virtual void Close();
