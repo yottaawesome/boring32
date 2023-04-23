@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>
-
 module boring32.ipc:overlappednamedpipeserver;
 import boring32.error;
 import <stdexcept>;
