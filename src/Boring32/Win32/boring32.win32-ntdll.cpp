@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>;
-
 module boring32.win32:ntdll;
 import boring32.error;
 import <win32.hpp>;
