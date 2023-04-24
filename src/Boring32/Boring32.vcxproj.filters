@@ -363,9 +363,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Compression\boring32.compression-compressionerror.ixx" />
-    <ClCompile Include="Compression\boring32.compression-compressionerror.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Compression\boring32.compression-deleters.ixx" />
     <ClCompile Include="Registry\boring32.registry-value.ixx" />
     <ClCompile Include="Async\boring32.async-waitableaddress.ixx" />

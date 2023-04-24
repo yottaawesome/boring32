@@ -15,7 +15,10 @@ export namespace Boring32::Compression
 			CompressionError(
 				const std::string& message,
 				const std::source_location location = std::source_location::current()
-			);
+			) : Error::Boring32Error(message, location)
+			{
+				GenerateErrorMessage(location, message);
+			}
 
 		public:
 			virtual CompressionError& operator=(const CompressionError& other) = default;
@@ -25,6 +28,9 @@ export namespace Boring32::Compression
 			virtual void GenerateErrorMessage(
 				const std::source_location& location,
 				const std::string& message
-			) override;
+			) override
+			{
+				m_message = Error::FormatErrorMessage("Compression", location, message);
+			}
 	};
 }
