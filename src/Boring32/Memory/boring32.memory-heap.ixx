@@ -11,6 +11,7 @@ export namespace Boring32::Memory
 
 		public:
 			void Destroy();
+			size_t Compact();
 
 		private:
 			HANDLE m_heap = nullptr;

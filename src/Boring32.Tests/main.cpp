@@ -36,6 +36,7 @@ import boring32.wirelesslan;
 import boring32.computer;
 import boring32.networking;
 import boring32.sspi;
+import boring32.memory;
 
 struct Test
 {

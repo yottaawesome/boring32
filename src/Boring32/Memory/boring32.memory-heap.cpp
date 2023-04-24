@@ -17,8 +17,25 @@ namespace Boring32::Memory
 
 	void Heap::Destroy()
 	{
-		HANDLE defaultHeap = GetProcessHeap();
-		if (m_heap != defaultHeap)
+		// Don't destroy the process' default heap, 
+		// only special-purpose heaps
+		if (m_heap != GetProcessHeap())
 			HeapDestroy(m_heap);
+	}
+
+	size_t Heap::Compact()
+	{
+		const size_t size = HeapCompact(
+			m_heap,
+			0
+		);
+		if (size == 0)
+		{
+			const auto lastError = GetLastError();
+			if (lastError == NO_ERROR)
+				return 0;
+			throw Error::Win32Error("HeapCompact() failed", lastError);
+		}
+		return size;
 	}
 }
