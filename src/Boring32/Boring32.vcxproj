@@ -210,7 +210,6 @@
     <ClCompile Include="Compression\boring32.compression-compressionerror.cpp" />
     <ClCompile Include="Compression\boring32.compression-compressionerror.ixx" />
     <ClCompile Include="Compression\boring32.compression-deleters.ixx" />
-    <ClCompile Include="Computer\boring32.computer-functions.cpp" />
     <ClCompile Include="Computer\boring32.computer-functions.ixx" />
     <ClCompile Include="Computer\boring32.computer-processinfo.cpp" />
     <ClCompile Include="Computer\boring32.computer-processinfo.ixx" />

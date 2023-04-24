@@ -431,9 +431,6 @@
     <ClCompile Include="WinHttp\boring32.winhttp-handles.ixx" />
     <ClCompile Include="Computer\boring32.computer.ixx" />
     <ClCompile Include="Computer\boring32.computer-functions.ixx" />
-    <ClCompile Include="Computer\boring32.computer-functions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Async\boring32.async-synced.ixx" />
     <ClCompile Include="Async\boring32.async-syncedcontainer.ixx" />
     <ClCompile Include="WirelessLAN\boring32.wirelesslan.ixx" />
