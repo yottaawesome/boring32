@@ -50,4 +50,28 @@ namespace Boring32::Memory
 			ptr
 		);
 	}
+
+	void Heap::Lock()
+	{
+		const bool success = HeapLock(
+			m_heap
+		);
+		if (!success)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("HeapLock() failed", lastError);
+		}
+	}
+
+	void Heap::Unlock()
+	{
+		const bool success = HeapUnlock(
+			m_heap
+		);
+		if (!success)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("HeapUnlock() failed", lastError);
+		}
+	}
 }

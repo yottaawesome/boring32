@@ -16,6 +16,8 @@ export namespace Boring32::Memory
 				void* const ptr = nullptr, 
 				const bool synchronised = true
 			) noexcept;
+			void Lock();
+			void Unlock();
 
 		private:
 			HANDLE m_heap = nullptr;
