@@ -448,9 +448,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Computer\boring32.computer-processinfo.ixx" />
-    <ClCompile Include="Computer\boring32.computer-processinfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Networking\boring32.networking.ixx" />
     <ClCompile Include="Networking\boring32.networking-api.ixx" />
     <ClCompile Include="IPC\boring32.ipc-mailslotserver.ixx" />

@@ -1,9 +1,11 @@
 export module boring32.computer:processinfo;
-import boring32.raii;
 import <string>;
 import <vector>;
 import <memory>;
 import <win32.hpp>;
+import boring32.raii;
+import boring32.error;
+import :functions;
 
 export namespace Boring32::Computer
 {
@@ -22,22 +24,160 @@ export namespace Boring32::Computer
 			virtual ~ProcessInfo() = default;
 			ProcessInfo(const ProcessInfo&) = default;
 			ProcessInfo(ProcessInfo&&) noexcept = default;
-			ProcessInfo(const HANDLE hProcess);
-			ProcessInfo(const DWORD processId);
+			ProcessInfo(const HANDLE hProcess)
+				: m_processHandle(hProcess)
+			{
+				if (!m_processHandle)
+					throw Error::Boring32Error("hProcess cannot be null");
+			}
+			ProcessInfo(const DWORD processId)
+			{
+				if (!processId)
+					throw Error::Boring32Error("processId must be a non-zero value");
+
+				// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess
+				m_processHandle = OpenProcess(PROCESS_QUERY_INFORMATION, false, processId);
+				if (!m_processHandle)
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("OpenProcess() failed", lastError);
+				}
+			}
 
 		public:
 			virtual ProcessInfo& operator=(ProcessInfo&) = default;
 			virtual ProcessInfo& operator=(ProcessInfo&&) noexcept = default;
 
 		public:
-			virtual ProcessTimes GetTimes() const;
-			virtual std::wstring GetPath() const;
-			virtual DWORD GetID() const;
-			virtual DWORD GetHandleCount() const;
-			virtual DWORD GetExitCode() const;
+			virtual ProcessTimes GetTimes() const
+			{
+				if (!m_processHandle)
+					throw Error::Boring32Error("m_processHandle cannot be null");
+
+				FILETIME ftCreationTime{ 0 };
+				FILETIME ftExitTime{ 0 };
+				FILETIME ftKernelTime{ 0 };
+				FILETIME ftUserTime{ 0 };
+				// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesstimes
+				const bool success = GetProcessTimes(
+					m_processHandle.GetHandle(),
+					&ftCreationTime,
+					&ftExitTime,
+					&ftKernelTime,
+					&ftUserTime
+				);
+				if (!success)
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("GetProcessTimes() failed", lastError);
+				}
+
+				const size_t startTime =
+					ULARGE_INTEGER{ ftCreationTime.dwLowDateTime, ftCreationTime.dwHighDateTime }.QuadPart;
+				const size_t exitTime =
+					ULARGE_INTEGER{ ftExitTime.dwLowDateTime, ftExitTime.dwHighDateTime }.QuadPart;
+				const size_t kernelTime =
+					ULARGE_INTEGER{ ftKernelTime.dwLowDateTime, ftKernelTime.dwHighDateTime }.QuadPart;
+				const size_t userTime =
+					ULARGE_INTEGER{ ftUserTime.dwLowDateTime, ftUserTime.dwHighDateTime }.QuadPart;
+				return {
+					.CreationTime = startTime,
+					.ExitTime = exitTime,
+					.KernelTime = kernelTime,
+					.UserTime = userTime,
+					.ProcessTime = kernelTime + userTime
+				};
+			}
+
+			virtual std::wstring GetPath() const
+			{
+				if (!m_processHandle)
+					throw Error::Boring32Error("m_processHandle cannot be null");
+
+				std::wstring path(2048, '\0');
+				// https://docs.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getmodulefilenameexw
+				// See also https://docs.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getprocessimagefilenamew
+				// See also https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-queryfullprocessimagenamew
+				const DWORD charactersCopied = GetModuleFileNameExW(
+					m_processHandle.GetHandle(),
+					nullptr,
+					&path[0],
+					static_cast<DWORD>(path.size())
+				);
+				if (!charactersCopied)
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("GetModuleFileNameExW() failed", lastError);
+				}
+				return path.c_str();
+			}
+
+			virtual DWORD GetID() const
+			{
+				if (!m_processHandle)
+					throw Error::Boring32Error("m_processHandle cannot be null");
+				// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessid
+				const DWORD id = GetProcessId(m_processHandle.GetHandle());
+				if (!id)
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("GetProcessId() failed", lastError);
+				}
+				return id;
+			}
+
+			virtual DWORD GetHandleCount() const
+			{
+				if (!m_processHandle)
+					throw Error::Boring32Error("m_processHandle cannot be null");
+
+				DWORD handleCount;
+				// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesshandlecount
+				const bool succeeded = GetProcessHandleCount(
+					m_processHandle.GetHandle(),
+					&handleCount
+				);
+				if (!succeeded)
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("GetProcessHandleCount() failed", lastError);
+				}
+				return handleCount;
+			}
+
+			virtual DWORD GetExitCode() const
+			{
+				if (!m_processHandle)
+					throw Error::Boring32Error("m_processHandle cannot be null");
+
+				DWORD exitCode;
+				// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodeprocess
+				const bool succeeded = GetExitCodeProcess(
+					m_processHandle.GetHandle(),
+					&exitCode
+				);
+				if (!succeeded)
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("GetExitCodeProcess() failed", lastError);
+				}
+				return exitCode;
+			}
 
 		public:
-			static std::vector<ProcessInfo> FromCurrentProcesses();
+			static std::vector<ProcessInfo> FromCurrentProcesses()
+			{
+				const auto processIDs = EnumerateProcessIDs();
+				std::vector<ProcessInfo> processes;
+				// Processes may not necessarily be openable due to permissions or
+				// they may have exited between getting the IDs and opening a handle
+				// to them, so all we can do is a best effort attempt to open them.
+				for (const DWORD id : processIDs)
+					// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess
+					if (HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION, false, id))
+						processes.emplace_back(hProcess);
+				return processes;
+			}
 
 		protected:
 			RAII::Win32Handle m_processHandle;
