@@ -542,8 +542,5 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Memory\boring32.memory-heap.ixx" />
-    <ClCompile Include="Memory\boring32.memory-heap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>
