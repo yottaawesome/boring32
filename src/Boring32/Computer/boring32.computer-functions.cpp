@@ -88,7 +88,7 @@ namespace Boring32::Computer
         return ts;
     }
 
-    SYSTEM_INFO GetSystemInfo()
+    SYSTEM_INFO GetSystemInfo() noexcept
     {
         // Can probably break this down to more useful pieces of info
         SYSTEM_INFO result;

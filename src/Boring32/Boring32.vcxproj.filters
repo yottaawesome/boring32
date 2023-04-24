@@ -536,5 +536,10 @@
     <ClCompile Include="WinSock\boring32.winsock-socket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Memory\boring32.memory.ixx" />
+    <ClCompile Include="Memory\boring32.memory-functions.ixx" />
+    <ClCompile Include="Memory\boring32.memory-functions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -28,7 +28,7 @@ export namespace Boring32::Computer
     TimeAdjustment GetSystemTimeAdjustmentInfo();
 
     [[nodiscard]]
-    SYSTEM_INFO GetSystemInfo();
+    SYSTEM_INFO GetSystemInfo() noexcept;
 
     // See https://docs.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-logical_processor_relationship
     [[nodiscard]] 
