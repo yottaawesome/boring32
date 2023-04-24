@@ -464,9 +464,6 @@
     <ClCompile Include="Security\boring32.security-securityattributes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Networking\boring32.networking-api.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="boring32.ixx" />
     <ClCompile Include="Time\boring32.time-datetime.ixx" />
     <ClCompile Include="Time\boring32.time-datetime.cpp">

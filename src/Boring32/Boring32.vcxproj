@@ -263,7 +263,6 @@
     <ClCompile Include="Memory\boring32.memory-functions.ixx" />
     <ClCompile Include="Memory\boring32.memory-heap.ixx" />
     <ClCompile Include="Memory\boring32.memory.ixx" />
-    <ClCompile Include="Networking\boring32.networking-api.cpp" />
     <ClCompile Include="Networking\boring32.networking-api.ixx" />
     <ClCompile Include="Networking\boring32.networking.ixx" />
     <ClCompile Include="Process\boring32.process-dynamiclinklibrary.ixx" />
