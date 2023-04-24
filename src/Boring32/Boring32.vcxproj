@@ -262,6 +262,8 @@
     <ClCompile Include="MediaFoundation\boring32.mediafoundation.ixx" />
     <ClCompile Include="Memory\boring32.memory-functions.cpp" />
     <ClCompile Include="Memory\boring32.memory-functions.ixx" />
+    <ClCompile Include="Memory\boring32.memory-heap.cpp" />
+    <ClCompile Include="Memory\boring32.memory-heap.ixx" />
     <ClCompile Include="Memory\boring32.memory.ixx" />
     <ClCompile Include="Networking\boring32.networking-api.cpp" />
     <ClCompile Include="Networking\boring32.networking-api.ixx" />
