@@ -12,6 +12,10 @@ export namespace Boring32::Memory
 		public:
 			void Destroy();
 			size_t Compact();
+			bool Validate(
+				void* const ptr = nullptr, 
+				const bool synchronised = true
+			) noexcept;
 
 		private:
 			HANDLE m_heap = nullptr;

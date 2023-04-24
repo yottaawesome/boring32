@@ -38,4 +38,16 @@ namespace Boring32::Memory
 		}
 		return size;
 	}
+
+	bool Heap::Validate(
+		void* const ptr,
+		const bool synchronised
+	) noexcept
+	{
+		return HeapValidate(
+			m_heap,
+			synchronised ? 0 : 0x01, //HEAP_NO_SERIALISE,
+			ptr
+		);
+	}
 }
