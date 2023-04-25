@@ -322,7 +322,6 @@
     <ClCompile Include="Win32\boring32.win32.ixx" />
     <ClCompile Include="WindowsImagingComponent\boring32.windowsimagingcomponent-imagingfactory.ixx" />
     <ClCompile Include="WindowsImagingComponent\boring32.windowsimagingcomponent.ixx" />
-    <ClCompile Include="WindowsImagingComponent\boring32.windowsimagingcomponent-imagingfactory.cpp" />
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform-callout.ixx" />
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform-engine.ixx" />
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform-filter.ixx" />
