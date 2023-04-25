@@ -34,6 +34,7 @@ export namespace Boring32::Error
 			{
 				return m_hresult;
 			}
+
 			virtual const char* what() const noexcept override
 			{
 				return m_errorString.c_str();
