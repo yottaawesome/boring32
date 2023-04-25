@@ -421,7 +421,6 @@
     <ClCompile Include="Strings\boring32.strings.ixx" />
     <ClCompile Include="Security\boring32.security-functions.cpp" />
     <ClCompile Include="Security\boring32.security-securityidentifier.cpp" />
-    <ClCompile Include="Registry\boring32.registry-key.cpp" />
     <ClCompile Include="Security\boring32.security-impersonationcontext.cpp" />
     <ClCompile Include="Security\boring32.security-privatenamespace.cpp" />
     <ClCompile Include="Security\boring32.security-token.cpp" />

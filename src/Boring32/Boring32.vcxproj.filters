@@ -171,9 +171,6 @@
     <ClCompile Include="Crypto\boring32.crypto-securestring.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Registry\boring32.registry-key.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Crypto\boring32.crypto-tempcertimport.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
