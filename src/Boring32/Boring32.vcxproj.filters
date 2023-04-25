@@ -273,9 +273,6 @@
     <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-websocketstatus.ixx" />
     <ClCompile Include="FileSystem\boring32.filesystem.ixx" />
-    <ClCompile Include="FileSystem\boring32.filesystem-functions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocketsettings.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-websocketsettings.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-proxyinfo.ixx" />

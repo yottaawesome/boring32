@@ -239,7 +239,6 @@
     <ClCompile Include="Error\boring32.error-functions.cpp" />
     <ClCompile Include="FileSystem\boring32.filesystem-functions.ixx" />
     <ClCompile Include="FileSystem\boring32.filesystem.ixx" />
-    <ClCompile Include="FileSystem\boring32.filesystem-functions.cpp" />
     <ClCompile Include="IO\boring32.io-completionport.ixx" />
     <ClCompile Include="IO\boring32.io.ixx" />
     <ClCompile Include="IPC\boring32.ipc-mailslotserver.cpp" />
