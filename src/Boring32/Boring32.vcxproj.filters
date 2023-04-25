@@ -27,9 +27,6 @@
     <ClCompile Include="WinHttp\boring32.winhttp-winhttphandle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RAII\boring32.raii-win32handle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Security\boring32.security-securityidentifier.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
