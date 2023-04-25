@@ -403,9 +403,6 @@
     </ClCompile>
     <ClCompile Include="Services\boring32.services.ixx" />
     <ClCompile Include="Services\boring32.services-functions.ixx" />
-    <ClCompile Include="Services\boring32.services-functions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="RAII\boring32.raii-handle.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-handles.ixx" />
     <ClCompile Include="Computer\boring32.computer.ixx" />
