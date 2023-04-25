@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Strings\boring32.strings.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Time\boring32.time-functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
