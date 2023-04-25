@@ -102,9 +102,6 @@
     <ClCompile Include="Security\boring32.security-privatenamespace.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Error\boring32.error-win32error.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Async\boring32.async-timerqueue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
