@@ -208,9 +208,6 @@
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskservice.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler.ixx" />
     <ClCompile Include="Error\boring32.error-functions.ixx" />
-    <ClCompile Include="Error\boring32.error-functions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Error\boring32.error-win32error.ixx" />
     <ClCompile Include="Error\boring32.error.ixx" />
     <ClCompile Include="Error\boring32.error-comerror.ixx" />
