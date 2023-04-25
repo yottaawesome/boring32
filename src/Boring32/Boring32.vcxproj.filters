@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Time\boring32.time-functions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="WinHttp\boring32.winhttp-winhttphandle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -397,9 +394,6 @@
     </ClCompile>
     <ClCompile Include="boring32.ixx" />
     <ClCompile Include="Time\boring32.time-datetime.ixx" />
-    <ClCompile Include="Time\boring32.time-datetime.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Time\boring32.time-functions.ixx" />
     <ClCompile Include="Services\boring32.services-servicecontrolmanager.ixx" />
     <ClCompile Include="Services\boring32.services-raii.ixx" />

@@ -307,7 +307,6 @@
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-registeredtask.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskfolder.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskservice.ixx" />
-    <ClCompile Include="Time\boring32.time-datetime.cpp" />
     <ClCompile Include="Time\boring32.time-datetime.ixx" />
     <ClCompile Include="Time\boring32.time-functions.ixx" />
     <ClCompile Include="Time\boring32.time.ixx" />
@@ -413,7 +412,6 @@
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-registeredtask.cpp" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskfolder.cpp" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskservice.cpp" />
-    <ClCompile Include="Time\boring32.time-functions.cpp" />
     <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket.cpp" />
     <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket-statuscallback.cpp" />
     <ClCompile Include="WinHttp\boring32.winhttp-proxyinfo.cpp" />
