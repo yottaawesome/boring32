@@ -368,9 +368,6 @@
     <ClCompile Include="WinHttp\boring32.winhttp.ixx" />
     <ClCompile Include="Async\boring32.async.ixx" />
     <ClCompile Include="Util\boring32.util-globallyuniqueid.ixx" />
-    <ClCompile Include="Util\boring32.util-globallyuniqueid.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Services\boring32.services.ixx" />
     <ClCompile Include="Services\boring32.services-functions.ixx" />
     <ClCompile Include="RAII\boring32.raii-handle.ixx" />
