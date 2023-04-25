@@ -138,9 +138,6 @@
     <ClCompile Include="Async\boring32.async-functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Registry\boring32.registry-functions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Crypto\boring32.crypto-certstore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
