@@ -400,7 +400,6 @@
     <ClCompile Include="Compression\boring32.compression-decompressor.ixx" />
     <ClCompile Include="Compression\boring32.compression.ixx" />
     <ClCompile Include="Compression\boring32.compression-compressiontype.ixx" />
-    <ClCompile Include="Compression\boring32.compression-compressor.cpp" />
     <ClCompile Include="Compression\boring32.compression-decompressor.cpp" />
     <ClCompile Include="COM\boring32.com-comthreadscope.ixx" />
     <ClCompile Include="COM\boring32.com-comthreadscope.cpp" />

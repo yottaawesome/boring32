@@ -114,9 +114,6 @@
     <ClCompile Include="Error\boring32.error-comerror.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Compression\boring32.compression-compressor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Compression\boring32.compression-decompressor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
