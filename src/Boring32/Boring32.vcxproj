@@ -406,7 +406,6 @@
     <ClCompile Include="Error\boring32.error-comerror.cpp" />
     <ClCompile Include="Error\boring32.error-ntstatuserror.cpp" />
     <ClCompile Include="Error\boring32.error-win32error.cpp" />
-    <ClCompile Include="FileSystem\boring32.filesystem-file.cpp" />
     <ClCompile Include="FileSystem\boring32.filesystem-file.ixx" />
     <ClCompile Include="Async\boring32.async-memorymappedfile.cpp" />
     <ClCompile Include="Async\boring32.async-mutex.cpp" />
