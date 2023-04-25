@@ -45,9 +45,6 @@
     <ClCompile Include="Async\boring32.async-job.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Util\boring32.util-functions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="WinHttp\boring32.winhttp-httpwebclient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

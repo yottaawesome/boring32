@@ -414,7 +414,6 @@
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskfolder.cpp" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskservice.cpp" />
     <ClCompile Include="Time\boring32.time-functions.cpp" />
-    <ClCompile Include="Util\boring32.util-functions.cpp" />
     <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket.cpp" />
     <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket-statuscallback.cpp" />
     <ClCompile Include="WinHttp\boring32.winhttp-proxyinfo.cpp" />
