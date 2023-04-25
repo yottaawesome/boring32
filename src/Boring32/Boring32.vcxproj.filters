@@ -147,9 +147,6 @@
     <ClCompile Include="Crypto\boring32.crypto-aesencryption.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Error\boring32.error-ntstatuserror.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Crypto\boring32.crypto-cryptokey.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
