@@ -213,7 +213,6 @@
     <ClCompile Include="Computer\boring32.computer-processinfo.ixx" />
     <ClCompile Include="Computer\boring32.computer.ixx" />
     <ClCompile Include="COM\boring32.com-functions.ixx" />
-    <ClCompile Include="COM\boring32.com-hresult.cpp" />
     <ClCompile Include="COM\boring32.com-hresult.ixx" />
     <ClCompile Include="COM\boring32.com.ixx" />
     <ClCompile Include="Crypto\boring32.crypto-aesencryption.ixx" />
