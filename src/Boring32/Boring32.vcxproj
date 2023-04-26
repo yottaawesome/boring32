@@ -277,7 +277,6 @@
     <ClCompile Include="Security\boring32.security-securitydescriptor.ixx" />
     <ClCompile Include="Security\boring32.security-securityidentifier.ixx" />
     <ClCompile Include="Security\boring32.security-token.ixx" />
-    <ClCompile Include="Security\boring32.security-securitydescriptor.cpp" />
     <ClCompile Include="Services\boring32.services-functions.ixx" />
     <ClCompile Include="Services\boring32.services-raii.ixx" />
     <ClCompile Include="Services\boring32.services-service.ixx" />

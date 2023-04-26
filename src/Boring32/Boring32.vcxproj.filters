@@ -237,9 +237,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Security\boring32.security-securitydescriptor.ixx" />
-    <ClCompile Include="Security\boring32.security-securitydescriptor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Async\boring32.async-processinfo.ixx" />
     <ClCompile Include="Async\boring32.async-process.ixx" />
     <ClCompile Include="Async\boring32.async-memorymappedfile.ixx" />
