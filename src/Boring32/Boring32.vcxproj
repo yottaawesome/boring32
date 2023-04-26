@@ -379,7 +379,6 @@
     <ClCompile Include="Crypto\boring32.crypto-certstore.cpp" />
     <ClCompile Include="Crypto\boring32.crypto-functions.cpp" />
     <ClCompile Include="Crypto\boring32.crypto-cryptokey.cpp" />
-    <ClCompile Include="Crypto\boring32.crypto-securestring.cpp" />
     <ClCompile Include="FileSystem\boring32.filesystem-file.ixx" />
     <ClCompile Include="Async\boring32.async-memorymappedfile.cpp" />
     <ClCompile Include="Async\boring32.async-mutex.cpp" />
