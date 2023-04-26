@@ -13,6 +13,7 @@ export namespace Boring32::WinHttp
 			WinHttpError(
 				const std::string& msg,
 				const std::source_location location = std::source_location::current()
-			);
+			) : Error::Boring32Error(msg, location)
+			{ }
 	};
 }

@@ -203,9 +203,6 @@
     <ClCompile Include="Error\boring32.error-errorbase.ixx" />
     <ClCompile Include="Util\boring32.util-switcher.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-winhttperror.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp-winhttperror.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Security\boring32.security-securitydescriptor.ixx" />
     <ClCompile Include="Async\boring32.async-processinfo.ixx" />
     <ClCompile Include="Async\boring32.async-process.ixx" />
