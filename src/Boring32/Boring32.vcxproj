@@ -392,7 +392,6 @@
     <ClCompile Include="Async\boring32.async-processinfo.cpp" />
     <ClCompile Include="RAII\boring32.raii-win32handle.ixx" />
     <ClCompile Include="Strings\boring32.strings.ixx" />
-    <ClCompile Include="Security\boring32.security-functions.cpp" />
     <ClCompile Include="Security\boring32.security-securityidentifier.cpp" />
     <ClCompile Include="Security\boring32.security-privatenamespace.cpp" />
     <ClCompile Include="Security\boring32.security-token.cpp" />

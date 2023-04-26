@@ -153,9 +153,6 @@
     <ClCompile Include="Security\boring32.security-token.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Security\boring32.security-functions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Strings\boring32.strings.ixx" />
     <ClCompile Include="Async\boring32.async-threadpool.ixx" />
     <ClCompile Include="Async\boring32.async-semaphore.ixx" />
