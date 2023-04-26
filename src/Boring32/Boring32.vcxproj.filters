@@ -120,9 +120,6 @@
     <ClCompile Include="Crypto\boring32.crypto-functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\boring32.crypto-cryptokey.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Crypto\boring32.crypto-certificatechain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
