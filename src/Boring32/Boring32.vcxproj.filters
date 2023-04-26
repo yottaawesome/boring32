@@ -350,9 +350,6 @@
     <ClCompile Include="IO\boring32.io-completionport.ixx" />
     <ClCompile Include="Security\boring32.security-policy.ixx" />
     <ClCompile Include="Security\boring32.security-lsaunicodestring.ixx" />
-    <ClCompile Include="Security\boring32.security-lsaunicodestring.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Win32\boring32.win32-ntdll.ixx" />
     <ClCompile Include="Win32\boring32.win32.ixx" />
     <ClCompile Include="Win32\boring32.win32-defs.ixx" />
