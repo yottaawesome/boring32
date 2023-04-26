@@ -123,9 +123,6 @@
     <ClCompile Include="Crypto\boring32.crypto-certificate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\boring32.crypto-aesencryption.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Crypto\boring32.crypto-cryptokey.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
