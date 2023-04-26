@@ -87,9 +87,6 @@
     <ClCompile Include="Async\boring32.async-overlappedop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Security\boring32.security-privatenamespace.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Async\boring32.async-timerqueue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
