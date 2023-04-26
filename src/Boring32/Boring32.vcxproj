@@ -288,7 +288,6 @@
     <ClCompile Include="Services\boring32.services.ixx" />
     <ClCompile Include="SSPI\boring32.sspi-buffertype.ixx" />
     <ClCompile Include="SSPI\boring32.sspi-contextbuffer.ixx" />
-    <ClCompile Include="SSPI\boring32.sspi-credential.cpp" />
     <ClCompile Include="SSPI\boring32.sspi-credential.ixx" />
     <ClCompile Include="SSPI\boring32.sspi-sizedcontextbuffer.ixx" />
     <ClCompile Include="SSPI\boring32.sspi-types.ixx" />

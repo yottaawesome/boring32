@@ -366,9 +366,6 @@
     <ClCompile Include="Logging\boring32.logging-functions.ixx" />
     <ClCompile Include="SSPI\boring32.sspi.ixx" />
     <ClCompile Include="SSPI\boring32.sspi-credential.ixx" />
-    <ClCompile Include="SSPI\boring32.sspi-credential.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SSPI\boring32.sspi-securitycontext.ixx" />
     <ClCompile Include="MediaFoundation\boring32.mediafoundation.ixx" />
     <ClCompile Include="SSPI\boring32.sspi-types.ixx" />
