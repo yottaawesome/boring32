@@ -135,9 +135,6 @@
     <ClCompile Include="Crypto\boring32.crypto-cryptokey.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Security\boring32.security-impersonationcontext.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Crypto\boring32.crypto-securestring.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
