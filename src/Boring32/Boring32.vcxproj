@@ -429,7 +429,6 @@
     <ClCompile Include="WirelessLAN\boring32.wirelesslan-cleanup.ixx" />
     <ClCompile Include="WirelessLAN\boring32.wirelesslan.ixx" />
     <ClCompile Include="XAudio2\boring32.xaudio2-audiograph.ixx" />
-    <ClCompile Include="XAudio2\boring32.xaudio2-engine.cpp" />
     <ClCompile Include="XAudio2\boring32.xaudio2-functions.cpp" />
     <ClCompile Include="XAudio2\boring32.xaudio2-functions.ixx" />
     <ClCompile Include="XAudio2\boring32.xaudio2.ixx" />
