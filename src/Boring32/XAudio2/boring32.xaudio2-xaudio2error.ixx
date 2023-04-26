@@ -12,6 +12,7 @@ export namespace Boring32::XAudio2
 			XAudio2Error(
 				const std::string& message,
 				const std::source_location location = std::source_location::current()
-			);
+			) : Error::Boring32Error(message, location)
+			{ }
 	};
 }

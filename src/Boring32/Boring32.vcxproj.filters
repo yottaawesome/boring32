@@ -284,9 +284,6 @@
     <ClCompile Include="XAudio2\boring32.xaudio2-functions.ixx" />
     <ClCompile Include="Error\boring32.error-boring32error.ixx" />
     <ClCompile Include="XAudio2\boring32.xaudio2-xaudio2error.ixx" />
-    <ClCompile Include="XAudio2\boring32.xaudio2-xaudio2error.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Compression\boring32.compression-compressionerror.ixx" />
     <ClCompile Include="Compression\boring32.compression-deleters.ixx" />
     <ClCompile Include="Registry\boring32.registry-value.ixx" />
