@@ -403,7 +403,6 @@
     <ClCompile Include="Security\boring32.security-impersonationcontext.cpp" />
     <ClCompile Include="Security\boring32.security-privatenamespace.cpp" />
     <ClCompile Include="Security\boring32.security-token.cpp" />
-    <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskservice.cpp" />
     <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket.cpp" />
     <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket-statuscallback.cpp" />
     <ClCompile Include="WinHttp\boring32.winhttp-proxyinfo.cpp" />
