@@ -5,9 +5,12 @@ export namespace Boring32::XAudio2
 	class AudioGraph
 	{
 		public:
-			virtual ~AudioGraph();
+			virtual ~AudioGraph() 
+			{
+				Close();
+			}
 
 		public:
-			virtual void Close();
+			virtual void Close() {}
 	};
 }
