@@ -375,7 +375,6 @@
     <ClCompile Include="Compression\boring32.compression.ixx" />
     <ClCompile Include="Compression\boring32.compression-compressiontype.ixx" />
     <ClCompile Include="COM\boring32.com-comthreadscope.ixx" />
-    <ClCompile Include="Crypto\boring32.crypto-certstore.cpp" />
     <ClCompile Include="Crypto\boring32.crypto-functions.cpp" />
     <ClCompile Include="FileSystem\boring32.filesystem-file.ixx" />
     <ClCompile Include="Async\boring32.async-memorymappedfile.cpp" />
