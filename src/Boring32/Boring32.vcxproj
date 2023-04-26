@@ -433,7 +433,6 @@
     <ClCompile Include="XAudio2\boring32.xaudio2.ixx" />
     <ClCompile Include="XAudio2\boring32.xaudio2-engine.ixx" />
     <ClCompile Include="XAudio2\boring32.xaudio2-masteringvoice.ixx" />
-    <ClCompile Include="XAudio2\boring32.xaudio2-sourcevoice.cpp" />
     <ClCompile Include="XAudio2\boring32.xaudio2-sourcevoice.ixx" />
     <ClCompile Include="XAudio2\boring32.xaudio2-voice.cpp" />
     <ClCompile Include="XAudio2\boring32.xaudio2-voice.ixx" />
