@@ -239,7 +239,6 @@
     <ClCompile Include="FileSystem\boring32.filesystem.ixx" />
     <ClCompile Include="IO\boring32.io-completionport.ixx" />
     <ClCompile Include="IO\boring32.io.ixx" />
-    <ClCompile Include="IPC\boring32.ipc-mailslotserver.cpp" />
     <ClCompile Include="IPC\boring32.ipc-blockingnamedpipeclient.ixx" />
     <ClCompile Include="IPC\boring32.ipc-blockingnamedpipeserver.ixx" />
     <ClCompile Include="IPC\boring32.ipc-anonymouspipe.ixx" />

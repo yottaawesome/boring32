@@ -291,9 +291,6 @@
     <ClCompile Include="Networking\boring32.networking.ixx" />
     <ClCompile Include="Networking\boring32.networking-api.ixx" />
     <ClCompile Include="IPC\boring32.ipc-mailslotserver.ixx" />
-    <ClCompile Include="IPC\boring32.ipc-mailslotserver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Security\boring32.security-securityattributes.ixx" />
     <ClCompile Include="boring32.ixx" />
     <ClCompile Include="Time\boring32.time-datetime.ixx" />
