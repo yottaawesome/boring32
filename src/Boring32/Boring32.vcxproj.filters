@@ -138,9 +138,6 @@
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskfolder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TaskScheduler\boring32.taskscheduler-registeredtask.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskservice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -191,7 +188,6 @@
     <ClCompile Include="Registry\boring32.registry-key.ixx" />
     <ClCompile Include="Registry\boring32.registry-functions.ixx" />
     <ClCompile Include="Registry\boring32.registry.ixx" />
-    <ClCompile Include="TaskScheduler\boring32.taskscheduler-registeredtask.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskfolder.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskservice.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler.ixx" />
@@ -407,5 +403,6 @@
     <ClCompile Include="Memory\boring32.memory.ixx" />
     <ClCompile Include="Memory\boring32.memory-functions.ixx" />
     <ClCompile Include="Memory\boring32.memory-heap.ixx" />
+    <ClCompile Include="TaskScheduler\boring32.taskscheduler-registeredtask.ixx" />
   </ItemGroup>
 </Project>

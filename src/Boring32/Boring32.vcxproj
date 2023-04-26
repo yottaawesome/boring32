@@ -303,8 +303,8 @@
     <ClCompile Include="SSPI\NTLM\boring32.sspi.provider.ntlm.ixx" />
     <ClCompile Include="SSPI\PKU2U\boring32.sspi.provider.pku2u.ixx" />
     <ClCompile Include="SSPI\Schannel\boring32.sspi.provider.schannel.ixx" />
-    <ClCompile Include="TaskScheduler\boring32.taskscheduler.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-registeredtask.ixx" />
+    <ClCompile Include="TaskScheduler\boring32.taskscheduler.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskfolder.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskservice.ixx" />
     <ClCompile Include="Time\boring32.time-datetime.ixx" />
@@ -403,7 +403,6 @@
     <ClCompile Include="Security\boring32.security-impersonationcontext.cpp" />
     <ClCompile Include="Security\boring32.security-privatenamespace.cpp" />
     <ClCompile Include="Security\boring32.security-token.cpp" />
-    <ClCompile Include="TaskScheduler\boring32.taskscheduler-registeredtask.cpp" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskfolder.cpp" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskservice.cpp" />
     <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket.cpp" />
