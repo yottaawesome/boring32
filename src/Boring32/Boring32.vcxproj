@@ -391,8 +391,6 @@
     <ClCompile Include="Async\boring32.async-processinfo.cpp" />
     <ClCompile Include="RAII\boring32.raii-win32handle.ixx" />
     <ClCompile Include="Strings\boring32.strings.ixx" />
-    <ClCompile Include="Security\boring32.security-securityidentifier.cpp" />
-    <ClCompile Include="Security\boring32.security-token.cpp" />
     <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket.cpp" />
     <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket-statuscallback.cpp" />
     <ClCompile Include="WinHttp\boring32.winhttp-proxyinfo.cpp" />
