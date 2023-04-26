@@ -376,7 +376,6 @@
     <ClCompile Include="FileSystem\boring32.filesystem-file.ixx" />
     <ClCompile Include="Async\boring32.async-memorymappedfile.cpp" />
     <ClCompile Include="Async\boring32.async-mutex.cpp" />
-    <ClCompile Include="IPC\boring32.ipc-anonymouspipe.cpp" />
     <ClCompile Include="Async\boring32.async-process.cpp" />
     <ClCompile Include="Async\boring32.async-processinfo.cpp" />
     <ClCompile Include="RAII\boring32.raii-win32handle.ixx" />

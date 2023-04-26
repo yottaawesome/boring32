@@ -60,9 +60,6 @@
     <ClCompile Include="Async\boring32.async-overlappedio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IPC\boring32.ipc-anonymouspipe.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="IPC\boring32.ipc-blockingnamedpipeclient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
