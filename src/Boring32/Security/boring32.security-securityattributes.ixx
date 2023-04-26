@@ -6,10 +6,16 @@ export namespace Boring32::Security
 	class SecurityAttributes
 	{
 		public:
-			virtual ~SecurityAttributes();
+			virtual ~SecurityAttributes()
+			{
+				Close();
+			}
 
 		public:
-			virtual void Close() noexcept;
+			virtual void Close() noexcept
+			{
+
+			}
 
 		protected:
 			SECURITY_ATTRIBUTES m_sa{0};
