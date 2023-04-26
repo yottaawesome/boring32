@@ -271,7 +271,6 @@
     <ClCompile Include="Security\boring32.security-impersonationcontext.ixx" />
     <ClCompile Include="Security\boring32.security-lsaunicodestring.cpp" />
     <ClCompile Include="Security\boring32.security-lsaunicodestring.ixx" />
-    <ClCompile Include="Security\boring32.security-policy.cpp" />
     <ClCompile Include="Security\boring32.security-policy.ixx" />
     <ClCompile Include="Security\boring32.security-securityattributes.cpp" />
     <ClCompile Include="Security\boring32.security-securityattributes.ixx" />

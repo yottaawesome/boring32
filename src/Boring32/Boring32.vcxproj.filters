@@ -352,9 +352,6 @@
     <ClCompile Include="IO\boring32.io.ixx" />
     <ClCompile Include="IO\boring32.io-completionport.ixx" />
     <ClCompile Include="Security\boring32.security-policy.ixx" />
-    <ClCompile Include="Security\boring32.security-policy.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Security\boring32.security-lsaunicodestring.ixx" />
     <ClCompile Include="Security\boring32.security-lsaunicodestring.cpp">
       <Filter>Source Files</Filter>
