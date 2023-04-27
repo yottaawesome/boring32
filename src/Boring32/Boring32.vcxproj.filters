@@ -21,9 +21,6 @@
     <ClCompile Include="Async\boring32.async-process.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async-processinfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Async\boring32.async-thread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
