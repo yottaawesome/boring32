@@ -63,9 +63,6 @@
     <ClCompile Include="IPC\boring32.ipc-overlappednamedpipeserver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IPC\boring32.ipc-overlappednamedpipeclient.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Async\boring32.async-overlappedop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
