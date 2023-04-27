@@ -346,7 +346,6 @@
     <ClCompile Include="Async\boring32.async-job.cpp" />
     <ClCompile Include="Async\boring32.async-mutev.cpp" />
     <ClCompile Include="Async\boring32.async-overlappedop.cpp" />
-    <ClCompile Include="IPC\boring32.ipc-blockingnamedpipeclient.cpp" />
     <ClCompile Include="IPC\boring32.ipc-blockingnamedpipeserver.cpp" />
     <ClCompile Include="IPC\boring32.ipc-namedpipeserverbase.cpp" />
     <ClCompile Include="Async\boring32.async-overlappedio.cpp" />
