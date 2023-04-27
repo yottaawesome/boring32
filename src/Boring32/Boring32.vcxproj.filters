@@ -54,9 +54,6 @@
     <ClCompile Include="Async\boring32.async-threadpool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async-functions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket-statuscallback.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

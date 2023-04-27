@@ -337,7 +337,6 @@
     <ClCompile Include="WinSock\boring32.winsock-uniqueptrs.ixx" />
     <ClCompile Include="WinSock\boring32.winsock-winsockerror.ixx" />
     <ClCompile Include="WinSock\boring32.winsock-winsockinit.ixx" />
-    <ClCompile Include="Async\boring32.async-functions.cpp" />
     <ClCompile Include="Async\boring32.async-event.cpp" />
     <ClCompile Include="Async\boring32.async-filemapping.cpp" />
     <ClCompile Include="Async\boring32.async-overlappedop.cpp" />
