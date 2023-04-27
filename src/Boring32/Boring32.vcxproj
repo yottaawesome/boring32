@@ -347,7 +347,6 @@
     <ClCompile Include="Async\boring32.async-semaphore.ixx" />
     <ClCompile Include="Async\boring32.async-thread.cpp" />
     <ClCompile Include="Async\boring32.async-threadpool.cpp" />
-    <ClCompile Include="Async\boring32.async-timerqueue.cpp" />
     <ClCompile Include="Async\boring32.async-timerqueuetimer.cpp" />
     <ClCompile Include="Async\boring32.async-timerqueuetimercallback.cpp" />
     <ClCompile Include="Async\boring32.async-waitabletimer.cpp" />
