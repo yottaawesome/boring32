@@ -69,13 +69,7 @@
     <ClCompile Include="Async\boring32.async-synchronizationbarrier.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinHttp\boring32.winhttp-proxyinfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Async\boring32.async-threadpool.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WinHttp\boring32.winhttp-session.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Async\boring32.async-mutev.cpp">

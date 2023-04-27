@@ -371,8 +371,6 @@
     <ClCompile Include="Strings\boring32.strings.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket.cpp" />
     <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket-statuscallback.cpp" />
-    <ClCompile Include="WinHttp\boring32.winhttp-proxyinfo.cpp" />
-    <ClCompile Include="WinHttp\boring32.winhttp-session.cpp" />
     <ClCompile Include="WinHttp\boring32.winhttp-httpwebclient.cpp" />
     <ClCompile Include="WinSock\boring32.winsock.ixx" />
     <ClCompile Include="WirelessLAN\boring32.wirelesslan-wirelessinterface.cpp" />
