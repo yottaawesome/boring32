@@ -344,7 +344,6 @@
     <ClCompile Include="Async\boring32.async-eventloop.cpp" />
     <ClCompile Include="Async\boring32.async-filemapping.cpp" />
     <ClCompile Include="Async\boring32.async-job.cpp" />
-    <ClCompile Include="Async\boring32.async-mutev.cpp" />
     <ClCompile Include="Async\boring32.async-overlappedop.cpp" />
     <ClCompile Include="Async\boring32.async-overlappedio.cpp" />
     <ClCompile Include="Async\boring32.async-semaphore.cpp" />

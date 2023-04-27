@@ -63,9 +63,6 @@
     <ClCompile Include="Async\boring32.async-threadpool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async-mutev.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Async\boring32.async-eventloop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
