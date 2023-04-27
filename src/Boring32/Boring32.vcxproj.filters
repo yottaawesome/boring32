@@ -21,9 +21,6 @@
     <ClCompile Include="Async\boring32.async-waitabletimer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async-semaphore.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Async\boring32.async-threadpool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -337,7 +337,6 @@
     <ClCompile Include="WinSock\boring32.winsock-uniqueptrs.ixx" />
     <ClCompile Include="WinSock\boring32.winsock-winsockerror.ixx" />
     <ClCompile Include="WinSock\boring32.winsock-winsockinit.ixx" />
-    <ClCompile Include="Async\boring32.async-semaphore.cpp" />
     <ClCompile Include="Async\boring32.async-semaphore.ixx" />
     <ClCompile Include="Async\boring32.async-thread.cpp" />
     <ClCompile Include="Async\boring32.async-threadpool.cpp" />
