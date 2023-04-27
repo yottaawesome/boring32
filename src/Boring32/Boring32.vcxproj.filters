@@ -42,9 +42,6 @@
     <ClCompile Include="Async\boring32.async-semaphore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async-slimreadwritelock.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Async\boring32.async-criticalsectionlock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
