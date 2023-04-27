@@ -2,6 +2,10 @@ export module boring32.ipc:blockingnamedpipeclient;
 import :namedpipeclientbase;
 import <vector>;
 import <string>;
+import <stdexcept>;
+import <win32.hpp>;
+import boring32.error;
+import boring32.util;
 
 export namespace Boring32::IPC
 {
@@ -12,7 +16,9 @@ export namespace Boring32::IPC
 			BlockingNamedPipeClient() = default;
 			BlockingNamedPipeClient(const BlockingNamedPipeClient& other) = default;
 			BlockingNamedPipeClient(BlockingNamedPipeClient&& other) noexcept = default;
-			BlockingNamedPipeClient(const std::wstring& name);
+			BlockingNamedPipeClient(const std::wstring& name)
+				: NamedPipeClientBase(name, 0)
+			{ }
 
 		public:
 			virtual BlockingNamedPipeClient& operator=(
@@ -23,19 +29,114 @@ export namespace Boring32::IPC
 			) noexcept = default;
 
 		public:
-			virtual void Write(const std::wstring& msg);
-			virtual bool Write(const std::wstring& msg, const std::nothrow_t&) noexcept;
-			virtual void Write(const std::vector<std::byte>& data);
+			virtual void Write(const std::wstring& msg)
+			{
+				InternalWrite(Util::StringToByteVector(msg));
+			}
+
+			virtual bool Write(
+				const std::wstring& msg, 
+				const std::nothrow_t&
+			) noexcept try
+			{
+				InternalWrite(Util::StringToByteVector(msg));
+				return true;
+			}
+			catch (...)
+			{
+				return false;
+			}
+
+			virtual void Write(const std::vector<std::byte>& data)
+			{
+				InternalWrite(data);
+			}
+
 			virtual bool Write(
 				const std::vector<std::byte>& data, 
 				const std::nothrow_t&
-			)  noexcept;
+			) noexcept try
+			{
+				InternalWrite(data);
+				return true;
+			}
+			catch (...)
+			{
+				return false;
+			}
 
-			virtual std::wstring ReadAsString();
-			virtual bool ReadAsString(std::wstring& out, const std::nothrow_t&) noexcept;
+			virtual std::wstring ReadAsString()
+			{
+				return Util::ByteVectorToString<std::wstring>(InternalRead());
+			}
+
+			virtual bool ReadAsString(
+				std::wstring& out, 
+				const std::nothrow_t&
+			) noexcept try
+			{
+				out = Util::ByteVectorToString<std::wstring>(InternalRead());
+				return true;
+			}
+			catch (...)
+			{
+				return false;
+			}
 
 		protected:
-			virtual void InternalWrite(const std::vector<std::byte>& data);
-			virtual std::vector<std::byte> InternalRead();
+			virtual void InternalWrite(const std::vector<std::byte>& data)
+			{
+				if (m_handle == nullptr)
+					throw std::runtime_error("No pipe to write to");
+
+				DWORD bytesWritten = 0;
+				// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile
+				bool successfulWrite = WriteFile(
+					m_handle.GetHandle(),   // pipe handle 
+					&data[0],        // message 
+					(DWORD)data.size(),         // message length 
+					&bytesWritten,      // bytes written 
+					nullptr				// not overlapped 
+				);
+				if (successfulWrite == false)
+					throw Error::Win32Error("Failed to write to client pipe", GetLastError());
+			}
+
+			virtual std::vector<std::byte> InternalRead()
+			{
+				if (m_handle == nullptr)
+					throw std::runtime_error("No pipe to read from");
+
+				constexpr DWORD blockSize = 1024;
+				std::vector<std::byte> dataBuffer(blockSize);
+
+				bool continueReading = true;
+				DWORD totalBytesRead = 0;
+				while (continueReading)
+				{
+					DWORD currentBytesRead = 0;
+					// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile
+					bool successfulRead = ReadFile(
+						m_handle.GetHandle(),    // pipe handle 
+						&dataBuffer[0],    // buffer to receive reply 
+						(DWORD)dataBuffer.size(),  // size of buffer 
+						&currentBytesRead,  // number of bytes read 
+						nullptr				// not overlapped
+					);
+					totalBytesRead += currentBytesRead;
+
+					const DWORD lastError = GetLastError();
+					if (successfulRead == false && lastError != ERROR_MORE_DATA)
+						throw Error::Win32Error("Failed to read from pipe", GetLastError());
+					if (lastError == ERROR_MORE_DATA)
+						dataBuffer.resize(dataBuffer.size() + blockSize);
+					continueReading = !successfulRead;
+				}
+
+				if (totalBytesRead > 0)
+					dataBuffer.resize(totalBytesRead);
+
+				return dataBuffer;
+			}
 	};
 }
