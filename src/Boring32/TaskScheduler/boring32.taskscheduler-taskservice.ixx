@@ -36,7 +36,8 @@ export namespace Boring32::TaskScheduler
 					CLSID_TaskScheduler,
 					nullptr,
 					CLSCTX_INPROC_SERVER,
-					IID_PPV_ARGS(&m_taskService)
+					IID_ITaskService,
+					&m_taskService
 				);
 				if (FAILED(hr))
 					throw Error::COMError("Failed to create ITaskService", hr);
