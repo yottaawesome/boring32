@@ -33,9 +33,6 @@
     <ClCompile Include="Async\boring32.async-semaphore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async-timerqueuetimercallback.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Async\boring32.async-threadpool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -46,9 +43,6 @@
     <ClCompile Include="Async\boring32.async-threadpool.ixx" />
     <ClCompile Include="Async\boring32.async-semaphore.ixx" />
     <ClCompile Include="Async\boring32.async-filemapping.ixx" />
-    <ClCompile Include="Async\boring32.async-filemapping.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="FileSystem\boring32.filesystem-file.ixx" />
     <ClCompile Include="RAII\boring32.raii-win32handle.ixx" />
     <ClCompile Include="COM\boring32.com-comthreadscope.ixx" />
