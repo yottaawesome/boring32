@@ -340,7 +340,6 @@
     <ClCompile Include="WinSock\boring32.winsock-uniqueptrs.ixx" />
     <ClCompile Include="WinSock\boring32.winsock-winsockerror.cpp" />
     <ClCompile Include="WinSock\boring32.winsock-winsockerror.ixx" />
-    <ClCompile Include="WinSock\boring32.winsock-winsockinit.cpp" />
     <ClCompile Include="WinSock\boring32.winsock-winsockinit.ixx" />
     <ClCompile Include="Async\boring32.async-functions.cpp" />
     <ClCompile Include="Async\boring32.async-criticalsectionlock.cpp" />
