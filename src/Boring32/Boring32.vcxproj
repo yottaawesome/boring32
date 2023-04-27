@@ -338,7 +338,6 @@
     <ClCompile Include="WinSock\boring32.winsock-winsockerror.ixx" />
     <ClCompile Include="WinSock\boring32.winsock-winsockinit.ixx" />
     <ClCompile Include="Async\boring32.async-semaphore.ixx" />
-    <ClCompile Include="Async\boring32.async-thread.cpp" />
     <ClCompile Include="Async\boring32.async-threadpool.cpp" />
     <ClCompile Include="Async\boring32.async-waitabletimer.cpp" />
     <ClCompile Include="Compression\boring32.compression-compressor.ixx" />
