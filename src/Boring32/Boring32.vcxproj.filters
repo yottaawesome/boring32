@@ -310,9 +310,6 @@
     <ClCompile Include="SSPI\Schannel\boring32.sspi.provider.schannel.ixx" />
     <ClCompile Include="COM\boring32.com-hresult.ixx" />
     <ClCompile Include="WinSock\boring32.winsock-socket.ixx" />
-    <ClCompile Include="WinSock\boring32.winsock-socket.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Memory\boring32.memory.ixx" />
     <ClCompile Include="Memory\boring32.memory-functions.ixx" />
     <ClCompile Include="Memory\boring32.memory-heap.ixx" />
