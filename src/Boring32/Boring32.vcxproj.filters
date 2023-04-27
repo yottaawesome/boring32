@@ -239,9 +239,6 @@
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform-functions.ixx" />
     <ClCompile Include="WinSock\boring32.winsock-winsockinit.ixx" />
     <ClCompile Include="WinSock\boring32.winsock-functions.ixx" />
-    <ClCompile Include="WinSock\boring32.winsock-tcpsocket.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="WinSock\boring32.winsock-tcpsocket.ixx" />
     <ClCompile Include="WinSock\boring32.winsock-uniqueptrs.ixx" />
     <ClCompile Include="WinSock\boring32.winsock-winsockerror.ixx" />

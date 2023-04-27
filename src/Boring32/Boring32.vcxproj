@@ -334,7 +334,6 @@
     <ClCompile Include="WinHttp\boring32.winhttp-proxytype.ixx" />
     <ClCompile Include="WinSock\boring32.winsock-functions.ixx" />
     <ClCompile Include="WinSock\boring32.winsock-socket.ixx" />
-    <ClCompile Include="WinSock\boring32.winsock-tcpsocket.cpp" />
     <ClCompile Include="WinSock\boring32.winsock-tcpsocket.ixx" />
     <ClCompile Include="WinSock\boring32.winsock-uniqueptrs.ixx" />
     <ClCompile Include="WinSock\boring32.winsock-winsockerror.ixx" />
