@@ -348,7 +348,6 @@
     <ClCompile Include="Compression\boring32.compression-compressiontype.ixx" />
     <ClCompile Include="COM\boring32.com-comthreadscope.ixx" />
     <ClCompile Include="FileSystem\boring32.filesystem-file.ixx" />
-    <ClCompile Include="Async\boring32.async-mutex.cpp" />
     <ClCompile Include="Async\boring32.async-process.cpp" />
     <ClCompile Include="RAII\boring32.raii-win32handle.ixx" />
     <ClCompile Include="Strings\boring32.strings.ixx" />

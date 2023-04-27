@@ -2,6 +2,12 @@ export module boring32.async:mutex;
 import boring32.raii;
 import <string>;
 import <win32.hpp>;
+import <stdexcept>;
+import <string>;
+import <iostream>;
+import <format>;
+import boring32.error;
+import :functions;
 
 export namespace Boring32::Async
 {
@@ -21,18 +27,27 @@ export namespace Boring32::Async
 			///		Clones a mutex.
 			/// </summary>
 			/// <param name="other"></param>
-			Mutex(const Mutex& other);
+			Mutex(const Mutex& other)
+			{
+				Copy(other);
+			}
 
 			/// <summary>
 			///		Move constructor.
 			/// </summary>
 			/// <param name="other">The rvalue to move.</param>
-			Mutex(Mutex&& other) noexcept;
+			Mutex(Mutex&& other) noexcept
+			{
+				Move(other);
+			}
 
 			/// <summary>
 			///		Destroys this mutex.
 			/// </summary>
-			virtual ~Mutex();
+			virtual ~Mutex()
+			{
+				Close();
+			}
 
 			/// <summary>
 			///		Creates an anonymous mutex.
@@ -46,7 +61,18 @@ export namespace Boring32::Async
 			/// <exception cref="std::runtime_error">
 			///		Thrown when mutex creation failed.
 			/// </exception>
-			Mutex(const bool acquire, const bool inheritable);
+			Mutex(const bool acquire, const bool inheritable)
+				: m_locked(acquire)
+			{
+				m_mutex = CreateMutexW(
+					nullptr,
+					m_locked,
+					nullptr
+				);
+				m_mutex.SetInheritability(inheritable);
+				if (!m_mutex)
+					throw Error::Win32Error("Failed to create mutex", GetLastError());
+			}
 
 			/// <summary>
 			///		Creates a new named or anonymous mutex.
@@ -65,7 +91,20 @@ export namespace Boring32::Async
 				const bool acquireOnCreation,
 				const bool inheritable,
 				std::wstring name
-			);
+			) : m_name(std::move(name)),
+				m_created(true)
+			{
+				m_mutex = CreateMutexW(
+					nullptr,
+					acquireOnCreation,
+					m_name.empty() ? nullptr : m_name.c_str()
+				);
+				m_mutex.SetInheritability(inheritable);
+				if (!m_mutex)
+					throw Error::Win32Error("Failed to create mutex", GetLastError());
+
+				m_locked = acquireOnCreation;
+			}
 
 			/// <summary>
 			///		Opens an existing named mutex.
@@ -81,26 +120,54 @@ export namespace Boring32::Async
 			/// </param>
 			Mutex(
 				const bool acquireOnOpen,
-				const bool inheritable,
+				const bool isInheritable,
 				std::wstring name,
 				const DWORD desiredAccess
-			);
+			) : m_name(name)
+			{
+				if (m_name.empty())
+					throw Error::Boring32Error("Cannot open mutex with empty name");
+				m_mutex = OpenMutexW(desiredAccess, isInheritable, m_name.c_str());
+				if (!m_mutex)
+					throw Error::Win32Error("failed to open mutex", GetLastError());
+				if (acquireOnOpen)
+					Lock(INFINITE, true);
+			}
 
 		public:
 			/// <summary>
 			///		Copy assignment.
 			/// </summary>
-			virtual Mutex& operator=(const Mutex& other);
+			virtual Mutex& operator=(const Mutex& other)
+			{
+				Copy(other);
+				return *this;
+			}
 
 			/// <summary>
 			///		Move assignment.
 			/// </summary>
-			virtual Mutex& operator=(Mutex&& other) noexcept;
+			virtual Mutex& operator=(Mutex&& other) noexcept
+			{
+				Move(other);
+				return *this;
+			}
 		
 		public:
-			virtual bool Lock();
-			virtual bool Lock(const DWORD waitTime);
-			virtual bool Lock(const bool isAlertable);
+			virtual bool Lock()
+			{
+				return Lock(INFINITE, false);
+			}
+
+			virtual bool Lock(const DWORD waitTime)
+			{
+				return Lock(waitTime, false);
+			}
+
+			virtual bool Lock(const bool isAlertable)
+			{
+				return Lock(INFINITE, isAlertable);
+			}
 
 			/// <summary>
 			///		Blocks the current thread for a specified amount of time 
@@ -117,7 +184,13 @@ export namespace Boring32::Async
 			/// <exception cref="Error::Boring32Error">
 			///		Mutex not initialised.
 			/// </exception>
-			virtual bool Lock(const DWORD waitTime, const bool isAlertable);
+			virtual bool Lock(const DWORD waitTime, const bool isAlertable)
+			{
+				if (!m_mutex)
+					throw Error::Boring32Error("Cannot wait on null mutex");
+				m_locked = WaitFor(m_mutex.GetHandle(), waitTime, isAlertable);
+				return m_locked;
+			}
 
 			/// <summary>
 			///		Blocks the current thread for a specified amount of time 
@@ -136,7 +209,15 @@ export namespace Boring32::Async
 				const DWORD waitTime, 
 				const bool isAlertable, 
 				const std::nothrow_t&
-			) noexcept;
+			) noexcept try
+			{
+				return Lock(waitTime, isAlertable);
+			}
+			catch (const std::exception& ex)
+			{
+				std::wcerr << std::format("{}: Lock() failed: {}\n", __FUNCSIG__, ex.what()).c_str();
+				return false;
+			}
 
 			/// <summary>
 			///		Frees the mutex, allowing another process to acquire it.
@@ -144,35 +225,80 @@ export namespace Boring32::Async
 			/// <exception cref="Error::Win32Error">
 			///		Failed to release the mutex.
 			/// </exception>
-			virtual void Unlock();
+			virtual void Unlock()
+			{
+				if (!m_mutex)
+					throw Error::Boring32Error("Cannot wait on null mutex");
+				if (!ReleaseMutex(m_mutex.GetHandle()))
+					throw Error::Win32Error("Failed to release mutex", GetLastError());
+
+				m_locked = false;
+			}
 
 			/// <summary>
 			///		Frees the mutex, allowing another process to acquire it.
 			///		Does not throw exceptions on failure.
 			/// </summary>
-			virtual bool Unlock(const std::nothrow_t&) noexcept;
+			virtual bool Unlock(const std::nothrow_t&) noexcept try
+			{
+				Unlock();
+				return true;
+			}
+			catch (const std::exception& ex)
+			{
+				std::wcerr << std::format("{}: Unlock() failed: {}\n", __FUNCSIG__, ex.what()).c_str();
+				return false;
+			}
 
 			/// <summary>
 			///		Invalidates and closes the native Mutex handle.
 			/// </summary>
-			virtual void Close();
+			virtual void Close()
+			{
+				if (m_mutex)
+				{
+					if (m_locked)
+						Unlock();
+					m_mutex.Close();
+				}
+			}
 
 			/// <summary>
 			///		Retrieves this Mutex's underlying handle.
 			/// </summary>
 			/// <returns>This Mutex's underlying handle</returns>
-			virtual HANDLE GetHandle() const noexcept;
+			virtual HANDLE GetHandle() const noexcept
+			{
+				return m_mutex.GetHandle();
+			}
 
 			/// <summary>
 			///		Retrieves this Mutex's name. This value is an empty string
 			///		if this is an anonymous Mutex.
 			/// </summary>
 			/// <returns>This Mutex's name.</returns>
-			virtual const std::wstring& GetName() const noexcept;
+			virtual const std::wstring& GetName() const noexcept
+			{
+				return m_name;
+			}
 
 		protected:
-			virtual void Move(Mutex& other) noexcept;
-			virtual void Copy(const Mutex& other);
+			virtual void Move(Mutex& other) noexcept
+			{
+				m_name = std::move(other.m_name);
+				m_created = other.m_created;
+				m_locked = other.m_locked;
+				m_mutex = std::move(other.m_mutex);
+			}
+
+			virtual void Copy(const Mutex& other)
+			{
+				Close();
+				m_name = other.m_name;
+				m_created = false;
+				m_locked = other.m_locked;
+				m_mutex = other.m_mutex;
+			}
 
 		protected:
 			std::wstring m_name;
