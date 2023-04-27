@@ -373,7 +373,6 @@
     <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket-statuscallback.cpp" />
     <ClCompile Include="WinHttp\boring32.winhttp-proxyinfo.cpp" />
     <ClCompile Include="WinHttp\boring32.winhttp-session.cpp" />
-    <ClCompile Include="WinHttp\boring32.winhttp-winhttphandle.cpp" />
     <ClCompile Include="WinHttp\boring32.winhttp-httpwebclient.cpp" />
     <ClCompile Include="WinHttp\boring32.winhttp-websocket.cpp" />
     <ClCompile Include="WinSock\boring32.winsock.ixx" />

@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WinHttp\boring32.winhttp-winhttphandle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Async\boring32.async-memorymappedfile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
