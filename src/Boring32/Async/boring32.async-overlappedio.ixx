@@ -1,6 +1,8 @@
 export module boring32.async:overlappedio;
 import :overlappedop;
 import <vector>;
+import <stdexcept>;
+import boring32.error;
 
 export namespace Boring32::Async
 {
@@ -9,8 +11,16 @@ export namespace Boring32::Async
 		public:
 			virtual ~OverlappedIo() = default;
 			OverlappedIo() = default;
-			OverlappedIo(OverlappedIo&& other) noexcept;
-			virtual OverlappedIo& operator=(OverlappedIo&& other) noexcept;
+			OverlappedIo(OverlappedIo&& other) noexcept
+			{
+				Move(other);
+			}
+
+			virtual OverlappedIo& operator=(OverlappedIo&& other) noexcept
+			{
+				Move(other);
+				return *this;
+			}
 
 			// Non-copyable
 		public:
@@ -21,8 +31,24 @@ export namespace Boring32::Async
 			std::vector<std::byte> IoBuffer;
 
 		protected:
-			virtual void Move(OverlappedIo& other) noexcept;
-			virtual void OnSuccess() override;
-			virtual void ResizeBuffer();
+			virtual void Move(OverlappedIo& other) noexcept
+			{
+				OverlappedOp::Move(other);
+				IoBuffer = std::move(other.IoBuffer);
+			}
+
+			virtual void OnSuccess() override
+			{
+				ResizeBuffer();
+			}
+
+			virtual void ResizeBuffer()
+			{
+				if (IsSuccessful() == false)
+					throw Error::Boring32Error("Operation is not successful");
+				const uint64_t bytesTransferred = GetBytesTransferred();
+				if (bytesTransferred > 0)
+					IoBuffer.resize(bytesTransferred);
+			}
 	};
 }

@@ -39,9 +39,6 @@
     <ClCompile Include="Async\boring32.async-semaphore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async-overlappedio.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Async\boring32.async-timerqueuetimercallback.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
