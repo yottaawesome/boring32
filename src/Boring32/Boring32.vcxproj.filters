@@ -45,9 +45,6 @@
     <ClCompile Include="Async\boring32.async-overlappedop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32.async-timerqueuetimer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Async\boring32.async-timerqueuetimercallback.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
