@@ -10,10 +10,12 @@ export namespace Boring32::WinSock
 	class WinSockError : public Error::Boring32Error
 	{
 		public:
-			virtual ~WinSockError();
+			virtual ~WinSockError() = default;
 			WinSockError(
 				const std::string& message,
 				const std::source_location location = std::source_location::current()
-			);
+			) : Error::Boring32Error(message, location)
+			{
+			}
 	};
 }

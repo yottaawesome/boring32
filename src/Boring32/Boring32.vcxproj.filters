@@ -244,9 +244,6 @@
     </ClCompile>
     <ClCompile Include="WinSock\boring32.winsock-tcpsocket.ixx" />
     <ClCompile Include="WinSock\boring32.winsock-uniqueptrs.ixx" />
-    <ClCompile Include="WinSock\boring32.winsock-winsockerror.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="WinSock\boring32.winsock-winsockerror.ixx" />
     <ClCompile Include="WinSock\boring32.winsock.ixx" />
     <ClCompile Include="Util\boring32.util-functions.ixx" />
