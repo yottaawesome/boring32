@@ -89,7 +89,10 @@ export namespace Boring32::Async
 					period
 				);
 				if (success == false)
-					throw Error::Win32Error("ChangeTimerQueueTimer() failed", GetLastError());
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("ChangeTimerQueueTimer() failed", lastError);
+				}
 			}
 
 			virtual void Close()
@@ -102,13 +105,16 @@ export namespace Boring32::Async
 						m_completionEvent
 					);
 					if (succeeded == false)
-						throw Error::Win32Error("DeleteTimerQueueTimer() failed", GetLastError());
+					{
+						const auto lastError = GetLastError();
+						throw Error::Win32Error("DeleteTimerQueueTimer() failed", lastError);
+					}
 					m_timerQueueTimer = nullptr;
 				}
 			}
 
 			virtual bool Close(
-				const std::nothrow_t
+				const std::nothrow_t&
 			) noexcept try
 			{
 				Close();
@@ -154,7 +160,10 @@ export namespace Boring32::Async
 					m_flags
 				);
 				if (succeeded == false)
-					throw Error::Win32Error("CreateTimerQueueTimer() failed", GetLastError());
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("CreateTimerQueueTimer() failed", lastError);
+				}
 			}
 
 		protected:
@@ -168,3 +177,4 @@ export namespace Boring32::Async
 			void* m_parameter = nullptr;
 	};
 }
+

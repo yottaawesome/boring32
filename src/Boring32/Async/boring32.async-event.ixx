@@ -12,11 +12,11 @@ export namespace Boring32::Async
 	/// <summary>
 	/// Encapsulates a Win32 Event synchronization object.
 	/// </summary>
-	class Event
+	class Event final
 	{
 		// Constructors
 		public:
-			virtual ~Event() = default;
+			~Event() = default;
 			Event() = default;
 			Event(const Event& other) = default;
 			Event(Event&& other) noexcept = default;
@@ -87,21 +87,23 @@ export namespace Boring32::Async
 			}
 
 		public:
-			virtual Event& operator=(const Event& other) = default;
-			virtual Event& operator=(Event&& other) noexcept = default;
-			virtual operator HANDLE() const noexcept
+			Event& operator=(const Event& other) = default;
+
+			Event& operator=(Event&& other) noexcept = default;
+
+			inline operator HANDLE() const noexcept
 			{
 				return *m_event;
 			}
 
-			virtual operator bool() const noexcept
+			inline operator bool() const noexcept
 			{
 				return m_event != nullptr;
 			}
 
 			// API
 		public:
-			virtual void Signal()
+			void Signal()
 			{
 				if (!m_event)
 					throw Error::Boring32Error("No Event to signal");
@@ -112,7 +114,7 @@ export namespace Boring32::Async
 				}
 			}
 
-			virtual bool Signal(const std::nothrow_t&) noexcept try
+			bool Signal(const std::nothrow_t&) noexcept try
 			{
 				Signal();
 				return true;
@@ -127,7 +129,7 @@ export namespace Boring32::Async
 				return false;
 			}
 
-			virtual void Reset()
+			void Reset()
 			{
 				if (!m_isManualReset)
 					return;
@@ -140,7 +142,7 @@ export namespace Boring32::Async
 				}
 			}
 
-			virtual bool Reset(std::nothrow_t) noexcept try
+			bool Reset(const std::nothrow_t&) noexcept try
 			{
 				Reset();
 				return true;
@@ -155,7 +157,7 @@ export namespace Boring32::Async
 				return false;
 			}
 
-			virtual void WaitOnEvent() const
+			void WaitOnEvent() const
 			{
 				if (!m_event)
 					throw Error::Boring32Error("No Event to wait on");
@@ -170,7 +172,7 @@ export namespace Boring32::Async
 					throw Error::Boring32Error("The wait was abandoned");
 			}
 
-			virtual bool WaitOnEvent(
+			bool WaitOnEvent(
 				const DWORD millis, 
 				const bool alertable
 			) const
@@ -193,7 +195,7 @@ export namespace Boring32::Async
 				return false;
 			}
 
-			virtual bool WaitOnEvent(
+			bool WaitOnEvent(
 				const DWORD millis, 
 				const bool alertable, 
 				const std::nothrow_t&
@@ -213,33 +215,33 @@ export namespace Boring32::Async
 				return false;
 			}
 
-			virtual HANDLE Detach() noexcept
+			inline HANDLE Detach() noexcept
 			{
 				return m_event.Detach();
 			}
 
-			virtual HANDLE GetHandle() const noexcept
+			inline HANDLE GetHandle() const noexcept
 			{
 				return m_event.GetHandle();
 			}
 
-			virtual void Close()
+			inline void Close()
 			{
 				m_event = nullptr;
 			}
 
-			virtual const std::wstring& GetName() const noexcept
+			inline const std::wstring& GetName() const noexcept
 			{
 				return m_name;
 			}
 
-			virtual bool IsManualReset() const noexcept
+			inline bool IsManualReset() const noexcept
 			{
 				return m_isManualReset;
 			}
 
-		protected:
-			virtual void InternalCreate(
+		private:
+			void InternalCreate(
 				const bool isSignaled, 
 				const bool isInheritable
 			)
@@ -258,7 +260,7 @@ export namespace Boring32::Async
 				m_event.SetInheritability(isInheritable);
 			}
 
-		protected:
+		private:
 			RAII::Win32Handle m_event;
 			bool m_isManualReset = false;
 			std::wstring m_name;
