@@ -212,6 +212,13 @@ export namespace Boring32::Crypto
 					: nullptr;
 			}
 
+			[[nodiscard]] std::wstring GetHash() const
+			{
+				return m_certContext 
+					? ToBase64WString(InternalCertGetProperty(CERT_HASH_PROP_ID))
+					: L"";
+			}
+
 		private:
 			Certificate& Copy(const Certificate& other)
 			{

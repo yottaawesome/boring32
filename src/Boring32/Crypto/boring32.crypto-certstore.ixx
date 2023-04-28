@@ -232,7 +232,14 @@ export namespace Boring32::Crypto
 				const std::wstring& subjectName
 			) const
 			{
-				return { GetCertByArg(CERT_FIND_SUBJECT_STR, subjectName.c_str()), true };
+				return { GetCertByArg(StoreFindType::SubjectStr, subjectName.c_str()), true };
+			}
+
+			[[nodiscard]] Certificate GetExisting(
+				const PCCERT_CONTEXT cert
+			) const
+			{
+				return { GetCertByArg(StoreFindType::Existing, cert), true };
 			}
 
 			[[nodiscard]] Certificate GetCertByExactSubject(
@@ -244,7 +251,7 @@ export namespace Boring32::Crypto
 					.cbData = (DWORD)encodedBytes.size(),
 					.pbData = (BYTE*)&encodedBytes[0]
 				};
-				return { GetCertByArg(CERT_FIND_SUBJECT_NAME, &blob), true };
+				return { GetCertByArg(StoreFindType::SubjectName, &blob), true };
 			}
 
 			[[nodiscard]] Certificate GetCertByExactSubject(
@@ -255,7 +262,7 @@ export namespace Boring32::Crypto
 					.cbData = (DWORD)subjectName.size(),
 					.pbData = (BYTE*)&subjectName[0]
 				};
-				return { GetCertByArg(CERT_FIND_SUBJECT_NAME, &blob), true };
+				return { GetCertByArg(StoreFindType::SubjectName, &blob), true };
 			}
 
 			[[nodiscard]] Certificate GetCertByExactIssuer(
@@ -267,14 +274,14 @@ export namespace Boring32::Crypto
 					.cbData = (DWORD)encodedBytes.size(),
 					.pbData = (BYTE*)&encodedBytes[0]
 				};
-				return { GetCertByArg(CERT_FIND_ISSUER_NAME, &blob), true };
+				return { GetCertByArg(StoreFindType::IssuerName, &blob), true };
 			}
 
 			[[nodiscard]] Certificate GetCertBySubstringIssuerName(
 				const std::wstring& issuerName
 			) const
 			{
-				return { GetCertByArg(CERT_FIND_ISSUER_STR, issuerName.c_str()), true };
+				return { GetCertByArg(StoreFindType::IssuerStr, issuerName.c_str()), true };
 			}
 
 			[[nodiscard]] Certificate GetCertByByBase64Signature(
@@ -286,7 +293,7 @@ export namespace Boring32::Crypto
 					.cbData = (DWORD)bytes.size(),
 					.pbData = (BYTE*)&bytes[0]
 				};
-				return { GetCertByArg(CERT_FIND_SIGNATURE_HASH, &blob), true };
+				return { GetCertByArg(StoreFindType::SignatureHash, &blob), true };
 			}
 
 			[[nodiscard]] CertStoreType GetStoreType() const noexcept
@@ -374,6 +381,18 @@ export namespace Boring32::Crypto
 				}
 			}
 
+			PCCERT_CONTEXT GetCertByArg(
+				const StoreFindType searchFlag,
+				const void* arg
+			) const
+			{
+				return Crypto::GetCertByArg(
+					m_certStore,
+					searchFlag,
+					arg
+				);
+			}
+
 		public:
 			//virtual Certificate GetCertByExactSubjectRdn(const std::string& subjectName);
 
@@ -457,29 +476,6 @@ export namespace Boring32::Crypto
 					const auto lastError = GetLastError();
 					throw Error::Win32Error("CertOpenSystemStoreW() failed", lastError);
 				}
-			}
-
-			PCCERT_CONTEXT GetCertByArg(
-				const DWORD searchFlag, 
-				const void* arg
-			) const
-			{
-				PCCERT_CONTEXT certContext = (CERT_CONTEXT*)CertFindCertificateInStore(
-					m_certStore,
-					X509_ASN_ENCODING | PKCS_7_ASN_ENCODING | CERT_FIND_HAS_PRIVATE_KEY,
-					0,
-					searchFlag,
-					(void*)arg,
-					nullptr
-				);
-				if (!certContext)
-				{
-					const DWORD lastError = GetLastError();
-					if (lastError != CRYPT_E_NOT_FOUND)
-						throw Error::Win32Error("CertFindCertificateInStore() failed", lastError);
-				}
-
-				return certContext;
 			}
 
 		private:

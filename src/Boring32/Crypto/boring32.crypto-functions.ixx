@@ -571,4 +571,63 @@ export namespace Boring32::Crypto
 			);
 		}
 	}
+
+	// See https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindcertificateinstore
+	enum class StoreFindType : DWORD
+	{
+		Any = CERT_FIND_ANY,
+		CertId = CERT_FIND_CERT_ID,
+		CtlUsage = CERT_FIND_CTL_USAGE,
+		EnhKeyUsage = CERT_FIND_ENHKEY_USAGE,
+		Existing = CERT_FIND_EXISTING,
+		Hash = CERT_FIND_HASH,
+		HasPrivateKey = CERT_FIND_HAS_PRIVATE_KEY,
+		IssuerAttr = CERT_FIND_ISSUER_ATTR,
+		IssuerName = CERT_FIND_ISSUER_NAME,
+		IssuerOf = CERT_FIND_ISSUER_OF,
+		IssuerStr = CERT_FIND_ISSUER_STR,
+		KeyIdentifier = CERT_FIND_KEY_IDENTIFIER,
+		KeySpec = CERT_FIND_KEY_SPEC,
+		Md5Hash = CERT_FIND_MD5_HASH,
+		FindProperty = CERT_FIND_PROPERTY,
+		PublicKey = CERT_FIND_PUBLIC_KEY,
+		Sha1Hash = CERT_FIND_SHA1_HASH,
+		SignatureHash = CERT_FIND_SIGNATURE_HASH,
+		SubjectAttr = CERT_FIND_SUBJECT_ATTR,
+		SubjectCert = CERT_FIND_SUBJECT_CERT,
+		SubjectName = CERT_FIND_SUBJECT_NAME,
+		SubjectStr = CERT_FIND_SUBJECT_STR,
+		CrossCertDistPoints = CERT_FIND_CROSS_CERT_DIST_POINTS,
+		PubKeyMd5Hash = CERT_FIND_PUBKEY_MD5_HASH
+	};
+
+	PCCERT_CONTEXT GetCertByArg(
+		HCERTSTORE certStore,
+		const StoreFindType searchFlag,
+		const void* arg
+	)
+	{
+		if (!certStore)
+			throw Error::Boring32Error("CertStore cannot be null");
+
+		// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindcertificateinstore
+		PCCERT_CONTEXT certContext = static_cast<PCCERT_CONTEXT>(
+			CertFindCertificateInStore(
+				certStore,
+				X509_ASN_ENCODING | PKCS_7_ASN_ENCODING | CERT_FIND_HAS_PRIVATE_KEY,
+				0,
+				static_cast<DWORD>(searchFlag),
+				arg,
+				nullptr
+			)
+		);
+		if (!certContext)
+		{
+			const DWORD lastError = GetLastError();
+			if (lastError != CRYPT_E_NOT_FOUND)
+				throw Error::Win32Error("CertFindCertificateInStore() failed", lastError);
+		}
+
+		return certContext;
+	}
 }
