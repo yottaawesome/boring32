@@ -194,7 +194,7 @@ export namespace Boring32::Crypto
 					// The cert is automatically freed by the next call to CertEnumCertificatesInStore
 					// We only use Certificate to provide us with exception-based clean up and to use
 					// GetFormattedSubjectName()
-					cert.Detach();
+					auto dummy = cert.Detach();
 				}
 				const DWORD lastError = GetLastError();
 				if (lastError != CRYPT_E_NOT_FOUND && lastError != ERROR_NO_MORE_FILES)

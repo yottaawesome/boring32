@@ -7,7 +7,7 @@ import :functions;
 
 export namespace Boring32::Crypto
 {
-	class Certificate
+	class Certificate final
 	{
 		public:
 			enum class CertTimeValidity : long
@@ -18,7 +18,7 @@ export namespace Boring32::Crypto
 			};
 
 		public:
-			virtual ~Certificate() = default;
+			~Certificate() = default;
 			Certificate() = default;
 			Certificate(const Certificate& other)
 			{
@@ -40,33 +40,33 @@ export namespace Boring32::Crypto
 			}
 
 		public:
-			virtual Certificate& operator=(const Certificate& other)
+			Certificate& operator=(const Certificate& other)
 			{
 				return Copy(other);
 			}
 
-			virtual Certificate& operator=(Certificate&& other) noexcept
+			Certificate& operator=(Certificate&& other) noexcept
 			{
 				return Move(other);
 			}
 
-			virtual bool operator==(PCCERT_CONTEXT const other) const noexcept
+			bool operator==(PCCERT_CONTEXT const other) const noexcept
 			{
 				return m_certContext == other;
 			}
 
-			virtual operator bool() const noexcept
+			operator bool() const noexcept
 			{
 				return m_certContext != nullptr;
 			}
 
-			virtual operator PCCERT_CONTEXT() const noexcept
+			operator PCCERT_CONTEXT() const noexcept
 			{
 				return m_certContext;
 			}
 
 		public:
-			virtual void Close() noexcept
+			void Close() noexcept
 			{
 				if (m_certContext)
 				{
@@ -75,13 +75,13 @@ export namespace Boring32::Crypto
 				}
 			}
 
-			virtual void Attach(PCCERT_CONTEXT attachTo)
+			void Attach(PCCERT_CONTEXT attachTo)
 			{
 				Close();
 				m_certContext = attachTo;
 			}
 
-			virtual void IncreaseRefCount() const noexcept
+			void IncreaseRefCount() const noexcept
 			{
 				if (m_certContext)
 				{
@@ -89,22 +89,22 @@ export namespace Boring32::Crypto
 				}
 			}
 
-			virtual [[nodiscard]] PCCERT_CONTEXT GetCert() const noexcept
+			[[nodiscard]] PCCERT_CONTEXT GetCert() const noexcept
 			{
 				return m_certContext;
 			}
 
-			virtual [[nodiscard]] std::wstring GetFormattedSubject(const DWORD format) const
+			[[nodiscard]] std::wstring GetFormattedSubject(const DWORD format) const
 			{
 				return FormatAsnNameBlob(m_certContext->pCertInfo->Subject, format);
 			}
 
-			virtual [[nodiscard]] std::wstring GetFormattedIssuer(const DWORD format) const
+			[[nodiscard]] std::wstring GetFormattedIssuer(const DWORD format) const
 			{
 				return FormatAsnNameBlob(m_certContext->pCertInfo->Issuer, format);
 			}
 
-			virtual [[nodiscard]] std::vector<std::byte> GetIssuer() const
+			[[nodiscard]] std::vector<std::byte> GetIssuer() const
 			{
 				if (!m_certContext)
 					throw Error::Boring32Error("m_certContext is nullptr");
@@ -117,7 +117,7 @@ export namespace Boring32::Crypto
 				};
 			}
 
-			virtual [[nodiscard]] std::vector<std::byte> GetSubject() const
+			[[nodiscard]] std::vector<std::byte> GetSubject() const
 			{
 				if (!m_certContext)
 					throw Error::Boring32Error("m_certContext is nullptr");
@@ -130,12 +130,12 @@ export namespace Boring32::Crypto
 				};
 			}
 
-			virtual [[nodiscard]] std::wstring GetSignature() const
+			[[nodiscard]] std::wstring GetSignature() const
 			{
 				return ToBase64WString(InternalCertGetProperty(CERT_SIGNATURE_HASH_PROP_ID));
 			}
 
-			virtual [[nodiscard]] std::wstring GetSignatureHashCngAlgorithm() const
+			[[nodiscard]] std::wstring GetSignatureHashCngAlgorithm() const
 			{
 				std::vector<std::byte> bytes = InternalCertGetProperty(CERT_SIGN_HASH_CNG_ALG_PROP_ID);
 				std::wstring result(
@@ -147,21 +147,21 @@ export namespace Boring32::Crypto
 				return result;
 			}
 
-			virtual [[nodiscard]] PCCERT_CONTEXT Detach() noexcept
+			[[nodiscard]] PCCERT_CONTEXT Detach() noexcept
 			{
 				PCCERT_CONTEXT temp = m_certContext;
 				m_certContext = nullptr;
 				return temp;
 			}
 
-			virtual [[nodiscard]] bool IsValidForCurrentDate() const
+			[[nodiscard]] bool IsValidForCurrentDate() const
 			{
 				if (!m_certContext)
 					throw Error::Boring32Error("m_certContext is nullptr");
 				return GetTimeValidity(nullptr) == Certificate::CertTimeValidity::Valid;
 			}
 
-			virtual [[nodiscard]] CertTimeValidity GetTimeValidity(FILETIME* const ft) const
+			[[nodiscard]] CertTimeValidity GetTimeValidity(FILETIME* const ft) const
 			{
 				if (!m_certContext)
 					throw Error::Boring32Error("m_certContext is nullptr");
@@ -174,21 +174,21 @@ export namespace Boring32::Crypto
 				return static_cast<Certificate::CertTimeValidity>(value);
 			}
 
-			virtual [[nodiscard]] const FILETIME& GetNotBefore() const
+			[[nodiscard]] const FILETIME& GetNotBefore() const
 			{
 				if (!m_certContext)
 					throw Error::Boring32Error("m_certContext is nullptr");
 				return m_certContext->pCertInfo->NotBefore;
 			}
 
-			virtual [[nodiscard]] const FILETIME& GetNotAfter() const
+			[[nodiscard]] const FILETIME& GetNotAfter() const
 			{
 				if (!m_certContext)
 					throw Error::Boring32Error("m_certContext is nullptr");
 				return m_certContext->pCertInfo->NotAfter;
 			}
 
-			virtual [[nodiscard]] DWORD GetPublicKeyBitLength() const
+			[[nodiscard]] DWORD GetPublicKeyBitLength() const
 			{
 				if (!m_certContext)
 					throw Error::Boring32Error("m_certContext is nullptr");
@@ -205,15 +205,15 @@ export namespace Boring32::Crypto
 				return length;
 			}
 
-			virtual [[nodiscard]] PCCERT_CONTEXT Duplicate() const noexcept
+			[[nodiscard]] PCCERT_CONTEXT Duplicate() const noexcept
 			{
 				return m_certContext
 					? CertDuplicateCertificateContext(m_certContext)
 					: nullptr;
 			}
 
-		protected:
-			virtual Certificate& Copy(const Certificate& other)
+		private:
+			Certificate& Copy(const Certificate& other)
 			{
 				if (this == &other)
 					return *this;
@@ -223,7 +223,7 @@ export namespace Boring32::Crypto
 				return *this;
 			}
 
-			virtual Certificate& Move(Certificate& other) noexcept
+			Certificate& Move(Certificate& other) noexcept
 			{
 				Close();
 				m_certContext = other.m_certContext;
@@ -231,7 +231,7 @@ export namespace Boring32::Crypto
 				return *this;
 			}
 
-			virtual std::vector<std::byte> InternalCertGetProperty(
+			std::vector<std::byte> InternalCertGetProperty(
 				const DWORD property
 			) const
 			{
@@ -268,7 +268,7 @@ export namespace Boring32::Crypto
 				return returnValue;
 			}
 
-		protected:
+		private:
 			// See https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context
 			PCCERT_CONTEXT m_certContext = nullptr;
 
