@@ -32,10 +32,10 @@ export namespace Boring32::Crypto
 		InMemory
 	};
 
-	class CertStore
+	class CertStore final
 	{
 		public:
-			virtual ~CertStore()
+			~CertStore()
 			{
 				Close();
 			}
@@ -113,28 +113,28 @@ export namespace Boring32::Crypto
 			}
 
 		public:
-			virtual CertStore& operator=(const CertStore& other)
+			CertStore& operator=(const CertStore& other)
 			{
 				return Copy(other);
 			}
 
-			virtual CertStore& operator=(CertStore&& other) noexcept
+			CertStore& operator=(CertStore&& other) noexcept
 			{
 				return Move(other);
 			}
 
-			virtual bool operator==(const CertStore& other) const noexcept
+			bool operator==(const CertStore& other) const noexcept
 			{
 				return m_certStore == other.m_certStore;
 			}
 
-			virtual operator bool() const noexcept
+			operator bool() const noexcept
 			{
 				return m_certStore != nullptr;
 			}
 
 		public:
-			virtual void Close() noexcept
+			void Close() noexcept
 			{
 				if (!m_certStore)
 					return;
@@ -150,17 +150,17 @@ export namespace Boring32::Crypto
 				m_certStore = nullptr;
 			}
 
-			virtual [[nodiscard]] HCERTSTORE GetHandle() const noexcept
+			[[nodiscard]] HCERTSTORE GetHandle() const noexcept
 			{
 				return m_certStore;
 			}
 
-			virtual [[nodiscard]] const std::wstring& GetName() const noexcept
+			[[nodiscard]] const std::wstring& GetName() const noexcept
 			{
 				return m_storeName;
 			}
 
-			virtual [[nodiscard]] std::vector<Certificate> GetAll() const
+			[[nodiscard]] std::vector<Certificate> GetAll() const
 			{
 				if (!m_certStore)
 					throw Error::Boring32Error("m_certStore is null");
@@ -178,7 +178,7 @@ export namespace Boring32::Crypto
 				return results;
 			}
 
-			virtual [[nodiscard]] Certificate GetCertByFormattedSubject(
+			[[nodiscard]] Certificate GetCertByFormattedSubject(
 				const std::wstring& subjectRdn
 			) const
 			{
@@ -203,7 +203,7 @@ export namespace Boring32::Crypto
 				return {};
 			}
 
-			virtual [[nodiscard]] Certificate GetCertBySubjectCn(
+			[[nodiscard]] Certificate GetCertBySubjectCn(
 				const std::wstring& subjectCn
 			) const
 			{
@@ -228,14 +228,14 @@ export namespace Boring32::Crypto
 				return {};
 			}
 
-			virtual [[nodiscard]] Certificate GetCertBySubstringSubject(
+			[[nodiscard]] Certificate GetCertBySubstringSubject(
 				const std::wstring& subjectName
 			) const
 			{
 				return { GetCertByArg(CERT_FIND_SUBJECT_STR, subjectName.c_str()), true };
 			}
 
-			virtual [[nodiscard]] Certificate GetCertByExactSubject(
+			[[nodiscard]] Certificate GetCertByExactSubject(
 				const std::wstring& subjectName
 			) const
 			{
@@ -247,7 +247,7 @@ export namespace Boring32::Crypto
 				return { GetCertByArg(CERT_FIND_SUBJECT_NAME, &blob), true };
 			}
 
-			virtual [[nodiscard]] Certificate GetCertByExactSubject(
+			[[nodiscard]] Certificate GetCertByExactSubject(
 				const std::vector<std::byte>& subjectName
 			) const
 			{
@@ -258,7 +258,7 @@ export namespace Boring32::Crypto
 				return { GetCertByArg(CERT_FIND_SUBJECT_NAME, &blob), true };
 			}
 
-			virtual [[nodiscard]] Certificate GetCertByExactIssuer(
+			[[nodiscard]] Certificate GetCertByExactIssuer(
 				const std::wstring& subjectName
 			) const
 			{
@@ -270,14 +270,14 @@ export namespace Boring32::Crypto
 				return { GetCertByArg(CERT_FIND_ISSUER_NAME, &blob), true };
 			}
 
-			virtual [[nodiscard]] Certificate GetCertBySubstringIssuerName(
+			[[nodiscard]] Certificate GetCertBySubstringIssuerName(
 				const std::wstring& issuerName
 			) const
 			{
 				return { GetCertByArg(CERT_FIND_ISSUER_STR, issuerName.c_str()), true };
 			}
 
-			virtual [[nodiscard]] Certificate GetCertByByBase64Signature(
+			[[nodiscard]] Certificate GetCertByByBase64Signature(
 				const std::wstring& base64Signature
 			) const
 			{
@@ -289,7 +289,7 @@ export namespace Boring32::Crypto
 				return { GetCertByArg(CERT_FIND_SIGNATURE_HASH, &blob), true };
 			}
 
-			virtual [[nodiscard]] CertStoreType GetStoreType() const noexcept
+			[[nodiscard]] CertStoreType GetStoreType() const noexcept
 			{
 				return m_storeType;
 			}
@@ -297,7 +297,7 @@ export namespace Boring32::Crypto
 			// Note that this function frees the cert. Increase the
 			// cert's reference count if this is not the wanted
 			// behaviour.
-			virtual void DeleteCert(const CERT_CONTEXT* cert)
+			void DeleteCert(const CERT_CONTEXT* cert)
 			{
 				if (!cert)
 					throw Error::Boring32Error("cert is nullptr");
@@ -315,7 +315,7 @@ export namespace Boring32::Crypto
 				}
 			}
 
-			virtual void ImportCert(const CERT_CONTEXT* cert)
+			void ImportCert(const CERT_CONTEXT* cert)
 			{
 				if (!m_certStore)
 					throw Error::Boring32Error("m_certStore is nullptr");
@@ -333,7 +333,7 @@ export namespace Boring32::Crypto
 				ImportCertToStore(m_certStore, info);
 			}
 
-			virtual void ImportCertsFromFile(
+			void ImportCertsFromFile(
 				const std::filesystem::path& path, 
 				const std::wstring& password
 			)
@@ -352,7 +352,7 @@ export namespace Boring32::Crypto
 				ImportCertToStore(m_certStore, info);
 			}
 
-			virtual void AddCertificate(const CERT_CONTEXT* cert)
+			void AddCertificate(const CERT_CONTEXT* cert)
 			{
 				if (!cert)
 					throw Error::Boring32Error("cert is null");
@@ -377,8 +377,8 @@ export namespace Boring32::Crypto
 		public:
 			//virtual Certificate GetCertByExactSubjectRdn(const std::string& subjectName);
 
-		protected:
-			virtual CertStore& Copy(const CertStore& other)
+		private:
+			CertStore& Copy(const CertStore& other)
 			{
 				if (this == &other)
 					return *this;
@@ -392,7 +392,7 @@ export namespace Boring32::Crypto
 				return *this;
 			}
 
-			virtual CertStore& Move(CertStore& other) noexcept
+			CertStore& Move(CertStore& other) noexcept
 			{
 				if (this == &other)
 					return *this;
@@ -409,7 +409,7 @@ export namespace Boring32::Crypto
 				return *this;
 			}
 
-			virtual void InternalOpen()
+			void InternalOpen()
 			{
 				if (m_storeType != CertStoreType::InMemory && m_storeName.empty())
 					throw Error::Boring32Error("m_storeName is required for non-memory stores");
@@ -459,7 +459,7 @@ export namespace Boring32::Crypto
 				}
 			}
 
-			virtual PCCERT_CONTEXT GetCertByArg(
+			PCCERT_CONTEXT GetCertByArg(
 				const DWORD searchFlag, 
 				const void* arg
 			) const
@@ -482,7 +482,7 @@ export namespace Boring32::Crypto
 				return certContext;
 			}
 
-		protected:
+		private:
 			HCERTSTORE m_certStore = nullptr;
 			std::wstring m_storeName;
 			CertStoreCloseOptions m_closeOptions = CertStoreCloseOptions::Default;
