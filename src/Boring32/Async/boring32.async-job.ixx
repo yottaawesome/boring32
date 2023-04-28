@@ -6,11 +6,11 @@ import boring32.error;
 
 export namespace Boring32::Async
 {
-	class Job
+	class Job final
 	{
 		// Constructors and destructor
 		public:
-			virtual ~Job() = default;
+			~Job() = default;
 
 			Job() = default;
 
@@ -36,12 +36,12 @@ export namespace Boring32::Async
 			}
 
 		public:
-			virtual Job& operator=(const Job& other) = default;
-			virtual Job& operator=(Job&& other) noexcept = default;
+			Job& operator=(const Job& other) = default;
+			Job& operator=(Job&& other) noexcept = default;
 
 		// API
 		public:
-			virtual void SetInformation(JOBOBJECT_EXTENDED_LIMIT_INFORMATION& jeli)
+			void SetInformation(JOBOBJECT_EXTENDED_LIMIT_INFORMATION& jeli)
 			{
 				// See https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_basic_limit_information
 				// jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
@@ -62,7 +62,7 @@ export namespace Boring32::Async
 				}
 			}
 
-			virtual void AssignProcessToThisJob(const HANDLE process)
+			void AssignProcessToThisJob(const HANDLE process)
 			{
 				if (!m_job)
 					throw Error::Boring32Error("Cannot assign process to job; job is not initialised");
@@ -79,28 +79,28 @@ export namespace Boring32::Async
 				}
 			}
 
-			virtual HANDLE GetHandle() const noexcept
+			HANDLE GetHandle() const noexcept
 			{
 				return m_job.GetHandle();
 			}
 
-			virtual const std::wstring& GetName() const noexcept
+			const std::wstring& GetName() const noexcept
 			{
 				return m_name;
 			}
 
-			virtual void Close()
+			void Close()
 			{
 				m_job = nullptr;
 			}
 
-			virtual bool IsInheritable() const noexcept
+			bool IsInheritable() const noexcept
 			{
 				return m_job.IsInheritable();
 			}
 
-		protected:
-			virtual void Create(const bool isInheritable)
+		private:
+			void Create(const bool isInheritable)
 			{
 				m_job = CreateJobObjectW(
 					nullptr,
@@ -117,7 +117,7 @@ export namespace Boring32::Async
 				m_job.SetInheritability(isInheritable);
 			}
 
-			virtual void Open(const bool isInheritable)
+			void Open(const bool isInheritable)
 			{
 				m_job = OpenJobObjectW(
 					JOB_OBJECT_ALL_ACCESS,
@@ -134,7 +134,7 @@ export namespace Boring32::Async
 				}
 			}
 
-		protected:
+		private:
 			RAII::Win32Handle m_job;
 			std::wstring m_name;
 	};
