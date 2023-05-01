@@ -1,6 +1,7 @@
 export module boring32.crypto:securestring;
 import <string>;
 import <vector>;
+import <algorithm>; // for std::fill()
 import <win32.hpp>;
 import boring32.error;
 
@@ -23,6 +24,25 @@ export namespace Boring32::Crypto
 
 			SecureString() = default;
 
+			SecureString(const SecureString& other)
+			{
+				Copy(other);
+			}
+			SecureString& operator=(const SecureString& other)
+			{
+				return Copy(other);
+			}
+
+			SecureString(SecureString&& other) noexcept
+			{
+				Move(other);
+			}
+			SecureString& operator=(SecureString&& other) noexcept
+			{
+				return Move(other);
+			}
+
+		public:
 			SecureString(const std::wstring& value)
 			{
 				SetValueAndEncrypt(value);
@@ -61,10 +81,10 @@ export namespace Boring32::Crypto
 				// decrypt. Strictly speaking, keeping this data
 				// violates Shannon's perfect secrecy rule on encrypted 
 				// data, but we can live with it
-				m_characters = (DWORD)value.size();
+				m_characters = static_cast<DWORD>(value.size());
 
 				// Figure out if we need to align to the encryption block size
-				const DWORD bytesOfPlainData = (DWORD)value.size() * sizeof(wchar_t);
+				const DWORD bytesOfPlainData = static_cast<DWORD>(value.size() * sizeof(wchar_t));
 				const DWORD bytesModBlock = bytesOfPlainData % CRYPTPROTECTMEMORY_BLOCK_SIZE;
 				const DWORD bytesOfEncryptedData = bytesModBlock
 					? bytesOfPlainData + CRYPTPROTECTMEMORY_BLOCK_SIZE - bytesModBlock
@@ -113,7 +133,7 @@ export namespace Boring32::Crypto
 
 			bool HasData() const noexcept
 			{
-				return m_protectedString.empty() == false;
+				return !m_protectedString.empty();
 			}
 
 			void Encrypt()
@@ -121,38 +141,68 @@ export namespace Boring32::Crypto
 				if (m_isEncrypted)
 					return;
 				if (m_protectedString.empty())
-					throw Error::Boring32Error("Nothing to decrypt");
+					throw Error::Boring32Error("Nothing to encrypt");
 
 				const bool succeeded = CryptProtectMemory(
-					(void*)&m_protectedString[0],
-					(DWORD)m_protectedString.size() * sizeof(wchar_t),
-					(DWORD)m_encryptionType
+					reinterpret_cast<void*>(&m_protectedString[0]),
+					static_cast<DWORD>(m_protectedString.size() * sizeof(wchar_t)),
+					static_cast<DWORD>(m_encryptionType)
 				);
-				if (succeeded == false)
-					throw Error::Win32Error("CryptProtectMemory() failed", GetLastError());
+				if (!succeeded)
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("CryptProtectMemory() failed", lastError);
+				}
 				m_isEncrypted = true;
 			}
 
 			void Decrypt()
 			{
-				if (m_isEncrypted == false)
+				if (!m_isEncrypted)
 					return;
 				if (m_protectedString.empty())
 					throw Error::Boring32Error("Nothing to decrypt");
 
 				const bool succeeded = CryptUnprotectMemory(
-					(void*)&m_protectedString[0],
-					(DWORD)m_protectedString.size() * sizeof(wchar_t),
-					(DWORD)m_encryptionType
+					reinterpret_cast<void*>(&m_protectedString[0]),
+					static_cast<DWORD>(m_protectedString.size() * sizeof(wchar_t)),
+					static_cast<DWORD>(m_encryptionType)
 				);
-				if (succeeded == false)
-					throw Error::Win32Error("CryptUnprotectMemory() failed", GetLastError());
+				if (!succeeded)
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("CryptUnprotectMemory() failed", lastError);
+				}
 				m_isEncrypted = false;
 			}
 
 			bool IsCurrentlyEncrypted() const noexcept
 			{
 				return m_isEncrypted;
+			}
+
+		private:
+			SecureString& Copy(const SecureString& other) noexcept
+			{
+				Clear();
+				m_encryptionType = other.m_encryptionType;
+				m_characters = other.m_characters;
+				m_protectedString = other.m_protectedString;
+				m_isEncrypted = other.m_isEncrypted;
+				return *this;
+			}
+
+			SecureString& Move(SecureString& other) noexcept
+			{
+				Clear();
+				m_encryptionType = other.m_encryptionType;
+				m_characters = other.m_characters;
+				m_protectedString = std::move(other.m_protectedString);
+				m_isEncrypted = other.m_isEncrypted;
+
+				other.m_characters = 0;
+				other.m_isEncrypted = false;
+				return *this;
 			}
 
 		private:
