@@ -168,9 +168,20 @@ export namespace Boring32::Crypto
 				std::vector<Certificate> results;
 				PCCERT_CONTEXT currentCert = nullptr;
 				// The cert is automatically freed by the next call to CertEnumCertificatesInStore
+				// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certenumcertificatesinstore
 				while (currentCert = CertEnumCertificatesInStore(m_certStore, currentCert))
+				{
+					// I'm not sure if this intermediate error check is necessary.
+					// The MSDN sample doesn't do an error check, but I've added it
+					// just in case.
+					const DWORD lastError = GetLastError();
+					if (lastError != ERROR_FILE_NOT_FOUND)
+						throw Error::Win32Error(
+							"CertEnumCertificatesInStore() failed", 
+							lastError
+						);
 					results.emplace_back(currentCert, false);
-
+				}
 				const DWORD lastError = GetLastError();
 				if (lastError != CRYPT_E_NOT_FOUND && lastError != ERROR_NO_MORE_FILES)
 					throw Error::Win32Error("CertEnumCertificatesInStore() failed", lastError);
@@ -391,6 +402,49 @@ export namespace Boring32::Crypto
 					searchFlag,
 					arg
 				);
+			}
+
+			std::wstring GetLocalisedName() const
+			{
+				if (!m_certStore)
+					throw Error::Boring32Error("m_certStore is nullptr");
+
+				DWORD bytes = 0;
+				bool succeeded = CertGetStoreProperty(
+					m_certStore,
+					CERT_STORE_LOCALIZED_NAME_PROP_ID,
+					nullptr,
+					&bytes
+				);
+				if (!succeeded)
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error(
+						"CertGetStoreProperty() failed",
+						lastError
+					);
+				}
+
+				std::wstring returnValue(bytes / sizeof(wchar_t), '\0');
+				succeeded = CertGetStoreProperty(
+					m_certStore,
+					CERT_STORE_LOCALIZED_NAME_PROP_ID,
+					&returnValue[0],
+					&bytes
+				);
+				if (!succeeded)
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error(
+						"CertGetStoreProperty() failed",
+						lastError
+					);
+				}
+				returnValue.resize(bytes / sizeof(wchar_t));
+				if (returnValue.ends_with('\0'))
+					returnValue.pop_back();
+
+				return returnValue;
 			}
 
 		public:

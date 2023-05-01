@@ -73,5 +73,13 @@ namespace Crypto
 				cert1.Close();
 				Assert::IsNull(cert1.GetCert());
 			}
+
+			// Surpisingly errors with CRYPT_E_NOT_FOUND
+			/*TEST_METHOD(TestGetLocalisedName)
+			{
+				Boring32::Crypto::CertStore certStore(L"MY");
+				std::wstring localisedName = certStore.GetLocalisedName();
+				Assert::IsFalse(localisedName.empty());
+			}*/
 	};
 }
