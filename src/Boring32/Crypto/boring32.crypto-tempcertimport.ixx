@@ -10,30 +10,31 @@ export namespace Boring32::Crypto
 	class TempCertImport
 	{
 		public:
-			virtual ~TempCertImport()
+			~TempCertImport()
 			{
-				try
-				{
-					Certificate certToDelete = m_store.GetCertByByBase64Signature(m_thumbprint);
-					m_store.DeleteCert(certToDelete.GetCert());
-				}
-				catch (const std::exception& ex)
-				{
-					std::wcerr
-						<< "Failed to delete temp cert: "
-						<< ex.what();
-				}
+				Close();
 			}
 				
 			TempCertImport(CertStore& store, Certificate& toImport)
-				: m_store(store)
+				: m_store(store), m_cert(toImport)
 			{
-				m_store.ImportCert(toImport.GetCert());
-				m_thumbprint = toImport.GetSignature();
+				m_store.AddCertificate(toImport.GetCert());
 			}
 
-		protected:
+		public:
+			void Close() noexcept try
+			{
+				m_store.DeleteCert(m_cert.GetCert());
+			}
+			catch (const std::exception& ex)
+			{
+				std::wcerr
+					<< "Failed to delete temp cert: "
+					<< ex.what();
+			}
+
+		private:
 			CertStore m_store;
-			std::wstring m_thumbprint;
+			Certificate m_cert;
 	};
 }
