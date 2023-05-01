@@ -376,6 +376,9 @@ export namespace Boring32::Crypto
 					throw Error::Boring32Error("cert is null");
 				if (!m_certStore)
 					throw Error::Boring32Error("m_certStore is nullptr");
+
+				// TODO add dispositions as an argument
+				// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certaddcertificatecontexttostore
 				const bool succeeded = CertAddCertificateContextToStore(
 					m_certStore,
 					cert,
