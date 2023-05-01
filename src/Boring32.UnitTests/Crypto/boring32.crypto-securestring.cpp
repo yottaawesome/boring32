@@ -14,7 +14,7 @@ namespace Crypto
 				secureString.SetValueAndEncrypt(L"TEST VALUE");
 
 				std::wstring out;
-				secureString.DecryptAndCopy(out);
+				secureString.DecryptCopyAndReencrypt(out);
 				Assert::IsTrue(out == L"TEST VALUE");
 			}
 
@@ -25,6 +25,13 @@ namespace Crypto
 
 				std::wstring result = (std::wstring)secureString;
 				Assert::IsTrue(result == L"TEST VALUE");
+			}
+
+			TEST_METHOD(TestEquals)
+			{
+				Boring32::Crypto::SecureString secureString;
+				secureString.SetValueAndEncrypt(L"TEST VALUE");
+				Assert::IsTrue(secureString == L"TEST VALUE");
 			}
 	};
 }

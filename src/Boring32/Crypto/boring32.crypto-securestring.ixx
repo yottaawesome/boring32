@@ -104,7 +104,7 @@ export namespace Boring32::Crypto
 			explicit operator std::wstring()
 			{
 				std::wstring out;
-				DecryptAndCopy(out);
+				DecryptCopyAndReencrypt(out);
 				return out;
 			}
 
@@ -116,9 +116,9 @@ export namespace Boring32::Crypto
 
 			bool operator==(const std::wstring& comparison)
 			{
-				Decrypt();
-				const bool comp = m_protectedString == comparison;
-				Encrypt();
+				ScopedString s;
+				DecryptCopyAndReencrypt(s.Value);
+				const bool comp = s.Value == comparison;
 				return comp;
 			}
 
@@ -154,7 +154,7 @@ export namespace Boring32::Crypto
 				Encrypt();
 			}
 
-			void DecryptAndCopy(std::wstring& value)
+			void DecryptCopyAndReencrypt(std::wstring& value)
 			{
 				// https://docs.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptunprotectmemory
 				// De-encrypt
@@ -175,9 +175,8 @@ export namespace Boring32::Crypto
 
 			ScopedString ToScopedString()
 			{
-				Decrypt();
-				ScopedString copy = m_protectedString;
-				Encrypt();
+				ScopedString copy;
+				DecryptCopyAndReencrypt(copy.Value);
 				return copy;
 			}
 
