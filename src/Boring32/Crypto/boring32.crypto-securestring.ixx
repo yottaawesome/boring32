@@ -114,6 +114,14 @@ export namespace Boring32::Crypto
 				return *this;
 			}
 
+			bool operator==(const std::wstring& comparison)
+			{
+				Decrypt();
+				const bool comp = m_protectedString == comparison;
+				Encrypt();
+				return comp;
+			}
+
 		public:
 			void SetValueAndEncrypt(const std::wstring& value)
 			{
