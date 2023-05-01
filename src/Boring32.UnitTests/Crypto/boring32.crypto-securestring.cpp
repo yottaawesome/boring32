@@ -41,5 +41,13 @@ namespace Crypto
 				Boring32::Crypto::SecureString secureString2(secureString1);
 				Assert::IsTrue(secureString1 == secureString2);
 			}
+
+			TEST_METHOD(TestCopyAssignment)
+			{
+				Boring32::Crypto::SecureString secureString1;
+				secureString1.SetValueAndEncrypt(L"TEST VALUE");
+				Boring32::Crypto::SecureString secureString2 = secureString1;
+				Assert::IsTrue(secureString1 == secureString2);
+			}
 	};
 }
