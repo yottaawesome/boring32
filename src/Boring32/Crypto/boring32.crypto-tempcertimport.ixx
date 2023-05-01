@@ -15,10 +15,13 @@ export namespace Boring32::Crypto
 				Close();
 			}
 				
-			TempCertImport(CertStore& store, Certificate& toImport)
-				: m_store(store), m_cert(toImport)
+			TempCertImport(
+				CertStore& store, 
+				Certificate& toImport, 
+				const CertAddDisposition disposition = CertAddDisposition::AddNewer
+			) : m_store(store), m_cert(toImport)
 			{
-				m_store.AddCertificate(toImport.GetCert());
+				m_store.AddCertificate(toImport.GetCert(), disposition);
 			}
 
 		public:

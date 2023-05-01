@@ -541,7 +541,7 @@ void TestCertFileImport()
 		Boring32::Crypto::CertStoreType::CurrentUser
 	);
 	//root.ImportCert(rootCa.GetCert());
-	root.AddCertificate(rootCa.GetCert());
+	root.AddCertificate(rootCa.GetCert(), Boring32::Crypto::CertAddDisposition::AddNewer);
 	std::wcout << L"Finished successfully" << std::endl;
 }
 

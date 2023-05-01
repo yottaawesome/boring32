@@ -17,6 +17,17 @@ import boring32.error;
 
 export namespace Boring32::Crypto
 {
+	enum class CertAddDisposition : DWORD
+	{
+		AddAlways = CERT_STORE_ADD_ALWAYS,
+		AddNew = CERT_STORE_ADD_NEW,
+		AddNewer = CERT_STORE_ADD_NEWER,
+		AddNewerInheritProperties = CERT_STORE_ADD_NEWER_INHERIT_PROPERTIES,
+		ReplaceExisting = CERT_STORE_ADD_REPLACE_EXISTING,
+		ReplaceExistingInheritProperties = CERT_STORE_ADD_REPLACE_EXISTING_INHERIT_PROPERTIES,
+		AddUseExisting = CERT_STORE_ADD_USE_EXISTING
+	};
+
 	enum class CertStoreCloseOptions : DWORD
 	{
 		Default = 0,
@@ -370,19 +381,18 @@ export namespace Boring32::Crypto
 				ImportCertToStore(m_certStore, info);
 			}
 
-			void AddCertificate(const CERT_CONTEXT* cert)
+			void AddCertificate(const CERT_CONTEXT* cert, const CertAddDisposition disposition)
 			{
 				if (!cert)
 					throw Error::Boring32Error("cert is null");
 				if (!m_certStore)
 					throw Error::Boring32Error("m_certStore is nullptr");
 
-				// TODO add dispositions as an argument
 				// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certaddcertificatecontexttostore
 				const bool succeeded = CertAddCertificateContextToStore(
 					m_certStore,
 					cert,
-					CERT_STORE_ADD_REPLACE_EXISTING,
+					static_cast<DWORD>(disposition),
 					nullptr
 				);
 				if (!succeeded)
