@@ -3,7 +3,6 @@ import <string>;
 import <vector>;
 import <win32.hpp>;
 import boring32.error;
-import <algorithm>;
 
 export namespace Boring32::Crypto
 {
@@ -14,10 +13,10 @@ export namespace Boring32::Crypto
 		SameLogon = CRYPTPROTECTMEMORY_SAME_LOGON
 	};
 
-	class SecureString
+	class SecureString final
 	{
 		public:
-			virtual ~SecureString()
+			~SecureString()
 			{
 				Clear();
 			}
@@ -35,26 +34,26 @@ export namespace Boring32::Crypto
 			}
 
 		public:
-			virtual operator bool() const noexcept
+			operator bool() const noexcept
 			{
 				return m_isEncrypted;
 			}
 
-			virtual explicit operator std::wstring()
+			explicit operator std::wstring()
 			{
 				std::wstring out;
 				DecryptAndCopy(out);
 				return out;
 			}
 
-			virtual SecureString& operator=(const std::wstring& newValue)
+			SecureString& operator=(const std::wstring& newValue)
 			{
 				SetValueAndEncrypt(newValue);
 				return *this;
 			}
 
 		public:
-			virtual void SetValueAndEncrypt(const std::wstring& value)
+			void SetValueAndEncrypt(const std::wstring& value)
 			{
 				Clear();
 
@@ -85,7 +84,7 @@ export namespace Boring32::Crypto
 				Encrypt();
 			}
 
-			virtual void DecryptAndCopy(std::wstring& value)
+			void DecryptAndCopy(std::wstring& value)
 			{
 				// https://docs.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptunprotectmemory
 				// De-encrypt
@@ -99,12 +98,12 @@ export namespace Boring32::Crypto
 				Encrypt();
 			}
 
-			virtual const std::wstring& GetValue() const
+			const std::wstring& GetValue() const
 			{
 				return m_protectedString;
 			}
 
-			virtual void Clear()
+			void Clear()
 			{
 				std::fill(m_protectedString.begin(), m_protectedString.end(), '\0');
 				m_protectedString.clear();
@@ -112,12 +111,12 @@ export namespace Boring32::Crypto
 				m_isEncrypted = false;
 			}
 
-			virtual bool HasData() const noexcept
+			bool HasData() const noexcept
 			{
 				return m_protectedString.empty() == false;
 			}
 
-			virtual void Encrypt()
+			void Encrypt()
 			{
 				if (m_isEncrypted)
 					return;
@@ -134,7 +133,7 @@ export namespace Boring32::Crypto
 				m_isEncrypted = true;
 			}
 
-			virtual void Decrypt()
+			void Decrypt()
 			{
 				if (m_isEncrypted == false)
 					return;
@@ -151,12 +150,12 @@ export namespace Boring32::Crypto
 				m_isEncrypted = false;
 			}
 
-			virtual bool IsCurrentlyEncrypted() const noexcept
+			bool IsCurrentlyEncrypted() const noexcept
 			{
 				return m_isEncrypted;
 			}
 
-		protected:
+		private:
 			EncryptionType m_encryptionType = EncryptionType::SameProcess;
 			DWORD m_characters = 0;
 			std::wstring m_protectedString;
