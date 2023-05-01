@@ -14,6 +14,52 @@ export namespace Boring32::Crypto
 		SameLogon = CRYPTPROTECTMEMORY_SAME_LOGON
 	};
 
+	class ScopedString final
+	{
+		public:
+			~ScopedString()
+			{
+				Clear();
+			}
+
+			ScopedString() = default;
+
+			ScopedString(const ScopedString& other) = default;
+			ScopedString& operator=(const ScopedString& other)
+			{
+				Clear();
+				Value = other.Value;
+				return *this;
+			}
+
+			ScopedString(ScopedString&& other) noexcept = default;
+			ScopedString& operator=(ScopedString&& other) noexcept
+			{
+				Clear();
+				Value = std::move(other.Value);
+				return *this;
+			}
+
+		public:
+			ScopedString(const std::wstring& value)
+				: Value(value)
+			{ }
+
+			ScopedString(std::wstring&& value)
+				: Value(value)
+			{ }
+
+		public:
+			void Clear()
+			{
+				std::fill(Value.begin(), Value.end(), '\0');
+				Value.clear();
+			}
+
+		public:
+			std::wstring Value;
+	};
+
 	class SecureString final
 	{
 		public:
@@ -24,19 +70,15 @@ export namespace Boring32::Crypto
 
 			SecureString() = default;
 
-			SecureString(const SecureString& other)
-			{
-				Copy(other);
-			}
+			SecureString(const SecureString& other) = default;
+
 			SecureString& operator=(const SecureString& other)
 			{
 				return Copy(other);
 			}
 
-			SecureString(SecureString&& other) noexcept
-			{
-				Move(other);
-			}
+			SecureString(SecureString&& other) noexcept = default;
+
 			SecureString& operator=(SecureString&& other) noexcept
 			{
 				return Move(other);
@@ -121,6 +163,14 @@ export namespace Boring32::Crypto
 			const std::wstring& GetValue() const
 			{
 				return m_protectedString;
+			}
+
+			ScopedString ToScopedString()
+			{
+				Decrypt();
+				ScopedString copy = m_protectedString;
+				Encrypt();
+				return copy;
 			}
 
 			void Clear()
