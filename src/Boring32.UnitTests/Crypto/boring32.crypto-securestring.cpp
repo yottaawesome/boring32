@@ -58,5 +58,14 @@ namespace Crypto
 				Assert::IsFalse(secureString1.HasData());
 				Assert::IsTrue(secureString2 == L"TEST VALUE");
 			}
+
+			TEST_METHOD(TestMoveAssignment)
+			{
+				Boring32::Crypto::SecureString secureString1;
+				secureString1.SetValueAndEncrypt(L"TEST VALUE");
+				Boring32::Crypto::SecureString secureString2 = std::move(secureString1);
+				Assert::IsFalse(secureString1.HasData());
+				Assert::IsTrue(secureString2 == L"TEST VALUE");
+			}
 	};
 }
