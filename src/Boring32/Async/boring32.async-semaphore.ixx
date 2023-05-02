@@ -8,10 +8,10 @@ import boring32.raii;
 
 export namespace Boring32::Async
 {
-	class Semaphore
+	class Semaphore final
 	{
 		public:
-			virtual ~Semaphore() = default;
+			~Semaphore() = default;
 			Semaphore() = default;
 			Semaphore(const Semaphore& other) = default;
 			Semaphore(Semaphore&& other) noexcept = default;
@@ -63,26 +63,26 @@ export namespace Boring32::Async
 			}
 			
 		public:
-			virtual Semaphore& operator=(const Semaphore& other) = default;
-			virtual Semaphore& operator=(Semaphore&& other) noexcept = default;
-			virtual operator bool() const noexcept
+			Semaphore& operator=(const Semaphore& other) = default;
+			Semaphore& operator=(Semaphore&& other) noexcept = default;
+			operator bool() const noexcept
 			{
 				return m_handle != nullptr;
 			}
 
 		public:
-			virtual void Close()
+			void Close()
 			{
 				m_handle = nullptr;
 				m_name.clear();
 			}
 
-			virtual void Release()
+			void Release()
 			{
 				Release(1);
 			}
 
-			virtual void Release(const long countToRelease)
+			void Release(const long countToRelease)
 			{
 				if (countToRelease == 0)
 					return;
@@ -97,17 +97,17 @@ export namespace Boring32::Async
 				}
 			}
 
-			virtual bool Acquire()
+			bool Acquire()
 			{
 				return Acquire(INFINITE, false);
 			}
 
-			virtual bool Acquire(const unsigned long millisTimeout)
+			bool Acquire(const unsigned long millisTimeout)
 			{
 				return Acquire(millisTimeout, false);
 			}
 
-			virtual bool AcquireMany(
+			bool AcquireMany(
 				const long countToAcquire, 
 				const unsigned long millisTimeout
 			)
@@ -129,7 +129,7 @@ export namespace Boring32::Async
 				return true;
 			}
 
-			virtual bool Acquire(const unsigned long millisTimeout, const bool isAlertable)
+			bool Acquire(const unsigned long millisTimeout, const bool isAlertable)
 			{
 				if (!m_handle)
 					throw Error::Boring32Error("m_handle is nullptr.");
@@ -141,47 +141,47 @@ export namespace Boring32::Async
 				);
 				switch (status)
 				{
-				case WAIT_OBJECT_0:
-					return true;
+					case WAIT_OBJECT_0:
+						return true;
 
-				case WAIT_TIMEOUT:
-					return false;
+					case WAIT_TIMEOUT:
+						return false;
 
-				case WAIT_ABANDONED:
-					throw Error::Boring32Error("The wait was abandoned.");
+					case WAIT_ABANDONED:
+						throw Error::Boring32Error("The wait was abandoned.");
 
-				case WAIT_FAILED:
-				{
-					const auto lastError = GetLastError();
-					throw Error::Win32Error("WaitForSingleObject() failed", lastError);
-				}
+					case WAIT_FAILED:
+					{
+						const auto lastError = GetLastError();
+						throw Error::Win32Error("WaitForSingleObject() failed", lastError);
+					}
 
-				default:
-					throw Error::Boring32Error(
-						"Unknown WaitForSingleObjectEx() value {}",
-						std::source_location::current(),
-						status
-					);
+					default:
+						throw Error::Boring32Error(
+							"Unknown WaitForSingleObjectEx() value {}",
+							std::source_location::current(),
+							status
+						);
 				}
 			}
 
-			virtual const std::wstring& GetName() const noexcept final
+			const std::wstring& GetName() const noexcept
 			{
 				return m_name;
 			}
 
-			virtual long GetMaxCount() const noexcept final
+			long GetMaxCount() const noexcept
 			{
 				return m_maxCount;
 			}
 
-			virtual HANDLE GetHandle() const noexcept final
+			HANDLE GetHandle() const noexcept
 			{
 				return m_handle.GetHandle();
 			}
 
-		protected:
-			virtual void InternalCreate(
+		private:
+			void InternalCreate(
 				const std::wstring& name,
 				const unsigned long initialCount,
 				const unsigned long maxCount,
@@ -210,7 +210,7 @@ export namespace Boring32::Async
 				m_handle.SetInheritability(isInheritable);
 			}
 
-		protected:
+		private:
 			RAII::Win32Handle m_handle;
 			std::wstring m_name;
 			long m_maxCount = 0;
