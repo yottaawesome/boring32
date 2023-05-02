@@ -30,3 +30,5 @@ import <optional>;
 import <tuple>;
 import <future>;
 import <ostream>;
+import <stacktrace>;
+import <ranges>;

@@ -45,6 +45,7 @@ export namespace Boring32::Crypto
 
 	class CertStore final
 	{
+		// The Six
 		public:
 			~CertStore()
 			{
@@ -58,10 +59,20 @@ export namespace Boring32::Crypto
 				Copy(other);
 			}
 
+			CertStore& operator=(const CertStore& other)
+			{
+				return Copy(other);
+			}
+
 			CertStore(CertStore&& other) noexcept
 				: m_certStore(nullptr)
 			{
 				Move(other);
+			}
+
+			CertStore& operator=(CertStore&& other) noexcept
+			{
+				return Move(other);
 			}
 		
 		public:
@@ -124,16 +135,6 @@ export namespace Boring32::Crypto
 			}
 
 		public:
-			CertStore& operator=(const CertStore& other)
-			{
-				return Copy(other);
-			}
-
-			CertStore& operator=(CertStore&& other) noexcept
-			{
-				return Move(other);
-			}
-
 			bool operator==(const CertStore& other) const noexcept
 			{
 				return m_certStore == other.m_certStore;
@@ -270,8 +271,8 @@ export namespace Boring32::Crypto
 			{
 				std::vector<std::byte> encodedBytes = EncodeAsnString(subjectName);
 				const CERT_NAME_BLOB blob{
-					.cbData = (DWORD)encodedBytes.size(),
-					.pbData = (BYTE*)&encodedBytes[0]
+					.cbData = static_cast<DWORD>(encodedBytes.size()),
+					.pbData = reinterpret_cast<BYTE*>(&encodedBytes[0])
 				};
 				return { GetCertByArg(StoreFindType::SubjectName, &blob), true };
 			}
@@ -281,8 +282,8 @@ export namespace Boring32::Crypto
 			) const
 			{
 				CERT_NAME_BLOB blob{
-					.cbData = (DWORD)subjectName.size(),
-					.pbData = (BYTE*)&subjectName[0]
+					.cbData = static_cast<DWORD>(subjectName.size()),
+					.pbData = reinterpret_cast<BYTE*>(const_cast<std::byte*>(&subjectName[0]))
 				};
 				return { GetCertByArg(StoreFindType::SubjectName, &blob), true };
 			}
@@ -293,8 +294,8 @@ export namespace Boring32::Crypto
 			{
 				std::vector<std::byte> encodedBytes = EncodeAsnString(subjectName);
 				const CERT_NAME_BLOB blob{
-					.cbData = (DWORD)encodedBytes.size(),
-					.pbData = (BYTE*)&encodedBytes[0]
+					.cbData = static_cast<DWORD>(encodedBytes.size()),
+					.pbData = reinterpret_cast<BYTE*>(&encodedBytes[0])
 				};
 				return { GetCertByArg(StoreFindType::IssuerName, &blob), true };
 			}
@@ -310,10 +311,10 @@ export namespace Boring32::Crypto
 				const std::wstring& base64Signature
 			) const
 			{
-				const std::vector<std::byte> bytes = ToBinary(base64Signature);
+				std::vector<std::byte> bytes = ToBinary(base64Signature);
 				const CRYPT_HASH_BLOB blob{
-					.cbData = (DWORD)bytes.size(),
-					.pbData = (BYTE*)&bytes[0]
+					.cbData = static_cast<DWORD>(bytes.size()),
+					.pbData = reinterpret_cast<BYTE*>(&bytes[0])
 				};
 				return { GetCertByArg(StoreFindType::SignatureHash, &blob), true };
 			}
@@ -502,40 +503,40 @@ export namespace Boring32::Crypto
 
 				switch (m_storeType)
 				{
-				case CertStoreType::CurrentUser:
-				{
-					// See https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopensystemstorew
-					// common store names: CA, MY, ROOT, SPC
-					m_certStore = CertOpenSystemStoreW(0, m_storeName.c_str());
-					break;
-				}
+					case CertStoreType::CurrentUser:
+					{
+						// See https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopensystemstorew
+						// common store names: CA, MY, ROOT, SPC
+						m_certStore = CertOpenSystemStoreW(0, m_storeName.c_str());
+						break;
+					}
 
-				case CertStoreType::System:
-				{
-					m_certStore = CertOpenStore(
-						CERT_STORE_PROV_SYSTEM_REGISTRY_W,
-						PKCS_7_ASN_ENCODING | X509_ASN_ENCODING,
-						0,
-						CERT_STORE_OPEN_EXISTING_FLAG | CERT_SYSTEM_STORE_LOCAL_MACHINE,
-						m_storeName.c_str()
-					);
-					break;
-				}
+					case CertStoreType::System:
+					{
+						m_certStore = CertOpenStore(
+							CERT_STORE_PROV_SYSTEM_REGISTRY_W,
+							PKCS_7_ASN_ENCODING | X509_ASN_ENCODING,
+							0,
+							CERT_STORE_OPEN_EXISTING_FLAG | CERT_SYSTEM_STORE_LOCAL_MACHINE,
+							m_storeName.c_str()
+						);
+						break;
+					}
 
-				case CertStoreType::InMemory:
-				{
-					m_certStore = CertOpenStore(
-						CERT_STORE_PROV_MEMORY,
-						PKCS_7_ASN_ENCODING | X509_ASN_ENCODING,
-						0,
-						CERT_SYSTEM_STORE_CURRENT_USER,
-						nullptr
-					);
-					break;
-				}
+					case CertStoreType::InMemory:
+					{
+						m_certStore = CertOpenStore(
+							CERT_STORE_PROV_MEMORY,
+							PKCS_7_ASN_ENCODING | X509_ASN_ENCODING,
+							0,
+							CERT_SYSTEM_STORE_CURRENT_USER,
+							nullptr
+						);
+						break;
+					}
 
-				default:
-					throw Error::Boring32Error("unknown m_storeType");
+					default:
+						throw Error::Boring32Error("unknown m_storeType");
 				}
 
 				if (!m_certStore)
