@@ -115,7 +115,6 @@ export namespace Boring32::COM
 				if (m_isSecurityInitialised != 1)
 				{
 					std::wcerr
-						<< L"__FUNCSIG__: "
 						<< L"An attempt to initialise COM security more than once for this process occurred. "
 						<< L"COM security can only be set once for the whole process, and cannot be changed. "
 						<< L"Ignoring..."
