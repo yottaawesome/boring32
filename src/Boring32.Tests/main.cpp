@@ -689,6 +689,8 @@ enum class SomeEnum : unsigned long
 
 int main(int argc, char** args) try
 {
+	SomeEnum x{};
+
 	Boring32::Util::Enum<SomeEnum> s;
 	bool u = s.IsValid(1);
 
