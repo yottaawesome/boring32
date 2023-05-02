@@ -44,7 +44,11 @@ export namespace Boring32::COM
 			///		is initialised.
 			/// </summary>
 			/// <param name="other">The ComThreadScope to copy from.</param>
-			COMThreadScope(const COMThreadScope& other);
+			COMThreadScope(const COMThreadScope& other)
+			{
+				Copy(other);
+			}
+
 			/// <summary>
 			///		Copy assignment. Copies the ComThreadScope's threading mode
 			///		and initialises COM for the current thread if ComThreadScope
