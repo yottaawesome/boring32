@@ -16,7 +16,10 @@ export namespace Boring32::Util
 	{
 		T::SentinelMin;
 	};
+}
 
+export namespace Boring32::Util
+{
 	template<typename T> requires std::is_enum_v<T>
 	class Enum final
 	{
