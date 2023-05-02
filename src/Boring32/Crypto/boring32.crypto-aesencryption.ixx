@@ -115,7 +115,7 @@ export namespace Boring32::Crypto
 				if (!m_algHandle)
 					throw Error::Boring32Error("Cipher algorithm not initialised");
 
-				const std::wstring& mode = ChainingModeString.at(cm);
+				const std::wstring& mode = ChainingModeToString(cm);
 				// https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptsetproperty
 				const NTSTATUS status = BCryptSetProperty(
 					m_algHandle,
