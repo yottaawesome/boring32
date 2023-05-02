@@ -214,6 +214,7 @@ export namespace Boring32::COM
 			bool m_isInitialised = false;
 			static std::atomic<unsigned> m_isSecurityInitialised;
 			DWORD m_comInitialisedThreadId = 0;
+			// https://learn.microsoft.com/en-us/windows/win32/api/objbase/ne-objbase-coinit
 			COINIT m_apartmentThreadingMode = COINIT_MULTITHREADED;
 	};
 
