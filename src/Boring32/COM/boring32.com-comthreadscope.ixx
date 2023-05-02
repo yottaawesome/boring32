@@ -9,13 +9,14 @@ export namespace Boring32::COM
 	/// <summary>
 	///		Represents a COM library lifetime scope for a thread.
 	/// </summary>
-	class COMThreadScope
+	class COMThreadScope final
 	{
+		// The Six
 		public:
 			/// <summary>
 			///		Internally calls Uninitialise().
 			/// </summary>
-			virtual ~COMThreadScope()
+			~COMThreadScope()
 			{
 				Uninitialise();
 			}
@@ -24,19 +25,6 @@ export namespace Boring32::COM
 			///		Default constructor. Does not initialise COM.
 			/// </summary>
 			COMThreadScope() = default;
-			
-			/// <summary>
-			///		Initialises COM for the creating thread with the specified
-			///		apartment threading mode.
-			/// </summary>
-			/// <param name="apartmentThreadingMode">The threading mode to initialise COM with.</param>
-			COMThreadScope(const COINIT apartmentThreadingMode)
-				: m_isInitialised(false),
-				m_comInitialisedThreadId(0),
-				m_apartmentThreadingMode(apartmentThreadingMode)
-			{
-				Initialise();
-			}
 
 			/// <summary>
 			///		Copy constructor. Copies the ComThreadScope's threading mode
@@ -55,11 +43,11 @@ export namespace Boring32::COM
 			///		is initialised.
 			/// </summary>
 			/// <param name="other">The ComThreadScope to copy from.</param>
-			virtual void operator=(const COMThreadScope& other)
+			void operator=(const COMThreadScope& other)
 			{
 				Copy(other);
 			}
-
+			
 			/// <summary>
 			///		Move constructor. Assumes the temporary's scope.
 			/// </summary>
@@ -71,11 +59,28 @@ export namespace Boring32::COM
 			/// <summary>
 			///		Move assignment. Assumes the temporary's scope.
 			/// </summary>
-			virtual void operator=(COMThreadScope&& other) noexcept
+			void operator=(COMThreadScope&& other) noexcept
 			{
 				Move(other);
 			}
-			
+
+		// Custom constructors
+		public:
+			/// <summary>
+			///		Initialises COM for the creating thread with the specified
+			///		apartment threading mode.
+			/// </summary>
+			/// <param name="apartmentThreadingMode">The threading mode to initialise COM with.</param>
+			COMThreadScope(const COINIT apartmentThreadingMode)
+				: m_isInitialised(false),
+				m_comInitialisedThreadId(0),
+				m_apartmentThreadingMode(apartmentThreadingMode)
+			{
+				Initialise();
+			}
+
+		// API
+		public:
 			/// <summary>
 			///		Initialises COM for the calling thread with the specified
 			///		apartment threading mode. If this object has already been
@@ -86,7 +91,7 @@ export namespace Boring32::COM
 			///		Thrown if this function fails to initialise COM or set the
 			///		COM security level.
 			/// </exception>
-			virtual void Initialise()
+			void Initialise()
 			{
 				if (m_isInitialised)
 					return;
@@ -104,7 +109,7 @@ export namespace Boring32::COM
 			///		Initialises general COM security levels. This can only
 			///		be called once.
 			/// </summary>
-			virtual void InitialiseSecurity()
+			void InitialiseSecurity()
 			{
 				m_isSecurityInitialised++;
 				if (m_isSecurityInitialised != 1)
@@ -143,7 +148,7 @@ export namespace Boring32::COM
 			///		Thrown if this function is called from a thread different
 			///		to the thread that initialised this object.
 			/// </exception>
-			virtual void Uninitialise()
+			void Uninitialise()
 			{
 				if (m_isInitialised == false)
 					return;
@@ -159,7 +164,7 @@ export namespace Boring32::COM
 			///		Returns whether this COM scope object has been initialised.
 			/// </summary>
 			/// <returns>A bool indicating whether this scope is active.</returns>
-			virtual bool IsInitialised() const noexcept
+			bool IsInitialised() const noexcept
 			{
 				return m_isInitialised;
 			}
@@ -168,7 +173,7 @@ export namespace Boring32::COM
 			///		Returns the thread ID that initialised this COM object scope.
 			/// </summary>
 			/// <returns>The thread ID that initialsed the COM scope.</returns>
-			virtual DWORD GetComInitialisedThreadId() const noexcept
+			DWORD GetComInitialisedThreadId() const noexcept
 			{
 				return m_comInitialisedThreadId;
 			}
@@ -178,12 +183,13 @@ export namespace Boring32::COM
 			///		this object.
 			/// </summary>
 			/// <returns>The current COM threading apartment mode </returns>
-			virtual COINIT GetApartmentThreadingMode() const noexcept
+			COINIT GetApartmentThreadingMode() const noexcept
 			{
 				return m_apartmentThreadingMode;
 			}
 
-		protected:
+		// Internal
+		private:
 			void Copy(const COMThreadScope& other)
 			{
 				Uninitialise();
@@ -205,7 +211,7 @@ export namespace Boring32::COM
 					other.m_isInitialised = false;
 			}
 
-		protected:
+		private:
 			bool m_isInitialised = false;
 			static std::atomic<unsigned> m_isSecurityInitialised;
 			DWORD m_comInitialisedThreadId = 0;
