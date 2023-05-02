@@ -679,8 +679,19 @@ void Run<Lum::One>(Lum v) {}
 template<>
 void Run<Lum::Two>(Lum v) {}
 
+
+enum class SomeEnum : unsigned long
+{
+	//SentinelMin = 0,
+	ValidValue = 1,
+	SentinelMax
+};
+
 int main(int argc, char** args) try
 {
+	Boring32::Util::Enum<SomeEnum> s;
+	bool u = s.IsValid(1);
+
 	Number<5> n;
 	TestOptionalThrow<true>();
 	TestOptionalThrow<false>();

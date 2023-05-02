@@ -4,7 +4,8 @@
 export module boring32.util;
 export import :switcher;
 export import :functions;
-export import :functions;
 export import :guid;
+export import :enumeration;
 
 //#define colconc(str1,str2) #str1 ": " #str2
+

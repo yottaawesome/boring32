@@ -301,6 +301,7 @@
     <ClCompile Include="Time\boring32.time-datetime.ixx" />
     <ClCompile Include="Time\boring32.time-functions.ixx" />
     <ClCompile Include="Time\boring32.time.ixx" />
+    <ClCompile Include="Util\boring32.util-enumeration.ixx" />
     <ClCompile Include="Util\boring32.util-functions.ixx" />
     <ClCompile Include="Util\boring32.util-globallyuniqueid.ixx" />
     <ClCompile Include="Util\boring32.util.ixx" />
