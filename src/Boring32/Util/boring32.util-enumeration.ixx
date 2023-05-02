@@ -12,7 +12,7 @@ export namespace Boring32::Util
 	};
 
 	template<typename T>
-	concept HasSentinelMin = requires(T a)
+	concept HasSentinelMin = requires()
 	{
 		T::SentinelMin;
 	};
@@ -30,6 +30,22 @@ export namespace Boring32::Util
 			Enum& operator=(const Enum&) = default;
 			Enum(Enum&&) noexcept = default;
 			Enum& operator=(Enum&&) noexcept = default;
+
+		public:
+			Enum(std::underlying_type_t<T> value)
+				requires !HasSentinelMax<T> && !HasSentinelMin<T>
+			{
+				m_value = static_cast<T>(value);
+			}
+
+			Enum(std::underlying_type_t<T> value)
+				requires HasSentinelMax<T> || HasSentinelMin<T>
+			{
+				if (!IsValid(value))
+					throw Error::Boring32Error("Value out of legal enum range");
+
+				m_value = static_cast<T>(value);
+			}
 
 		public:
 			operator std::underlying_type_t<T>() const noexcept
