@@ -20,7 +20,7 @@ export namespace Boring32::Util
 
 export namespace Boring32::Util
 {
-	template<typename T> requires std::is_enum_v<T>
+	template<typename T, T D = 0> requires std::is_enum_v<T>
 	class Enum final
 	{
 		public:
@@ -122,7 +122,12 @@ export namespace Boring32::Util
 				return std::to_underlying(m_value);
 			}
 
+			T Default() const noexcept
+			{
+				return D;
+			}
+
 		private:
-			T m_value{};
+			T m_value = D;
 	};
 }

@@ -691,7 +691,8 @@ int main(int argc, char** args) try
 {
 	SomeEnum x{};
 
-	Boring32::Util::Enum<SomeEnum> s;
+	Boring32::Util::Enum<SomeEnum, SomeEnum::ValidValue> s;
+	SomeEnum def = s.Default();
 	bool u = s.IsValid(1);
 
 	Number<5> n;
