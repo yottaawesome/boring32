@@ -6,8 +6,9 @@ import boring32.error;
 
 export namespace Boring32::Time
 {
-	class DateTime
+	class DateTime final
 	{
+		// The Six
 		public:
 			virtual ~DateTime() = default;
 			
@@ -17,7 +18,12 @@ export namespace Boring32::Time
 			}
 
 			DateTime(const DateTime& dateTime) = default;
+			DateTime& operator=(const DateTime&) = default;
+
 			DateTime(DateTime&& dateTime) noexcept = default;
+			DateTime& operator=(DateTime&&) noexcept = default;
+
+		public:
 			DateTime(const SYSTEMTIME& st)
 			{
 				if (!SystemTimeToFileTime(&st, &m_ft))
@@ -32,35 +38,35 @@ export namespace Boring32::Time
 			{ }
 
 		public:
-			virtual uint64_t ToMicroSeconds() const noexcept
+			uint64_t ToMicroSeconds() const noexcept
 			{
 				return FromFileTime(m_ft) / 10ull;
 			}
 
-			virtual uint64_t ToNanosecondTicks() const noexcept
+			uint64_t ToNanosecondTicks() const noexcept
 			{
 				return FromFileTime(m_ft);
 			}
 
-			virtual void AddMinutes(const int64_t minutes)
+			void AddMinutes(const int64_t minutes)
 			{
 				const int64_t nsTicks = minutes * 60ll * 1000ll * 1000ll * 10ll;
 				SetNewTotal(ToNanosecondTicks() + nsTicks);
 			}
 
-			virtual void AddSeconds(const int64_t seconds)
+			void AddSeconds(const int64_t seconds)
 			{
 				const int64_t nsTicks = seconds * 1000ll * 1000ll * 10ll;
 				SetNewTotal(ToNanosecondTicks() + nsTicks);
 			}
 
-			virtual void AddMillseconds(const int64_t milliseconds)
+			void AddMillseconds(const int64_t milliseconds)
 			{
 				const int64_t nsTicks = milliseconds * 1000ll * 10ll;
 				SetNewTotal(ToNanosecondTicks() + nsTicks);
 			}
 
-			virtual SYSTEMTIME ToSystemTime() const
+			SYSTEMTIME ToSystemTime() const
 			{
 				SYSTEMTIME st;
 				// https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-filetimetosystemtime
@@ -72,8 +78,8 @@ export namespace Boring32::Time
 				return st;
 			}
 
-		protected:
-			virtual void SetNewTotal(const uint64_t newTotal)
+		private:
+			void SetNewTotal(const uint64_t newTotal)
 			{
 				const LARGE_INTEGER li{
 					.QuadPart = static_cast<long long>(newTotal)
@@ -84,7 +90,7 @@ export namespace Boring32::Time
 				};
 			}
 
-		protected:
+		private:
 			FILETIME m_ft{ 0 };
 	};
 }

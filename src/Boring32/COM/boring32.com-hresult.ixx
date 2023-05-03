@@ -7,7 +7,7 @@ import <win32.hpp>;
 export namespace Boring32::COM
 {
 	// See https://learn.microsoft.com/en-us/windows/win32/com/error-handling-in-com
-	class HResult
+	class HResult final
 	{
 		// The six
 		public:

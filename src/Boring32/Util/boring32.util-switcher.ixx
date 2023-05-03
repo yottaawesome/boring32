@@ -2,7 +2,7 @@ export module boring32.util:switcher;
 
 export namespace Boring32::Util
 {
-	class Switcher // TODO: What is the purpose of this class? I don't remember.
+	class Switcher final // TODO: What is the purpose of this class? I don't remember.
 	{
 		public:
 			~Switcher()

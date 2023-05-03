@@ -7,7 +7,7 @@ import boring32.strings;
 
 export namespace Boring32::Util
 {
-	class GloballyUniqueID
+	class GloballyUniqueID final
 	{
 		// The Six
 		public:
