@@ -2,10 +2,10 @@ export module boring32.util:switcher;
 
 export namespace Boring32::Util
 {
-	class Switcher
+	class Switcher // TODO: What is the purpose of this class? I don't remember.
 	{
 		public:
-			virtual ~Switcher()
+			~Switcher()
 			{
 				m_valueToSwitch = !m_valueToSwitch;
 			}
@@ -16,7 +16,7 @@ export namespace Boring32::Util
 				m_valueToSwitch = !m_valueToSwitch;
 			};
 
-		protected:
+		private:
 			bool m_valueToSwitch;
 	};
 }
