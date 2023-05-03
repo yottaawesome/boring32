@@ -8,27 +8,38 @@ import boring32.error;
 
 export namespace Boring32::Compression
 {
-	class Decompressor
+	class Decompressor final
 	{
+		// The Six
 		public:
-			virtual ~Decompressor()
+			~Decompressor()
 			{
 				Close();
 			}
 
 			Decompressor() = default;
+
 			Decompressor(const Decompressor& other)
-				: m_type(CompressionType::NotSet)
 			{
 				Copy(other);
 			}
+			Decompressor& operator=(const Decompressor& other)
+			{
+				Copy(other);
+				return *this;
+			}
 
 			Decompressor(Decompressor&& other) noexcept
-				: m_type(CompressionType::NotSet)
 			{
 				Move(other);
 			}
-
+			Decompressor& operator=(Decompressor&& other) noexcept
+			{
+				Move(other);
+				return *this;
+			}
+			
+		public:
 			Decompressor(const CompressionType type)
 				: m_type(type)
 			{
@@ -36,20 +47,7 @@ export namespace Boring32::Compression
 			}
 
 		public:
-			virtual Decompressor& operator=(const Decompressor& other)
-			{
-				Copy(other);
-				return *this;
-			}
-
-			virtual Decompressor& operator=(Decompressor&& other) noexcept
-			{
-				Move(other);
-				return *this;
-			}
-
-		public:
-			virtual void Close()
+			void Close()
 			{
 				m_decompressor.reset();
 				m_type = CompressionType::NotSet;
@@ -59,7 +57,7 @@ export namespace Boring32::Compression
 			///		Returns the type of algorithm of this decompressor.
 			/// </summary>
 			/// <returns>The algorithm used by this decompressor.</returns>
-			[[nodiscard]] virtual CompressionType GetType() const noexcept
+			[[nodiscard]] CompressionType GetType() const noexcept
 			{
 				return m_type;
 			}
@@ -69,7 +67,7 @@ export namespace Boring32::Compression
 			/// </summary>
 			/// <param name="buffer">The buffer to determine the uncompressed size of.</param>
 			/// <returns>The uncompressed size, in bytes, of the compressed buffer specified in the parameter</returns>
-			[[nodiscard]] virtual size_t GetDecompressedSize(
+			[[nodiscard]] size_t GetDecompressedSize(
 				const std::vector<std::byte>& compressedBuffer
 			) const
 			{
@@ -104,7 +102,7 @@ export namespace Boring32::Compression
 			/// </summary>
 			/// <param name="buffer">The buffer to decompress.</param>
 			/// <returns>The decompressed buffer.</returns>
-			[[nodiscard]] virtual std::vector<std::byte> DecompressBuffer(
+			[[nodiscard]] std::vector<std::byte> DecompressBuffer(
 				const std::vector<std::byte>& compressedBuffer
 			)
 			{
@@ -135,12 +133,12 @@ export namespace Boring32::Compression
 				return returnVal;
 			}
 
-			[[nodiscard]] virtual DECOMPRESSOR_HANDLE GetHandle() const noexcept
+			[[nodiscard]] DECOMPRESSOR_HANDLE GetHandle() const noexcept
 			{
 				return m_decompressor.get();
 			}
 
-			virtual void Reset()
+			void Reset()
 			{
 				if (!m_decompressor)
 					throw CompressionError("Decompressor handle is null");
@@ -155,8 +153,8 @@ export namespace Boring32::Compression
 				}
 			}
 
-		protected:
-			virtual void Create()
+		private:
+			void Create()
 			{
 				if (m_type == CompressionType::NotSet)
 					return;
@@ -178,21 +176,21 @@ export namespace Boring32::Compression
 				m_decompressor = DecompressorUniquePtr(handle);
 			}
 
-			virtual void Copy(const Decompressor& other)
+			void Copy(const Decompressor& other)
 			{
 				Close();
 				m_type = other.m_type;
 				Create();
 			}
 
-			virtual void Move(Decompressor& other) noexcept
+			void Move(Decompressor& other) noexcept
 			{
 				Close();
 				m_type = other.m_type;
 				m_decompressor = std::move(other.m_decompressor);
 			}
 
-		protected:
+		private:
 			CompressionType m_type = CompressionType::NotSet;
 			DecompressorUniquePtr m_decompressor;
 	};

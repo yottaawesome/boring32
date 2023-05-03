@@ -13,10 +13,11 @@ import boring32.error;
 /// </summary>
 export namespace Boring32::Compression
 {
-	class Compressor
+	class Compressor final
 	{
+		// The Six
 		public:
-			virtual ~Compressor()
+			~Compressor()
 			{
 				Close();
 			}
@@ -27,31 +28,29 @@ export namespace Boring32::Compression
 			{
 				Copy(other);
 			}
+			Compressor& operator=(const Compressor& other)
+			{
+				Copy(other);
+				return *this;
+			}
 
 			Compressor(Compressor&& other) noexcept
 				: m_type(CompressionType::NotSet)
 			{
 				Move(other);
 			}
-
-			Compressor(const CompressionType type)
-				: m_type(type)
-			{
-				Create();
-			}
-
-		public:
-			virtual Compressor& operator=(const Compressor& other)
-			{
-				Copy(other);
-				return *this;
-			}
-
-			virtual Compressor& operator=(Compressor&& other) noexcept
+			Compressor& operator=(Compressor&& other) noexcept
 			{
 				Move(other);
 				return *this;
 			}
+
+		public:
+			Compressor(const CompressionType type)
+				: m_type(type)
+			{
+				Create();
+			}	
 
 		public:
 			/// <summary>
@@ -60,7 +59,7 @@ export namespace Boring32::Compression
 			/// <param name="buffer">The buffer to determine the compressed size of.</param>
 			/// <returns>The size, in bytes, of the compressed buffer specified in the parameter</returns>
 			/// <exception cref="CompressionError">Thrown if an empty buffer is passed, or no compressor is set, or compression fails.</exception>
-			[[nodiscard]] virtual size_t GetCompressedSize(
+			[[nodiscard]] size_t GetCompressedSize(
 				const std::vector<std::byte>& buffer
 			) const
 			{
@@ -94,7 +93,7 @@ export namespace Boring32::Compression
 			///		Returns the type of algorithm of this compressor.
 			/// </summary>
 			/// <returns>The algorithm used by this compressor.</returns>
-			[[nodiscard]] virtual CompressionType GetType() const noexcept
+			[[nodiscard]] CompressionType GetType() const noexcept
 			{
 				return m_type;
 			}
@@ -104,7 +103,7 @@ export namespace Boring32::Compression
 			/// </summary>
 			/// <param name="buffer">The buffer to compress.</param>
 			/// <returns>The compressed buffer.</returns>
-			[[nodiscard]] virtual std::vector<std::byte> CompressBuffer(
+			[[nodiscard]] std::vector<std::byte> CompressBuffer(
 				const std::vector<std::byte>& buffer
 			)
 			{
@@ -139,18 +138,18 @@ export namespace Boring32::Compression
 			/// <summary>
 			///		Releases all resources associated with this object.
 			/// </summary>
-			virtual void Close()
+			void Close()
 			{
 				m_compressor.reset();
 				m_type = CompressionType::NotSet;
 			}
 
-			[[nodiscard]] virtual COMPRESSOR_HANDLE GetHandle() const noexcept
+			[[nodiscard]] COMPRESSOR_HANDLE GetHandle() const noexcept
 			{
 				return m_compressor.get();
 			}
 			
-			virtual void Reset()
+			void Reset()
 			{
 				if (!m_compressor)
 					throw CompressionError("Compressor handle is null");
@@ -165,8 +164,8 @@ export namespace Boring32::Compression
 				}
 			}
 
-		protected:
-			virtual void Create()
+		private:
+			void Create()
 			{
 				if (m_type == CompressionType::NotSet)
 					return;
@@ -188,7 +187,7 @@ export namespace Boring32::Compression
 				m_compressor = CompressorUniquePtr(handle);
 			}
 
-			virtual void Move(Compressor& other) noexcept try
+			void Move(Compressor& other) noexcept try
 			{
 				Close();
 				m_type = other.m_type;
@@ -199,14 +198,14 @@ export namespace Boring32::Compression
 				std::wcerr << ex.what() << std::endl;
 			}
 
-			virtual void Copy(const Compressor& other)
+			void Copy(const Compressor& other)
 			{
 				Close();
 				m_type = other.m_type;
 				Create();
 			}
 
-		protected:
+		private:
 			CompressionType m_type = CompressionType::NotSet;
 			CompressorUniquePtr m_compressor;
 	};
