@@ -9,11 +9,23 @@ export namespace Boring32::Util
 {
 	class GloballyUniqueID
 	{
+		// The Six
 		public:
-			virtual ~GloballyUniqueID() = default;
+			~GloballyUniqueID() = default;
+
 			GloballyUniqueID()
 				: m_guid(GenerateGUID())
 			{}
+
+			GloballyUniqueID(const GloballyUniqueID&) = default;
+
+			GloballyUniqueID& operator=(const GloballyUniqueID&) = default;
+
+			GloballyUniqueID(GloballyUniqueID&&) noexcept = default;
+
+			GloballyUniqueID& operator=(GloballyUniqueID&&) noexcept = default;
+			
+		public:
 			GloballyUniqueID(const std::wstring& guidString)
 				: m_guid{ 0 }
 			{
@@ -35,51 +47,45 @@ export namespace Boring32::Util
 					throw Error::Win32Error("UuidFromStringW() failed", status);
 			}
 
-			GloballyUniqueID(const GloballyUniqueID& other) = default;
-			GloballyUniqueID(GloballyUniqueID&& other) noexcept = default;
-
 			GloballyUniqueID(const GUID& guid)
 				: m_guid(guid)
 			{}
 
 		public:
-			virtual GloballyUniqueID& operator=(const GUID& other) noexcept
+			GloballyUniqueID& operator=(const GUID& other) noexcept
 			{
 				m_guid = other;
 				return *this;
 			}
 
-			virtual GloballyUniqueID& operator=(const GloballyUniqueID& other) = default;
-			virtual GloballyUniqueID& operator=(GloballyUniqueID&& other) noexcept = default;
-
-			virtual bool operator==(const GloballyUniqueID& other) const noexcept
+			bool operator==(const GloballyUniqueID& other) const noexcept
 			{
 				// https://docs.microsoft.com/en-us/windows/win32/api/guiddef/nf-guiddef-isequalguid
 				return IsEqualGUID(m_guid, other.m_guid);
 			}
 
-			virtual bool operator==(const GUID& other) const noexcept
+			bool operator==(const GUID& other) const noexcept
 			{
 				return IsEqualGUID(m_guid, other);
 			}
 
 		public:
-			virtual void ToString(std::wstring& out) const
+			void ToString(std::wstring& out) const
 			{
 				out = GetGuidAsWString(m_guid);
 			}
 
-			virtual void ToString(std::string& out) const
+			void ToString(std::string& out) const
 			{
 				out = Strings::ConvertString(GetGuidAsWString(m_guid));
 			}
 
-			virtual const GUID& Get() const noexcept
+			const GUID& Get() const noexcept
 			{
 				return m_guid;
 			}
 
-		protected:
+		private:
 			GUID m_guid;
 	};
 }
