@@ -48,5 +48,11 @@ namespace COM
 				Boring32::COM::HResult hr2 = std::move(hr1);
 				TestCopyOrMove(hr1, hr2);
 			}
+
+			TEST_METHOD(TestGet)
+			{
+				Boring32::COM::HResult hr(TestHr);
+				Assert::IsTrue(hr.Get() == TestHr);
+			}
 	};
 }
