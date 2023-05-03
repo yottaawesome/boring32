@@ -8,16 +8,20 @@ export namespace Boring32::Async
 {
 	class Job final
 	{
-		// Constructors and destructor
+		// The Six
 		public:
 			~Job() = default;
 
 			Job() = default;
 
 			Job(const Job& other) = default;
+			Job& operator=(const Job& other) = default;
 
 			Job(Job&& other) noexcept = default;
+			Job& operator=(Job&& other) noexcept = default;
 
+		// Custom constructors
+		public:
 			Job(const bool isInheritable)
 			{
 				Create(isInheritable);
@@ -34,10 +38,6 @@ export namespace Boring32::Async
 			{
 				Open(isInheritable);
 			}
-
-		public:
-			Job& operator=(const Job& other) = default;
-			Job& operator=(Job&& other) noexcept = default;
 
 		// API
 		public:
