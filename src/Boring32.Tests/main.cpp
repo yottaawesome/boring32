@@ -687,6 +687,16 @@ enum class SomeEnum : unsigned long
 	SentinelMax
 };
 
+//constexpr void Check(int v = 0)
+//{
+//	static_assert(v < 1);
+//}
+
+constexpr int Check()
+{
+	return 1;
+}
+
 int main(int argc, char** args) try
 {
 	SomeEnum x{};
@@ -694,6 +704,9 @@ int main(int argc, char** args) try
 	Boring32::Util::Enum<SomeEnum, SomeEnum::ValidValue> s;
 	SomeEnum def = s.Default();
 	bool u = s.IsValid(1);
+	const int k = 0;
+	constexpr int q = Check();
+	//Check(k);
 
 	Number<5> n;
 	TestOptionalThrow<true>();

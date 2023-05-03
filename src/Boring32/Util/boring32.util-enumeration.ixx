@@ -100,7 +100,7 @@ export namespace Boring32::Util
 				return IsAboveMin(v) && IsBelowMax(v);
 			}
 
-			bool IsAboveMin(const std::underlying_type_t<T> v) const noexcept 
+			bool IsAboveMin(const std::underlying_type_t<T> v) const noexcept
 				requires HasSentinelMin<T>
 			{
 				return std::to_underlying(T::SentinelMin) < v;
