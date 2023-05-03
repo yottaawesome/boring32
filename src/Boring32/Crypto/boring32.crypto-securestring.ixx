@@ -239,7 +239,7 @@ export namespace Boring32::Crypto
 			}
 
 		private:
-			SecureString& Copy(const SecureString& other) noexcept
+			SecureString& Copy(const SecureString& other)
 			{
 				Clear();
 				m_encryptionType = other.m_encryptionType;
