@@ -9,14 +9,20 @@ export namespace Boring32::COM
 	// See https://learn.microsoft.com/en-us/windows/win32/com/error-handling-in-com
 	class HResult
 	{
+		// The six
 		public:
-			virtual ~HResult() noexcept = default;
+			~HResult() noexcept = default;
 			HResult() = default;
+			HResult(const HResult&) = default;
+			HResult& operator=(const HResult&) = default;
 			HResult(HResult&&) noexcept = default;
-			HResult(const HResult&) noexcept = default;
+			HResult& operator=(HResult&&) = default;
+
+		public:
 			HResult(const HRESULT hr) noexcept
 				: m_hr(hr)
 			{ }
+
 			HResult(
 				const long severity, 
 				const long facility, 
@@ -27,55 +33,55 @@ export namespace Boring32::COM
 			}
 
 		public:
-			virtual operator HRESULT() const noexcept
+			operator HRESULT() const noexcept
 			{
 				return m_hr;
 			}
 
-			virtual HResult& operator=(const HRESULT hr) noexcept
+			HResult& operator=(const HRESULT hr) noexcept
 			{
 				m_hr = hr;
 				return *this;
 			}
 
-			virtual operator bool() const noexcept
+			operator bool() const noexcept
 			{
 				return Succeeded(m_hr);
 			}
 
-			virtual bool operator==(const HRESULT hr) const noexcept
+			bool operator==(const HRESULT hr) const noexcept
 			{
 				return m_hr == hr;
 			}
 
-			virtual bool operator==(const HResult& hr) const noexcept
+			bool operator==(const HResult& hr) const noexcept
 			{
 				return m_hr == hr.m_hr;
 			}
 
 		// See https://learn.microsoft.com/en-us/windows/win32/com/using-macros-for-error-handling
 		public:
-			virtual HRESULT Get() const noexcept
+			HRESULT Get() const noexcept
 			{
 				return m_hr;
 			}
 
-			virtual long Facility() const noexcept
+			long Facility() const noexcept
 			{
 				return HRESULT_FACILITY(m_hr);
 			}
 
-			virtual long Code() const noexcept
+			long Code() const noexcept
 			{
 				return HRESULT_CODE(m_hr);
 			}
 
-			virtual long Severity() const noexcept
+			long Severity() const noexcept
 			{
 				return HRESULT_SEVERITY(m_hr);
 			}
 
-			virtual void ThrowIfFailed(
+			void ThrowIfFailed(
 				const char* msg,
 				const std::source_location& loc = std::source_location::current()
 			) const
@@ -87,7 +93,7 @@ export namespace Boring32::COM
 				throw Error::COMError("HRESULT check failed", m_hr, loc);
 			}
 
-		protected:
+		private:
 			HRESULT m_hr = 0x0;
 	};
 }
