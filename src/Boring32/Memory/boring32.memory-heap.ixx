@@ -1,4 +1,5 @@
 export module boring32.memory:heap;
+import <memory>;
 import boring32.error;
 import <win32.hpp>;
 
@@ -50,7 +51,7 @@ export namespace Boring32::Memory
 				m_heap = heap;
 			}
 
-			Heap(const DWORD options, const DWORD initialSize = 0, const DWORD maxSize = 0)
+			Heap(const DWORD options, const DWORD initialSize, const DWORD maxSize = 0)
 			{
 				// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapcreate
 				m_heap = HeapCreate(
@@ -133,7 +134,7 @@ export namespace Boring32::Memory
 				}
 			}
 
-			void* New(const size_t bytes, const DWORD options = 0)
+			[[nodiscard]] void* New(const size_t bytes, const DWORD options = 0)
 			{
 				// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapalloc
 				void* allocation = HeapAlloc(m_heap, options, bytes);
@@ -146,20 +147,41 @@ export namespace Boring32::Memory
 			}
 
 			template<typename T>
-			T* New(const DWORD options = 0)
+			[[nodiscard]] T* New(const DWORD options = 0)
 			{
 				void* ptr = New(sizeof(T), options);
 				return new(ptr) T();
 			}
 
 			template<typename T, typename...Args>
-			T* New(const DWORD options = 0, Args&... args)
+			[[nodiscard]] T* New(const DWORD options = 0, Args&... args)
 			{
 				void* ptr = New(sizeof(T), options);
 				return new(ptr) T(args...);
 			}
 
-			// TODO add functions returning unique_ptr
+			template<typename T>
+			struct Deleter
+			{
+				Deleter(Heap& h) : m_h(h) {}
+				void operator()(T* t)
+				{
+					m_h.Delete((void*)t);
+				}
+
+				private:
+					Heap& m_h;
+			};
+
+			template<typename T, typename...Args>
+			[[nodiscard]] std::unique_ptr<T, Deleter<T>> NewPtr(const Args&... args)
+			{
+				void* ptr = New(sizeof(T), 0);
+				return std::unique_ptr<T, Deleter<T>> (
+					new(ptr) T(args...), 
+					Deleter<T>(*this)
+				);
+			}
 
 			void Delete(void* ptr, const DWORD options = 0)
 			{

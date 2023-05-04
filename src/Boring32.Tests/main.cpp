@@ -701,6 +701,10 @@ int main(int argc, char** args) try
 {
 	SomeEnum x{};
 
+	Boring32::Memory::Heap h(0, 0);
+	auto ptr = h.NewPtr<int>(10);
+	ptr.reset();
+
 	Boring32::Util::Enum<SomeEnum, SomeEnum::ValidValue> s;
 	SomeEnum def = s.Default();
 	bool u = s.IsValid(1);
