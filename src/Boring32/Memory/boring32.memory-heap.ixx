@@ -4,6 +4,13 @@ import <win32.hpp>;
 
 export namespace Boring32::Memory
 {
+	enum HeapCreateOptions : DWORD
+	{
+		EnableExecute = HEAP_CREATE_ENABLE_EXECUTE,
+		GenerateExceptions = HEAP_GENERATE_EXCEPTIONS,
+		NoSerialise = HEAP_NO_SERIALIZE
+	};
+
 	class Heap final
 	{
 		// The six
@@ -33,6 +40,20 @@ export namespace Boring32::Memory
 				if (!heap)
 					throw Error::Boring32Error("Must pass in a valid heap pointer");
 				m_heap = heap;
+			}
+
+			Heap(const HeapCreateOptions options, const DWORD initialSize = 0, const DWORD maxSize = 0)
+			{
+				m_heap = HeapCreate(
+					options,
+					initialSize,
+					maxSize
+				);
+				if (!m_heap)
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("HeapCreate() failed", lastError);
+				}
 			}
 
 		public:
