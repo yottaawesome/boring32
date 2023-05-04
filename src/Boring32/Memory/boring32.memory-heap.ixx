@@ -6,12 +6,28 @@ export namespace Boring32::Memory
 {
 	class Heap final
 	{
+		// The six
 		public:
 			~Heap()
 			{
 				Destroy();
 			}
 
+			Heap() = delete;
+			
+			Heap(const Heap&) = delete;
+			Heap& operator=(const Heap&) = delete;
+
+			Heap(Heap&& other) noexcept
+			{
+				Move(other);
+			}
+			Heap& operator=(Heap&& other) noexcept
+			{
+				return Move(other);
+			}
+
+		public:
 			Heap(HANDLE heap)
 			{
 				if (!heap)
@@ -24,8 +40,11 @@ export namespace Boring32::Memory
 			{
 				// Don't destroy the process' default heap, 
 				// only special-purpose heaps
-				if (m_heap != GetProcessHeap())
+				if (m_heap && m_heap != GetProcessHeap())
+				{
 					HeapDestroy(m_heap);
+					m_heap = nullptr;
+				}
 			}
 
 			size_t Compact()
@@ -78,6 +97,15 @@ export namespace Boring32::Memory
 					const auto lastError = GetLastError();
 					throw Error::Win32Error("HeapUnlock() failed", lastError);
 				}
+			}
+
+		private:
+			Heap& Move(Heap& other)
+			{
+				Destroy();
+				m_heap = other.m_heap;
+				other.m_heap = nullptr;
+				return *this;
 			}
 
 		private:
