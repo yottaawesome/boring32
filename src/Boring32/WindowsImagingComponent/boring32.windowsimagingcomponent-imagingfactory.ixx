@@ -1,13 +1,13 @@
 export module boring32.windowsimagingcomponent:imagingfactory;
 import <string>;
+import <stdexcept>;
 import <win32.hpp>;
 import boring32.error;
-import <stdexcept>;
 
 export namespace Boring32::WindowsImagingComponent
 {
 	// https://docs.microsoft.com/en-us/windows/win32/api/wincodec/nn-wincodec-iwicimagingfactory
-	class ImagingFactory
+	class ImagingFactory final
 	{
 		public:
 			virtual ~ImagingFactory()
@@ -39,23 +39,23 @@ export namespace Boring32::WindowsImagingComponent
 			}
 
 		public:
-			virtual ImagingFactory& operator=(const ImagingFactory& other)
+			ImagingFactory& operator=(const ImagingFactory& other)
 			{
 				return Copy(other);
 			}
 
-			virtual ImagingFactory& operator=(ImagingFactory&& other) noexcept
+			ImagingFactory& operator=(ImagingFactory&& other) noexcept
 			{
 				return Move(other);
 			}
 
 		public:
-			virtual void Close()
+			void Close()
 			{
 				m_imagingFactory = nullptr;
 			}
 
-			virtual Microsoft::WRL::ComPtr<IWICBitmapDecoder> CreateDecoderFromFilename(
+			Microsoft::WRL::ComPtr<IWICBitmapDecoder> CreateDecoderFromFilename(
 				const std::wstring& path
 			)
 			{
@@ -79,7 +79,7 @@ export namespace Boring32::WindowsImagingComponent
 				return result;
 			}
 
-			virtual Microsoft::WRL::ComPtr<IWICFormatConverter> CreateFormatConverter()
+			Microsoft::WRL::ComPtr<IWICFormatConverter> CreateFormatConverter()
 			{
 				if (!m_imagingFactory)
 					throw Error::Boring32Error("m_imagingFactory is nullptr");
@@ -92,8 +92,8 @@ export namespace Boring32::WindowsImagingComponent
 				return pConverter;
 			}
 
-		protected:
-			virtual ImagingFactory& Copy(const ImagingFactory& other)
+		private:
+			ImagingFactory& Copy(const ImagingFactory& other)
 			{
 				if (this == &other)
 					return *this;
@@ -103,7 +103,7 @@ export namespace Boring32::WindowsImagingComponent
 				return *this;
 			}
 
-			virtual ImagingFactory& Move(const ImagingFactory& other)
+			ImagingFactory& Move(const ImagingFactory& other)
 			{
 				if (this == &other)
 					return *this;
@@ -113,7 +113,7 @@ export namespace Boring32::WindowsImagingComponent
 				return *this;
 			}
 
-		protected:
+		private:
 			Microsoft::WRL::ComPtr<IWICImagingFactory> m_imagingFactory;
 	};
 }
