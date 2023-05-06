@@ -7,10 +7,10 @@ import boring32.raii;
 
 export namespace Boring32::Security
 {
-	class PrivateNamespace
+	class PrivateNamespace final
 	{
 		public:
-			virtual ~PrivateNamespace()
+			~PrivateNamespace()
 			{
 				Close();
 			}
@@ -22,7 +22,7 @@ export namespace Boring32::Security
 				Copy(other);
 			}
 
-			virtual PrivateNamespace& operator=(const PrivateNamespace& other)
+			PrivateNamespace& operator=(const PrivateNamespace& other)
 			{
 				Copy(other);
 				return *this;
@@ -33,12 +33,13 @@ export namespace Boring32::Security
 				Move(other);
 			}
 
-			virtual PrivateNamespace& operator=(PrivateNamespace&& other) noexcept
+			PrivateNamespace& operator=(PrivateNamespace&& other) noexcept
 			{
 				Move(other);
 				return *this;
 			}
 
+		public:
 			PrivateNamespace(
 				const bool create,
 				const bool destroyOnClose,
@@ -56,7 +57,7 @@ export namespace Boring32::Security
 			}
 
 		public:
-			virtual void Close()
+			void Close()
 			{
 				if (m_boundaryDescriptor)
 				{
@@ -70,8 +71,8 @@ export namespace Boring32::Security
 				}
 			}
 
-		protected:
-			virtual void Copy(const PrivateNamespace& other)
+		private:
+			void Copy(const PrivateNamespace& other)
 			{
 				Close();
 				m_namespaceName = other.m_namespaceName;
@@ -82,7 +83,7 @@ export namespace Boring32::Security
 					CreateOrOpen(false);
 			}
 
-			virtual void Move(PrivateNamespace& other) noexcept
+			void Move(PrivateNamespace& other) noexcept
 			{
 				Close();
 				m_namespaceName = std::move(other.m_namespaceName);
@@ -94,7 +95,7 @@ export namespace Boring32::Security
 				other.m_namespace = nullptr;
 			}
 
-			virtual void CreateOrOpen(const bool create) try
+			void CreateOrOpen(const bool create) try
 			{
 				m_boundaryDescriptor = CreateBoundaryDescriptorW(m_boundaryName.c_str(), 0);
 				if (m_boundaryDescriptor == nullptr)
@@ -149,7 +150,7 @@ export namespace Boring32::Security
 				throw;
 			}
 
-		protected:
+		private:
 			std::wstring m_namespaceName;
 			std::wstring m_boundaryName;
 			std::wstring m_namespaceSid;
