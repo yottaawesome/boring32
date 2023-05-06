@@ -1,17 +1,17 @@
 export module boring32.security:token;
-import :constants;
-import boring32.raii;
 import <string>;
 import <win32.hpp>;
+import boring32.raii;
 import boring32.error;
+import :constants;
 import :functions;
 
 export namespace Boring32::Security
 {
-	class Token
+	class Token final
 	{
 		public:
-			virtual ~Token()
+			~Token()
 			{
 				Close();
 			}
@@ -23,11 +23,22 @@ export namespace Boring32::Security
 				Copy(other);
 			}
 
+			Token& operator=(const Token& other)
+			{
+				return Copy(other);
+			}
+
 			Token(Token&& other) noexcept
 			{
 				Move(other);
 			}
 
+			Token& operator=(Token&& other) noexcept
+			{
+				return Move(other);
+			}
+
+		public:
 			Token(const DWORD desiredAccess)
 			{
 				m_token = GetProcessToken(GetCurrentProcess(), desiredAccess);
@@ -59,27 +70,19 @@ export namespace Boring32::Security
 					&m_token
 				);
 				if (!succeeded)
-					throw Error::Win32Error("DuplicateTokenEx() failed", GetLastError());
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("DuplicateTokenEx() failed", lastError);
+				}
 			}
-
+			
 		public:
-			virtual Token& operator=(const Token& other)
-			{
-				return Copy(other);
-			}
-
-			virtual Token& operator=(Token&& other) noexcept
-			{
-				return Move(other);
-			}
-
-		public:
-			virtual void Close()
+			void Close()
 			{
 				m_token = nullptr;
 			}
 
-			virtual RAII::Win32Handle GetToken() const noexcept
+			RAII::Win32Handle GetToken() const noexcept
 			{
 				return m_token;
 			}
@@ -87,18 +90,18 @@ export namespace Boring32::Security
 			/// <summary>
 			/// https://docs.microsoft.com/en-us/windows/win32/secauthz/privilege-constants
 			/// </summary>
-			virtual void AdjustPrivileges(const std::wstring& privilege, const bool enabled)
+			void AdjustPrivileges(const std::wstring& privilege, const bool enabled)
 			{
 				Security::AdjustPrivileges(m_token.GetHandle(), privilege, enabled);
 			}
 
-			virtual void SetIntegrity(const Constants::GroupIntegrity integrity)
+			void SetIntegrity(const Constants::GroupIntegrity integrity)
 			{
 				Security::SetIntegrity(m_token.GetHandle(), integrity);
 			}
 
-		protected:
-			virtual Token& Copy(const Token& other)
+		private:
+			Token& Copy(const Token& other)
 			{
 				if (&other == this)
 					return *this;
@@ -115,13 +118,16 @@ export namespace Boring32::Security
 						&m_token
 					);
 					if (!succeeded)
-						throw Error::Win32Error("DuplicateTokenEx() failed", GetLastError());
+					{
+						const auto lastError = GetLastError();
+						throw Error::Win32Error("DuplicateTokenEx() failed", lastError);
+					}
 				}
 
 				return *this;
 			}
 
-			virtual Token& Move(Token& other) noexcept
+			Token& Move(Token& other) noexcept
 			{
 				if (&other == this)
 					return *this;
@@ -132,7 +138,7 @@ export namespace Boring32::Security
 				return *this;
 			}
 
-		protected:
+		private:
 			RAII::Win32Handle m_token;
 	};
 }
