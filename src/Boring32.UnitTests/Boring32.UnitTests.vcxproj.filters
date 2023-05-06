@@ -126,6 +126,9 @@
     <ClCompile Include="COM\boring32.com-hresult.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Error\boring32.error-win32error.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">

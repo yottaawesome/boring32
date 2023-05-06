@@ -191,6 +191,7 @@
     <ClCompile Include="DataStructures\boring32.datastructures-cappedstack.cpp" />
     <ClCompile Include="DataStructures\boring32.datastructures-singlylinkedlist.cpp" />
     <ClCompile Include="Error\boring32.error-functions.cpp" />
+    <ClCompile Include="Error\boring32.error-win32error.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -1,10 +1,10 @@
 export module boring32.error:win32error;
 import <string>;
+import <format>;
 import <stdexcept>;
 import <source_location>;
 import :boring32error;
 import :functions;
-import <format>;
 
 export namespace Boring32::Error
 {
@@ -13,7 +13,11 @@ export namespace Boring32::Error
 		public:
 			virtual ~Win32Error() = default;
 			Win32Error(const Win32Error& other) = default;
+			virtual Win32Error& operator=(const Win32Error& other) = default;
 			Win32Error(Win32Error&& other) noexcept = default;
+			virtual Win32Error& operator=(Win32Error&& other) noexcept = default; 
+			
+		public:
 			Win32Error(
 				const std::string& msg,
 				const std::source_location location = std::source_location::current()
@@ -59,11 +63,7 @@ export namespace Boring32::Error
 					errorCode,
 					m_message
 				);
-			}
-
-		public:
-			virtual Win32Error& operator=(const Win32Error& other) = default;
-			virtual Win32Error& operator=(Win32Error&& other) noexcept = default;
+			}		
 
 		public:
 			virtual unsigned long GetErrorCode() const noexcept
