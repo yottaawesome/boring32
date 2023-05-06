@@ -7,13 +7,16 @@ import boring32.error;
 
 export namespace Boring32::Services
 {
-	class ServiceControlManager
+	class ServiceControlManager final
 	{
 		public:
-			virtual ~ServiceControlManager() = default;
+			~ServiceControlManager() = default;
 			ServiceControlManager(const ServiceControlManager&) = default;
+			ServiceControlManager& operator=(const ServiceControlManager&) = default;
 			ServiceControlManager(ServiceControlManager&&) noexcept = default;
+			ServiceControlManager& operator=(ServiceControlManager&&) noexcept = default;
 
+		public:
 			ServiceControlManager()
 			{
 				Open(SC_MANAGER_ALL_ACCESS);
@@ -25,28 +28,25 @@ export namespace Boring32::Services
 			}
 
 		public:
-			virtual ServiceControlManager& operator=(const ServiceControlManager&) = default;
-			virtual ServiceControlManager& operator=(ServiceControlManager&&) noexcept = default;
-
-			virtual operator bool() const noexcept
+			operator bool() const noexcept
 			{
 				return m_scm.get() != nullptr;
 			}
 
 		public:
-			virtual void Close()
+			void Close()
 			{
 				m_scm = nullptr;
 			}
 
-			virtual Service AccessService(
+			Service AccessService(
 				const std::wstring& name
 			)
 			{
 				return AccessService(name, SERVICE_ALL_ACCESS);
 			}
 
-			virtual Service AccessService(
+			Service AccessService(
 				const std::wstring& name,
 				const unsigned desiredAccess
 			)
@@ -68,13 +68,13 @@ export namespace Boring32::Services
 				return { CreateSharedPtr(serviceHandle) };
 			}
 
-			virtual SC_HANDLE GetHandle() const noexcept
+			SC_HANDLE GetHandle() const noexcept
 			{
 				return m_scm.get();
 			}
 
-		protected:
-			virtual void Open(const unsigned desiredAccess)
+		private:
+			void Open(const unsigned desiredAccess)
 			{
 				// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openscmanagerw
 				SC_HANDLE schSCManager = OpenSCManagerW(
@@ -90,7 +90,7 @@ export namespace Boring32::Services
 				m_scm = CreateSharedPtr(schSCManager);
 			}
 
-		protected:
+		private:
 			ServiceHandleSharedPtr m_scm;
 	};
 }

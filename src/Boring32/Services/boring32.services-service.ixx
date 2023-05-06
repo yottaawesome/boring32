@@ -1,22 +1,24 @@
 export module boring32.services:service;
-import :raii;
 import <vector>;
 import <string>;
+import <utility>;
 import <win32.hpp>;
 import boring32.error;
 import :raii;
-//import <source_location>;
-import <utility>;
 
 export namespace Boring32::Services
 {
-	class Service
+	class Service final
 	{
 		public:
-			virtual ~Service() = default;
+			~Service() = default;
 			Service() = default;
 			Service(const Service&) = default;
+			Service& operator=(const Service&) = default;
 			Service(Service&&) noexcept = default;
+			Service& operator=(Service&&) noexcept = default;
+
+		public:
 			Service(ServiceHandleSharedPtr service)
 				: m_service(std::move(service))
 			{
@@ -25,11 +27,7 @@ export namespace Boring32::Services
 			}
 
 		public:
-			virtual Service& operator=(const Service&) = default;
-			virtual Service& operator=(Service&&) noexcept = default;
-
-		public:
-			virtual void Start(const std::vector<std::wstring>& args)
+			void Start(const std::vector<std::wstring>& args)
 			{
 				if (!m_service)
 					throw Error::Boring32Error("m_service is nullptr");
@@ -54,7 +52,7 @@ export namespace Boring32::Services
 				}
 			}
 
-			virtual void Stop()
+			void Stop()
 			{
 				if (!m_service)
 					throw Error::Boring32Error("m_service is nullptr");
@@ -78,7 +76,7 @@ export namespace Boring32::Services
 				}
 			}
 
-			virtual void Delete()
+			void Delete()
 			{
 				if (!m_service)
 					throw Error::Boring32Error("m_service is nullptr");
@@ -91,14 +89,14 @@ export namespace Boring32::Services
 				m_service = nullptr;
 			}
 
-			virtual std::wstring GetDisplayName() const
+			std::wstring GetDisplayName() const
 			{
 				std::vector<std::byte> buffer = GetConfigBuffer();
 				auto config = reinterpret_cast<QUERY_SERVICE_CONFIGW*>(&buffer[0]);
 				return config->lpDisplayName;
 			}
 
-			virtual bool IsRunning() const
+			bool IsRunning() const
 			{
 				if (!m_service)
 					throw Error::Boring32Error("m_service is nullptr");
@@ -123,12 +121,12 @@ export namespace Boring32::Services
 				return status.dwCurrentState == SERVICE_RUNNING;
 			}
 			
-			virtual SC_HANDLE GetHandle() const noexcept
+			SC_HANDLE GetHandle() const noexcept
 			{
 				return m_service.get();
 			}
 
-			virtual void SendControlCode(
+			void SendControlCode(
 				const unsigned long controlCode,
 				const std::wstring& comment
 			)
@@ -156,8 +154,8 @@ export namespace Boring32::Services
 				}
 			}
 
-		protected:
-			virtual std::vector<std::byte> GetConfigBuffer() const
+		private:
+			std::vector<std::byte> GetConfigBuffer() const
 			{
 				if (!m_service)
 					throw Error::Boring32Error("m_service is nullptr");
@@ -188,7 +186,7 @@ export namespace Boring32::Services
 				return buffer;
 			}
 
-		protected:
+		private:
 			ServiceHandleSharedPtr m_service;
 	};
 }
