@@ -16,5 +16,13 @@ namespace Error
 				Boring32::Error::Win32Error basicError(m_errorMessage);
 				Assert::IsTrue(std::string(basicError.what()).contains(m_errorMessage));
 			}
+
+			TEST_METHOD(TestCopyConstructor)
+			{
+				Boring32::Error::Win32Error error1(m_errorMessage, 0x5);
+				Boring32::Error::Win32Error error2(error1);
+				Assert::IsTrue(std::string(error1.what()) == std::string(error2.what()));
+				Assert::IsTrue(error1.GetErrorCode() == error2.GetErrorCode());
+			}
 	};
 }
