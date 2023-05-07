@@ -33,7 +33,7 @@ export namespace Boring32::Error
 				const std::string& msg,
 				const unsigned long errorCode,
 				const std::source_location location = std::source_location::current()
-			)
+			) : m_errorCode(errorCode)
 			{
 				m_message = Boring32::Error::TranslateErrorCode<std::string>(errorCode);
 				m_message = Error::FormatErrorMessage(
@@ -50,7 +50,7 @@ export namespace Boring32::Error
 				const unsigned long errorCode,
 				const std::wstring& moduleName,
 				const std::source_location location = std::source_location::current()
-			)
+			) : m_errorCode(errorCode)
 			{
 				m_message = Boring32::Error::TranslateErrorCode<std::string>(
 					errorCode,
@@ -66,7 +66,7 @@ export namespace Boring32::Error
 			}		
 
 		public:
-			virtual unsigned long GetErrorCode() const noexcept
+			virtual unsigned long GetErrorCode() const noexcept final
 			{
 				return m_errorCode;
 			}
