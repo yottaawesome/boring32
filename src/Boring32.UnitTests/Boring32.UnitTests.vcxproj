@@ -190,6 +190,7 @@
     <ClCompile Include="Crypto\boring32.crypto-securestring.cpp" />
     <ClCompile Include="DataStructures\boring32.datastructures-cappedstack.cpp" />
     <ClCompile Include="DataStructures\boring32.datastructures-singlylinkedlist.cpp" />
+    <ClCompile Include="Error\boring32.error-comerror.cpp" />
     <ClCompile Include="Error\boring32.error-functions.cpp" />
     <ClCompile Include="Error\boring32.error-win32error.cpp" />
     <ClCompile Include="pch.cpp">

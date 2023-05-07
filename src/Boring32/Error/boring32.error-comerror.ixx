@@ -13,9 +13,13 @@ export namespace Boring32::Error
 	{
 		public:
 			virtual ~COMError() = default;
+			COMError() = delete;
 			COMError(const COMError& other) = default;
+			virtual COMError& operator=(const COMError& other) = default;
 			COMError(COMError&& other) noexcept = default;
+			virtual COMError& operator=(COMError&& other) noexcept = default;
 
+		public:
 			COMError(
 				const std::string& msg, 
 				const HRESULT hr,
@@ -24,10 +28,6 @@ export namespace Boring32::Error
 			{
 				GenerateErrorMessage(location, msg);
 			}
-
-		public:
-			virtual COMError& operator=(const COMError& other) = default;
-			virtual COMError& operator=(COMError&& other) noexcept = default;
 
 		public:
 			virtual HRESULT GetHResult() const noexcept
