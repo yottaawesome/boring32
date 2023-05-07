@@ -50,5 +50,13 @@ namespace Error
 				Assert::IsFalse(std::string(error2.what()).empty());
 				Assert::IsTrue(error2.GetErrorCode() == 0x5);
 			}
+
+			TEST_METHOD(TestGetErrorCode)
+			{
+				Boring32::Error::Win32Error error1(m_errorMessage, 0x5);
+				Boring32::Error::Win32Error error2(m_errorMessage, 0x6);
+				Assert::IsTrue(error1.GetErrorCode() == 0x5);
+				Assert::IsTrue(error2.GetErrorCode() == 0x6);
+			}
 	};
 }
