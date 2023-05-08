@@ -22,7 +22,7 @@ export namespace Boring32::Error
 			NTStatusError(
 				const std::string& msg,
 				const std::source_location location = std::source_location::current()
-			) : m_errorCode(0), Boring32Error(msg, location)
+			) : m_errorCode(0)
 			{
 				GenerateErrorMessage(location, msg);
 			}
