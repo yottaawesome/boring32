@@ -26,5 +26,13 @@ namespace Error
 				Assert::IsTrue(error1.GetHResult() == error2.GetHResult());
 				Assert::IsTrue(std::string(error1.what()) == std::string(error2.what()));
 			}
+
+			TEST_METHOD(TestCopyAssignment)
+			{
+				Boring32::Error::COMError error1(m_errorMessage, m_errorCode);
+				Boring32::Error::COMError error2 = error1;
+				Assert::IsTrue(error1.GetHResult() == error2.GetHResult());
+				Assert::IsTrue(std::string(error1.what()) == std::string(error2.what()));
+			}
 	};
 }
