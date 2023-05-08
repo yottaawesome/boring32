@@ -132,6 +132,9 @@
     <ClCompile Include="Error\boring32.error-comerror.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Error\boring32.error-ntstatuserror.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">

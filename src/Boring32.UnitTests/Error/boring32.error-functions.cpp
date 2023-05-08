@@ -7,7 +7,7 @@ import boring32.async;
 
 namespace Error
 {
-	TEST_CLASS(Error)
+	TEST_CLASS(Functions)
 	{
 		public:
 			TEST_METHOD(TestGetErrorCodeStringWinHttp)
