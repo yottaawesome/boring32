@@ -8,6 +8,7 @@ namespace Error
 {
 	TEST_CLASS(NTStatusError)
 	{
+		const unsigned m_errorCode = 0xC0000194;
 		std::string m_errorMessage = "Some error message";
 
 		public:
@@ -15,6 +16,13 @@ namespace Error
 			{
 				Boring32::Error::NTStatusError basicError(m_errorMessage);
 				Assert::IsTrue(std::string(basicError.what()).contains(m_errorMessage));
+			}
+
+			TEST_METHOD(TestConstructor2)
+			{
+				Boring32::Error::NTStatusError basicError(m_errorMessage, m_errorCode);
+				Assert::IsTrue(std::string(basicError.what()).contains(m_errorMessage));
+				Assert::IsTrue(basicError.GetErrorCode() == m_errorCode);
 			}
 	};
 }
