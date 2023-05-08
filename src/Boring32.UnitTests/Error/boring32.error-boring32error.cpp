@@ -11,6 +11,12 @@ namespace Error
 		std::string m_errorMessage = "Some error message";
 
 		public:
+			TEST_METHOD(TestDefaultConstructor)
+			{
+				Boring32::Error::Boring32Error error;
+				Assert::IsTrue(std::string(error.what()).empty());
+			}
+
 			TEST_METHOD(TestConstructor)
 			{
 				Boring32::Error::Boring32Error error(m_errorMessage);
