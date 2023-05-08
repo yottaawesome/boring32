@@ -8,15 +8,18 @@ import <format>;
 
 export namespace Boring32::Error
 {
-	class NtStatusError : public Boring32Error
+	class NTStatusError : public Boring32Error
 	{
 		public:
-			virtual ~NtStatusError() = default;
-			NtStatusError(const NtStatusError& other) = default;
-			NtStatusError(NtStatusError&& other) noexcept = default;
+			virtual ~NTStatusError() = default;
+			NTStatusError(const NTStatusError& other) = default;
+			virtual NTStatusError& operator=(const NTStatusError& other) = default;
+			NTStatusError(NTStatusError&& other) noexcept = default;
+			virtual NTStatusError& operator=(NTStatusError&& other) noexcept = default;
 
+		public:
 			// Related: https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/596a1078-e883-4972-9bbc-49e60bebca55
-			NtStatusError(
+			NTStatusError(
 				const std::string& msg,
 				const std::source_location location = std::source_location::current()
 			) : m_errorCode(0), Boring32Error(msg, location)
@@ -24,18 +27,14 @@ export namespace Boring32::Error
 				GenerateErrorMessage(location, msg);
 			}
 
-			NtStatusError(
+			NTStatusError(
 				const std::string& msg,
 				const long errorCode,
 				const std::source_location location = std::source_location::current()
-			) : m_errorCode(errorCode), Boring32Error(msg, location)
+			) : m_errorCode(errorCode)
 			{
 				GenerateErrorMessage(location, msg);
 			}
-
-		public:
-			virtual NtStatusError& operator=(const NtStatusError& other) = default;
-			virtual NtStatusError& operator=(NtStatusError&& other) noexcept = default;
 
 		public:
 			[[nodiscard]] virtual long GetErrorCode() const noexcept

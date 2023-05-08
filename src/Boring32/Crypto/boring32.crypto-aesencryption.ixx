@@ -83,7 +83,7 @@ export namespace Boring32::Crypto
 					0
 				);
 				if (!BCRYPT_SUCCESS(status))
-					throw Error::NtStatusError("Failed to set AES key length", status);
+					throw Error::NTStatusError("Failed to set AES key length", status);
 
 				return cbKeyObject;
 			}
@@ -105,7 +105,7 @@ export namespace Boring32::Crypto
 					0
 				);
 				if (!BCRYPT_SUCCESS(status))
-					throw Error::NtStatusError("Failed to set AES key length", status);
+					throw Error::NTStatusError("Failed to set AES key length", status);
 
 				return cbKeyObject;
 			}
@@ -125,7 +125,7 @@ export namespace Boring32::Crypto
 					0
 				);
 				if (!BCRYPT_SUCCESS(status))
-					throw Error::NtStatusError("Failed to set chaining mode", status);
+					throw Error::NTStatusError("Failed to set chaining mode", status);
 				m_chainingMode = cm;
 			}
 
@@ -150,7 +150,7 @@ export namespace Boring32::Crypto
 					0
 				);
 				if (!BCRYPT_SUCCESS(status))
-					throw Error::NtStatusError("Failed to set chaining mode", status);
+					throw Error::NTStatusError("Failed to set chaining mode", status);
 
 				return CryptoKey(hKey, std::move(keyObject));
 			}
@@ -209,7 +209,7 @@ export namespace Boring32::Crypto
 					flags
 				);
 				if (!BCRYPT_SUCCESS(status))
-					throw Error::NtStatusError("BCryptEncrypt() failed to count bytes", status);
+					throw Error::NTStatusError("BCryptEncrypt() failed to count bytes", status);
 
 				// Actually do the encryption
 				std::vector<std::byte> cypherText(cbData, std::byte{ 0 });
@@ -226,7 +226,7 @@ export namespace Boring32::Crypto
 					flags
 				);
 				if (!BCRYPT_SUCCESS(status))
-					throw Error::NtStatusError("BCryptEncrypt() failed to encrypt", status);
+					throw Error::NTStatusError("BCryptEncrypt() failed to encrypt", status);
 
 				return cypherText;
 			}
@@ -270,7 +270,7 @@ export namespace Boring32::Crypto
 					flags
 				);
 				if (!BCRYPT_SUCCESS(status))
-					throw Error::NtStatusError("BCryptDecrypt() failed to count bytes", status);
+					throw Error::NTStatusError("BCryptDecrypt() failed to count bytes", status);
 
 				// Actually do the decryption
 				std::vector<std::byte> plainText(cbData, std::byte{ 0 });
@@ -287,7 +287,7 @@ export namespace Boring32::Crypto
 					flags
 				);
 				if (!BCRYPT_SUCCESS(status))
-					throw Error::NtStatusError("BCryptDecrypt() failed to decrypt", status);
+					throw Error::NTStatusError("BCryptDecrypt() failed to decrypt", status);
 
 				plainText.resize(cbData);
 				return plainText;
@@ -326,7 +326,7 @@ export namespace Boring32::Crypto
 					0
 				);
 				if (!BCRYPT_SUCCESS(status))
-					throw Error::NtStatusError("Failed to create AES algorithm", status);
+					throw Error::NTStatusError("Failed to create AES algorithm", status);
 				SetChainingMode(m_chainingMode);
 			}
 
