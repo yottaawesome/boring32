@@ -22,5 +22,12 @@ namespace Error
 				Boring32::Error::Boring32Error error(m_errorMessage);
 				Assert::IsTrue(std::string(error.what()).contains(m_errorMessage));
 			}
+
+			TEST_METHOD(TestCopyConstructor)
+			{
+				Boring32::Error::Boring32Error error1(m_errorMessage);
+				Boring32::Error::Boring32Error error2(error1);
+				Assert::IsTrue(std::string(error1.what()) == std::string(error2.what()));
+			}
 	};
 }
