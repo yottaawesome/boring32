@@ -24,5 +24,11 @@ namespace Error
 				Assert::IsTrue(std::string(basicError.what()).contains(m_errorMessage));
 				Assert::IsTrue(basicError.GetErrorCode() == m_errorCode);
 			}
+
+			TEST_METHOD(TestGetErrorCode)
+			{
+				Boring32::Error::NTStatusError error(m_errorMessage, m_errorCode);
+				Assert::IsTrue(error.GetErrorCode() == m_errorCode);
+			}
 	};
 }
