@@ -11,13 +11,15 @@ export namespace Boring32::Error
 	{
 		public:
 			virtual ~Boring32Error() = default;
-			Boring32Error(const Boring32Error& other) = default;
-			Boring32Error(Boring32Error&& other) noexcept = default;
-
 			Boring32Error()
 				: m_message("Boring32 encountered an error")
 			{ }
+			Boring32Error(const Boring32Error& other) = default;
+			virtual Boring32Error& operator=(const Boring32Error& other) = default;
+			Boring32Error(Boring32Error&& other) noexcept = default;
+			virtual Boring32Error& operator=(Boring32Error&& other) noexcept = default;
 
+		public:
 			Boring32Error(
 				const std::string& message, 
 				const std::source_location location = std::source_location::current()
@@ -41,10 +43,6 @@ export namespace Boring32::Error
 					)
 				);
 			}
-
-		public:
-			virtual Boring32Error& operator=(const Boring32Error& other) = default;
-			virtual Boring32Error& operator=(Boring32Error&& other) noexcept = default;
 
 		public:
 			virtual const char* what() const noexcept override
