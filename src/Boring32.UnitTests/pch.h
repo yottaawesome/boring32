@@ -15,6 +15,7 @@
 #include <thread>
 #include <format>
 #include <stdexcept>
+#include <stacktrace>
 #include <source_location>
 #include <Windows.h>
 #include "CppUnitTest.h"

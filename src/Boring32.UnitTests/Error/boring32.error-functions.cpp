@@ -73,5 +73,15 @@ namespace Error
 					}
 				}
 			}
+
+			TEST_METHOD(TestFormatErrorMessageStackTrace)
+			{
+				std::string errorMsg = ::Boring32::Error::FormatErrorMessage(
+					"Boring32",
+					std::stacktrace::current(),
+					std::source_location::current(),
+					"This is a test message"
+				);
+			}
 	};
 }

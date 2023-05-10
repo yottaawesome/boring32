@@ -54,6 +54,7 @@ export namespace Boring32::Error
     std::string FormatErrorMessage(
         const std::string& errorType,
         const std::stacktrace& trace,
+        const std::source_location& location,
         const std::string& message
     )
     {
@@ -72,9 +73,13 @@ export namespace Boring32::Error
         }
 
         return std::format(
-            "{}: {} error at:\n{}",
+            "{}: {} error at {}() in {}:{}:{}. Stacktrace:\n{}",
             message,
             errorType,
+            location.function_name(),
+            location.file_name(),
+            location.line(),
+            location.column(),
             bt
         );
     }
