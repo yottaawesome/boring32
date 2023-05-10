@@ -252,6 +252,14 @@ export namespace Boring32::Error
         }
     }
 
+    std::string PrintExceptionToString(
+        const std::exception& ex
+    )
+    {
+        std::stringstream ss;
+        return PrintExceptionToStringStream(ex, ss).str();
+    }
+
     std::wstringstream& PrintExceptionToStringStream(
         const std::exception& ex,
         std::wstringstream& ss
@@ -267,5 +275,13 @@ export namespace Boring32::Error
         {
             return PrintExceptionToStringStream(ne, ss);
         }
+    }
+
+    std::wstring PrintExceptionToWString(
+        const std::exception& ex
+    )
+    {
+        std::wstringstream ss;
+        return PrintExceptionToStringStream(ex, ss).str();
     }
 }
