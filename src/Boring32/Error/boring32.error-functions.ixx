@@ -158,7 +158,6 @@ export namespace Boring32::Error
             const auto lastError = GetLastError();
             std::wcerr << std::format(
                 L"LocalFree() failed: {}\n",
-                L"FormatCode()",
                 lastError
             );
         }
