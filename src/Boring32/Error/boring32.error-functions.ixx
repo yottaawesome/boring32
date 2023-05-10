@@ -151,7 +151,6 @@ export namespace Boring32::Error
                 lastError
             );
         }
-            
 
         std::string msg(static_cast<char*>(messageBuffer));
         if (LocalFree(messageBuffer))
