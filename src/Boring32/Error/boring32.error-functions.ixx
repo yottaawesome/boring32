@@ -160,7 +160,11 @@ export namespace Boring32::Error
     }
 
     template<>
-    std::wstring FormatCode<std::wstring>(const DWORD errorCode, const DWORD flags, HMODULE moduleToSearch)
+    std::wstring FormatCode<std::wstring>(
+        const DWORD errorCode, 
+        const DWORD flags, 
+        HMODULE moduleToSearch
+    )
     {
         void* messageBuffer = nullptr;
         FormatMessageW(
@@ -173,16 +177,21 @@ export namespace Boring32::Error
             nullptr
         );
         if (!messageBuffer)
+        {
+            const auto lastError = GetLastError();
             return std::format(
-                L"{}: FormatMessageA() failed on code {} with error {}",
-                TEXT(__FUNCSIG__),
+                L"FormatMessageA() failed on code {} with error {}",
                 errorCode,
-                GetLastError()
+                lastError
             );
+        }
 
         std::wstring msg(static_cast<wchar_t*>(messageBuffer));
         if (LocalFree(messageBuffer))
-            std::wcerr << std::format(L"{}: LocalFree() failed: {}\n", TEXT(__FUNCSIG__), GetLastError());
+        {
+            const auto lastError = GetLastError();
+            std::wcerr << std::format(L"LocalFree() failed: {}\n", lastError);
+        }
 
         std::erase_if(msg, [](const wchar_t x) { return x == '\n' || x == '\r'; });
 
