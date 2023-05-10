@@ -6,6 +6,7 @@ import <stdexcept>;
 import <sstream>;
 import <algorithm>;
 import <format>;
+import <stacktrace>;
 import <source_location>;
 import <win32.hpp>;
 
@@ -48,6 +49,34 @@ export namespace Boring32::Error
         {
             PrintExceptionInfo(ne, level + 1);
         }
+    }
+
+    std::string FormatErrorMessage(
+        const std::string& errorType,
+        const std::stacktrace& trace,
+        const std::string& message
+    )
+    {
+        std::string bt;
+        for (const auto& ste : trace)
+        {
+            bt += std::format(
+                "Entry:\n\tDescription: {}\n\tSource file: {}\n\tSource line: {}\n",
+                ste.description(),
+                ste.source_file(),
+                ste.source_line()
+            );
+            // Break on this to avoid logging VC runtime functions
+            if (ste.description().starts_with("StackTrace!main"))
+                break;
+        }
+
+        return std::format(
+            "{}: {} error at:\n{}",
+            message,
+            errorType,
+            bt
+        );
     }
 
     std::string FormatErrorMessage(
