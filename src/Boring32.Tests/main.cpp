@@ -692,6 +692,14 @@ enum class SomeEnum : unsigned long
 //	static_assert(v < 1);
 //}
 
+void DontDoThis()
+{
+	// https://stackoverflow.com/questions/55790420/is-string-view-really-promoting-use-after-free-errors
+	std::string s = "Hellooooooooooooooo ";
+	std::string_view sv = s + "World\n";
+	std::cout << sv;
+}
+
 constexpr int Check()
 {
 	return 1;
