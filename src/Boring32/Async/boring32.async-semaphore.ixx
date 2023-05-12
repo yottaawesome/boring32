@@ -160,6 +160,7 @@ export namespace Boring32::Async
 						throw Error::Boring32Error(
 							"Unknown WaitForSingleObjectEx() value {}",
 							std::source_location::current(),
+							std::stacktrace::current(),
 							status
 						);
 				}

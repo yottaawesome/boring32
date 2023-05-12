@@ -3,6 +3,7 @@ import <stdexcept>;
 import <string>;
 import <format>;
 import <source_location>;
+import <stacktrace>;
 import :functions;
 
 export namespace Boring32::Error
@@ -22,16 +23,18 @@ export namespace Boring32::Error
 		public:
 			Boring32Error(
 				const std::string& message, 
-				const std::source_location location = std::source_location::current()
+				const std::source_location location = std::source_location::current(),
+				const std::stacktrace& trace = std::stacktrace::current()
 			)
 			{
-				GenerateErrorMessage(location, message);
+				GenerateErrorMessage(location, message, trace);
 			}
 
 			template<typename...Args>
 			Boring32Error(
 				const std::string& message,
-				const std::source_location location,
+				const std::source_location& location,
+				const std::stacktrace& trace,
 				Args...args
 			)
 			{
@@ -40,7 +43,8 @@ export namespace Boring32::Error
 					std::vformat(
 						message, 
 						std::make_format_args(args...)
-					)
+					),
+					trace
 				);
 			}
 
@@ -53,10 +57,16 @@ export namespace Boring32::Error
 		protected:
 			virtual void GenerateErrorMessage(
 				const std::source_location& location,
-				const std::string& message
+				const std::string& message,
+				const std::stacktrace& trace
 			)
 			{
-				m_message = Error::FormatErrorMessage("Boring32", location, message);
+				m_message = Error::FormatErrorMessage(
+					"Boring32",
+					trace,
+					location, 
+					message
+				);
 			}
 
 		protected:

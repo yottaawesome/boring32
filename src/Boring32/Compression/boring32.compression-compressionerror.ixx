@@ -2,6 +2,7 @@ export module boring32.compression:compressionerror;
 import boring32.error;
 import <stdexcept>;
 import <string>;
+import <stacktrace>;
 import <source_location>;
 
 export namespace Boring32::Compression
@@ -10,27 +11,35 @@ export namespace Boring32::Compression
 	{
 		public:
 			virtual ~CompressionError() = default;
+			CompressionError() = default;
 			CompressionError(const CompressionError& other) = default;
+			virtual CompressionError& operator=(const CompressionError& other) = default;
 			CompressionError(CompressionError&& other) noexcept = default;
-			CompressionError(
-				const std::string& message,
-				const std::source_location location = std::source_location::current()
-			) : Error::Boring32Error(message, location)
-			{
-				GenerateErrorMessage(location, message);
-			}
+			virtual CompressionError& operator=(CompressionError&& other) noexcept = default;
 
 		public:
-			virtual CompressionError& operator=(const CompressionError& other) = default;
-			virtual CompressionError& operator=(CompressionError&& other) noexcept = default;
+			CompressionError(
+				const std::string& message,
+				const std::source_location location = std::source_location::current(),
+				const std::stacktrace & trace = std::stacktrace::current()
+			) : Error::Boring32Error(message, location)
+			{
+				GenerateErrorMessage(location, message, trace);
+			}
 
 		protected:
 			virtual void GenerateErrorMessage(
 				const std::source_location& location,
-				const std::string& message
+				const std::string& message,
+				const std::stacktrace& trace
 			) override
 			{
-				m_message = Error::FormatErrorMessage("Compression", location, message);
+				m_message = Error::FormatErrorMessage(
+					"Compression", 
+					trace, 
+					location, 
+					message
+				);
 			}
 	};
 }

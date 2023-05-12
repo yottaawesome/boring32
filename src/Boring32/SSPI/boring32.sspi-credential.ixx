@@ -1,5 +1,6 @@
 export module boring32.sspi:credential;
 import <memory>;
+import <stacktrace>;
 import <win32.hpp>;
 import boring32.error;
 
@@ -60,6 +61,7 @@ namespace Boring32::SSPI
 					throw Error::Boring32Error(
 						"AcquireCredentialsHandleW() failed with code {:#X}",
 						std::source_location::current(),
+						std::stacktrace::current(),
 						status
 					);
 				}
@@ -94,6 +96,7 @@ namespace Boring32::SSPI
 					throw Error::Boring32Error(
 						"AcquireCredentialsHandleW() failed with code {:#X}",
 						std::source_location::current(),
+						std::stacktrace::current(),
 						status
 					);
 				}

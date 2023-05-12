@@ -2,6 +2,7 @@ export module boring32.error:comerror;
 import <stdexcept>;
 import <string>;
 import <source_location>;
+import <stacktrace>;
 import <format>;
 import <win32.hpp>;
 import :boring32error;
@@ -23,10 +24,11 @@ export namespace Boring32::Error
 			COMError(
 				const std::string& msg, 
 				const HRESULT hr,
-				const std::source_location location = std::source_location::current()
+				const std::source_location location = std::source_location::current(),
+				const std::stacktrace& trace = std::stacktrace::current()
 			) : m_hresult(hr)
 			{
-				GenerateErrorMessage(location, msg);
+				GenerateErrorMessage(location, msg, trace);
 			}
 
 		public:
@@ -43,11 +45,21 @@ export namespace Boring32::Error
 		protected:
 			virtual void GenerateErrorMessage(
 				const std::source_location& location,
-				const std::string& message
+				const std::string& message,
+				const std::stacktrace& trace
 			) override
 			{
-				m_errorString = Boring32::Error::TranslateErrorCode<std::string>(m_hresult);
-				m_errorString = Error::FormatErrorMessage("COM", location, message, m_hresult, m_errorString);
+				m_errorString = Boring32::Error::TranslateErrorCode<std::string>(
+					m_hresult
+				);
+				m_errorString = Error::FormatErrorMessage(
+					"COM", 
+					trace,
+					location,
+					message, 
+					m_hresult, 
+					m_errorString
+				);
 			}
 
 		protected:

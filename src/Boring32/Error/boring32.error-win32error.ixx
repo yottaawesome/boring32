@@ -2,6 +2,7 @@ export module boring32.error:win32error;
 import <string>;
 import <format>;
 import <stdexcept>;
+import <stacktrace>;
 import <source_location>;
 import :boring32error;
 import :functions;
@@ -20,24 +21,29 @@ export namespace Boring32::Error
 		public:
 			Win32Error(
 				const std::string& msg,
-				const std::source_location location = std::source_location::current()
+				const std::source_location location = std::source_location::current(),
+				const std::stacktrace& trace = std::stacktrace::current()
 			)
 			{
 				m_message = Error::FormatErrorMessage(
 					"Win32",
-					location, msg
+					trace,
+					location,
+					msg
 				);
 			}
 
 			Win32Error(
 				const std::string& msg,
 				const unsigned long errorCode,
-				const std::source_location location = std::source_location::current()
+				const std::source_location location = std::source_location::current(),
+				const std::stacktrace & trace = std::stacktrace::current()
 			) : m_errorCode(errorCode)
 			{
 				m_message = Boring32::Error::TranslateErrorCode<std::string>(errorCode);
 				m_message = Error::FormatErrorMessage(
 					"Win32",
+					trace,
 					location,
 					msg,
 					errorCode,
@@ -49,7 +55,8 @@ export namespace Boring32::Error
 				const std::string& msg, 
 				const unsigned long errorCode,
 				const std::wstring& moduleName,
-				const std::source_location location = std::source_location::current()
+				const std::source_location location = std::source_location::current(),
+				const std::stacktrace& trace = std::stacktrace::current()
 			) : m_errorCode(errorCode)
 			{
 				m_message = Boring32::Error::TranslateErrorCode<std::string>(
@@ -58,12 +65,13 @@ export namespace Boring32::Error
 				);
 				m_message = Error::FormatErrorMessage(
 					"Win32",
+					trace,
 					location,
 					msg,
 					errorCode,
 					m_message
 				);
-			}		
+			}
 
 		public:
 			virtual unsigned long GetErrorCode() const noexcept final

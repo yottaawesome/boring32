@@ -51,12 +51,7 @@ export namespace Boring32::Error
         }
     }
 
-    std::string FormatErrorMessage(
-        const std::string& errorType,
-        const std::stacktrace& trace,
-        const std::source_location& location,
-        const std::string& message
-    )
+    std::string FormatStackTrace(const std::stacktrace& trace)
     {
         std::string bt;
         for (const auto& ste : trace)
@@ -71,7 +66,16 @@ export namespace Boring32::Error
             if (ste.description().starts_with("StackTrace!main"))
                 break;
         }
+        return bt;
+    }
 
+    std::string FormatErrorMessage(
+        const std::string& errorType,
+        const std::stacktrace& trace,
+        const std::source_location& location,
+        const std::string& message
+    )
+    {
         return std::format(
             "{}: {} error at {}() in {}:{}:{}. Stacktrace:\n{}",
             message,
@@ -80,7 +84,7 @@ export namespace Boring32::Error
             location.file_name(),
             location.line(),
             location.column(),
-            bt
+            FormatStackTrace(trace)
         );
     }
 
@@ -103,14 +107,15 @@ export namespace Boring32::Error
 
     std::string FormatErrorMessage(
         const std::string& errorType,
-        const std::source_location& location, 
+        const std::stacktrace& trace,
+        const std::source_location& location,
         const std::string& message,
         const DWORD errorCode,
         const std::string& translatedError
     )
     {
         return std::format(
-            "{}: {} error {:#010X} ({}) at {}() in {}:{}:{}",
+            "{}: {} error {:#010X} ({}) at {}() in {}:{}:{}. Stacktrace:\n{}",
             message,
             errorType,
             errorCode,
@@ -118,7 +123,8 @@ export namespace Boring32::Error
             location.function_name(),
             location.file_name(),
             location.line(),
-            location.column()
+            location.column(),
+            FormatStackTrace(trace)
         );
     }
 
