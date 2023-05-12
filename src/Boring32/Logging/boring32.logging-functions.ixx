@@ -1,9 +1,6 @@
-module;
-
-#include <source_location>
-
 export module boring32.logging:functions;
 import <string>;
+import <source_location>;
 
 export namespace Boring32::Logging
 {

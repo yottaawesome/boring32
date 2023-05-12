@@ -35,7 +35,7 @@ export namespace Boring32::Error
 				const std::string& message,
 				const std::source_location& location,
 				const std::stacktrace& trace,
-				Args...args
+				const Args&...args
 			)
 			{
 				GenerateErrorMessage(
