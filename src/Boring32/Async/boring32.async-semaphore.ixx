@@ -15,7 +15,10 @@ export namespace Boring32::Async
 			Semaphore() = default;
 			Semaphore(const Semaphore& other) = default;
 			Semaphore(Semaphore&& other) noexcept = default;
+			Semaphore& operator=(const Semaphore& other) = default;
+			Semaphore& operator=(Semaphore&& other) noexcept = default;
 
+		public:
 			Semaphore(
 				const bool isInheritable,
 				const unsigned long initialCount,
@@ -63,8 +66,6 @@ export namespace Boring32::Async
 			}
 			
 		public:
-			Semaphore& operator=(const Semaphore& other) = default;
-			Semaphore& operator=(Semaphore&& other) noexcept = default;
 			operator bool() const noexcept
 			{
 				return m_handle != nullptr;
