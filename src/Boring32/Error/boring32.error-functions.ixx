@@ -54,17 +54,17 @@ export namespace Boring32::Error
     std::string FormatStackTrace(const std::stacktrace& trace)
     {
         std::string bt;
-        for (const auto& ste : trace)
+        for (const std::stacktrace_entry& ste : trace)
         {
+            // Break on this to avoid logging VC runtime functions
+            if (ste.description().contains("invoke_main"))
+                break;
             bt += std::format(
                 "Entry:\n\tDescription: {}\n\tSource file: {}\n\tSource line: {}\n",
                 ste.description(),
                 ste.source_file(),
                 ste.source_line()
             );
-            // Break on this to avoid logging VC runtime functions
-            if (ste.description().starts_with("StackTrace!main"))
-                break;
         }
         return bt;
     }
@@ -258,12 +258,12 @@ export namespace Boring32::Error
         return TranslateErrorCode<STR_T>(errorCode, L"ntdll.dll");
     }
 
-    std::stringstream& PrintExceptionToStringStream(
+    std::string& PrintExceptionToStringStream(
         const std::exception& ex,
-        std::stringstream& ss
+        std::string& ss
     )
     {
-        ss << ex.what() << std::endl;
+        ss += std::format("{}\n", ex.what());
         try
         {
             std::rethrow_if_nested(ex);
@@ -279,32 +279,7 @@ export namespace Boring32::Error
         const std::exception& ex
     )
     {
-        std::stringstream ss;
-        return PrintExceptionToStringStream(ex, ss).str();
-    }
-
-    std::wstringstream& PrintExceptionToStringStream(
-        const std::exception& ex,
-        std::wstringstream& ss
-    )
-    {
-        ss << ex.what() << std::endl;
-        try
-        {
-            std::rethrow_if_nested(ex);
-            return ss;
-        }
-        catch (const std::exception& ne)
-        {
-            return PrintExceptionToStringStream(ne, ss);
-        }
-    }
-
-    std::wstring PrintExceptionToWString(
-        const std::exception& ex
-    )
-    {
-        std::wstringstream ss;
-        return PrintExceptionToStringStream(ex, ss).str();
+        std::string ss;
+        return PrintExceptionToStringStream(ex, ss);
     }
 }

@@ -700,13 +700,14 @@ void DontDoThis()
 	std::cout << sv;
 }
 
-constexpr int Check()
+void Check()
 {
-	return 1;
+	throw Boring32::Error::Win32Error("Aden is gay", 0x5);
 }
 
 int main(int argc, char** args) try
 {
+	Check();
 	SomeEnum x{};
 
 	Boring32::Memory::Heap h(0, 0);
@@ -717,7 +718,6 @@ int main(int argc, char** args) try
 	SomeEnum def = s.Default();
 	bool u = s.IsValid(1);
 	const int k = 0;
-	constexpr int q = Check();
 	//Check(k);
 
 	Number<5> n;

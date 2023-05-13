@@ -20,7 +20,7 @@ namespace Error
 
 			TEST_METHOD(TestPrintExceptionToStringStream)
 			{
-				std::stringstream ss;
+				std::string ss;
 				try
 				{
 					throw std::logic_error("first");
@@ -40,35 +40,7 @@ namespace Error
 						catch (const std::exception& ex)
 						{
 							Boring32::Error::PrintExceptionToStringStream(ex, ss);
-							Assert::IsFalse(ss.str().empty());
-						}
-					}
-				}
-			}
-
-			TEST_METHOD(TestPrintExceptionToWStringStream)
-			{
-				std::wstringstream ss;
-				try
-				{
-					throw std::logic_error("first");
-				}
-				catch (const std::exception& ex)
-				{
-					try
-					{
-						std::throw_with_nested(std::logic_error("second"));
-					}
-					catch (const std::exception& ex)
-					{
-						try
-						{
-							std::throw_with_nested(std::logic_error("third"));
-						}
-						catch (const std::exception& ex)
-						{
-							Boring32::Error::PrintExceptionToStringStream(ex, ss);
-							Assert::IsFalse(ss.str().empty());
+							Assert::IsFalse(ss.empty());
 						}
 					}
 				}
