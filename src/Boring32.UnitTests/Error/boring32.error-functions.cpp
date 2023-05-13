@@ -20,7 +20,6 @@ namespace Error
 
 			TEST_METHOD(TestPrintExceptionToString)
 			{
-				std::string ss;
 				try
 				{
 					throw std::logic_error("first");
@@ -39,7 +38,7 @@ namespace Error
 						}
 						catch (const std::exception& ex)
 						{
-							Boring32::Error::PrintExceptionToString(ex, ss);
+							std::string ss = Boring32::Error::PrintExceptionToString(ex);
 							Assert::IsFalse(ss.empty());
 						}
 					}
