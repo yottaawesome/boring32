@@ -258,7 +258,7 @@ export namespace Boring32::Error
         return TranslateErrorCode<STR_T>(errorCode, L"ntdll.dll");
     }
 
-    std::string& PrintExceptionToStringStream(
+    std::string& PrintExceptionToString(
         const std::exception& ex,
         std::string& ss
     )
@@ -271,7 +271,7 @@ export namespace Boring32::Error
         }
         catch (const std::exception& ne)
         {
-            return PrintExceptionToStringStream(ne, ss);
+            return PrintExceptionToString(ne, ss);
         }
     }
 
@@ -280,6 +280,6 @@ export namespace Boring32::Error
     )
     {
         std::string ss;
-        return PrintExceptionToStringStream(ex, ss);
+        return PrintExceptionToString(ex, ss);
     }
 }

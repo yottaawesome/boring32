@@ -18,7 +18,7 @@ namespace Error
 				Assert::IsTrue(pos > 0);
 			}
 
-			TEST_METHOD(TestPrintExceptionToStringStream)
+			TEST_METHOD(TestPrintExceptionToString)
 			{
 				std::string ss;
 				try
@@ -39,7 +39,7 @@ namespace Error
 						}
 						catch (const std::exception& ex)
 						{
-							Boring32::Error::PrintExceptionToStringStream(ex, ss);
+							Boring32::Error::PrintExceptionToString(ex, ss);
 							Assert::IsFalse(ss.empty());
 						}
 					}
