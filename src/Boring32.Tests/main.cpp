@@ -702,6 +702,11 @@ void DontDoThis()
 
 int main(int argc, char** args) try
 {
+	throw Boring32::Error::RuntimeError(
+		std::source_location::current(), 
+		std::stacktrace::current(), 
+		std::string("A")
+	);
 	SomeEnum x{};
 
 	Boring32::Memory::Heap h(0, 0);

@@ -35,8 +35,7 @@ export namespace Boring32::Error
 				const std::source_location& location, 
 				const std::stacktrace& trace,
 				const Args&... args
-			)
-				: T(std::forward<Args>(args)...), 
+			) : T(args...),
 				m_location(location),
 				m_trace(trace)
 			{
@@ -49,12 +48,12 @@ export namespace Boring32::Error
 				return m_errorMsg.c_str();
 			}
 
-			virtual std::source_location& GetLocation() const noexcept
+			virtual const std::source_location& GetLocation() const noexcept
 			{
 				return m_location;
 			}
 
-			virtual std::stacktrace& GetStacktrace() const noexcept
+			virtual const std::stacktrace& GetStacktrace() const noexcept
 			{
 				return m_trace;
 			}
@@ -77,6 +76,8 @@ export namespace Boring32::Error
 			std::string m_errorMsg;
 			std::stacktrace m_trace;
 	};
+
+	using RuntimeError = ErrorBase<std::runtime_error>;
 }
 
 namespace Boring32::Error
