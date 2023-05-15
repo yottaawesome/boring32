@@ -12,10 +12,16 @@ export namespace Boring32::Error
 	{
 		public:
 			virtual ~ErrorBase() = default;
+			ErrorBase() = delete;
+			ErrorBase(const ErrorBase&) = default;
+			ErrorBase(ErrorBase&&) noexcept = default;
+			virtual ErrorBase& operator=(const ErrorBase&) = default;
+			virtual ErrorBase& operator=(ErrorBase&&) noexcept = default;
 
+		public:
 			//template <std::enable_if<std::is_default_constructible<T>::value, bool> = true>
 			ErrorBase(
-				const std::source_location& location,
+				const std::source_location& location = std::source_location::current(),
 				const std::stacktrace& trace = std::stacktrace::current()
 			) requires std::is_default_constructible_v<T>
 				: m_location(location),
@@ -28,7 +34,7 @@ export namespace Boring32::Error
 			ErrorBase(
 				const std::source_location& location, 
 				const std::stacktrace& trace,
-				Args&... args
+				const Args&... args
 			)
 				: T(std::forward<Args>(args)...), 
 				m_location(location),
@@ -41,6 +47,16 @@ export namespace Boring32::Error
 			virtual const char* what() const noexcept override
 			{ 
 				return m_errorMsg.c_str();
+			}
+
+			virtual std::source_location& GetLocation() const noexcept
+			{
+				return m_location;
+			}
+
+			virtual std::stacktrace& GetStacktrace() const noexcept
+			{
+				return m_trace;
 			}
 
 		protected:
