@@ -14,7 +14,7 @@ export namespace Boring32::Error
 		T("dummy-value");
 	};
 
-	template<typename T> requires std::is_base_of<std::exception, T>::value
+	template<typename T> requires std::is_base_of_v<std::exception, T>
 	class ErrorBase : public T
 	{
 		public:
