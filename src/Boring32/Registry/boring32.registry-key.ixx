@@ -9,14 +9,6 @@ import <win32.hpp>;
 import :functions;
 import boring32.error;
 
-namespace Boring32::Registry
-{
-	std::shared_ptr<HKEY__> CreateRegKeyPtr(HKEY key)
-	{
-		return { key, [](const auto val) { RegCloseKey(val); } };
-	}
-}
-
 export namespace Boring32::Registry
 {
 	struct KeyValues
@@ -267,6 +259,26 @@ export namespace Boring32::Registry
 				return subkeys;
 			}
 
+			virtual bool IsPredefinedKey() const noexcept
+			{
+				return IsPredefinedKey(m_key.get());
+			}
+
+			static bool IsPredefinedKey(HKEY const key) noexcept
+			{
+				if (key == HKEY_CLASSES_ROOT)
+					return true;
+				if (key == HKEY_CURRENT_CONFIG)
+					return true;
+				if (key == HKEY_CURRENT_USER)
+					return true;
+				if (key == HKEY_LOCAL_MACHINE)
+					return true;
+				if (key == HKEY_USERS)
+					return true;
+				return false;
+			}
+
 		protected:
 			virtual Key& Copy(const Key& other)
 			{
@@ -314,6 +326,18 @@ export namespace Boring32::Registry
 			catch (const std::exception& ex)
 			{
 				std::wcerr << ex.what() << std::endl;
+			}
+
+			static std::shared_ptr<HKEY__> CreateRegKeyPtr(HKEY key)
+			{
+				return {
+					key,
+					[](const HKEY val)
+					{
+						if (!Key::IsPredefinedKey(val))
+							RegCloseKey(val);
+					}
+				};
 			}
 
 		protected:
