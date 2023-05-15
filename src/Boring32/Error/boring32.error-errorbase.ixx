@@ -48,8 +48,8 @@ export namespace Boring32::Error
 			template<typename...Args> 
 			ErrorBase(
 				const std::string_view msg,
-				const std::source_location& location,
-				const std::stacktrace& trace
+				const std::source_location& location = std::source_location::current(),
+				const std::stacktrace& trace = std::stacktrace::current()
 			) requires std::is_same_v<T, std::runtime_error>
 				: T(msg.data()),
 				m_location(location),
