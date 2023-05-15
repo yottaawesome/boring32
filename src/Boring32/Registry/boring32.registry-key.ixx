@@ -241,6 +241,32 @@ export namespace Boring32::Registry
 				return values;
 			}
 
+			virtual unsigned GetSubkeyCount()
+			{
+				DWORD subkeys;
+				// https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryinfokeyw
+				const LSTATUS status = RegQueryInfoKeyW(
+					m_key.get(),
+					nullptr,
+					nullptr,
+					nullptr,
+					&subkeys,
+					nullptr,
+					nullptr,
+					nullptr,
+					nullptr,
+					nullptr,
+					nullptr,
+					nullptr
+				);
+				if (status)
+					throw Error::Win32Error(
+						"Failed to open registry key",
+						status
+					);
+				return subkeys;
+			}
+
 		protected:
 			virtual Key& Copy(const Key& other)
 			{
@@ -270,7 +296,10 @@ export namespace Boring32::Registry
 					&key
 				);
 				if (status != ERROR_SUCCESS)
-					throw Error::Win32Error("failed to open registry key", status);
+					throw Error::Win32Error(
+						"Failed to open registry key", 
+						status
+					);
 				m_key = CreateRegKeyPtr(key);
 			}
 
