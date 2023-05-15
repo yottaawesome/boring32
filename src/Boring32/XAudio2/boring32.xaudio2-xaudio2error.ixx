@@ -2,6 +2,7 @@ export module boring32.xaudio2:xaudio2error;
 import boring32.error;
 import <string>;
 import <source_location>;
+import <stacktrace>;
 
 export namespace Boring32::XAudio2
 {
@@ -9,10 +10,18 @@ export namespace Boring32::XAudio2
 	{
 		public:
 			virtual ~XAudio2Error() = default;
+			XAudio2Error() = default;
+			XAudio2Error(const XAudio2Error&) = default;
+			XAudio2Error(XAudio2Error&&) noexcept = default;
+			virtual XAudio2Error& operator=(const XAudio2Error&) = default;
+			virtual XAudio2Error& operator=(XAudio2Error&&) noexcept = default;
+
+		public:
 			XAudio2Error(
 				const std::string& message,
-				const std::source_location location = std::source_location::current()
-			) : Error::Boring32Error(message, location)
+				const std::source_location location = std::source_location::current(),
+				const std::stacktrace trace = std::stacktrace::current()
+			) : Error::Boring32Error(message, location, trace)
 			{ }
 	};
 }
