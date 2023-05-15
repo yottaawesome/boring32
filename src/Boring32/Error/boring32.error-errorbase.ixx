@@ -4,9 +4,16 @@ import <format>;
 import <string>;
 import <source_location>;
 import <stacktrace>;
+import :functions;
 
 export namespace Boring32::Error
 {
+	template<typename T>
+	concept CheckStringConstructor = requires()
+	{
+		T("dummy-value");
+	};
+
 	template<typename T> requires std::is_base_of<std::exception, T>::value
 	class ErrorBase : public T
 	{
@@ -37,7 +44,7 @@ export namespace Boring32::Error
 				const std::source_location& location,
 				const std::stacktrace& trace,
 				const Args&... args
-			) requires !std::is_same_v<T, std::runtime_error>
+			) requires !CheckStringConstructor<T>
 				: T(args...),
 				m_location(location),
 				m_trace(trace)
@@ -50,7 +57,7 @@ export namespace Boring32::Error
 				const std::string_view msg,
 				const std::source_location& location = std::source_location::current(),
 				const std::stacktrace& trace = std::stacktrace::current()
-			) requires std::is_same_v<T, std::runtime_error>
+			) requires CheckStringConstructor<T>
 				: T(msg.data()),
 				m_location(location),
 				m_trace(trace)
@@ -77,15 +84,7 @@ export namespace Boring32::Error
 		protected:
 			virtual void SetErrorMessage(std::string_view msg)
 			{
-				m_errorMsg = std::format(
-					"{}: Exception in function {}() at {}:{}:{} --> {}",
-					msg,
-					m_location.function_name(),
-					m_location.file_name(),
-					m_location.line(),
-					m_location.column(),
-					T::what()
-				);
+				m_errorMsg = FormatErrorMessage(m_trace, m_location, std::string(msg));
 			}
 
 		protected:
@@ -99,12 +98,6 @@ export namespace Boring32::Error
 
 namespace Boring32::Error
 {
-	template<typename T>
-	concept CheckStringConstructor = requires()
-	{
-		T("dummy-value");
-	};
-
 	template<typename...E>
 	[[deprecated("This is just here for possible repurposing.")]]
 	class Error : public virtual E...
