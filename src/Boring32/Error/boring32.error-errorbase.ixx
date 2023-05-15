@@ -3,35 +3,36 @@ import <stdexcept>;
 import <format>;
 import <string>;
 import <source_location>;
+import <stacktrace>;
 
-namespace Boring32::Error
+export namespace Boring32::Error
 {
-	template<typename T>
-	concept CheckStringConstructor = requires()
-	{
-		T("dummy-value");
-	};
-
 	template<typename T> requires std::is_base_of<std::exception, T>::value
-	[[deprecated("This is just here for possible repurposing.")]]
 	class ErrorBase : public T
 	{
 		public:
-			virtual ~ErrorBase() {}
+			virtual ~ErrorBase() = default;
 
 			//template <std::enable_if<std::is_default_constructible<T>::value, bool> = true>
-			ErrorBase(const std::source_location& location)
-				requires std::is_default_constructible_v<T>
-				: T(),
-				m_location(location)
+			ErrorBase(
+				const std::source_location& location,
+				const std::stacktrace& trace = std::stacktrace::current()
+			) requires std::is_default_constructible_v<T>
+				: m_location(location),
+				m_trace(trace)
 			{
 				SetErrorMessage();
 			}
 
 			template<typename...Args>
-			ErrorBase(const std::source_location& location, Args&... args)
+			ErrorBase(
+				const std::source_location& location, 
+				const std::stacktrace& trace,
+				Args&... args
+			)
 				: T(std::forward<Args>(args)...), 
-				m_location(location)
+				m_location(location),
+				m_trace(trace)
 			{
 				SetErrorMessage();
 			}
@@ -58,8 +59,17 @@ namespace Boring32::Error
 		protected:
 			std::source_location m_location;
 			std::string m_errorMsg;
+			std::stacktrace m_trace;
 	};
+}
 
+namespace Boring32::Error
+{
+	template<typename T>
+	concept CheckStringConstructor = requires()
+	{
+		T("dummy-value");
+	};
 
 	template<typename...E>
 	[[deprecated("This is just here for possible repurposing.")]]
