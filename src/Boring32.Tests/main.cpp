@@ -703,9 +703,9 @@ void DontDoThis()
 int main(int argc, char** args) try
 {
 	throw Boring32::Error::RuntimeError(
+		"Blah",
 		std::source_location::current(), 
-		std::stacktrace::current(), 
-		std::string("A")
+		std::stacktrace::current()
 	);
 	SomeEnum x{};
 

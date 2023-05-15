@@ -12,7 +12,7 @@ export namespace Boring32::Error
 	{
 		public:
 			virtual ~ErrorBase() = default;
-			ErrorBase() = delete;
+			ErrorBase() requires std::is_default_constructible_v<T> = default;
 			ErrorBase(const ErrorBase&) = default;
 			ErrorBase(ErrorBase&&) noexcept = default;
 			virtual ErrorBase& operator=(const ErrorBase&) = default;
@@ -21,25 +21,41 @@ export namespace Boring32::Error
 		public:
 			//template <std::enable_if<std::is_default_constructible<T>::value, bool> = true>
 			ErrorBase(
+				const std::string_view msg,
 				const std::source_location& location = std::source_location::current(),
 				const std::stacktrace& trace = std::stacktrace::current()
 			) requires std::is_default_constructible_v<T>
 				: m_location(location),
 				m_trace(trace)
 			{
-				SetErrorMessage();
+				SetErrorMessage(msg);
 			}
 
 			template<typename...Args>
 			ErrorBase(
-				const std::source_location& location, 
+				const std::string_view msg,
+				const std::source_location& location,
 				const std::stacktrace& trace,
 				const Args&... args
-			) : T(args...),
+			) requires !std::is_same_v<T, std::runtime_error>
+				: T(args...),
 				m_location(location),
 				m_trace(trace)
 			{
-				SetErrorMessage();
+				SetErrorMessage(msg);
+			}
+
+			template<typename...Args> 
+			ErrorBase(
+				const std::string_view msg,
+				const std::source_location& location,
+				const std::stacktrace& trace
+			) requires std::is_same_v<T, std::runtime_error>
+				: T(msg.data()),
+				m_location(location),
+				m_trace(trace)
+			{
+				SetErrorMessage(msg);
 			}
 
 		public:
@@ -59,10 +75,11 @@ export namespace Boring32::Error
 			}
 
 		protected:
-			virtual void SetErrorMessage()
+			virtual void SetErrorMessage(std::string_view msg)
 			{
 				m_errorMsg = std::format(
-					"Exception in function {}() at {}:{}:{} --> {}",
+					"{}: Exception in function {}() at {}:{}:{} --> {}",
+					msg,
 					m_location.function_name(),
 					m_location.file_name(),
 					m_location.line(),
