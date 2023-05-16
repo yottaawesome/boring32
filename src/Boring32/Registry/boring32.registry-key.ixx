@@ -18,15 +18,15 @@ export namespace Boring32::Registry
 		DWORD DataSizeBytes = 0;
 	};
 
-	class Key
+	class Key final
 	{
 		public:
-			virtual ~Key() = default;
+			~Key() = default;
 			Key() = default;
 			Key(const Key& other) = default;
 			Key(Key&& other) noexcept = default;
-			virtual Key& operator=(const Key& other) = default;
-			virtual Key& operator=(Key&& other) noexcept = default;
+			Key& operator=(const Key& other) = default;
+			Key& operator=(Key&& other) noexcept = default;
 
 		public:
 			Key(const HKEY key, const std::wstring& subkey)
@@ -72,29 +72,29 @@ export namespace Boring32::Registry
 			{}
 
 		public:
-			virtual Key& operator=(const HKEY other)
+			Key& operator=(const HKEY other)
 			{
 				m_key = CreateRegKeyPtr(other);
 				return *this;
 			}
 
-			virtual operator bool() const noexcept
+			operator bool() const noexcept
 			{
 				return m_key != nullptr;
 			}
 
 		public:
-			virtual void Close() noexcept
+			void Close() noexcept
 			{
 				m_key = nullptr;
 			}
 
-			virtual HKEY GetKey() const noexcept
+			HKEY GetKey() const noexcept
 			{
 				return m_key.get();
 			}
 
-			virtual void GetValue(const std::wstring& valueName, std::wstring& out)
+			void GetValue(const std::wstring& valueName, std::wstring& out)
 			{
 				if (!m_key)
 					throw Error::Boring32Error("m_key is null");
@@ -102,17 +102,17 @@ export namespace Boring32::Registry
 				Registry::GetValue(m_key.get(), valueName, out);
 			}
 
-			virtual void GetValue(const std::wstring& valueName, DWORD& out)
+			void GetValue(const std::wstring& valueName, DWORD& out)
 			{
 				Registry::GetValue(m_key.get(), valueName, out);
 			}
 
-			virtual void GetValue(const std::wstring& valueName, size_t& out)
+			void GetValue(const std::wstring& valueName, size_t& out)
 			{
 				Registry::GetValue(m_key.get(), valueName, out);
 			}
 
-			virtual void WriteValue(
+			void WriteValue(
 				const std::wstring& valueName,
 				const std::wstring& value
 			)
@@ -133,7 +133,7 @@ export namespace Boring32::Registry
 					throw Error::Win32Error("RegSetValueExW() failed", status);
 			}
 
-			virtual void WriteValue(
+			void WriteValue(
 				const std::wstring& valueName,
 				const DWORD value
 			)
@@ -141,7 +141,7 @@ export namespace Boring32::Registry
 				Registry::WriteValue(m_key.get(), valueName, REG_DWORD, value);
 			}
 
-			virtual void WriteValue(
+			void WriteValue(
 				const std::wstring& valueName,
 				const size_t value
 			)
@@ -149,7 +149,7 @@ export namespace Boring32::Registry
 				Registry::WriteValue(m_key.get(), valueName, REG_QWORD, value);
 			}
 
-			virtual void Export(const std::wstring& path, const DWORD flags)
+			void Export(const std::wstring& path, const DWORD flags)
 			{
 				if (!m_key)
 					throw Error::Boring32Error("m_key is null");
@@ -164,7 +164,7 @@ export namespace Boring32::Registry
 					throw Error::Win32Error("RegSaveKeyExW() failed", status);
 			}
 
-			virtual std::vector<KeyValues> GetValues()
+			std::vector<KeyValues> GetValues()
 			{
 				if (!m_key)
 				{
@@ -213,7 +213,7 @@ export namespace Boring32::Registry
 				return values;
 			}
 
-			virtual unsigned GetSubkeyCount()
+			unsigned GetSubkeyCount()
 			{
 				DWORD subkeys;
 				// https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryinfokeyw
@@ -239,7 +239,7 @@ export namespace Boring32::Registry
 				return subkeys;
 			}
 
-			virtual bool IsPredefinedKey() const noexcept
+			bool IsPredefinedKey() const noexcept
 			{
 				return IsPredefinedKey(m_key.get());
 			}
@@ -259,8 +259,8 @@ export namespace Boring32::Registry
 				return false;
 			}
 
-		protected:
-			virtual void InternalOpen(
+		private:
+			void InternalOpen(
 				const HKEY superKey,
 				const std::wstring& subkey
 			)
@@ -281,7 +281,7 @@ export namespace Boring32::Registry
 				m_key = CreateRegKeyPtr(key);
 			}
 
-			virtual void InternalOpen(
+			void InternalOpen(
 				const HKEY key, 
 				const std::wstring& subkey, 
 				const std::nothrow_t&
@@ -306,7 +306,7 @@ export namespace Boring32::Registry
 				};
 			}
 
-		protected:
+		private:
 			std::shared_ptr<HKEY__> m_key;
 			DWORD m_access = 0;
 	};
