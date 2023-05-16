@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 export module boring32.async:eventloop;
 import <vector>;
 import <functional>;

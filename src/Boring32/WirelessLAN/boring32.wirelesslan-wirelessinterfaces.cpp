@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 module boring32.wirelesslan:wirelessinterfaces;
 import boring32.error;
 import :cleanup;

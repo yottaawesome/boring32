@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 export module boring32.io:completionport;
 import boring32.raii;
 import <win32.hpp>;

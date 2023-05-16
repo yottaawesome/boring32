@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 export module boring32.datastructures:singlylinkedlist;
 import boring32.error;
 import <stdexcept>;

@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 export module boring32.ipc:blockingnamedpipeserver;
 import boring32.raii;
 import :namedpipeserverbase;

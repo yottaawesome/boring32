@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 export module boring32.windowsimagingcomponent:imagingfactory;
 import <string>;
 import <stdexcept>;

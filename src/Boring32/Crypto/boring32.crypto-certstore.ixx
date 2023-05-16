@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 //#include <Windows.h>
 //#include <dpapi.h> // not including this header causes symbol has already been defined error
 //#include <wincrypt.h>

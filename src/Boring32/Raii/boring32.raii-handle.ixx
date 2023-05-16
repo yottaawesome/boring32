@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 export module boring32.raii:handle;
 import <type_traits>;
 import <win32.hpp>;

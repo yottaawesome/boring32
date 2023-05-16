@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 export module boring32.winsock:functions;
 import <iostream>;
 import <vector>;

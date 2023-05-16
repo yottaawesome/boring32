@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 export module boring32.raii:win32handle;
 import <functional>;
 import <iostream>;

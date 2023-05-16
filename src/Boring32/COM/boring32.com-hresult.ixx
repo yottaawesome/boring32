@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 export module boring32.com:hresult;
 import :functions;
 import boring32.error;

@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 export module boring32.registry:functions;
 import boring32.error;
 import boring32.async;

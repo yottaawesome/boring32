@@ -1,4 +1,6 @@
-﻿import <format>;
+﻿#include <source_location>;
+
+import <format>;
 import <memory>;
 import <atomic>;
 import <iostream>;

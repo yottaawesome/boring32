@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 export module boring32.winhttp:websocketsettings;
 import boring32.crypto;
 import :session;

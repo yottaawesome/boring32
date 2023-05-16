@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 export module boring32.ipc:overlappednamedpipeclient;
 import :namedpipeclientbase;
 import boring32.async;

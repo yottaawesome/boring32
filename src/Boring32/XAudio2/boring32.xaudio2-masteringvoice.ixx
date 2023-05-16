@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 export module boring32.xaudio2:masteringvoice;
 import :voice;
 import <win32.hpp>;

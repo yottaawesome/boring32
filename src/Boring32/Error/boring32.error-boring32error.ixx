@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 export module boring32.error:boring32error;
 import <stdexcept>;
 import <string>;

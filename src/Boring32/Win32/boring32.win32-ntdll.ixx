@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 export module boring32.win32:ntdll;
 import :defs;
 import boring32.error;

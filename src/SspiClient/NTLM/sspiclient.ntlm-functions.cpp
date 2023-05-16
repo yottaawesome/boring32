@@ -1,5 +1,6 @@
 module sspiclient.ntlm:functions;
 import <string>;
+import <win32.hpp>;
 
 namespace SSPIClient::NTLM
 {

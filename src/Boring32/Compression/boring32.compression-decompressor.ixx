@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 export module boring32.compression:decompressor;
 import <vector>;
 import <win32.hpp>;

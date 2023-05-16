@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 export module boring32.async:mutex;
 import boring32.raii;
 import <string>;

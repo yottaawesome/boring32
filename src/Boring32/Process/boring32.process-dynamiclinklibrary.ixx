@@ -1,5 +1,7 @@
 module;
 
+#include <source_location>;
+
 export module boring32.process:dynamiclinklibrary;
 import <string>;
 import <stdexcept>;

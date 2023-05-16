@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 export module boring32.taskscheduler:taskfolder;
 import :registeredtask;
 import <string>;

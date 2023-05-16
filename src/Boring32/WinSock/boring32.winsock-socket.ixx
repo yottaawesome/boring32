@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 export module boring32.winsock:socket;
 import "win32.hpp";
 import :winsockerror;

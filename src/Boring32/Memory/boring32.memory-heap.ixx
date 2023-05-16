@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 export module boring32.memory:heap;
 import <memory>;
 import <win32.hpp>;

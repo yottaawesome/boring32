@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 export module boring32.winhttp:asyncwebsocket;
 import <vector>;
 import <string>;

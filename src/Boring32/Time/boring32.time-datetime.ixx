@@ -1,3 +1,7 @@
+module;
+
+#include <source_location>;
+
 export module boring32.time:datetime;
 import <cstdint>;
 import <win32.hpp>;
