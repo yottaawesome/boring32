@@ -7,7 +7,7 @@ import <iostream>;
 
 export namespace Boring32::Crypto
 {
-	class TempCertImport
+	class TempCertImport final
 	{
 		public:
 			~TempCertImport()

@@ -15,24 +15,17 @@ export namespace Boring32::Crypto
 // See: https://docs.microsoft.com/en-us/windows/win32/seccng/encrypting-data-with-cng
 export namespace Boring32::Crypto
 {
-	class CryptoKey
+	class CryptoKey final
 	{
 		public:
-			virtual ~CryptoKey()
+			~CryptoKey()
 			{
 				Close();
 			}
 
 			CryptoKey() = default;
-			CryptoKey(
-				BCRYPT_KEY_HANDLE const keyHandle, 
-				std::vector<std::byte>&& keyObject
-			) : m_keyHandle(keyHandle),
-				m_keyObject(std::move(keyObject))
-			{ }
-
 			CryptoKey(const CryptoKey&) = delete;
-			virtual CryptoKey& operator=(const CryptoKey&) = delete;
+			CryptoKey& operator=(const CryptoKey&) = delete;
 
 			CryptoKey(CryptoKey&& other) noexcept
 				: m_keyHandle(nullptr)
@@ -40,18 +33,26 @@ export namespace Boring32::Crypto
 				Move(other);
 			}
 
-			virtual CryptoKey& operator=(CryptoKey&& other) noexcept
+			CryptoKey& operator=(CryptoKey&& other) noexcept
 			{
 				return Move(other);
 			}
 
 		public:
-			virtual BCRYPT_KEY_HANDLE GetHandle() const noexcept
+			CryptoKey(
+				BCRYPT_KEY_HANDLE const keyHandle,
+				std::vector<std::byte>&& keyObject
+			) : m_keyHandle(keyHandle),
+				m_keyObject(std::move(keyObject))
+			{ }
+
+		public:
+			BCRYPT_KEY_HANDLE GetHandle() const noexcept
 			{
 				return m_keyHandle;
 			}
 
-			virtual void Close()
+			void Close()
 			{
 				if (m_keyHandle)
 				{
@@ -60,8 +61,8 @@ export namespace Boring32::Crypto
 				}
 			}
 
-		protected:
-			virtual CryptoKey& Move(CryptoKey& other) noexcept
+		private:
+			CryptoKey& Move(CryptoKey& other) noexcept
 			{
 				Close();
 				m_keyHandle = other.m_keyHandle;
@@ -70,7 +71,7 @@ export namespace Boring32::Crypto
 				return *this;
 			}
 
-		protected:
+		private:
 			// We can duplicate this key, but for now, just share it
 			BCRYPT_KEY_HANDLE m_keyHandle = nullptr;
 			std::vector<std::byte> m_keyObject;
