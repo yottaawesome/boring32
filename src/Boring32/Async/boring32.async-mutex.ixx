@@ -3,7 +3,6 @@ module;
 #include <source_location>;
 
 export module boring32.async:mutex;
-import boring32.raii;
 import <string>;
 import <win32.hpp>;
 import <stdexcept>;
@@ -11,6 +10,7 @@ import <string>;
 import <iostream>;
 import <format>;
 import boring32.error;
+import boring32.raii;
 import :functions;
 
 export namespace Boring32::Async

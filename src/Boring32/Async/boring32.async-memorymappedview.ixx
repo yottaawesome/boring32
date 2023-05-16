@@ -1,10 +1,6 @@
-module;
-
-#include <source_location>;
-
 export module boring32.async:memorymappedview;
-import :memorymappedfile;
 import <string>;
+import :memorymappedfile;
 
 export namespace Boring32::Async
 {

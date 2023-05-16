@@ -1,11 +1,7 @@
-module;
-
-#include <source_location>;
-
 export module boring32.async:synced;
-import :criticalsectionlock;
 import <functional>;
 import <win32.hpp>;
+import :criticalsectionlock;
 
 export namespace Boring32::Async
 {

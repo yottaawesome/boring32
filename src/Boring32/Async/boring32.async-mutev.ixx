@@ -3,12 +3,12 @@ module;
 #include <source_location>;
 
 export module boring32.async:mutev;
-import :event;
-import boring32.error;
 import <stdexcept>;
 import <format>;
 import <string>;
 import <win32.hpp>;
+import :event;
+import boring32.error;
 
 export namespace Boring32::Async
 {

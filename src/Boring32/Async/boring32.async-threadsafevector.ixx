@@ -1,14 +1,11 @@
-module;
-
-#include <source_location>;
-
 export module boring32.async:threadsafevector;
-import :criticalsectionlock;
-import :event;
+
 import <algorithm>;
 import <functional>;
 import <vector>;
 import <win32.hpp>;
+import :criticalsectionlock;
+import :event;
 
 export namespace Boring32::Async
 {

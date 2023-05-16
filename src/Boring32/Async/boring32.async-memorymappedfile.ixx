@@ -3,12 +3,12 @@ module;
 #include <source_location>;
 
 export module boring32.async:memorymappedfile;
-import boring32.raii;
 import <string>;
 import <stdexcept>;
 import <format>;
 import <iostream>;
 import <win32.hpp>;
+import boring32.raii;
 import boring32.error;
 
 export namespace Boring32::Async

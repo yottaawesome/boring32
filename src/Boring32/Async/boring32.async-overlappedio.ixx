@@ -3,10 +3,10 @@ module;
 #include <source_location>;
 
 export module boring32.async:overlappedio;
-import :overlappedop;
 import <vector>;
 import <stdexcept>;
 import boring32.error;
+import :overlappedop;
 
 export namespace Boring32::Async
 {
