@@ -197,9 +197,10 @@ export namespace Boring32::Compression
 				m_type = other.m_type;
 				m_compressor = std::move(other.m_compressor);
 			}
-			catch (const std::exception& ex)
+			catch (const std::exception&)
 			{
-				std::wcerr << ex.what() << std::endl;
+				// ICE...
+				//std::wcerr << ex.what() << std::endl;
 			}
 
 			void Copy(const Compressor& other)

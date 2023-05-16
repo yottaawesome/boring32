@@ -61,9 +61,10 @@ export namespace Boring32::TaskScheduler
 				Connect();
 				return true;
 			}
-			catch (const std::exception& ex)
+			catch (const std::exception&)
 			{
-				std::wcerr << ex.what() << std::endl;
+				// ICE
+				//std::wcerr << ex.what() << std::endl;
 				return false;
 			}
 

@@ -196,9 +196,10 @@ export namespace Boring32::Async::ThreadPools
 				{
 					callback->Callback(instance, callback->Parameter, work);
 				}
-				catch (const std::exception& ex)
+				catch (const std::exception&)
 				{
-					std::wcerr << ex.what() << std::endl;
+					// ICE
+					//std::wcerr << ex.what() << std::endl;
 				}
 			}
 
