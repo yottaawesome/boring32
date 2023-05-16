@@ -206,11 +206,12 @@ export namespace Boring32::Crypto
 					throw Error::Boring32Error("m_chainContext is null");
 				if (chainIndex >= m_chainContext->cChain)
 					throw Error::Boring32Error(
-						std::format(
-							"Expected index to be less than {} but got an index of {}",
-							m_chainContext->cChain,
-							chainIndex
-						));
+						"Expected index to be less than {} but got an index of {}",
+						std::source_location::current(),
+						std::stacktrace::current(),
+						m_chainContext->cChain,
+						chainIndex
+					);
 
 				CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
 				if (!simpleChain)
@@ -268,6 +269,9 @@ export namespace Boring32::Crypto
 
 			CertificateChain& Move(CertificateChain& other) noexcept
 			{
+				if (&other == this)
+					return *this;
+
 				Close();
 				m_chainContext = other.m_chainContext;
 				other.m_chainContext = nullptr;
