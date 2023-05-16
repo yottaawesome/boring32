@@ -22,10 +22,10 @@ export namespace Boring32::Crypto
 		SSLF12 = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_SSL_F12)
 	};
 
-	class CertificateChain
+	class CertificateChain final
 	{
 		public:
-			virtual ~CertificateChain()
+			~CertificateChain()
 			{
 				Close();
 			}
@@ -40,6 +40,18 @@ export namespace Boring32::Crypto
 			CertificateChain(CertificateChain&& other) noexcept
 			{
 				Move(other);
+			}
+
+			virtual CertificateChain& operator=(const CertificateChain& other)
+			{
+				Close();
+				return Copy(other);
+			}
+
+			virtual CertificateChain& operator=(CertificateChain&& other) noexcept
+			{
+				Close();
+				return Move(other);
 			}
 
 		public:
@@ -75,8 +87,7 @@ export namespace Boring32::Crypto
 			}
 
 		public:
-			virtual CertificateChain& operator=(const CertificateChain& other);
-			virtual CertificateChain& operator=(CertificateChain&& other) noexcept;
+			
 
 		public:
 			virtual void Close() noexcept
