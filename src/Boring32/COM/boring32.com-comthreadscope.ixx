@@ -3,10 +3,10 @@ module;
 #include <source_location>;
 
 export module boring32.com:comthreadscope;
-import boring32.error;
 import <atomic>;
 import <iostream>;
 import <win32.hpp>;
+import boring32.error;
 
 export namespace Boring32::COM
 {

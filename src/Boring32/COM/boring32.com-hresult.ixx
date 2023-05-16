@@ -3,10 +3,10 @@ module;
 #include <source_location>;
 
 export module boring32.com:hresult;
-import :functions;
-import boring32.error;
 import <source_location>;
 import <win32.hpp>;
+import boring32.error;
+import :functions;
 
 export namespace Boring32::COM
 {
