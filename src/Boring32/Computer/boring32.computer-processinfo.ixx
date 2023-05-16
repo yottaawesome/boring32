@@ -18,18 +18,24 @@ export namespace Boring32::Computer
 		size_t ProcessTime = 0;
 	};
 
-	class ProcessInfo
+	class ProcessInfo final
 	{
 		public:
-			virtual ~ProcessInfo() = default;
+			~ProcessInfo() = default;
+			ProcessInfo() = default;
 			ProcessInfo(const ProcessInfo&) = default;
 			ProcessInfo(ProcessInfo&&) noexcept = default;
+			ProcessInfo& operator=(ProcessInfo&) = default;
+			ProcessInfo& operator=(ProcessInfo&&) noexcept = default;
+
+		public:
 			ProcessInfo(const HANDLE hProcess)
 				: m_processHandle(hProcess)
 			{
 				if (!m_processHandle)
 					throw Error::Boring32Error("hProcess cannot be null");
 			}
+
 			ProcessInfo(const DWORD processId)
 			{
 				if (!processId)
@@ -45,11 +51,7 @@ export namespace Boring32::Computer
 			}
 
 		public:
-			virtual ProcessInfo& operator=(ProcessInfo&) = default;
-			virtual ProcessInfo& operator=(ProcessInfo&&) noexcept = default;
-
-		public:
-			virtual ProcessTimes GetTimes() const
+			ProcessTimes GetTimes() const
 			{
 				if (!m_processHandle)
 					throw Error::Boring32Error("m_processHandle cannot be null");
@@ -89,7 +91,7 @@ export namespace Boring32::Computer
 				};
 			}
 
-			virtual std::wstring GetPath() const
+			std::wstring GetPath() const
 			{
 				if (!m_processHandle)
 					throw Error::Boring32Error("m_processHandle cannot be null");
@@ -112,7 +114,7 @@ export namespace Boring32::Computer
 				return path.c_str();
 			}
 
-			virtual DWORD GetID() const
+			DWORD GetID() const
 			{
 				if (!m_processHandle)
 					throw Error::Boring32Error("m_processHandle cannot be null");
@@ -126,7 +128,7 @@ export namespace Boring32::Computer
 				return id;
 			}
 
-			virtual DWORD GetHandleCount() const
+			DWORD GetHandleCount() const
 			{
 				if (!m_processHandle)
 					throw Error::Boring32Error("m_processHandle cannot be null");
@@ -145,7 +147,7 @@ export namespace Boring32::Computer
 				return handleCount;
 			}
 
-			virtual DWORD GetExitCode() const
+			DWORD GetExitCode() const
 			{
 				if (!m_processHandle)
 					throw Error::Boring32Error("m_processHandle cannot be null");
@@ -179,7 +181,7 @@ export namespace Boring32::Computer
 				return processes;
 			}
 
-		protected:
+		private:
 			RAII::Win32Handle m_processHandle;
 	};
 }
