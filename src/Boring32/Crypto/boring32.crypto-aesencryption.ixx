@@ -1,56 +1,53 @@
 export module boring32.crypto:aesencryption;
-import :cryptokey;
-import :chainingmode;
 import <string>;
 import <vector>;
 import <win32.hpp>;
-import :chainingmode;
 import boring32.error;
+import :cryptokey;
+import :chainingmode;
+import :chainingmode;
 
 // See: https://docs.microsoft.com/en-us/windows/win32/seccng/encrypting-data-with-cng
 export namespace Boring32::Crypto
 {
-	class AesEncryption
+	class AesEncryption final
 	{
 		public:
-			virtual ~AesEncryption()
+			~AesEncryption()
 			{
 				Close();
 			}
 
 			AesEncryption()
-				: m_algHandle(nullptr),
-				m_chainingMode(ChainingMode::CipherBlockChaining)
+				: m_chainingMode(ChainingMode::CipherBlockChaining)
 			{
 				Create();
 			}
 
-
 			AesEncryption(const AesEncryption& other)
-				: m_algHandle(nullptr)
 			{
 				Copy(other);
 			}
 
-			virtual AesEncryption& operator=(const AesEncryption& other)
+			AesEncryption& operator=(const AesEncryption& other)
 			{
 				return Copy(other);
 			}
 
 			AesEncryption(AesEncryption&& other) noexcept
-				: m_algHandle(nullptr),
-				m_chainingMode(ChainingMode::NotSet)
 			{
 				Move(other);
 			}
 			
-			virtual AesEncryption& operator=(AesEncryption&& other) noexcept
+			AesEncryption& operator=(AesEncryption&& other) noexcept
 			{
 				return Move(other);
 			}
 
 		public:
-			virtual void Close() noexcept
+
+		public:
+			void Close() noexcept
 			{
 				if (m_algHandle)
 				{
@@ -61,12 +58,12 @@ export namespace Boring32::Crypto
 				}
 			}
 
-			virtual BCRYPT_ALG_HANDLE GetHandle() const noexcept
+			BCRYPT_ALG_HANDLE GetHandle() const noexcept
 			{
 				return m_algHandle;
 			}
 
-			virtual DWORD GetObjectByteSize() const
+			DWORD GetObjectByteSize() const
 			{
 				if (!m_algHandle)
 					throw Error::Boring32Error("Cipher algorithm not initialised");
@@ -88,7 +85,7 @@ export namespace Boring32::Crypto
 				return cbKeyObject;
 			}
 
-			virtual DWORD GetBlockByteLength() const
+			DWORD GetBlockByteLength() const
 			{
 				if (!m_algHandle)
 					throw Error::Boring32Error("Cipher algorithm not initialised");
@@ -110,7 +107,7 @@ export namespace Boring32::Crypto
 				return cbKeyObject;
 			}
 
-			virtual void SetChainingMode(const ChainingMode cm)
+			void SetChainingMode(const ChainingMode cm)
 			{
 				if (!m_algHandle)
 					throw Error::Boring32Error("Cipher algorithm not initialised");
@@ -129,7 +126,7 @@ export namespace Boring32::Crypto
 				m_chainingMode = cm;
 			}
 
-			virtual CryptoKey GenerateSymmetricKey(const std::vector<std::byte>& rgbAES128Key)
+			CryptoKey GenerateSymmetricKey(const std::vector<std::byte>& rgbAES128Key)
 			{
 				if (!m_algHandle)
 					throw Error::Boring32Error("Cipher algorithm not initialised");
@@ -156,7 +153,7 @@ export namespace Boring32::Crypto
 			}
 
 			// IV will be modified during encryption, so pass a copy if needed
-			virtual std::vector<std::byte> Encrypt(
+			std::vector<std::byte> Encrypt(
 				const CryptoKey& key,
 				const std::vector<std::byte>& iv,
 				const std::wstring_view string
@@ -170,7 +167,7 @@ export namespace Boring32::Crypto
 				);
 			}
 
-			virtual std::vector<std::byte> Encrypt(
+			std::vector<std::byte> Encrypt(
 				const CryptoKey& key,
 				const std::vector<std::byte>& iv,
 				const std::vector<std::byte>& plainText
@@ -231,7 +228,7 @@ export namespace Boring32::Crypto
 				return cypherText;
 			}
 
-			virtual std::vector<std::byte> Decrypt(
+			std::vector<std::byte> Decrypt(
 				const CryptoKey& key,
 				const std::vector<std::byte>& iv,
 				const std::vector<std::byte>& cypherText
@@ -293,8 +290,8 @@ export namespace Boring32::Crypto
 				return plainText;
 			}
 
-		protected:
-			virtual AesEncryption& Copy(const AesEncryption& other)
+		private:
+			AesEncryption& Copy(const AesEncryption& other)
 			{
 				Close();
 				if (other.m_algHandle == nullptr)
@@ -304,7 +301,7 @@ export namespace Boring32::Crypto
 				return *this;
 			}
 
-			virtual AesEncryption& Move(AesEncryption& other) noexcept
+			AesEncryption& Move(AesEncryption& other) noexcept
 			{
 				Close();
 				m_algHandle = other.m_algHandle;
@@ -313,7 +310,7 @@ export namespace Boring32::Crypto
 				return *this;
 			}
 
-			virtual void Create()
+			void Create()
 			{
 				if (m_chainingMode == ChainingMode::NotSet)
 					throw Error::Boring32Error("m_chainingMode is not set");
@@ -330,7 +327,7 @@ export namespace Boring32::Crypto
 				SetChainingMode(m_chainingMode);
 			}
 
-			virtual DWORD GetEncryptDecryptFlags() const
+			DWORD GetEncryptDecryptFlags() const
 			{
 				// BCRYPT_BLOCK_PADDING must not be used with the authenticated encryption modes(AES - CCM and AES - GCM)
 				if (m_chainingMode == ChainingMode::NotSet)
@@ -342,8 +339,8 @@ export namespace Boring32::Crypto
 				return BCRYPT_BLOCK_PADDING;
 			}
 
-		protected:
-			BCRYPT_ALG_HANDLE m_algHandle;
-			ChainingMode m_chainingMode;
+		private:
+			BCRYPT_ALG_HANDLE m_algHandle = nullptr;
+			ChainingMode m_chainingMode = ChainingMode::NotSet;
 	}; 
 }
