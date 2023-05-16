@@ -1,11 +1,11 @@
 export module boring32.crypto:certificatechain;
-import :certificate;
 import <vector>;
 import <win32.hpp>;
-import :functions;
 import <string>;
 import <format>;
 import boring32.error;
+import :certificate;
+import :functions;
 
 export namespace Boring32::Crypto
 {

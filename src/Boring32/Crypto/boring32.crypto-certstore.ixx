@@ -6,14 +6,14 @@
 
 export module boring32.crypto:certstore;
 import <iostream>;
-import :certificate;
 import <string>;
 import <filesystem>;
 import <vector>;
 import <win32.hpp>;
-import :functions;
 import boring32.strings;
 import boring32.error;
+import :functions;
+import :certificate;
 
 export namespace Boring32::Crypto
 {
