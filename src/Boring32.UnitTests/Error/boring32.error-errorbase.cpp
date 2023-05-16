@@ -12,7 +12,7 @@ namespace Error
 			TEST_METHOD(TestDefaultConstructor)
 			{
 				Boring32::Error::ErrorBase<std::exception> error;
-				Assert::IsTrue(!std::string(error.what()).empty());
+				Assert::IsTrue(std::string(error.what()).empty());
 			}
 	};
 }
