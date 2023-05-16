@@ -1,13 +1,13 @@
 export module boring32.filesystem:functions;
 import <string>;
 import <source_location>;
-import boring32.error;
-import boring32.strings;
 import <filesystem>;
 import <format>;
 import <vector>;
 import <memory>;
 import <win32.hpp>;
+import boring32.error;
+import boring32.strings;
 
 export namespace Boring32::FileSystem
 {
@@ -134,8 +134,7 @@ export namespace Boring32::FileSystem
 		SECURITY_ATTRIBUTES* const securityAttributes = nullptr,
 		const DWORD creationDisposition = OPEN_ALWAYS,
 		const DWORD flagsAndAttributes = FILE_ATTRIBUTE_NORMAL,
-		const HANDLE templateFile = nullptr,
-		const std::source_location& location = std::source_location::current()
+		const HANDLE templateFile = nullptr
 	)
 	{
 		if (fileName.empty())
@@ -157,7 +156,7 @@ export namespace Boring32::FileSystem
 		if (fileHandle == INVALID_HANDLE_VALUE)
 		{
 			const auto lastError = GetLastError();
-			throw Error::Win32Error("CreateFileW() failed", lastError, location);
+			throw Error::Win32Error("CreateFileW() failed", lastError);
 		}
 		return fileHandle;
 	}
@@ -166,23 +165,22 @@ export namespace Boring32::FileSystem
 		const HANDLE file,
 		const void* lpBuffer,
 		const DWORD numberOfBytesToWrite,
-		DWORD* const numberOfBytesWritten,
-		const std::source_location& location = std::source_location::current()
+		DWORD* const numberOfBytesWritten
 	)
 	{
 		if (!file)
-			throw Error::Boring32Error("File handle cannot be null", location);
+			throw Error::Boring32Error("File handle cannot be null");
 		if (file == INVALID_HANDLE_VALUE)
-			throw Error::Boring32Error("File handle cannot be INVALID_HANDLE_VALUE", location);
+			throw Error::Boring32Error("File handle cannot be INVALID_HANDLE_VALUE");
 		if (!numberOfBytesWritten)
-			throw Error::Boring32Error("numberOfBytesWritten cannot be null", location);
+			throw Error::Boring32Error("numberOfBytesWritten cannot be null");
 		if (numberOfBytesToWrite == 0)
 		{
 			*numberOfBytesWritten = 0;
 			return;
 		}
 		if (!lpBuffer)
-			throw Error::Boring32Error("Buffer cannot be null", location);
+			throw Error::Boring32Error("Buffer cannot be null");
 
 		// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile
 		const bool success = ::WriteFile(
@@ -197,8 +195,7 @@ export namespace Boring32::FileSystem
 			const auto lastError = GetLastError();
 			throw Error::Win32Error(
 				"WriteFile() failed",
-				lastError,
-				location
+				lastError
 			);
 		}
 	}
@@ -207,20 +204,19 @@ export namespace Boring32::FileSystem
 		const HANDLE file,
 		const void* lpBuffer,
 		const DWORD numberOfBytesToWrite,
-		const OVERLAPPED& overlapped,
-		const std::source_location& location = std::source_location::current()
+		const OVERLAPPED& overlapped
 	)
 	{
 		if (!file)
-			throw Error::Boring32Error("File handle cannot be null", location);
+			throw Error::Boring32Error("File handle cannot be null");
 		if (file == INVALID_HANDLE_VALUE)
-			throw Error::Boring32Error("File handle cannot be INVALID_HANDLE_VALUE", location);
+			throw Error::Boring32Error("File handle cannot be INVALID_HANDLE_VALUE");
 		if (numberOfBytesToWrite == 0)
 		{
 			return;
 		}
 		if (!lpBuffer)
-			throw Error::Boring32Error("Buffer cannot be null", location);
+			throw Error::Boring32Error("Buffer cannot be null");
 
 		// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile
 		const bool success = ::WriteFile(
@@ -235,8 +231,7 @@ export namespace Boring32::FileSystem
 			const auto lastError = GetLastError();
 			throw Error::Win32Error(
 				"WriteFile() failed",
-				lastError,
-				location
+				lastError
 			);
 		}
 	}
@@ -245,20 +240,19 @@ export namespace Boring32::FileSystem
 		const HANDLE file,
 		void* const lpBuffer,
 		const DWORD nNumberOfBytesToRead,
-		DWORD& lpNumberOfBytesRead,
-		const std::source_location& location = std::source_location::current()
+		DWORD& lpNumberOfBytesRead
 	)
 	{
 		if (!file)
-			throw Error::Boring32Error("File handle cannot be null", location);
+			throw Error::Boring32Error("File handle cannot be null");
 		if (file == INVALID_HANDLE_VALUE)
-			throw Error::Boring32Error("File handle cannot be INVALID_HANDLE_VALUE", location);
+			throw Error::Boring32Error("File handle cannot be INVALID_HANDLE_VALUE");
 		if (nNumberOfBytesToRead == 0)
 		{
 			return;
 		}
 		if (!lpBuffer)
-			throw Error::Boring32Error("Buffer cannot be null", location);
+			throw Error::Boring32Error("Buffer cannot be null");
 
 		const bool success = ::ReadFile(
 			file,
@@ -272,8 +266,7 @@ export namespace Boring32::FileSystem
 			const auto lastError = GetLastError();
 			throw Error::Win32Error(
 				"ReadFile() failed",
-				lastError,
-				location
+				lastError
 			);
 		}
 	}

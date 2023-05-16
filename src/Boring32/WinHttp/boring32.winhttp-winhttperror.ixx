@@ -3,6 +3,7 @@ import boring32.error;
 import <string>;
 import <win32.hpp>;
 import <source_location>;
+import <stacktrace>;
 
 export namespace Boring32::WinHttp
 {
@@ -12,8 +13,9 @@ export namespace Boring32::WinHttp
 			virtual ~WinHttpError() = default;
 			WinHttpError(
 				const std::string& msg,
-				const std::source_location location = std::source_location::current()
-			) : Error::Boring32Error(msg, location)
+				const std::source_location& location = std::source_location::current(),
+				const std::stacktrace& trace = std::stacktrace::current()
+			) : Error::Boring32Error(msg, location, trace)
 			{ }
 	};
 }

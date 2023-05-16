@@ -3,6 +3,7 @@ import boring32.error;
 import <string>;
 import <stdexcept>;
 import <source_location>;
+import <stacktrace>;
 import <win32.hpp>;
 
 export namespace Boring32::WinSock
@@ -13,8 +14,9 @@ export namespace Boring32::WinSock
 			virtual ~WinSockError() = default;
 			WinSockError(
 				const std::string& message,
-				const std::source_location location = std::source_location::current()
-			) : Error::Boring32Error(message, location)
+				const std::source_location& location = std::source_location::current(),
+				const std::stacktrace trace = std::stacktrace::current()
+			) : Error::Boring32Error(message, location, trace)
 			{
 			}
 	};

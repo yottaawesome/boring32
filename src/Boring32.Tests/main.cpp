@@ -319,23 +319,6 @@ void templateStuff()
 	s = a;
 }
 
-class Y : public Boring32::Error::Boring32Error
-{
-	public:
-		virtual ~Y() {}
-		Y(
-			std::string s, 
-			DWORD lastError, 
-			std::source_location location = std::source_location::current()
-		)
-			: Boring32::Error::Boring32Error("AA", location)
-		{
-
-		}
-
-	protected:
-};
-
 void BlahBlah()
 {
 	const auto procInfos = Boring32::Computer::ProcessInfo::FromCurrentProcesses();
@@ -702,6 +685,8 @@ void DontDoThis()
 
 int main(int argc, char** args) try
 {
+	throw Boring32::Error::Boring32Error("AAA");
+
 	throw Boring32::Error::RuntimeError("Blah");
 	SomeEnum x{};
 
