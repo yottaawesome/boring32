@@ -21,12 +21,14 @@ export namespace Boring32::Registry
 	class Key
 	{
 		public:
-			virtual ~Key()
-			{
-				Close();
-			}
-
+			virtual ~Key() = default;
 			Key() = default;
+			Key(const Key& other) = default;
+			Key(Key&& other) noexcept = default;
+			virtual Key& operator=(const Key& other) = default;
+			virtual Key& operator=(Key&& other) noexcept = default;
+
+		public:
 			Key(const HKEY key, const std::wstring& subkey)
 				: m_access(KEY_ALL_ACCESS)
 			{
@@ -37,8 +39,7 @@ export namespace Boring32::Registry
 				const HKEY key, 
 				const std::wstring& subkey, 
 				const DWORD access
-			) 
-				: m_access(access)
+			) : m_access(access)
 			{
 				InternalOpen(key, subkey);
 			}
@@ -70,32 +71,11 @@ export namespace Boring32::Registry
 				m_access(KEY_ALL_ACCESS)
 			{}
 
-			Key(const Key& other)
-				: m_access(0)
-			{
-				Copy(other);
-			}
-
-			Key(Key&& other) noexcept
-			{
-				Move(other);
-			}
-
 		public:
 			virtual Key& operator=(const HKEY other)
 			{
 				m_key = CreateRegKeyPtr(other);
 				return *this;
-			}
-
-			virtual Key& operator=(const Key& other)
-			{
-				return Copy(other);
-			}
-
-			virtual Key& operator=(Key&& other) noexcept
-			{
-				return Move(other);
 			}
 
 			virtual operator bool() const noexcept
@@ -280,20 +260,6 @@ export namespace Boring32::Registry
 			}
 
 		protected:
-			virtual Key& Copy(const Key& other)
-			{
-				m_key = other.m_key;
-				m_access = other.m_access;
-				return *this;
-			}
-
-			virtual Key& Move(Key& other) noexcept
-			{
-				m_key = std::move(other.m_key);
-				m_access = other.m_access;
-				return *this;
-			}
-
 			virtual void InternalOpen(
 				const HKEY superKey,
 				const std::wstring& subkey
