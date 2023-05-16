@@ -3,10 +3,10 @@ module;
 #include <source_location>;
 
 export module boring32.ipc:mailslotserver;
-import boring32.raii;
 import <string>;
-import boring32.error;
 import <win32.hpp>;
+import boring32.error;
+import boring32.raii;
 
 export namespace Boring32::IPC
 {

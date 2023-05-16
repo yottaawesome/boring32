@@ -3,13 +3,13 @@ module;
 #include <source_location>;
 
 export module boring32.ipc:blockingnamedpipeclient;
-import :namedpipeclientbase;
 import <vector>;
 import <string>;
 import <stdexcept>;
 import <win32.hpp>;
 import boring32.error;
 import boring32.util;
+import :namedpipeclientbase;
 
 export namespace Boring32::IPC
 {

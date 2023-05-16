@@ -3,9 +3,9 @@ module;
 #include <source_location>;
 
 export module boring32.datastructures:cappedstack;
-import boring32.error;
 import <deque>;
 import <algorithm>;
+import boring32.error;
 
 export namespace Boring32::DataStructures
 {

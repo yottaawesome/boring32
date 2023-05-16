@@ -3,8 +3,8 @@ module;
 #include <source_location>;
 
 export module boring32.io:completionport;
-import boring32.raii;
 import <win32.hpp>;
+import boring32.raii;
 import boring32.error;
 
 export namespace Boring32::IO

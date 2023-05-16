@@ -3,14 +3,14 @@ module;
 #include <source_location>;
 
 export module boring32.ipc:overlappednamedpipeclient;
-import :namedpipeclientbase;
-import boring32.async;
 import <stdexcept>;
 import <format>;
 import <iostream>; 
 import <string>;
 import <win32.hpp>;
+import boring32.async;
 import boring32.error;
+import :namedpipeclientbase;
 
 export namespace Boring32::IPC
 {

@@ -7,10 +7,10 @@ import <stdexcept>;
 import <iostream>;
 import <string>;
 import <win32.hpp>;
-import :namedpipeserverbase;
 import boring32.raii;
 import boring32.async;
 import boring32.error;
+import :namedpipeserverbase;
 
 export namespace Boring32::IPC
 {
