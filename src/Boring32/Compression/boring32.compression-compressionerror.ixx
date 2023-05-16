@@ -3,11 +3,11 @@ module;
 #include <source_location>;
 
 export module boring32.compression:compressionerror;
-import boring32.error;
 import <stdexcept>;
 import <string>;
 import <stacktrace>;
 import <source_location>;
+import boring32.error;
 
 export namespace Boring32::Compression
 {

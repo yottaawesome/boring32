@@ -6,10 +6,10 @@ export module boring32.compression:compressor;
 import <iostream>;
 import <vector>;
 import <win32.hpp>;
+import boring32.error;
 import :compressiontype;
 import :deleters;
 import :compressionerror;
-import boring32.error;
 
 /// <summary>
 /// For reference of the Compression API, see: https://docs.microsoft.com/en-us/windows/win32/cmpapi/using-the-compression-api
