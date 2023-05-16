@@ -42,13 +42,13 @@ export namespace Boring32::Crypto
 				Move(other);
 			}
 
-			virtual CertificateChain& operator=(const CertificateChain& other)
+			CertificateChain& operator=(const CertificateChain& other)
 			{
 				Close();
 				return Copy(other);
 			}
 
-			virtual CertificateChain& operator=(CertificateChain&& other) noexcept
+			CertificateChain& operator=(CertificateChain&& other) noexcept
 			{
 				Close();
 				return Move(other);
@@ -87,10 +87,7 @@ export namespace Boring32::Crypto
 			}
 
 		public:
-			
-
-		public:
-			virtual void Close() noexcept
+			void Close() noexcept
 			{
 				if (m_chainContext)
 				{
@@ -99,7 +96,7 @@ export namespace Boring32::Crypto
 				}
 			}
 
-			virtual bool Verify(const ChainVerificationPolicy policy)
+			bool Verify(const ChainVerificationPolicy policy)
 			{
 				// TODO: need to verify this actually works
 				if (!m_chainContext)
@@ -125,12 +122,12 @@ export namespace Boring32::Crypto
 				return status.dwError == 0;
 			}
 
-			virtual PCCERT_CHAIN_CONTEXT GetChainContext() const noexcept
+			PCCERT_CHAIN_CONTEXT GetChainContext() const noexcept
 			{
 				return m_chainContext;
 			}
 
-			virtual std::vector<Certificate> GetCertChainAt(const DWORD chainIndex) const
+			std::vector<Certificate> GetCertChainAt(const DWORD chainIndex) const
 			{
 				if (m_chainContext == nullptr)
 					throw Error::Boring32Error("m_chainContext is null");
@@ -162,7 +159,7 @@ export namespace Boring32::Crypto
 				return certsInChain;
 			}
 
-			virtual Certificate GetCertAt(
+			Certificate GetCertAt(
 				const DWORD chainIndex, 
 				const DWORD certIndex
 			) const
@@ -193,7 +190,7 @@ export namespace Boring32::Crypto
 				return { simpleChain->rgpElement[certIndex]->pCertContext, false };
 			}
 
-			virtual Certificate GetFirstCertAt(
+			Certificate GetFirstCertAt(
 				const DWORD chainIndex
 			) const
 			{
@@ -215,7 +212,7 @@ export namespace Boring32::Crypto
 				return { simpleChain->rgpElement[0]->pCertContext, false };
 			}
 
-			virtual Certificate GetLastCertAt(
+			Certificate GetLastCertAt(
 				const DWORD chainIndex
 			) const
 			{
@@ -223,11 +220,12 @@ export namespace Boring32::Crypto
 					throw Error::Boring32Error("m_chainContext is null");
 				if (chainIndex >= m_chainContext->cChain)
 					throw Error::Boring32Error(
-						std::format(
-							"Expected index to be less than {} but got an index of {}",
-							m_chainContext->cChain,
-							chainIndex
-						));
+						"Expected index to be less than {} but got an index of {}",
+						std::source_location::current(),
+						std::stacktrace::current(),
+						m_chainContext->cChain,
+						chainIndex
+					);
 
 				CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
 				if (!simpleChain)
@@ -247,8 +245,8 @@ export namespace Boring32::Crypto
 				return temporaryStore;
 			}*/
 
-		protected:
-			virtual CertificateChain& Copy(const CertificateChain& other)
+		private:
+			CertificateChain& Copy(const CertificateChain& other)
 			{
 				if (&other == this)
 					return *this;
@@ -260,7 +258,7 @@ export namespace Boring32::Crypto
 				return *this;
 			}
 
-			virtual CertificateChain& Move(CertificateChain& other) noexcept
+			CertificateChain& Move(CertificateChain& other) noexcept
 			{
 				Close();
 				m_chainContext = other.m_chainContext;
@@ -269,7 +267,7 @@ export namespace Boring32::Crypto
 				return *this;
 			}
 
-		protected:
+		private:
 			PCCERT_CHAIN_CONTEXT m_chainContext = nullptr;
 	};
 }
