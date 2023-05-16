@@ -129,32 +129,40 @@ export namespace Boring32::Crypto
 
 			std::vector<Certificate> GetCertChainAt(const DWORD chainIndex) const
 			{
-				if (m_chainContext == nullptr)
+				if (!m_chainContext)
 					throw Error::Boring32Error("m_chainContext is null");
 
-				if (chainIndex >= m_chainContext->cChain) throw Error::Boring32Error(
-					std::format(
+				if (chainIndex >= m_chainContext->cChain)
+					throw Error::Boring32Error(
 						"Expected index to be less than {} but got an index of {}",
+						std::source_location::current(),
+						std::stacktrace::current(),
 						m_chainContext->cChain,
 						chainIndex
-					)
-				);
+					);
 
 				std::vector<Certificate> certsInChain;
 				CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
 				// This probably should never happen, but guard just in case
-				if (!simpleChain) throw Error::Boring32Error(
-					std::format(
+				if (!simpleChain) 
+					throw Error::Boring32Error(
 						"The simpleChain at {} was unexpectedly null",
+						std::source_location::current(),
+						std::stacktrace::current(),
 						chainIndex
-					)
-				);
+					);
 
-				for (DWORD certIndexInChain = 0; certIndexInChain < simpleChain->cElement; certIndexInChain++)
+				for (
+					DWORD certIndexInChain = 0;
+					certIndexInChain < simpleChain->cElement;
+					certIndexInChain++
+				)
+				{
 					certsInChain.emplace_back(
 						simpleChain->rgpElement[certIndexInChain]->pCertContext,
 						false
 					);
+				}
 
 				return certsInChain;
 			}
@@ -168,23 +176,23 @@ export namespace Boring32::Crypto
 					throw Error::Boring32Error("m_chainContext is null");
 				if (chainIndex >= m_chainContext->cChain)
 					throw Error::Boring32Error(
-						std::format(
-							"Expected chainIndex to be less than {} but got an index of {}",
-							m_chainContext->cChain,
-							chainIndex
-						)
+						"Expected chainIndex to be less than {} but got an index of {}",
+						std::source_location::current(),
+						std::stacktrace::current(),
+						m_chainContext->cChain,
+						chainIndex
 					);
 
 				CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
-				if (simpleChain == nullptr)
+				if (!simpleChain)
 					throw Error::Boring32Error("simpleChain is null");
 				if (certIndex >= simpleChain->cElement)
 					throw Error::Boring32Error(
-						std::format(
-							"Expected certIndex to be less than {} but got an index of {}",
-							simpleChain->cElement,
-							certIndex
-						)
+						"Expected certIndex to be less than {} but got an index of {}",
+						std::source_location::current(),
+						std::stacktrace::current(),
+						simpleChain->cElement,
+						certIndex
 					);
 
 				return { simpleChain->rgpElement[certIndex]->pCertContext, false };
