@@ -38,7 +38,7 @@ export namespace Boring32::Error
 				: m_location(std::move(msg.Location)),
 				m_trace(std::move(msg.Trace))
 			{
-				SetErrorMessage(msg);
+				SetErrorMessage(msg.Message);
 			}
 
 			template<typename...Args>
