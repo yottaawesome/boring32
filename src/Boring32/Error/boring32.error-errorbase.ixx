@@ -43,29 +43,25 @@ export namespace Boring32::Error
 
 			template<typename...Args>
 			ErrorBase(
-				const std::string_view msg,
-				const std::source_location& location,
-				const std::stacktrace& trace,
+				MessageLocationTrace msg,
 				const Args&... args
 			) requires !CheckStringConstructor<T>
 				: T(args...),
-				m_location(location),
-				m_trace(trace)
+				m_location(std::move(msg.Location)),
+				m_trace(std::move(msg.Trace))
 			{
-				SetErrorMessage(msg);
+				SetErrorMessage(msg.Message);
 			}
 
 			template<typename...Args> 
 			ErrorBase(
-				const std::string_view msg,
-				const std::source_location& location = std::source_location::current(),
-				const std::stacktrace& trace = std::stacktrace::current()
+				MessageLocationTrace msg
 			) requires CheckStringConstructor<T>
-				: T(msg.data()),
-				m_location(location),
-				m_trace(trace)
+				: T(msg.Message.data()),
+				m_location(std::move(msg.Location)),
+				m_trace(std::move(msg.Trace))
 			{
-				SetErrorMessage(msg);
+				SetErrorMessage(msg.Message);
 			}
 
 		public:
