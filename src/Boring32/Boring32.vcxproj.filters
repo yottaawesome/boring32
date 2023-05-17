@@ -210,5 +210,6 @@
     <ClCompile Include="Memory\boring32.memory-heap.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-registeredtask.ixx" />
     <ClCompile Include="Util\boring32.util-enumeration.ixx" />
+    <ClCompile Include="Memory\boring32.memory-virtualaddress.ixx" />
   </ItemGroup>
 </Project>
