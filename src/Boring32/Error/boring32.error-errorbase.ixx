@@ -9,6 +9,7 @@ import <string>;
 import <source_location>;
 import <stacktrace>;
 import :functions;
+import :boring32error;
 
 export namespace Boring32::Error
 {
@@ -32,12 +33,10 @@ export namespace Boring32::Error
 		public:
 			//template <std::enable_if<std::is_default_constructible<T>::value, bool> = true>
 			ErrorBase(
-				const std::string_view msg,
-				const std::source_location& location = std::source_location::current(),
-				const std::stacktrace& trace = std::stacktrace::current()
+				MessageLocationTrace msg
 			) requires std::is_default_constructible_v<T>
-				: m_location(location),
-				m_trace(trace)
+				: m_location(std::move(msg.Location)),
+				m_trace(std::move(msg.Trace))
 			{
 				SetErrorMessage(msg);
 			}
@@ -86,15 +85,19 @@ export namespace Boring32::Error
 			}
 
 		protected:
-			virtual void SetErrorMessage(std::string_view msg)
+			virtual void SetErrorMessage(const std::string_view msg)
 			{
-				m_errorMsg = FormatErrorMessage(m_trace, m_location, std::string(msg));
+				m_errorMsg = FormatErrorMessage(
+					m_trace,
+					m_location,
+					std::string(msg)
+				);
 			}
 
 		protected:
 			std::source_location m_location;
-			std::string m_errorMsg;
 			std::stacktrace m_trace;
+			std::string m_errorMsg;
 	};
 
 	using RuntimeError = ErrorBase<std::runtime_error>;

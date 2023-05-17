@@ -14,14 +14,14 @@ import :functions;
 export namespace Boring32::Error
 {
 	// Based on https://www.reddit.com/r/cpp_questions/comments/vl2n68/variadic_template_and_default_arguments/
-	struct MessageAndLocation
+	struct MessageLocationTrace
 	{
 		std::string_view Message;
 		std::source_location Location;
 		std::stacktrace Trace;
 
 		template<typename T>
-		MessageAndLocation(
+		MessageLocationTrace(
 			T&& msg,
 			std::source_location loc = std::source_location::current(),
 			std::stacktrace trace = std::stacktrace::current()
@@ -44,7 +44,7 @@ export namespace Boring32::Error
 			virtual Boring32Error& operator=(Boring32Error&& other) noexcept = default;
 
 		public:
-			Boring32Error(const MessageAndLocation msg)
+			Boring32Error(const MessageLocationTrace msg)
 			{
 				GenerateErrorMessage(
 					msg.Location, 
