@@ -4,7 +4,7 @@ module;
 
 export module boring32.logging:functions;
 import <string>;
-import <source_location>;
+import <format>;
 
 export namespace Boring32::Logging
 {
@@ -26,7 +26,7 @@ export namespace Boring32::Logging
 
 	struct MessageAndLocationW
 	{
-		std::string_view message;
+		std::wstring_view message;
 		std::source_location loc;
 
 		template<typename T>
@@ -42,6 +42,7 @@ export namespace Boring32::Logging
 	template <class... Types>
 	void Info(const std::string_view fmt, const Types&... Args)
 	{
+		std::vformat(fmt, std::make_format_args(Args...));
 	}
 
 	template <class... Types>
