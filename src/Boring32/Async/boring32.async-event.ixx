@@ -7,6 +7,7 @@ import <string>;
 import <stdexcept>;
 import <iostream>;
 import <format>;
+import <optional>;
 import <win32.hpp>;
 import boring32.raii;
 import boring32.error;
@@ -18,13 +19,17 @@ export namespace Boring32::Async
 	/// </summary>
 	class Event final
 	{
-		// Constructors
+		// The Six
 		public:
 			~Event() = default;
 			Event() = default;
 			Event(const Event& other) = default;
 			Event(Event&& other) noexcept = default;
+			Event& operator=(const Event& other) = default;
+			Event& operator=(Event&& other) noexcept = default;
 
+		// Custom constructors
+		public:
 			/// <summary>
 			///		Constructor for an anonymous Event object.
 			/// </summary>
@@ -82,7 +87,14 @@ export namespace Boring32::Async
 			) : m_isManualReset(manualReset),
 				m_name(std::move(name))
 			{
-				m_event = OpenEventW(desiredAccess, isInheritable, m_name.c_str());
+				if (m_name->empty())
+					throw Error::Boring32Error("Name of Event to open cannot be empty");
+
+				m_event = OpenEventW(
+					desiredAccess, 
+					isInheritable, 
+					m_name->c_str()
+				);
 				if (!m_event)
 				{
 					const auto lastError = GetLastError();
@@ -91,10 +103,6 @@ export namespace Boring32::Async
 			}
 
 		public:
-			Event& operator=(const Event& other) = default;
-
-			Event& operator=(Event&& other) noexcept = default;
-
 			inline operator HANDLE() const noexcept
 			{
 				return *m_event;
@@ -234,7 +242,7 @@ export namespace Boring32::Async
 				m_event = nullptr;
 			}
 
-			inline const std::wstring& GetName() const noexcept
+			inline const std::optional<std::wstring>& GetName() const noexcept
 			{
 				return m_name;
 			}
@@ -254,7 +262,7 @@ export namespace Boring32::Async
 					nullptr,			// security attributes
 					m_isManualReset,	// manual reset event
 					isSignaled,			// is initially signalled
-					m_name.empty() ? nullptr : m_name.c_str() // name
+					!m_name || m_name->empty() ? nullptr : m_name->c_str() // name
 				);
 				if (!m_event)
 				{
@@ -267,6 +275,6 @@ export namespace Boring32::Async
 		private:
 			RAII::Win32Handle m_event;
 			bool m_isManualReset = false;
-			std::wstring m_name;
+			std::optional<std::wstring> m_name;
 	};
 }
