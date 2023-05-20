@@ -15,7 +15,7 @@ export namespace Boring32::Strings
 	std::string ConvertString(const std::wstring_view wstr)
 	{
 		if (wstr.empty())
-			return "";
+			return {};
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-widechartomultibyte
 		// Returns the size in bytes, this differs from MultiByteToWideChar, which returns the size in characters
@@ -52,7 +52,7 @@ export namespace Boring32::Strings
 	std::wstring ConvertString(const std::string_view str)
 	{
 		if (str.empty())
-			return L"";
+			return {};
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar
 		// Returns the size in characters, this differs from WideCharToMultiByte, which returns the size in bytes
