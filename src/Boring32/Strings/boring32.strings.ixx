@@ -30,7 +30,10 @@ export namespace Boring32::Strings
 			nullptr											// lpUsedDefaultChar
 		);
 		if (sizeInBytes == 0)
-			throw Error::Win32Error("WideCharToMultiByte() [1] failed", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("WideCharToMultiByte() [1] failed", lastError);
+		}
 
 		std::string strTo(sizeInBytes / sizeof(char), '\0');
 		const int status = WideCharToMultiByte(
@@ -44,7 +47,10 @@ export namespace Boring32::Strings
 			nullptr											// lpUsedDefaultChar
 		);
 		if (status == 0)
-			throw Error::Win32Error("WideCharToMultiByte() [2] failed", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("WideCharToMultiByte() [2] failed", lastError);
+		}
 
 		return strTo;
 	}
@@ -65,7 +71,10 @@ export namespace Boring32::Strings
 			0											// cchWideChar
 		);
 		if (sizeInCharacters == 0)
-			throw Error::Win32Error("MultiByteToWideChar() [1] failed", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("MultiByteToWideChar() [1] failed", lastError);
+		}
 
 		std::wstring wstrTo(sizeInCharacters, '\0');
 		const int status = MultiByteToWideChar(
@@ -77,7 +86,10 @@ export namespace Boring32::Strings
 			static_cast<int>(wstrTo.size())				// cchWideChar
 		);
 		if (status == 0)
-			throw Error::Win32Error("MultiByteToWideChar() [2] failed", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("MultiByteToWideChar() [2] failed", lastError);
+		}
 
 		return wstrTo;
 	}
