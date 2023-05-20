@@ -22,10 +22,10 @@ export namespace Boring32::Async
 		Write = FILE_MAP_WRITE
 	};
 
-	class FileMapping
+	class FileMapping final
 	{
 		public:
-			virtual ~FileMapping()
+			~FileMapping()
 			{
 				Close();
 			}
@@ -105,18 +105,18 @@ export namespace Boring32::Async
 			}
 
 		public:
-			virtual FileMapping& operator=(const FileMapping& other)
+			FileMapping& operator=(const FileMapping& other)
 			{
 				return Copy(other);
 			}
 
-			virtual FileMapping& operator=(FileMapping&& other) noexcept
+			FileMapping& operator=(FileMapping&& other) noexcept
 			{
 				return Move(other);
 			}
 
 		public:
-			virtual void Close()
+			void Close()
 			{
 				m_fileMapping = nullptr;
 				m_maxSize = 0;
@@ -124,28 +124,28 @@ export namespace Boring32::Async
 				m_pageProtection = 0;
 			}
 
-			virtual const std::wstring GetName() const noexcept final
+			const std::wstring GetName() const noexcept
 			{
 				return m_name;
 			}
 
-			virtual HANDLE GetNativeHandle() const noexcept final
+			HANDLE GetNativeHandle() const noexcept
 			{
 				return m_fileMapping.GetHandle();
 			}
 
-			virtual const RAII::Win32Handle GetHandle() const noexcept final
+			const RAII::Win32Handle GetHandle() const noexcept
 			{
 				return m_fileMapping;
 			}
 
-			virtual size_t GetFileSize() const final
+			size_t GetFileSize() const
 			{
 				return m_maxSize;
 			}
 			
-		protected:
-			virtual void CreateOrOpen(
+		private:
+			void CreateOrOpen(
 				const bool create,
 				const FileMapAccess desiredAccess,
 				const bool isInheritable
@@ -189,7 +189,7 @@ export namespace Boring32::Async
 				}
 			}
 
-			virtual FileMapping& Copy(const FileMapping& other)
+			FileMapping& Copy(const FileMapping& other)
 			{
 				Close();
 				m_name = other.m_name;
@@ -206,7 +206,7 @@ export namespace Boring32::Async
 				return *this;
 			}
 
-			virtual FileMapping& Move(FileMapping& other) noexcept
+			FileMapping& Move(FileMapping& other) noexcept
 			{
 				Close();
 				m_fileMapping = std::move(other.m_fileMapping);
@@ -217,7 +217,7 @@ export namespace Boring32::Async
 				return *this;
 			}
 
-		protected:
+		private:
 			RAII::Win32Handle m_fileMapping;
 			size_t m_maxSize = 0;
 			std::wstring m_name;
