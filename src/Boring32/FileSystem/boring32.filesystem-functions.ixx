@@ -22,10 +22,10 @@ export namespace Boring32::FileSystem
 		// See also https://docs.microsoft.com/en-us/windows/win32/menurc/version-information
 		if (!std::filesystem::exists(filePath))
 			throw Error::Boring32Error(
-				std::format(
-					"File {} does not exist",
-					Strings::ConvertString(filePath)
-				)
+				"File {} does not exist",
+				std::source_location::current(),
+				std::stacktrace::current(),
+				Strings::ConvertString(filePath)
 			);
 
 		DWORD verHandle = 0;

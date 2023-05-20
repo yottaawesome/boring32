@@ -99,31 +99,28 @@ export namespace Boring32::Strings
 		const std::wstring& delimiter
 	)
 	{
-		std::vector<std::wstring> results;
 		size_t position = 0;
-		std::wstring intermediateString = stringToTokenise;
-
 		// If we don't find it at all, add the whole string
 		if (stringToTokenise.find(delimiter, position) == std::string::npos)
 		{
-			results.push_back(stringToTokenise);
+			return { stringToTokenise };
 		}
-		else
+
+		std::vector<std::wstring> results;
+		std::wstring intermediateString = stringToTokenise;
+		while ((position = intermediateString.find(delimiter)) != std::string::npos)
 		{
-			while ((position = intermediateString.find(delimiter)) != std::string::npos)
-			{
-				// split and add to the results
-				std::wstring split = intermediateString.substr(0, position);
-				results.push_back(split);
+			// split and add to the results
+			std::wstring split = intermediateString.substr(0, position);
+			results.push_back(split);
 
-				// move up our position
-				position += delimiter.length();
-				intermediateString = intermediateString.substr(position);
+			// move up our position
+			position += delimiter.length();
+			intermediateString = intermediateString.substr(position);
 
-				// On the last iteration, enter the remainder
-				if (intermediateString.find(delimiter) == std::string::npos)
-					results.push_back(intermediateString);
-			}
+			// On the last iteration, enter the remainder
+			if (intermediateString.find(delimiter) == std::string::npos)
+				results.push_back(intermediateString);
 		}
 
 		return results;
