@@ -102,9 +102,7 @@ export namespace Boring32::Strings
 		size_t position = 0;
 		// If we don't find it at all, add the whole string
 		if (stringToTokenise.find(delimiter, position) == std::string::npos)
-		{
 			return { stringToTokenise };
-		}
 
 		std::vector<std::wstring> results;
 		std::wstring intermediateString = stringToTokenise;
@@ -153,7 +151,10 @@ export namespace Boring32::Strings
 
 	std::wstring Erase(std::wstring source, const wchar_t what)
 	{
-		source.erase(std::remove(source.begin(), source.end(), what), source.end());
+		source.erase(
+			std::remove(source.begin(), source.end(), what), 
+			source.end()
+		);
 		return source;
 	}
 
