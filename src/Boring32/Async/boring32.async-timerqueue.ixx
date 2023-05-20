@@ -99,7 +99,10 @@ export namespace Boring32::Async
 				//https://docs.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-createtimerqueue
 				m_timer = CreateTimerQueue();
 				if (m_timer == nullptr)
-					throw Error::Win32Error("CreateTimerQueue() failed", GetLastError());
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("CreateTimerQueue() failed", lastError);
+				}
 			}
 
 			virtual void Move(TimerQueue& other) noexcept try
