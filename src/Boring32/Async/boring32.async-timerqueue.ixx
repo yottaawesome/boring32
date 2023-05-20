@@ -12,10 +12,10 @@ import :event;
 export namespace Boring32::Async
 {
 	//https://docs.microsoft.com/en-us/windows/win32/sync/timer-queues
-	class TimerQueue
+	class TimerQueue final
 	{
 		public:
-			virtual ~TimerQueue()
+			~TimerQueue()
 			{
 				Close(std::nothrow);
 			}
@@ -48,16 +48,16 @@ export namespace Boring32::Async
 			}
 			
 		public:
-			virtual TimerQueue& operator=(TimerQueue&& other) noexcept
+			TimerQueue& operator=(TimerQueue&& other) noexcept
 			{
 				Move(other);
 				return *this;
 			}
 
-			virtual TimerQueue& operator=(const TimerQueue& other) = delete;
+			TimerQueue& operator=(const TimerQueue& other) = delete;
 
 		public:
-			virtual void Close()
+			void Close()
 			{
 				if (!m_timer)
 					return;
@@ -77,7 +77,7 @@ export namespace Boring32::Async
 				m_timer = nullptr;
 			}
 
-			virtual bool Close(const std::nothrow_t&) noexcept try
+			bool Close(const std::nothrow_t&) noexcept try
 			{
 				Close();
 				return true;
@@ -88,13 +88,13 @@ export namespace Boring32::Async
 				return false;
 			}
 
-			virtual HANDLE GetHandle() const noexcept final
+			HANDLE GetHandle() const noexcept
 			{
 				return m_timer;
 			}
 
-		protected:
-			virtual void InternalCreate()
+		private:
+			void InternalCreate()
 			{
 				//https://docs.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-createtimerqueue
 				m_timer = CreateTimerQueue();
@@ -105,7 +105,7 @@ export namespace Boring32::Async
 				}
 			}
 
-			virtual void Move(TimerQueue& other) noexcept try
+			void Move(TimerQueue& other) noexcept try
 			{
 				Close(std::nothrow);
 				m_completionEvent = other.m_completionEvent;
@@ -117,7 +117,7 @@ export namespace Boring32::Async
 				std::wcerr << ex.what() << std::endl;
 			}
 
-		protected:
+		private:
 			HANDLE m_timer = nullptr;
 			Async::Event m_completionEvent;
 			bool m_waitForAllCallbacks = false;
