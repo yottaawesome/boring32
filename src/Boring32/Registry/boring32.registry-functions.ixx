@@ -3,19 +3,19 @@ module;
 #include <source_location>;
 
 export module boring32.registry:functions;
-import boring32.error;
-import boring32.async;
 import <string>;
 import <stdexcept>;
 import <win32.hpp>;
+import boring32.error;
+import boring32.async;
 
 export namespace Boring32::Registry
 {
 	template<typename T, DWORD dataType>
 	T GetValue(const HKEY key, const std::wstring& valueName)
 	{
-		if (key == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": key is nullptr");
+		if (!key)
+			throw Error::Boring32Error("key is nullptr");
 
 		T out;
 		DWORD sizeInBytes = sizeof(out);
@@ -39,7 +39,7 @@ export namespace Boring32::Registry
 		const std::wstring& valueName
 	)
 	{
-		if (key == nullptr)
+		if (!key)
 			throw Error::Boring32Error("m_key is null");
 
 		std::wstring out;
@@ -78,7 +78,7 @@ export namespace Boring32::Registry
 
 		out.resize(sizeInBytes / sizeof(wchar_t));
 		// Exclude terminating null
-		if (out.empty() == false)
+		if (!out.empty())
 			out.pop_back();
 		return out;
 	}
@@ -106,8 +106,8 @@ export namespace Boring32::Registry
 		const T& value
 	)
 	{
-		if (key == nullptr)
-			throw std::runtime_error(__FUNCSIG__ ": key is nullptr");
+		if (!key)
+			throw Error::Boring32Error("key is nullptr");
 
 		const LSTATUS status = RegSetValueExW(
 			key,
@@ -125,10 +125,10 @@ export namespace Boring32::Registry
 	// against calling it multiple times causing resource leaks
 	void WatchKey(const HKEY key, const Async::Event& eventToSignal)
 	{
-		if (key == nullptr)
-			throw std::invalid_argument(__FUNCSIG__ ": key cannot be nullptr");
-		if (eventToSignal.GetHandle() == nullptr)
-			throw std::invalid_argument(__FUNCSIG__ ": eventToSignal is not an initialised Event");
+		if (!key)
+			throw Error::Boring32Error("key cannot be nullptr");
+		if (!eventToSignal)
+			throw Error::Boring32Error("eventToSignal is not an initialised Event");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regnotifychangekeyvalue
 		LSTATUS status = RegNotifyChangeKeyValue(
@@ -144,8 +144,8 @@ export namespace Boring32::Registry
 
 	void DeleteKeyAndSubkey(const HKEY parent, const std::wstring& subkey)
 	{
-		if (parent == nullptr)
-			throw std::invalid_argument(__FUNCSIG__ ": parent cannot be nullptr");
+		if (!parent)
+			throw Error::Boring32Error("Parent cannot be nullptr");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-shdeletekeyw
 		const LSTATUS status = SHDeleteKeyW(
@@ -153,7 +153,10 @@ export namespace Boring32::Registry
 			subkey.c_str()
 		);
 		if (status != ERROR_SUCCESS)
-			throw Error::Win32Error("SHDeleteKeyW() failed", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("SHDeleteKeyW() failed", lastError);
+		}
 	}
 
 	void DeleteSubkeys(const HKEY parent, const std::wstring& subkey)
@@ -167,6 +170,9 @@ export namespace Boring32::Registry
 			subkey.c_str()
 		);
 		if (status != ERROR_SUCCESS)
-			throw Error::Win32Error("RegDeleteTreeW() failed", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("RegDeleteTreeW() failed", lastError);
+		}
 	}
 }
