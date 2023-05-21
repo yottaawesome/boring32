@@ -38,8 +38,11 @@ export namespace Boring32::Security
 			desiredAccess, // https://docs.microsoft.com/en-us/windows/win32/secauthz/access-rights-for-access-token-objects
 			&handle
 		);
-		if (succeeded == false)
-			throw Error::Win32Error("OpenProcessToken() failed", GetLastError());
+		if (!succeeded)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("OpenProcessToken() failed", lastError);
+		}
 
 		return handle;
 	}
@@ -59,7 +62,10 @@ export namespace Boring32::Security
 		// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupprivilegevaluew
 		bool succeeded = LookupPrivilegeValueW(nullptr, privilege.c_str(), &luidPrivilege);
 		if (succeeded == false)
-			throw Error::Win32Error("LookupPrivilegeValueW() failed", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("LookupPrivilegeValueW() failed", lastError);
+		}
 
 		// See https://cpp.hotexamples.com/examples/-/-/AdjustTokenPrivileges/cpp-adjusttokenprivileges-function-examples.html
 		// and https://stackoverflow.com/questions/9195889/what-is-the-purpose-of-anysize-array-in-winnt-h
@@ -102,7 +108,10 @@ export namespace Boring32::Security
 		PSID rawIntegritySid = nullptr;
 		// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw
 		if (!ConvertStringSidToSidW(integritySidString.c_str(), &rawIntegritySid))
-			throw Error::Win32Error("ConvertStringSidToSidW() failed", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("ConvertStringSidToSidW() failed", lastError);
+		}
 		RAII::SIDUniquePtr integritySid(rawIntegritySid);
 
 		TOKEN_MANDATORY_LABEL tml = { 0 };
@@ -116,7 +125,10 @@ export namespace Boring32::Security
 			sizeof(TOKEN_MANDATORY_LABEL) + GetLengthSid(integritySid.get())
 		);
 		if (!succeeded)
-			throw Error::Win32Error("SetTokenInformation() failed", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("SetTokenInformation() failed", lastError);
+		}
 	}
 
 	// See https://docs.microsoft.com/en-us/windows/win32/secauthz/searching-for-a-sid-in-an-access-token-in-c--
@@ -139,7 +151,10 @@ export namespace Boring32::Security
 
 		// Call GetTokenInformation again to get the group information.
 		if (!GetTokenInformation(token, TokenGroups, pGroupInfo, dwSize, &dwSize))
-			throw Error::Win32Error("GetTokenInformation() failed", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("GetTokenInformation() failed", lastError);
+		}
 
 		// Loop through the group SIDs looking for the SID.
 		for (unsigned i = 0; i < pGroupInfo->GroupCount; i++)
@@ -168,7 +183,10 @@ export namespace Boring32::Security
 
 		// Call GetTokenInformation again to get the group information.
 		if (!GetTokenInformation(token, TokenGroups, pGroupInfo, dwSize, &dwSize))
-			throw Error::Win32Error("GetTokenInformation() failed", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("GetTokenInformation() failed", lastError);
+		}
 
 		// Loop through the group SIDs looking for the administrator SID.
 		SID_NAME_USE SidType;
@@ -240,7 +258,10 @@ export namespace Boring32::Security
 			&bytesNeeded
 		);
 		if (!succeeded)
-			throw Error::Win32Error("GetTokenInformation() [2] failed", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("GetTokenInformation() failed", lastError);
+		}
 
 		TOKEN_PRIVILEGES* pPrivs = reinterpret_cast<TOKEN_PRIVILEGES*>(&buffer[0]);
 		for (unsigned i = 0; i < pPrivs->PrivilegeCount; i++)
@@ -249,7 +270,10 @@ export namespace Boring32::Security
 			std::wstring privName(size, '\0');
 			// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupprivilegenamew
 			if (!LookupPrivilegeNameW(nullptr, &pPrivs->Privileges[i].Luid, &privName[0], &size))
-				throw Error::Win32Error("LookupPrivilegeName() failed", GetLastError());
+			{
+				const auto lastError = GetLastError();
+				throw Error::Win32Error("LookupPrivilegeName() failed", lastError);
+			}
 
 			std::wstring privsString;
 			if (pPrivs->Privileges[i].Attributes & SE_PRIVILEGE_ENABLED)
@@ -281,7 +305,10 @@ export namespace Boring32::Security
 		BOOL result = false;
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-checktokenmembership
 		if (!CheckTokenMembership(token, sidToCheck, &result))
-			throw Error::Win32Error("CheckTokenMembership() failed", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("CheckTokenMembership() failed", lastError);
+		}
 		return result;
 	}
 
@@ -309,7 +336,10 @@ export namespace Boring32::Security
 			&luid					// receives LUID of privilege
 		);
 		if (!succeeded)
-			throw Error::Win32Error("LookupPrivilegeValue() failed", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("LookupPrivilegeValue() failed", lastError);
+		}
 
 		// Enable or disable the privilege.
 		TOKEN_PRIVILEGES tokenPrivileges{
@@ -331,7 +361,10 @@ export namespace Boring32::Security
 			nullptr
 		);
 		if (!succeeded)
-			throw Error::Win32Error("AdjustTokenPrivileges() failed", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("AdjustTokenPrivileges() failed", lastError);
+		}
 
 		return GetLastError() == ERROR_NOT_ALL_ASSIGNED ? false : true;
 	}
@@ -386,7 +419,10 @@ export namespace Boring32::Security
 			&result
 		);
 		if (!succeeded)
-			throw Error::Win32Error("PrivilegeCheck() failed", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("PrivilegeCheck() failed", lastError);
+		}
 
 		return result;
 	}
