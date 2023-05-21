@@ -18,15 +18,15 @@ export namespace Boring32::Async
 	///		which allows processes to share memory. This is a copyable
 	///		and movable object.
 	/// </summary>
-	class MemoryMappedFile
+	class MemoryMappedFile final
 	{
-		// Constructors and destructor
+		// The six
 		public:
 			/// <summary>
 			///		Unmaps the view of the MemoryMappedFile and releases
 			///		the handle owned by this object.
 			/// </summary>
-			virtual ~MemoryMappedFile()
+			~MemoryMappedFile()
 			{
 				Close(std::nothrow);
 			}
@@ -36,6 +36,48 @@ export namespace Boring32::Async
 			/// </summary>
 			MemoryMappedFile() = default;
 
+			/// <summary>
+			///		Duplicates the specified MemoryMappedFile.
+			/// </summary>
+			/// <param name="other">The MemoryMappedFile to duplicate.</param>
+			MemoryMappedFile(const MemoryMappedFile& other)
+				: m_name(other.m_name),
+				m_maxSize(other.m_maxSize)
+			{
+				Copy(other);
+			}
+
+			/// <summary>
+			///		Move constructor.
+			/// </summary>
+			MemoryMappedFile(MemoryMappedFile&& other) noexcept
+			{
+				Move(other);
+			}
+
+			/// <summary>
+			///		Unmaps the view of the MemoryMappedFile and releases
+			///		the handle owned by this object before duplicating
+			///		from the specified MemoryMappedFile.
+			/// </summary>
+			MemoryMappedFile& operator=(const MemoryMappedFile& other)
+			{
+				Close();
+				Copy(other);
+				return *this;
+			}
+
+			/// <summary>
+			///		Move assignment.
+			/// </summary>
+			MemoryMappedFile& operator=(MemoryMappedFile&& other) noexcept
+			{
+				Move(other);
+				return *this;
+			}
+
+			// Custom constructors
+		public:
 			/// <summary>
 			///		Creates a new memory mapped file.
 			/// </summary>
@@ -64,7 +106,10 @@ export namespace Boring32::Async
 					m_name.c_str()				// m_name of mapping object
 				);
 				if (!m_mapFile)
-					throw Error::Win32Error("CreateFileMappingW() failed", GetLastError());
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("CreateFileMappingW() failed", lastError);
+				}
 
 				m_mapFile.SetInheritability(inheritable);
 				m_view = MapViewOfFile(
@@ -77,7 +122,8 @@ export namespace Boring32::Async
 				if (!m_view)
 				{
 					Close();
-					throw Error::Win32Error("MapViewOfFile() failed", GetLastError());
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("MapViewOfFile() failed", lastError);
 				}
 
 				RtlSecureZeroMemory(m_view, m_maxSize);
@@ -113,7 +159,10 @@ export namespace Boring32::Async
 					m_name.c_str()	// name of mapping object
 				);
 				if (!m_mapFile)
-					throw Error::Win32Error("OpenFileMappingW() failed", GetLastError());
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("OpenFileMappingW() failed", lastError);
+				}
 
 				m_view = MapViewOfFile(
 					m_mapFile.GetHandle(),	// handle to map object
@@ -125,51 +174,9 @@ export namespace Boring32::Async
 				if (!m_view)
 				{
 					Close();
-					throw Error::Win32Error("MapViewOfFile() failed", GetLastError());
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("MapViewOfFile() failed", lastError);
 				}
-			}
-
-			/// <summary>
-			///		Duplicates the specified MemoryMappedFile.
-			/// </summary>
-			/// <param name="other">The MemoryMappedFile to duplicate.</param>
-			MemoryMappedFile(const MemoryMappedFile& other)
-				: m_name(other.m_name),
-				m_maxSize(other.m_maxSize)
-			{
-				Copy(other);
-			}
-
-			/// <summary>
-			///		Unmaps the view of the MemoryMappedFile and releases
-			///		the handle owned by this object before duplicating
-			///		from the specified MemoryMappedFile.
-			/// </summary>
-			/// <param name="other">The MemoryMappedFile to duplicate.</param>
-			virtual MemoryMappedFile& operator=(const MemoryMappedFile& other)
-			{
-				Close();
-				Copy(other);
-				return *this;
-			}
-
-			/// <summary>
-			///		Move constructor.
-			/// </summary>
-			/// <param name="other">The MemoryMappedFile to move.</param>
-			MemoryMappedFile(MemoryMappedFile&& other) noexcept
-			{
-				Move(other);
-			}
-
-			/// <summary>
-			///		Move assignment.
-			/// </summary>
-			/// <param name="other">The MemoryMappedFile to move.</param>
-			virtual MemoryMappedFile& operator=(MemoryMappedFile&& other) noexcept
-			{
-				Move(other);
-				return *this;
 			}
 
 		// API
@@ -178,7 +185,7 @@ export namespace Boring32::Async
 			///		Gets the view pointer of the memory mapped file.
 			/// </summary>
 			/// <returns>The view object.</returns>
-			virtual void* GetViewPointer() const noexcept final
+			void* GetViewPointer() const noexcept
 			{
 				return m_view;
 			}
@@ -187,7 +194,7 @@ export namespace Boring32::Async
 			///		Get the name of this MemoryMappedFile.
 			/// </summary>
 			/// <returns>The name of this MemoryMappedFile.</returns>
-			virtual const std::wstring& GetName() const noexcept final
+			const std::wstring& GetName() const noexcept
 			{
 				return m_name;
 			}
@@ -197,7 +204,7 @@ export namespace Boring32::Async
 			///		by child processes.
 			/// </summary>
 			/// <returns></returns>
-			virtual bool IsInheritable() const final
+			bool IsInheritable() const
 			{
 				return m_mapFile.IsInheritable();
 			}
@@ -205,10 +212,13 @@ export namespace Boring32::Async
 			/// <summary>
 			///		Releases all resources owned by this object.
 			/// </summary>
-			virtual void Close()
+			void Close()
 			{
 				if (m_view && !UnmapViewOfFile(m_view))
-					throw Error::Win32Error("UnmapViewOfFile() failed", GetLastError());
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("UnmapViewOfFile() failed", lastError);
+				}
 				m_view = nullptr;
 				m_mapFile = nullptr;
 			}
@@ -216,21 +226,21 @@ export namespace Boring32::Async
 			/// <summary>
 			///		Releases all resources owned by this object.
 			/// </summary>
-			virtual void Close(const std::nothrow_t&) noexcept try
+			void Close(const std::nothrow_t&) noexcept try
 			{
 				Close();
 			}
 			catch (const std::exception& ex)
 			{
-				std::wcerr << std::format(__FUNCSIG__": Close() failed: {}\n", ex.what()).c_str();
+				std::wcerr << std::format("Close() failed: {}\n", ex.what()).c_str();
 			}
 
-		protected:
+		private:
 			/// <summary>
 			///		Moves the MemoryMappedFile on the RHS into this object.
 			/// </summary>
 			/// <param name="other">The MemoryMappedFile to move.</param>
-			virtual void Move(MemoryMappedFile& other) noexcept
+			void Move(MemoryMappedFile& other) noexcept
 			{
 				Close();
 				m_name = std::move(other.m_name);
@@ -244,32 +254,33 @@ export namespace Boring32::Async
 			///		Duplicates the specified MemoryMappedFile.
 			/// </summary>
 			/// <param name="other">The MemoryMappedFile to duplicate.</param>
-			virtual void Copy(const MemoryMappedFile& other)
+			void Copy(const MemoryMappedFile& other)
 			{
 				Close();
 				m_name = other.m_name;
 				m_maxSize = other.m_maxSize;
 				m_mapFile = other.m_mapFile;
-				if (m_mapFile)
+				if (!m_mapFile)
+					return;
+
+				m_view = MapViewOfFile(
+					m_mapFile.GetHandle(),   // handle to map object
+					FILE_MAP_ALL_ACCESS, // read/write permission
+					0,
+					0,
+					m_maxSize
+				);
+				if (!m_view)
 				{
-					m_view = MapViewOfFile(
-						m_mapFile.GetHandle(),   // handle to map object
-						FILE_MAP_ALL_ACCESS, // read/write permission
-						0,
-						0,
-						m_maxSize
-					);
-					if (!m_view)
-					{
-						Close();
-						throw Error::Win32Error("MapViewOfFile() failed", GetLastError());
-					}
+					Close();
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("MapViewOfFile() failed", lastError);
 				}
 			}
 
-		protected:
+		private:
 			std::wstring m_name;
-			UINT m_maxSize = 0;
+			unsigned m_maxSize = 0;
 			RAII::Win32Handle m_mapFile;
 			void* m_view = nullptr;
 	};
