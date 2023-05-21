@@ -32,17 +32,35 @@ export namespace Boring32::FileSystem
 		// https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfosizew
 		const DWORD verSize = GetFileVersionInfoSizeW(filePath.c_str(), &verHandle);
 		if (!verSize)
-			throw Error::Win32Error("GetFileVersionInfoSizeW() failed", GetLastError());
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("GetFileVersionInfoSizeW() failed", lastError);
+		}
 
 		std::vector<std::byte> verData(verSize);
 		// https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfow
-		if (!GetFileVersionInfoW(filePath.c_str(), verHandle, verSize, &verData[0]))
-			throw Error::Win32Error("GetFileVersionInfoW() failed", GetLastError());
+		bool success = GetFileVersionInfoW(
+			filePath.c_str(), 
+			verHandle, 
+			verSize, 
+			&verData[0]
+		);
+		if (!success)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("GetFileVersionInfoW() failed", lastError);
+		}
 
-		UINT size = 0;
-		LPBYTE lpBuffer = nullptr;
+		unsigned size = 0;
+		std::byte* lpBuffer = nullptr; // Free when pBlock argument is freed
 		// https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-verqueryvaluew
-		if (!VerQueryValueW(&verData[0], L"\\", reinterpret_cast<void**>(&lpBuffer), &size))
+		success = VerQueryValueW(
+			&verData[0], 
+			L"\\", 
+			reinterpret_cast<void**>(&lpBuffer), 
+			&size
+		);
+		if (!success)
 			throw Error::Boring32Error("Could not determine version info (VerQueryValueW() failed)");
 		if (!size)
 			throw Error::Boring32Error("Could not determine version info (size was zero)");
