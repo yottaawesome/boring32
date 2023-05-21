@@ -5,17 +5,17 @@ module;
 export module boring32.process:dynamiclinklibrary;
 import <string>;
 import <stdexcept>;
-import <win32.hpp>;
 import <format>;
 import <iostream>;
+import <win32.hpp>;
 import boring32.error;
 
 export namespace Boring32::Process
 {
-	class DynamicLinkLibrary
+	class DynamicLinkLibrary final
 	{
 		public:
-			virtual ~DynamicLinkLibrary()
+			~DynamicLinkLibrary()
 			{
 				Close();
 			}
@@ -23,17 +23,26 @@ export namespace Boring32::Process
 			DynamicLinkLibrary() = default;
 
 			DynamicLinkLibrary(const DynamicLinkLibrary& other)
-				: m_libraryHandle(nullptr)
 			{
 				Copy(other);
 			}
 
 			DynamicLinkLibrary(DynamicLinkLibrary&& other) noexcept
-				: m_libraryHandle(nullptr)
 			{
 				Move(other);
 			}
 
+			DynamicLinkLibrary& operator=(const DynamicLinkLibrary& other)
+			{
+				return Copy(other);
+			}
+
+			DynamicLinkLibrary& operator=(DynamicLinkLibrary&& other) noexcept
+			{
+				return Move(other);
+			}
+
+		public:
 			DynamicLinkLibrary(const std::wstring& path)
 				: m_path(path)
 			{
@@ -47,18 +56,7 @@ export namespace Boring32::Process
 			}
 
 		public:
-			virtual DynamicLinkLibrary& operator=(const DynamicLinkLibrary& other)
-			{
-				return Copy(other);
-			}
-
-			virtual DynamicLinkLibrary& operator=(DynamicLinkLibrary&& other) noexcept
-			{
-				return Move(other);
-			}
-
-		public:
-			virtual void Close() noexcept
+			void Close() noexcept
 			{
 				if (!m_libraryHandle)
 					return;
@@ -71,7 +69,7 @@ export namespace Boring32::Process
 				m_path.clear();
 			}
 
-			virtual void* Resolve(const std::string& symbolName)
+			void* Resolve(const std::string& symbolName)
 			{
 				if (!m_libraryHandle)
 					throw Error::Boring32Error("Library handle is null");
@@ -84,7 +82,7 @@ export namespace Boring32::Process
 					GetLastError());
 			}
 
-			virtual void* Resolve(
+			void* Resolve(
 				const std::string& symbolName, 
 				const std::nothrow_t&
 			) noexcept
@@ -94,17 +92,17 @@ export namespace Boring32::Process
 				return GetProcAddress(m_libraryHandle, symbolName.c_str());
 			}
 
-			virtual const std::wstring& GetPath() const noexcept final
+			const std::wstring& GetPath() const noexcept
 			{
 				return m_path;
 			}
 
-			virtual HMODULE GetHandle() const noexcept final
+			HMODULE GetHandle() const noexcept
 			{
 				return m_libraryHandle;
 			}
 
-			virtual bool IsLoaded() const noexcept final
+			bool IsLoaded() const noexcept
 			{
 				return m_libraryHandle != nullptr;
 			}
@@ -122,8 +120,8 @@ export namespace Boring32::Process
 				return static_cast<T>(Resolve(symbolName, std::nothrow));
 			}
 
-		protected:
-			virtual DynamicLinkLibrary& Copy(const DynamicLinkLibrary& other)
+		private:
+			DynamicLinkLibrary& Copy(const DynamicLinkLibrary& other)
 			{
 				Close();
 				m_path = other.m_path;
@@ -131,7 +129,7 @@ export namespace Boring32::Process
 				return *this;
 			}
 
-			virtual DynamicLinkLibrary& Move(DynamicLinkLibrary& other) noexcept
+			DynamicLinkLibrary& Move(DynamicLinkLibrary& other) noexcept
 			{
 				Close();
 				m_path = std::move(other.m_path);
@@ -140,17 +138,20 @@ export namespace Boring32::Process
 				return *this;
 			}
 
-			virtual void InternalLoad()
+			void InternalLoad()
 			{
 				if (m_path.empty())
 					throw Error::Boring32Error("No library path specified");
 
 				m_libraryHandle = LoadLibraryW(m_path.c_str());
 				if (!m_libraryHandle)
-					throw Error::Win32Error("failed to load library", GetLastError());
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("failed to load library", lastError);
+				}
 			}
 
-			virtual bool InternalLoad(
+			bool InternalLoad(
 				const std::nothrow_t&
 			) noexcept try
 			{
@@ -163,7 +164,7 @@ export namespace Boring32::Process
 				return false;
 			}
 
-		protected:
+		private:
 			std::wstring m_path;
 			HMODULE m_libraryHandle = nullptr;
 	};
