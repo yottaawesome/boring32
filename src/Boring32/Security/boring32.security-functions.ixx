@@ -3,19 +3,19 @@ module;
 #include <source_location>;
 
 export module boring32.security:functions;
-import boring32.raii;
-import :constants;
 import <string>;
 import <vector>;
-import boring32.error;
 import <stdexcept>;
 import <format>;
 import <iostream>;
 import <win32.hpp>;
+import boring32.raii;
+import boring32.error;
+import :constants;
 
 namespace Boring32::Security
 {
-	bool IsHandleValid(const HANDLE handle)
+	inline constexpr bool IsHandleValid(const HANDLE handle) noexcept
 	{
 		return handle && handle != INVALID_HANDLE_VALUE;
 	}
@@ -29,7 +29,7 @@ export namespace Boring32::Security
 	)
 	{
 		if (!IsHandleValid(processHandle))
-			throw Error::Boring32Error(__FUNCSIG__ ": processHandle cannot be null");
+			throw Error::Boring32Error("processHandle cannot be null");
 
 		RAII::Win32Handle handle;
 		// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocesstoken
@@ -53,15 +53,18 @@ export namespace Boring32::Security
 		const bool enabled
 	)
 	{
+		if (privilege.empty())
+			throw Error::Boring32Error("Must specify the privilege name");
+
 		// See also: https://docs.microsoft.com/en-us/windows/win32/secauthz/enabling-and-disabling-privileges-in-c--
 		if (!IsHandleValid(token))
-			throw Error::Boring32Error(__FUNCSIG__ ": token cannot be null");
+			throw Error::Boring32Error(": token cannot be null");
 
 		// https://docs.microsoft.com/en-us/windows/win32/secauthz/privilege-constants
 		LUID luidPrivilege;
 		// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupprivilegevaluew
 		bool succeeded = LookupPrivilegeValueW(nullptr, privilege.c_str(), &luidPrivilege);
-		if (succeeded == false)
+		if (!succeeded)
 		{
 			const auto lastError = GetLastError();
 			throw Error::Win32Error("LookupPrivilegeValueW() failed", lastError);
