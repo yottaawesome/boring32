@@ -90,20 +90,23 @@ export namespace Boring32::IPC
 		protected:
 			virtual void InternalWrite(const std::vector<std::byte>& data)
 			{
-				if (m_handle == nullptr)
-					throw std::runtime_error("No pipe to write to");
+				if (!m_handle)
+					throw Error::Boring32Error("No pipe to write to");
 
 				DWORD bytesWritten = 0;
 				// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile
-				bool successfulWrite = WriteFile(
+				const bool successfulWrite = WriteFile(
 					m_handle.GetHandle(),   // pipe handle 
 					&data[0],        // message 
-					(DWORD)data.size(),         // message length 
+					static_cast<DWORD>(data.size()),         // message length 
 					&bytesWritten,      // bytes written 
 					nullptr				// not overlapped 
 				);
-				if (successfulWrite == false)
-					throw Error::Win32Error("Failed to write to client pipe", GetLastError());
+				if (!successfulWrite)
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("Failed to write to client pipe", lastError);
+				}
 			}
 
 			virtual std::vector<std::byte> InternalRead()
@@ -123,7 +126,7 @@ export namespace Boring32::IPC
 					bool successfulRead = ReadFile(
 						m_handle.GetHandle(),    // pipe handle 
 						&dataBuffer[0],    // buffer to receive reply 
-						(DWORD)dataBuffer.size(),  // size of buffer 
+						static_cast<DWORD>(dataBuffer.size()),  // size of buffer 
 						&currentBytesRead,  // number of bytes read 
 						nullptr				// not overlapped
 					);
@@ -131,7 +134,10 @@ export namespace Boring32::IPC
 
 					const DWORD lastError = GetLastError();
 					if (successfulRead == false && lastError != ERROR_MORE_DATA)
-						throw Error::Win32Error("Failed to read from pipe", GetLastError());
+					{
+						const auto lastError = GetLastError();
+						throw Error::Win32Error("Failed to read from pipe", lastError);
+					}
 					if (lastError == ERROR_MORE_DATA)
 						dataBuffer.resize(dataBuffer.size() + blockSize);
 					continueReading = !successfulRead;
