@@ -59,9 +59,12 @@ export namespace Boring32::Util
 		while (status == ERROR_INSUFFICIENT_BUFFER)
 		{
 			filePath.resize(filePath.size() + blockSize);
-			status = GetModuleFileNameW(nullptr, &filePath[0], (DWORD)filePath.size());
+			status = GetModuleFileNameW(nullptr, &filePath[0], static_cast<DWORD>(filePath.size()));
 			if (!status)
-				throw Error::Win32Error("GetModuleFileNameW() failed", GetLastError());
+			{
+				const auto lastError = GetLastError();
+				throw Error::Win32Error("GetModuleFileNameW() failed", lastError);
+			}
 		}
 
 		const HRESULT result = PathCchRemoveFileSpec(&filePath[0], filePath.size());
@@ -74,19 +77,24 @@ export namespace Boring32::Util
 
 	SYSTEMTIME LargeIntegerTimeToSystemTime(const LARGE_INTEGER& li)
 	{
-		FILETIME ft{ 0 };
-		ft.dwLowDateTime = li.LowPart;
-		ft.dwHighDateTime = li.HighPart;
 		SYSTEMTIME st{ 0 };
-		if (FileTimeToSystemTime(&ft, &st) == false)
-			throw Error::Win32Error("FileTimeToSystemTime() failed", GetLastError());
+		FILETIME ft{
+			.dwLowDateTime = li.LowPart,
+			.dwHighDateTime = static_cast<DWORD>(li.HighPart)
+		};
+		if (!FileTimeToSystemTime(&ft, &st))
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("FileTimeToSystemTime() failed", lastError);
+		}
 		return st;
 	}
 
 	size_t GetUnixTime() noexcept
 	{
-		const auto rightNow = std::chrono::system_clock::now();
-		return std::chrono::duration_cast<std::chrono::seconds>(rightNow.time_since_epoch()).count();
+		namespace ch = std::chrono;
+		const auto rightNow = ch::system_clock::now();
+		return ch::duration_cast<ch::seconds>(rightNow.time_since_epoch()).count();
 	}
 
 	size_t GetMillisToMinuteBoundary(const SYSTEMTIME& time, const size_t minuteBoundary) noexcept
