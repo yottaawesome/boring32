@@ -21,6 +21,31 @@ export namespace Boring32::IPC
 			}
 
 			NamedPipeServerBase() = default;
+			
+
+			NamedPipeServerBase(const NamedPipeServerBase& other)
+				: NamedPipeServerBase()
+			{
+				Copy(other);
+			}
+
+			virtual void operator=(const NamedPipeServerBase& other)
+			{
+				Copy(other);
+			}
+
+			NamedPipeServerBase(NamedPipeServerBase&& other) noexcept
+				: NamedPipeServerBase()
+			{
+				Move(other);
+			}
+
+			virtual void operator=(NamedPipeServerBase&& other) noexcept
+			{
+				Move(other);
+			}
+
+		public:
 			NamedPipeServerBase(
 				const std::wstring& pipeName, 
 				const DWORD size,
@@ -65,28 +90,6 @@ export namespace Boring32::IPC
 				m_pipeMode(pipeMode)
 			{ }
 
-			NamedPipeServerBase(const NamedPipeServerBase& other)
-				: NamedPipeServerBase()
-			{
-				Copy(other);
-			}
-
-			virtual void operator=(const NamedPipeServerBase& other)
-			{
-				Copy(other);
-			}
-
-			NamedPipeServerBase(NamedPipeServerBase&& other) noexcept
-				: NamedPipeServerBase()
-			{
-				Move(other);
-			}
-
-			virtual void operator=(NamedPipeServerBase&& other) noexcept
-			{
-				Move(other);
-			}
-
 		public:
 			virtual void Close()
 			{
@@ -102,10 +105,13 @@ export namespace Boring32::IPC
 
 			virtual void Flush()
 			{
-				if (m_pipe == nullptr)
-					throw std::runtime_error("No pipe to flush");
-				if (FlushFileBuffers(m_pipe.GetHandle()) == false)
-					throw Error::Win32Error("Flush() failed", GetLastError());
+				if (!m_pipe)
+					throw Error::Boring32Error("No pipe to flush");
+				if (!FlushFileBuffers(m_pipe.GetHandle()))
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("Flush() failed", lastError);
+				}
 			}
 
 			virtual RAII::Win32Handle& GetInternalHandle()
@@ -155,10 +161,13 @@ export namespace Boring32::IPC
 
 			virtual void CancelCurrentThreadIo()
 			{
-				if (m_pipe == nullptr)
-					throw std::runtime_error("NamedPipeServerBase::CancelCurrentThreadIo(): pipe is nullptr");
-				if (CancelIo(m_pipe.GetHandle()) == false)
-					throw Error::Win32Error("CancelIo() failed", GetLastError());
+				if (!m_pipe)
+					throw Error::Boring32Error("pipe is nullptr");
+				if (!CancelIo(m_pipe.GetHandle()))
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("CancelIo() failed", lastError);
+				}
 			}
 
 			virtual bool CancelCurrentThreadIo(
@@ -168,59 +177,65 @@ export namespace Boring32::IPC
 				CancelCurrentThreadIo();
 				return true;
 			}
-			catch (const std::exception&)
+			catch (const std::exception& ex)
 			{
-				/*std::wcerr
-					<< L"NamedPipeServerBase::CancelCurrentThreadIo(std::nothrow_t) failed: "
-					<< ex.what()
-					<< std::endl;*/
+				std::wcerr << std::format(
+					"CancelCurrentThreadIo failed: {}\n", ex.what()
+				).c_str();
 				return false;
 			}
 
 			virtual void CancelCurrentProcessIo(OVERLAPPED* overlapped)
 			{
-				if (m_pipe == nullptr)
-					throw std::runtime_error("NamedPipeServerBase::CancelCurrentProcessIo(): pipe is nullptr");
-				if (CancelIoEx(m_pipe.GetHandle(), overlapped) == false)
-					throw Error::Win32Error("CancelIo() failed", GetLastError());
+				if (!m_pipe)
+					throw Error::Boring32Error("pipe is nullptr");
+				if (!CancelIoEx(m_pipe.GetHandle(), overlapped))
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("CancelIo() failed", lastError);
+				}
 			}
 
 			virtual bool CancelCurrentProcessIo(
-				OVERLAPPED* overlapped, const std::nothrow_t&
+				OVERLAPPED* overlapped, 
+				const std::nothrow_t&
 			) noexcept try
 			{
 				CancelCurrentProcessIo(overlapped);
 				return true;
 			}
-			catch (const std::exception&)
+			catch (const std::exception& ex)
 			{
-				/*std::wcerr
-					<< __FUNCSIG__
-					<< L": CancelCurrentProcessIo() failed: "
-					<< ex.what()
-					<< std::endl;*/
+				std::wcerr << std::format(
+					"CancelCurrentProcessIo() failed: {}\n", 
+					ex.what()
+				).c_str();
 				return false;
 			}
 
 		protected:
 			virtual void InternalCreatePipe()
 			{
-				if (m_pipeName.starts_with(L"\\\\.\\pipe\\") == false)
+				if (!m_pipeName.starts_with(L"\\\\.\\pipe\\"))
 					m_pipeName = L"\\\\.\\pipe\\" + m_pipeName;
 
-				SECURITY_ATTRIBUTES sa;
-				sa.nLength = sizeof(sa);
-				sa.bInheritHandle = m_isInheritable;
-				if (m_sid != L"")
+				SECURITY_ATTRIBUTES sa{
+					.nLength = sizeof(sa),
+					.bInheritHandle = m_isInheritable
+				};
+				if (!m_sid.empty())
 				{
-					bool converted = ConvertStringSecurityDescriptorToSecurityDescriptorW(
+					const bool converted = ConvertStringSecurityDescriptorToSecurityDescriptorW(
 						m_sid.c_str(),
 						SDDL_REVISION_1,
 						&sa.lpSecurityDescriptor,
 						nullptr
 					);
-					if (converted == false)
-						throw Error::Win32Error("Failed to convert security descriptor", GetLastError());
+					if (!converted)
+					{
+						const auto lastError = GetLastError();
+						throw Error::Win32Error("Failed to convert security descriptor", lastError);
+					}
 				}
 
 				// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createnamedpipea
@@ -232,11 +247,15 @@ export namespace Boring32::IPC
 					m_size,                         // output buffer size 
 					m_size,                         // input buffer size 
 					0,                              // client time-out 
-					m_sid != L"" ? &sa : nullptr);
-				if (m_sid != L"")
+					!m_sid.empty() ? &sa : nullptr
+				);
+				if (!m_sid.empty())
 					LocalFree(sa.lpSecurityDescriptor);
-				if (m_pipe == nullptr)
-					throw Error::Win32Error("Failed to create named pipe", GetLastError());
+				if (!m_pipe)
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("Failed to create named pipe", lastError);
+				}
 			}
 
 			virtual void Copy(const NamedPipeServerBase& other)
@@ -269,7 +288,7 @@ export namespace Boring32::IPC
 				const bool throwOnError
 			) const
 			{
-				if (m_pipe == nullptr)
+				if (!m_pipe)
 					return false;
 				charactersRemaining = 0;
 				bool succeeded = PeekNamedPipe(
@@ -280,10 +299,13 @@ export namespace Boring32::IPC
 					nullptr,
 					&charactersRemaining
 				);
-				if (succeeded == false)
+				if (!succeeded)
 				{
 					if (throwOnError)
-						throw Error::Win32Error("PeekNamedPipe() failed", GetLastError());
+					{
+						const auto lastError = GetLastError();
+						throw Error::Win32Error("PeekNamedPipe() failed", lastError);
+					}
 					return false;
 				}
 
