@@ -11,12 +11,12 @@ import <algorithm>;
 import <stdexcept>;
 import <iostream>;
 import <win32.hpp>;
-import :websocketstatus;
-import :asyncwebsocketsettings;
 import boring32.async;
-import :winhttphandle;
 import boring32.error;
 import :winhttphandle;
+import :websocketstatus;
+import :winhttphandle;
+import :asyncwebsocketsettings;
 
 export namespace Boring32::WinHttp::WebSockets
 {
@@ -29,24 +29,17 @@ export namespace Boring32::WinHttp::WebSockets
 		Error
 	};
 
-	struct AsyncReadResult
+	struct AsyncReadResult final
 	{
-		AsyncReadResult() {};
+		AsyncReadResult() = default;
 		AsyncReadResult(const AsyncReadResult&) = delete;
 		AsyncReadResult& operator=(const AsyncReadResult&) = delete;
-		virtual AsyncReadResult& operator=(AsyncReadResult&& other) noexcept
-		{
-			Status = other.Status;
-			TotalBytesRead = other.TotalBytesRead;
-			Data = std::move(other.Data);
-			Complete = std::move(other.Complete);
-			return *this;
-		};
+		AsyncReadResult& operator=(AsyncReadResult&& other) noexcept = default;
 
 		ReadResultStatus Status = ReadResultStatus::NotInitiated;
 		DWORD TotalBytesRead = 0;
 		std::vector<char> Data;
-		Async::Event Complete{ false,true,false };
+		Async::Event Complete{ false, true, false };
 	};
 
 	enum class WriteResultStatus : DWORD
@@ -57,17 +50,12 @@ export namespace Boring32::WinHttp::WebSockets
 		Finished
 	};
 
-	struct WriteResult
+	struct WriteResult final
 	{
-		WriteResult() {};
+		WriteResult() = default;
 		WriteResult(const WriteResult&) = delete;
-		virtual WriteResult& operator=(const WriteResult&) = delete;
-		virtual WriteResult& operator=(WriteResult&& other) noexcept
-		{ 
-			Status = other.Status; 
-			Complete = std::move(other.Complete);
-			return *this;
-		};
+		WriteResult& operator=(const WriteResult&) = delete;
+		WriteResult& operator=(WriteResult&& other) noexcept = default;
 
 		WriteResultStatus Status = WriteResultStatus::NotInitiated;
 		Async::Event Complete{ false,true,false };
@@ -75,17 +63,12 @@ export namespace Boring32::WinHttp::WebSockets
 
 	struct ConnectionResult
 	{
-		ConnectionResult() {};
+		ConnectionResult() = default;
 		ConnectionResult(const ConnectionResult&) = delete;
 		ConnectionResult& operator=(const ConnectionResult&) = delete;
-		virtual ConnectionResult& operator=(ConnectionResult&& other) noexcept
-		{
-			IsConnected = other.IsConnected;
-			Complete = std::move(other.Complete);
-			return *this;
-		};
+		ConnectionResult& operator=(ConnectionResult&& other) noexcept = default;
 
-		bool IsConnected=false;
+		bool IsConnected = false;
 		Async::Event Complete{ false, true, false };
 	};
 
@@ -106,7 +89,7 @@ export namespace Boring32::WinHttp::WebSockets
 				}
 				catch (const std::exception& ex)
 				{
-					std::wcerr << __FUNCSIG__ ": " << ex.what() << std::endl;
+					std::wcerr << ex.what() << std::endl;
 				}
 
 				// Release any waiting threads. However, all threads that use
@@ -149,9 +132,9 @@ export namespace Boring32::WinHttp::WebSockets
 			virtual const WriteResult& SendString(const std::string& msg)
 			{
 				if (m_status != WebSocketStatus::Connected)
-					throw std::runtime_error("WebSocket is not connected to send data");
+					throw Error::Boring32Error("WebSocket is not connected to send data");
 				if (m_writeResult.Status != WriteResultStatus::NotInitiated && m_writeResult.Status != WriteResultStatus::Finished)
-					throw std::runtime_error(__FUNCSIG__": a write result is either pending or in error");
+					throw Error::Boring32Error("A write result is either pending or in error");
 
 				m_writeResult.Status = WriteResultStatus::Initiated;
 				m_writeResult.Complete.Reset();
@@ -172,7 +155,7 @@ export namespace Boring32::WinHttp::WebSockets
 			virtual const WriteResult& SendBuffer(const std::vector<std::byte>& buffer)
 			{
 				if (m_status != WebSocketStatus::Connected)
-					throw std::runtime_error("WebSocket is not connected to send data");
+					throw Error::Boring32Error("WebSocket is not connected to send data");
 
 				m_writeResult.Status = WriteResultStatus::Initiated;
 				m_writeResult.Complete.Reset();
@@ -196,9 +179,9 @@ export namespace Boring32::WinHttp::WebSockets
 			{
 				//Async::CriticalSectionLock cs(m_cs);
 				if (m_status != WebSocketStatus::Connected)
-					throw std::runtime_error("WebSocket is not connected to receive data");
+					throw Error::Boring32Error("WebSocket is not connected to receive data");
 				if (m_readResult.Status == ReadResultStatus::Initiated)
-					throw std::runtime_error("A read operation is already in progress");
+					throw Error::Boring32Error("A read operation is already in progress");
 
 				m_readResult.Status = ReadResultStatus::Initiated;
 				m_readResult.Data.clear();
@@ -279,7 +262,7 @@ export namespace Boring32::WinHttp::WebSockets
 			virtual const ConnectionResult& InternalConnect(const std::wstring& path)
 			{
 				if (m_status != WebSocketStatus::NotInitialised)
-					throw std::runtime_error(__FUNCSIG__ ": WebSocket needs to be in NotInitialised state to connect");
+					throw Error::Boring32Error("WebSocket needs to be in NotInitialised state to connect");
 
 				try
 				{
@@ -291,11 +274,12 @@ export namespace Boring32::WinHttp::WebSockets
 						WINHTTP_NO_PROXY_BYPASS,
 						WINHTTP_FLAG_ASYNC
 					);
-					if (m_winHttpSession == nullptr)
+					if (!m_winHttpSession)
 					{
+						const auto lastError = GetLastError();
 						throw Error::Win32Error(
 							"WinHttpOpen() failed to open the WinHttp session",
-							GetLastError()
+							lastError
 						);
 					}
 
@@ -306,11 +290,14 @@ export namespace Boring32::WinHttp::WebSockets
 						m_settings.Port,
 						0
 					);
-					if (m_winHttpConnection == nullptr)
+					if (!m_winHttpConnection)
+					{
+						const auto lastError = GetLastError();
 						throw Error::Win32Error(
 							"WinHttpConnect() failed",
-							GetLastError()
+							lastError
 						);
+					}
 
 					WINHTTP_STATUS_CALLBACK callbackStatus = WinHttpSetStatusCallback(
 						m_winHttpConnection.Get(),
@@ -319,10 +306,13 @@ export namespace Boring32::WinHttp::WebSockets
 						0
 					);
 					if (callbackStatus == WINHTTP_INVALID_STATUS_CALLBACK)
+					{
+						const auto lastError = GetLastError();
 						throw Error::Win32Error(
 							"WinHttpSetStatusCallback() failed when setting callback",
-							GetLastError()
+							lastError
 						);
+					}
 
 					DWORD_PTR _this = reinterpret_cast<DWORD_PTR>(this);
 					bool succeeded = WinHttpSetOption(
@@ -331,11 +321,14 @@ export namespace Boring32::WinHttp::WebSockets
 						reinterpret_cast<void*>(&_this),
 						sizeof(DWORD_PTR)
 					);
-					if (succeeded == false)
+					if (!succeeded)
+					{
+						const auto lastError = GetLastError();
 						throw Error::Win32Error(
 							"WinHttpSetOption() failed when setting context value",
-							GetLastError()
+							lastError
 						);
+					}
 
 					// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpopenrequest
 					m_requestHandle = WinHttpOpenRequest(
@@ -347,11 +340,14 @@ export namespace Boring32::WinHttp::WebSockets
 						nullptr,
 						WINHTTP_FLAG_SECURE
 					);
-					if (m_requestHandle == nullptr)
+					if (!m_requestHandle)
+					{
+						const auto lastError = GetLastError();
 						throw Error::Win32Error(
 							"WinHttpOpenRequest() failed",
-							GetLastError()
+							lastError
 						);
+					}
 
 					succeeded = WinHttpSetOption(
 						m_requestHandle.Get(),
@@ -359,11 +355,14 @@ export namespace Boring32::WinHttp::WebSockets
 						reinterpret_cast<void*>(&_this),
 						sizeof(DWORD_PTR)
 					);
-					if (succeeded == false)
+					if (!succeeded)
+					{
+						const auto lastError = GetLastError();
 						throw Error::Win32Error(
 							"WinHttpSetOption() failed when setting context value",
-							GetLastError()
+							lastError
 						);
+					}
 
 					if (m_settings.IgnoreSslErrors)
 					{
@@ -423,11 +422,15 @@ export namespace Boring32::WinHttp::WebSockets
 						0,
 						0
 					);
-					if (succeeded == false)
+					if (!succeeded)
+					{
+						const auto lastError = GetLastError();
 						throw Error::Win32Error(
 							"WinHttpSendRequest() failed on initial request",
-							GetLastError()
+							lastError
 						);
+					}
+						
 					return m_connectionResult;
 				}
 				catch (const std::exception&)
@@ -442,7 +445,7 @@ export namespace Boring32::WinHttp::WebSockets
 			{
 				//Async::CriticalSectionLock cs(m_cs);
 				if (m_status != WebSocketStatus::Connected)
-					throw std::runtime_error("WebSocket is not connected to receive data");
+					throw Error::Boring32Error("WebSocket is not connected to receive data");
 
 				char* currentBufferPointer = nullptr;
 				if (receiveBuffer.Status == ReadResultStatus::PartialRead)
@@ -458,7 +461,7 @@ export namespace Boring32::WinHttp::WebSockets
 				}
 				else
 				{
-					throw std::runtime_error(__FUNCSIG__ ": unknown status " + std::to_string((DWORD)receiveBuffer.Status));
+					throw Error::Boring32Error("unknown status " + std::to_string((DWORD)receiveBuffer.Status));
 				}
 
 				// This can potentially block
@@ -499,15 +502,18 @@ export namespace Boring32::WinHttp::WebSockets
 
 			virtual void CompleteUpgrade()
 			{
-				if (m_requestHandle == nullptr)
-					throw std::runtime_error(__FUNCSIG__": m_requestHandle is nullptr");
+				if (!m_requestHandle)
+					throw Error::Boring32Error("m_requestHandle is nullptr");
 
 				m_winHttpWebSocket = WinHttpWebSocketCompleteUpgrade(m_requestHandle.Get(), 0);
-				if (m_winHttpWebSocket == nullptr)
+				if (!m_winHttpWebSocket)
+				{
+					const auto lastError = GetLastError();
 					throw Error::Win32Error(
 						"WinHttpWebSocketCompleteUpgrade() failed",
-						GetLastError()
+						lastError
 					);
+				}
 
 				DWORD_PTR dwThis = reinterpret_cast<DWORD_PTR>(this);
 				const bool succeeded = WinHttpSetOption(
@@ -516,11 +522,14 @@ export namespace Boring32::WinHttp::WebSockets
 					reinterpret_cast<void*>(&dwThis),
 					sizeof(DWORD_PTR)
 				);
-				if (succeeded == false)
+				if (!succeeded)
+				{
+					const auto lastError = GetLastError();
 					throw Error::Win32Error(
 						"WinHttpSetOption() failed when setting context value",
-						GetLastError()
+						lastError
 					);
+				}
 
 				m_status = WebSocketStatus::Connected;
 				m_connectionResult.IsConnected = true;
