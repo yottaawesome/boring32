@@ -21,6 +21,7 @@ export namespace Boring32::Async
 	/// </summary>
 	class Mutex final
 	{
+		// The six
 		public:
 			/// <summary>
 			/// Default constructor. Does not initialise any underlying mutex.
@@ -46,13 +47,33 @@ export namespace Boring32::Async
 			}
 
 			/// <summary>
-			///		Destroys this mutex.
+			///		Copy assignment.
+			/// </summary>
+			Mutex& operator=(const Mutex& other)
+			{
+				Copy(other);
+				return *this;
+			}
+
+			/// <summary>
+			///		Move assignment.
+			/// </summary>
+			Mutex& operator=(Mutex&& other) noexcept
+			{
+				Move(other);
+				return *this;
+			}
+
+			/// <summary>
+			///		Destructor.
 			/// </summary>
 			~Mutex()
 			{
 				Close();
 			}
 
+			// Custom constructors
+		public:
 			/// <summary>
 			///		Creates an anonymous mutex.
 			/// </summary>
@@ -75,7 +96,10 @@ export namespace Boring32::Async
 				);
 				m_mutex.SetInheritability(inheritable);
 				if (!m_mutex)
-					throw Error::Win32Error("Failed to create mutex", GetLastError());
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("Failed to create mutex", lastError);
+				}
 			}
 
 			/// <summary>
@@ -105,7 +129,10 @@ export namespace Boring32::Async
 				);
 				m_mutex.SetInheritability(inheritable);
 				if (!m_mutex)
-					throw Error::Win32Error("Failed to create mutex", GetLastError());
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("Failed to create mutex", lastError);
+				}
 
 				m_locked = acquireOnCreation;
 			}
@@ -133,30 +160,15 @@ export namespace Boring32::Async
 					throw Error::Boring32Error("Cannot open mutex with empty name");
 				m_mutex = OpenMutexW(desiredAccess, isInheritable, m_name.c_str());
 				if (!m_mutex)
-					throw Error::Win32Error("failed to open mutex", GetLastError());
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("Failed to open mutex", lastError);
+				}
 				if (acquireOnOpen)
 					Lock(INFINITE, true);
 			}
 
-		public:
-			/// <summary>
-			///		Copy assignment.
-			/// </summary>
-			Mutex& operator=(const Mutex& other)
-			{
-				Copy(other);
-				return *this;
-			}
-
-			/// <summary>
-			///		Move assignment.
-			/// </summary>
-			Mutex& operator=(Mutex&& other) noexcept
-			{
-				Move(other);
-				return *this;
-			}
-		
+		// API
 		public:
 			bool Lock()
 			{
@@ -219,7 +231,7 @@ export namespace Boring32::Async
 			}
 			catch (const std::exception& ex)
 			{
-				std::wcerr << std::format("{}: Lock() failed: {}\n", __FUNCSIG__, ex.what()).c_str();
+				std::wcerr << std::format("Lock() failed: {}\n", ex.what()).c_str();
 				return false;
 			}
 
@@ -234,7 +246,10 @@ export namespace Boring32::Async
 				if (!m_mutex)
 					throw Error::Boring32Error("Cannot wait on null mutex");
 				if (!ReleaseMutex(m_mutex.GetHandle()))
-					throw Error::Win32Error("Failed to release mutex", GetLastError());
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("Failed to release mutex", lastError);
+				}
 
 				m_locked = false;
 			}
@@ -250,7 +265,7 @@ export namespace Boring32::Async
 			}
 			catch (const std::exception& ex)
 			{
-				std::wcerr << std::format("{}: Unlock() failed: {}\n", __FUNCSIG__, ex.what()).c_str();
+				std::wcerr << std::format("Unlock() failed: {}\n", ex.what()).c_str();
 				return false;
 			}
 
@@ -259,12 +274,11 @@ export namespace Boring32::Async
 			/// </summary>
 			void Close()
 			{
-				if (m_mutex)
-				{
-					if (m_locked)
-						Unlock();
-					m_mutex.Close();
-				}
+				if (!m_mutex)
+					return;
+				if (m_locked)
+					Unlock();
+				m_mutex.Close();
 			}
 
 			/// <summary>
@@ -289,6 +303,7 @@ export namespace Boring32::Async
 		private:
 			void Move(Mutex& other) noexcept
 			{
+				Close();
 				m_name = std::move(other.m_name);
 				m_created = other.m_created;
 				m_locked = other.m_locked;
