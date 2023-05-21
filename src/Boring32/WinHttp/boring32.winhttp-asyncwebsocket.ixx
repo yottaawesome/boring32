@@ -376,8 +376,11 @@ export namespace Boring32::WinHttp::WebSockets
 							&optionFlags,
 							sizeof(optionFlags)
 						);
-						if (succeeded == false)
-							throw Error::Win32Error("WinHttpSetOption() failed", GetLastError());
+						if (!succeeded)
+						{
+							const auto lastError = GetLastError();
+							throw Error::Win32Error("WinHttpSetOption() failed", lastError);
+						}
 					}
 
 					succeeded = WinHttpSetOption(
@@ -386,8 +389,11 @@ export namespace Boring32::WinHttp::WebSockets
 						nullptr,
 						0
 					);
-					if (succeeded == false)
-						throw Error::Win32Error("WinHttpSetOption() failed", GetLastError());
+					if (!succeeded)
+					{
+						const auto lastError = GetLastError();
+						throw Error::Win32Error("WinHttpSetOption() failed", lastError);
+					}
 
 					if (m_settings.ClientCert.GetCert())
 					{
@@ -398,8 +404,11 @@ export namespace Boring32::WinHttp::WebSockets
 							(void*)m_settings.ClientCert.GetCert(),
 							sizeof(CERT_CONTEXT)
 						);
-						if (setCertOption == false)
-							throw Error::Win32Error("WinHttpSetOption() failed for client certificate", GetLastError());
+						if (!setCertOption)
+						{
+							const auto lastError = GetLastError();
+							throw Error::Win32Error("WinHttpSetOption() failed for client certificate", lastError);
+						}
 					}
 
 					const wchar_t* connectionHeaders = m_settings.ConnectionHeaders.empty()
