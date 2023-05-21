@@ -87,16 +87,16 @@ export namespace Boring32::Security
 			nullptr,
 			nullptr
 		);
-		if (succeeded == false)
-			throw Error::Win32Error(
-				"AdjustTokenPrivileges() failed",
-				GetLastError()
-			);
+		if (!succeeded)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("AdjustTokenPrivileges() failed", lastError);
+		}
 		if (GetLastError() == ERROR_NOT_ALL_ASSIGNED)
-			throw Error::Win32Error(
-				"AdjustTokenPrivileges() could not adjust all privileges",
-				GetLastError()
-			);
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("AdjustTokenPrivileges() failed", lastError);
+		}
 	}
 
 	void SetIntegrity(
