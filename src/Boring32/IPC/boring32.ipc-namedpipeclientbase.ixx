@@ -13,22 +13,22 @@ export namespace Boring32::IPC
 {
 	class NamedPipeClientBase
 	{
+		// The six
 		public:
 			virtual ~NamedPipeClientBase() = default;
 			NamedPipeClientBase() = default;
+			NamedPipeClientBase(const NamedPipeClientBase& other) = default;
+			NamedPipeClientBase(NamedPipeClientBase&& other) noexcept = default;
+			virtual NamedPipeClientBase& operator=(const NamedPipeClientBase& other) = default;
+			virtual NamedPipeClientBase& operator=(NamedPipeClientBase&& other) noexcept = default;
+
+		public:
 			NamedPipeClientBase(
-				const std::wstring& name, 
+				const std::wstring& name,
 				const DWORD fileAttributes
 			) : m_pipeName(name),
 				m_fileAttributes(fileAttributes)
 			{ }
-
-		// Moveable, copyable
-		public:
-			NamedPipeClientBase(const NamedPipeClientBase& other) = default;
-			virtual NamedPipeClientBase& operator=(const NamedPipeClientBase& other) = default;
-			NamedPipeClientBase(NamedPipeClientBase&& other) noexcept = default;
-			virtual NamedPipeClientBase& operator=(NamedPipeClientBase&& other) noexcept = default;
 
 		public:
 			virtual void SetMode(const DWORD pipeMode)
@@ -42,7 +42,10 @@ export namespace Boring32::IPC
 					nullptr,     // don't set maximum bytes 
 					nullptr);    // don't set maximum time 
 				if (!succeeded)
-					throw Error::Win32Error("SetNamedPipeHandleState() failed", GetLastError());
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("SetNamedPipeHandleState() failed", lastError);
+				}
 			}
 
 			virtual void Connect(const DWORD timeout)
