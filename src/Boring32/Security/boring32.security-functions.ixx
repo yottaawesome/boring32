@@ -119,15 +119,15 @@ export namespace Boring32::Security
 		}
 		RAII::SIDUniquePtr integritySid(rawIntegritySid);
 
-		TOKEN_MANDATORY_LABEL tml = { 0 };
-		tml.Label.Attributes = SE_GROUP_INTEGRITY;
-		tml.Label.Sid = integritySid.get();
+		TOKEN_MANDATORY_LABEL tml = { 
+			.Label = { .Sid = integritySid.get(), .Attributes = SE_GROUP_INTEGRITY }
+		};
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-settokeninformation
 		const bool succeeded = SetTokenInformation(
 			token,
 			TokenIntegrityLevel,
 			&tml,
-			sizeof(TOKEN_MANDATORY_LABEL) + GetLengthSid(integritySid.get())
+			sizeof(TOKEN_MANDATORY_LABEL) + GetLengthSid(tml.Label.Sid)
 		);
 		if (!succeeded)
 		{
