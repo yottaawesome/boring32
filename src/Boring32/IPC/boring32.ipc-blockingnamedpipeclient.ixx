@@ -13,32 +13,28 @@ import :namedpipeclientbase;
 
 export namespace Boring32::IPC
 {
-	class BlockingNamedPipeClient : public NamedPipeClientBase
+	class BlockingNamedPipeClient final : public NamedPipeClientBase
 	{
 		public:
-			virtual ~BlockingNamedPipeClient() = default;
+			~BlockingNamedPipeClient() = default;
 			BlockingNamedPipeClient() = default;
 			BlockingNamedPipeClient(const BlockingNamedPipeClient& other) = default;
 			BlockingNamedPipeClient(BlockingNamedPipeClient&& other) noexcept = default;
+			BlockingNamedPipeClient& operator=(const BlockingNamedPipeClient& other) = default;
+			BlockingNamedPipeClient& operator=(BlockingNamedPipeClient&& other) noexcept = default;
+
+		public:
 			BlockingNamedPipeClient(const std::wstring& name)
 				: NamedPipeClientBase(name, 0)
 			{ }
 
 		public:
-			virtual BlockingNamedPipeClient& operator=(
-				const BlockingNamedPipeClient& other
-			) = default;
-			virtual BlockingNamedPipeClient& operator=(
-				BlockingNamedPipeClient&& other
-			) noexcept = default;
-
-		public:
-			virtual void Write(const std::wstring& msg)
+			void Write(const std::wstring& msg)
 			{
 				InternalWrite(Util::StringToByteVector(msg));
 			}
 
-			virtual bool Write(
+			bool Write(
 				const std::wstring& msg, 
 				const std::nothrow_t&
 			) noexcept try
@@ -51,12 +47,12 @@ export namespace Boring32::IPC
 				return false;
 			}
 
-			virtual void Write(const std::vector<std::byte>& data)
+			void Write(const std::vector<std::byte>& data)
 			{
 				InternalWrite(data);
 			}
 
-			virtual bool Write(
+			bool Write(
 				const std::vector<std::byte>& data, 
 				const std::nothrow_t&
 			) noexcept try
@@ -69,12 +65,12 @@ export namespace Boring32::IPC
 				return false;
 			}
 
-			virtual std::wstring ReadAsString()
+			std::wstring ReadAsString()
 			{
 				return Util::ByteVectorToString<std::wstring>(InternalRead());
 			}
 
-			virtual bool ReadAsString(
+			bool ReadAsString(
 				std::wstring& out, 
 				const std::nothrow_t&
 			) noexcept try
@@ -87,8 +83,8 @@ export namespace Boring32::IPC
 				return false;
 			}
 
-		protected:
-			virtual void InternalWrite(const std::vector<std::byte>& data)
+		private:
+			void InternalWrite(const std::vector<std::byte>& data)
 			{
 				if (!m_handle)
 					throw Error::Boring32Error("No pipe to write to");
@@ -109,10 +105,10 @@ export namespace Boring32::IPC
 				}
 			}
 
-			virtual std::vector<std::byte> InternalRead()
+			std::vector<std::byte> InternalRead()
 			{
-				if (m_handle == nullptr)
-					throw std::runtime_error("No pipe to read from");
+				if (!m_handle)
+					throw Error::Boring32Error("No pipe to read from");
 
 				constexpr DWORD blockSize = 1024;
 				std::vector<std::byte> dataBuffer(blockSize);
