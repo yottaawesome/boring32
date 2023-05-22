@@ -22,7 +22,7 @@ export namespace Boring32::Async
 				m_map[key] = value;
 			}
 
-			V GetValueCopy(const K& key)
+			V GetValueCopy(const K& key) requires std::is_default_constructible_v<V>
 			{
 				SharedLockScope(m_lock.GetLock());
 				if(m_map.contains(key))
@@ -41,7 +41,7 @@ export namespace Boring32::Async
 				return false;
 			}
 
-			bool GetValueCopy(const K& key, const auto& function)
+			bool ExecuteOnValue(const K& key, const auto& function)
 			{
 				SharedLockScope(m_lock.GetLock());
 				if (m_map.contains(key))
