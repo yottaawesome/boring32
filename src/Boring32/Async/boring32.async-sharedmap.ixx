@@ -43,7 +43,8 @@ export namespace Boring32::Async
 			}
 
 			bool ExecuteOnValue(
-				const K& key, 
+				const K& key,
+				// auto creates bad codegen that segfaults
 				const std::function<void(const V&)>& function
 			)
 			{
