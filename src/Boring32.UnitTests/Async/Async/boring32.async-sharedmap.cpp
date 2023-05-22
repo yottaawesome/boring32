@@ -25,5 +25,18 @@ namespace Async
 				map.SetValue(L"Blah", 1);
 				Assert::IsTrue(map.GetValueCopy(L"Blah") == 1);
 			}
+
+			TEST_METHOD(TestExecuteOnValue)
+			{
+				::Boring32::Async::SharedMap<std::wstring, int> map;
+				std::wstring key = L"Blah";
+				map.SetValue(key, 1);
+				map.ExecuteOnValue(
+					key, 
+					[](const int& value)
+					{
+						Assert::IsTrue(value == 1);
+					});
+			}
 	};
 }

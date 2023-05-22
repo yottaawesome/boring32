@@ -1,5 +1,6 @@
 export module boring32.async:sharedmap;
 import <map>;
+import <functional>;
 import :slimreadwritelock;
 
 export namespace Boring32::Async
@@ -41,7 +42,10 @@ export namespace Boring32::Async
 				return false;
 			}
 
-			bool ExecuteOnValue(const K& key, const auto& function)
+			bool ExecuteOnValue(
+				const K& key, 
+				const std::function<void(const V&)>& function
+			)
 			{
 				SharedLockScope(m_lock.GetLock());
 				if (m_map.contains(key))
@@ -50,6 +54,14 @@ export namespace Boring32::Async
 					return true;
 				}
 				return false;
+			}
+
+			V operator[](const K& key)
+			{
+				SharedLockScope(m_lock.GetLock());
+				if (m_map.contains(key))
+					return m_map[key];
+				return {};
 			}
 
 		private:
