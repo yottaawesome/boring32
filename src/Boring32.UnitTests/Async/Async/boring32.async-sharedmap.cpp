@@ -35,6 +35,14 @@ namespace Async
 				Assert::IsTrue(i == 1);
 			}
 
+			TEST_METHOD(TestOperatorBracket)
+			{
+				::Boring32::Async::SharedMap<std::wstring, int> map;
+				map.SetValue(L"Blah", 1);
+				int i = map[L"Blah"];
+				Assert::IsTrue(i == 1);
+			}
+
 			TEST_METHOD(TestExecuteOnValue)
 			{
 				::Boring32::Async::SharedMap<std::wstring, int> map;
