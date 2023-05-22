@@ -141,6 +141,9 @@
     <ClCompile Include="Error\boring32.error-errorbase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Async\Async\boring32.async-sharedmap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">

@@ -5,7 +5,7 @@ import :slimreadwritelock;
 export namespace Boring32::Async
 {
 	template<typename K, typename V>
-	class SharedMap final
+	class SharedMap
 	{
 		public:
 			~SharedMap() = default;

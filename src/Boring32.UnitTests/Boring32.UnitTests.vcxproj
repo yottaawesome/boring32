@@ -178,6 +178,7 @@
     <ClCompile Include="Async\Async\boring32.async-semaphore.cpp" />
     <ClCompile Include="Async\Async\boring32.async-threadpool.cpp" />
     <ClCompile Include="Async\Async\boring32.async-waitabletimer.cpp" />
+    <ClCompile Include="Async\Async\boring32.async-sharedmap.cpp" />
     <ClCompile Include="Compression\boring32.compression-compressor.cpp" />
     <ClCompile Include="Compression\boring32.compression-decompressor.cpp" />
     <ClCompile Include="Computer\boring32.computer-functions.cpp" />
