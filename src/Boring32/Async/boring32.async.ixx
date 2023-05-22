@@ -26,3 +26,4 @@ export import :waitableaddress;
 export import :waitabletimer;
 export import :synced;
 export import :syncedcontainer;
+export import :sharedmap;

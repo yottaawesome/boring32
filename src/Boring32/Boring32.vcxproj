@@ -180,6 +180,7 @@
   <ItemGroup>
     <ClCompile Include="Async\boring32.async-eventloop.ixx" />
     <ClCompile Include="Async\boring32.async-functions.ixx" />
+    <ClCompile Include="Async\boring32.async-sharedmap.ixx" />
     <ClCompile Include="Async\boring32.async-synced.ixx" />
     <ClCompile Include="Async\boring32.async-syncedcontainer.ixx" />
     <ClCompile Include="Async\boring32.async.ixx" />
