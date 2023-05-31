@@ -22,14 +22,21 @@ export namespace Boring32::Util
 		return{ std::byte(std::forward<Ts>(args))... };
 	}
 
-	template<typename T> requires std::is_same<std::wstring, T>::value || std::is_same<std::string, T>::value
-		T ByteVectorToString(const std::vector<std::byte>&vector)
+	template<typename T>
+	concept IsString = 
+		std::is_same_v<std::wstring, T> || std::is_same_v<std::string, T>;
+
+	template<typename T> requires IsString<T>
+	T ByteVectorToString(const std::vector<std::byte>& vector)
 	{
-		return { reinterpret_cast<T::const_pointer>(&vector[0]), vector.size() / sizeof(T::value_type) };
+		return { 
+			reinterpret_cast<T::const_pointer>(&vector[0]), 
+			vector.size() / sizeof(T::value_type) 
+		};
 	}
 
-	template<typename T> requires std::is_same<std::wstring, T>::value || std::is_same<std::string, T>::value
-		std::vector<std::byte> StringToByteVector(const T & str)
+	template<typename T> requires IsString<T>
+	std::vector<std::byte> StringToByteVector(const T& str)
 	{
 		return {
 			reinterpret_cast<const std::byte*>(&str[0]),
