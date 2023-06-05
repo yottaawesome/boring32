@@ -84,9 +84,10 @@ namespace Boring32::WinHttp::WebSockets
 
 				if (!WinHttpReceiveResponse(hInternet, 0))
 				{
+					const auto lastError = GetLastError();
 					Error::Win32Error ex(
 						"WinHttpReceiveResponse() failed on initial connection",
-						GetLastError()
+						lastError
 					);
 
 					std::wcout << ex.what() << std::endl;
