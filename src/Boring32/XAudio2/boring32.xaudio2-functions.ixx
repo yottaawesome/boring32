@@ -3,9 +3,9 @@ module;
 #include <source_location>;
 
 export module boring32.xaudio2:functions;
+import <stdexcept>;
 import <win32.hpp>;
 import boring32.error;
-import <stdexcept>;
 
 namespace Boring32::XAudio2
 {
@@ -92,7 +92,7 @@ export namespace Boring32::XAudio2
             }
             dwOffset += dwChunkDataSize;
             if (bytesRead >= dwRIFFDataSize)
-                throw std::runtime_error("bytesRead >= dwRIFFDataSize");
+                throw Error::Boring32Error("bytesRead >= dwRIFFDataSize");
         }
     }
 }
