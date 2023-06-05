@@ -160,7 +160,7 @@ export namespace Boring32::RAII
 			virtual void SetInheritability(const bool isInheritable)
 			{
 				if (!IsValidValue())
-					throw std::runtime_error(__FUNCSIG__": handle is null or invalid.");
+					throw Error::Boring32Error("handle is null or invalid.");
 				if (!SetHandleInformation(*m_handle, HANDLE_FLAG_INHERIT, isInheritable))
 				{
 					const auto lastError = GetLastError();

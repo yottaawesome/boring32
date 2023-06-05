@@ -5,6 +5,7 @@ module;
 export module boring32.ipc:namedpipeserverbase;
 import <string>;
 import <iostream>;
+import <format>;
 import <win32.hpp>;
 import boring32.error;
 import boring32.raii;
