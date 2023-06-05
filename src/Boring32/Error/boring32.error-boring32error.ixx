@@ -67,14 +67,14 @@ export namespace Boring32::Error
 				const std::string& message,
 				const std::source_location& location,
 				const std::stacktrace& trace,
-				const Args&...args
+				Args&&...args
 			)
 			{
 				GenerateErrorMessage(
 					location,
 					std::vformat(
 						message, 
-						std::make_format_args(args...)
+						std::make_format_args(std::forward<Args>(args)...)
 					),
 					trace
 				);

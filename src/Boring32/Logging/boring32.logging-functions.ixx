@@ -40,23 +40,23 @@ export namespace Boring32::Logging
 	};
 
 	template <class... Types>
-	void Info(const std::string_view fmt, const Types&... Args)
+	void Info(const std::string_view fmt, Types&&... Args)
 	{
-		std::vformat(fmt, std::make_format_args(Args...));
+		std::vformat(fmt, std::make_format_args(std::forward<Args>(Args)...));
 	}
 
 	template <class... Types>
-	void Info(const std::wstring_view fmt, const Types&... Args)
-	{
-	}
-
-	template <class... Types>
-	void Warn(const MessageAndLocation msgAndLoc, const Types&... Args)
+	void Info(const std::wstring_view fmt, Types&&... Args)
 	{
 	}
 
 	template <class... Types>
-	void Warn(const MessageAndLocationW msgAndLoc, const Types&... Args)
+	void Warn(const MessageAndLocation msgAndLoc, Types&&... Args)
+	{
+	}
+
+	template <class... Types>
+	void Warn(const MessageAndLocationW msgAndLoc, Types&&... Args)
 	{
 	}
 
@@ -64,7 +64,7 @@ export namespace Boring32::Logging
 	void Warn(
 		const MessageAndLocation msgAndLoc, 
 		const std::exception& ex, 
-		const Types&... Args
+		Types&&... Args
 	)
 	{
 	}
@@ -73,7 +73,7 @@ export namespace Boring32::Logging
 	void Warn(
 		const MessageAndLocationW msgAndLoc,
 		const std::exception& ex,
-		const Types&... Args
+		Types&&... Args
 	)
 	{
 	}
@@ -82,7 +82,7 @@ export namespace Boring32::Logging
 	void Exception(
 		const MessageAndLocation msgAndLoc,
 		const std::exception& ex,
-		const Types&... Args
+		Types&&... Args
 	)
 	{
 	}
@@ -91,7 +91,7 @@ export namespace Boring32::Logging
 	void Exception(
 		const MessageAndLocationW msgAndLoc,
 		const std::exception& ex,
-		const Types&... Args
+		Types&... Args
 	)
 	{
 	}
@@ -100,7 +100,7 @@ export namespace Boring32::Logging
 	void Error(
 		const MessageAndLocation msgAndLoc,
 		const std::exception& ex,
-		const Types&... Args
+		Types&&... Args
 	)
 	{
 	}
@@ -109,7 +109,7 @@ export namespace Boring32::Logging
 	void Error(
 		const MessageAndLocationW msgAndLoc,
 		const std::exception& ex,
-		const Types&... Args
+		Types&&... Args
 	)
 	{
 	}
@@ -117,7 +117,7 @@ export namespace Boring32::Logging
 	template <class... Types>
 	void Error(
 		const MessageAndLocation msgAndLoc,
-		const Types&... Args
+		Types&&... Args
 	)
 	{
 	}
@@ -125,18 +125,18 @@ export namespace Boring32::Logging
 	template <class... Types>
 	void Error(
 		const MessageAndLocationW msgAndLoc,
-		const Types&... Args
+		Types&&... Args
 	)
 	{
 	}
 
 	template <class... Types>
-	void Debug(const std::string_view fmt, const Types&... Args)
+	void Debug(const std::string_view fmt, Types&&... Args)
 	{
 	}
 
 	template <class... Types>
-	void Debug(const std::wstring_view fmt, const Types&... Args)
+	void Debug(const std::wstring_view fmt, Types&&... Args)
 	{
 	}
 }
