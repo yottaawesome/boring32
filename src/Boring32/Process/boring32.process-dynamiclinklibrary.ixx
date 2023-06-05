@@ -77,9 +77,11 @@ export namespace Boring32::Process
 				if (void* ptr = GetProcAddress(m_libraryHandle, symbolName.c_str()))
 					return ptr;
 
+				const auto lastError = GetLastError();
 				throw Error::Win32Error(
-					std::format("{}: failed to resolve symbol: {}", __FUNCSIG__, symbolName),
-					GetLastError());
+					std::format("Failed to resolve symbol: {}", symbolName),
+					lastError
+				);
 			}
 
 			void* Resolve(
