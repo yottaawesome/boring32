@@ -111,7 +111,7 @@ export namespace Boring32::WinHttp::WebSockets
 			virtual void SendString(const std::string& msg)
 			{
 				if (m_status != WebSocketStatus::Connected)
-					throw std::runtime_error("WebSocket is not connected to send data");
+					throw Error::Boring32Error("WebSocket is not connected to send data");
 				const void* a = reinterpret_cast<const void*>(&msg[0]);
 				const DWORD statusCode = WinHttpWebSocketSend(
 					m_winHttpWebSocket.Get(),
@@ -129,7 +129,7 @@ export namespace Boring32::WinHttp::WebSockets
 			virtual void SendBuffer(const std::vector<std::byte>& buffer)
 			{
 				if (m_status != WebSocketStatus::Connected)
-					throw std::runtime_error("WebSocket is not connected to send data");
+					throw Error::Boring32Error("WebSocket is not connected to send data");
 
 				const DWORD statusCode = WinHttpWebSocketSend(
 					m_winHttpWebSocket.Get(),
@@ -147,9 +147,9 @@ export namespace Boring32::WinHttp::WebSockets
 			virtual bool Receive(std::vector<char>& receiveBuffer)
 			{
 				if (m_status != WebSocketStatus::Connected)
-					throw std::runtime_error("WebSocket is not connected to receive data");
+					throw Error::Boring32Error("WebSocket is not connected to receive data");
 				if (m_readInProgress)
-					throw std::runtime_error("WebSocket is already reading data");
+					throw Error::Boring32Error("WebSocket is already reading data");
 				Util::Switcher switcher(m_readInProgress);
 
 				receiveBuffer.clear();
