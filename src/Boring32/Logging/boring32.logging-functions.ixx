@@ -47,7 +47,7 @@ export namespace Boring32::Logging
 	template <class... Types>
 	void Info(const std::string_view fmt, Types&&... Args)
 	{
-		std::vformat(fmt, std::make_format_args(std::forward<Args>(Args)...));
+		std::vformat(fmt, std::make_format_args(std::forward<Types>(Args)...));
 	}
 
 	template <class... Types>
