@@ -71,34 +71,43 @@ export namespace Boring32::Async
 			/// </summary>
 			virtual void Terminate(const DWORD exitCode)
 			{
-				if (m_threadHandle == nullptr)
+				if (!m_threadHandle)
 					throw Error::Boring32Error("No thread handle to terminate");
-				if (TerminateThread(m_threadHandle.GetHandle(), exitCode) == false)
-					throw Error::Win32Error("TerminateThread() failed", GetLastError());
+				if (!TerminateThread(m_threadHandle.GetHandle(), exitCode))
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("TerminateThread() failed", lastError);
+				}
 				m_status = ThreadStatus::Terminated;
 			}
 
 			virtual void Suspend()
 			{
-				if (m_threadHandle == nullptr)
+				if (!m_threadHandle)
 					throw Error::Boring32Error("No thread handle to suspend");
 				if (m_status != ThreadStatus::Running)
 					throw Error::Boring32Error("Thread was not running when request to suspend occurred.");
 
-				if (SuspendThread(m_threadHandle.GetHandle()) == false)
-					throw Error::Win32Error("SuspendThread() failed", GetLastError());
+				if (!SuspendThread(m_threadHandle.GetHandle()))
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("SuspendThread() failed", lastError);
+				}
 				m_status = ThreadStatus::Suspended;
 			}
 
 			virtual void Resume()
 			{
-				if (m_threadHandle == nullptr)
+				if (!m_threadHandle)
 					throw Error::Boring32Error("No thread handle to resume");
 				if (m_status != ThreadStatus::Suspended)
 					throw Error::Boring32Error("Thread was not suspended when request to resume occurred.");
 
-				if (ResumeThread(m_threadHandle.GetHandle()) == false)
-					throw Error::Win32Error("ResumeThread() failed", GetLastError());
+				if (!ResumeThread(m_threadHandle.GetHandle()))
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("ResumeThread() failed", lastError);
+				}
 				m_status = ThreadStatus::Running;
 			}
 
@@ -114,7 +123,8 @@ export namespace Boring32::Async
 					return false;
 				if (waitResult == WAIT_ABANDONED)
 					throw Error::Boring32Error("Wait was abandoned");
-				throw Error::Win32Error("WaitForSingleObject() failed", GetLastError());
+				const auto lastError = GetLastError();
+				throw Error::Win32Error("WaitForSingleObject() failed", lastError);
 			}
 
 			virtual void Close()
@@ -146,12 +156,15 @@ export namespace Boring32::Async
 
 			virtual UINT GetExitCode() const
 			{
-				if (m_threadHandle == nullptr)
+				if (!m_threadHandle)
 					throw Error::Boring32Error("No handle to thread; has the the thread been started or destroyed?");
 
 				DWORD exitCode;
-				if (GetExitCodeThread(m_threadHandle.GetHandle(), &exitCode) == false)
-					throw Error::Win32Error("GetExitCodeThread() failed", GetLastError());
+				if (!GetExitCodeThread(m_threadHandle.GetHandle(), &exitCode))
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("GetExitCodeThread() failed", lastError);
+				}
 				return exitCode;
 			}
 
@@ -234,15 +247,14 @@ export namespace Boring32::Async
 					0,
 					nullptr
 				);
-				if (m_threadHandle == nullptr)
+				if (!m_threadHandle)
 				{
 					int errorCode = 0;
-					std::string errorMessage = "_beginthreadex() failed";
-					// https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/get-errno?view=msvc-160
-					errorMessage += _get_errno(&errorCode) == 0
-						? "; error code: " + std::to_string(errorCode)
-						: ", but could not determine the error code";
-
+					_get_errno(&errorCode);
+					std::string errorMessage = std::format(
+						"_beginthreadex() failed with error code {}", 
+						errorCode
+					);
 					throw Error::Boring32Error(errorMessage);
 				}
 			}
