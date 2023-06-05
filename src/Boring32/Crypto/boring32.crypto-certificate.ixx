@@ -257,10 +257,13 @@ export namespace Boring32::Crypto
 					&sizeInBytes
 				);
 				if (!succeeded)
+				{
+					const auto lastError = GetLastError();
 					throw Error::Win32Error(
 						"CertGetCertificateContextProperty() failed (1)",
-						GetLastError()
+						lastError
 					);
+				}
 
 				std::vector<std::byte> returnValue(sizeInBytes);
 				succeeded = CertGetCertificateContextProperty(
@@ -270,10 +273,13 @@ export namespace Boring32::Crypto
 					&sizeInBytes
 				);
 				if (!succeeded)
+				{
+					const auto lastError = GetLastError();
 					throw Error::Win32Error(
 						"CertGetCertificateContextProperty() failed (2)",
-						GetLastError()
+						lastError
 					);
+				}
 				returnValue.resize(sizeInBytes);
 
 				return returnValue;
