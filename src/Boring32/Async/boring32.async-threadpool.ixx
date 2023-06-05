@@ -70,7 +70,7 @@ export namespace Boring32::Async::ThreadPools
 		public:
 			virtual void SetMinAndMaxThreads(const DWORD min, const DWORD max)
 			{
-				if (m_pool == nullptr)
+				if (!m_pool)
 					throw Error::Boring32Error("m_pool is nullptr");
 				ValidateArgs(min, max);
 				SetMinThreads(min);
@@ -79,7 +79,7 @@ export namespace Boring32::Async::ThreadPools
 
 			virtual void SetMaxThreads(const DWORD value)
 			{
-				if (m_pool == nullptr)
+				if (!m_pool)
 					throw Error::Boring32Error("m_pool is nullptr");
 				ValidateArgs(m_minThreads, value);
 
@@ -90,13 +90,16 @@ export namespace Boring32::Async::ThreadPools
 
 			virtual void SetMinThreads(const DWORD value)
 			{
-				if (m_pool == nullptr)
+				if (!m_pool)
 					throw Error::Boring32Error("m_pool is nullptr");
 				ValidateArgs(value, m_maxThreads);
 
 				// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-setthreadpoolthreadminimum
 				if (!SetThreadpoolThreadMinimum(m_pool.get(), value))
-					throw Error::Win32Error("SetThreadpoolThreadMinimum() failed", GetLastError());
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("SetThreadpoolThreadMinimum() failed", lastError);
+				}
 
 				m_minThreads = value;
 			}
@@ -120,7 +123,7 @@ export namespace Boring32::Async::ThreadPools
 				void* param
 			)
 			{
-				if (m_pool == nullptr)
+				if (!m_pool)
 					throw Error::Boring32Error("m_pool is nullptr");
 
 				// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-createthreadpoolwork
@@ -133,8 +136,11 @@ export namespace Boring32::Async::ThreadPools
 					param,
 					&m_environ
 				);
-				if (item == nullptr)
-					throw Error::Win32Error("CreateThreadPool() failed", GetLastError());
+				if (!item)
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("CreateThreadPool() failed", lastError);
+				}
 
 				return item;
 			}
@@ -142,7 +148,7 @@ export namespace Boring32::Async::ThreadPools
 			template<typename T>
 			void CreateWork(WorkItem<T>& outWorkItem)
 			{
-				if (m_pool == nullptr)
+				if (!m_pool)
 					throw Error::Boring32Error("m_pool is nullptr");
 
 				outWorkItem.Item = CreateThreadpoolWork(
@@ -150,11 +156,12 @@ export namespace Boring32::Async::ThreadPools
 					&outWorkItem, 
 					&m_environ
 				);
-				if (outWorkItem.Item == nullptr)
+				if (!outWorkItem.Item)
 				{
 					const auto location = std::source_location::current();
 					// using current() directly causes a compiler internal error
-					throw Error::Win32Error("CreateThreadpoolWork() failed", GetLastError());
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("CreateThreadpoolWork() failed", lastError);
 				}
 			}
 
@@ -163,9 +170,9 @@ export namespace Boring32::Async::ThreadPools
 
 			virtual void SubmitWork(PTP_WORK workItem)
 			{
-				if (m_pool == nullptr)
+				if (!m_pool)
 					throw Error::Boring32Error("m_pool is nullptr");
-				if (workItem == nullptr)
+				if (!workItem)
 					throw Error::Boring32Error("workItem is nullptr");
 				SubmitThreadpoolWork(workItem);
 			}
@@ -240,9 +247,15 @@ export namespace Boring32::Async::ThreadPools
 
 				// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-createthreadpool
 				// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-closethreadpool
-				m_pool = std::shared_ptr<TP_POOL>(CreateThreadpool(nullptr), CloseThreadpool);
-				if (m_pool == nullptr)
-					throw Error::Win32Error("CreateThreadPool() failed", GetLastError());
+				m_pool = std::shared_ptr<TP_POOL>(
+					CreateThreadpool(nullptr), 
+					CloseThreadpool
+				);
+				if (!m_pool)
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("CreateThreadPool() failed", lastError);
+				}
 
 				SetMinAndMaxThreads(m_minThreads, m_maxThreads);
 				// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-initializethreadpoolenvironment
