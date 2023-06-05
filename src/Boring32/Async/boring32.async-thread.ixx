@@ -154,7 +154,7 @@ export namespace Boring32::Async
 				return m_status;
 			}
 
-			virtual UINT GetExitCode() const
+			virtual unsigned long GetExitCode() const
 			{
 				if (!m_threadHandle)
 					throw Error::Boring32Error("No handle to thread; has the the thread been started or destroyed?");
@@ -211,7 +211,7 @@ export namespace Boring32::Async
 			}
 
 		protected:
-			virtual UINT Run()
+			virtual unsigned Run()
 			{
 				return m_func(m_threadParam);
 			}
@@ -239,13 +239,15 @@ export namespace Boring32::Async
 			virtual void InternalStart()
 			{
 				// https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/beginthread-beginthreadex?view=vs-2019
-				m_threadHandle = (HANDLE)_beginthreadex(
-					0,
-					0,
-					Thread::ThreadProc,
-					this,
-					0,
-					nullptr
+				m_threadHandle = reinterpret_cast<HANDLE>(
+					_beginthreadex(
+						0,
+						0,
+						Thread::ThreadProc,
+						this,
+						0,
+						nullptr
+					)
 				);
 				if (!m_threadHandle)
 				{
@@ -259,13 +261,13 @@ export namespace Boring32::Async
 				}
 			}
 
-			static UINT WINAPI ThreadProc(void* param)
+			static unsigned WINAPI ThreadProc(void* param)
 			{
 				Thread* threadObj = static_cast<Thread*>(param);
-				if (threadObj == nullptr)
+				if (!threadObj)
 					throw Error::Boring32Error("threadObj is unexpectedly nullptr");
 
-				UINT returnCode = 0;
+				unsigned returnCode = 0;
 				threadObj->m_status = ThreadStatus::Running;
 
 				threadObj->m_started.Signal();
