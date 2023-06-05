@@ -27,7 +27,7 @@ export namespace Boring32::Util
 		std::is_same_v<std::wstring, T> || std::is_same_v<std::string, T>;
 
 	template<typename T> requires IsString<T>
-	T ByteVectorToString(const std::vector<std::byte>& vector)
+	inline T ByteVectorToString(const std::vector<std::byte>& vector)
 	{
 		return { 
 			reinterpret_cast<T::const_pointer>(&vector[0]), 
@@ -36,7 +36,7 @@ export namespace Boring32::Util
 	}
 
 	template<typename T> requires IsString<T>
-	std::vector<std::byte> StringToByteVector(const T& str)
+	inline std::vector<std::byte> StringToByteVector(const T& str)
 	{
 		return {
 			reinterpret_cast<const std::byte*>(&str[0]),
@@ -45,7 +45,7 @@ export namespace Boring32::Util
 	}
 
 	template<typename T, typename S>
-	std::vector<T> ReinterpretVector(const std::vector<S>& in)
+	inline std::vector<T> ReinterpretVector(const std::vector<S>& in)
 	{
 		return {
 			reinterpret_cast<const T*>(&in[0]),
