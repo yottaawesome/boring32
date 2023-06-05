@@ -198,7 +198,7 @@ namespace Boring32::WinHttp::WebSockets
 							break;
 
 						default:
-							throw std::runtime_error("Unknown eBufferType");
+							throw Error::Boring32Error("Unknown eBufferType");
 					}
 				}
 				catch (const std::exception& ex)
