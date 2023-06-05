@@ -184,7 +184,7 @@ export namespace Boring32::IPC
 					throw Error::Boring32Error("No pipe to write to");
 
 				oio = Async::OverlappedIo();
-				conts bool succeeded = WriteFile(
+				const bool succeeded = WriteFile(
 					m_pipe.GetHandle(),     // handle to pipe 
 					&msg[0],                // buffer to write from 
 					static_cast<DWORD>(msg.size() * sizeof(wchar_t)), // number of bytes to write 
