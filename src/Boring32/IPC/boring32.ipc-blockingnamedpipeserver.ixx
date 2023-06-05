@@ -9,6 +9,7 @@ import <vector>;
 import <win32.hpp>;
 import boring32.util;
 import boring32.raii;
+import boring32.error;
 import :namedpipeserverbase;
 
 export namespace Boring32::IPC
@@ -95,11 +96,11 @@ export namespace Boring32::IPC
 		public:
 			virtual void Connect()
 			{
-				if (m_pipe == nullptr)
-					throw std::runtime_error("No valid pipe handle to connect");
+				if (!m_pipe)
+					throw Error::Boring32Error("No valid pipe handle to connect");
 
-				if (ConnectNamedPipe(m_pipe.GetHandle(), nullptr) == false)
-					throw std::runtime_error("Failed to connect named pipe");
+				if (!ConnectNamedPipe(m_pipe.GetHandle(), nullptr))
+					throw Error::Boring32Error("Failed to connect named pipe");
 			}
 
 			virtual void Write(const std::wstring& msg)
@@ -141,25 +142,25 @@ export namespace Boring32::IPC
 		protected:
 			virtual void InternalWrite(const std::vector<std::byte>& msg)
 			{
-				if (m_pipe == nullptr)
-					throw std::runtime_error("No pipe to write to");
+				if (!m_pipe)
+					throw Error::Boring32Error("No pipe to write to");
 
 				DWORD bytesWritten = 0;
-				bool success = WriteFile(
+				const bool success = WriteFile(
 					m_pipe.GetHandle(),     // handle to pipe 
 					&msg[0],                // buffer to write from 
-					(DWORD)msg.size(), // number of bytes to write 
+					static_cast<DWORD>(msg.size()), // number of bytes to write 
 					&bytesWritten,          // number of bytes written 
 					nullptr                 // not overlapped I/O
 				);
-				if (success == false)
-					throw std::runtime_error("Failed to read pipe");
+				if (!success)
+					throw Error::Boring32Error("Failed to read pipe");
 			}
 
 			virtual std::vector<std::byte> InternalRead()
 			{
-				if (m_pipe == nullptr)
-					throw std::runtime_error("No pipe to read from");
+				if (!m_pipe)
+					throw Error::Boring32Error("No pipe to read from");
 
 				constexpr DWORD blockSize = 1024;
 				std::vector<std::byte> dataBuffer(blockSize);
@@ -170,18 +171,18 @@ export namespace Boring32::IPC
 				{
 					DWORD currentBytesRead = 0;
 					// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile
-					bool successfulRead = ReadFile(
+					const bool successfulRead = ReadFile(
 						m_pipe.GetHandle(),    // pipe handle 
 						&dataBuffer[0],    // buffer to receive reply 
-						(DWORD)dataBuffer.size(),  // size of buffer 
+						static_cast<DWORD>(dataBuffer.size()),  // size of buffer 
 						&currentBytesRead,  // number of bytes read 
 						nullptr // not overlapped
 					);
 					totalBytesRead += currentBytesRead;
 
 					const DWORD lastError = GetLastError();
-					if (successfulRead == false && lastError != ERROR_MORE_DATA)
-						throw std::runtime_error("Failed to read from pipe");
+					if (!successfulRead && lastError != ERROR_MORE_DATA)
+						throw Error::Boring32Error("Failed to read from pipe");
 					if (lastError == ERROR_MORE_DATA)
 						dataBuffer.resize(dataBuffer.size() + blockSize);
 					continueReading = !successfulRead;
