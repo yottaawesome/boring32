@@ -33,6 +33,18 @@ namespace Async
 				Assert::IsNotNull(testEvent2.GetHandle());
 			}
 
+			TEST_METHOD(TestWaitOnEventChrono)
+			{
+				Boring32::Async::Event testEvent(false, true, false);
+
+				std::thread([&]() { testEvent.Signal(); }).detach();
+				const bool waitSucceeded = testEvent.WaitOnEvent(
+					std::chrono::seconds(3), 
+					false
+				);
+				Assert::IsTrue(waitSucceeded);
+			}
+
 			TEST_METHOD(TestManualResetEvent)
 			{
 				Boring32::Async::Event testEvent(false, true, false, L"");
