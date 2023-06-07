@@ -13,6 +13,15 @@ import <win32.hpp>;
 import boring32.raii;
 import boring32.error;
 
+namespace Boring32::Async
+{
+	template<typename T>
+	concept IsDuration = 
+		std::is_same_v<T, std::chrono::milliseconds> 
+		|| std::is_same_v<T, std::chrono::seconds> 
+		|| std::is_same_v<T, std::chrono::minutes>;
+}
+
 export namespace Boring32::Async
 {
 	/// <summary>
@@ -185,10 +194,11 @@ export namespace Boring32::Async
 					throw Error::Boring32Error("The wait was abandoned");
 			}
 
+			template<typename T>
 			bool WaitOnEvent(
-				const std::chrono::seconds time,
+				const T& time,
 				const bool alertable
-			) const
+			) const requires IsDuration<T>
 			{
 				return WaitOnEvent(
 					static_cast<DWORD>(std::chrono::duration_cast<std::chrono::milliseconds>(time).count()),
@@ -196,11 +206,12 @@ export namespace Boring32::Async
 				);
 			}
 
+			template<typename T>
 			bool WaitOnEvent(
 				const std::chrono::seconds time,
 				const bool alertable,
 				const std::nothrow_t&
-			) const
+			) const requires IsDuration<T>
 			{
 				return WaitOnEvent(
 					static_cast<DWORD>(std::chrono::duration_cast<std::chrono::milliseconds>(time).count()),
