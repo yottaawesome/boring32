@@ -47,7 +47,7 @@ namespace Async
 
 			TEST_METHOD(TestManualResetEvent)
 			{
-				Boring32::Async::Event testEvent(false, true, false, L"");
+				Boring32::Async::Event testEvent(false, true, false);
 				testEvent.Signal();
 				Assert::IsTrue(testEvent.WaitOnEvent(0, true));
 				Assert::IsTrue(testEvent.WaitOnEvent(0, true));
@@ -57,7 +57,7 @@ namespace Async
 
 			TEST_METHOD(TestAutoResetEvent)
 			{
-				Boring32::Async::Event testEvent(false, false, false, L"");
+				Boring32::Async::Event testEvent(false, false, false);
 				testEvent.Signal();
 				Assert::IsTrue(testEvent.WaitOnEvent(0, true));
 				Assert::IsFalse(testEvent.WaitOnEvent(0, true));
