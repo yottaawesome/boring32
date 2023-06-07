@@ -6,6 +6,7 @@ export module boring32.async:event;
 import <string>;
 import <stdexcept>;
 import <iostream>;
+import <chrono>;
 import <format>;
 import <optional>;
 import <win32.hpp>;
@@ -182,6 +183,30 @@ export namespace Boring32::Async
 				}
 				if (status == WAIT_ABANDONED)
 					throw Error::Boring32Error("The wait was abandoned");
+			}
+
+			bool WaitOnEvent(
+				const std::chrono::seconds time,
+				const bool alertable
+			) const
+			{
+				return WaitOnEvent(
+					static_cast<DWORD>(std::chrono::duration_cast<std::chrono::milliseconds>(time).count()),
+					alertable
+				);
+			}
+
+			bool WaitOnEvent(
+				const std::chrono::seconds time,
+				const bool alertable,
+				const std::nothrow_t&
+			) const
+			{
+				return WaitOnEvent(
+					static_cast<DWORD>(std::chrono::duration_cast<std::chrono::milliseconds>(time).count()),
+					alertable, 
+					std::nothrow
+				);
 			}
 
 			bool WaitOnEvent(
