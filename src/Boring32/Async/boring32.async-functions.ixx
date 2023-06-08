@@ -160,6 +160,24 @@ export namespace Boring32::Async
 		return WaitFor(handles, waitForAll, timeout, false);
 	}
 
+	template<typename T>
+	DWORD WaitFor(
+		const std::vector<HANDLE>& handles,
+		const bool waitForAll,
+		const T& time,
+		const bool alertable
+	) requires IsDuration<T>
+	{
+		using std::chrono::duration_cast;
+		using std::chrono::milliseconds;
+		return WaitFor(
+			handles, 
+			waitForAll, 
+			static_cast<DWORD>(duration_cast<milliseconds>(time).count()),
+			false
+		);
+	}
+
 	// Why is this here?
 	/// <summary>
 	///		Find a process IDs by process name.
