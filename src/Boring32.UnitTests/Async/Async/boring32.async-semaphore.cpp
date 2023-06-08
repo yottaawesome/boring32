@@ -87,5 +87,11 @@ namespace Async
 			Boring32::Async::Semaphore semaphore(false, 10, 10);
 			semaphore.Release(0);
 		}
+
+		TEST_METHOD(TestAcquireChrono)
+		{
+			Boring32::Async::Semaphore semaphore(false, 10, 10);
+			Assert::IsTrue(semaphore.Acquire(std::chrono::seconds(5), false));
+		}
 	};
 }
