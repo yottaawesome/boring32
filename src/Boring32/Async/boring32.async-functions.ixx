@@ -5,12 +5,14 @@ module;
 export module boring32.async:functions;
 import <vector>;
 import <string>;
-import <win32.hpp>;
 import <stdexcept>;
 import <format>;
+import <chrono>;
+import <win32.hpp>;
 import boring32.raii;
 import boring32.strings;
 import boring32.error;
+import :concepts;
 
 export namespace Boring32::Async
 {
@@ -56,6 +58,22 @@ export namespace Boring32::Async
 	bool WaitFor(const HANDLE handle, const DWORD timeout)
 	{
 		return WaitFor(handle, timeout, false);
+	}
+
+	template<typename T>
+	bool WaitFor(
+		const HANDLE handle, 
+		const T& time, 
+		const bool isAlertable
+	) requires IsDuration<T>
+	{
+		using std::chrono::duration_cast;
+		using std::chrono::milliseconds;
+		return WaitFor(
+			handle, 
+			static_cast<DWORD>(duration_cast<milliseconds>(time).count()),
+			isAlertable
+		);
 	}
 
 	/// <summary>
