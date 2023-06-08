@@ -12,6 +12,7 @@ import <format>;
 import boring32.error;
 import boring32.raii;
 import :functions;
+import :concepts;
 
 export namespace Boring32::Async
 {
@@ -183,6 +184,20 @@ export namespace Boring32::Async
 			bool Lock(const bool isAlertable)
 			{
 				return Lock(INFINITE, isAlertable);
+			}
+
+			template<typename T>
+			bool Lock(
+				const T& time,
+				const bool alertable
+			) const requires IsDuration<T>
+			{
+				using std::chrono::duration_cast;
+				using std::chrono::milliseconds;
+				return Lock(
+					static_cast<DWORD>(duration_cast<milliseconds>(time).count()),
+					alertable
+				);
 			}
 
 			/// <summary>
