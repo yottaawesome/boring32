@@ -25,11 +25,23 @@ namespace Async
 			TEST_METHOD(WaitForChrono)
 			{
 				Boring32::Async::Event event(false, true, false);
-				std::thread([&]() { event.Signal(); }).detach();
+				event.Signal();
 				Assert::IsTrue(
 					Boring32::Async::WaitFor(
 						event.GetHandle(),
 						std::chrono::seconds(5),
+						false
+					)
+				);
+			}
+
+			TEST_METHOD(WaitForChronoTimeout)
+			{
+				Boring32::Async::Event event(false, true, false);
+				Assert::IsFalse(
+					Boring32::Async::WaitFor(
+						event.GetHandle(),
+						std::chrono::seconds(1),
 						false
 					)
 				);
