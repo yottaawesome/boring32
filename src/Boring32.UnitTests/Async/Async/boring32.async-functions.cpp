@@ -8,7 +8,7 @@ namespace Async
 	TEST_CLASS(AsyncFuncs)
 	{
 		public:
-			TEST_METHOD(WaitFor1)
+			TEST_METHOD(WaitForSingle)
 			{
 				Boring32::Async::Event event(false, true, false, L"");
 				std::thread signalThread([&event]() { event.Signal(); });
@@ -22,7 +22,7 @@ namespace Async
 				guardThread.join();
 			}
 
-			TEST_METHOD(WaitForChrono)
+			TEST_METHOD(WaitForSingleChrono)
 			{
 				Boring32::Async::Event event(false, true, false);
 				event.Signal();
@@ -35,7 +35,7 @@ namespace Async
 				);
 			}
 
-			TEST_METHOD(WaitForChronoTimeout)
+			TEST_METHOD(WaitForSingleChronoTimeout)
 			{
 				Boring32::Async::Event event(false, true, false);
 				Assert::IsFalse(
@@ -47,13 +47,13 @@ namespace Async
 				);
 			}
 
-			TEST_METHOD(WaitFor2Timeout)
+			TEST_METHOD(WaitForSingleTimeout)
 			{
 				Boring32::Async::Event event(false, true, false, L"");
 				Assert::IsFalse(Boring32::Async::WaitFor(event.GetHandle(), 100));
 			}
 
-			TEST_METHOD(WaitFor3WaitOne)
+			TEST_METHOD(WaitForMultipleOne)
 			{
 				Boring32::Async::Event event1(false, true, false, L"");
 				Boring32::Async::Event event2(false, true, false, L"");
@@ -68,7 +68,7 @@ namespace Async
 				Assert::IsTrue(Boring32::Async::WaitFor(handles, false) == 1);
 			}
 
-			TEST_METHOD(WaitFor3WaitAll)
+			TEST_METHOD(WaitForMultipleAll)
 			{
 				Boring32::Async::Event event1(false, true, false, L"");
 				Boring32::Async::Event event2(false, true, false, L"");
@@ -84,7 +84,7 @@ namespace Async
 				Assert::IsTrue(Boring32::Async::WaitFor(handles, false) == 0);
 			}
 
-			TEST_METHOD(WaitFor4Timeout)
+			TEST_METHOD(WaitForMultipleTimeout)
 			{
 				Boring32::Async::Event event1(false, true, false, L"");
 				Boring32::Async::Event event2(false, true, false, L"");
@@ -93,20 +93,22 @@ namespace Async
 				Assert::IsTrue(Boring32::Async::WaitFor(handles, false, 100) == WAIT_TIMEOUT);
 			}
 
-			TEST_METHOD(WaitFor5ApcTest)
+			TEST_METHOD(WaitForSingleApcTest)
 			{
 				DWORD status = QueueUserAPC(
 					[](ULONG_PTR ptr) {},
 					GetCurrentThread(),
 					0
 				);
-				if (status == false)
+				if (!status)
 					throw std::runtime_error("Failed to QueueUserAPC");
 
 				Boring32::Async::Event event1(false, true, false, L"");
 				Boring32::Async::Event event2(false, true, false, L"");
 				std::vector<HANDLE> handles{ event1.GetHandle(), event2.GetHandle() };
-				Assert::IsTrue(Boring32::Async::WaitFor(handles, false, INFINITE, true) == WAIT_IO_COMPLETION);
+				Assert::IsTrue(
+					Boring32::Async::WaitFor(handles, false, INFINITE, true) == WAIT_IO_COMPLETION
+				);
 			}
 
 			TEST_METHOD(TestGetProcessIDByName)
