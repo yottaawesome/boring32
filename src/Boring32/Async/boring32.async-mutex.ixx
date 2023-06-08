@@ -219,8 +219,11 @@ export namespace Boring32::Async
 			{
 				if (!m_mutex)
 					throw Error::Boring32Error("Cannot wait on null mutex");
-				m_locked = WaitFor(m_mutex.GetHandle(), waitTime, isAlertable);
-				return m_locked;
+				return m_locked = WaitFor(
+					m_mutex.GetHandle(), 
+					waitTime, 
+					isAlertable
+				);
 			}
 
 			/// <summary>
