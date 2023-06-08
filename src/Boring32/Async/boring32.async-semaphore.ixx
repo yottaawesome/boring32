@@ -6,9 +6,11 @@ export module boring32.async:semaphore;
 import <string>;
 import <stdexcept>;
 import <format>;
+import <chrono>;
 import <win32.hpp>;
 import boring32.error;
 import boring32.raii;
+import :concepts;
 
 export namespace Boring32::Async
 {
@@ -132,6 +134,20 @@ export namespace Boring32::Async
 				}
 
 				return true;
+			}
+
+			template<typename T>
+			bool Acquire(
+				const T& time, 
+				const bool isAlertable
+			) requires IsDuration<T>
+			{
+				using std::chrono::milliseconds;
+				using std::chrono::duration_cast;
+				return Acquire(
+					static_cast<unsigned long>(duration_cast<milliseconds>(time).count()), 
+					isAlertable
+				);
 			}
 
 			bool Acquire(const unsigned long millisTimeout, const bool isAlertable)
