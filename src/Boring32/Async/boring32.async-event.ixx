@@ -192,8 +192,10 @@ export namespace Boring32::Async
 				const bool alertable
 			) const requires IsDuration<T>
 			{
+				using std::chrono::duration_cast;
+				using std::chrono::milliseconds;
 				return WaitOnEvent(
-					static_cast<DWORD>(std::chrono::duration_cast<std::chrono::milliseconds>(time).count()),
+					static_cast<DWORD>(duration_cast<milliseconds>(time).count()),
 					alertable
 				);
 			}
@@ -205,8 +207,10 @@ export namespace Boring32::Async
 				const std::nothrow_t&
 			) const requires IsDuration<T>
 			{
+				using std::chrono::duration_cast;
+				using std::chrono::milliseconds;
 				return WaitOnEvent(
-					static_cast<DWORD>(std::chrono::duration_cast<std::chrono::milliseconds>(time).count()),
+					static_cast<DWORD>(duration_cast<milliseconds>(time).count()),
 					alertable, 
 					std::nothrow
 				);
