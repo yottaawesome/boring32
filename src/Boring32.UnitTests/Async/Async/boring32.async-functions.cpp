@@ -22,6 +22,19 @@ namespace Async
 				guardThread.join();
 			}
 
+			TEST_METHOD(WaitForChrono)
+			{
+				Boring32::Async::Event event(false, true, false);
+				std::thread([&]() { event.Signal(); }).detach();
+				Assert::IsTrue(
+					Boring32::Async::WaitFor(
+						event.GetHandle(),
+						std::chrono::seconds(5),
+						false
+					)
+				);
+			}
+
 			TEST_METHOD(WaitFor2Timeout)
 			{
 				Boring32::Async::Event event(false, true, false, L"");
