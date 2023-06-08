@@ -82,6 +82,12 @@ namespace Async
 				Assert::IsTrue(testMutex1.Lock(500, false));
 			}
 
+			TEST_METHOD(TestLockChrono)
+			{
+				Boring32::Async::Mutex testMutex1(false, false);
+				Assert::IsTrue(testMutex1.Lock(std::chrono::seconds(5), false));
+			}
+
 			TEST_METHOD(TestUnlock)
 			{
 				Boring32::Async::Mutex testMutex(false, false, L"Mutex1");

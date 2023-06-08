@@ -4,11 +4,12 @@ module;
 
 export module boring32.async:mutex;
 import <string>;
-import <win32.hpp>;
 import <stdexcept>;
 import <string>;
+import <chrono>;
 import <iostream>;
 import <format>;
+import <win32.hpp>;
 import boring32.error;
 import boring32.raii;
 import :functions;
@@ -190,7 +191,7 @@ export namespace Boring32::Async
 			bool Lock(
 				const T& time,
 				const bool alertable
-			) const requires IsDuration<T>
+			) requires IsDuration<T>
 			{
 				using std::chrono::duration_cast;
 				using std::chrono::milliseconds;
