@@ -12,15 +12,7 @@ import <optional>;
 import <win32.hpp>;
 import boring32.raii;
 import boring32.error;
-
-namespace Boring32::Async
-{
-	template<typename T>
-	concept IsDuration = 
-		std::is_same_v<T, std::chrono::milliseconds> 
-		|| std::is_same_v<T, std::chrono::seconds> 
-		|| std::is_same_v<T, std::chrono::minutes>;
-}
+import :concepts;
 
 export namespace Boring32::Async
 {

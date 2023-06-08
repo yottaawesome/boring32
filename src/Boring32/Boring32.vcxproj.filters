@@ -212,5 +212,6 @@
     <ClCompile Include="Util\boring32.util-enumeration.ixx" />
     <ClCompile Include="Memory\boring32.memory-virtualaddress.ixx" />
     <ClCompile Include="Async\boring32.async-sharedmap.ixx" />
+    <ClCompile Include="Async\boring32.async-concepts.ixx" />
   </ItemGroup>
 </Project>
