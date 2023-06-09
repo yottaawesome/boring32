@@ -130,7 +130,7 @@ export namespace Boring32::Async
 			}
 			catch (const std::exception& ex)
 			{
-				std::wcerr << std::format("{}: SetTimerInNanos() failed: {}\n", __FUNCSIG__, ex.what()).c_str();
+				std::wcerr << std::format("SetTimerInNanos() failed: {}\n", ex.what()).c_str();
 				return false;
 			}
 
