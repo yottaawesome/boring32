@@ -70,7 +70,10 @@ export namespace Boring32::Async
 				//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-openwaitabletimerw
 				m_handle = OpenWaitableTimerW(desiredAccess, isInheritable, m_name.c_str());
 				if (!m_handle)
-					throw Error::Win32Error("failed to open waitable timer", GetLastError());
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("Failed to open waitable timer", lastError);
+				}
 			}
 
 		public:
@@ -156,7 +159,7 @@ export namespace Boring32::Async
 			}
 			catch (const std::exception& ex)
 			{
-				std::wcerr << std::format("{}: SetTimerInMillis() failed: {}\n", __FUNCSIG__, ex.what()).c_str();
+				std::wcerr << std::format("SetTimerInMillis() failed: {}\n", ex.what()).c_str();
 				return false;
 			}
 
@@ -206,7 +209,10 @@ export namespace Boring32::Async
 					throw Error::Boring32Error("Timer handle is null");
 
 				if (!CancelWaitableTimer(m_handle.GetHandle()))
-					throw Error::Win32Error("CancelWaitableTimer() failed", GetLastError());
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("CancelWaitableTimer() failed", lastError);
+				}
 			}
 
 			virtual bool CancelTimer(
@@ -276,7 +282,10 @@ export namespace Boring32::Async
 					m_name.empty() ? nullptr : m_name.c_str()
 				);
 				if (!m_handle)
-					throw Error::Win32Error("Failed to create waitable timer", GetLastError());
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("Failed to create waitable timer", lastError);
+				}
 				m_handle.SetInheritability(isInheritable);
 			}
 
@@ -299,7 +308,10 @@ export namespace Boring32::Async
 					false
 				);
 				if (!succeeded)
-					throw Error::Win32Error("Failed to set timer", GetLastError());
+				{
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("Failed to set timer", lastError);
+				}
 			}
 
 		protected:
