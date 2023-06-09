@@ -280,7 +280,10 @@ export namespace Boring32::WinHttp::WebSockets
 						0
 					);
 					if (!m_winHttpConnection)
-						throw Error::Win32Error("WinHttpConnect() failed", GetLastError());
+					{
+						const auto lastError = GetLastError();
+						throw Error::Win32Error("WinHttpConnect() failed", lastError);
+					}
 
 					// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpopenrequest
 					WinHttpHandle requestHandle = WinHttpOpenRequest(
@@ -293,7 +296,10 @@ export namespace Boring32::WinHttp::WebSockets
 						WINHTTP_FLAG_SECURE
 					);
 					if (requestHandle == nullptr)
-						throw Error::Win32Error("WinHttpOpenRequest() failed", GetLastError());
+					{
+						const auto lastError = GetLastError();
+						throw Error::Win32Error("WinHttpOpenRequest() failed", lastError);
+					}
 
 					bool success = false;
 					if (m_settings.IgnoreSslErrors)
@@ -308,7 +314,10 @@ export namespace Boring32::WinHttp::WebSockets
 							sizeof(optionFlags)
 						);
 						if (success == false)
-							throw Error::Win32Error("WinHttpSetOption() failed", GetLastError());
+						{
+							const auto lastError = GetLastError();
+							throw Error::Win32Error("WinHttpSetOption() failed", lastError);
+						}
 					}
 
 					success = WinHttpSetOption(
@@ -318,7 +327,10 @@ export namespace Boring32::WinHttp::WebSockets
 						0
 					);
 					if (!success)
-						throw Error::Win32Error("WinHttpSetOption() failed", GetLastError());
+					{
+						const auto lastError = GetLastError();
+						throw Error::Win32Error("WinHttpSetOption() failed", lastError);
+					}
 
 					if (m_settings.ClientCert.GetCert())
 					{
@@ -330,7 +342,10 @@ export namespace Boring32::WinHttp::WebSockets
 							sizeof(CERT_CONTEXT)
 						);
 						if (!setCertOption)
-							throw Error::Win32Error("WinHttpSetOption() failed for client certificate", GetLastError());
+						{
+							const auto lastError = GetLastError();
+							throw Error::Win32Error("WinHttpSetOption() failed for client certificate", lastError);
+						}
 					}
 					const wchar_t* connectionHeaders = m_settings.ConnectionHeaders.empty()
 						? WINHTTP_NO_ADDITIONAL_HEADERS
@@ -352,7 +367,10 @@ export namespace Boring32::WinHttp::WebSockets
 
 					success = WinHttpReceiveResponse(requestHandle.Get(), 0);
 					if (success == false)
-						throw Error::Win32Error("WinHttpReceiveResponse() failed on initial connection", GetLastError());
+					{
+						const auto lastError = GetLastError();
+						throw Error::Win32Error("WinHttpReceiveResponse() failed on initial connection", lastError);
+					}
 
 					DWORD statusCode = 0;
 					DWORD statusCodeSize = sizeof(statusCode);
@@ -366,7 +384,10 @@ export namespace Boring32::WinHttp::WebSockets
 						WINHTTP_NO_HEADER_INDEX
 					);
 					if (success == false)
-						throw Error::Win32Error("WinHttpQueryHeaders() failed", GetLastError());
+					{
+						const auto lastError = GetLastError();
+						throw Error::Win32Error("WinHttpQueryHeaders() failed", lastError);
+					}
 
 					if (statusCode != 101) // switching protocol
 					{
@@ -379,7 +400,10 @@ export namespace Boring32::WinHttp::WebSockets
 					// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpwebsocketcompleteupgrade
 					m_winHttpWebSocket = WinHttpWebSocketCompleteUpgrade(requestHandle.Get(), 0);
 					if (m_winHttpWebSocket == nullptr)
-						throw Error::Win32Error("WinHttpWebSocketCompleteUpgrade() failed", GetLastError());
+					{
+						const auto lastError = GetLastError();
+						throw Error::Win32Error("WinHttpWebSocketCompleteUpgrade() failed", lastError);
+					}
 
 					requestHandle = nullptr;
 					m_status = WebSocketStatus::Connected;
