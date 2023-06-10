@@ -33,6 +33,7 @@ namespace Async
 			apcExecutor.Start();
 			Assert::IsTrue(apcExecutor.WaitToStart(1000));
 			bool test = false;
+			// This is safe. See https://en.cppreference.com/w/cpp/language/reference_initialization#Lifetime_of_a_temporary
 			apcExecutor.QueueAPC(
 				[&test]()
 				{
