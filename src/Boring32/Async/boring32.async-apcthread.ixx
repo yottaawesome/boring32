@@ -14,11 +14,19 @@ export namespace Boring32::Async
 			using ApcFunctionSignature = PAPCFUNC;
 
 		public:
-			APCThread() : Thread(nullptr) {}
+			APCThread() = default;
 
 		public:
 			auto QueueAPC(ApcFunctionSignature apc, const ULONG_PTR arg) -> void
 			{
+				if (m_status != ThreadStatus::Running && m_status != ThreadStatus::Suspended)
+					throw Error::Boring32Error(
+						std::format(
+							"APCThread must either be running or suspended. Currently in {}.",
+							int(m_status)
+						)
+					);
+
 				const DWORD status = QueueUserAPC(
 					apc,
 					GetHandle(),
