@@ -313,7 +313,7 @@ export namespace Boring32::WinHttp::WebSockets
 							&optionFlags,
 							sizeof(optionFlags)
 						);
-						if (success == false)
+						if (!success)
 						{
 							const auto lastError = GetLastError();
 							throw Error::Win32Error("WinHttpSetOption() failed", lastError);
@@ -359,14 +359,17 @@ export namespace Boring32::WinHttp::WebSockets
 						0,
 						0
 					);
-					if (success == false)
+					if (!success)
+					{
+						const auto lastError = GetLastError();
 						throw Error::Win32Error(
 							"WinHttpSendRequest() failed on initial request",
-							GetLastError()
+							lastError
 						);
+					}
 
 					success = WinHttpReceiveResponse(requestHandle.Get(), 0);
-					if (success == false)
+					if (!success)
 					{
 						const auto lastError = GetLastError();
 						throw Error::Win32Error("WinHttpReceiveResponse() failed on initial connection", lastError);
@@ -383,7 +386,7 @@ export namespace Boring32::WinHttp::WebSockets
 						&statusCodeSize,
 						WINHTTP_NO_HEADER_INDEX
 					);
-					if (success == false)
+					if (!success)
 					{
 						const auto lastError = GetLastError();
 						throw Error::Win32Error("WinHttpQueryHeaders() failed", lastError);
