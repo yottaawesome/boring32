@@ -7,6 +7,7 @@ import <iostream>;
 import <functional>;
 import <tuple>;
 import <string>;
+import <chrono>;
 import <utility>;
 import <vector>;
 import <stdexcept>;
@@ -687,9 +688,6 @@ void DontDoThis()
 
 int main(int argc, char** args) try
 {
-	throw Boring32::Error::Boring32Error("AAA");
-
-	throw Boring32::Error::RuntimeError("Blah");
 	SomeEnum x{};
 
 	Boring32::Memory::Heap h(0, 0);

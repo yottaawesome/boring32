@@ -16,6 +16,45 @@ import :concepts;
 
 export namespace Boring32::Async
 {
+	enum class WaitResult : DWORD
+	{
+		Success = WAIT_OBJECT_0,
+		Timeout = WAIT_TIMEOUT,
+		WaitAbandoned = WAIT_ABANDONED, 
+		IOComplete = WAIT_IO_COMPLETION
+	};
+
+	// https://stackoverflow.com/questions/37918168/pass-stdchronoduration-by-value-or-by-reference-to-const
+	// https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-signalobjectandwait
+	template<typename T> requires IsDuration<T>
+	WaitResult SignalAndWait(
+		HANDLE const objectToSignal,
+		HANDLE const objectToWaitOn,
+		const T timeout,
+		const bool alertable
+	)
+	{
+		if (!objectToSignal)
+			throw Error::Boring32Error("objectToSignal is nullptr");
+		if (!objectToWaitOn)
+			throw Error::Boring32Error("objectToWaitOn is nullptr");
+
+		using std::chrono::duration_cast;
+		using std::chrono::milliseconds;
+		const DWORD result = SignalObjectAndWait(
+			objectToSignal, 
+			objectToWaitOn, 
+			static_cast<DWORD>(duration_cast<milliseconds>(timeout).count()),
+			alertable
+		);
+		if (result == WAIT_FAILED)
+		{
+			const auto lastError = GetLastError();
+			throw Error::Win32Error("SignalObjectAndWait() failed", lastError);
+		}
+		return WaitResult(result);
+	}
+
 	bool WaitFor(const HANDLE handle, const DWORD timeout, const bool alertable)
 	{
 		if (!handle)
