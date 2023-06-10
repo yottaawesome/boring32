@@ -63,29 +63,29 @@ export namespace Boring32::Async
 		// https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobjectex
 		switch (const DWORD status = WaitForSingleObjectEx(handle, timeout, alertable))
 		{
-		case WAIT_OBJECT_0:
-			return true;
+			case WAIT_OBJECT_0:
+				return true;
 
-		case WAIT_TIMEOUT:
-			return false;
+			case WAIT_TIMEOUT:
+				return false;
 
-		case WAIT_IO_COMPLETION:
-			return false;
+			case WAIT_IO_COMPLETION:
+				return false;
 
-		case WAIT_ABANDONED:
-			throw Error::Boring32Error("The wait was abandoned");
+			case WAIT_ABANDONED:
+				throw Error::Boring32Error("The wait was abandoned");
 
-		case WAIT_FAILED:
-		{
-			const auto lastError = GetLastError();
-			throw Error::Win32Error(
-				"WaitForSingleObjectEx() failed",
-				lastError
-			);
-		}
+			case WAIT_FAILED:
+			{
+				const auto lastError = GetLastError();
+				throw Error::Win32Error(
+					"WaitForSingleObjectEx() failed",
+					lastError
+				);
+			}
 
-		default:
-			throw Error::Boring32Error(std::format("Unknown wait status: {}", status));
+			default:
+				throw Error::Boring32Error(std::format("Unknown wait status: {}", status));
 		}
 	}
 
