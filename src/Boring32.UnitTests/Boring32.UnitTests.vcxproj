@@ -170,6 +170,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Async\Async\boring32.async-apcthread.cpp" />
     <ClCompile Include="Async\Async\boring32.async-functions.cpp" />
     <ClCompile Include="Async\Async\boring32.async-event.cpp" />
     <ClCompile Include="Async\Async\boring32.async-eventloop.cpp" />
