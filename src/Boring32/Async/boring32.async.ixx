@@ -1,4 +1,5 @@
 export module boring32.async;
+export import :criticalsection;
 export import :criticalsectionlock;
 export import :event;
 export import :eventloop; 

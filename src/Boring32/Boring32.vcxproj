@@ -182,6 +182,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Async\boring32.async-concepts.ixx" />
+    <ClCompile Include="Async\boring32.async-criticalsection.ixx" />
     <ClCompile Include="Async\boring32.async-eventloop.ixx" />
     <ClCompile Include="Async\boring32.async-functions.ixx" />
     <ClCompile Include="Async\boring32.async-sharedmap.ixx" />
