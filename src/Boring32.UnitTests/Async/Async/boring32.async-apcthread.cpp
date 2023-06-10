@@ -45,6 +45,32 @@ namespace Async
 			Assert::IsTrue(test);
 		}
 
+		struct TestSetter
+		{
+			TestSetter(bool& test) : m_test(test) {}
+			void Set() { m_test = true; }
+			bool& m_test;
+		};
+
+		TEST_METHOD(TestQueueAPC3)
+		{
+			Boring32::Async::APCThread apcExecutor;
+			apcExecutor.Start();
+			Assert::IsTrue(apcExecutor.WaitToStart(1000));
+			bool test = false;
+
+			TestSetter b(test);
+
+			// This is safe. See https://en.cppreference.com/w/cpp/language/reference_initialization#Lifetime_of_a_temporary
+			apcExecutor.QueueInstanceAPC(
+				b, 
+				&TestSetter::Set
+			);
+			apcExecutor.SignalToExit();
+			Assert::IsTrue(apcExecutor.Join(2500));
+			Assert::IsTrue(test);
+		}
+
 		TEST_METHOD(TestRun)
 		{
 			Boring32::Async::APCThread apcExecutor;

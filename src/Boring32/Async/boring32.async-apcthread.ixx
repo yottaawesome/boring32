@@ -18,6 +18,20 @@ export namespace Boring32::Async
 			APCThread() = default;
 
 		public:
+			template<typename T, typename M>
+			auto QueueInstanceAPC(const T& instance, M member) -> void
+			{
+				auto* arg = new InstanceMethod<T, M>{
+					.Instance = const_cast<T*>(&instance),
+					.Method = const_cast<M>(member)
+				};
+
+				QueueAPC(
+					InternalAPC<T, M>,
+					reinterpret_cast<ULONG_PTR>(arg)
+				);
+			}
+
 			template<typename T>
 			auto QueueAPC(const T& apc) -> void
 			{
@@ -93,6 +107,22 @@ export namespace Boring32::Async
 			{
 				const T& apc = *reinterpret_cast<T*>(arg);
 				apc();
+			}
+
+			template<typename T, typename M>
+			struct InstanceMethod
+			{
+				T* Instance;
+				M Method;
+			};
+
+			template<typename T, typename M>
+			static void InternalAPC(ULONG_PTR arg)
+			{
+				InstanceMethod<T, M>* apc = reinterpret_cast<InstanceMethod<T, M>*>(arg);
+				//(apc->Instance.*apc->Method)();
+				std::invoke(apc->Method, apc->Instance);
+				delete apc;
 			}
 
 		protected:
