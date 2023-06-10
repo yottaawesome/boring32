@@ -89,12 +89,12 @@ export namespace Boring32::Async
 		}
 	}
 
-	void WaitFor(const HANDLE handle)
+	inline void WaitFor(const HANDLE handle)
 	{
 		WaitFor(handle, INFINITE, false);
 	}
 
-	bool WaitFor(const HANDLE handle, const DWORD timeout)
+	inline bool WaitFor(const HANDLE handle, const DWORD timeout)
 	{
 		return WaitFor(handle, timeout, false);
 	}
@@ -182,7 +182,7 @@ export namespace Boring32::Async
 		}
 	}
 
-	DWORD WaitFor(
+	inline DWORD WaitFor(
 		const std::vector<HANDLE>& handles,
 		const bool waitForAll
 	)
@@ -190,7 +190,7 @@ export namespace Boring32::Async
 		return WaitFor(handles, waitForAll, INFINITE, false);
 	}
 
-	DWORD WaitFor(
+	inline DWORD WaitFor(
 		const std::vector<HANDLE>& handles,
 		const bool waitForAll,
 		const DWORD timeout

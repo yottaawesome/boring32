@@ -282,6 +282,6 @@ export namespace Boring32::Async
 			RAII::Win32Handle m_threadHandle;
 			void* m_threadParam = nullptr;
 			std::function<int(void*)> m_func;
-			Event m_started{ false, true, false, L"" };
+			Event m_started{ false, true, false, };
 	};
 }

@@ -18,6 +18,7 @@ export import :semaphore;
 export import :slimreadwritelock;
 export import :synchronizationbarrier;
 export import :thread;
+export import :apcthread;
 export import :threadpool;
 export import :threadsafevector;
 export import :timerqueue;
