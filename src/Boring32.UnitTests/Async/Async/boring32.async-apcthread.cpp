@@ -7,7 +7,7 @@ namespace Async
 {
 	TEST_CLASS(APCThread)
 	{
-		TEST_METHOD(TestQueueAPC)
+		TEST_METHOD(TestQueueAPC1)
 		{
 			Boring32::Async::APCThread apcExecutor;
 			apcExecutor.Start();
@@ -21,6 +21,23 @@ namespace Async
 					test = true;
 				},
 				reinterpret_cast<ULONG_PTR>(&test)
+			);
+			apcExecutor.SignalToExit();
+			Assert::IsTrue(apcExecutor.Join(2500));
+			Assert::IsTrue(test);
+		}
+
+		TEST_METHOD(TestQueueAPC2)
+		{
+			Boring32::Async::APCThread apcExecutor;
+			apcExecutor.Start();
+			Assert::IsTrue(apcExecutor.WaitToStart(1000));
+			bool test = false;
+			apcExecutor.QueueAPC(
+				[&test]()
+				{
+					test = true;
+				}
 			);
 			apcExecutor.SignalToExit();
 			Assert::IsTrue(apcExecutor.Join(2500));

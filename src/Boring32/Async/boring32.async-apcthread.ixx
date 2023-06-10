@@ -1,6 +1,7 @@
 export module boring32.async:apcthread;
 import <iostream>;
 import <format>;
+import <functional>;
 import <win32.hpp>;
 import boring32.error;
 import :thread;
@@ -17,7 +18,19 @@ export namespace Boring32::Async
 			APCThread() = default;
 
 		public:
-			auto QueueAPC(ApcFunctionSignature apc, const ULONG_PTR arg) -> void
+			template<typename T>
+			auto QueueAPC(const T& apc) -> void
+			{
+				QueueAPC(
+					InternalAPC<T>,
+					reinterpret_cast<ULONG_PTR>(const_cast<T*>(&apc))
+				);
+			}
+
+			auto QueueAPC(
+				ApcFunctionSignature apc, 
+				const ULONG_PTR arg
+			) -> void
 			{
 				if (!m_threadHandle)
 					throw Error::Boring32Error("No thread handle found. Either the thread hasn't been started or has been Close()d.");
@@ -73,6 +86,13 @@ export namespace Boring32::Async
 				}
 				
 				return 0;
+			}
+
+			template<typename T>
+			static void InternalAPC(ULONG_PTR arg)
+			{
+				const T& apc = *reinterpret_cast<T*>(arg);
+				apc();
 			}
 
 		protected:
