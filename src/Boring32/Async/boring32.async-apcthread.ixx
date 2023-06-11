@@ -35,10 +35,21 @@ export namespace Boring32::Async
 
 			template<typename T>
 			auto QueueAPC(const T& apc) -> void
+				requires std::is_invocable_v<T>
 			{
 				QueueAPC(
 					InternalAPC<T>,
 					reinterpret_cast<ULONG_PTR>(const_cast<T*>(&apc))
+				);
+			}
+
+			template<typename T>
+			auto QueueAPC(T&& apc) -> void
+				requires std::is_invocable_v<T>
+			{
+				QueueAPC(
+					InternalHeapAPC<T>,
+					reinterpret_cast<ULONG_PTR>(new T(std::move(apc)))
 				);
 			}
 
@@ -105,9 +116,19 @@ export namespace Boring32::Async
 
 			template<typename T>
 			static void InternalAPC(ULONG_PTR arg)
+				requires std::is_invocable_v<T>
 			{
 				const T& apc = *reinterpret_cast<T*>(arg);
 				apc();
+			}
+
+			template<typename T>
+			static void InternalHeapAPC(ULONG_PTR arg)
+				requires std::is_invocable_v<T>
+			{
+				T* apc = reinterpret_cast<T*>(arg);
+				(*apc)();
+				delete apc;
 			}
 
 			template<typename T, typename M>
