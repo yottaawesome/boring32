@@ -9,6 +9,7 @@ import :event;
 
 export namespace Boring32::Async
 {
+	// See https://learn.microsoft.com/en-us/windows/win32/sync/asynchronous-procedure-calls
 	class APCThread : public Thread
 	{
 		public:
