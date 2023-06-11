@@ -21,9 +21,9 @@ export namespace Boring32::Async
 			template<typename T, typename M>
 			auto QueueInstanceAPC(const T& instance, M member) -> void
 			{
-				auto* arg = new InstanceMethod<T, M>{
+				auto* arg = new InstanceMethod{
 					.Instance = const_cast<T*>(&instance),
-					.Method = const_cast<M>(member)
+					.Method = member
 				};
 
 				QueueAPC(
@@ -119,7 +119,7 @@ export namespace Boring32::Async
 			template<typename T, typename M>
 			static void InternalAPC(ULONG_PTR arg)
 			{
-				InstanceMethod<T, M>* apc = reinterpret_cast<InstanceMethod<T, M>*>(arg);
+				auto* apc = reinterpret_cast<InstanceMethod<T, M>*>(arg);
 				//(apc->Instance.*apc->Method)();
 				std::invoke(apc->Method, apc->Instance);
 				delete apc;
