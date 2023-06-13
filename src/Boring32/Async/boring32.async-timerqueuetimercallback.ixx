@@ -10,6 +10,7 @@ import boring32.error;
 
 export namespace Boring32::Async
 {
+	template<typename T>
 	class TimerQueueTimerCallback : public TimerQueueTimer
 	{
 		public:
@@ -55,15 +56,12 @@ export namespace Boring32::Async
 			) = delete;
 
 		protected:
-			virtual void Run(const BOOLEAN timerOrWaitFired) = 0;
-
-		protected:
 			static void InternalCallback(void* parameter, BOOLEAN timerOrWaitFired)
 			{
 				if (!parameter)
 					throw Error::Boring32Error("Invalid parameter");
-				TimerQueueTimerCallback* obj = (TimerQueueTimerCallback*)parameter;
-				obj->Run(timerOrWaitFired);
+				auto* obj = reinterpret_cast<TimerQueueTimerCallback*>(parameter);
+				T::Run(timerOrWaitFired);
 			}
 	};
 }
