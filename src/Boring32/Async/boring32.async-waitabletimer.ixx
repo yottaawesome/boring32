@@ -7,6 +7,7 @@ import <string>;
 import <stdexcept>;
 import <iostream>;
 import <format>;
+import <chrono>;
 import <win32.hpp>;
 import boring32.error;
 import boring32.raii;
@@ -163,16 +164,19 @@ export namespace Boring32::Async
 				return false;
 			}
 
-			virtual bool WaitOnTimer(const DWORD millis)
+			virtual bool WaitOnTimer(const DWORD millis, const bool alertable)
 			{
 				if (!m_handle)
 					throw Error::Boring32Error("Timer handle is null");
 
-				const DWORD status = WaitForSingleObject(m_handle.GetHandle(), millis);
+				const DWORD status = WaitForSingleObjectEx(m_handle.GetHandle(), millis, alertable);
 				switch (status)
 				{
 					case WAIT_OBJECT_0:
 						return true;
+
+					case WAIT_IO_COMPLETION:
+						return false;
 
 					case WAIT_TIMEOUT:
 						return false;
@@ -191,15 +195,16 @@ export namespace Boring32::Async
 			}
 
 			virtual bool WaitOnTimer(
-				const DWORD millis, 
+				const DWORD millis,
+				const bool alertable,
 				const std::nothrow_t&
 			) noexcept try
 			{
-				return WaitOnTimer(millis);
+				return WaitOnTimer(millis, alertable);
 			}
 			catch (const std::exception& ex)
 			{
-				std::wcerr << std::format("{}: WaitOnTimer() failed: {}\n", __FUNCSIG__, ex.what()).c_str();
+				std::wcerr << std::format("WaitOnTimer() failed: {}\n", ex.what()).c_str();
 				return false;
 			}
 
