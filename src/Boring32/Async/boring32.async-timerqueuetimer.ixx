@@ -13,6 +13,7 @@ import :concepts;
 
 export namespace Boring32::Async
 {
+	// See https://learn.microsoft.com/en-us/windows/win32/sync/using-timer-queues
 	class TimerQueueTimer
 	{
 		public:
@@ -89,13 +90,14 @@ export namespace Boring32::Async
 				if (!m_timerQueueTimer || m_timerQueueTimer == INVALID_HANDLE_VALUE)
 					throw Error::Boring32Error("m_timerQueueTimer is null");
 
-				bool success = ChangeTimerQueueTimer(
+				// https://learn.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-changetimerqueuetimer
+				const bool success = ChangeTimerQueueTimer(
 					m_timerQueue,
 					m_timerQueueTimer,
 					dueTime,
 					period
 				);
-				if (success == false)
+				if (!success)
 				{
 					const auto lastError = GetLastError();
 					throw Error::Win32Error("ChangeTimerQueueTimer() failed", lastError);
@@ -104,20 +106,20 @@ export namespace Boring32::Async
 
 			virtual void Close()
 			{
-				if (m_timerQueueTimer && m_timerQueueTimer != INVALID_HANDLE_VALUE)
+				if (!m_timerQueueTimer || m_timerQueueTimer != INVALID_HANDLE_VALUE)
+					return;
+				// https://learn.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-deletetimerqueuetimer
+				const bool succeeded = DeleteTimerQueueTimer(
+					m_timerQueue,
+					m_timerQueueTimer,
+					m_completionEvent
+				);
+				if (!succeeded)
 				{
-					bool succeeded = DeleteTimerQueueTimer(
-						m_timerQueue,
-						m_timerQueueTimer,
-						m_completionEvent
-					);
-					if (succeeded == false)
-					{
-						const auto lastError = GetLastError();
-						throw Error::Win32Error("DeleteTimerQueueTimer() failed", lastError);
-					}
-					m_timerQueueTimer = nullptr;
+					const auto lastError = GetLastError();
+					throw Error::Win32Error("DeleteTimerQueueTimer() failed", lastError);
 				}
+				m_timerQueueTimer = nullptr;
 			}
 
 			virtual bool Close(
@@ -132,22 +134,6 @@ export namespace Boring32::Async
 				// ICE
 				//std::wcerr << ex.what() << std::endl;
 				return false;
-			}
-
-			template<typename T>
-			bool WaitForTimer(
-				const T time,
-				const bool alertable
-			) const requires IsDuration<T>
-			{
-				if (!m_timerQueueTimer || m_timerQueueTimer == INVALID_HANDLE_VALUE)
-					throw Error::Boring32Error("m_timerQueueTimer is null");
-
-				return WaitFor(
-					m_timerQueue,
-					time,
-					alertable
-				);
 			}
 
 		protected:
@@ -169,11 +155,11 @@ export namespace Boring32::Async
 
 			virtual void InternalCreate()
 			{
-				if (m_timerQueue == nullptr || m_timerQueue == INVALID_HANDLE_VALUE)
+				if (!m_timerQueue || m_timerQueue == INVALID_HANDLE_VALUE)
 					throw Error::Boring32Error("m_timerQueue is null");
 
 				//https://docs.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-createtimerqueuetimer
-				bool succeeded = CreateTimerQueueTimer(
+				const bool succeeded = CreateTimerQueueTimer(
 					&m_timerQueueTimer,
 					m_timerQueue,
 					m_callback,
@@ -182,7 +168,7 @@ export namespace Boring32::Async
 					m_period,
 					m_flags
 				);
-				if (succeeded == false)
+				if (!succeeded)
 				{
 					const auto lastError = GetLastError();
 					throw Error::Win32Error("CreateTimerQueueTimer() failed", lastError);
