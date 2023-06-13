@@ -5,8 +5,11 @@ module;
 export module boring32.async:timerqueuetimer;
 import <stdexcept>;
 import <iostream>;
+import <chrono>;
 import <win32.hpp>;
 import boring32.error;
+import :functions;
+import :concepts;
 
 export namespace Boring32::Async
 {
@@ -83,7 +86,7 @@ export namespace Boring32::Async
 		public:
 			virtual void Update(const ULONG dueTime, const ULONG period)
 			{
-				if (m_timerQueueTimer == nullptr || m_timerQueueTimer == INVALID_HANDLE_VALUE)
+				if (!m_timerQueueTimer || m_timerQueueTimer == INVALID_HANDLE_VALUE)
 					throw Error::Boring32Error("m_timerQueueTimer is null");
 
 				bool success = ChangeTimerQueueTimer(
@@ -127,8 +130,24 @@ export namespace Boring32::Async
 			catch (const std::exception&)
 			{
 				// ICE
-				// std::wcerr << ex.what() << std::endl;
+				//std::wcerr << ex.what() << std::endl;
 				return false;
+			}
+
+			template<typename T>
+			bool WaitForTimer(
+				const T time,
+				const bool alertable
+			) const requires IsDuration<T>
+			{
+				if (!m_timerQueueTimer || m_timerQueueTimer == INVALID_HANDLE_VALUE)
+					throw Error::Boring32Error("m_timerQueueTimer is null");
+
+				return WaitFor(
+					m_timerQueue,
+					time,
+					alertable
+				);
 			}
 
 		protected:

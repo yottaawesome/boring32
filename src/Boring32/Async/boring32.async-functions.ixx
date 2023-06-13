@@ -102,7 +102,7 @@ export namespace Boring32::Async
 	template<typename T>
 	bool WaitFor(
 		const HANDLE handle, 
-		const T& time, 
+		const T time, 
 		const bool isAlertable
 	) requires IsDuration<T>
 	{
@@ -203,7 +203,7 @@ export namespace Boring32::Async
 	DWORD WaitFor(
 		const std::vector<HANDLE>& handles,
 		const bool waitForAll,
-		const T& time,
+		const T time,
 		const bool alertable
 	) requires IsDuration<T>
 	{
