@@ -147,6 +147,9 @@
     <ClCompile Include="Async\Async\boring32.async-apcthread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Async\Async\boring32.async-timerqueue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
