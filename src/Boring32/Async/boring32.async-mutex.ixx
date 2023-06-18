@@ -32,30 +32,12 @@ export namespace Boring32::Async
 			Mutex() = default;
 
 			/// <summary>
-			///		Clones a mutex.
-			/// </summary>
-			/// <param name="other"></param>
-			Mutex(const Mutex& other)
-			{
-				Copy(other);
-			}
-
-			/// <summary>
 			///		Move constructor.
 			/// </summary>
 			/// <param name="other">The rvalue to move.</param>
 			Mutex(Mutex&& other) noexcept
 			{
 				Move(other);
-			}
-
-			/// <summary>
-			///		Copy assignment.
-			/// </summary>
-			Mutex& operator=(const Mutex& other)
-			{
-				Copy(other);
-				return *this;
 			}
 
 			/// <summary>
@@ -328,15 +310,6 @@ export namespace Boring32::Async
 				m_created = other.m_created;
 				m_locked = other.m_locked.load(); // TODO: probably pointless, remove
 				m_mutex = std::move(other.m_mutex);
-			}
-
-			void Copy(const Mutex& other)
-			{
-				Close();
-				m_name = other.m_name;
-				m_created = false;
-				m_locked = other.m_locked.load();
-				m_mutex = other.m_mutex;
 			}
 
 		private:

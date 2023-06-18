@@ -68,19 +68,6 @@ void TestWaitableTime(int64_t relativeMillis)
 	timer1.CancelTimer();
 }
 
-void TestMutex()
-{
-	Boring32::Async::Mutex m1(false, false, L"HelloMutex");
-	m1.Lock(1000, true);
-	m1.Unlock();
-
-	Boring32::Async::Mutex m2(m1);
-	Boring32::Async::Mutex m3(false, false);
-
-	m2 = m3;
-	m2 = Boring32::Async::Mutex(false, false, L"Assignment");
-}
-
 void TestConversions()
 {
 	std::wstring wstrTest = L"Test1";
@@ -442,8 +429,6 @@ int OldJunk()
 				TestException();
 			if (i == 3)
 				TestWaitableTime(2000);
-			if (i == 5)
-				TestMutex();
 			if (i == 6)
 				TestConversions();
 			if (i == 7)
