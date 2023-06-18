@@ -9,6 +9,7 @@ import <string>;
 import <chrono>;
 import <iostream>;
 import <format>;
+import <atomic>;
 import <win32.hpp>;
 import boring32.error;
 import boring32.raii;
@@ -325,7 +326,7 @@ export namespace Boring32::Async
 				Close();
 				m_name = std::move(other.m_name);
 				m_created = other.m_created;
-				m_locked = other.m_locked;
+				m_locked = other.m_locked.load(); // TODO: probably pointless, remove
 				m_mutex = std::move(other.m_mutex);
 			}
 
@@ -334,14 +335,14 @@ export namespace Boring32::Async
 				Close();
 				m_name = other.m_name;
 				m_created = false;
-				m_locked = other.m_locked;
+				m_locked = other.m_locked.load();
 				m_mutex = other.m_mutex;
 			}
 
 		private:
 			std::wstring m_name;
 			bool m_created = false;
-			bool m_locked = false;
+			std::atomic<bool> m_locked = false;
 			RAII::Win32Handle m_mutex;
 	};
 }
