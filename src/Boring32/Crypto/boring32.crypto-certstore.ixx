@@ -161,7 +161,7 @@ export namespace Boring32::Crypto
 					const auto lastError = GetLastError();
 					Error::Win32Error error("CertCloseStore() failed", lastError);
 					// ICEs -- disabled for now
-					//std::wcerr << L"A" << std::endl;
+					std::wcerr << error.what() << std::endl;
 				}
 				m_certStore = nullptr;
 			}

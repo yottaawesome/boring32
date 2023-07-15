@@ -129,10 +129,10 @@ export namespace Boring32::Async
 				Close();
 				return true;
 			}
-			catch (const std::exception&)
+			catch (const std::exception& ex)
 			{
 				// ICE
-				//std::wcerr << ex.what() << std::endl;
+				std::wcerr << ex.what() << std::endl;
 				return false;
 			}
 
