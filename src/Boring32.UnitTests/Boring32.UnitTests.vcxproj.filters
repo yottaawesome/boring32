@@ -153,6 +153,9 @@
     <ClCompile Include="Async\Async\boring32.async-timerqueuetimercallback.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MSI\boring32.msi-functions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">

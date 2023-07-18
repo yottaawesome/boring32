@@ -11,19 +11,19 @@ import boring32.error;
 export namespace Boring32::MSI
 {
 	// See https://learn.microsoft.com/en-us/windows/win32/msi/installer-function-reference
-	struct InstalledProducts
+	struct InstalledProduct
 	{
 		std::wstring ProductCode;
 	};
 
-	std::vector<InstalledProducts> GetInstalledProducts()
+	std::vector<InstalledProduct> GetInstalledProducts()
 	{
-		std::vector<InstalledProducts> returnValue;
+		std::vector<InstalledProduct> returnValue;
 
-		std::wstring productCode(38, '\0');
 		DWORD index = 0;
 		while (true)
 		{
+			std::wstring productCode(38, '\0');
 			// https://learn.microsoft.com/en-us/windows/win32/api/msi/nf-msi-msienumproductsexw
 			const unsigned status = MsiEnumProductsExW(
 				nullptr,
