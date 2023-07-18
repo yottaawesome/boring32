@@ -13,8 +13,9 @@ export namespace Boring32::Util
 {
 	class GloballyUniqueID final
 	{
-		struct BasicGuidString { std::wstring GuidString; };
-		struct WrappedGuidString { std::wstring GuidString; };
+		public:
+			struct BasicGuidString { std::wstring GuidString; };
+			struct WrappedGuidString { std::wstring GuidString; };
 
 		// The Six
 		public:
@@ -40,7 +41,7 @@ export namespace Boring32::Util
 					throw Error::COMError("IIDFromString() failed", hr);
 			}
 
-			GloballyUniqueID(const std::wstring& guidString)
+			explicit GloballyUniqueID(const BasicGuidString& guidString)
 			{
 				// CLSID, UUID, GUID seem to be equivalent
 				// See https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-iidfromstring
@@ -48,7 +49,7 @@ export namespace Boring32::Util
 				// https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-clsidfromstring
 				// https://docs.microsoft.com/en-us/windows/win32/api/rpcdce/nf-rpcdce-uuidfromstringw
 				// https://docs.microsoft.com/en-us/windows/win32/shell/guidfromstring
-				const RPC_WSTR cString = RPC_WSTR(guidString.c_str());
+				const RPC_WSTR cString = RPC_WSTR(guidString.GuidString.c_str());
 				// Does not accept {} around the GUID
 				const RPC_STATUS status = UuidFromStringW(
 					cString,
