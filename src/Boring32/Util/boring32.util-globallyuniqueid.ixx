@@ -31,7 +31,6 @@ export namespace Boring32::Util
 			
 		public:
 			GloballyUniqueID(const std::wstring& guidString)
-				: m_guid{ 0 }
 			{
 				// CLSID, UUID, GUID seem to be equivalent
 				// See https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-iidfromstring
@@ -89,7 +88,17 @@ export namespace Boring32::Util
 				return m_guid;
 			}
 
+			bool IsNil() const noexcept
+			{
+				RPC_STATUS out;
+				const int status = UuidIsNil(
+					const_cast<GUID*>(&m_guid),
+					&out
+				);
+				return out;
+			}
+
 		private:
-			GUID m_guid;
+			GUID m_guid = { 0 };
 	};
 }
