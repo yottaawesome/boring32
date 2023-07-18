@@ -34,15 +34,22 @@ export namespace Boring32::Util
 			GloballyUniqueID& operator=(GloballyUniqueID&&) noexcept = default;
 			
 		public:
-			explicit GloballyUniqueID(const WrappedGuidString& guid)
+			explicit GloballyUniqueID(const WrappedGuidString& guidString)
 			{
-				const HRESULT hr = IIDFromString(guid.GuidString.c_str(), &m_guid);
+				if (guidString.GuidString.empty())
+					throw Error::Boring32Error("GUID cannot be an empty string");
+				const HRESULT hr = IIDFromString(
+					guidString.GuidString.c_str(), 
+					&m_guid
+				);
 				if (hr != S_OK)
 					throw Error::COMError("IIDFromString() failed", hr);
 			}
 
 			explicit GloballyUniqueID(const BasicGuidString& guidString)
 			{
+				if (guidString.GuidString.empty())
+					throw Error::Boring32Error("GUID cannot be an empty string");
 				// CLSID, UUID, GUID seem to be equivalent
 				// See https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-iidfromstring
 				// https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-stringfromguid2
