@@ -11,6 +11,8 @@
 // set the _WIN32_WINNT macro to the platform you wish to support before including SDKDDKVer.h.
 #include <SDKDDKVer.h>
 #include <Windows.h>
+#include <Msi.h>
+#include <MsiQuery.h>
 #include <memoryapi.h>
 #include <Comdef.h>
 #include <sddl.h>
