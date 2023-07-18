@@ -7,15 +7,14 @@ import boring32.error;
 
 namespace Util
 {
-	TEST_CLASS(UtilGloballyUniqueID)
-	{
-		// {BA6D5A7F-6777-4D86-876B-8E0D0D79D0E3}
-		const GUID TestGUID =
+	// {BA6D5A7F-6777-4D86-876B-8E0D0D79D0E3}
+	constexpr GUID TestGUID =
 		{ 0xba6d5a7f, 0x6777, 0x4d86, { 0x87, 0x6b, 0x8e, 0xd, 0xd, 0x79, 0xd0, 0xe3 } };
-
-		const GUID NilGUID =
+	constexpr GUID NilGUID =
 		{ 0x0, 0x0, 0x0, { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 } };
 
+	TEST_CLASS(UtilGloballyUniqueID)
+	{
 		public:
 			TEST_METHOD(TestGUIDConstructor)
 			{

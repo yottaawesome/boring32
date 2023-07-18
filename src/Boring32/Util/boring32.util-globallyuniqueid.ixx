@@ -13,6 +13,9 @@ export namespace Boring32::Util
 {
 	class GloballyUniqueID final
 	{
+		struct BasicGuidString { std::wstring GuidString; };
+		struct WrappedGuidString { std::wstring GuidString; };
+
 		// The Six
 		public:
 			~GloballyUniqueID() = default;
@@ -30,6 +33,13 @@ export namespace Boring32::Util
 			GloballyUniqueID& operator=(GloballyUniqueID&&) noexcept = default;
 			
 		public:
+			explicit GloballyUniqueID(const WrappedGuidString& guid)
+			{
+				const HRESULT hr = IIDFromString(guid.GuidString.c_str(), &m_guid);
+				if (hr != S_OK)
+					throw Error::COMError("IIDFromString() failed", hr);
+			}
+
 			GloballyUniqueID(const std::wstring& guidString)
 			{
 				// CLSID, UUID, GUID seem to be equivalent
