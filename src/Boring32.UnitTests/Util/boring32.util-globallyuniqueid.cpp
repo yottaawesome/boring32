@@ -13,6 +13,9 @@ namespace Util
 		const GUID TestGUID =
 		{ 0xba6d5a7f, 0x6777, 0x4d86, { 0x87, 0x6b, 0x8e, 0xd, 0xd, 0x79, 0xd0, 0xe3 } };
 
+		const GUID NilGUID =
+		{ 0x0, 0x0, 0x0, { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 } };
+
 		public:
 			TEST_METHOD(TestGUIDConstructor)
 			{
@@ -90,6 +93,12 @@ namespace Util
 			{
 				Boring32::Util::GloballyUniqueID id = Boring32::Util::GloballyUniqueID(TestGUID);
 				Assert::IsTrue(id == TestGUID);
+			}
+
+			TEST_METHOD(TestIsNil)
+			{
+				Boring32::Util::GloballyUniqueID id = Boring32::Util::GloballyUniqueID(NilGUID);
+				Assert::IsTrue(id.IsNil());
 			}
 	};
 }

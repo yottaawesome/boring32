@@ -95,7 +95,7 @@ export namespace Boring32::Util
 					const_cast<GUID*>(&m_guid),
 					&out
 				);
-				return out;
+				return status;
 			}
 
 		private:
