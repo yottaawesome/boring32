@@ -14,7 +14,9 @@ export namespace Boring32::Util
 	class GloballyUniqueID final
 	{
 		public:
+			// GUID strings which aren't wrapped by {}
 			struct BasicGuidString { std::wstring GuidString; };
+			// GUID strings which are wrapped by {}
 			struct WrappedGuidString { std::wstring GuidString; };
 
 		// The Six
@@ -38,6 +40,8 @@ export namespace Boring32::Util
 			{
 				if (guidString.GuidString.empty())
 					throw Error::Boring32Error("GUID cannot be an empty string");
+				// Accepts {} around the GUID
+				// See https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-iidfromstring
 				const HRESULT hr = IIDFromString(
 					guidString.GuidString.c_str(), 
 					&m_guid
@@ -51,7 +55,6 @@ export namespace Boring32::Util
 				if (guidString.GuidString.empty())
 					throw Error::Boring32Error("GUID cannot be an empty string");
 				// CLSID, UUID, GUID seem to be equivalent
-				// See https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-iidfromstring
 				// https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-stringfromguid2
 				// https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-clsidfromstring
 				// https://docs.microsoft.com/en-us/windows/win32/api/rpcdce/nf-rpcdce-uuidfromstringw
