@@ -64,7 +64,8 @@ export namespace Boring32::MSI
 		if (status != ERROR_SUCCESS)
 			throw Error::Win32Error("MsiGetProductInfoExW() failed [1]", status);
 
-		std::wstring returnValue(characters+1, '\0');
+		characters++;
+		std::wstring returnValue(characters, '\0');
 		status = MsiGetProductInfoExW(
 			productCode.data(),
 			nullptr,
@@ -93,8 +94,8 @@ export namespace Boring32::MSI
 			return {};
 		return {
 			.ProductCode = product.ProductCode,
-			.Name = GetMsiProperty(product.ProductCode, L"INSTALLPROPERTY_PRODUCTNAME"),
-			.OriginalMsiPackage = GetMsiProperty(product.ProductCode, L"INSTALLPROPERTY_PACKAGENAME")
+			.Name = GetMsiProperty(product.ProductCode, INSTALLPROPERTY_PRODUCTNAME),
+			.OriginalMsiPackage = GetMsiProperty(product.ProductCode, INSTALLPROPERTY_PACKAGENAME)
 		};
 	}
 }
