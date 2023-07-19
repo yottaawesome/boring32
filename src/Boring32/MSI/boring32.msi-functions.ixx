@@ -52,7 +52,11 @@ export namespace Boring32::MSI
 		const std::wstring& propertyName
 	)
 	{
+		// See https://learn.microsoft.com/en-us/windows/win32/msi/required-properties
+		// and https://learn.microsoft.com/en-us/windows/win32/msi/properties
 		DWORD characters = 0;
+		// https://learn.microsoft.com/en-us/windows/win32/api/msi/nf-msi-msigetproductinfow
+		// https://learn.microsoft.com/en-us/windows/win32/api/msi/nf-msi-msigetproductinfoexw
 		unsigned status = MsiGetProductInfoExW(
 			productCode.c_str(),
 			nullptr,
@@ -64,6 +68,8 @@ export namespace Boring32::MSI
 		if (status != ERROR_SUCCESS)
 			throw Error::Win32Error("MsiGetProductInfoExW() failed [1]", status);
 
+		// The returned character count excludes the null terminator,
+		// but this is required, so we bump the value.
 		characters++;
 		std::wstring returnValue(characters, '\0');
 		status = MsiGetProductInfoExW(
