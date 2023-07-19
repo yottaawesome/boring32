@@ -19,6 +19,10 @@ Building requires Visual Studio 2022 with the _Desktop development with C++_ wor
 
 The test project `Boring32.Tests` is a good reference of how to use `Boring32`, at least until I can devote a bit more time to documenting the various classes. Note that this project is still in development, so as time goes by, I'll be adding, modifying, and removing stuff. There's also a unit test project that can be used as a reference, and you can run these tests either from VS's test runner, or through the `vstest.console.exe` binary. This binary can be found in the VS build tools and can be invoked through the `x64 Native Tools Command Prompt for VS 2022` like so: `vstest.console.exe Boring32.UnitTests.dll`. This returns 0 or 1, depending on whether the tests succeeded or failed (you can use `echo Exit Code is %errorlevel%` to check the return code from the command prompt).
 
+## Other notes
+
+Some unit tests will likely fail on your machine as they are referencing objects (e.g. certificates) in my local environment I use for testing Win32 API calls. You can safely ignore these failures or comment them out. 
+
 ## Additional resources
 
 * [Programming Windows 5th edition](https://github.com/yottaawesome/programming-windows-5th-edition)
