@@ -46,4 +46,55 @@ export namespace Boring32::MSI
 
 		return returnValue;
 	}
+
+	std::wstring GetMsiProperty(
+		const std::wstring& productCode,
+		const std::wstring& propertyName
+	)
+	{
+		DWORD characters = 0;
+		unsigned status = MsiGetProductInfoExW(
+			productCode.c_str(),
+			nullptr,
+			MSIINSTALLCONTEXT_MACHINE,
+			propertyName.c_str(),
+			nullptr,
+			&characters
+		);
+		if (status != ERROR_SUCCESS)
+			throw Error::Win32Error("MsiGetProductInfoExW() failed [1]", status);
+
+		std::wstring returnValue(characters+1, '\0');
+		status = MsiGetProductInfoExW(
+			productCode.data(),
+			nullptr,
+			MSIINSTALLCONTEXT_MACHINE,
+			propertyName.c_str(),
+			returnValue.data(),
+			&characters
+		);
+		if (status != ERROR_SUCCESS)
+			throw Error::Win32Error("MsiGetProductInfoExW() failed [2]", status);
+		returnValue.resize(characters);
+
+		return returnValue;
+	}
+
+	struct InstalledProductInfo
+	{
+		std::wstring ProductCode;
+		std::wstring Name;
+		std::wstring OriginalMsiPackage;
+	};
+	
+	InstalledProductInfo GetProductInfo(const InstalledProduct& product)
+	{
+		if (product.ProductCode.empty())
+			return {};
+		return {
+			.ProductCode = product.ProductCode,
+			.Name = GetMsiProperty(product.ProductCode, L"INSTALLPROPERTY_PRODUCTNAME"),
+			.OriginalMsiPackage = GetMsiProperty(product.ProductCode, L"INSTALLPROPERTY_PACKAGENAME")
+		};
+	}
 }
