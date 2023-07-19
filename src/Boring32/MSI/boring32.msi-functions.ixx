@@ -49,9 +49,13 @@ export namespace Boring32::MSI
 
 	std::wstring GetMsiProperty(
 		const std::wstring& productCode,
-		const std::wstring& propertyName
+		const std::wstring& propertyName,
+		bool* propertyFound = nullptr
 	)
 	{
+		if (propertyFound)
+			*propertyFound = false;
+
 		// See https://learn.microsoft.com/en-us/windows/win32/msi/required-properties
 		// and https://learn.microsoft.com/en-us/windows/win32/msi/properties
 		DWORD characters = 0;
@@ -65,6 +69,8 @@ export namespace Boring32::MSI
 			nullptr,
 			&characters
 		);
+		if (status == ERROR_UNKNOWN_PROPERTY)
+			return {};
 		if (status != ERROR_SUCCESS)
 			throw Error::Win32Error("MsiGetProductInfoExW() failed [1]", status);
 
@@ -80,9 +86,14 @@ export namespace Boring32::MSI
 			returnValue.data(),
 			&characters
 		);
+		if (status == ERROR_UNKNOWN_PROPERTY)
+			return {};
 		if (status != ERROR_SUCCESS)
 			throw Error::Win32Error("MsiGetProductInfoExW() failed [2]", status);
+
 		returnValue.resize(characters);
+		if (propertyFound)
+			*propertyFound = true;
 
 		return returnValue;
 	}
