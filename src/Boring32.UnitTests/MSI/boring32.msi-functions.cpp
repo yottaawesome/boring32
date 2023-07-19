@@ -20,7 +20,7 @@ namespace MSI
 			{
 				std::vector<Boring32::MSI::InstalledProduct> products
 					= Boring32::MSI::GetInstalledProducts();
-				Assert::IsTrue(products.empty());
+				Assert::IsFalse(products.empty());
 
 				Boring32::MSI::InstalledProductInfo info = GetProductInfo(
 					products.back()
