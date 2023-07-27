@@ -115,4 +115,26 @@ export namespace Boring32::MSI
 			.OriginalMsiPackage = GetMsiProperty(product.ProductCode, INSTALLPROPERTY_PACKAGENAME)
 		};
 	}
+
+	InstalledProductInfo FindProductCodeByName(const std::wstring& productName)
+	{
+		std::vector<InstalledProduct> productCodes = GetInstalledProducts();
+
+		for (const InstalledProduct& code : productCodes)
+		{
+			std::wstring name = GetMsiProperty(
+				code.ProductCode, 
+				INSTALLPROPERTY_PRODUCTNAME
+			);
+			if (name != productName)
+				continue;
+
+			return {
+				.ProductCode = code.ProductCode,
+				.Name = std::move(productName),
+				.OriginalMsiPackage = GetMsiProperty(code.ProductCode, INSTALLPROPERTY_PACKAGENAME)
+			};
+		}
+		return {};
+	}
 }
