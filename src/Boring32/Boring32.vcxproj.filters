@@ -218,5 +218,6 @@
     <ClCompile Include="FileSystem\boring32.filesystem-directory.ixx" />
     <ClCompile Include="MSI\boring32.msi.ixx" />
     <ClCompile Include="MSI\boring32.msi-functions.ixx" />
+    <ClCompile Include="MSI\boring32.msi-database.ixx" />
   </ItemGroup>
 </Project>
