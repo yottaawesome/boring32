@@ -59,5 +59,14 @@ namespace MSI
 				Assert::IsFalse(database1);
 				Assert::IsTrue(database2);
 			}
+
+			TEST_METHOD(TestMoveAssignment)
+			{
+				Boring32::MSI::Database database1(std::wstring{ MsiPath });
+				Boring32::MSI::Database database2(std::wstring{ MsiPath });
+				database2 = std::move(database1);
+				Assert::IsFalse(database1);
+				Assert::IsTrue(database2);
+			}
 	};
 }

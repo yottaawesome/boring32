@@ -39,7 +39,7 @@ export namespace Boring32::MSI
 
 			Database& operator=(Database&& other) noexcept
 			{
-				Move(other);
+				return Move(other);
 			}
 
 		public:
@@ -83,7 +83,7 @@ export namespace Boring32::MSI
 
 			Database& Move(Database& other) noexcept
 			{
-				if (other == *this)
+				if (&other == this)
 					return *this;
 
 				Close();
