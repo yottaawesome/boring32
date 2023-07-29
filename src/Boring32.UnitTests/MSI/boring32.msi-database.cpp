@@ -52,6 +52,27 @@ namespace MSI
 				Assert::IsFalse(value.empty());
 			}
 
+			TEST_METHOD(TestCopyConstructor)
+			{
+				Boring32::MSI::Database database1(std::wstring{ MsiPath });
+				Boring32::MSI::Database database2(database1);
+				Assert::IsTrue(database1);
+				Assert::IsTrue(database2);
+				Assert::IsTrue(database1.GetPath() == database2.GetPath());
+				Assert::IsTrue(database1.GetMode() == database2.GetMode());
+			}
+
+			TEST_METHOD(TestCopyAssignment)
+			{
+				Boring32::MSI::Database database1(std::wstring{ MsiPath });
+				Boring32::MSI::Database database2(std::wstring{ MsiPath });
+				database2 = database1;
+				Assert::IsTrue(database1);
+				Assert::IsTrue(database2);
+				Assert::IsTrue(database1.GetPath() == database2.GetPath());
+				Assert::IsTrue(database1.GetMode() == database2.GetMode());
+			}
+
 			TEST_METHOD(TestMoveConstructor)
 			{
 				Boring32::MSI::Database database1(std::wstring{ MsiPath });
