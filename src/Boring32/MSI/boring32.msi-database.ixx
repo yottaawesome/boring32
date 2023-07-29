@@ -83,6 +83,9 @@ export namespace Boring32::MSI
 
 			Database& Move(Database& other) noexcept
 			{
+				if (other == *this)
+					return *this;
+
 				Close();
 				m_handle = other.m_handle;
 				other.m_handle = 0;

@@ -51,5 +51,13 @@ namespace MSI
 				std::wstring value = database.GetProductLanguage();
 				Assert::IsFalse(value.empty());
 			}
+
+			TEST_METHOD(TestMoveConstructor)
+			{
+				Boring32::MSI::Database database1(std::wstring{ MsiPath });
+				Boring32::MSI::Database database2(std::move(database1));
+				Assert::IsFalse(database1);
+				Assert::IsTrue(database2);
+			}
 	};
 }
