@@ -81,6 +81,11 @@ export namespace Boring32::MSI
 				return m_path;
 			}
 
+			const Mode GetMode() const noexcept
+			{
+				return m_mode;
+			}
+
 		private:
 			void Close() noexcept
 			{

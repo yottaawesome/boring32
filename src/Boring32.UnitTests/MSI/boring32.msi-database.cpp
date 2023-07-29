@@ -75,5 +75,14 @@ namespace MSI
 				Boring32::MSI::Database database(path);
 				Assert::IsTrue(database.GetPath() == path);
 			}
+
+			TEST_METHOD(TestGetMode)
+			{
+				Boring32::MSI::Database database(
+					std::wstring{ MsiPath },
+					Boring32::MSI::Mode::ReadOnly
+				);
+				Assert::IsTrue(database.GetMode() == Boring32::MSI::Mode::ReadOnly);
+			}
 	};
 }
