@@ -56,6 +56,11 @@ export namespace Boring32::MSI
 				return GetProperty(L"ProductName");
 			}
 
+			std::wstring GetProductLanguage() const
+			{
+				return GetProperty(L"ProductLanguage");
+			}
+
 		private:
 			void Open()
 			{
@@ -72,39 +77,53 @@ export namespace Boring32::MSI
 					throw Error::Win32Error("MsiOpenDatabaseW() failed", status);
 			}
 
-			std::wstring GetProperty(std::wstring_view propname) const
+			std::wstring GetProperty(std::wstring_view propertyName) const
 			{
 				// See https://stackoverflow.com/questions/27634407/how-to-get-the-product-version-from-an-msi-file-without-installing-the-msi
-				PMSIHANDLE viewH;
-				std::wstring qry = std::format(
+				PMSIHANDLE hView;
+				std::wstring query = std::format(
 					L"Select `Value` from `Property` where `Property`='{}'",
-					propname
+					propertyName
 				);
-				UINT res = MsiDatabaseOpenView(m_handle, qry.data(), &viewH);
-				if (res != ERROR_SUCCESS)
-					throw Error::Win32Error("MsiDatabaseOpenView() failed", res);
+				UINT status = MsiDatabaseOpenView(
+					m_handle, 
+					query.data(), 
+					&hView
+				);
+				if (status != ERROR_SUCCESS)
+					throw Error::Win32Error("MsiDatabaseOpenView() failed", status);
 				
-				res = MsiViewExecute(viewH, 0);
-				if (res != ERROR_SUCCESS)
-					throw Error::Win32Error("MsiViewExecute() failed", res);
+				status = MsiViewExecute(hView, 0);
+				if (status != ERROR_SUCCESS)
+					throw Error::Win32Error("MsiViewExecute() failed", status);
 				
-				PMSIHANDLE recH;
-				res = MsiViewFetch(viewH, &recH);
-				if (res != ERROR_SUCCESS)
-					throw Error::Win32Error("MsiViewFetch() failed", res);
+				PMSIHANDLE hViewFetch;
+				status = MsiViewFetch(hView, &hViewFetch);
+				if (status != ERROR_SUCCESS)
+					throw Error::Win32Error("MsiViewFetch() failed", status);
 
 				DWORD charCount = 0;
 				// https://learn.microsoft.com/en-us/windows/win32/api/msiquery/nf-msiquery-msirecordgetstringw
 				std::wstring returnValue;
-				res = MsiRecordGetString(recH, 1, returnValue.data(), &charCount);
-				if (res != ERROR_MORE_DATA)
-					throw Error::Win32Error("MsiRecordGetString() failed", res);
+				status = MsiRecordGetString(
+					hViewFetch, 
+					1, 
+					returnValue.data(), 
+					&charCount
+				);
+				if (status != ERROR_MORE_DATA)
+					throw Error::Win32Error("MsiRecordGetString() failed", status);
 
 				charCount++; // must increment to include null-terminator
 				returnValue.resize(charCount);
-				res = MsiRecordGetString(recH, 1, returnValue.data(), &charCount);
-				if (res != ERROR_SUCCESS)
-					throw Error::Win32Error("MsiRecordGetString() failed", res);
+				status = MsiRecordGetString(
+					hViewFetch, 
+					1, 
+					returnValue.data(), 
+					&charCount
+				);
+				if (status != ERROR_SUCCESS)
+					throw Error::Win32Error("MsiRecordGetString() failed", status);
 
 				returnValue.resize(charCount);
 				return returnValue;
