@@ -1,5 +1,6 @@
 export module boring32.msi:database;
 import <string>;
+import <memory>;
 import <format>;
 import <win32.hpp>;
 import boring32.error;
@@ -21,8 +22,7 @@ export namespace Boring32::MSI
 		public:
 			~Database() 
 			{
-				if (m_handle)
-					MsiCloseHandle(m_handle);
+				Close();
 			};
 
 			Database(std::wstring path, const Mode mode = Mode::ReadOnly)
@@ -72,10 +72,18 @@ export namespace Boring32::MSI
 			}
 
 		private:
-			Database& Move(Database& other) // could probably just default this
+			void Close() noexcept
 			{
 				if (m_handle)
+				{
 					MsiCloseHandle(m_handle);
+					m_handle = 0;
+				}
+			}
+
+			Database& Move(Database& other) noexcept
+			{
+				Close();
 				m_handle = other.m_handle;
 				other.m_handle = 0;
 				m_path = std::move(other.m_path);
@@ -85,8 +93,7 @@ export namespace Boring32::MSI
 
 			void Open()
 			{
-				if (m_handle)
-					MsiCloseHandle(m_handle);
+				Close();
 
 				// https://learn.microsoft.com/en-us/windows/win32/api/msiquery/nf-msiquery-msiopendatabasew
 				unsigned status = MsiOpenDatabaseW(
@@ -157,6 +164,8 @@ export namespace Boring32::MSI
 
 		private:
 			std::wstring m_path;
+			// Given this is just an int, unique_ptr doesn't play
+			// nicely with it.
 			MSIHANDLE m_handle = 0;
 			Mode m_mode = Mode::ReadOnly;
 	};
