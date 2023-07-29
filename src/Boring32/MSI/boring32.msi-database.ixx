@@ -25,21 +25,26 @@ export namespace Boring32::MSI
 				Close();
 			};
 
+			Database() = delete;
+			// No copy semantics supported
+			Database(const Database&) = delete;
+			Database& operator=(const Database&) = delete;
+			// Movable
+			Database(Database&& other)
+			{
+				Move(other);
+			}
+			Database& operator=(Database&& other) noexcept
+			{
+				return Move(other);
+			}
+
+		public:
 			Database(std::wstring path, const Mode mode = Mode::ReadOnly)
 				: m_path(std::move(path)),
 				m_mode(mode)
 			{
 				Open();
-			}
-
-			Database(Database&& other)
-			{
-				Move(other);
-			}
-
-			Database& operator=(Database&& other) noexcept
-			{
-				return Move(other);
 			}
 
 		public:
