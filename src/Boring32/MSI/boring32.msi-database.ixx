@@ -76,6 +76,11 @@ export namespace Boring32::MSI
 				return GetProperty(L"ProductLanguage");
 			}
 
+			const std::wstring& GetPath() const noexcept
+			{
+				return m_path;
+			}
+
 		private:
 			void Close() noexcept
 			{

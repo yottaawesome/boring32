@@ -68,5 +68,12 @@ namespace MSI
 				Assert::IsFalse(database1);
 				Assert::IsTrue(database2);
 			}
+
+			TEST_METHOD(TestGetPath)
+			{
+				std::wstring path{ MsiPath };
+				Boring32::MSI::Database database(path);
+				Assert::IsTrue(database.GetPath() == path);
+			}
 	};
 }
