@@ -26,18 +26,12 @@ export namespace Boring32::MSI
 			};
 
 			Database() = delete;
-			// No copy semantics supported
-			Database(const Database&) = delete;
-			Database& operator=(const Database&) = delete;
+			// Copyable
+			Database(const Database& other) { Copy(other); }
+			Database& operator=(const Database& other) { return Copy(other); }
 			// Movable
-			Database(Database&& other)
-			{
-				Move(other);
-			}
-			Database& operator=(Database&& other) noexcept
-			{
-				return Move(other);
-			}
+			Database(Database&& other) { Move(other); }
+			Database& operator=(Database&& other) noexcept { return Move(other); }
 
 		public:
 			Database(std::wstring path, const Mode mode = Mode::ReadOnly)
@@ -106,6 +100,21 @@ export namespace Boring32::MSI
 				other.m_handle = 0;
 				m_path = std::move(other.m_path);
 				m_mode = other.m_mode;
+				return *this;
+			}
+
+			Database& Copy(const Database& other)
+			{
+				if (&other == this)
+					return *this;
+
+				Close();
+				m_mode = other.m_mode;
+				if (other.m_path.empty())
+					return *this;
+				m_path = other.m_path;
+				Open();
+
 				return *this;
 			}
 
