@@ -51,6 +51,11 @@ export namespace Boring32::MSI
 				return GetProperty(L"ProductCode");
 			}
 
+			std::wstring GetProductName() const
+			{
+				return GetProperty(L"ProductName");
+			}
+
 		private:
 			void Open()
 			{

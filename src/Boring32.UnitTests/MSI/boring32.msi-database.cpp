@@ -37,5 +37,12 @@ namespace MSI
 				std::wstring value = database.GetProductCode();
 				Assert::IsFalse(value.empty());
 			}
+
+			TEST_METHOD(TestGetProductName)
+			{
+				Boring32::MSI::Database database(std::wstring{ MsiPath });
+				std::wstring value = database.GetProductName();
+				Assert::IsFalse(value.empty());
+			}
 	};
 }
