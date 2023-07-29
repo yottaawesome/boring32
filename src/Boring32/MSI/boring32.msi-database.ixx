@@ -80,6 +80,8 @@ export namespace Boring32::MSI
 			std::wstring GetProperty(std::wstring_view propertyName) const
 			{
 				// See https://stackoverflow.com/questions/27634407/how-to-get-the-product-version-from-an-msi-file-without-installing-the-msi
+				// MSI SQL: https://learn.microsoft.com/en-us/windows/win32/msi/sql-syntax
+				// MSI SQL examples: https://learn.microsoft.com/en-us/windows/win32/msi/examples-of-database-queries-using-sql-and-script
 				PMSIHANDLE hView;
 				std::wstring query = std::format(
 					L"Select `Value` from `Property` where `Property`='{}'",
