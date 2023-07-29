@@ -41,6 +41,11 @@ export namespace Boring32::MSI
 				return GetProperty(L"ProductVersion");
 			}
 
+			std::wstring GetUpgradeCode() const
+			{
+				return GetProperty(L"UpgradeCode");
+			}
+
 		private:
 			void Open()
 			{

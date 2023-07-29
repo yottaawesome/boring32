@@ -20,8 +20,15 @@ namespace MSI
 			TEST_METHOD(TestGetProductVersion)
 			{
 				Boring32::MSI::Database database(std::wstring{ MsiPath });
-				std::wstring version = database.GetProductVersion();
-				Assert::IsFalse(version.empty());
+				std::wstring value = database.GetProductVersion();
+				Assert::IsFalse(value.empty());
+			}
+
+			TEST_METHOD(TestGetUpgradeCode)
+			{
+				Boring32::MSI::Database database(std::wstring{ MsiPath });
+				std::wstring value = database.GetUpgradeCode();
+				Assert::IsFalse(value.empty());
 			}
 	};
 }
