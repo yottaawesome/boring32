@@ -32,6 +32,16 @@ export namespace Boring32::MSI
 				Open();
 			}
 
+			Database(Database&& other)
+			{
+				Move(other);
+			}
+
+			Database& operator=(Database&& other) noexcept
+			{
+				Move(other);
+			}
+
 		public:
 			operator bool() const noexcept { return m_handle; }
 
@@ -62,6 +72,17 @@ export namespace Boring32::MSI
 			}
 
 		private:
+			Database& Move(Database& other) // could probably just default this
+			{
+				if (m_handle)
+					MsiCloseHandle(m_handle);
+				m_handle = other.m_handle;
+				other.m_handle = 0;
+				m_path = std::move(other.m_path);
+				m_mode = other.m_mode;
+				return *this;
+			}
+
 			void Open()
 			{
 				if (m_handle)
