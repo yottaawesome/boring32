@@ -85,6 +85,7 @@ export namespace Boring32::MSI
 					L"Select `Value` from `Property` where `Property`='{}'",
 					propertyName
 				);
+				// https://learn.microsoft.com/en-us/windows/win32/api/msiquery/nf-msiquery-msidatabaseopenvieww
 				UINT status = MsiDatabaseOpenView(
 					m_handle, 
 					query.data(), 
@@ -93,11 +94,13 @@ export namespace Boring32::MSI
 				if (status != ERROR_SUCCESS)
 					throw Error::Win32Error("MsiDatabaseOpenView() failed", status);
 				
+				// https://learn.microsoft.com/en-us/windows/win32/api/msiquery/nf-msiquery-msiviewexecute
 				status = MsiViewExecute(hView, 0);
 				if (status != ERROR_SUCCESS)
 					throw Error::Win32Error("MsiViewExecute() failed", status);
 				
 				PMSIHANDLE hViewFetch;
+				// https://learn.microsoft.com/en-us/windows/win32/api/msiquery/nf-msiquery-msiviewfetch
 				status = MsiViewFetch(hView, &hViewFetch);
 				if (status != ERROR_SUCCESS)
 					throw Error::Win32Error("MsiViewFetch() failed", status);
