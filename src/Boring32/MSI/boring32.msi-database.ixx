@@ -35,6 +35,12 @@ export namespace Boring32::MSI
 		public:
 			operator bool() const noexcept { return m_handle; }
 
+		public:
+			std::wstring GetProductVersion() const
+			{
+				return GetProperty(L"ProductVersion");
+			}
+
 		private:
 			void Open()
 			{
@@ -51,7 +57,7 @@ export namespace Boring32::MSI
 					throw Error::Win32Error("MsiOpenDatabaseW() failed", status);
 			}
 
-			std::wstring GetProperty(std::wstring_view propname)
+			std::wstring GetProperty(std::wstring_view propname) const
 			{
 				// See https://stackoverflow.com/questions/27634407/how-to-get-the-product-version-from-an-msi-file-without-installing-the-msi
 				PMSIHANDLE viewH;
@@ -60,28 +66,29 @@ export namespace Boring32::MSI
 					propname
 				);
 				UINT res = MsiDatabaseOpenView(m_handle, qry.data(), &viewH);
-				if (ERROR_SUCCESS != res)
+				if (res != ERROR_SUCCESS)
 					throw Error::Win32Error("MsiDatabaseOpenView() failed", res);
 				
 				res = MsiViewExecute(viewH, 0);
-				if (ERROR_SUCCESS != res)
+				if (res != ERROR_SUCCESS)
 					throw Error::Win32Error("MsiViewExecute() failed", res);
 				
 				PMSIHANDLE recH;
 				res = MsiViewFetch(viewH, &recH);
-				if (ERROR_SUCCESS != res)
+				if (res != ERROR_SUCCESS)
 					throw Error::Win32Error("MsiViewFetch() failed", res);
 
 				DWORD charCount = 0;
 				// https://learn.microsoft.com/en-us/windows/win32/api/msiquery/nf-msiquery-msirecordgetstringw
 				std::wstring returnValue;
 				res = MsiRecordGetString(recH, 1, returnValue.data(), &charCount);
-				if (ERROR_SUCCESS != res)
+				if (res != ERROR_MORE_DATA)
 					throw Error::Win32Error("MsiRecordGetString() failed", res);
 
-				returnValue.resize(charCount+1);
+				charCount++; // must increment to include null-terminator
+				returnValue.resize(charCount);
 				res = MsiRecordGetString(recH, 1, returnValue.data(), &charCount);
-				if (ERROR_SUCCESS != res)
+				if (res != ERROR_SUCCESS)
 					throw Error::Win32Error("MsiRecordGetString() failed", res);
 
 				returnValue.resize(charCount);
