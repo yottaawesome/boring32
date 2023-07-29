@@ -200,6 +200,7 @@
     <ClCompile Include="Error\boring32.error-functions.cpp" />
     <ClCompile Include="Error\boring32.error-ntstatuserror.cpp" />
     <ClCompile Include="Error\boring32.error-win32error.cpp" />
+    <ClCompile Include="MSI\boring32.msi-database.cpp" />
     <ClCompile Include="MSI\boring32.msi-functions.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

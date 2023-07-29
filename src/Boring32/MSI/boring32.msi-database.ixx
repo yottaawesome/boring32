@@ -1,5 +1,6 @@
 export module boring32.msi:database;
 import <string>;
+import <format>;
 import <win32.hpp>;
 import boring32.error;
 
@@ -48,6 +49,43 @@ export namespace Boring32::MSI
 				);
 				if (status != ERROR_SUCCESS)
 					throw Error::Win32Error("MsiOpenDatabaseW() failed", status);
+			}
+
+			std::wstring GetProperty(std::wstring_view propname)
+			{
+				// See https://stackoverflow.com/questions/27634407/how-to-get-the-product-version-from-an-msi-file-without-installing-the-msi
+				PMSIHANDLE viewH;
+				std::wstring qry = std::format(
+					L"Select `Value` from `Property` where `Property`='{}'",
+					propname
+				);
+				UINT res = MsiDatabaseOpenView(m_handle, qry.data(), &viewH);
+				if (ERROR_SUCCESS != res)
+					throw Error::Win32Error("MsiDatabaseOpenView() failed", res);
+				
+				res = MsiViewExecute(viewH, 0);
+				if (ERROR_SUCCESS != res)
+					throw Error::Win32Error("MsiViewExecute() failed", res);
+				
+				PMSIHANDLE recH;
+				res = MsiViewFetch(viewH, &recH);
+				if (ERROR_SUCCESS != res)
+					throw Error::Win32Error("MsiViewFetch() failed", res);
+
+				DWORD charCount = 0;
+				// https://learn.microsoft.com/en-us/windows/win32/api/msiquery/nf-msiquery-msirecordgetstringw
+				std::wstring returnValue;
+				res = MsiRecordGetString(recH, 1, returnValue.data(), &charCount);
+				if (ERROR_SUCCESS != res)
+					throw Error::Win32Error("MsiRecordGetString() failed", res);
+
+				returnValue.resize(charCount+1);
+				res = MsiRecordGetString(recH, 1, returnValue.data(), &charCount);
+				if (ERROR_SUCCESS != res)
+					throw Error::Win32Error("MsiRecordGetString() failed", res);
+
+				returnValue.resize(charCount);
+				return returnValue;
 			}
 
 		private:
