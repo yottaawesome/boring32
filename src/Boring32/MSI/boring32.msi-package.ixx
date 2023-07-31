@@ -1,6 +1,7 @@
 export module boring32.msi:package;
-import <win32.hpp>;
 import <string>;
+import <win32.hpp>;
+import boring32.error;
 
 export namespace Boring32::MSI
 {
@@ -17,7 +18,12 @@ export namespace Boring32::MSI
 		public:
 			Package(std::wstring path)
 				: m_path(std::move(path))
-			{ }
+			{ 
+				Open();
+			}
+
+		public:
+			operator bool() const noexcept { return m_handle; }
 
 		private:
 			void Close()
@@ -27,6 +33,16 @@ export namespace Boring32::MSI
 					MsiCloseHandle(m_handle);
 					m_handle = 0;
 				}
+			}
+
+			void Open()
+			{
+				unsigned status = MsiOpenPackageW(
+					m_path.c_str(),
+					&m_handle
+				);
+				if (status != ERROR_SUCCESS)
+					throw Error::Win32Error("MsiOpenPackageW() failed", status);
 			}
 
 		private:
