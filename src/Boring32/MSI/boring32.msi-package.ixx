@@ -37,6 +37,8 @@ export namespace Boring32::MSI
 
 			void Open()
 			{
+				// https://learn.microsoft.com/en-us/windows/win32/api/msi/nf-msi-msiopenpackagew
+				// https://learn.microsoft.com/en-us/windows/win32/api/msi/nf-msi-msiopenpackageexw
 				unsigned status = MsiOpenPackageW(
 					m_path.c_str(),
 					&m_handle
