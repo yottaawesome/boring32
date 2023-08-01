@@ -5,3 +5,4 @@ export import :compressiontype;
 export import :compressor;
 export import :decompressor;
 export import :compressionerror;
+export import :cabinet;

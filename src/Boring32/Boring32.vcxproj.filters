@@ -221,5 +221,6 @@
     <ClCompile Include="MSI\boring32.msi-database.ixx" />
     <ClCompile Include="MSI\boring32.msi-package.ixx" />
     <ClCompile Include="MSI\boring32.msi-product.ixx" />
+    <ClCompile Include="Compression\boring32.compression-cabinet.ixx" />
   </ItemGroup>
 </Project>

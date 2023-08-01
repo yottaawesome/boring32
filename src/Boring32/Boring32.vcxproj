@@ -213,6 +213,7 @@
     <ClCompile Include="Async\boring32.async-timerqueuetimer.ixx" />
     <ClCompile Include="Async\boring32.async-timerqueuetimercallback.ixx" />
     <ClCompile Include="boring32.ixx" />
+    <ClCompile Include="Compression\boring32.compression-cabinet.ixx" />
     <ClCompile Include="Compression\boring32.compression-compressionerror.ixx" />
     <ClCompile Include="Compression\boring32.compression-deleters.ixx" />
     <ClCompile Include="Computer\boring32.computer-functions.ixx" />
