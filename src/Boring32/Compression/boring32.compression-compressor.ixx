@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>;
-
 export module boring32.compression:compressor;
 import <iostream>;
 import <vector>;
