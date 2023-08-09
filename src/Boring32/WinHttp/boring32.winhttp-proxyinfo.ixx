@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>;
-
 export module boring32.winhttp:proxyinfo;
 import <string>;
 import <win32.hpp>;

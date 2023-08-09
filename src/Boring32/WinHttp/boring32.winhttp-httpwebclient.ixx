@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>;
-
 export module boring32.winhttp:httpwebclient;
 import <string>;
 import <vector>;
