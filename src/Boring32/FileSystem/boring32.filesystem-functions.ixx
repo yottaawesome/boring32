@@ -1,12 +1,9 @@
-module;
-
-#include <source_location>;
-
 export module boring32.filesystem:functions;
 import <string>;
 import <source_location>;
 import <filesystem>;
 import <format>;
+import <stacktrace>;
 import <vector>;
 import <memory>;
 import <win32.hpp>;
