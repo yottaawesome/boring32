@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>;
-
 export module boring32.async:semaphore;
 import <string>;
 import <stdexcept>;

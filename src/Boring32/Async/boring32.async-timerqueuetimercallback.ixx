@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>;
-
 export module boring32.async:timerqueuetimercallback;
 import <iostream>;
 import <win32.hpp>;

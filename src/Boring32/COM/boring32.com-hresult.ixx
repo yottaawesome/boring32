@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>;
-
 export module boring32.com:hresult;
 import <source_location>;
 import <win32.hpp>;
