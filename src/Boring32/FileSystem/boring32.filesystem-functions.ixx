@@ -1,11 +1,6 @@
 export module boring32.filesystem:functions;
-import <string>;
-import <source_location>;
-import <filesystem>;
-import <format>;
-import <stacktrace>;
-import <vector>;
-import <memory>;
+import std;
+
 import <win32.hpp>;
 import boring32.error;
 import boring32.strings;

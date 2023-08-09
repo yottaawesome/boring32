@@ -3,7 +3,8 @@ import :voice;
 import <win32.hpp>;
 import boring32.error;
 import :xaudio2error;
-import <stdexcept>;
+import std;
+
 
 export namespace Boring32::XAudio2
 {

@@ -1,7 +1,7 @@
 export module boring32.async:timerqueue;
-import <stdexcept>;
+import std;
+
 import <win32.hpp>;
-import <iostream>;
 import boring32.error;
 import :event;
 

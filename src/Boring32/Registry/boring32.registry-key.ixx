@@ -1,10 +1,7 @@
 export module boring32.registry:key;
 import :value;
-import <stdexcept>;
-import <memory>;
-import <vector>;
-import <utility>;
-import <iostream>;
+import std;
+
 import <win32.hpp>;
 import :functions;
 import boring32.error;

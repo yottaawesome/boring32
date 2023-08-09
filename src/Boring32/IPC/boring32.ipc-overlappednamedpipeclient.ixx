@@ -1,8 +1,6 @@
 export module boring32.ipc:overlappednamedpipeclient;
-import <stdexcept>;
-import <format>;
-import <iostream>; 
-import <string>;
+import std;
+
 import <win32.hpp>;
 import boring32.async;
 import boring32.error;

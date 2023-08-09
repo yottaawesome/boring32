@@ -1,11 +1,7 @@
-module;
-
-#include <source_location>;
-
 module boring32.wirelesslan:session;
 import boring32.error;
-import <format>;
-import <iostream>;
+import std;
+
 import <win32.hpp>;
 
 namespace Boring32::WirelessLAN

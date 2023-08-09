@@ -1,9 +1,6 @@
 export module boring32.winsock:functions;
-import <iostream>;
-import <vector>;
-import <ostream>;
-import <string>;
-import <stdexcept>;
+import std;
+
 import <win32.hpp>;
 import :winsockerror;
 import boring32.raii;

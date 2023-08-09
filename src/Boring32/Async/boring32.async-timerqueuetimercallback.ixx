@@ -1,5 +1,6 @@
 export module boring32.async:timerqueuetimercallback;
-import <iostream>;
+import std;
+
 import <win32.hpp>;
 import :timerqueuetimer;
 import boring32.error;

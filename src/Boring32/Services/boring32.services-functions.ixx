@@ -1,7 +1,7 @@
 export module boring32.services:functions;
-import <string>;
+import std;
 import <win32.hpp>;
-import <format>;
+
 import boring32.error;
 
 export namespace Boring32::Services

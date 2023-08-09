@@ -1,5 +1,6 @@
 export module boring32.xaudio2:functions;
-import <stdexcept>;
+import std;
+
 import <win32.hpp>;
 import boring32.error;
 

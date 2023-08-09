@@ -1,10 +1,7 @@
 export module boring32.winhttp:httpwebclient;
-import <string>;
-import <vector>;
+import std;
 import <win32.hpp>;
-import <stdexcept>;
-import <functional>;
-import <sstream>;
+
 import :winhttphandle;
 import :requestresult;
 import :proxyinfo;

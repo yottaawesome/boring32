@@ -1,6 +1,7 @@
 export module boring32.security:securitydescriptor;
 import boring32.raii;
-import <string>;
+import std;
+
 import <win32.hpp>;
 import boring32.error;
 

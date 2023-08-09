@@ -1,7 +1,7 @@
 export module boring32.ipc:namedpipeclientbase;
-import <string>;
+import std;
 import <win32.hpp>;
-import <iostream>;
+
 import boring32.raii;
 import boring32.error;
 

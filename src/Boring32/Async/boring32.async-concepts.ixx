@@ -1,6 +1,6 @@
 export module boring32.async:concepts;
-import <type_traits>;
-import <chrono>;
+import std;
+
 
 namespace Boring32::Async
 {

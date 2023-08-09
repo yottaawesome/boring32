@@ -1,9 +1,6 @@
 export module boring32.async:functions;
-import <vector>;
-import <string>;
-import <stdexcept>;
-import <format>;
-import <chrono>;
+import std;
+
 import <win32.hpp>;
 import boring32.raii;
 import boring32.strings;

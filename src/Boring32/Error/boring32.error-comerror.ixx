@@ -1,10 +1,5 @@
 export module boring32.error:comerror;
-import <stdexcept>;
-import <string>;
-import <source_location>;
-import <stacktrace>;
-import <format>;
-import <win32.hpp>;
+import std;
 import :boring32error;
 import :functions;
 

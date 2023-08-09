@@ -1,14 +1,12 @@
 export module boring32.winsock:tcpsocket;
 import :uniqueptrs;
-import <string>;
-import <vector>;
+import std;
+
 import <win32.hpp>;
 import :winsockerror;
 import boring32.error;
 import boring32.strings;
-import <iostream>;
-import <format>;
-import <stdexcept>;
+
 
 export namespace Boring32::WinSock
 {

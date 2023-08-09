@@ -1,5 +1,6 @@
 export module boring32.async:job;
-import <string>;
+import std;
+
 import <win32.hpp>;
 import boring32.raii;
 import boring32.error;

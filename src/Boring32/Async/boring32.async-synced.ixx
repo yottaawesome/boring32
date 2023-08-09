@@ -1,5 +1,6 @@
 export module boring32.async:synced;
-import <functional>;
+import std;
+
 import <win32.hpp>;
 import :criticalsectionlock;
 

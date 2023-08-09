@@ -1,9 +1,6 @@
 export module boring32.async:threadpool;
-import <functional>;
-import <memory>;
-import <source_location>;
-import <tuple>;
-import <iostream>;
+import std;
+
 import <win32.hpp>;
 import boring32.error;
 

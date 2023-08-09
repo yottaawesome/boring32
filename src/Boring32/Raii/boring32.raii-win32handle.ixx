@@ -1,9 +1,6 @@
 export module boring32.raii:win32handle;
-import <functional>;
-import <iostream>;
-import <stdexcept>;
-import <format>;
-import <memory>;
+import std;
+
 import <win32.hpp>;
 import boring32.error;
 

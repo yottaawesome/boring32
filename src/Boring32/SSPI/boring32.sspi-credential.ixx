@@ -1,7 +1,6 @@
 export module boring32.sspi:credential;
-import <memory>;
-import <source_location>;
-import <stacktrace>;
+import std;
+
 import <win32.hpp>;
 import boring32.error;
 

@@ -1,13 +1,5 @@
 export module boring32.error:functions;
-import <string>;
-import <iostream>;
-import <memory>;
-import <stdexcept>;
-import <sstream>;
-import <algorithm>;
-import <format>;
-import <stacktrace>;
-import <source_location>;
+import std;
 import <win32.hpp>;
 
 export namespace Boring32::Error
@@ -179,7 +171,7 @@ export namespace Boring32::Error
         if (LocalFree(messageBuffer))
         {
             const auto lastError = GetLastError();
-            std::wcerr << std::format(
+            std::format(
                 L"LocalFree() failed: {}\n",
                 lastError
             );
@@ -211,9 +203,9 @@ export namespace Boring32::Error
         {
             const auto lastError = GetLastError();
             return std::format(
-                L"FormatMessageA() failed on code {} with error {}",
-                errorCode,
-                lastError
+                L"FormatMessageA() failed on code  with error "//s,
+                /*errorCode,
+                lastError*/
             );
         }
 

@@ -1,5 +1,6 @@
 export module boring32.sspi:contextbuffer;
-import <vector>;
+import std;
+
 import <win32.hpp>;
 
 export namespace Boring32::SSPI

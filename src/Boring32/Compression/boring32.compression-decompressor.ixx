@@ -1,5 +1,6 @@
 export module boring32.compression:decompressor;
-import <vector>;
+import std;
+
 import <win32.hpp>;
 import boring32.error;
 import :compressiontype;

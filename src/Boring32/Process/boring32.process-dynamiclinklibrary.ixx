@@ -1,8 +1,6 @@
 export module boring32.process:dynamiclinklibrary;
-import <string>;
-import <stdexcept>;
-import <format>;
-import <iostream>;
+import std;
+
 import <win32.hpp>;
 import boring32.error;
 

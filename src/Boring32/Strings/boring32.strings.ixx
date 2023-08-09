@@ -1,8 +1,6 @@
 export module boring32.strings;
-import <string>;
-import <vector>;
-import <algorithm>;
-import <stdexcept>;
+import std;
+
 import <win32.hpp>;
 import boring32.error;
 

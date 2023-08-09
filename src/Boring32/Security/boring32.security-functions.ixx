@@ -1,9 +1,6 @@
 export module boring32.security:functions;
-import <string>;
-import <vector>;
-import <stdexcept>;
-import <format>;
-import <iostream>;
+import std;
+
 import <win32.hpp>;
 import boring32.raii;
 import boring32.error;

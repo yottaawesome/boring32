@@ -1,9 +1,8 @@
 export module boring32.time:functions;
-import <string>;
+import std;
 import <win32.hpp>;
 import boring32.error;
-import <sstream>;
-import <format>;
+
 
 export namespace Boring32::Time
 {

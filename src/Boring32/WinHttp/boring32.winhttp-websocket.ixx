@@ -1,13 +1,7 @@
 export module boring32.winhttp:websocket;
-import <string>;
-import <vector>;
-import <atomic>;
-import <memory>;
-import <future>;
+import std;
 import <win32.hpp>;
-import <stdexcept>;
-import <sstream>;
-import <iostream>;
+
 import boring32.error;
 import :proxyinfo;
 import boring32.util;

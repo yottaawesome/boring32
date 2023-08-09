@@ -1,10 +1,5 @@
 export module boring32.error:boring32error;
-import <stdexcept>;
-import <string>;
-import <string_view>;
-import <format>;
-import <source_location>;
-import <stacktrace>;
+import std;
 import :functions;
 
 export namespace Boring32::Error

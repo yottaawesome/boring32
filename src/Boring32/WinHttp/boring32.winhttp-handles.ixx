@@ -1,5 +1,6 @@
 export module boring32.winhttp:handles;
-import <memory>;
+import std;
+
 import <win32.hpp>;
 
 namespace Boring32::WinHttp

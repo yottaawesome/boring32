@@ -1,5 +1,6 @@
 export module boring32.services:servicecontrolmanager;
-import <string>;
+import std;
+
 import <win32.hpp>;
 import :raii;
 import :service;

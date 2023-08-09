@@ -1,5 +1,6 @@
 export module boring32.raii:handle;
-import <type_traits>;
+import std;
+
 import <win32.hpp>;
 //https://docs.microsoft.com/en-us/windows/win32/sysinfo/kernel-objects
 

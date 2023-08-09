@@ -1,8 +1,6 @@
 export module boring32.async:eventloop;
-import <vector>;
-import <functional>;
-import <stdexcept>;
-import <algorithm>;
+import std;
+
 import <win32.hpp>;
 import boring32.error;
 import :criticalsectionlock;

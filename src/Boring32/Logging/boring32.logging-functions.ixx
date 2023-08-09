@@ -1,7 +1,7 @@
 export module boring32.logging:functions;
-import <string>;
-import <source_location>;
-import <format>;
+import std;
+
+
 
 export namespace Boring32::Logging
 {
@@ -42,7 +42,7 @@ export namespace Boring32::Logging
 	};
 
 	template <class... Types>
-	void Info(const std::string_view fmt, Types&&... Args)
+	void Info(std::string_view fmt, Types&&... Args)
 	{
 		std::vformat(fmt, std::make_format_args(std::forward<Types>(Args)...));
 	}

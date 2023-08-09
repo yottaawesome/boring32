@@ -1,6 +1,6 @@
 export module boring32.registry:functions;
-import <string>;
-import <stdexcept>;
+import std;
+
 import <win32.hpp>;
 import boring32.error;
 import boring32.async;

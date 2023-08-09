@@ -1,6 +1,6 @@
 export module boring32.msi:functions;
-import <vector>;
-import <string>;
+import std;
+
 import <win32.hpp>;
 import boring32.error;
 

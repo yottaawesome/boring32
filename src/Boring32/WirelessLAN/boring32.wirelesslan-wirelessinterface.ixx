@@ -1,8 +1,8 @@
 export module boring32.wirelesslan:wirelessinterface;
 import boring32.util;
 import :cleanup;
-import <string>;
-import <vector>;
+import std;
+
 import <win32.hpp>;
 
 export namespace Boring32::WirelessLAN

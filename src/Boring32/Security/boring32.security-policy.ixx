@@ -6,8 +6,8 @@ export module boring32.security:policy;
 //#include <ntstatus.h>
 //#include <winnt.h>
 //#include <Ntsecapi.h>
-import <string>;
-import <memory>;
+import std;
+
 import <win32.hpp>;
 import boring32.error;
 import :lsaunicodestring;

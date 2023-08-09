@@ -1,5 +1,6 @@
 export module boring32.util:guid;
-import <string>;
+import std;
+
 import <win32.hpp>;
 import :functions;
 import boring32.error;

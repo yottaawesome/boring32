@@ -1,8 +1,6 @@
 export module boring32.util:functions;
-import <string>;
-import <stdexcept>;
-import <chrono>;
-import <vector>;
+import std;
+
 import <win32.hpp>;
 import boring32.error;
 

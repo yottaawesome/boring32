@@ -1,6 +1,6 @@
 export module boring32.security:privatenamespace;
-import <string>;
-import <vector>;
+import std;
+
 import <win32.hpp>;
 import boring32.error;
 import boring32.raii;
