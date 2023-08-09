@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>;
-
 export module boring32.error:win32error;
 import <string>;
 import <format>;

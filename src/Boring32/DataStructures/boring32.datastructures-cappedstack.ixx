@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>;
-
 export module boring32.datastructures:cappedstack;
 import <deque>;
 import <algorithm>;
