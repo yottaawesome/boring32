@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>;
-
 export module boring32.sspi:securitycontext;
 import <vector>;
 import <string>;
