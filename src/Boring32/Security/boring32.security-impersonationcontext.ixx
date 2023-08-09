@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>;
-
 export module boring32.security:impersonationcontext;
 import <win32.hpp>;
 import boring32.error;

@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>;
-
 export module boring32.security:policy;
 // https://www.mschaef.com/windows_h_is_wierd
 //#define WIN32_NO_STATUS

@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>;
-
 export module boring32.networking:api;
 import <vector>;
 import <win32.hpp>;
