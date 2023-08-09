@@ -1,7 +1,3 @@
-module;
-
-#include <source_location>;
-
 export module boring32.xaudio2:functions;
 import <stdexcept>;
 import <win32.hpp>;
