@@ -1,8 +1,12 @@
+module;
+
+#include <wrl/client.h>
+#include <Comdef.h>
+
 export module boring32.taskscheduler:registeredtask;
 import std;
 import <win32.hpp>;
 import boring32.error;
-
 
 namespace Boring32::TaskScheduler
 {

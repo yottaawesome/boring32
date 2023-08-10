@@ -1,3 +1,7 @@
+module;
+
+#include <wrl/client.h>
+
 export module boring32.xaudio2:engine;
 import <win32.hpp>;
 import :xaudio2error;

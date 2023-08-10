@@ -1,3 +1,7 @@
+module;
+
+#include <stdint.h>
+
 export module boring32.winsock:functions;
 import std;
 

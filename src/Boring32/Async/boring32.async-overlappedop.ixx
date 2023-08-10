@@ -1,3 +1,7 @@
+module;
+
+#include <stdint.h>
+
 export module boring32.async:overlappedop;
 import std;
 import :event;

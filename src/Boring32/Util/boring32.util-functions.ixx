@@ -1,3 +1,7 @@
+module;
+
+#include <wrl/client.h>
+
 export module boring32.util:functions;
 import std;
 
