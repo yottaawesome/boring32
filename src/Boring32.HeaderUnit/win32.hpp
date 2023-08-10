@@ -14,7 +14,7 @@
 #include <Msi.h>
 #include <MsiQuery.h>
 #include <memoryapi.h>
-#include <Comdef.h> // Incompatible with modules
+//#include <Comdef.h> // Incompatible with modules
 #include <sddl.h>
 #include <wlanapi.h> // unfortunately, not importable
 #include <wtypes.h>
@@ -31,7 +31,7 @@
 #include <iptypes.h> // module file mapping is invalid.
 #include <Ntsecapi.h>
 #include <taskschd.h>
-#include <wrl/client.h> // incompatible with modules
+//#include <wrl/client.h> // incompatible with modules
 #include <TlHelp32.h>
 #include <Jobapi2.h>
 #include <threadpoolapiset.h>
