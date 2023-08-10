@@ -8,7 +8,7 @@ namespace Boring32::WirelessLAN
     {
         // https://docs.microsoft.com/en-us/windows/win32/api/wlanapi/nf-wlanapi-wlanclosehandle
         if (DWORD status = WlanCloseHandle(handle, 0) != ERROR_SUCCESS)
-            std::wcerr << std::format(L"WlanCloseHandle() failed: {}\n", status);
+            std::wcerr << L"";// std::format(L"WlanCloseHandle() failed: {}\n", status);
     }
 
     struct HandleDeleter

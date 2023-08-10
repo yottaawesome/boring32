@@ -32,7 +32,7 @@ export namespace Boring32::Error
 
     void PrintExceptionInfo(const std::exception& e, const unsigned level = 0)
     {
-        std::wcout << std::format("{}-> {}", std::string(level, '-'), e.what()).c_str() << std::endl;
+        //std::wcout << std::format("{}-> {}", std::string(level, '-'), e.what()).c_str() << std::endl;
         try
         {
             rethrow_if_nested(e);
@@ -171,10 +171,11 @@ export namespace Boring32::Error
         if (LocalFree(messageBuffer))
         {
             const auto lastError = GetLastError();
-            std::format(
-                L"LocalFree() failed: {}\n",
-                lastError
-            );
+            //std::wstring s = std::format(
+            //    L"LocalFree() failed: {}\n"
+            //    //,lastError
+            //);
+            std::wcerr << L"LocalFree() failed " << lastError;
         }
 
         std::erase_if(msg, [](const char x) { return x == '\n' || x == '\r'; });
@@ -202,18 +203,20 @@ export namespace Boring32::Error
         if (!messageBuffer)
         {
             const auto lastError = GetLastError();
-            return std::format(
-                L"FormatMessageA() failed on code  with error "//s,
-                /*errorCode,
-                lastError*/
-            );
+            return L"FormatMessageA() failed"; 
+            /*return std::format(
+                L"FormatMessageA() failed on code {} with error {}",
+                errorCode,
+                lastError
+            );*/
         }
 
         std::wstring msg(static_cast<wchar_t*>(messageBuffer));
         if (LocalFree(messageBuffer))
         {
             const auto lastError = GetLastError();
-            std::wcerr << std::format(L"LocalFree() failed: {}\n", lastError);
+            std::wcerr << L"LocalFree() failed: " << lastError;
+            //std::wcerr << std::format(L"LocalFree() failed: {}\n", lastError);
         }
 
         std::erase_if(msg, [](const wchar_t x) { return x == '\n' || x == '\r'; });
