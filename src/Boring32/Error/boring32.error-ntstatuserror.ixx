@@ -26,19 +26,16 @@ export namespace Boring32::Error
 				const std::string& msg,
 				const std::source_location location = std::source_location::current(),
 				const std::stacktrace& trace = std::stacktrace::current()
-			) : m_errorCode(0)
-			{
-				GenerateErrorMessage(location, msg, trace);
-			}
+			) : m_errorCode(0), Boring32Error(GenerateErrorMessage(location, msg, trace))
+			{ }
 
 			NTStatusError(
 				const std::string& msg,
 				const long errorCode,
 				const std::source_location location = std::source_location::current(),
 				const std::stacktrace& trace = std::stacktrace::current()
-			) : m_errorCode(errorCode)
+			) : m_errorCode(errorCode), Boring32Error(GenerateErrorMessage(location, msg, trace))
 			{
-				GenerateErrorMessage(location, msg, trace);
 			}
 
 		public:
@@ -47,16 +44,16 @@ export namespace Boring32::Error
 				return m_errorCode;
 			}
 
-		protected:
-			virtual void GenerateErrorMessage(
+		private:
+			ExactMessage GenerateErrorMessage(
 				const std::source_location& location,
 				const std::string& message,
 				const std::stacktrace& trace
-			) override
+			)
 			{
 				if (m_errorCode)
 				{
-					m_message = Boring32::Error::GetNtStatusCode<std::string>(m_errorCode);
+					std::string m_message = Boring32::Error::GetNtStatusCode<std::string>(m_errorCode);
 					m_message = Error::FormatErrorMessage(
 						"NTSTATUS", trace,
 						location, 
@@ -65,15 +62,15 @@ export namespace Boring32::Error
 						m_message
 					);
 				}
-				else
-				{
-					m_message = Error::FormatErrorMessage(
-						"NTSTATUS", 
-						trace, 
-						location, 
+
+				return { 
+					Error::FormatErrorMessage(
+						"NTSTATUS",
+						trace,
+						location,
 						message
-					);
-				}
+					) 
+				};
 			}
 
 		protected:

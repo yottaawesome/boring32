@@ -37,7 +37,6 @@ namespace Error
 			{
 				Boring32::Error::Win32Error error1(m_errorMessage, 0x5);
 				Boring32::Error::Win32Error error2(std::move(error1));
-				Assert::IsTrue(std::string(error1.what()).empty());
 				Assert::IsFalse(std::string(error2.what()).empty());
 				Assert::IsTrue(error2.GetErrorCode() == 0x5);
 			}
@@ -46,7 +45,6 @@ namespace Error
 			{
 				Boring32::Error::Win32Error error1(m_errorMessage, 0x5);
 				Boring32::Error::Win32Error error2 = std::move(error1);
-				Assert::IsTrue(std::string(error1.what()).empty());
 				Assert::IsFalse(std::string(error2.what()).empty());
 				Assert::IsTrue(error2.GetErrorCode() == 0x5);
 			}

@@ -23,14 +23,13 @@ export namespace Boring32::Error
 				const std::string& msg,
 				const std::source_location location = std::source_location::current(),
 				const std::stacktrace& trace = std::stacktrace::current()
-			)
-			{
-				m_message = Error::FormatErrorMessage(
+			) : Boring32Error(ExactMessage{ Error::FormatErrorMessage(
 					"Win32",
 					trace,
 					location,
 					msg
-				);
+				) })
+			{
 			}
 
 			Win32Error(
@@ -38,18 +37,8 @@ export namespace Boring32::Error
 				const unsigned long errorCode,
 				const std::source_location location = std::source_location::current(),
 				const std::stacktrace & trace = std::stacktrace::current()
-			) : m_errorCode(errorCode)
-			{
-				m_message = Boring32::Error::TranslateErrorCode<std::string>(errorCode);
-				m_message = Error::FormatErrorMessage(
-					"Win32",
-					trace,
-					location,
-					msg,
-					errorCode,
-					m_message
-				);
-			}
+			) : m_errorCode(errorCode), Boring32Error(Generate(msg, errorCode, location, trace))
+			{ }
 
 			template<typename...Args>
 			Win32Error(
@@ -58,23 +47,8 @@ export namespace Boring32::Error
 				const std::source_location location = std::source_location::current(),
 				const std::stacktrace& trace = std::stacktrace::current(),
 				const Args&...args
-			) : m_errorCode(errorCode)
-			{
-				std::string format = std::vformat(
-					msg,
-					std::make_format_args(args...)
-				);
-				m_message =
-					Boring32::Error::TranslateErrorCode<std::string>(errorCode);
-				m_message = Error::FormatErrorMessage(
-					"Win32",
-					trace,
-					location,
-					msg,
-					errorCode,
-					m_message
-				);
-			}
+			) : m_errorCode(errorCode), Boring32Error(Generate(msg, errorCode, location, trace, args...))
+			{ }
 
 			Win32Error(
 				const std::string& msg, 
@@ -82,9 +56,28 @@ export namespace Boring32::Error
 				const std::wstring& moduleName,
 				const std::source_location location = std::source_location::current(),
 				const std::stacktrace& trace = std::stacktrace::current()
-			) : m_errorCode(errorCode)
+			) : m_errorCode(errorCode), Boring32Error(Generate(msg, errorCode, moduleName, location, trace))
+			{ }
+
+		public:
+			virtual unsigned long GetErrorCode() const noexcept final
 			{
-				m_message = Boring32::Error::TranslateErrorCode<std::string>(
+				return m_errorCode;
+			}
+
+		protected:
+			unsigned long m_errorCode = 0;
+
+		private:
+			ExactMessage Generate(
+				const std::string& msg,
+				const unsigned long errorCode,
+				const std::wstring& moduleName,
+				const std::source_location location,
+				const std::stacktrace& trace
+			)
+			{
+				std::string m_message = Boring32::Error::TranslateErrorCode<std::string>(
 					errorCode,
 					moduleName
 				);
@@ -96,15 +89,55 @@ export namespace Boring32::Error
 					errorCode,
 					m_message
 				);
+
+				return { m_message };
 			}
 
-		public:
-			virtual unsigned long GetErrorCode() const noexcept final
+			ExactMessage Generate(
+				const std::string& msg,
+				const unsigned long errorCode,
+				const std::source_location location = std::source_location::current(),
+				const std::stacktrace& trace = std::stacktrace::current()
+			)
 			{
-				return m_errorCode;
+				std::string m_message = Boring32::Error::TranslateErrorCode<std::string>(errorCode);
+				return {
+					Error::FormatErrorMessage(
+						"Win32",
+						trace,
+						location,
+						msg,
+						errorCode,
+						m_message
+					) 
+				};
 			}
 
-		protected:
-			unsigned long m_errorCode = 0;
+			template<typename...Args>
+			ExactMessage Generate(
+				const std::string& msg,
+				const unsigned long errorCode,
+				const std::source_location location = std::source_location::current(),
+				const std::stacktrace& trace = std::stacktrace::current(),
+				const Args&...args
+			)
+			{
+				std::string format = std::vformat(
+					msg,
+					std::make_format_args(args...)
+				);
+				std::string m_message =
+					Boring32::Error::TranslateErrorCode<std::string>(errorCode);
+				return { 
+					Error::FormatErrorMessage(
+						"Win32",
+						trace,
+						location,
+						msg,
+						errorCode,
+						m_message
+					) 
+				};
+			}
 	};
 }

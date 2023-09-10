@@ -27,19 +27,21 @@ export namespace Boring32::Compression
 				GenerateErrorMessage(location, message, trace);
 			}
 
-		protected:
-			virtual void GenerateErrorMessage(
+		private:
+			Error::ExactMessage GenerateErrorMessage(
 				const std::source_location& location,
 				const std::string& message,
 				const std::stacktrace& trace
-			) override
+			)
 			{
-				m_message = Error::FormatErrorMessage(
-					"Compression", 
-					trace, 
-					location, 
-					message
-				);
+				return { 
+					Error::FormatErrorMessage(
+						"Compression",
+						trace,
+						location,
+						message
+					)
+				};
 			}
 	};
 }

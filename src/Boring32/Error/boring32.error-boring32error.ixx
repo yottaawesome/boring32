@@ -27,12 +27,17 @@ export namespace Boring32::Error
 		{}
 	};
 
+	struct ExactMessage
+	{
+		std::string Message;
+	};
+
 	class Boring32Error : public std::exception
 	{
 		public:
 			virtual ~Boring32Error() = default;
 			Boring32Error()
-				: m_message("Boring32 encountered an error")
+				: std::exception("Boring32 encountered an error")
 			{ }
 			Boring32Error(const Boring32Error& other) = default;
 			virtual Boring32Error& operator=(const Boring32Error& other) = default;
@@ -40,23 +45,24 @@ export namespace Boring32::Error
 			virtual Boring32Error& operator=(Boring32Error&& other) noexcept = default;
 
 		public:
+			Boring32Error(const ExactMessage& msg)
+				: std::exception(msg.Message.c_str())
+			{ }
+
 			Boring32Error(const MessageLocationTrace msg)
-			{
-				GenerateErrorMessage(
-					msg.Location, 
-					std::string(msg.Message), 
+				: std::exception(GenerateErrorMessage(
+					msg.Location,
+					std::string(msg.Message),
 					msg.Trace
-				);
-			}
+				).c_str())
+			{ }
 
 			Boring32Error(
 				const std::string& message, 
 				const std::source_location& location,
 				const std::stacktrace& trace
-			)
-			{
-				GenerateErrorMessage(location, message, trace);
-			}
+			) : std::exception(GenerateErrorMessage(location, message, trace).c_str())
+			{ }
 
 			template<typename...Args>
 			Boring32Error(
@@ -64,40 +70,30 @@ export namespace Boring32::Error
 				const std::source_location& location,
 				const std::stacktrace& trace,
 				Args&&...args
-			)
-			{
+			) : std::exception(
 				GenerateErrorMessage(
 					location,
 					std::vformat(
-						message, 
+						message,
 						std::make_format_args(std::forward<Args>(args)...)
 					),
 					trace
-				);
-			}
+				).c_str())
+			{ }
 
-		public:
-			virtual const char* what() const noexcept override
-			{
-				return m_message.c_str();
-			}
-
-		protected:
-			virtual void GenerateErrorMessage(
+		private:
+			std::string GenerateErrorMessage(
 				const std::source_location& location,
 				const std::string& message,
 				const std::stacktrace& trace
 			)
 			{
-				m_message = Error::FormatErrorMessage(
+				return Error::FormatErrorMessage(
 					"Boring32",
 					trace,
 					location, 
 					message
 				);
 			}
-
-		protected:
-			std::string m_message;
 	};
 }

@@ -53,7 +53,6 @@ namespace Error
 				std::string errorMsg = error1.what();
 				Boring32::Error::NTStatusError error2(std::move(error1));
 				Assert::IsTrue(m_errorCode == error2.GetErrorCode());
-				Assert::IsTrue(std::string(error1.what()).empty());
 				Assert::IsTrue(errorMsg == std::string(error2.what()));
 			}
 
@@ -63,7 +62,6 @@ namespace Error
 				std::string errorMsg = error1.what();
 				Boring32::Error::NTStatusError error2 = std::move(error1);
 				Assert::IsTrue(m_errorCode == error2.GetErrorCode());
-				Assert::IsTrue(std::string(error1.what()).empty());
 				Assert::IsTrue(errorMsg == std::string(error2.what()));
 			}
 	};

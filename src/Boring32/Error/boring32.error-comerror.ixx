@@ -26,10 +26,8 @@ export namespace Boring32::Error
 				const HRESULT hr,
 				const std::source_location location = std::source_location::current(),
 				const std::stacktrace& trace = std::stacktrace::current()
-			) : m_hresult(hr)
-			{
-				GenerateErrorMessage(location, msg, trace);
-			}
+			) : m_hresult(hr), Boring32Error(GenerateErrorMessage(location, msg, trace))
+			{ }
 
 		public:
 			virtual HRESULT GetHResult() const noexcept
@@ -37,19 +35,14 @@ export namespace Boring32::Error
 				return m_hresult;
 			}
 
-			virtual const char* what() const noexcept override
-			{
-				return m_errorString.c_str();
-			}
-
-		protected:
-			virtual void GenerateErrorMessage(
+		private:
+			ExactMessage GenerateErrorMessage(
 				const std::source_location& location,
 				const std::string& message,
 				const std::stacktrace& trace
-			) override
+			)
 			{
-				m_errorString = Boring32::Error::TranslateErrorCode<std::string>(
+				std::string m_errorString = Boring32::Error::TranslateErrorCode<std::string>(
 					m_hresult
 				);
 				m_errorString = Error::FormatErrorMessage(
@@ -60,10 +53,10 @@ export namespace Boring32::Error
 					m_hresult, 
 					m_errorString
 				);
+				return { m_errorString };
 			}
 
 		protected:
 			HRESULT m_hresult = 0;
-			std::string m_errorString;
 	};
 }
