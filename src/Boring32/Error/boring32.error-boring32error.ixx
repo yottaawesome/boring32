@@ -32,6 +32,12 @@ export namespace Boring32::Error
 		std::string Message;
 	};
 
+	/*
+	* TODO: this inheritance-based approach to building an error hierarchy 
+	* is pretty shitty. See ApproachD in C++Expriments' Inheritance sample 
+	* for a better approach. The code should be changed to follow that 
+	* sample's approach.
+	*/
 	class Boring32Error : public std::exception
 	{
 		public:
