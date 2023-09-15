@@ -3,13 +3,8 @@ import <string>;
 import <win32.hpp>;
 import boring32.error;
 
-namespace Boring32::WinHttp
+export namespace Boring32::WinHttp
 {
-	export
-	{
-		class DecomposedURL;
-	}
-
 	class DecomposedURL final
 	{
 		public:
