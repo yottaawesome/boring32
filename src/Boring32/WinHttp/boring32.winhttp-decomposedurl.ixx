@@ -5,15 +5,15 @@ import boring32.error;
 
 namespace Boring32::WinHttp
 {
-	class DecomposedUrl final
+	class DecomposedURL final
 	{
 		public:
-			~DecomposedUrl() = default;
-			DecomposedUrl(const DecomposedUrl&) = default;
-			DecomposedUrl(DecomposedUrl&&) noexcept = default;
+			~DecomposedURL() = default;
+			DecomposedURL(const DecomposedURL&) = default;
+			DecomposedURL(DecomposedURL&&) noexcept = default;
 
 		public:
-			DecomposedUrl(std::wstring url) : m_url(std::move(url)) { Crack(); }
+			DecomposedURL(std::wstring url) : m_url(std::move(url)) { Crack(); }
 
 		public:
 			const std::wstring& Url() const noexcept { return m_url; }
