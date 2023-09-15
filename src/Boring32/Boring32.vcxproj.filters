@@ -222,5 +222,6 @@
     <ClCompile Include="MSI\boring32.msi-package.ixx" />
     <ClCompile Include="MSI\boring32.msi-product.ixx" />
     <ClCompile Include="Compression\boring32.compression-cabinet.ixx" />
+    <ClCompile Include="WinHttp\boring32.winhttp-decomposedurl.ixx" />
   </ItemGroup>
 </Project>

@@ -14,3 +14,4 @@ export import :websocketstatus;
 export import :winhttperror;
 export import :winhttphandle;
 export import :handles;
+export import :decomposedurl;

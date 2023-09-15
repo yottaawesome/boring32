@@ -333,6 +333,7 @@
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform.ixx" />
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform-provider.ixx" />
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform-providercontext.ixx" />
+    <ClCompile Include="WinHttp\boring32.winhttp-decomposedurl.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-handles.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-httpwebclient.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp.ixx" />
