@@ -221,6 +221,7 @@
     <ClCompile Include="Util\boring32.util-functions.cpp" />
     <ClCompile Include="Util\boring32.util-globallyuniqueid.cpp" />
     <ClCompile Include="Win32\boring32.win32-ntdll.cpp" />
+    <ClCompile Include="WinHttp\boring32.winhttp-decomposedurl.cpp" />
     <ClCompile Include="WinHttp\boring32.winhttp-session.cpp" />
     <ClCompile Include="WinSock\boring32.winsock-socket.cpp" />
     <ClCompile Include="WinSock\boring32.winsock-winsockinit.cpp" />

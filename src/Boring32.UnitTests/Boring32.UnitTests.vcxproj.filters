@@ -162,6 +162,9 @@
     <ClCompile Include="MSI\boring32.msi-package.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="WinHttp\boring32.winhttp-decomposedurl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
