@@ -60,7 +60,7 @@ export namespace Boring32::WinHttp
 
 		private:
 			std::wstring m_url;
-			std::wstring m_scheme;
+			std::wstring m_scheme; // winhttp only suppports http/s
 			std::wstring m_host;
 			std::wstring m_path;
 			std::wstring m_username;
