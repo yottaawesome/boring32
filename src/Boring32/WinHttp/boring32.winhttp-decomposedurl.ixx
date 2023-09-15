@@ -8,14 +8,11 @@ export namespace Boring32::WinHttp
 	class DecomposedURL final
 	{
 		public:
-			~DecomposedURL() = default;
-			DecomposedURL(const DecomposedURL&) = default;
-			DecomposedURL(DecomposedURL&&) noexcept = default;
-			DecomposedURL& operator=(const DecomposedURL&) = default;
-			DecomposedURL& operator=(DecomposedURL&&) noexcept = default;
-
-		public:
-			DecomposedURL(std::wstring url) : m_url(std::move(url)) { Crack(); }
+			DecomposedURL(std::wstring url) 
+				: m_url(std::move(url)) 
+			{ 
+				Crack(); 
+			}
 
 		public:
 			const std::wstring& Url() const noexcept { return m_url; }
