@@ -1,10 +1,11 @@
 export module boring32.async:slimreadwritelock;
 import <stdexcept>;
+import <functional>;
 import <win32.hpp>;
 
 export namespace Boring32::Async
 {
-	class SharedLockScope
+	class SharedLockScope final
 	{
 		public:
 			~SharedLockScope()
@@ -12,7 +13,7 @@ export namespace Boring32::Async
 				ReleaseSRWLockShared(&m_srwLock);
 			}
 
-			SharedLockScope(SRWLOCK& srwLock)
+			SharedLockScope(SRWLOCK& srwLock) noexcept
 				: m_srwLock(srwLock)
 			{
 				AcquireSRWLockShared(&m_srwLock);
@@ -27,7 +28,7 @@ export namespace Boring32::Async
 			SRWLOCK& m_srwLock;
 	};
 
-	class ExclusiveLockScope
+	class ExclusiveLockScope final
 	{
 		public:
 			~ExclusiveLockScope()
@@ -35,7 +36,7 @@ export namespace Boring32::Async
 				ReleaseSRWLockExclusive(&m_srwLock);
 			}
 
-			ExclusiveLockScope(SRWLOCK& srwLock)
+			ExclusiveLockScope(SRWLOCK& srwLock) noexcept
 				: m_srwLock(srwLock)
 			{
 				AcquireSRWLockExclusive(&m_srwLock);
@@ -53,7 +54,6 @@ export namespace Boring32::Async
 	class SlimReadWriteLock final
 	{
 		public:
-			~SlimReadWriteLock() = default;
 			SlimReadWriteLock()
 			{
 				InitializeSRWLock(&m_srwLock);
@@ -122,5 +122,49 @@ export namespace Boring32::Async
 		private:
 			SRWLOCK m_srwLock;
 			DWORD m_threadOwningExclusiveLock = 0;
+	};
+
+	// Loosely inspired by Rust's Futex.
+	template<typename TProtected>
+	class SlimRWProtectedObject final
+	{
+		public:
+			SlimRWProtectedObject()
+				requires std::is_default_constructible_v<TProtected> = default;
+			SlimRWProtectedObject(const TProtected& data)
+				requires std::is_copy_constructible_v<TProtected>
+				: m_data(data)
+			{}
+			SlimRWProtectedObject(TProtected&& data)
+				requires std::is_move_constructible_v<TProtected>
+			: m_data(std::move(data))
+			{}
+
+		public:
+			// NB. I tried experimenting turning this class into a functor with overloaded
+			// operator() that accepts either a auto(TProtected&) or auto(const TProtected&)
+			// lambda in order to choose which lock scope to create, but I found in my 
+			// testing the auto(TProtected&) overload is always preferred over the 
+			// auto(const TProtected&) overload. Maybe a better option is to have one 
+			// operator() and statically inspect the first argument to see if it's a 
+			// const TProtected& or TProtected& and dispatch via a constexpr if from there, 
+			// but that's something to figure out another day.
+			auto Read(const auto& func, auto&&...args) const
+				requires std::is_invocable_v<decltype(func), const TProtected&, decltype(args)...>
+			{
+				SharedLockScope scope(m_lock.GetLock());
+				return func(m_data, std::forward<decltype(args)>(args)...);
+			}
+
+			auto Mutate(const auto& func, auto&&...args)
+				requires std::is_invocable_v<decltype(func), TProtected&, decltype(args)...>
+			{
+				ExclusiveLockScope scope(m_lock.GetLock());
+				return func(m_data, std::forward<decltype(args)>(args)...);
+			}
+
+		private:
+			TProtected m_data;
+			mutable SlimReadWriteLock m_lock;
 	};
 }
