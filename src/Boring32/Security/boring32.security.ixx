@@ -8,4 +8,4 @@ export import :securityattributes;
 export import :securityidentifier;
 export import :token;
 export import :policy;
-export import :lsaunicodestring;
+import :lsaunicodestring;

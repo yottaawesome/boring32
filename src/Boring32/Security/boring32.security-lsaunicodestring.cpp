@@ -1,4 +1,4 @@
-export module boring32.security:lsaunicodestring;
+module boring32.security:lsaunicodestring;
 import <string>;
 import <win32.hpp>;
 
