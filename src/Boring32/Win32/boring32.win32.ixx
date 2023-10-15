@@ -80,10 +80,15 @@ export namespace Boring32::Win32
 	using ::PULONG;
 	using ::HMODULE;
 	using ::NTSTATUS;
+	using ::BOOL;
+	using ::MSIHANDLE;
 
 	using ::GetLastError;
 	using ::GetProcAddress;
 	using ::GetModuleHandleW;
+	using ::MsiIsProductElevatedW;
+	using ::MsiOpenPackageW;
+	using ::MsiCloseHandle;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
