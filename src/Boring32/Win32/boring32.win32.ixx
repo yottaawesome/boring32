@@ -66,18 +66,24 @@ export namespace Boring32::Win32
 	}
 
 	using ::HANDLE;
+	using ::PHANDLE;
+	using ::UNICODE_STRING;
+	using ::PUNICODE_STRING;
 	using ::PVOID;
 	using ::ULONG_PTR;
 	using ::SIZE_T;
+	using ::PSIZE_T;
 	using ::PLARGE_INTEGER;
 	using ::ULONG;
 	using ::PHANDLE;
 	using ::ACCESS_MASK;
 	using ::PULONG;
 	using ::HMODULE;
+	using ::NTSTATUS;
 
 	using ::GetLastError;
 	using ::GetProcAddress;
+	using ::GetModuleHandleW;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
