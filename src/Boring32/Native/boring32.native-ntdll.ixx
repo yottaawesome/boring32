@@ -1,9 +1,9 @@
-export module boring32.win32:ntdll;
-import :defs;
+export module boring32.native:ntdll;
 import boring32.error;
 import <win32.hpp>;
+import :defs;
 
-export namespace Boring32::Win32
+export namespace Boring32::Native
 {
 	class NTDLL final
 	{

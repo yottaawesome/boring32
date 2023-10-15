@@ -321,9 +321,9 @@
     <ClCompile Include="Util\boring32.util-globallyuniqueid.ixx" />
     <ClCompile Include="Util\boring32.util.ixx" />
     <ClCompile Include="Util\boring32.util-switcher.ixx" />
-    <ClCompile Include="Win32\boring32.win32-defs.ixx" />
-    <ClCompile Include="Win32\boring32.win32-ntdll.ixx" />
-    <ClCompile Include="Win32\boring32.win32.ixx" />
+    <ClCompile Include="Native\boring32.native-defs.ixx" />
+    <ClCompile Include="Native\boring32.native-ntdll.ixx" />
+    <ClCompile Include="Native\boring32.native.ixx" />
     <ClCompile Include="WindowsImagingComponent\boring32.windowsimagingcomponent-imagingfactory.ixx" />
     <ClCompile Include="WindowsImagingComponent\boring32.windowsimagingcomponent.ixx" />
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform-callout.ixx" />

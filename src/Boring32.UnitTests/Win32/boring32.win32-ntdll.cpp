@@ -2,7 +2,7 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-import boring32.win32;
+import boring32.native;
 
 namespace Win32
 {
@@ -11,7 +11,7 @@ namespace Win32
 		public:
 			TEST_METHOD(TestLoad)
 			{
-				Boring32::Win32::NTDLL ntdll;
+				Boring32::Native::NTDLL ntdll;
 			}
 	};
 }

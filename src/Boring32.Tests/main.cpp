@@ -687,6 +687,9 @@ void DontDoThis()
 
 int main(int argc, char** args) try
 {
+	Boring32::Async::SlimRWProtectedObject<int> g(3);
+	g.Mutate([](const int& x) {});
+
 	Boring32::Memory::Heap h(0, 0);
 	auto ptr = h.NewPtr<int>(10);
 	ptr.reset();
