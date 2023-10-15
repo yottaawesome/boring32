@@ -65,7 +65,19 @@ export namespace Boring32::Win32
 		constexpr auto BufferOverflow = ERROR_BUFFER_OVERFLOW;
 	}
 
+	using ::HANDLE;
+	using ::PVOID;
+	using ::ULONG_PTR;
+	using ::SIZE_T;
+	using ::PLARGE_INTEGER;
+	using ::ULONG;
+	using ::PHANDLE;
+	using ::ACCESS_MASK;
+	using ::PULONG;
+	using ::HMODULE;
+
 	using ::GetLastError;
+	using ::GetProcAddress;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
