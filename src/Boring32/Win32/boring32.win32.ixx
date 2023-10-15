@@ -63,6 +63,8 @@ export namespace Boring32::Win32
 	{
 		constexpr auto Success = ERROR_SUCCESS;
 		constexpr auto BufferOverflow = ERROR_BUFFER_OVERFLOW;
+		constexpr auto UnknownProperty = ERROR_UNKNOWN_PROPERTY;
+		constexpr auto NoMoreItems = ERROR_NO_MORE_ITEMS;
 	}
 
 	using ::HANDLE;
@@ -82,6 +84,7 @@ export namespace Boring32::Win32
 	using ::NTSTATUS;
 	using ::BOOL;
 	using ::MSIHANDLE;
+	using ::MSIINSTALLCONTEXT;
 
 	using ::GetLastError;
 	using ::GetProcAddress;
@@ -89,6 +92,12 @@ export namespace Boring32::Win32
 	using ::MsiIsProductElevatedW;
 	using ::MsiOpenPackageW;
 	using ::MsiCloseHandle;
+	using ::MsiGetProductInfoExW;
+	using ::MsiOpenDatabaseW;
+	using ::MsiDatabaseOpenView;
+	using ::MsiViewExecute;
+	using ::MsiViewFetch;
+	using ::MsiRecordGetString;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
