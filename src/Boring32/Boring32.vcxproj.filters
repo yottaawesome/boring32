@@ -181,7 +181,7 @@
     <ClCompile Include="IO\boring32.io.ixx" />
     <ClCompile Include="IO\boring32.io-completionport.ixx" />
     <ClCompile Include="Security\boring32.security-policy.ixx" />
-    <ClCompile Include="Security\boring32.security-lsaunicodestring.ixx" />
+    <ClCompile Include="Security\boring32.security-lsaunicodestring.cpp" />
     <ClCompile Include="Native\boring32.native-ntdll.ixx" />
     <ClCompile Include="Native\boring32.native.ixx" />
     <ClCompile Include="Native\boring32.native-defs.ixx" />
