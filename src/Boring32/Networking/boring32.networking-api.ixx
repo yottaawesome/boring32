@@ -1,32 +1,33 @@
 export module boring32.networking:api;
 import <vector>;
-import <win32.hpp>;
+//import <win32.hpp>;
 import boring32.error;
+import boring32.win32;
 
 export namespace Boring32::Networking
 {
 	std::vector<std::byte> GetAdapters(const unsigned family, const unsigned flags)
 	{
-		ULONG bufferSizeBytes = 15000;
+		unsigned long bufferSizeBytes = 15000;
 		std::vector<std::byte> buffer(bufferSizeBytes);
-		ULONG status = ERROR_BUFFER_OVERFLOW;
-		while (status != ERROR_SUCCESS)
+		unsigned status = Win32::ErrorCodes::BufferOverflow;
+		while (status != Win32::ErrorCodes::Success)
 		{
 			buffer.resize(bufferSizeBytes);
 			// https://docs.microsoft.com/en-us/windows/win32/api/iphlpapi/nf-iphlpapi-getadaptersaddresses
 			// https://docs.microsoft.com/en-us/windows/win32/api/iptypes/ns-iptypes-ip_adapter_addresses_lh
-			status = GetAdaptersAddresses(
+			status = Win32::GetAdaptersAddresses(
 				family,
 				flags,
 				nullptr,
-				reinterpret_cast<IP_ADAPTER_ADDRESSES*>(buffer.data()),
+				reinterpret_cast<Win32::IP_ADAPTER_ADDRESSES*>(buffer.data()),
 				&bufferSizeBytes
 			);
 			// bufferSizeBytes will give the correct buffer size in this case,
 			// and will be used to resize the buffer in the next iteration.
-			if (status != ERROR_BUFFER_OVERFLOW && status != ERROR_SUCCESS)
+			if (status != Win32::ErrorCodes::BufferOverflow && status != Win32::ErrorCodes::Success)
 			{
-				const auto lastError = GetLastError();
+				const auto lastError = Win32::GetLastError();
 				throw Error::Win32Error("GetAdaptersAddresses() failed", lastError);
 			}
 		}

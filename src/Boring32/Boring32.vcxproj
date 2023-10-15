@@ -127,9 +127,10 @@
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)src;%(AdditionalIncludeDirectories);$(SolutionDir)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <EnableModules>true</EnableModules>
+      <EnableModules>false</EnableModules>
       <ErrorReporting>Send</ErrorReporting>
       <DisableSpecificWarnings>4005;5106;4067</DisableSpecificWarnings>
+      <BuildStlModules>true</BuildStlModules>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -170,8 +171,9 @@
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <EnableModules>true</EnableModules>
+      <EnableModules>false</EnableModules>
       <DisableSpecificWarnings>4005;5106;4067</DisableSpecificWarnings>
+      <BuildStlModules>true</BuildStlModules>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -327,6 +329,7 @@
     <ClCompile Include="Native\boring32.native-defs.ixx" />
     <ClCompile Include="Native\boring32.native-ntdll.ixx" />
     <ClCompile Include="Native\boring32.native.ixx" />
+    <ClCompile Include="Win32\boring32.win32.ixx" />
     <ClCompile Include="WindowsImagingComponent\boring32.windowsimagingcomponent-imagingfactory.ixx" />
     <ClCompile Include="WindowsImagingComponent\boring32.windowsimagingcomponent.ixx" />
     <ClCompile Include="WindowsFilteringPlatform\boring32.windowsfilteringplatform-callout.ixx" />
