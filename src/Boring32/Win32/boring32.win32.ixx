@@ -105,6 +105,7 @@ export namespace Boring32::Win32
 	using ::BOOL;
 	using ::MSIHANDLE;
 	using ::MSIINSTALLCONTEXT;
+	using ::PMSIHANDLE;
 
 	using ::GetLastError;
 	using ::GetProcAddress;
@@ -114,10 +115,10 @@ export namespace Boring32::Win32
 	using ::MsiCloseHandle;
 	using ::MsiGetProductInfoExW;
 	using ::MsiOpenDatabaseW;
-	using ::MsiDatabaseOpenView;
+	using ::MsiDatabaseOpenViewW;
 	using ::MsiViewExecute;
 	using ::MsiViewFetch;
-	using ::MsiRecordGetString;
+	using ::MsiRecordGetStringW;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;

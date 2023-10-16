@@ -2,19 +2,19 @@ export module boring32.msi:database;
 import <string>;
 import <memory>;
 import <format>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 
 export namespace Boring32::MSI
 {
 	enum class Mode : uint64_t
 	{
-		CreateDirect = reinterpret_cast<uint64_t>(MSIDBOPEN_CREATEDIRECT),
-		Create = reinterpret_cast<uint64_t>(MSIDBOPEN_CREATE),
-		Direct = reinterpret_cast<uint64_t>(MSIDBOPEN_DIRECT),
-		ReadOnly = reinterpret_cast<uint64_t>(MSIDBOPEN_READONLY),
-		Transact = reinterpret_cast<uint64_t>(MSIDBOPEN_TRANSACT),
-		PatchFile = MSIDBOPEN_PATCHFILE
+		CreateDirect = Win32::MsiDbOpen_CreateDirect<uint64_t>(),
+		Create = Win32::MsiDbOpen_Create<uint64_t>(),
+		Direct = Win32::MsiDbOpen_Direct<uint64_t>(),
+		ReadOnly = Win32::MsiDbOpen_ReadOnly<uint64_t>(),
+		Transact = Win32::MsiDbOpen_Transact<uint64_t>(),
+		PatchFile = Win32::MsiDbOpen_PatchFile
 	};
 
 	class Database final
@@ -85,7 +85,7 @@ export namespace Boring32::MSI
 			{
 				if (m_handle)
 				{
-					MsiCloseHandle(m_handle);
+					Win32::MsiCloseHandle(m_handle);
 					m_handle = 0;
 				}
 			}
@@ -123,12 +123,12 @@ export namespace Boring32::MSI
 				Close();
 
 				// https://learn.microsoft.com/en-us/windows/win32/api/msiquery/nf-msiquery-msiopendatabasew
-				unsigned status = MsiOpenDatabaseW(
+				unsigned status = Win32::MsiOpenDatabaseW(
 					m_path.c_str(),
 					LPCWSTR(m_mode),
 					&m_handle
 				);
-				if (status != ERROR_SUCCESS)
+				if (status != Win32::ErrorCodes::Success)
 					throw Error::Win32Error("MsiOpenDatabaseW() failed", status);
 			}
 
@@ -136,7 +136,7 @@ export namespace Boring32::MSI
 			{
 				// PMSIHANDLE is actually a RAII-type class, not a pointer.
 				// See: https://learn.microsoft.com/en-us/windows/win32/msi/windows-installer-best-practices#use-pmsihandle-instead-of-handle
-				PMSIHANDLE hView;
+				Win32::PMSIHANDLE hView;
 				// See https://stackoverflow.com/questions/27634407/how-to-get-the-product-version-from-an-msi-file-without-installing-the-msi
 				// MSI SQL: https://learn.microsoft.com/en-us/windows/win32/msi/sql-syntax
 				// MSI SQL examples: https://learn.microsoft.com/en-us/windows/win32/msi/examples-of-database-queries-using-sql-and-script
@@ -145,46 +145,46 @@ export namespace Boring32::MSI
 					propertyName
 				);
 				// https://learn.microsoft.com/en-us/windows/win32/api/msiquery/nf-msiquery-msidatabaseopenvieww
-				UINT status = MsiDatabaseOpenView(
+				UINT status = Win32::MsiDatabaseOpenViewW(
 					m_handle, 
 					query.data(), 
 					&hView
 				);
-				if (status != ERROR_SUCCESS)
+				if (status != Win32::ErrorCodes::Success)
 					throw Error::Win32Error("MsiDatabaseOpenView() failed", status);
 				
 				// https://learn.microsoft.com/en-us/windows/win32/api/msiquery/nf-msiquery-msiviewexecute
-				status = MsiViewExecute(hView, 0);
-				if (status != ERROR_SUCCESS)
+				status = Win32::MsiViewExecute(hView, 0);
+				if (status != Win32::ErrorCodes::Success)
 					throw Error::Win32Error("MsiViewExecute() failed", status);
 				
-				PMSIHANDLE hViewFetch;
+				Win32::PMSIHANDLE hViewFetch;
 				// https://learn.microsoft.com/en-us/windows/win32/api/msiquery/nf-msiquery-msiviewfetch
-				status = MsiViewFetch(hView, &hViewFetch);
-				if (status != ERROR_SUCCESS)
+				status = Win32::MsiViewFetch(hView, &hViewFetch);
+				if (status != Win32::ErrorCodes::Success)
 					throw Error::Win32Error("MsiViewFetch() failed", status);
 
-				DWORD charCount = 0;
+				Win32::DWORD charCount = 0;
 				// https://learn.microsoft.com/en-us/windows/win32/api/msiquery/nf-msiquery-msirecordgetstringw
 				std::wstring returnValue;
-				status = MsiRecordGetString(
+				status = Win32::MsiRecordGetStringW(
 					hViewFetch, 
 					1, 
 					returnValue.data(), 
 					&charCount
 				);
-				if (status != ERROR_MORE_DATA)
+				if (status != Win32::ErrorCodes::MoreData)
 					throw Error::Win32Error("MsiRecordGetString() failed", status);
 
 				charCount++; // must increment to include null-terminator
 				returnValue.resize(charCount);
-				status = MsiRecordGetString(
+				status = Win32::MsiRecordGetStringW(
 					hViewFetch, 
 					1, 
 					returnValue.data(), 
 					&charCount
 				);
-				if (status != ERROR_SUCCESS)
+				if (status != Win32::ErrorCodes::Success)
 					throw Error::Win32Error("MsiRecordGetString() failed", status);
 
 				returnValue.resize(charCount);
@@ -195,7 +195,7 @@ export namespace Boring32::MSI
 			std::wstring m_path;
 			// Given this is just an int, unique_ptr doesn't play
 			// nicely with it.
-			MSIHANDLE m_handle = 0;
+			Win32::MSIHANDLE m_handle = 0;
 			Mode m_mode = Mode::ReadOnly;
 	};
 }
