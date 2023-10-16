@@ -57,6 +57,7 @@ module;
 
 export module boring32.win32;
 
+// Experimental module intended to decouple the codebase from having to import Windows headers.
 export namespace Boring32::Win32
 {
 	template<typename T = LPCTSTR>
@@ -75,6 +76,9 @@ export namespace Boring32::Win32
 	inline constexpr T MsiDbOpen_Transact() noexcept { return (T)MSIDBOPEN_TRANSACT; }
 		
 	constexpr unsigned long long MsiDbOpen_PatchFile = MSIDBOPEN_PATCHFILE;
+
+	constexpr const wchar_t* InstallProperty_ProductName = INSTALLPROPERTY_PRODUCTNAME;
+	constexpr const wchar_t* InstallProperty_PackageName = INSTALLPROPERTY_PACKAGENAME;
 
 	namespace ErrorCodes
 	{
@@ -119,6 +123,7 @@ export namespace Boring32::Win32
 	using ::MsiViewExecute;
 	using ::MsiViewFetch;
 	using ::MsiRecordGetStringW;
+	using ::MsiEnumProductsExW;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;

@@ -160,7 +160,7 @@ struct TP
 {
 	TP(const R... args)
 	{
-		(std::make_exception_ptr(args), ...);
+		auto x = (std::make_exception_ptr(args), ...);
 
 		m_ptrs = { (std::make_exception_ptr(args))... };
 	}
