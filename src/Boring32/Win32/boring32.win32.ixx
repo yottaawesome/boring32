@@ -59,14 +59,34 @@ export module boring32.win32;
 
 export namespace Boring32::Win32
 {
+	template<typename T = LPCTSTR>
+	inline constexpr T MsiDbOpen_CreateDirect() noexcept { return (T)MSIDBOPEN_CREATEDIRECT; }
+
+	template<typename T = LPCTSTR>
+	inline constexpr T MsiDbOpen_Create() noexcept { return (T)MSIDBOPEN_CREATE; }
+
+	template<typename T = LPCTSTR>
+	inline constexpr T MsiDbOpen_Direct() noexcept { return (T)MSIDBOPEN_DIRECT; }
+		
+	template<typename T = LPCTSTR>
+	inline constexpr T MsiDbOpen_ReadOnly() noexcept { return (T)MSIDBOPEN_READONLY; }
+		
+	template<typename T = LPCTSTR>
+	inline constexpr T MsiDbOpen_Transact() noexcept { return (T)MSIDBOPEN_TRANSACT; }
+		
+	constexpr unsigned long long MsiDbOpen_PatchFile = MSIDBOPEN_PATCHFILE;
+
 	namespace ErrorCodes
 	{
 		constexpr auto Success = ERROR_SUCCESS;
 		constexpr auto BufferOverflow = ERROR_BUFFER_OVERFLOW;
 		constexpr auto UnknownProperty = ERROR_UNKNOWN_PROPERTY;
 		constexpr auto NoMoreItems = ERROR_NO_MORE_ITEMS;
+		constexpr auto MoreData = ERROR_MORE_DATA;
 	}
 
+	using ::DWORD;
+	using ::UINT;
 	using ::HANDLE;
 	using ::PHANDLE;
 	using ::UNICODE_STRING;
