@@ -70,14 +70,14 @@ export namespace Boring32::Registry
 	struct FixedString
 	{
 		wchar_t buf[N]{};
-		constexpr FixedString(const wchar_t(&arg)[N])
+		constexpr FixedString(const wchar_t(&arg)[N]) noexcept
 		{
 			//buf = arg;
 			for (unsigned i = 0; i < N; i++)
 				buf[i] = arg[i];
 		}
 
-		constexpr operator const wchar_t* () const
+		constexpr operator const wchar_t* () const noexcept
 		{
 			return buf;
 		}
