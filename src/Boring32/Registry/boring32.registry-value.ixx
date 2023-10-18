@@ -166,7 +166,6 @@ export namespace Boring32::Registry
 
 			static std::wstring ReadString()
 			{
-				std::wstring out;
 				DWORD sizeInBytes = 0;
 				// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew
 				LSTATUS statusCode = RegGetValueW(
@@ -185,7 +184,7 @@ export namespace Boring32::Registry
 					throw Error::Win32Error("RegGetValueW() failed (1)", statusCode);
 				}
 
-				out.resize(sizeInBytes / sizeof(wchar_t), '\0');
+				std::wstring out(sizeInBytes / sizeof(wchar_t), '\0');
 				statusCode = RegGetValueW(
 					TParentKey,
 					SubKey,
