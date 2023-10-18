@@ -692,7 +692,9 @@ int main(int argc, char** args) try
 		Boring32::Registry::ValueTypes::DWord,
 		HKEY_LOCAL_MACHINE, 
 		LR"(SOFTWARE\Microsoft\OneDrive)", 
-		L"UpdateBeginTimestampTryCountODSU"
+		L"UpdateBeginTimestampTryCountODSU22",
+		true,
+		[] { return 1; }
 	>;
 
 	std::wcout << std::format(L"The registry value {}\\{} is {}\n", SomeRegValue::GetSubKey(), SomeRegValue::GetValueName(), SomeRegValue::Read());

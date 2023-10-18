@@ -88,7 +88,7 @@ export namespace Boring32::Registry
 	template <typename T>
 	constexpr bool always_false = std::false_type::value;
 
-	template<ValueTypes TValueType, HKEY TParentKey, FixedString TSubKey, FixedString TValueName>
+	template<ValueTypes TValueType, HKEY TParentKey, FixedString TSubKey, FixedString TValueName, bool TUseDefault = false, auto TDefaultValue = 1>
 	class RegistryValue
 	{
 		static constexpr const wchar_t* SubKey = TSubKey;
@@ -127,7 +127,16 @@ export namespace Boring32::Registry
 						&sizeInBytes
 					);
 					if (status != ERROR_SUCCESS)
-						throw Error::Win32Error("RegGetValueW() failed", status);
+					{
+						if constexpr (TUseDefault)
+						{
+							return static_cast<DWORD>(TDefaultValue());
+						}
+						else
+						{
+							throw Error::Win32Error("RegGetValueW() failed", status);
+						}
+					}
 					return out;
 				}
 				else
