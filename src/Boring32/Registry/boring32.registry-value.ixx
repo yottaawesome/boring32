@@ -88,37 +88,41 @@ export namespace Boring32::Registry
 	template <typename T>
 	constexpr bool always_false = std::false_type::value;
 
-	template<ValueTypes T, bool UseDefault>
+	template<ValueTypes T, typename TInvokeResult>
 	struct OP
 	{
-		void operator()() requires (UseDefault == false) {}
-
-		DWORD operator()() requires (UseDefault == true and T == ValueTypes::DWord)
+		auto operator()()
 		{
-			return 1;
-		}
-
-		std::wstring operator()() requires (UseDefault == true and T == ValueTypes::String)
-		{
-			return L"";
+			if constexpr (!std::is_same_v<TInvokeResult, void>)
+			{
+				if constexpr (T == ValueTypes::DWord)
+				{
+					return 1ul;
+				}
+				else if constexpr (T == ValueTypes::String)
+				{
+					return std::wstring{};
+				}
+			}
 		}
 	};
 
-	template<auto F, ValueTypes V, bool UseDefault>
-	concept CheckInvocable = requires(OP<V, UseDefault> op)
+	template<auto F, ValueTypes V>
+	concept CheckInvocable = requires(OP<V, std::invoke_result_t<decltype(F)>> op)
 	{
 		F();
 		op();
-		{F()} -> std::convertible_to<std::invoke_result_t<OP<V, UseDefault>>>;
+		{F()} -> std::convertible_to<std::invoke_result_t<OP<V, std::invoke_result_t<decltype(F)>>>>;
 	};
 
-	template<ValueTypes TValueType, HKEY TParentKey, FixedString TSubKey, FixedString TValueName, bool TUseDefault = false, auto TDefaultValue = [] {} >
-		requires CheckInvocable<TDefaultValue, TValueType, TUseDefault>
+	template<HKEY TParentKey, FixedString TSubKey, FixedString TValueName, ValueTypes TValueType, auto TDefaultValue = [] {} >
+		requires CheckInvocable<TDefaultValue, TValueType> // not really required due to the static_asserts below
 	class RegistryValue
 	{
 		static constexpr const wchar_t* SubKey = TSubKey;
 		static constexpr const wchar_t* ValueName = TValueName;
-		using T = RegistryValue<TValueType, TParentKey, TSubKey, TValueName>;
+		using T = RegistryValue<TParentKey, TSubKey, TValueName, TValueType>;
+		using ReturnDefaultType = std::invoke_result_t<decltype(TDefaultValue)>;
 
 		public:
 			static constexpr const wchar_t* GetSubKey() noexcept
@@ -138,8 +142,12 @@ export namespace Boring32::Registry
 
 			static auto Read()
 			{
+				constexpr bool ThrowOnError = std::is_same_v<ReturnDefaultType, void>;
+				constexpr bool ReturnDefault = not ThrowOnError;
+
 				if constexpr (TValueType == ValueTypes::DWord)
 				{
+					static_assert(ThrowOnError or std::is_convertible_v<ReturnDefaultType, DWORD>, "Return type from default lambda should be DWORD or convertible to DWORD.");
 					DWORD out;
 					DWORD sizeInBytes = sizeof(out);
 					LSTATUS status = RegGetValueW(
@@ -153,7 +161,7 @@ export namespace Boring32::Registry
 					);
 					if (status != ERROR_SUCCESS)
 					{
-						if constexpr (TUseDefault)
+						if constexpr (ReturnDefault)
 							return static_cast<DWORD>(TDefaultValue());
 						throw Error::Win32Error("RegGetValueW() failed", status);
 					}
@@ -161,6 +169,7 @@ export namespace Boring32::Registry
 				}
 				else if constexpr (TValueType == ValueTypes::String)
 				{
+					static_assert(ThrowOnError or std::is_convertible_v<ReturnDefaultType, std::wstring>, "Return type from default lambda should be wstring or convertible to wstring.");
 					std::wstring out;
 					DWORD sizeInBytes = 0;
 					// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew
@@ -175,8 +184,9 @@ export namespace Boring32::Registry
 					);
 					if (statusCode != ERROR_SUCCESS)
 					{
-						if constexpr (TUseDefault)
+						if constexpr (ReturnDefault)
 							return std::wstring(TDefaultValue());
+
 						throw Error::Win32Error("RegGetValueW() failed (1)", statusCode);
 					}
 
@@ -192,7 +202,7 @@ export namespace Boring32::Registry
 					);
 					if (statusCode != ERROR_SUCCESS)
 					{
-						if constexpr (TUseDefault)
+						if constexpr (ReturnDefault)
 							return std::wstring(TDefaultValue());
 						throw Error::Win32Error("RegGetValueW() failed (2)", statusCode);
 					}

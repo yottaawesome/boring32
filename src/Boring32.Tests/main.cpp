@@ -688,11 +688,11 @@ void DontDoThis()
 
 template<Boring32::Registry::ValueTypes TType, Boring32::Registry::FixedString TName>
 using Specialised = Boring32::Registry::RegistryValue<
-	TType,
 	HKEY_LOCAL_MACHINE,
 	LR"(SOFTWARE\Microsoft\OneDrive)",
-	TName
-> ;
+	TName,
+	TType
+>;
 
 template<int T>
 struct OPP
@@ -722,22 +722,20 @@ int main(int argc, char** args) try
 	p();*/
 
 	using Odsu = Boring32::Registry::RegistryValue<
-		Boring32::Registry::ValueTypes::DWord,
-		HKEY_LOCAL_MACHINE, 
-		LR"(SOFTWARE\Microsoft\OneDrive)", 
+		HKEY_LOCAL_MACHINE,
+		LR"(SOFTWARE\Microsoft\OneDrive)",
 		L"UpdateBeginTimestampTryCountODSU",
-		true,
+		Boring32::Registry::ValueTypes::DWord,
 		[] { return 1; }
 	>;
 
 	using Odsu2 = Specialised<Boring32::Registry::ValueTypes::DWord, L"UpdateBeginTimestampTryCountODSU">;
 
 	using CurrentVersionPath = Boring32::Registry::RegistryValue <
-		Boring32::Registry::ValueTypes::String,
 		HKEY_LOCAL_MACHINE,
 		LR"(SOFTWARE\Microsoft\OneDrive)",
 		L"CurrentVersionPath",
-		true,
+		Boring32::Registry::ValueTypes::String,
 		[] { return L""; }
 	> ;
 
