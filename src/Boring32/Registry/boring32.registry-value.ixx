@@ -119,10 +119,12 @@ export namespace Boring32::Registry
 		requires CheckInvocable<TDefaultValue, TValueType> // not really required due to the static_asserts below
 	class RegistryValue
 	{
-		static constexpr const wchar_t* SubKey = TSubKey;
-		static constexpr const wchar_t* ValueName = TValueName;
 		using T = RegistryValue<TParentKey, TSubKey, TValueName, TValueType>;
 		using ReturnDefaultType = std::invoke_result_t<decltype(TDefaultValue)>;
+		static constexpr const wchar_t* SubKey = TSubKey;
+		static constexpr const wchar_t* ValueName = TValueName;
+		static constexpr bool ThrowOnError = std::is_same_v<ReturnDefaultType, void>;
+		static constexpr bool ReturnDefault = not ThrowOnError;
 
 		public:
 			static constexpr const wchar_t* GetSubKey() noexcept
@@ -140,78 +142,84 @@ export namespace Boring32::Registry
 				return TValueType;
 			}
 
+			static DWORD ReadDWord()
+			{
+				DWORD out;
+				DWORD sizeInBytes = sizeof(out);
+				LSTATUS status = RegGetValueW(
+					TParentKey,
+					SubKey,
+					ValueName,
+					RRF_RT_REG_DWORD,
+					nullptr,
+					&out,
+					&sizeInBytes
+				);
+				if (status != ERROR_SUCCESS)
+				{
+					if constexpr (ReturnDefault)
+						return TDefaultValue();
+					throw Error::Win32Error("RegGetValueW() failed", status);
+				}
+				return out;
+			}
+
+			static std::wstring ReadString()
+			{
+				std::wstring out;
+				DWORD sizeInBytes = 0;
+				// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew
+				LSTATUS statusCode = RegGetValueW(
+					TParentKey,
+					SubKey,
+					ValueName,
+					RRF_RT_REG_SZ,
+					nullptr,
+					nullptr,
+					&sizeInBytes
+				);
+				if (statusCode != ERROR_SUCCESS)
+				{
+					if constexpr (ReturnDefault)
+						return TDefaultValue();
+					throw Error::Win32Error("RegGetValueW() failed (1)", statusCode);
+				}
+
+				out.resize(sizeInBytes / sizeof(wchar_t), '\0');
+				statusCode = RegGetValueW(
+					TParentKey,
+					SubKey,
+					ValueName,
+					RRF_RT_REG_SZ,
+					nullptr,
+					&out[0],
+					&sizeInBytes
+				);
+				if (statusCode != ERROR_SUCCESS)
+				{
+					if constexpr (ReturnDefault)
+						return TDefaultValue();
+					throw Error::Win32Error("RegGetValueW() failed (2)", statusCode);
+				}
+
+				out.resize(sizeInBytes / sizeof(wchar_t));
+				// Exclude terminating null
+				if (!out.empty())
+					out.pop_back();
+				return out;
+			}
+
 			static auto Read()
 			{
-				constexpr bool ThrowOnError = std::is_same_v<ReturnDefaultType, void>;
-				constexpr bool ReturnDefault = not ThrowOnError;
-
 				if constexpr (TValueType == ValueTypes::DWord)
 				{
 					static_assert(ThrowOnError or std::is_convertible_v<ReturnDefaultType, DWORD>, "Return type from default lambda should be DWORD or convertible to DWORD.");
-					DWORD out;
-					DWORD sizeInBytes = sizeof(out);
-					LSTATUS status = RegGetValueW(
-						TParentKey,
-						SubKey,
-						ValueName,
-						RRF_RT_REG_DWORD,
-						nullptr,
-						&out,
-						&sizeInBytes
-					);
-					if (status != ERROR_SUCCESS)
-					{
-						if constexpr (ReturnDefault)
-							return static_cast<DWORD>(TDefaultValue());
-						throw Error::Win32Error("RegGetValueW() failed", status);
-					}
-					return out;
+					return ReadDWord();
 				}
 				else if constexpr (TValueType == ValueTypes::String)
 				{
 					static_assert(ThrowOnError or std::is_convertible_v<ReturnDefaultType, std::wstring>, "Return type from default lambda should be wstring or convertible to wstring.");
-					std::wstring out;
-					DWORD sizeInBytes = 0;
-					// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew
-					LSTATUS statusCode = RegGetValueW(
-						TParentKey,
-						SubKey,
-						ValueName,
-						RRF_RT_REG_SZ,
-						nullptr,
-						nullptr,
-						&sizeInBytes
-					);
-					if (statusCode != ERROR_SUCCESS)
-					{
-						if constexpr (ReturnDefault)
-							return std::wstring(TDefaultValue());
-
-						throw Error::Win32Error("RegGetValueW() failed (1)", statusCode);
-					}
-
-					out.resize(sizeInBytes / sizeof(wchar_t), '\0');
-					statusCode = RegGetValueW(
-						TParentKey,
-						SubKey,
-						ValueName,
-						RRF_RT_REG_SZ,
-						nullptr,
-						&out[0],
-						&sizeInBytes
-					);
-					if (statusCode != ERROR_SUCCESS)
-					{
-						if constexpr (ReturnDefault)
-							return std::wstring(TDefaultValue());
-						throw Error::Win32Error("RegGetValueW() failed (2)", statusCode);
-					}
-
-					out.resize(sizeInBytes / sizeof(wchar_t));
-					// Exclude terminating null
-					if (!out.empty())
-						out.pop_back();
-					return out;
+					return ReadString();
 				}
 				else
 				{
