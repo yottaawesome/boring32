@@ -686,50 +686,31 @@ void DontDoThis()
 	std::cout << sv;
 }
 
-template<Boring32::Registry::ValueTypes TType, Boring32::Registry::FixedString TName>
-using Specialised = Boring32::Registry::RegistryValue<
+template<Boring32::Registry::FixedString TName, Boring32::Registry::ValueTypes TType, auto DefaultGetter = [] {} >
+using RegValue = Boring32::Registry::RegistryValue<
 	HKEY_LOCAL_MACHINE,
 	LR"(SOFTWARE\Microsoft\OneDrive)",
 	TName,
-	TType
+	TType,
+	DefaultGetter
 >;
-
-template<int T>
-struct OPP
-{
-	int operator()()
-		requires (T == 1)
-	{
-		return 1;
-	}
-
-	std::string operator()()
-		requires (T == 2)
-	{
-		return {};
-	}
-};
 
 int main(int argc, char** args) try
 {
-	OPP<1> uio;
-	uio();
-	OPP<2> oo;
-	oo();
-
 	/*constexpr int i = 1;
 	OPP<2> p;
 	p();*/
 
-	using Odsu = Boring32::Registry::RegistryValue<
-		HKEY_LOCAL_MACHINE,
-		LR"(SOFTWARE\Microsoft\OneDrive)",
-		L"UpdateBeginTimestampTryCountODSU",
+	constexpr wchar_t iol[] = L"UpdateBeginTimestampTryCountODSU";
+
+	using Odsu = RegValue<
+		//L"UpdateBeginTimestampTryCountODSU",
+		iol,
 		Boring32::Registry::ValueTypes::DWord,
 		[] { return 1; }
 	>;
 
-	using Odsu2 = Specialised<Boring32::Registry::ValueTypes::DWord, L"UpdateBeginTimestampTryCountODSU">;
+	using Odsu2 = RegValue<L"UpdateBeginTimestampTryCountODSU", Boring32::Registry::ValueTypes::DWord>;
 
 	using CurrentVersionPath = Boring32::Registry::RegistryValue <
 		HKEY_LOCAL_MACHINE,
