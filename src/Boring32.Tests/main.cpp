@@ -36,6 +36,7 @@ import boring32.computer;
 import boring32.networking;
 import boring32.sspi;
 import boring32.memory;
+import boring32.registry;
 
 struct Test
 {
@@ -687,6 +688,16 @@ void DontDoThis()
 
 int main(int argc, char** args) try
 {
+	using SomeRegValue = Boring32::Registry::RegistryValue<
+		Boring32::Registry::ValueTypes::DWord,
+		HKEY_LOCAL_MACHINE, 
+		LR"(SOFTWARE\Microsoft\OneDrive)", 
+		L"UpdateBeginTimestampTryCountODSU"
+	>;
+
+	std::wcout << std::format(L"The registry value {}\\{} is {}\n", SomeRegValue::GetSubKey(), SomeRegValue::GetValueName(), SomeRegValue::Read());
+
+
 	Boring32::Async::SlimRWProtectedObject<int> g(3);
 	g.Mutate([](const int& x) {});
 
