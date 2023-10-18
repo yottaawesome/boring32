@@ -88,7 +88,7 @@ export namespace Boring32::Registry
 	template <typename T>
 	constexpr bool always_false = std::false_type::value;
 
-	template<ValueTypes TValueType, HKEY TParentKey, FixedString TSubKey, FixedString TValueName, bool TUseDefault = false, auto TDefaultValue = 1>
+	template<ValueTypes TValueType, HKEY TParentKey, FixedString TSubKey, FixedString TValueName, bool TUseDefault = false, auto TDefaultValue = 0>
 	class RegistryValue
 	{
 		static constexpr const wchar_t* SubKey = TSubKey;
@@ -129,14 +129,53 @@ export namespace Boring32::Registry
 					if (status != ERROR_SUCCESS)
 					{
 						if constexpr (TUseDefault)
-						{
 							return static_cast<DWORD>(TDefaultValue());
-						}
-						else
-						{
-							throw Error::Win32Error("RegGetValueW() failed", status);
-						}
+						throw Error::Win32Error("RegGetValueW() failed", status);
 					}
+					return out;
+				}
+				else if constexpr (TValueType == ValueTypes::String)
+				{
+					std::wstring out;
+					DWORD sizeInBytes = 0;
+					// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew
+					LONG statusCode = RegGetValueW(
+						TParentKey,
+						SubKey,
+						ValueName,
+						RRF_RT_REG_SZ,
+						nullptr,
+						nullptr,
+						&sizeInBytes
+					);
+					if (statusCode != ERROR_SUCCESS)
+					{
+						if constexpr (TUseDefault)
+							return std::wstring(TDefaultValue());
+						throw Error::Win32Error("RegGetValueW() failed (1)", statusCode);
+					}
+
+					out.resize(sizeInBytes / sizeof(wchar_t), '\0');
+					statusCode = RegGetValueW(
+						TParentKey,
+						SubKey,
+						ValueName,
+						RRF_RT_REG_SZ,
+						nullptr,
+						&out[0],
+						&sizeInBytes
+					);
+					if (statusCode != ERROR_SUCCESS)
+					{
+						if constexpr (TUseDefault)
+							return std::wstring(TDefaultValue());
+						throw Error::Win32Error("RegGetValueW() failed (2)", statusCode);
+					}
+
+					out.resize(sizeInBytes / sizeof(wchar_t));
+					// Exclude terminating null
+					if (!out.empty())
+						out.pop_back();
 					return out;
 				}
 				else

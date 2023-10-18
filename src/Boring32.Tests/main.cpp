@@ -688,16 +688,26 @@ void DontDoThis()
 
 int main(int argc, char** args) try
 {
-	using SomeRegValue = Boring32::Registry::RegistryValue<
+	using Odsu = Boring32::Registry::RegistryValue<
 		Boring32::Registry::ValueTypes::DWord,
 		HKEY_LOCAL_MACHINE, 
 		LR"(SOFTWARE\Microsoft\OneDrive)", 
-		L"UpdateBeginTimestampTryCountODSU22",
+		L"UpdateBeginTimestampTryCountODSU",
 		true,
 		[] { return 1; }
 	>;
 
-	std::wcout << std::format(L"The registry value {}\\{} is {}\n", SomeRegValue::GetSubKey(), SomeRegValue::GetValueName(), SomeRegValue::Read());
+	using CurrentVersionPath = Boring32::Registry::RegistryValue <
+		Boring32::Registry::ValueTypes::String,
+		HKEY_LOCAL_MACHINE,
+		LR"(SOFTWARE\Microsoft\OneDrive)",
+		L"CurrentVersionPath",
+		true,
+		[] { return L""; }
+	> ;
+
+	std::wcout << std::format(L"The registry value {}\\{} is {}\n", Odsu::GetSubKey(), Odsu::GetValueName(), Odsu::Read());
+	std::wcout << std::format(L"The registry value {}\\{} is {}\n", CurrentVersionPath::GetSubKey(), CurrentVersionPath::GetValueName(), CurrentVersionPath::Read());
 
 
 	Boring32::Async::SlimRWProtectedObject<int> g(3);
