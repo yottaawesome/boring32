@@ -88,7 +88,32 @@ export namespace Boring32::Registry
 	template <typename T>
 	constexpr bool always_false = std::false_type::value;
 
-	template<ValueTypes TValueType, HKEY TParentKey, FixedString TSubKey, FixedString TValueName, bool TUseDefault = false, auto TDefaultValue = 0>
+	template<ValueTypes T, bool UseDefault>
+	struct OP
+	{
+		void operator()() requires (UseDefault == false) {}
+
+		DWORD operator()() requires (UseDefault == true and T == ValueTypes::DWord)
+		{
+			return 1;
+		}
+
+		std::wstring operator()() requires (UseDefault == true and T == ValueTypes::String)
+		{
+			return L"";
+		}
+	};
+
+	template<auto F, ValueTypes V, bool UseDefault>
+	concept CheckInvocable = requires(OP<V, UseDefault> op)
+	{
+		F();
+		op();
+		{F()} -> std::convertible_to<std::invoke_result_t<OP<V, UseDefault>>>;
+	};
+
+	template<ValueTypes TValueType, HKEY TParentKey, FixedString TSubKey, FixedString TValueName, bool TUseDefault = false, auto TDefaultValue = [] {} >
+		requires CheckInvocable<TDefaultValue, TValueType, TUseDefault>
 	class RegistryValue
 	{
 		static constexpr const wchar_t* SubKey = TSubKey;
@@ -139,7 +164,7 @@ export namespace Boring32::Registry
 					std::wstring out;
 					DWORD sizeInBytes = 0;
 					// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew
-					LONG statusCode = RegGetValueW(
+					LSTATUS statusCode = RegGetValueW(
 						TParentKey,
 						SubKey,
 						ValueName,

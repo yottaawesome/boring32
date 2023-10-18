@@ -694,8 +694,33 @@ using Specialised = Boring32::Registry::RegistryValue<
 	TName
 > ;
 
+template<int T>
+struct OPP
+{
+	int operator()()
+		requires (T == 1)
+	{
+		return 1;
+	}
+
+	std::string operator()()
+		requires (T == 2)
+	{
+		return {};
+	}
+};
+
 int main(int argc, char** args) try
 {
+	OPP<1> uio;
+	uio();
+	OPP<2> oo;
+	oo();
+
+	/*constexpr int i = 1;
+	OPP<2> p;
+	p();*/
+
 	using Odsu = Boring32::Registry::RegistryValue<
 		Boring32::Registry::ValueTypes::DWord,
 		HKEY_LOCAL_MACHINE, 
