@@ -686,6 +686,14 @@ void DontDoThis()
 	std::cout << sv;
 }
 
+template<Boring32::Registry::ValueTypes TType, Boring32::Registry::FixedString TName>
+using Specialised = Boring32::Registry::RegistryValue<
+	TType,
+	HKEY_LOCAL_MACHINE,
+	LR"(SOFTWARE\Microsoft\OneDrive)",
+	TName
+> ;
+
 int main(int argc, char** args) try
 {
 	using Odsu = Boring32::Registry::RegistryValue<
@@ -696,6 +704,8 @@ int main(int argc, char** args) try
 		true,
 		[] { return 1; }
 	>;
+
+	using Odsu2 = Specialised<Boring32::Registry::ValueTypes::DWord, L"UpdateBeginTimestampTryCountODSU">;
 
 	using CurrentVersionPath = Boring32::Registry::RegistryValue <
 		Boring32::Registry::ValueTypes::String,
