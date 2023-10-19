@@ -208,6 +208,8 @@ export namespace Boring32::Registry
 				return out;
 			}
 
+			static void Blah(std::wstring_view s) {}
+
 			static auto Read()
 			{
 				if constexpr (TValueType == ValueTypes::DWord)
