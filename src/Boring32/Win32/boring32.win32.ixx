@@ -61,19 +61,19 @@ export module boring32.win32;
 export namespace Boring32::Win32
 {
 	template<typename T = LPCTSTR>
-	inline constexpr T MsiDbOpen_CreateDirect() noexcept { return (T)MSIDBOPEN_CREATEDIRECT; }
+	inline consteval T MsiDbOpen_CreateDirect() noexcept { return (T)MSIDBOPEN_CREATEDIRECT; }
 
 	template<typename T = LPCTSTR>
-	inline constexpr T MsiDbOpen_Create() noexcept { return (T)MSIDBOPEN_CREATE; }
+	inline consteval T MsiDbOpen_Create() noexcept { return (T)MSIDBOPEN_CREATE; }
 
 	template<typename T = LPCTSTR>
-	inline constexpr T MsiDbOpen_Direct() noexcept { return (T)MSIDBOPEN_DIRECT; }
+	inline consteval T MsiDbOpen_Direct() noexcept { return (T)MSIDBOPEN_DIRECT; }
 		
 	template<typename T = LPCTSTR>
-	inline constexpr T MsiDbOpen_ReadOnly() noexcept { return (T)MSIDBOPEN_READONLY; }
+	inline consteval T MsiDbOpen_ReadOnly() noexcept { return (T)MSIDBOPEN_READONLY; }
 		
 	template<typename T = LPCTSTR>
-	inline constexpr T MsiDbOpen_Transact() noexcept { return (T)MSIDBOPEN_TRANSACT; }
+	inline consteval T MsiDbOpen_Transact() noexcept { return (T)MSIDBOPEN_TRANSACT; }
 		
 	constexpr unsigned long long MsiDbOpen_PatchFile = MSIDBOPEN_PATCHFILE;
 
@@ -89,6 +89,7 @@ export namespace Boring32::Win32
 		constexpr auto MoreData = ERROR_MORE_DATA;
 	}
 
+	using ::SECURITY_ATTRIBUTES;
 	using ::DWORD;
 	using ::UINT;
 	using ::HANDLE;
