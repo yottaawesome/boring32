@@ -2,8 +2,7 @@ export module boring32.strings;
 import <string>;
 import <vector>;
 import <algorithm>;
-import <stdexcept>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 
 export namespace Boring32::Strings
@@ -15,9 +14,9 @@ export namespace Boring32::Strings
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-widechartomultibyte
 		// Returns the size in bytes, this differs from MultiByteToWideChar, which returns the size in characters
-		const int sizeInBytes = WideCharToMultiByte(
-			CP_UTF8,										// CodePage
-			WC_NO_BEST_FIT_CHARS,							// dwFlags 
+		const int sizeInBytes = Win32::WideCharToMultiByte(
+			Win32::CpUtf8,										// CodePage
+			Win32::WcNoBestFitChars,							// dwFlags 
 			&wstr[0],										// lpWideCharStr
 			static_cast<int>(wstr.size()),					// cchWideChar 
 			nullptr,										// lpMultiByteStr
@@ -27,14 +26,14 @@ export namespace Boring32::Strings
 		);
 		if (sizeInBytes == 0)
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error("WideCharToMultiByte() [1] failed", lastError);
 		}
 
 		std::string strTo(sizeInBytes / sizeof(char), '\0');
 		const int status = WideCharToMultiByte(
-			CP_UTF8,										// CodePage
-			WC_NO_BEST_FIT_CHARS,							// dwFlags 
+			Win32::CpUtf8,										// CodePage
+			Win32::WcNoBestFitChars,							// dwFlags 
 			&wstr[0],										// lpWideCharStr
 			static_cast<int>(wstr.size()),					// cchWideChar 
 			&strTo[0],										// lpMultiByteStr
@@ -44,7 +43,7 @@ export namespace Boring32::Strings
 		);
 		if (status == 0)
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error("WideCharToMultiByte() [2] failed", lastError);
 		}
 
@@ -58,8 +57,8 @@ export namespace Boring32::Strings
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar
 		// Returns the size in characters, this differs from WideCharToMultiByte, which returns the size in bytes
-		const int sizeInCharacters = MultiByteToWideChar(
-			CP_UTF8,									// CodePage
+		const int sizeInCharacters = Win32::MultiByteToWideChar(
+			Win32::CpUtf8,									// CodePage
 			0,											// dwFlags
 			&str[0],									// lpMultiByteStr
 			static_cast<int>(str.size() * sizeof(char)),// cbMultiByte
@@ -68,13 +67,13 @@ export namespace Boring32::Strings
 		);
 		if (sizeInCharacters == 0)
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error("MultiByteToWideChar() [1] failed", lastError);
 		}
 
 		std::wstring wstrTo(sizeInCharacters, '\0');
-		const int status = MultiByteToWideChar(
-			CP_UTF8,									// CodePage
+		const int status = Win32::MultiByteToWideChar(
+			Win32::CpUtf8,									// CodePage
 			0,											// dwFlags
 			&str[0],									// lpMultiByteStr
 			static_cast<int>(str.size() * sizeof(char)),	// cbMultiByte
@@ -83,7 +82,7 @@ export namespace Boring32::Strings
 		);
 		if (status == 0)
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error("MultiByteToWideChar() [2] failed", lastError);
 		}
 

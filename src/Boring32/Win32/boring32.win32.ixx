@@ -99,6 +99,9 @@ export namespace Boring32::Win32
 
 	constexpr auto ProcessQueryInformation = PROCESS_QUERY_INFORMATION;
 
+	constexpr auto CpUtf8 = CP_UTF8;
+	constexpr auto WcNoBestFitChars = WC_NO_BEST_FIT_CHARS;
+
 	namespace ErrorCodes
 	{
 		constexpr auto Success = ERROR_SUCCESS;
@@ -194,6 +197,8 @@ export namespace Boring32::Win32
 	using ::K32GetModuleFileNameExW;
 	using ::OpenProcess;
 	using ::GetProcessId;
+	using ::WideCharToMultiByte;
+	using ::MultiByteToWideChar;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
