@@ -8,7 +8,7 @@ import <algorithm>;
 import <format>;
 import <stacktrace>;
 import <source_location>;
-import <win32.hpp>;
+import boring32.win32;
 
 export namespace Boring32::Error
 {
@@ -127,7 +127,7 @@ export namespace Boring32::Error
         const std::stacktrace& trace,
         const std::source_location& location,
         const std::string& message,
-        const DWORD errorCode,
+        const Win32::DWORD errorCode,
         const std::string& translatedError
     )
     {
@@ -147,16 +147,16 @@ export namespace Boring32::Error
 
     template<typename S>
     S FormatCode(
-        const DWORD errorCode, 
-        const DWORD flags, 
-        HMODULE moduleToSearch
+        const Win32::DWORD errorCode,
+        const Win32::DWORD flags,
+        Win32::HMODULE moduleToSearch
     ) { return S(); }
 
     template<>
-    std::string FormatCode<std::string>(const DWORD errorCode, const DWORD flags, HMODULE moduleToSearch)
+    std::string FormatCode<std::string>(const Win32::DWORD errorCode, const Win32::DWORD flags, Win32::HMODULE moduleToSearch)
     {
         void* messageBuffer = nullptr;
-        FormatMessageA(
+        Win32::FormatMessageA(
             flags,
             moduleToSearch,
             errorCode,
@@ -167,7 +167,7 @@ export namespace Boring32::Error
         );
         if (!messageBuffer)
         {
-            const auto lastError = GetLastError();
+            const auto lastError = Win32::GetLastError();
             return std::format(
                 "FormatMessageA() failed on code {} with error {}",
                 errorCode,
@@ -176,9 +176,9 @@ export namespace Boring32::Error
         }
 
         std::string msg(static_cast<char*>(messageBuffer));
-        if (LocalFree(messageBuffer))
+        if (Win32::LocalFree(messageBuffer))
         {
-            const auto lastError = GetLastError();
+            const auto lastError = Win32::GetLastError();
             std::wcerr << std::format(
                 L"LocalFree() failed: {}\n",
                 lastError
@@ -192,13 +192,13 @@ export namespace Boring32::Error
 
     template<>
     std::wstring FormatCode<std::wstring>(
-        const DWORD errorCode, 
-        const DWORD flags, 
-        HMODULE moduleToSearch
+        const Win32::DWORD errorCode,
+        const Win32::DWORD flags,
+        Win32::HMODULE moduleToSearch
     )
     {
         void* messageBuffer = nullptr;
-        FormatMessageW(
+        Win32::FormatMessageW(
             flags,
             moduleToSearch,
             errorCode,
@@ -209,7 +209,7 @@ export namespace Boring32::Error
         );
         if (!messageBuffer)
         {
-            const auto lastError = GetLastError();
+            const auto lastError = Win32::GetLastError();
             return std::format(
                 L"FormatMessageA() failed on code {} with error {}",
                 errorCode,
@@ -218,9 +218,9 @@ export namespace Boring32::Error
         }
 
         std::wstring msg(static_cast<wchar_t*>(messageBuffer));
-        if (LocalFree(messageBuffer))
+        if (Win32::LocalFree(messageBuffer))
         {
-            const auto lastError = GetLastError();
+            const auto lastError = Win32::GetLastError();
             std::wcerr << std::format(L"LocalFree() failed: {}\n", lastError);
         }
 
@@ -240,19 +240,19 @@ export namespace Boring32::Error
     /// <param name="moduleName">Optional. The module name to translate from.</param>
     /// <returns>The translated error string or a default error string if the function fails.</returns>
     template<typename STR_T>
-    STR_T TranslateErrorCode(const DWORD errorCode, const std::wstring& moduleName)
+    STR_T TranslateErrorCode(const Win32::DWORD errorCode, const std::wstring& moduleName)
         requires std::is_same<std::string, STR_T>::value || std::is_same<std::wstring, STR_T>::value
     {
         // Retrieve the system error message for the last-error code
-        HMODULE moduleHandle = moduleName.empty() ? nullptr : LoadLibraryW(moduleName.c_str());
-        const DWORD flags =
-            FORMAT_MESSAGE_ALLOCATE_BUFFER |
-            FORMAT_MESSAGE_FROM_SYSTEM |
-            FORMAT_MESSAGE_IGNORE_INSERTS |
-            (moduleHandle ? FORMAT_MESSAGE_FROM_HMODULE : 0);
+        Win32::HMODULE moduleHandle = moduleName.empty() ? nullptr : Win32::LoadLibraryW(moduleName.c_str());
+        const Win32::DWORD flags =
+            Win32::FormatMessageAllocateBuffer |
+            Win32::FormatMessageFromSystem |
+            Win32::FormatMessageIgnoreInserts |
+            (moduleHandle ? Win32::FormatMessageFromHModule : 0);
         const STR_T errorString = FormatCode<STR_T>(errorCode, flags, moduleHandle);
         if (moduleHandle)
-            FreeLibrary(moduleHandle);
+            Win32::FreeLibrary(moduleHandle);
 
         return errorString;
     }
@@ -264,13 +264,13 @@ export namespace Boring32::Error
     /// <param name="errorCode">The error code to translate.</param>
     /// <returns>The translated error string or a default error string if the function fails.</returns>
     template<typename STR_T>
-    STR_T TranslateErrorCode(const DWORD errorCode)
+    STR_T TranslateErrorCode(const Win32::DWORD errorCode)
     {
         return TranslateErrorCode<STR_T>(errorCode, L"");
     }
 
     template<typename STR_T>
-    STR_T GetNtStatusCode(const DWORD errorCode)
+    STR_T GetNtStatusCode(const Win32::DWORD errorCode)
     {
         return TranslateErrorCode<STR_T>(errorCode, L"ntdll.dll");
     }

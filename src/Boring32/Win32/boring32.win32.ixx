@@ -88,6 +88,11 @@ export namespace Boring32::Win32
 	constexpr unsigned long FilattributeNormal = FILE_ATTRIBUTE_NORMAL;
 	constexpr auto DuplicateSameAccess = DUPLICATE_SAME_ACCESS;
 
+	constexpr auto FormatMessageAllocateBuffer = FORMAT_MESSAGE_ALLOCATE_BUFFER;
+	constexpr auto FormatMessageFromSystem = FORMAT_MESSAGE_FROM_SYSTEM;
+	constexpr auto FormatMessageIgnoreInserts = FORMAT_MESSAGE_IGNORE_INSERTS;
+	constexpr auto FormatMessageFromHModule = FORMAT_MESSAGE_FROM_HMODULE;
+
 	constexpr int HandleFlagInherit = HANDLE_FLAG_INHERIT;
 
 	namespace ErrorCodes
@@ -123,6 +128,7 @@ export namespace Boring32::Win32
 	using ::MSIINSTALLCONTEXT;
 	using ::PMSIHANDLE;
 	using ::PSID;
+	using ::HRESULT;
 
 	using ::GetLastError;
 	using ::GetProcAddress;
@@ -132,6 +138,8 @@ export namespace Boring32::Win32
 	using ::GetHandleInformation;
 	using ::SetHandleInformation;
 	using ::GetProcAddress;
+	using ::FormatMessageA;
+	using ::FormatMessageW;
 	using ::LoadLibraryW;
 	using ::LoadLibraryExW;
 	using ::FreeLibrary;

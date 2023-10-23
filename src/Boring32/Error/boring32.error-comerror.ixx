@@ -4,7 +4,7 @@ import <string>;
 import <source_location>;
 import <stacktrace>;
 import <format>;
-import <win32.hpp>;
+import boring32.win32;
 import :boring32error;
 import :functions;
 
@@ -23,14 +23,14 @@ export namespace Boring32::Error
 		public:
 			COMError(
 				const std::string& msg, 
-				const HRESULT hr,
+				const Win32::HRESULT hr,
 				const std::source_location location = std::source_location::current(),
 				const std::stacktrace& trace = std::stacktrace::current()
 			) : m_hresult(hr), Boring32Error(GenerateErrorMessage(location, msg, trace))
 			{ }
 
 		public:
-			virtual HRESULT GetHResult() const noexcept
+			virtual Win32::HRESULT GetHResult() const noexcept
 			{
 				return m_hresult;
 			}
@@ -42,7 +42,7 @@ export namespace Boring32::Error
 				const std::stacktrace& trace
 			)
 			{
-				std::string m_errorString = Boring32::Error::TranslateErrorCode<std::string>(
+				std::string m_errorString = Error::TranslateErrorCode<std::string>(
 					m_hresult
 				);
 				m_errorString = Error::FormatErrorMessage(
@@ -57,6 +57,6 @@ export namespace Boring32::Error
 			}
 
 		protected:
-			HRESULT m_hresult = 0;
+			Win32::HRESULT m_hresult = 0;
 	};
 }
