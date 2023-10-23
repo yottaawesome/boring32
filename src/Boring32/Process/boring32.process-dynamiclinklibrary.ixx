@@ -3,7 +3,7 @@ import <string>;
 import <stdexcept>;
 import <format>;
 import <iostream>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 
 export namespace Boring32::Process
@@ -56,9 +56,9 @@ export namespace Boring32::Process
 			{
 				if (!m_libraryHandle)
 					return;
-				if (!FreeLibrary(m_libraryHandle))
+				if (!Win32::FreeLibrary(m_libraryHandle))
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					std::wcerr << std::format(L"FreeLibrary() failed: {}", lastError);
 				}
 				m_libraryHandle = nullptr;
@@ -70,10 +70,10 @@ export namespace Boring32::Process
 				if (!m_libraryHandle)
 					throw Error::Boring32Error("Library handle is null");
 
-				if (void* ptr = GetProcAddress(m_libraryHandle, symbolName.c_str()))
+				if (void* ptr = Win32::GetProcAddress(m_libraryHandle, symbolName.c_str()))
 					return ptr;
 
-				const auto lastError = GetLastError();
+				const auto lastError = Win32::GetLastError();
 				throw Error::Win32Error(
 					std::format("Failed to resolve symbol: {}", symbolName),
 					lastError
@@ -87,7 +87,7 @@ export namespace Boring32::Process
 			{
 				if (!m_libraryHandle)
 					return nullptr;
-				return GetProcAddress(m_libraryHandle, symbolName.c_str());
+				return Win32::GetProcAddress(m_libraryHandle, symbolName.c_str());
 			}
 
 			const std::wstring& GetPath() const noexcept
@@ -95,7 +95,7 @@ export namespace Boring32::Process
 				return m_path;
 			}
 
-			HMODULE GetHandle() const noexcept
+			Win32::HMODULE GetHandle() const noexcept
 			{
 				return m_libraryHandle;
 			}
@@ -141,10 +141,10 @@ export namespace Boring32::Process
 				if (m_path.empty())
 					throw Error::Boring32Error("No library path specified");
 
-				m_libraryHandle = LoadLibraryW(m_path.c_str());
+				m_libraryHandle = Win32::LoadLibraryW(m_path.c_str());
 				if (!m_libraryHandle)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("failed to load library", lastError);
 				}
 			}
@@ -164,6 +164,6 @@ export namespace Boring32::Process
 
 		private:
 			std::wstring m_path;
-			HMODULE m_libraryHandle = nullptr;
+			Win32::HMODULE m_libraryHandle = nullptr;
 	};
 }

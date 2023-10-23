@@ -89,6 +89,7 @@ export namespace Boring32::Win32
 		constexpr auto MoreData = ERROR_MORE_DATA;
 	}
 
+	using ::HMODULE;
 	using ::SECURITY_ATTRIBUTES;
 	using ::DWORD;
 	using ::UINT;
@@ -115,6 +116,10 @@ export namespace Boring32::Win32
 	using ::GetLastError;
 	using ::GetProcAddress;
 	using ::GetModuleHandleW;
+	using ::GetProcAddress;
+	using ::LoadLibraryW;
+	using ::LoadLibraryExW;
+	using ::FreeLibrary;
 	using ::MsiIsProductElevatedW;
 	using ::MsiOpenPackageW;
 	using ::MsiCloseHandle;
