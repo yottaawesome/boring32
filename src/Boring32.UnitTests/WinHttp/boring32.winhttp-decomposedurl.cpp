@@ -51,7 +51,7 @@ namespace WinHttp
 			TEST_METHOD(TestGetPath)
 			{
 				Boring32::WinHttp::DecomposedURL url1(Url1);
-				Assert::IsTrue(url1.Path() == L"some/path");
+				Assert::IsTrue(url1.Path() == L"/some/path");
 			}
 
 			TEST_METHOD(TestGetPort)

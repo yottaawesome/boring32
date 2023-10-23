@@ -85,7 +85,7 @@ export namespace Boring32::Win32
 	constexpr unsigned long GenericRead = GENERIC_READ;
 	constexpr unsigned long GenericWrite = GENERIC_WRITE;
 	constexpr unsigned long OpenAlways = OPEN_ALWAYS;
-	constexpr unsigned long FilattributeNormal = FILE_ATTRIBUTE_NORMAL;
+	constexpr unsigned long FileAttributeNormal = FILE_ATTRIBUTE_NORMAL;
 	constexpr auto DuplicateSameAccess = DUPLICATE_SAME_ACCESS;
 
 	constexpr auto FormatMessageAllocateBuffer = FORMAT_MESSAGE_ALLOCATE_BUFFER;
@@ -97,6 +97,8 @@ export namespace Boring32::Win32
 
 	constexpr auto MemoryAllocationAlignment = MEMORY_ALLOCATION_ALIGNMENT;
 
+	constexpr auto ProcessQueryInformation = PROCESS_QUERY_INFORMATION;
+
 	namespace ErrorCodes
 	{
 		constexpr auto Success = ERROR_SUCCESS;
@@ -104,6 +106,7 @@ export namespace Boring32::Win32
 		constexpr auto UnknownProperty = ERROR_UNKNOWN_PROPERTY;
 		constexpr auto NoMoreItems = ERROR_NO_MORE_ITEMS;
 		constexpr auto MoreData = ERROR_MORE_DATA;
+		constexpr auto InsufficientBuffer = ERROR_INSUFFICIENT_BUFFER;
 	}
 
 	using ::HMODULE;
@@ -136,7 +139,16 @@ export namespace Boring32::Win32
 	using ::PSLIST_ENTRY;
 	using ::SLIST_HEADER;
 	using ::PSLIST_HEADER;
+	using ::MEMORYSTATUSEX;
+	using ::SYSTEM_INFO;
+	using ::SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX;
+	using ::LOGICAL_PROCESSOR_RELATIONSHIP;
+	using ::COMPUTER_NAME_FORMAT;
+	using ::FILETIME;
+	using ::ULARGE_INTEGER;
 
+	using ::K32EnumDeviceDrivers;
+	using ::K32EnumProcesses;
 	using ::GetLastError;
 	using ::GetProcAddress;
 	using ::GetModuleHandleW;
@@ -169,6 +181,19 @@ export namespace Boring32::Win32
 	using ::InterlockedPopEntrySList;
 	using ::InterlockedPushEntrySList;
 	using ::InterlockedFlushSList;
+	using ::GetComputerNameExW;
+	using ::GetPhysicallyInstalledSystemMemory;
+	using ::GlobalMemoryStatusEx;
+	using ::GetTickCount64;
+	using ::GetSystemTimeAdjustment;
+	using ::GetSystemInfo;
+	using ::GetLogicalProcessorInformationEx;
+	using ::GetProcessTimes;
+	using ::GetProcessHandleCount;
+	using ::GetExitCodeProcess;
+	using ::K32GetModuleFileNameExW;
+	using ::OpenProcess;
+	using ::GetProcessId;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;

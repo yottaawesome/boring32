@@ -49,7 +49,7 @@ export namespace Boring32::FileSystem
 					0,								// dwShareMode
 					nullptr,						// lpSecurityAttributes
 					Win32::OpenAlways,					// dwCreationDisposition
-					Win32::FilattributeNormal,			// dwFlagsAndAttributes
+					Win32::FileAttributeNormal,			// dwFlagsAndAttributes
 					nullptr							// hTemplateFile
 				);
 				if (m_fileHandle == Win32::InvalidHandleValue)
