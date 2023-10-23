@@ -1,6 +1,6 @@
 export module boring32.raii:handle;
 import <type_traits>;
-import <win32.hpp>;
+import boring32.win32;
 //https://docs.microsoft.com/en-us/windows/win32/sysinfo/kernel-objects
 
 export namespace Boring32::RAII
@@ -22,25 +22,25 @@ export namespace Boring32::RAII
 	};
 
 	template<>
-	struct HandleTraits<HANDLE>
+	struct HandleTraits<Win32::HANDLE>
 	{
-		using Type = HANDLE;
-		using TypeConstReference = const HANDLE&;
-		using TypePointer = HANDLE*;
+		using Type = Win32::HANDLE;
+		using TypeConstReference = const Win32::HANDLE&;
+		using TypePointer = Win32::HANDLE*;
 
 		static bool IsValid(const HANDLE handle)
 		{
-			return handle != 0 && handle != INVALID_HANDLE_VALUE;
+			return handle != 0 && handle != Win32::InvalidHandleValue;
 		};
 
-		static void Close(HANDLE handle)
+		static void Close(Win32::HANDLE handle)
 		{
-			CloseHandle(handle);
+			Win32::CloseHandle(handle);
 		}
 
 		static constexpr bool IsCopyAssignable = true;
 
-		static void CopyAssignValue(HANDLE left, HANDLE right)
+		static void CopyAssignValue(Win32::HANDLE left, Win32::HANDLE right)
 		{
 			
 		}
@@ -84,5 +84,5 @@ export namespace Boring32::RAII
 			typename HandleTraits<T>::Type m_handle;
 	};
 
-	using BasicHandle = Handle<HANDLE>;
+	using BasicHandle = Handle<Win32::HANDLE>;
 }

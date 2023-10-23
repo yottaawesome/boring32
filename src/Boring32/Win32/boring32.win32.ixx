@@ -86,6 +86,9 @@ export namespace Boring32::Win32
 	constexpr unsigned long GenericWrite = GENERIC_WRITE;
 	constexpr unsigned long OpenAlways = OPEN_ALWAYS;
 	constexpr unsigned long FilattributeNormal = FILE_ATTRIBUTE_NORMAL;
+	constexpr auto DuplicateSameAccess = DUPLICATE_SAME_ACCESS;
+
+	constexpr int HandleFlagInherit = HANDLE_FLAG_INHERIT;
 
 	namespace ErrorCodes
 	{
@@ -119,10 +122,15 @@ export namespace Boring32::Win32
 	using ::MSIHANDLE;
 	using ::MSIINSTALLCONTEXT;
 	using ::PMSIHANDLE;
+	using ::PSID;
 
 	using ::GetLastError;
 	using ::GetProcAddress;
 	using ::GetModuleHandleW;
+	using ::DuplicateHandle;
+	using ::GetCurrentProcess;
+	using ::GetHandleInformation;
+	using ::SetHandleInformation;
 	using ::GetProcAddress;
 	using ::LoadLibraryW;
 	using ::LoadLibraryExW;
@@ -138,6 +146,9 @@ export namespace Boring32::Win32
 	using ::MsiRecordGetStringW;
 	using ::MsiEnumProductsExW;
 	using ::CreateFileW;
+	using ::CloseHandle;
+	using ::LocalFree;
+	using ::FreeSid;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;

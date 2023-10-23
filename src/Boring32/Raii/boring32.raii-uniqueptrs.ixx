@@ -1,6 +1,6 @@
 export module boring32.raii:uniqueptrs;
 import <memory>;
-import <win32.hpp>;
+import boring32.win32;
 
 export namespace Boring32::RAII
 {
@@ -8,7 +8,7 @@ export namespace Boring32::RAII
 	{
 		void operator()(void* ptr)
 		{
-			LocalFree(ptr);
+			Win32::LocalFree(ptr);
 		}
 	};
 	template<typename T>
@@ -16,19 +16,19 @@ export namespace Boring32::RAII
 
 	struct DLLDeleter final
 	{
-		void operator()(HMODULE ptr)
+		void operator()(Win32::HMODULE ptr)
 		{
-			FreeLibrary(ptr);
+			Win32::FreeLibrary(ptr);
 		}
 	};
-	using DllUniquePtr = std::unique_ptr<std::remove_pointer<HMODULE>::type, DLLDeleter>;
+	using DllUniquePtr = std::unique_ptr<std::remove_pointer<Win32::HMODULE>::type, DLLDeleter>;
 
 	struct SIDDeleter final
 	{
-		void operator()(PSID ptr)
+		void operator()(Win32::PSID ptr)
 		{
-			FreeSid(ptr);
+			Win32::FreeSid(ptr);
 		}
 	};
-	using SIDUniquePtr = std::unique_ptr<std::remove_pointer<PSID>::type, SIDDeleter>;
+	using SIDUniquePtr = std::unique_ptr<std::remove_pointer<Win32::PSID>::type, SIDDeleter>;
 }
