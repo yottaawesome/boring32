@@ -1,8 +1,8 @@
 export module boring32.filesystem:file;
 import <string>;
-import <win32.hpp>;
 import boring32.raii;
 import boring32.error;
+import boring32.win32;
 
 export namespace Boring32::FileSystem
 {
@@ -29,7 +29,7 @@ export namespace Boring32::FileSystem
 				m_fileHandle = nullptr;
 			}
 
-			HANDLE GetHandle() const noexcept
+			Win32::HANDLE GetHandle() const noexcept
 			{
 				return *m_fileHandle;
 			}
@@ -40,21 +40,21 @@ export namespace Boring32::FileSystem
 				if (m_fileName.empty())
 					throw Error::Boring32Error("Filename must be specified");
 
-				m_fileHandle = CreateFileW(
+				m_fileHandle = Win32::CreateFileW(
 					m_fileName.c_str(),				// lpFileName
-					GENERIC_READ | GENERIC_WRITE,	// dwDesiredAccess
+					Win32::GenericRead | Win32::GenericWrite,	// dwDesiredAccess
 					// https://learn.microsoft.com/en-us/windows/win32/secauthz/generic-access-rights
 					// https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights
 					// https://learn.microsoft.com/en-us/windows/win32/fileio/file-access-rights-constants
 					0,								// dwShareMode
 					nullptr,						// lpSecurityAttributes
-					OPEN_ALWAYS,					// dwCreationDisposition
-					FILE_ATTRIBUTE_NORMAL,			// dwFlagsAndAttributes
+					Win32::OpenAlways,					// dwCreationDisposition
+					Win32::FilattributeNormal,			// dwFlagsAndAttributes
 					nullptr							// hTemplateFile
 				);
-				if (m_fileHandle == INVALID_HANDLE_VALUE)
+				if (m_fileHandle == Win32::InvalidHandleValue)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("CreateFileW() failed", lastError);
 				}
 			}

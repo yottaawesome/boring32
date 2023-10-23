@@ -80,6 +80,13 @@ export namespace Boring32::Win32
 	constexpr const wchar_t* InstallProperty_ProductName = INSTALLPROPERTY_PRODUCTNAME;
 	constexpr const wchar_t* InstallProperty_PackageName = INSTALLPROPERTY_PACKAGENAME;
 
+	const HANDLE InvalidHandleValue = INVALID_HANDLE_VALUE;
+
+	constexpr unsigned long GenericRead = GENERIC_READ;
+	constexpr unsigned long GenericWrite = GENERIC_WRITE;
+	constexpr unsigned long OpenAlways = OPEN_ALWAYS;
+	constexpr unsigned long FilattributeNormal = FILE_ATTRIBUTE_NORMAL;
+
 	namespace ErrorCodes
 	{
 		constexpr auto Success = ERROR_SUCCESS;
@@ -130,6 +137,7 @@ export namespace Boring32::Win32
 	using ::MsiViewFetch;
 	using ::MsiRecordGetStringW;
 	using ::MsiEnumProductsExW;
+	using ::CreateFileW;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
