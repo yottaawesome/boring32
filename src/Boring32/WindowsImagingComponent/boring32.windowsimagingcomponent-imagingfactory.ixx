@@ -22,7 +22,8 @@ export namespace Boring32::WindowsImagingComponent
 					CLSID_WICImagingFactory,
 					nullptr,
 					CLSCTX_INPROC_SERVER,
-					IID_PPV_ARGS(&m_imagingFactory)
+					__uuidof (**(&m_imagingFactory)), 
+					&m_imagingFactory
 				);
 				if (FAILED(hr))
 					throw Error::COMError("CoCreateInstance() failed", hr);
