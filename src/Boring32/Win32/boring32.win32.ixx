@@ -95,6 +95,8 @@ export namespace Boring32::Win32
 
 	constexpr int HandleFlagInherit = HANDLE_FLAG_INHERIT;
 
+	constexpr auto MemoryAllocationAlignment = MEMORY_ALLOCATION_ALIGNMENT;
+
 	namespace ErrorCodes
 	{
 		constexpr auto Success = ERROR_SUCCESS;
@@ -108,6 +110,7 @@ export namespace Boring32::Win32
 	using ::SECURITY_ATTRIBUTES;
 	using ::DWORD;
 	using ::UINT;
+	using ::USHORT;
 	using ::HANDLE;
 	using ::PHANDLE;
 	using ::UNICODE_STRING;
@@ -129,6 +132,10 @@ export namespace Boring32::Win32
 	using ::PMSIHANDLE;
 	using ::PSID;
 	using ::HRESULT;
+	using ::SLIST_ENTRY;
+	using ::PSLIST_ENTRY;
+	using ::SLIST_HEADER;
+	using ::PSLIST_HEADER;
 
 	using ::GetLastError;
 	using ::GetProcAddress;
@@ -157,6 +164,11 @@ export namespace Boring32::Win32
 	using ::CloseHandle;
 	using ::LocalFree;
 	using ::FreeSid;
+	using ::InitializeSListHead;
+	using ::QueryDepthSList;
+	using ::InterlockedPopEntrySList;
+	using ::InterlockedPushEntrySList;
+	using ::InterlockedFlushSList;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;

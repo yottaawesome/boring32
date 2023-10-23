@@ -1,9 +1,8 @@
 export module boring32.datastructures:singlylinkedlist;
-import <stdexcept>;
 import <utility>;
 import <memory>;
-import <win32.hpp>;
 import <malloc.h>;
+import boring32.win32;
 import boring32.error;
 
 export namespace Boring32::DataStructures
@@ -11,7 +10,7 @@ export namespace Boring32::DataStructures
 	template<typename T>
 	struct ListElement 
 	{
-		SLIST_ENTRY EntryInfo;
+		Win32::SLIST_ENTRY EntryInfo;
 		std::shared_ptr<T> Item;
 	};
 
@@ -31,15 +30,15 @@ export namespace Boring32::DataStructures
 
 			SinglyLinkedList()
 			{
-				m_listHeader = reinterpret_cast<PSLIST_HEADER>(
+				m_listHeader = reinterpret_cast<Win32::PSLIST_HEADER>(
 					_aligned_malloc(
-						sizeof(SLIST_HEADER), 
-						MEMORY_ALLOCATION_ALIGNMENT
+						sizeof(Win32::SLIST_HEADER),
+						Win32::MemoryAllocationAlignment
 					)
 				);
 				if (!m_listHeader)
 					throw Error::Boring32Error("_aligned_malloc() failed");
-				InitializeSListHead(m_listHeader);
+				Win32::InitializeSListHead(m_listHeader);
 			}
 
 			SinglyLinkedList(const SinglyLinkedList& other) = delete;
@@ -79,9 +78,9 @@ export namespace Boring32::DataStructures
 				new(&newEntry->Item) std::shared_ptr<T>(new T(std::forward<Args>(args)...));
 			}
 
-			virtual USHORT GetDepth()
+			virtual Win32::USHORT GetDepth()
 			{
-				return m_listHeader ? QueryDepthSList(m_listHeader) : 0;
+				return m_listHeader ? Win32::QueryDepthSList(m_listHeader) : 0;
 			}
 
 			virtual void Add(std::shared_ptr<T> newVal)
@@ -100,7 +99,7 @@ export namespace Boring32::DataStructures
 				if (!m_listHeader)
 					throw Error::Boring32Error("Cannot pop null list header");
 
-				PSLIST_ENTRY listEntry = InterlockedPopEntrySList(m_listHeader);
+				Win32::PSLIST_ENTRY listEntry = Win32::InterlockedPopEntrySList(m_listHeader);
 				if (!listEntry)
 					return nullptr;
 
@@ -119,7 +118,7 @@ export namespace Boring32::DataStructures
 
 				while (Pop()) {}
 				// https://docs.microsoft.com/en-us/windows/win32/api/interlockedapi/nf-interlockedapi-interlockedflushslist
-				PSLIST_ENTRY entry = InterlockedFlushSList(m_listHeader);
+				Win32::PSLIST_ENTRY entry = Win32::InterlockedFlushSList(m_listHeader);
 			}
 
 			/// <summary>
@@ -130,13 +129,13 @@ export namespace Boring32::DataStructures
 			/// <param name="index"></param>
 			/// <returns></returns>
 			/// WARNING: doesn't work. Not sure why, but EntryInfo.Next is always null.
-			virtual std::shared_ptr<T> GetAt(const UINT index)
+			virtual std::shared_ptr<T> GetAt(const Win32::UINT index)
 			{
 				if (!m_firstEntry)
 					return nullptr;
 				
 				ListElement<T>* desiredEntry = m_firstEntry;
-				for (UINT i = 0; i < index; i++)
+				for (Win32::UINT i = 0; i < index; i++)
 					if (desiredEntry)
 						desiredEntry = reinterpret_cast<ListElement<T>*>(desiredEntry->EntryInfo.Next);
 				
@@ -157,7 +156,7 @@ export namespace Boring32::DataStructures
 			virtual ListElement<T>* InternalAdd()
 			{
 				const auto newEntry = reinterpret_cast<ListElement<T>*>(
-					_aligned_malloc(sizeof(ListElement<T>), MEMORY_ALLOCATION_ALIGNMENT));
+					_aligned_malloc(sizeof(ListElement<T>), Win32::MemoryAllocationAlignment));
 				if (!newEntry)
 					throw Error::Boring32Error("_aligned_malloc() failed");
 				if (!m_firstEntry)
@@ -166,7 +165,7 @@ export namespace Boring32::DataStructures
 				// https://docs.microsoft.com/en-us/windows/win32/api/interlockedapi/nf-interlockedapi-interlockedpushentryslist
 				// Note that it adds to the front of the list, not the back, which is why
 				// we update the firstEntry variable
-				PSLIST_ENTRY addedEntry = InterlockedPushEntrySList(
+				Win32::PSLIST_ENTRY addedEntry = Win32::InterlockedPushEntrySList(
 					m_listHeader,
 					&newEntry->EntryInfo
 				);
@@ -177,7 +176,7 @@ export namespace Boring32::DataStructures
 			}
 
 		protected:
-			PSLIST_HEADER m_listHeader = nullptr;
+			Win32::PSLIST_HEADER m_listHeader = nullptr;
 			ListElement<T>* m_firstEntry = nullptr;
 	};
 }
