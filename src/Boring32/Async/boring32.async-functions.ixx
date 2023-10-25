@@ -95,12 +95,11 @@ export namespace Boring32::Async
 		return WaitFor(handle, timeout, false);
 	}
 
-	template<typename T>
 	bool WaitFor(
 		const HANDLE handle, 
-		const T time, 
+		const Duration auto& time,
 		const bool isAlertable
-	) requires IsDuration<T>
+	)
 	{
 		using std::chrono::duration_cast;
 		using std::chrono::milliseconds;
@@ -199,9 +198,9 @@ export namespace Boring32::Async
 	DWORD WaitFor(
 		const std::vector<HANDLE>& handles,
 		const bool waitForAll,
-		const T time,
+		const Duration auto& time,
 		const bool alertable
-	) requires IsDuration<T>
+	)
 	{
 		using std::chrono::duration_cast;
 		using std::chrono::milliseconds;

@@ -132,11 +132,10 @@ export namespace Boring32::Async
 				return true;
 			}
 
-			template<typename T>
 			bool Acquire(
-				const T& time, 
+				const Duration auto& time,
 				const bool isAlertable
-			) requires IsDuration<T>
+			)
 			{
 				using std::chrono::milliseconds;
 				using std::chrono::duration_cast;

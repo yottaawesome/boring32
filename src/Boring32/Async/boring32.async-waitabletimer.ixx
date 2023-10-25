@@ -162,11 +162,10 @@ export namespace Boring32::Async
 				return false;
 			}
 
-			template<typename T>
 			bool WaitOnTimer(
-				const T time, 
+				const Duration auto time, 
 				const bool alertable
-			) requires IsDuration<T>
+			)
 			{
 				if (!m_handle)
 					throw Error::Boring32Error("Timer handle is null");
@@ -175,10 +174,10 @@ export namespace Boring32::Async
 
 			template<typename T>
 			bool WaitOnTimer(
-				const T time,
+				const Duration auto time,
 				const bool alertable,
 				const std::nothrow_t&
-			) noexcept requires IsDuration<T> try
+			) try
 			{
 				if (!m_handle)
 					throw Error::Boring32Error("Timer handle is null");

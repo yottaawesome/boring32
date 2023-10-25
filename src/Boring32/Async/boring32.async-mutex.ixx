@@ -166,11 +166,10 @@ export namespace Boring32::Async
 				return Lock(INFINITE, isAlertable);
 			}
 
-			template<typename T>
 			bool Lock(
-				const T& time,
+				const Duration auto& time,
 				const bool alertable
-			) requires IsDuration<T>
+			)
 			{
 				using std::chrono::duration_cast;
 				using std::chrono::milliseconds;

@@ -182,11 +182,10 @@ export namespace Boring32::Async
 					throw Error::Boring32Error("The wait was abandoned");
 			}
 
-			template<typename T>
 			bool WaitOnEvent(
-				const T& time,
+				const Duration auto& time,
 				const bool alertable
-			) const requires IsDuration<T>
+			) const
 			{
 				using std::chrono::duration_cast;
 				using std::chrono::milliseconds;
@@ -196,12 +195,11 @@ export namespace Boring32::Async
 				);
 			}
 
-			template<typename T>
 			bool WaitOnEvent(
-				const std::chrono::seconds time,
+				const Duration auto& time,
 				const bool alertable,
 				const std::nothrow_t&
-			) const requires IsDuration<T>
+			) const
 			{
 				using std::chrono::duration_cast;
 				using std::chrono::milliseconds;
