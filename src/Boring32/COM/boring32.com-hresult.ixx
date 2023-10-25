@@ -19,7 +19,7 @@ export namespace Boring32::COM
 			HResult& operator=(HResult&&) = default;
 
 		public:
-			HResult(const HRESULT hr) noexcept
+			HResult(const Win32::HRESULT hr) noexcept
 				: m_hr(hr)
 			{ }
 
