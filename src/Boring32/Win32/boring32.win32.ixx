@@ -60,6 +60,67 @@ export module boring32.win32;
 // Experimental module intended to decouple the codebase from having to import Windows headers.
 export namespace Boring32::Win32
 {
+	using ::HMODULE;
+	using ::SECURITY_ATTRIBUTES;
+	using ::DWORD;
+	using ::UINT;
+	using ::USHORT;
+	using ::HANDLE;
+	using ::PHANDLE;
+	using ::UNICODE_STRING;
+	using ::PUNICODE_STRING;
+	using ::PVOID;
+	using ::ULONG_PTR;
+	using ::SIZE_T;
+	using ::PSIZE_T;
+	using ::PLARGE_INTEGER;
+	using ::ULONG;
+	using ::PHANDLE;
+	using ::ACCESS_MASK;
+	using ::PULONG;
+	using ::HMODULE;
+	using ::NTSTATUS;
+	using ::BOOL;
+	using ::MSIHANDLE;
+	using ::MSIINSTALLCONTEXT;
+	using ::PMSIHANDLE;
+	using ::PSID;
+	using ::HRESULT;
+	using ::SLIST_ENTRY;
+	using ::PSLIST_ENTRY;
+	using ::SLIST_HEADER;
+	using ::PSLIST_HEADER;
+	using ::MEMORYSTATUSEX;
+	using ::SYSTEM_INFO;
+	using ::SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX;
+	using ::LOGICAL_PROCESSOR_RELATIONSHIP;
+	using ::COMPUTER_NAME_FORMAT;
+	using ::FILETIME;
+	using ::ULARGE_INTEGER;
+	using ::LPCSTR;
+	using ::COINIT;
+	using ::EOLE_AUTHENTICATION_CAPABILITIES;
+
+	inline HRESULT MakeHResult(const long severity, const long facility, const long code) noexcept
+	{
+		return MAKE_HRESULT(severity, facility, code);
+	}
+
+	inline long Facility(const HRESULT hr) noexcept
+	{
+		return HRESULT_FACILITY(hr);
+	}
+
+	inline long Code(const HRESULT hr) noexcept
+	{
+		return HRESULT_CODE(hr);
+	}
+
+	inline long Severity(const HRESULT hr) noexcept
+	{
+		return HRESULT_SEVERITY(hr);
+	}
+
 	template<typename T = LPCTSTR>
 	inline consteval T MsiDbOpen_CreateDirect() noexcept { return (T)MSIDBOPEN_CREATEDIRECT; }
 
@@ -112,43 +173,25 @@ export namespace Boring32::Win32
 		constexpr auto InsufficientBuffer = ERROR_INSUFFICIENT_BUFFER;
 	}
 
-	using ::HMODULE;
-	using ::SECURITY_ATTRIBUTES;
-	using ::DWORD;
-	using ::UINT;
-	using ::USHORT;
-	using ::HANDLE;
-	using ::PHANDLE;
-	using ::UNICODE_STRING;
-	using ::PUNICODE_STRING;
-	using ::PVOID;
-	using ::ULONG_PTR;
-	using ::SIZE_T;
-	using ::PSIZE_T;
-	using ::PLARGE_INTEGER;
-	using ::ULONG;
-	using ::PHANDLE;
-	using ::ACCESS_MASK;
-	using ::PULONG;
-	using ::HMODULE;
-	using ::NTSTATUS;
-	using ::BOOL;
-	using ::MSIHANDLE;
-	using ::MSIINSTALLCONTEXT;
-	using ::PMSIHANDLE;
-	using ::PSID;
-	using ::HRESULT;
-	using ::SLIST_ENTRY;
-	using ::PSLIST_ENTRY;
-	using ::SLIST_HEADER;
-	using ::PSLIST_HEADER;
-	using ::MEMORYSTATUSEX;
-	using ::SYSTEM_INFO;
-	using ::SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX;
-	using ::LOGICAL_PROCESSOR_RELATIONSHIP;
-	using ::COMPUTER_NAME_FORMAT;
-	using ::FILETIME;
-	using ::ULARGE_INTEGER;
+	enum class RPCCAuthLevel : unsigned long
+	{
+		Default = RPC_C_AUTHN_LEVEL_DEFAULT,
+		None = RPC_C_AUTHN_LEVEL_NONE,
+		Connect = RPC_C_AUTHN_LEVEL_CONNECT,
+		Call = RPC_C_AUTHN_LEVEL_CALL,
+		Pkt = RPC_C_AUTHN_LEVEL_PKT,
+		PktIntegrity = RPC_C_AUTHN_LEVEL_PKT_INTEGRITY,
+		PktPrivacy = RPC_C_AUTHN_LEVEL_PKT_PRIVACY
+	};
+
+	enum class RPCCImpLevel : unsigned long
+	{
+		Default = RPC_C_IMP_LEVEL_DEFAULT,
+		Anonymous = RPC_C_IMP_LEVEL_ANONYMOUS,
+		Identify = RPC_C_IMP_LEVEL_IDENTIFY,
+		Impersonate = RPC_C_IMP_LEVEL_IMPERSONATE,
+		Delegate = RPC_C_IMP_LEVEL_DELEGATE
+	};
 
 	using ::K32EnumDeviceDrivers;
 	using ::K32EnumProcesses;
@@ -199,6 +242,10 @@ export namespace Boring32::Win32
 	using ::GetProcessId;
 	using ::WideCharToMultiByte;
 	using ::MultiByteToWideChar;
+	using ::CoUninitialize;
+	using ::GetCurrentThreadId;
+	using ::CoInitializeSecurity;
+	using ::CoInitializeEx;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;

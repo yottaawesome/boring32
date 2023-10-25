@@ -1,6 +1,6 @@
 export module boring32.com:hresult;
 import <source_location>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 import :functions;
 
@@ -29,16 +29,16 @@ export namespace Boring32::COM
 				const long code
 			) noexcept
 			{
-				m_hr = MAKE_HRESULT(severity, facility, code);
+				m_hr = Win32::MakeHResult(severity, facility, code);
 			}
 
 		public:
-			operator HRESULT() const noexcept
+			operator Win32::HRESULT() const noexcept
 			{
 				return m_hr;
 			}
 
-			HResult& operator=(const HRESULT hr) noexcept
+			HResult& operator=(const Win32::HRESULT hr) noexcept
 			{
 				m_hr = hr;
 				return *this;
@@ -49,7 +49,7 @@ export namespace Boring32::COM
 				return Succeeded(m_hr);
 			}
 
-			bool operator==(const HRESULT hr) const noexcept
+			bool operator==(const Win32::HRESULT hr) const noexcept
 			{
 				return m_hr == hr;
 			}
@@ -68,17 +68,17 @@ export namespace Boring32::COM
 
 			long Facility() const noexcept
 			{
-				return HRESULT_FACILITY(m_hr);
+				return Win32::Facility(m_hr);
 			}
 
 			long Code() const noexcept
 			{
-				return HRESULT_CODE(m_hr);
+				return Win32::Code(m_hr);
 			}
 
 			long Severity() const noexcept
 			{
-				return HRESULT_SEVERITY(m_hr);
+				return Win32::Severity(m_hr);
 			}
 
 			void ThrowIfFailed(
@@ -94,6 +94,6 @@ export namespace Boring32::COM
 			}
 
 		private:
-			HRESULT m_hr = 0x0;
+			Win32::HRESULT m_hr = 0x0;
 	};
 }

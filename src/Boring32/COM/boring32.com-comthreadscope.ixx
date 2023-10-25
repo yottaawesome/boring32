@@ -1,8 +1,9 @@
 export module boring32.com:comthreadscope;
 import <atomic>;
 import <iostream>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
+import :functions;
 
 export namespace Boring32::COM
 {
@@ -71,7 +72,7 @@ export namespace Boring32::COM
 			///		apartment threading mode.
 			/// </summary>
 			/// <param name="apartmentThreadingMode">The threading mode to initialise COM with.</param>
-			COMThreadScope(const COINIT apartmentThreadingMode)
+			COMThreadScope(const Win32::COINIT apartmentThreadingMode)
 				: m_isInitialised(false),
 				m_comInitialisedThreadId(0),
 				m_apartmentThreadingMode(apartmentThreadingMode)
@@ -97,12 +98,12 @@ export namespace Boring32::COM
 					return;
 
 				// Initialise COM for this thread
-				HRESULT hr = CoInitializeEx(nullptr, m_apartmentThreadingMode);
-				if (FAILED(hr))
+				Win32::HRESULT hr = Win32::CoInitializeEx(nullptr, m_apartmentThreadingMode);
+				if (Failed(hr))
 					throw Error::COMError("CoInitializeEx() failed", hr);
 
 				m_isInitialised = true;
-				m_comInitialisedThreadId = GetCurrentThreadId();
+				m_comInitialisedThreadId = Win32::GetCurrentThreadId();
 			}
 
 			/// <summary>
@@ -114,28 +115,24 @@ export namespace Boring32::COM
 				m_isSecurityInitialised++;
 				if (m_isSecurityInitialised != 1)
 				{
-					std::wcerr
-						<< L"An attempt to initialise COM security more than once for this process occurred. "
-						<< L"COM security can only be set once for the whole process, and cannot be changed. "
-						<< L"Ignoring..."
-						<< std::endl;
+					std::wcerr << std::format(L"An attempt to initialise COM security more than once for this process occurred. COM security can only be set once for the whole process, and cannot be changed. Ignoring...\n");
 					return;
 				}
 
 				// Set general COM security levels. This can only be set once per process.
 				// https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-coinitializesecurity
-				HRESULT hr = CoInitializeSecurity(
+				HRESULT hr = Win32::CoInitializeSecurity(
 					nullptr,
 					-1,								// COM authentication
 					nullptr,                        // Authentication services
 					nullptr,                        // Reserved
-					RPC_C_AUTHN_LEVEL_DEFAULT,		// Default authentication 
-					RPC_C_IMP_LEVEL_IMPERSONATE,	// Default Impersonation  
+					(Win32::DWORD)Win32::RPCCAuthLevel::Default,		// Default authentication 
+					(Win32::DWORD)Win32::RPCCImpLevel::Impersonate,	// Default Impersonation  
 					nullptr,                        // Authentication info
-					EOAC_NONE,						// Additional capabilities 
+					Win32::EOLE_AUTHENTICATION_CAPABILITIES::EOAC_NONE,						// Additional capabilities 
 					nullptr                         // Reserved
 				);
-				if (FAILED(hr))
+				if (Failed(hr))
 					throw Error::COMError("CoInitializeSecurity() failed", hr);
 			}
 
@@ -152,10 +149,10 @@ export namespace Boring32::COM
 				if (m_isInitialised == false)
 					return;
 
-				if (m_comInitialisedThreadId != GetCurrentThreadId())
+				if (m_comInitialisedThreadId != Win32::GetCurrentThreadId())
 					throw Error::Boring32Error("Attempt to uninitialise COM by a thread different to initialising one.");
 
-				CoUninitialize();
+				Win32::CoUninitialize();
 				m_isInitialised = false;
 			}
 
@@ -172,7 +169,7 @@ export namespace Boring32::COM
 			///		Returns the thread ID that initialised this COM object scope.
 			/// </summary>
 			/// <returns>The thread ID that initialsed the COM scope.</returns>
-			DWORD GetComInitialisedThreadId() const noexcept
+			Win32::DWORD GetComInitialisedThreadId() const noexcept
 			{
 				return m_comInitialisedThreadId;
 			}
@@ -182,7 +179,7 @@ export namespace Boring32::COM
 			///		this object.
 			/// </summary>
 			/// <returns>The current COM threading apartment mode </returns>
-			COINIT GetApartmentThreadingMode() const noexcept
+			Win32::COINIT GetApartmentThreadingMode() const noexcept
 			{
 				return m_apartmentThreadingMode;
 			}
@@ -213,9 +210,9 @@ export namespace Boring32::COM
 		private:
 			bool m_isInitialised = false;
 			static std::atomic<unsigned> m_isSecurityInitialised;
-			DWORD m_comInitialisedThreadId = 0;
+			Win32::DWORD m_comInitialisedThreadId = 0;
 			// https://learn.microsoft.com/en-us/windows/win32/api/objbase/ne-objbase-coinit
-			COINIT m_apartmentThreadingMode = COINIT_MULTITHREADED;
+			Win32::COINIT m_apartmentThreadingMode = COINIT_MULTITHREADED;
 	};
 
 	std::atomic<unsigned> COMThreadScope::m_isSecurityInitialised(0);
