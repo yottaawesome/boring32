@@ -250,6 +250,8 @@ export namespace Boring32::Win32
 	using ::InitializeCriticalSectionEx;
 	using ::InitializeCriticalSectionAndSpinCount;
 	using ::DeleteCriticalSection;
+	using ::LeaveCriticalSection;
+	using ::EnterCriticalSection;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;

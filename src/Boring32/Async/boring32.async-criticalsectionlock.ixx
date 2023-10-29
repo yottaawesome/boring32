@@ -1,20 +1,20 @@
 export module boring32.async:criticalsectionlock;
-import <win32.hpp>;
+import boring32.win32;
 
 export namespace Boring32::Async
 {
-	class CriticalSectionLock
+	class CriticalSectionLock final
 	{
 		public:
-			virtual ~CriticalSectionLock()
+			~CriticalSectionLock()
 			{
-				LeaveCriticalSection(&m_criticalSection);
+				Win32::LeaveCriticalSection(&m_criticalSection);
 			}
 
-			CriticalSectionLock(CRITICAL_SECTION& criticalSection)
+			CriticalSectionLock(Win32::CRITICAL_SECTION& criticalSection)
 				: m_criticalSection(criticalSection)
 			{
-				EnterCriticalSection(&m_criticalSection);
+				Win32::EnterCriticalSection(&m_criticalSection);
 			}
 
 			// Non-movable and non-copyable
@@ -23,7 +23,7 @@ export namespace Boring32::Async
 			CriticalSectionLock(const CriticalSectionLock&& other) = delete;
 			CriticalSectionLock& operator=(const CriticalSectionLock&& other) = delete;
 
-		protected:
-			CRITICAL_SECTION& m_criticalSection;
+		private:
+			Win32::CRITICAL_SECTION& m_criticalSection;
 	};
 }
