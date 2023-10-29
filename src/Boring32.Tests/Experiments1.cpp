@@ -679,7 +679,7 @@ void TestAsyncWebSocket()
 	//socket.CloseSocket();
 	//Sleep(5000);
 	auto& result = socket.Receive();
-	result.Complete.WaitOnEvent(INFINITE, false);
+	result.Complete.WaitOnEvent((DWORD)INFINITE, false);
 
 
 	//auto result = socket.Receive2().get();

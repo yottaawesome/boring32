@@ -100,6 +100,7 @@ export namespace Boring32::Win32
 	using ::LPCSTR;
 	using ::COINIT;
 	using ::EOLE_AUTHENTICATION_CAPABILITIES;
+	using ::CRITICAL_SECTION;
 
 	inline HRESULT MakeHResult(const long severity, const long facility, const long code) noexcept
 	{
@@ -246,6 +247,9 @@ export namespace Boring32::Win32
 	using ::GetCurrentThreadId;
 	using ::CoInitializeSecurity;
 	using ::CoInitializeEx;
+	using ::InitializeCriticalSectionEx;
+	using ::InitializeCriticalSectionAndSpinCount;
+	using ::DeleteCriticalSection;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;

@@ -5,6 +5,7 @@ import <iostream>;
 import <chrono>;
 import <format>;
 import <optional>;
+import <source_location>;
 import <win32.hpp>;
 import boring32.raii;
 import boring32.error;
@@ -182,6 +183,11 @@ export namespace Boring32::Async
 					throw Error::Boring32Error("The wait was abandoned");
 			}
 
+			bool WaitOnEvent(const DWORD millis, const bool interruptible) const
+			{
+				return WaitOnEvent(std::chrono::milliseconds(millis), interruptible);
+			}
+
 			bool WaitOnEvent(
 				const Duration auto& time,
 				const bool alertable
@@ -189,34 +195,11 @@ export namespace Boring32::Async
 			{
 				using std::chrono::duration_cast;
 				using std::chrono::milliseconds;
-				return WaitOnEvent(
-					static_cast<DWORD>(duration_cast<milliseconds>(time).count()),
-					alertable
-				);
-			}
 
-			bool WaitOnEvent(
-				const Duration auto& time,
-				const bool alertable,
-				const std::nothrow_t&
-			) const
-			{
-				using std::chrono::duration_cast;
-				using std::chrono::milliseconds;
-				return WaitOnEvent(
-					static_cast<DWORD>(duration_cast<milliseconds>(time).count()),
-					alertable, 
-					std::nothrow
-				);
-			}
-
-			bool WaitOnEvent(
-				const DWORD millis, 
-				const bool alertable
-			) const
-			{
 				if (!m_event)
 					throw Error::Boring32Error("No Event to wait on");
+
+				const unsigned long millis = static_cast<unsigned long>(duration_cast<milliseconds>(time).count());
 
 				const DWORD status = WaitForSingleObjectEx(m_event.GetHandle(), millis, alertable);
 				if (status == WAIT_OBJECT_0)
@@ -234,13 +217,13 @@ export namespace Boring32::Async
 			}
 
 			bool WaitOnEvent(
-				const DWORD millis, 
+				const Duration auto& time,
 				const bool alertable, 
 				const std::nothrow_t&
 			) const noexcept try
 			{
 				//https://codeyarns.com/tech/2018-08-22-how-to-get-function-name-in-c.html
-				WaitOnEvent();
+				WaitOnEvent(time, alertable);
 				return true;
 			}
 			catch (const std::exception& ex)
