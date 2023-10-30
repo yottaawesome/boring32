@@ -39,22 +39,24 @@ export namespace Boring32::Async
 			{
 				m_lastWait = WaitFor(
 					m_handle,
-					std::chrono::duration_cast<std::chrono::milliseconds>(duration).count(),
+					static_cast<unsigned long>(std::chrono::duration_cast<std::chrono::milliseconds>(duration).count()),
 					alertable
 				);
 				if constexpr (FOnSuccess != nullptr)
 				{
-					static_assert(std::is_invocable_v<FOnSuccess>);
+					static_assert(std::is_invocable_v<decltype(FOnSuccess)>, "FOnSuccess must be invocable");
 					if (m_lastWait == WaitResult::Success)
 						FOnSuccess();
 				}
 				if constexpr (FOnTimeout != nullptr)
 				{
+					static_assert(std::is_invocable_v<decltype(FOnTimeout)>, "FOnTimeout must be invocable");
 					if (m_lastWait == WaitResult::Timeout)
 						FOnTimeout();
 				}
 				if constexpr (FOnFailure != nullptr)
 				{
+					static_assert(std::is_invocable_v<decltype(FOnFailure)>, "FOnFailure must be invocable");
 					if (m_lastWait == WaitResult::Failure)
 						FOnFailure();
 				}

@@ -12,6 +12,7 @@ namespace Async
 			Assert::ExpectException<std::exception>([]
 				{
 					Boring32::Async::Waitable<[]{}> w(nullptr);
+					w(std::chrono::seconds(1));
 				});
 		}
 	};
