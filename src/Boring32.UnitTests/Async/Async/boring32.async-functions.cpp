@@ -31,26 +31,26 @@ namespace Async
 						event.GetHandle(),
 						std::chrono::seconds(5),
 						false
-					)
+					) == Boring32::Async::WaitResult::Success
 				);
 			}
 
 			TEST_METHOD(WaitForSingleChronoTimeout)
 			{
 				Boring32::Async::Event event(false, true, false);
-				Assert::IsFalse(
+				Assert::IsTrue(
 					Boring32::Async::WaitFor(
 						event.GetHandle(),
 						std::chrono::seconds(1),
 						false
-					)
+					) == Boring32::Async::WaitResult::Timeout
 				);
 			}
 
 			TEST_METHOD(WaitForSingleTimeout)
 			{
 				Boring32::Async::Event event(false, true, false, L"");
-				Assert::IsFalse(Boring32::Async::WaitFor(event.GetHandle(), 100));
+				Assert::IsTrue(Boring32::Async::WaitFor(event.GetHandle(), 100) == Boring32::Async::WaitResult::Timeout);
 			}
 
 			TEST_METHOD(WaitForMultipleOne)

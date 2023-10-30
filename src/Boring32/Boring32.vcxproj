@@ -192,6 +192,7 @@
     <ClCompile Include="Async\boring32.async-sharedmap.ixx" />
     <ClCompile Include="Async\boring32.async-synced.ixx" />
     <ClCompile Include="Async\boring32.async-syncedcontainer.ixx" />
+    <ClCompile Include="Async\boring32.async-waitable.ixx" />
     <ClCompile Include="Async\boring32.async.ixx" />
     <ClCompile Include="Async\boring32.async-memorymappedfile.ixx" />
     <ClCompile Include="Async\boring32.async-memorymappedview.ixx" />

@@ -51,7 +51,7 @@ export namespace Boring32::Async
 		return WaitResult(result);
 	}
 
-	bool WaitFor(const HANDLE handle, const DWORD timeout, const bool alertable)
+	WaitResult WaitFor(const HANDLE handle, const DWORD timeout, const bool alertable)
 	{
 		if (!handle)
 			throw Error::Boring32Error("Handle is nullptr");
@@ -60,13 +60,13 @@ export namespace Boring32::Async
 		switch (const DWORD status = WaitForSingleObjectEx(handle, timeout, alertable))
 		{
 			case WAIT_OBJECT_0:
-				return true;
+				return WaitResult::Success;
 
 			case WAIT_TIMEOUT:
-				return false;
+				return WaitResult::Timeout;
 
 			case WAIT_IO_COMPLETION:
-				return false;
+				return WaitResult::IOComplete;
 
 			case WAIT_ABANDONED:
 				throw Error::Boring32Error("The wait was abandoned");
@@ -90,12 +90,12 @@ export namespace Boring32::Async
 		WaitFor(handle, INFINITE, false);
 	}
 
-	inline bool WaitFor(const HANDLE handle, const DWORD timeout)
+	inline WaitResult WaitFor(const HANDLE handle, const DWORD timeout)
 	{
 		return WaitFor(handle, timeout, false);
 	}
 
-	bool WaitFor(
+	WaitResult WaitFor(
 		const HANDLE handle, 
 		const Duration auto& time,
 		const bool isAlertable

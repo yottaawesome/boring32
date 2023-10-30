@@ -224,5 +224,6 @@
     <ClCompile Include="Native\boring32.native-ntdll.ixx" />
     <ClCompile Include="Native\boring32.native.ixx" />
     <ClCompile Include="Win32\boring32.win32.ixx" />
+    <ClCompile Include="Async\boring32.async-waitable.ixx" />
   </ItemGroup>
 </Project>

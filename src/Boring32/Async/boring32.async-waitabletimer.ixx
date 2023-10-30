@@ -193,7 +193,7 @@ export namespace Boring32::Async
 			{
 				if (!m_handle)
 					throw Error::Boring32Error("Timer handle is null");
-				return WaitFor(m_handle, millis, alertable);
+				return WaitFor(m_handle, millis, alertable) == WaitResult::Success;
 			}
 
 			virtual bool WaitOnTimer(

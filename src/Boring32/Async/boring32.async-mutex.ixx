@@ -202,7 +202,7 @@ export namespace Boring32::Async
 					m_mutex.GetHandle(), 
 					waitTime, 
 					isAlertable
-				);
+				) == WaitResult::Success;
 			}
 
 			/// <summary>

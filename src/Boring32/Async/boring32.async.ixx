@@ -30,3 +30,4 @@ export import :synced;
 export import :syncedcontainer;
 export import :sharedmap;
 export import :concepts;
+export import :waitable;
