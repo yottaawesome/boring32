@@ -164,6 +164,8 @@ export namespace Boring32::Win32
 	constexpr auto CpUtf8 = CP_UTF8;
 	constexpr auto WcNoBestFitChars = WC_NO_BEST_FIT_CHARS;
 
+	constexpr auto Infinite = INFINITE;
+
 	namespace ErrorCodes
 	{
 		constexpr auto Success = ERROR_SUCCESS;
@@ -192,6 +194,15 @@ export namespace Boring32::Win32
 		Identify = RPC_C_IMP_LEVEL_IDENTIFY,
 		Impersonate = RPC_C_IMP_LEVEL_IMPERSONATE,
 		Delegate = RPC_C_IMP_LEVEL_DELEGATE
+	};
+
+	enum class WaitResult : unsigned long
+	{
+		Failed = WAIT_FAILED,
+		Success = WAIT_OBJECT_0,
+		Timeout = WAIT_TIMEOUT,
+		Abandoned = WAIT_ABANDONED,
+		IoCompletion = STATUS_USER_APC
 	};
 
 	using ::K32EnumDeviceDrivers;
@@ -252,6 +263,10 @@ export namespace Boring32::Win32
 	using ::DeleteCriticalSection;
 	using ::LeaveCriticalSection;
 	using ::EnterCriticalSection;
+	using ::WaitForSingleObjectEx;
+	using ::WaitForSingleObject;
+	using ::WaitForMultipleObjectsEx;
+	using ::WaitForMultipleObjects;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
