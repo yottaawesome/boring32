@@ -11,9 +11,10 @@ import :concepts;
 
 export namespace Boring32::Async
 {
-	enum class WaitResult : DWORD
+	enum class WaitResult : unsigned long
 	{
 		Success = WAIT_OBJECT_0,
+		Failed = WAIT_FAILED,
 		Timeout = WAIT_TIMEOUT,
 		WaitAbandoned = WAIT_ABANDONED, 
 		IOComplete = WAIT_IO_COMPLETION

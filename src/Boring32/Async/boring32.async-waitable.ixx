@@ -44,6 +44,7 @@ export namespace Boring32::Async
 				);
 				if constexpr (FOnSuccess != nullptr)
 				{
+					static_assert(std::is_invocable_v<FOnSuccess>);
 					if (m_lastWait == WaitResult::Success)
 						FOnSuccess();
 				}
