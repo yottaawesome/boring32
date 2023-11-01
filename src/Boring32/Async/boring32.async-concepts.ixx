@@ -13,4 +13,7 @@ export namespace Boring32::Async
 
 	template<typename T>
 	concept Duration = IsDuration<T>::value;
+
+	template<typename T>
+	concept NullPtrOrInvocable = std::is_null_pointer_v<T> or std::invocable<T>;
 }

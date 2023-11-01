@@ -7,7 +7,12 @@ import :concepts;
 
 export namespace Boring32::Async
 {
-	template<auto FOnSuccess = nullptr, auto FOnTimeout = nullptr, auto FOnFailure = nullptr>
+	template<
+		NullPtrOrInvocable auto FWaitOperation = nullptr,
+		NullPtrOrInvocable auto FOnSuccess = nullptr,
+		NullPtrOrInvocable auto FOnTimeout = nullptr,
+		NullPtrOrInvocable auto FOnFailure = nullptr
+	>
 	class Waitable final
 	{
 		public:
@@ -29,19 +34,31 @@ export namespace Boring32::Async
 				return m_handle; 
 			}
 
-			void operator()(Duration auto duration, const bool alertable = false)
+			auto operator()(Duration auto duration, const bool alertable = false)
 			{
-				DoWaitAndGet(duration, alertable);
+				return DoWaitAndGet(duration, alertable);
 			}
 
 		public:
 			WaitResult DoWaitAndGet(Duration auto duration, const bool alertable = false)
 			{
-				m_lastWait = WaitFor(
-					m_handle,
-					static_cast<unsigned long>(std::chrono::duration_cast<std::chrono::milliseconds>(duration).count()),
-					alertable
-				);
+				if constexpr (FWaitOperation != nullptr)
+				{
+					m_lastWait = FWaitOperation(
+						m_handle,
+						static_cast<unsigned long>(std::chrono::duration_cast<std::chrono::milliseconds>(duration).count()),
+						alertable
+					);
+				}
+				else
+				{
+					m_lastWait = WaitFor(
+						m_handle,
+						static_cast<unsigned long>(std::chrono::duration_cast<std::chrono::milliseconds>(duration).count()),
+						alertable
+					);
+				}
+
 				if constexpr (FOnSuccess != nullptr)
 				{
 					static_assert(std::is_invocable_v<decltype(FOnSuccess)>, "FOnSuccess must be invocable");

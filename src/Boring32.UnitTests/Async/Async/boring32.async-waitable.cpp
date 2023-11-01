@@ -9,9 +9,9 @@ namespace Async
 	{
 		TEST_METHOD(TestThrowingConstructor)
 		{
-			Assert::ExpectException<std::exception>([]
-				{
-					Boring32::Async::Waitable<[]{}> w(nullptr);
+			Assert::ExpectException<std::exception>(
+				[]{
+					Boring32::Async::Waitable<nullptr, []{}> w(nullptr);
 					w(std::chrono::seconds(1));
 				});
 		}
