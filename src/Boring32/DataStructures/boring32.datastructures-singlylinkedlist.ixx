@@ -20,10 +20,10 @@ export namespace Boring32::DataStructures
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	template<typename T>
-	class SinglyLinkedList
+	class SinglyLinkedList final
 	{
 		public:
-			virtual ~SinglyLinkedList()
+			~SinglyLinkedList()
 			{
 				Close();
 			}
@@ -50,14 +50,14 @@ export namespace Boring32::DataStructures
 			}
 
 		public:
-			virtual SinglyLinkedList& operator=(const SinglyLinkedList&) = delete;
-			virtual SinglyLinkedList& operator=(SinglyLinkedList&& other) noexcept
+			SinglyLinkedList& operator=(const SinglyLinkedList&) = delete;
+			SinglyLinkedList& operator=(SinglyLinkedList&& other) noexcept
 			{
 				return Move(other);
 			}
 
 		public:
-			virtual void Close()
+			void Close()
 			{
 				if (m_listHeader)
 				{
@@ -78,12 +78,12 @@ export namespace Boring32::DataStructures
 				new(&newEntry->Item) std::shared_ptr<T>(new T(std::forward<Args>(args)...));
 			}
 
-			virtual Win32::USHORT GetDepth()
+			Win32::USHORT GetDepth()
 			{
 				return m_listHeader ? Win32::QueryDepthSList(m_listHeader) : 0;
 			}
 
-			virtual void Add(std::shared_ptr<T> newVal)
+			void Add(std::shared_ptr<T> newVal)
 			{
 				ListElement<T>* newEntry = InternalAdd();
 
@@ -93,7 +93,7 @@ export namespace Boring32::DataStructures
 				new(&newEntry->Item) std::shared_ptr<T>(std::move(newVal));
 			}
 
-			virtual std::shared_ptr<T> Pop()
+			std::shared_ptr<T> Pop()
 			{
 				// Using boring32error causes an internal compiler error. No idea why.
 				if (!m_listHeader)
@@ -111,7 +111,7 @@ export namespace Boring32::DataStructures
 				return item;
 			}
 
-			virtual void EmptyList()
+			void EmptyList()
 			{
 				if (!m_listHeader)
 					return;
@@ -129,7 +129,7 @@ export namespace Boring32::DataStructures
 			/// <param name="index"></param>
 			/// <returns></returns>
 			/// WARNING: doesn't work. Not sure why, but EntryInfo.Next is always null.
-			virtual std::shared_ptr<T> GetAt(const Win32::UINT index)
+			std::shared_ptr<T> GetAt(const Win32::UINT index)
 			{
 				if (!m_firstEntry)
 					return nullptr;
@@ -142,8 +142,8 @@ export namespace Boring32::DataStructures
 				return desiredEntry ? desiredEntry->Item : nullptr;
 			}
 
-		protected:
-			virtual SinglyLinkedList& Move(SinglyLinkedList& other)
+		private:
+			SinglyLinkedList& Move(SinglyLinkedList& other)
 			{
 				Close();
 				m_listHeader = other.m_listHeader;
@@ -153,7 +153,7 @@ export namespace Boring32::DataStructures
 				return *this;
 			}
 
-			virtual ListElement<T>* InternalAdd()
+			ListElement<T>* InternalAdd()
 			{
 				const auto newEntry = reinterpret_cast<ListElement<T>*>(
 					_aligned_malloc(sizeof(ListElement<T>), Win32::MemoryAllocationAlignment));
@@ -175,7 +175,7 @@ export namespace Boring32::DataStructures
 				return newEntry;
 			}
 
-		protected:
+		private:
 			Win32::PSLIST_HEADER m_listHeader = nullptr;
 			ListElement<T>* m_firstEntry = nullptr;
 	};

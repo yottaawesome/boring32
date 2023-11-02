@@ -74,6 +74,7 @@ export namespace Boring32::Win32
 	using ::SIZE_T;
 	using ::PSIZE_T;
 	using ::PLARGE_INTEGER;
+	using ::LARGE_INTEGER;
 	using ::ULONG;
 	using ::PHANDLE;
 	using ::ACCESS_MASK;
@@ -101,6 +102,8 @@ export namespace Boring32::Win32
 	using ::COINIT;
 	using ::EOLE_AUTHENTICATION_CAPABILITIES;
 	using ::CRITICAL_SECTION;
+	using ::PROCESSENTRY32W;
+	using ::PTIMERAPCROUTINE;
 
 	inline HRESULT MakeHResult(const long severity, const long facility, const long code) noexcept
 	{
@@ -196,13 +199,29 @@ export namespace Boring32::Win32
 		Delegate = RPC_C_IMP_LEVEL_DELEGATE
 	};
 
+	constexpr auto Th32csInherit = TH32CS_INHERIT;
+	constexpr auto Th32csSnapAll = TH32CS_SNAPALL;
+	constexpr auto Th32csSnapHeapList = TH32CS_SNAPHEAPLIST;
+	constexpr auto Th32csSnapModule = TH32CS_SNAPMODULE;
+	constexpr auto Th32csSnapModule32 = TH32CS_SNAPMODULE32;
+	constexpr auto Th32csSnapProcess = TH32CS_SNAPPROCESS;
+	constexpr auto Th32csSnapThread = TH32CS_SNAPTHREAD;
+
+	constexpr auto MaximumWaitObjects = MAXIMUM_WAIT_OBJECTS;
+	constexpr auto WaitObject0 = WAIT_OBJECT_0;
+	constexpr auto WaitFailed = WAIT_FAILED;
+	constexpr auto WaitSuccess = WAIT_OBJECT_0;
+	constexpr auto WaitTimeout = WAIT_TIMEOUT;
+	constexpr auto WaitAbandoned = WAIT_ABANDONED;
+	constexpr auto WaitIoCompletion = WAIT_IO_COMPLETION;
+
 	enum class WaitResult : unsigned long
 	{
 		Failed = WAIT_FAILED,
 		Success = WAIT_OBJECT_0,
 		Timeout = WAIT_TIMEOUT,
 		Abandoned = WAIT_ABANDONED,
-		IoCompletion = STATUS_USER_APC
+		IoCompletion = WAIT_IO_COMPLETION
 	};
 
 	using ::K32EnumDeviceDrivers;
@@ -271,6 +290,14 @@ export namespace Boring32::Win32
 	using ::CreateEventW;
 	using ::SetEvent;
 	using ::ResetEvent;
+	using ::CreateWaitableTimerW;
+	using ::SetWaitableTimer;
+	using ::CreateToolhelp32Snapshot;
+	using ::OpenWaitableTimerW;
+	using ::CancelWaitableTimer;
+	using ::Process32FirstW;
+	using ::ProcessIdToSessionId;
+	using ::Process32NextW;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;

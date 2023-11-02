@@ -40,7 +40,7 @@ export namespace Boring32::Async
 			}
 
 		public:
-			WaitResult DoWaitAndGet(Duration auto duration, const bool alertable = false)
+			Win32::WaitResult DoWaitAndGet(Duration auto duration, const bool alertable = false)
 			{
 				if constexpr (FWaitOperation != nullptr)
 				{
@@ -62,19 +62,19 @@ export namespace Boring32::Async
 				if constexpr (FOnSuccess != nullptr)
 				{
 					static_assert(std::is_invocable_v<decltype(FOnSuccess)>, "FOnSuccess must be invocable");
-					if (m_lastWait == WaitResult::Success)
+					if (m_lastWait == Win32::WaitResult::Success)
 						FOnSuccess();
 				}
 				if constexpr (FOnTimeout != nullptr)
 				{
 					static_assert(std::is_invocable_v<decltype(FOnTimeout)>, "FOnTimeout must be invocable");
-					if (m_lastWait == WaitResult::Timeout)
+					if (m_lastWait == Win32::WaitResult::Timeout)
 						FOnTimeout();
 				}
 				if constexpr (FOnFailure != nullptr)
 				{
 					static_assert(std::is_invocable_v<decltype(FOnFailure)>, "FOnFailure must be invocable");
-					if (m_lastWait == WaitResult::Failure)
+					if (m_lastWait == Win32::WaitResult::Failure)
 						FOnFailure();
 				}
 				return m_lastWait;
@@ -88,26 +88,26 @@ export namespace Boring32::Async
 
 			void AssertSuccess()
 			{
-				if (m_lastWait != WaitResult::Success)
+				if (m_lastWait != Win32::WaitResult::Success)
 					throw Error::Boring32Error("Last wait was not successful");
 			}
 
 			Waitable& OnSuccess(auto&& func, auto&&...args)
 			{
-				if (m_lastWait == WaitResult::Success)
+				if (m_lastWait == Win32::WaitResult::Success)
 					func(std::forward<decltype(args)>(args)...);
 				return *this;
 			}
 
 			Waitable& OnTimeout(auto&& func, auto&&...args)
 			{
-				if (m_lastWait == WaitResult::Timeout)
+				if (m_lastWait == Win32::WaitResult::Timeout)
 					func(std::forward<decltype(args)>(args)...);
 				return *this;
 			}
 
 		private:
-			WaitResult m_lastWait = WaitResult::Failed;
+			Win32::WaitResult m_lastWait = Win32::WaitResult::Failed;
 			Win32::HANDLE m_handle = nullptr;
 	};
 }

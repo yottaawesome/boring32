@@ -31,7 +31,7 @@ namespace Async
 						event.GetHandle(),
 						std::chrono::seconds(5),
 						false
-					) == Boring32::Async::WaitResult::Success
+					) == Boring32::Win32::WaitResult::Success
 				);
 			}
 
@@ -43,14 +43,14 @@ namespace Async
 						event.GetHandle(),
 						std::chrono::seconds(1),
 						false
-					) == Boring32::Async::WaitResult::Timeout
+					) == Boring32::Win32::WaitResult::Timeout
 				);
 			}
 
 			TEST_METHOD(WaitForSingleTimeout)
 			{
 				Boring32::Async::Event event(false, true, false, L"");
-				Assert::IsTrue(Boring32::Async::WaitFor(event.GetHandle(), 100) == Boring32::Async::WaitResult::Timeout);
+				Assert::IsTrue(Boring32::Async::WaitFor(event.GetHandle(), 100) == Boring32::Win32::WaitResult::Timeout);
 			}
 
 			TEST_METHOD(WaitForMultipleOne)

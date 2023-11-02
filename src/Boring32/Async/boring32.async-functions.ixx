@@ -3,7 +3,7 @@ import <vector>;
 import <string>;
 import <format>;
 import <chrono>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.raii;
 import boring32.strings;
 import boring32.error;
@@ -11,21 +11,12 @@ import :concepts;
 
 export namespace Boring32::Async
 {
-	enum class WaitResult : unsigned long
-	{
-		Success = WAIT_OBJECT_0,
-		Failed = WAIT_FAILED,
-		Timeout = WAIT_TIMEOUT,
-		WaitAbandoned = WAIT_ABANDONED, 
-		IOComplete = WAIT_IO_COMPLETION
-	};
-
 	// https://stackoverflow.com/questions/37918168/pass-stdchronoduration-by-value-or-by-reference-to-const
 	// https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-signalobjectandwait
 	template<typename T> requires IsDuration<T>
-	WaitResult SignalAndWait(
-		HANDLE const objectToSignal,
-		HANDLE const objectToWaitOn,
+	Win32::WaitResult SignalAndWait(
+		Win32::HANDLE const objectToSignal,
+		Win32::HANDLE const objectToWaitOn,
 		const T timeout,
 		const bool alertable
 	)
@@ -37,43 +28,39 @@ export namespace Boring32::Async
 
 		using std::chrono::duration_cast;
 		using std::chrono::milliseconds;
-		const DWORD result = SignalObjectAndWait(
+		const Win32::DWORD result = SignalObjectAndWait(
 			objectToSignal, 
 			objectToWaitOn, 
-			static_cast<DWORD>(duration_cast<milliseconds>(timeout).count()),
+			static_cast<Win32::DWORD>(duration_cast<milliseconds>(timeout).count()),
 			alertable
 		);
-		if (result == WAIT_FAILED)
+		if (result == Win32::WaitResult::Failed)
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error("SignalObjectAndWait() failed", lastError);
 		}
 		return WaitResult(result);
 	}
 
-	WaitResult WaitFor(const HANDLE handle, const DWORD timeout, const bool alertable)
+	Win32::WaitResult WaitFor(const Win32::HANDLE handle, const Win32::DWORD timeout, const bool alertable)
 	{
 		if (!handle)
 			throw Error::Boring32Error("Handle is nullptr");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobjectex
-		switch (const DWORD status = WaitForSingleObjectEx(handle, timeout, alertable))
+		switch (const Win32::WaitResult status = (Win32::WaitResult)Win32::WaitForSingleObjectEx(handle, timeout, alertable))
 		{
-			case WAIT_OBJECT_0:
-				return WaitResult::Success;
+			case Win32::WaitResult::Success:
+			case Win32::WaitResult::Timeout:
+			case Win32::WaitResult::IoCompletion:
+				return status;
 
-			case WAIT_TIMEOUT:
-				return WaitResult::Timeout;
-
-			case WAIT_IO_COMPLETION:
-				return WaitResult::IOComplete;
-
-			case WAIT_ABANDONED:
+			case Win32::WaitResult::Abandoned:
 				throw Error::Boring32Error("The wait was abandoned");
 
-			case WAIT_FAILED:
+			case Win32::WaitResult::Failed:
 			{
-				const auto lastError = GetLastError();
+				const auto lastError = Win32::GetLastError();
 				throw Error::Win32Error(
 					"WaitForSingleObjectEx() failed",
 					lastError
@@ -81,22 +68,22 @@ export namespace Boring32::Async
 			}
 
 			default:
-				throw Error::Boring32Error(std::format("Unknown wait status: {}", status));
+				throw Error::Boring32Error(std::format("Unknown wait status: {}", (unsigned long)status));
 		}
 	}
 
-	inline void WaitFor(const HANDLE handle)
+	inline void WaitFor(const Win32::HANDLE handle)
 	{
-		WaitFor(handle, INFINITE, false);
+		WaitFor(handle, Win32::Infinite, false);
 	}
 
-	inline WaitResult WaitFor(const HANDLE handle, const DWORD timeout)
+	inline Win32::WaitResult WaitFor(const Win32::HANDLE handle, const Win32::DWORD timeout)
 	{
 		return WaitFor(handle, timeout, false);
 	}
 
-	WaitResult WaitFor(
-		const HANDLE handle, 
+	Win32::WaitResult WaitFor(
+		const Win32::HANDLE handle,
 		const Duration auto& time,
 		const bool isAlertable
 	)
@@ -105,7 +92,7 @@ export namespace Boring32::Async
 		using std::chrono::milliseconds;
 		return WaitFor(
 			handle, 
-			static_cast<DWORD>(duration_cast<milliseconds>(time).count()),
+			static_cast<Win32::DWORD>(duration_cast<milliseconds>(time).count()),
 			isAlertable
 		);
 	}
@@ -132,23 +119,23 @@ export namespace Boring32::Async
 	///		respectively, 0 if waitForAll is true, or the index of the 
 	///		handle that was signaled otherwise.
 	/// </returns>
-	DWORD WaitFor(
-		const std::vector<HANDLE>& handles,
+	Win32::DWORD WaitFor(
+		const std::vector<Win32::HANDLE>& handles,
 		const bool waitForAll,
-		const DWORD timeout,
+		const Win32::DWORD timeout,
 		const bool alertable
 	)
 		{
 		if (handles.empty())
 			throw Error::Boring32Error("Handle is nullptr");
-		if (handles.size() > MAXIMUM_WAIT_OBJECTS)
+		if (handles.size() > Win32::MaximumWaitObjects)
 		{
 			throw Error::Boring32Error(std::format("Too many handles to wait on: {}", handles.size()));
 		}
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitformultipleobjectsex
-		const DWORD status = WaitForMultipleObjectsEx(
-			static_cast<DWORD>(handles.size()), 
+		const Win32::DWORD status = Win32::WaitForMultipleObjectsEx(
+			static_cast<Win32::DWORD>(handles.size()),
 			&handles[0], 
 			waitForAll, 
 			timeout, 
@@ -156,16 +143,16 @@ export namespace Boring32::Async
 		);
 		switch (status)
 		{
-			case WAIT_ABANDONED:
+			case Win32::WaitAbandoned:
 				throw Error::Boring32Error("The wait was abandoned.");
 
-			case WAIT_TIMEOUT:
-			case WAIT_IO_COMPLETION:
+			case Win32::WaitTimeout:
+			case Win32::WaitIoCompletion:
 				return status;
 
-			case WAIT_FAILED:
+			case Win32::WaitFailed:
 			{
-				const auto lastError = GetLastError();
+				const auto lastError = Win32::GetLastError();
 				throw Error::Win32Error(
 					"WaitForSingleObjectEx() failed",
 					lastError
@@ -173,30 +160,30 @@ export namespace Boring32::Async
 			}
 
 			default:
-				return waitForAll ? 0 : status - WAIT_OBJECT_0;
+				return waitForAll ? 0 : status - Win32::WaitObject0;
 		}
 	}
 
-	inline DWORD WaitFor(
-		const std::vector<HANDLE>& handles,
+	inline Win32::DWORD WaitFor(
+		const std::vector<Win32::HANDLE>& handles,
 		const bool waitForAll
 	)
 	{
-		return WaitFor(handles, waitForAll, INFINITE, false);
+		return WaitFor(handles, waitForAll, Win32::Infinite, false);
 	}
 
-	inline DWORD WaitFor(
-		const std::vector<HANDLE>& handles,
+	inline Win32::DWORD WaitFor(
+		const std::vector<Win32::HANDLE>& handles,
 		const bool waitForAll,
-		const DWORD timeout
+		const Win32::DWORD timeout
 	)
 	{
 		return WaitFor(handles, waitForAll, timeout, false);
 	}
 
 	template<typename T>
-	DWORD WaitFor(
-		const std::vector<HANDLE>& handles,
+	Win32::DWORD WaitFor(
+		const std::vector<Win32::HANDLE>& handles,
 		const bool waitForAll,
 		const Duration auto& time,
 		const bool alertable
@@ -207,7 +194,7 @@ export namespace Boring32::Async
 		return WaitFor(
 			handles, 
 			waitForAll, 
-			static_cast<DWORD>(duration_cast<milliseconds>(time).count()),
+			static_cast<Win32::DWORD>(duration_cast<milliseconds>(time).count()),
 			false
 		);
 	}
@@ -227,7 +214,7 @@ export namespace Boring32::Async
 	/// <returns>
 	///		vector of IDs.
 	/// </returns>
-	std::vector<DWORD> GetProcessIDsByName(
+	std::vector<Win32::DWORD> GetProcessIDsByName(
 		const std::wstring& processName,
 		const int sessionIdToMatch
 	)
@@ -236,28 +223,28 @@ export namespace Boring32::Async
 			throw Error::Boring32Error("ProcessName cannot be empty.");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-createtoolhelp32snapshot
-		RAII::Win32Handle processesSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-		if (processesSnapshot == INVALID_HANDLE_VALUE)
+		RAII::Win32Handle processesSnapshot = Win32::CreateToolhelp32Snapshot(Win32::Th32csSnapProcess, 0);
+		if (processesSnapshot == Win32::InvalidHandleValue)
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error(
 				"CreateToolhelp32Snapshot() failed",
 				lastError
 			);
 		}
 
-		PROCESSENTRY32W procEntry{ .dwSize = sizeof(PROCESSENTRY32W) };
+		Win32::PROCESSENTRY32W procEntry{ .dwSize = sizeof(Win32::PROCESSENTRY32W) };
 		// https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-process32firstw
-		if (!Process32FirstW(processesSnapshot.GetHandle(), &procEntry))
+		if (!Win32::Process32FirstW(processesSnapshot.GetHandle(), &procEntry))
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error(
 				"Process32First() failed",
 				lastError
 			);
 		}
 
-		std::vector<DWORD> results;
+		std::vector<Win32::DWORD> results;
 		do
 		{
 			if (!Strings::DoCaseInsensitiveMatch(procEntry.szExeFile, processName))
@@ -269,11 +256,11 @@ export namespace Boring32::Async
 				continue;
 			}
 
-			DWORD processSessionId = 0;
+			Win32::DWORD processSessionId = 0;
 			// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-processidtosessionid
-			if (!ProcessIdToSessionId(procEntry.th32ProcessID, &processSessionId))
+			if (!Win32::ProcessIdToSessionId(procEntry.th32ProcessID, &processSessionId))
 			{
-				const auto lastError = GetLastError();
+				const auto lastError = Win32::GetLastError();
 				throw Error::Win32Error(
 					"ProcessIdToSessionId() failed",
 					lastError
@@ -284,7 +271,7 @@ export namespace Boring32::Async
 			{
 				results.push_back(procEntry.th32ProcessID);
 			}
-		} while (Process32NextW(processesSnapshot.GetHandle(), &procEntry));
+		} while (Win32::Process32NextW(processesSnapshot.GetHandle(), &procEntry));
 		// https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-process32nextw
 
 		return results;

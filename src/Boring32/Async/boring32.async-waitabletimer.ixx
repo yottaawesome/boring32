@@ -4,9 +4,9 @@ import <stdexcept>;
 import <iostream>;
 import <format>;
 import <chrono>;
-import <win32.hpp>;
 import boring32.error;
 import boring32.raii;
+import boring32.win32;
 import :functions;
 import :concepts;
 
@@ -58,7 +58,7 @@ export namespace Boring32::Async
 				std::wstring name, 
 				const bool isInheritable, 
 				const bool isManualReset, 
-				const DWORD desiredAccess
+				const Win32::DWORD desiredAccess
 			) : m_name(std::move(name)),
 				m_isManualReset(isManualReset)
 			{
@@ -67,10 +67,10 @@ export namespace Boring32::Async
 
 				//TIMER_ALL_ACCESS
 				//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-openwaitabletimerw
-				m_handle = OpenWaitableTimerW(desiredAccess, isInheritable, m_name.c_str());
+				m_handle = Win32::OpenWaitableTimerW(desiredAccess, isInheritable, m_name.c_str());
 				if (!m_handle)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("Failed to open waitable timer", lastError);
 				}
 			}
@@ -106,8 +106,8 @@ export namespace Boring32::Async
 			///	</param>
 			virtual void SetTimerInNanos(
 				const int64_t hundredNanosecondIntervals, 
-				const UINT period,
-				const PTIMERAPCROUTINE callback,
+				const Win32::UINT period,
+				const Win32::PTIMERAPCROUTINE callback,
 				void* param
 			)
 			{
@@ -118,8 +118,8 @@ export namespace Boring32::Async
 
 			virtual bool SetTimerInNanos(
 				const int64_t hundedNsIntervals,
-				const UINT period,
-				const PTIMERAPCROUTINE callback,
+				const Win32::UINT period,
+				const Win32::PTIMERAPCROUTINE callback,
 				void* param,
 				const std::nothrow_t&
 			) noexcept try
@@ -135,8 +135,8 @@ export namespace Boring32::Async
 
 			virtual void SetTimerInMillis(
 				const int64_t ms,
-				const UINT period,
-				const PTIMERAPCROUTINE callback,
+				const Win32::UINT period,
+				const Win32::PTIMERAPCROUTINE callback,
 				void* param
 			)
 			{
@@ -147,8 +147,8 @@ export namespace Boring32::Async
 
 			virtual bool SetTimerInMillis(
 				const int64_t milliseconds,
-				const UINT period,
-				const PTIMERAPCROUTINE callback,
+				const Win32::UINT period,
+				const Win32::PTIMERAPCROUTINE callback,
 				void* param,
 				const std::nothrow_t&
 			) noexcept try
@@ -189,15 +189,15 @@ export namespace Boring32::Async
 				return false;
 			}
 
-			virtual bool WaitOnTimer(const DWORD millis, const bool alertable)
+			virtual bool WaitOnTimer(const Win32::DWORD millis, const bool alertable)
 			{
 				if (!m_handle)
 					throw Error::Boring32Error("Timer handle is null");
-				return WaitFor(m_handle, millis, alertable) == WaitResult::Success;
+				return WaitFor(m_handle, millis, alertable) == Win32::WaitResult::Success;
 			}
 
 			virtual bool WaitOnTimer(
-				const DWORD millis,
+				const Win32::DWORD millis,
 				const bool alertable,
 				const std::nothrow_t&
 			) noexcept try
@@ -215,9 +215,9 @@ export namespace Boring32::Async
 				if (!m_handle)
 					throw Error::Boring32Error("Timer handle is null");
 
-				if (!CancelWaitableTimer(m_handle.GetHandle()))
+				if (!Win32::CancelWaitableTimer(m_handle.GetHandle()))
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("CancelWaitableTimer() failed", lastError);
 				}
 			}
@@ -231,7 +231,7 @@ export namespace Boring32::Async
 			}
 			catch (const std::exception& ex)
 			{
-				std::wcerr << std::format("{}: CancelTimer() failed: {}\n", __FUNCSIG__, ex.what()).c_str();
+				std::wcerr << std::format("CancelTimer() failed: {}\n", ex.what()).c_str();
 				return false;
 			}
 
@@ -250,7 +250,7 @@ export namespace Boring32::Async
 			///		if no timer has been created.
 			/// </summary>
 			/// <returns></returns>
-			virtual HANDLE GetHandle() const noexcept
+			virtual Win32::HANDLE GetHandle() const noexcept
 			{
 				return m_handle.GetHandle();
 			}
@@ -283,14 +283,14 @@ export namespace Boring32::Async
 			virtual void InternalCreate(const bool isInheritable)
 			{
 				//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createwaitabletimerw
-				m_handle = CreateWaitableTimerW(
+				m_handle = Win32::CreateWaitableTimerW(
 					nullptr,
 					m_isManualReset,
 					m_name.empty() ? nullptr : m_name.c_str()
 				);
 				if (!m_handle)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("Failed to create waitable timer", lastError);
 				}
 				m_handle.SetInheritability(isInheritable);
@@ -298,15 +298,15 @@ export namespace Boring32::Async
 
 			virtual void InternalSetTimer(
 				const int64_t time, 
-				const UINT period,
-				const PTIMERAPCROUTINE callback, 
+				const Win32::UINT period,
+				const Win32::PTIMERAPCROUTINE callback,
 				void* param
 			)
 			{
-				LARGE_INTEGER liDueTime;
+				Win32::LARGE_INTEGER liDueTime;
 				liDueTime.QuadPart = time;
 				//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-setwaitabletimer
-				const bool succeeded = SetWaitableTimer(
+				const bool succeeded = Win32::SetWaitableTimer(
 					m_handle.GetHandle(),
 					&liDueTime,
 					period,
@@ -316,7 +316,7 @@ export namespace Boring32::Async
 				);
 				if (!succeeded)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("Failed to set timer", lastError);
 				}
 			}
