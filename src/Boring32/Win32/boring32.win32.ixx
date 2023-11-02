@@ -104,6 +104,8 @@ export namespace Boring32::Win32
 	using ::CRITICAL_SECTION;
 	using ::PROCESSENTRY32W;
 	using ::PTIMERAPCROUTINE;
+	using ::JOBOBJECT_EXTENDED_LIMIT_INFORMATION;
+	using ::JOBOBJECTINFOCLASS;
 
 	inline HRESULT MakeHResult(const long severity, const long facility, const long code) noexcept
 	{
@@ -224,6 +226,8 @@ export namespace Boring32::Win32
 		IoCompletion = WAIT_IO_COMPLETION
 	};
 
+	constexpr auto JobObjectAllAccess = JOB_OBJECT_ALL_ACCESS;
+
 	using ::K32EnumDeviceDrivers;
 	using ::K32EnumProcesses;
 	using ::GetLastError;
@@ -298,6 +302,10 @@ export namespace Boring32::Win32
 	using ::Process32FirstW;
 	using ::ProcessIdToSessionId;
 	using ::Process32NextW;
+	using ::SetInformationJobObject;
+	using ::AssignProcessToJobObject;
+	using ::CreateJobObjectW;
+	using ::OpenJobObjectW;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
