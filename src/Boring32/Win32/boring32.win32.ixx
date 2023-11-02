@@ -267,6 +267,10 @@ export namespace Boring32::Win32
 	using ::WaitForSingleObject;
 	using ::WaitForMultipleObjectsEx;
 	using ::WaitForMultipleObjects;
+	using ::OpenEventW;
+	using ::CreateEventW;
+	using ::SetEvent;
+	using ::ResetEvent;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
