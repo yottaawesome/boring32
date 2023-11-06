@@ -3,8 +3,8 @@ import <vector>;
 import <functional>;
 import <stdexcept>;
 import <algorithm>;
-import <win32.hpp>;
 import boring32.error;
+import boring32.win32;
 import :criticalsectionlock;
 
 export namespace Boring32::Async
@@ -19,7 +19,7 @@ export namespace Boring32::Async
 
 			EventLoop()
 			{
-				InitializeCriticalSection(&m_cs);
+				Win32::InitializeCriticalSection(&m_cs);
 			}
 
 		public:
@@ -27,31 +27,31 @@ export namespace Boring32::Async
 			{
 				m_handlers.clear();
 				m_events.clear();
-				DeleteCriticalSection(&m_cs);
+				Win32::DeleteCriticalSection(&m_cs);
 			}
 
-			virtual bool WaitOn(const DWORD millis, const bool waitAll)
+			virtual bool WaitOn(const Win32::DWORD millis, const bool waitAll)
 			{
 				if (m_events.empty())
 					throw Error::Boring32Error("m_events is empty");
 
 				CriticalSectionLock cs(m_cs);
 
-				const DWORD result = WaitForMultipleObjectsEx(
-					static_cast<DWORD>(m_events.size()),
+				const Win32::DWORD result = Win32::WaitForMultipleObjectsEx(
+					static_cast<Win32::DWORD>(m_events.size()),
 					&m_events[0],
 					waitAll,
 					millis,
 					true
 				);
-				if (result == WAIT_FAILED)
+				if (result == Win32::WaitFailed)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("WaitForMultipleObjectsEx() failed", lastError);
 				}
-				if (result == WAIT_TIMEOUT)
+				if (result == Win32::WaitTimeout)
 					return false;
-				if (result >= WAIT_ABANDONED && result <= (WAIT_ABANDONED + m_events.size() - 1))
+				if (result >= Win32::WaitAbandoned && result <= (Win32::WaitAbandoned + m_events.size() - 1))
 					throw Error::Boring32Error("A wait object was abandoned");
 
 				if (waitAll)
@@ -70,17 +70,17 @@ export namespace Boring32::Async
 				return true;
 			}
 
-			virtual void On(HANDLE handle, std::function<void()> handler)
+			virtual void On(Win32::HANDLE handle, std::function<void()> handler)
 			{
 				CriticalSectionLock cs(m_cs);
 				m_events.push_back(handle);
 				m_handlers.push_back(std::move(handler));
 			}
 
-			virtual void Erase(HANDLE handle)
+			virtual void Erase(Win32::HANDLE handle)
 			{
 				CriticalSectionLock cs(m_cs);
-				std::vector<HANDLE>::iterator handlePosIterator = std::find_if(
+				std::vector<Win32::HANDLE>::iterator handlePosIterator = std::find_if(
 					m_events.begin(),
 					m_events.end(),
 					[handle](const auto& elem) { return elem == handle; }
@@ -101,7 +101,7 @@ export namespace Boring32::Async
 
 		protected:
 			std::vector<std::function<void()>> m_handlers;
-			std::vector<HANDLE> m_events;
-			CRITICAL_SECTION m_cs;
+			std::vector<Win32::HANDLE> m_events;
+			Win32::CRITICAL_SECTION m_cs;
 	};
 }

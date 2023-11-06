@@ -306,6 +306,7 @@ export namespace Boring32::Win32
 	using ::AssignProcessToJobObject;
 	using ::CreateJobObjectW;
 	using ::OpenJobObjectW;
+	using ::InitializeCriticalSection;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
