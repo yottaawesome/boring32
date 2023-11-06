@@ -1,7 +1,7 @@
 export module boring32.async:slimreadwritelock;
 import <stdexcept>;
 import <functional>;
-import <win32.hpp>;
+import boring32.win32;
 
 export namespace Boring32::Async
 {
@@ -10,13 +10,13 @@ export namespace Boring32::Async
 		public:
 			~SharedLockScope()
 			{
-				ReleaseSRWLockShared(&m_srwLock);
+				Win32::ReleaseSRWLockShared(&m_srwLock);
 			}
 
-			SharedLockScope(SRWLOCK& srwLock) noexcept
+			SharedLockScope(Win32::SRWLOCK& srwLock) noexcept
 				: m_srwLock(srwLock)
 			{
-				AcquireSRWLockShared(&m_srwLock);
+				Win32::AcquireSRWLockShared(&m_srwLock);
 			}
 
 			SharedLockScope(const SharedLockScope&) = delete;
@@ -25,7 +25,7 @@ export namespace Boring32::Async
 			SharedLockScope operator=(SharedLockScope&&) noexcept = delete;
 
 		private:
-			SRWLOCK& m_srwLock;
+			Win32::SRWLOCK& m_srwLock;
 	};
 
 	class ExclusiveLockScope final
@@ -33,13 +33,13 @@ export namespace Boring32::Async
 		public:
 			~ExclusiveLockScope()
 			{
-				ReleaseSRWLockExclusive(&m_srwLock);
+				Win32::ReleaseSRWLockExclusive(&m_srwLock);
 			}
 
-			ExclusiveLockScope(SRWLOCK& srwLock) noexcept
+			ExclusiveLockScope(Win32::SRWLOCK& srwLock) noexcept
 				: m_srwLock(srwLock)
 			{
-				AcquireSRWLockExclusive(&m_srwLock);
+				Win32::AcquireSRWLockExclusive(&m_srwLock);
 			}
 
 			ExclusiveLockScope(const ExclusiveLockScope&) = delete;
@@ -48,7 +48,7 @@ export namespace Boring32::Async
 			ExclusiveLockScope operator=(ExclusiveLockScope&&) noexcept = delete;
 
 		private:
-			SRWLOCK& m_srwLock;
+			Win32::SRWLOCK& m_srwLock;
 	};
 
 	class SlimReadWriteLock final
@@ -56,7 +56,7 @@ export namespace Boring32::Async
 		public:
 			SlimReadWriteLock()
 			{
-				InitializeSRWLock(&m_srwLock);
+				Win32::InitializeSRWLock(&m_srwLock);
 			}
 
 			//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-initializesrwlock
@@ -69,15 +69,15 @@ export namespace Boring32::Async
 		public:
 			bool TryAcquireSharedLock()
 			{
-				return TryAcquireSRWLockShared(&m_srwLock);
+				return Win32::TryAcquireSRWLockShared(&m_srwLock);
 			}
 
 			bool TryAcquireExclusiveLock()
 			{
-				const DWORD currentThreadId = GetCurrentThreadId();
+				const Win32::DWORD currentThreadId = Win32::GetCurrentThreadId();
 				if (m_threadOwningExclusiveLock == currentThreadId)
 					return true;
-				if (TryAcquireSRWLockExclusive(&m_srwLock))
+				if (Win32::TryAcquireSRWLockExclusive(&m_srwLock))
 				{
 					m_threadOwningExclusiveLock = currentThreadId;
 					return true;
@@ -92,7 +92,7 @@ export namespace Boring32::Async
 
 			void AcquireExclusiveLock()
 			{
-				const DWORD currentThreadId = GetCurrentThreadId();
+				const Win32::DWORD currentThreadId = Win32::GetCurrentThreadId();
 				if (m_threadOwningExclusiveLock != currentThreadId)
 				{
 					AcquireSRWLockExclusive(&m_srwLock);
@@ -102,26 +102,26 @@ export namespace Boring32::Async
 
 			void ReleaseSharedLock()
 			{
-				ReleaseSRWLockShared(&m_srwLock);
+				Win32::ReleaseSRWLockShared(&m_srwLock);
 			}
 
 			void ReleaseExclusiveLock()
 			{
-				if (m_threadOwningExclusiveLock != GetCurrentThreadId())
+				if (m_threadOwningExclusiveLock != Win32::GetCurrentThreadId())
 					return;
 
-				ReleaseSRWLockExclusive(&m_srwLock);
+				Win32::ReleaseSRWLockExclusive(&m_srwLock);
 				m_threadOwningExclusiveLock = 0;
 			}
 
-			SRWLOCK& GetLock() noexcept
+			Win32::SRWLOCK& GetLock() noexcept
 			{
 				return m_srwLock;
 			}
 
 		private:
-			SRWLOCK m_srwLock;
-			DWORD m_threadOwningExclusiveLock = 0;
+			Win32::SRWLOCK m_srwLock;
+			Win32::DWORD m_threadOwningExclusiveLock = 0;
 	};
 
 	// Loosely inspired by Rust's Futex.
@@ -137,7 +137,7 @@ export namespace Boring32::Async
 			{}
 			SlimRWProtectedObject(TProtected&& data)
 				requires std::is_move_constructible_v<TProtected>
-			: m_data(std::move(data))
+				: m_data(std::move(data))
 			{}
 
 		public:

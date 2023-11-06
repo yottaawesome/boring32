@@ -106,6 +106,7 @@ export namespace Boring32::Win32
 	using ::PTIMERAPCROUTINE;
 	using ::JOBOBJECT_EXTENDED_LIMIT_INFORMATION;
 	using ::JOBOBJECTINFOCLASS;
+	using ::SRWLOCK;
 
 	inline HRESULT MakeHResult(const long severity, const long facility, const long code) noexcept
 	{
@@ -307,6 +308,13 @@ export namespace Boring32::Win32
 	using ::CreateJobObjectW;
 	using ::OpenJobObjectW;
 	using ::InitializeCriticalSection;
+	using ::ReleaseSRWLockShared;
+	using ::AcquireSRWLockShared;
+	using ::AcquireSRWLockExclusive;
+	using ::ReleaseSRWLockExclusive;
+	using ::TryAcquireSRWLockShared;
+	using ::TryAcquireSRWLockExclusive;
+	using ::InitializeSRWLock;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
