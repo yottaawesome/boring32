@@ -1,7 +1,7 @@
 export module boring32.async:filemapping;
 import <string>;
 import <stdexcept>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.raii;
 import boring32.error;
 
@@ -10,14 +10,6 @@ import boring32.error;
 
 export namespace Boring32::Async
 {
-	enum class FileMapAccess : unsigned long
-	{
-		All = FILE_MAP_ALL_ACCESS,
-		Execute = FILE_MAP_EXECUTE,
-		Read = FILE_MAP_READ,
-		Write = FILE_MAP_WRITE
-	};
-
 	class FileMapping final
 	{
 		public:
@@ -31,11 +23,11 @@ export namespace Boring32::Async
 			FileMapping(
 				const bool isInheritable, 
 				const size_t maxSize, 
-				const DWORD pageProtection
+				const Win32::DWORD pageProtection
 			) : m_maxSize(maxSize),
 				m_pageProtection(pageProtection)
 			{
-				CreateOrOpen(true, FileMapAccess::All, isInheritable);
+				Create(Win32::FileMapAccess::All, isInheritable);
 			}
 
 			/// <summary>
@@ -49,7 +41,7 @@ export namespace Boring32::Async
 				const bool isInheritable, 
 				const std::wstring name, 
 				const size_t maxSize, 
-				const DWORD pageProtection
+				const Win32::DWORD pageProtection
 			) : m_name(std::move(name)),
 				m_maxSize(maxSize),
 				m_pageProtection(pageProtection)
@@ -60,7 +52,7 @@ export namespace Boring32::Async
 					throw Error::Boring32Error("maxSize cannot be 0");
 				if (m_pageProtection == 0)
 					throw Error::Boring32Error("pageProtection cannot be 0");
-				CreateOrOpen(true, FileMapAccess::All, isInheritable);
+				Create(Win32::FileMapAccess::All, isInheritable);
 			}
 
 			/// <summary>
@@ -72,7 +64,7 @@ export namespace Boring32::Async
 			/// <param name="maxSize"></param>
 			FileMapping(
 				const std::wstring name,
-				const FileMapAccess desiredAccess,
+				const Win32::FileMapAccess desiredAccess,
 				const bool isInheritable,
 				const size_t maxSize
 			) : m_name(std::move(name)),
@@ -85,7 +77,7 @@ export namespace Boring32::Async
 					throw Error::Boring32Error("maxSize cannot be 0");
 				if (m_pageProtection == 0)
 					throw Error::Boring32Error("pageProtection cannot be 0");
-				CreateOrOpen(false, desiredAccess, isInheritable);
+				Open(desiredAccess, isInheritable);
 			}
 
 			FileMapping(const FileMapping& other)
@@ -125,7 +117,7 @@ export namespace Boring32::Async
 				return m_name;
 			}
 
-			HANDLE GetNativeHandle() const noexcept
+			Win32::HANDLE GetNativeHandle() const noexcept
 			{
 				return m_fileMapping.GetHandle();
 			}
@@ -141,47 +133,47 @@ export namespace Boring32::Async
 			}
 			
 		private:
-			void CreateOrOpen(
-				const bool create,
-				const FileMapAccess desiredAccess,
+			void Create(
+				const Win32::FileMapAccess desiredAccess,
 				const bool isInheritable
 			)
 			{
-				if (create)
+				Win32::LARGE_INTEGER li{ .QuadPart = static_cast<long long>(m_maxSize) };
+				const wchar_t* name = m_name.empty() ? nullptr : m_name.c_str();
+				// https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw
+				m_fileMapping = Win32::CreateFileMappingW(
+					Win32::InvalidHandleValue,	// use paging file
+					nullptr,				// default security
+					m_pageProtection,		// read/write access. e.g. PAGE_READWRITE
+					li.HighPart,			// maximum object size (high-order DWORD)
+					li.LowPart,				// maximum object size (low-order DWORD)
+					name					// m_name of mapping object
+				);
+				if (!m_fileMapping)
 				{
-					LARGE_INTEGER li{ .QuadPart = static_cast<long long>(m_maxSize) };
-					const wchar_t* name = m_name.empty() ? nullptr : m_name.c_str();
-					// https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw
-					m_fileMapping = CreateFileMappingW(
-						INVALID_HANDLE_VALUE,	// use paging file
-						nullptr,				// default security
-						m_pageProtection,		// read/write access. e.g. PAGE_READWRITE
-						li.HighPart,			// maximum object size (high-order DWORD)
-						li.LowPart,				// maximum object size (low-order DWORD)
-						name					// m_name of mapping object
-					);
-					if (!m_fileMapping)
-					{
-						const auto lastError = GetLastError();
-						throw Error::Win32Error("CreateFileMappingW() failed", lastError);
-					}
-					m_fileMapping.SetInheritability(isInheritable);
+					const auto lastError = Win32::GetLastError();
+					throw Error::Win32Error("CreateFileMappingW() failed", lastError);
 				}
-				else
+				m_fileMapping.SetInheritability(isInheritable);
+			}
+
+			void Open(
+				const Win32::FileMapAccess desiredAccess,
+				const bool isInheritable
+			)
+			{
+				if (m_name.empty())
+					throw Error::Boring32Error("m_name cannot be empty when opening a file mapping");
+				// https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-openfilemappingw
+				m_fileMapping = Win32::OpenFileMappingW(
+					static_cast<Win32::DWORD>(desiredAccess),	// read/write access
+					isInheritable,						// Should the handle be inheritable
+					m_name.c_str()						// name of mapping object
+				);
+				if (!m_fileMapping)
 				{
-					if (m_name.empty())
-						throw Error::Boring32Error("m_name cannot be empty when opening a file mapping");
-					// https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-openfilemappingw
-					m_fileMapping = OpenFileMappingW(
-						static_cast<DWORD>(desiredAccess),	// read/write access
-						isInheritable,						// Should the handle be inheritable
-						m_name.c_str()						// name of mapping object
-					);
-					if (!m_fileMapping)
-					{
-						const auto lastError = GetLastError();
-						throw Error::Win32Error("OpenFileMappingW() failed", lastError);
-					}
+					const auto lastError = Win32::GetLastError();
+					throw Error::Win32Error("OpenFileMappingW() failed", lastError);
 				}
 			}
 
@@ -217,6 +209,6 @@ export namespace Boring32::Async
 			RAII::Win32Handle m_fileMapping;
 			size_t m_maxSize = 0;
 			std::wstring m_name;
-			DWORD m_pageProtection = 0;
+			Win32::DWORD m_pageProtection = 0;
 	};
 }

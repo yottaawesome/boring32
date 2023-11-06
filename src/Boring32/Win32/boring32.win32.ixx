@@ -108,6 +108,24 @@ export namespace Boring32::Win32
 	using ::JOBOBJECTINFOCLASS;
 	using ::SRWLOCK;
 
+	enum class FileMapAccess : unsigned long
+	{
+		All = FILE_MAP_ALL_ACCESS,
+		Execute = FILE_MAP_EXECUTE,
+		Read = FILE_MAP_READ,
+		Write = FILE_MAP_WRITE
+	};
+
+	inline ::DWORD LowDWord(auto _qw) noexcept
+	{
+		return LODWORD(_qw);
+	}
+
+	inline ::DWORD HighDWord(auto _qw) noexcept
+	{
+		return HIDWORD(_qw);
+	}
+
 	inline HRESULT MakeHResult(const long severity, const long facility, const long code) noexcept
 	{
 		return MAKE_HRESULT(severity, facility, code);
@@ -315,6 +333,8 @@ export namespace Boring32::Win32
 	using ::TryAcquireSRWLockShared;
 	using ::TryAcquireSRWLockExclusive;
 	using ::InitializeSRWLock;
+	using ::CreateFileMappingW;
+	using ::OpenFileMappingW;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
