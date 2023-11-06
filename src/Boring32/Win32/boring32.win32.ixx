@@ -200,6 +200,7 @@ export namespace Boring32::Win32
 		constexpr auto NoMoreItems = ERROR_NO_MORE_ITEMS;
 		constexpr auto MoreData = ERROR_MORE_DATA;
 		constexpr auto InsufficientBuffer = ERROR_INSUFFICIENT_BUFFER;
+		constexpr auto Timeout = ERROR_TIMEOUT;
 	}
 
 	enum class RPCCAuthLevel : unsigned long
@@ -344,6 +345,9 @@ export namespace Boring32::Win32
 	using ::CreateMutexW;
 	using ::OpenMutexW;
 	using ::ReleaseMutex;
+	using ::WaitOnAddress;
+	using ::WakeByAddressSingle;
+	using ::WakeByAddressAll;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;

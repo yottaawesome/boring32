@@ -1,11 +1,11 @@
 export module boring32.async:waitableaddress;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 
 export namespace Boring32::Async
 {
 	// TODO: need to support values that can be 1, 2, 4, or 8 bytes long
-	class WaitableAddress
+	class WaitableAddress final
 	{
 		public:
 			enum class WakeType
@@ -15,75 +15,75 @@ export namespace Boring32::Async
 			};
 
 		public:
-			virtual ~WaitableAddress() = default;
+			~WaitableAddress() = default;
 			WaitableAddress() = default;
 			WaitableAddress(const WaitableAddress& other) = delete;
 			WaitableAddress(WaitableAddress&& other) noexcept = delete;
-			WaitableAddress(const DWORD defaultValue, const DWORD waitValue)
+			WaitableAddress(const Win32::DWORD defaultValue, const Win32::DWORD waitValue)
 				: m_defaultValue(defaultValue), m_waitValue(waitValue)
 			{ }
 
 		public:
-			virtual WaitableAddress& operator=(const WaitableAddress& other) = delete;
-			virtual WaitableAddress& operator=(WaitableAddress&& other) noexcept = delete;
+			WaitableAddress& operator=(const WaitableAddress& other) = delete;
+			WaitableAddress& operator=(WaitableAddress&& other) noexcept = delete;
 
 		public:
-			virtual bool Wait() const
+			bool Wait() const
 			{
-				return Wait(INFINITE);
+				return Wait(Win32::Infinite);
 			}
 
-			virtual bool Wait(const DWORD millis) const
+			bool Wait(const Win32::DWORD millis) const
 			{
 				// https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitonaddress
-				const bool waitSucceeded = WaitOnAddress(
+				const bool waitSucceeded = Win32::WaitOnAddress(
 					const_cast<unsigned long*>(&m_waitValue),
 					const_cast<unsigned long*>(&m_defaultValue),
-					sizeof(DWORD), // The size of the value, in bytes.This parameter can be 1, 2, 4, or 8.
+					sizeof(Win32::DWORD), // The size of the value, in bytes.This parameter can be 1, 2, 4, or 8.
 					millis
 				);
 				if (!waitSucceeded)
 				{
-					const auto lastError = GetLastError();
-					if (lastError == ERROR_TIMEOUT)
+					const auto lastError = Win32::GetLastError();
+					if (lastError == Win32::ErrorCodes::Timeout)
 						return false;
 					throw Error::Win32Error("WaitOnAddress() failed", lastError);
 				}
 				return true;
 			}
 
-			virtual void SetValue(const DWORD newValue, const WakeType wakeType)
+			void SetValue(const Win32::DWORD newValue, const WakeType wakeType)
 			{
 				m_waitValue = newValue;
 				switch (wakeType)
 				{
-				case WaitableAddress::WakeType::One:
-					// https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-wakebyaddresssingle
-					WakeByAddressSingle(&m_waitValue);
-					break;
+					case WaitableAddress::WakeType::One:
+						// https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-wakebyaddresssingle
+						Win32::WakeByAddressSingle(&m_waitValue);
+						break;
 
-				case WaitableAddress::WakeType::All:
-					WakeByAddressAll(&m_waitValue);
-					break;
+					case WaitableAddress::WakeType::All:
+						Win32::WakeByAddressAll(&m_waitValue);
+						break;
 
-				default:
-					throw Error::Boring32Error("Unknown wakeType");
+					default:
+						throw Error::Boring32Error("Unknown wakeType");
 				}
 			}
 
-			virtual DWORD GetValue() const noexcept
+			Win32::DWORD GetValue() const noexcept
 			{
 				return m_waitValue;
 			}
 
-			virtual DWORD GetDefaultValue() const noexcept
+			Win32::DWORD GetDefaultValue() const noexcept
 			{
 				return m_defaultValue;
 			}
 
-		protected:
+		private:
 			// These might probably be best extracted into their own template class
-			DWORD m_defaultValue = 0;
-			DWORD m_waitValue = 0;
+			Win32::DWORD m_defaultValue = 0;
+			Win32::DWORD m_waitValue = 0;
 	};
 }

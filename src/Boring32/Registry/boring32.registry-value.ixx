@@ -143,6 +143,7 @@ export namespace Boring32::Registry
 			}
 
 			static DWORD ReadDWord()
+				requires (TValueType == ValueTypes::DWord)
 			{
 				DWORD out;
 				DWORD sizeInBytes = sizeof(out);
@@ -165,6 +166,7 @@ export namespace Boring32::Registry
 			}
 
 			static std::wstring ReadString()
+				requires (TValueType == ValueTypes::String)
 			{
 				DWORD sizeInBytes = 0;
 				// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew
