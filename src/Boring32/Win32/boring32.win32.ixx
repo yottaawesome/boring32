@@ -335,6 +335,9 @@ export namespace Boring32::Win32
 	using ::InitializeSRWLock;
 	using ::CreateFileMappingW;
 	using ::OpenFileMappingW;
+	using ::ReleaseSemaphore;
+	using ::CreateSemaphoreW;
+	using ::OpenSemaphoreW;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;

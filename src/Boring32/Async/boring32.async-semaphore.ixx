@@ -3,7 +3,7 @@ import <string>;
 import <stdexcept>;
 import <format>;
 import <chrono>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 import boring32.raii;
 import :concepts;
@@ -59,10 +59,10 @@ export namespace Boring32::Async
 				if (maxCount == 0)
 					throw Error::Boring32Error("MaxCount cannot be 0.");
 				//SEMAPHORE_ALL_ACCESS
-				m_handle = OpenSemaphoreW(desiredAccess, isInheritable, m_name.c_str());
+				m_handle = Win32::OpenSemaphoreW(desiredAccess, isInheritable, m_name.c_str());
 				if (!m_handle)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("failed to open semaphore", lastError);
 				}
 			}
@@ -93,7 +93,7 @@ export namespace Boring32::Async
 					throw Error::Boring32Error("m_handle is nullptr.");
 
 				long previousCount;
-				if (!ReleaseSemaphore(*m_handle, countToRelease, &previousCount))
+				if (!Win32::ReleaseSemaphore(*m_handle, countToRelease, &previousCount))
 				{
 					const auto lastError = GetLastError();
 					throw Error::Win32Error("Failed to release semaphore", lastError);
@@ -102,7 +102,7 @@ export namespace Boring32::Async
 
 			bool Acquire()
 			{
-				return Acquire(INFINITE, false);
+				return Acquire(Win32::Infinite, false);
 			}
 
 			bool Acquire(const unsigned long millisTimeout)
@@ -150,25 +150,25 @@ export namespace Boring32::Async
 				if (!m_handle)
 					throw Error::Boring32Error("m_handle is nullptr.");
 
-				const DWORD status = WaitForSingleObjectEx(
+				const Win32::DWORD status = Win32::WaitForSingleObjectEx(
 					*m_handle,
 					millisTimeout,
 					isAlertable
 				);
 				switch (status)
 				{
-					case WAIT_OBJECT_0:
+					case Win32::WaitObject0:
 						return true;
 
-					case WAIT_TIMEOUT:
+					case Win32::WaitTimeout:
 						return false;
 
-					case WAIT_ABANDONED:
+					case Win32::WaitAbandoned:
 						throw Error::Boring32Error("The wait was abandoned.");
 
-					case WAIT_FAILED:
+					case Win32::WaitFailed:
 					{
-						const auto lastError = GetLastError();
+						const auto lastError = Win32::GetLastError();
 						throw Error::Win32Error("WaitForSingleObject() failed", lastError);
 					}
 
@@ -192,7 +192,7 @@ export namespace Boring32::Async
 				return m_maxCount;
 			}
 
-			HANDLE GetHandle() const noexcept
+			Win32::HANDLE GetHandle() const noexcept
 			{
 				return m_handle.GetHandle();
 			}
@@ -209,7 +209,7 @@ export namespace Boring32::Async
 					throw Error::Boring32Error("Initial count exceeds maximum count.");
 				if (maxCount == 0)
 					throw Error::Boring32Error("MaxCount cannot be 0.");
-				m_handle = CreateSemaphoreW(
+				m_handle = Win32::CreateSemaphoreW(
 					nullptr,
 					initialCount,
 					maxCount,
@@ -217,7 +217,7 @@ export namespace Boring32::Async
 				);
 				if (!m_handle)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error(
 						"Failed to create or open semaphore",
 						lastError
