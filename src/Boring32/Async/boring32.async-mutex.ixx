@@ -1,12 +1,9 @@
 export module boring32.async:mutex;
 import <string>;
-import <stdexcept>;
-import <string>;
 import <chrono>;
 import <iostream>;
-import <format>;
 import <atomic>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 import boring32.raii;
 import :functions;
@@ -70,7 +67,7 @@ export namespace Boring32::Async
 			Mutex(const bool acquire, const bool inheritable)
 				: m_locked(acquire)
 			{
-				m_mutex = CreateMutexW(
+				m_mutex = Win32::CreateMutexW(
 					nullptr,
 					m_locked,
 					nullptr
@@ -78,7 +75,7 @@ export namespace Boring32::Async
 				m_mutex.SetInheritability(inheritable);
 				if (!m_mutex)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("Failed to create mutex", lastError);
 				}
 			}
@@ -103,7 +100,7 @@ export namespace Boring32::Async
 			) : m_name(std::move(name)),
 				m_created(true)
 			{
-				m_mutex = CreateMutexW(
+				m_mutex = Win32::CreateMutexW(
 					nullptr,
 					acquireOnCreation,
 					m_name.empty() ? nullptr : m_name.c_str()
@@ -111,7 +108,7 @@ export namespace Boring32::Async
 				m_mutex.SetInheritability(inheritable);
 				if (!m_mutex)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("Failed to create mutex", lastError);
 				}
 
@@ -134,36 +131,36 @@ export namespace Boring32::Async
 				const bool acquireOnOpen,
 				const bool isInheritable,
 				std::wstring name,
-				const DWORD desiredAccess
+				const Win32::DWORD desiredAccess
 			) : m_name(name)
 			{
 				if (m_name.empty())
 					throw Error::Boring32Error("Cannot open mutex with empty name");
-				m_mutex = OpenMutexW(desiredAccess, isInheritable, m_name.c_str());
+				m_mutex = Win32::OpenMutexW(desiredAccess, isInheritable, m_name.c_str());
 				if (!m_mutex)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("Failed to open mutex", lastError);
 				}
 				if (acquireOnOpen)
-					Lock(INFINITE, true);
+					Lock(Win32::Infinite, true);
 			}
 
 		// API
 		public:
 			bool Lock()
 			{
-				return Lock(INFINITE, false);
+				return Lock(Win32::Infinite, false);
 			}
 
-			bool Lock(const DWORD waitTime)
+			bool Lock(const Win32::DWORD waitTime)
 			{
 				return Lock(waitTime, false);
 			}
 
 			bool Lock(const bool isAlertable)
 			{
-				return Lock(INFINITE, isAlertable);
+				return Lock(Win32::Infinite, isAlertable);
 			}
 
 			bool Lock(
@@ -174,7 +171,7 @@ export namespace Boring32::Async
 				using std::chrono::duration_cast;
 				using std::chrono::milliseconds;
 				return Lock(
-					static_cast<DWORD>(duration_cast<milliseconds>(time).count()),
+					static_cast<Win32::DWORD>(duration_cast<milliseconds>(time).count()),
 					alertable
 				);
 			}
@@ -194,7 +191,7 @@ export namespace Boring32::Async
 			/// <exception cref="Error::Boring32Error">
 			///		Mutex not initialised.
 			/// </exception>
-			bool Lock(const DWORD waitTime, const bool isAlertable)
+			bool Lock(const Win32::DWORD waitTime, const bool isAlertable)
 			{
 				if (!m_mutex)
 					throw Error::Boring32Error("Cannot wait on null mutex");
@@ -219,7 +216,7 @@ export namespace Boring32::Async
 			///		or false if the timeout occurred, or if an error occurred.
 			/// </returns>
 			bool Lock(
-				const DWORD waitTime, 
+				const Win32::DWORD waitTime,
 				const bool isAlertable, 
 				const std::nothrow_t&
 			) noexcept try
@@ -242,9 +239,9 @@ export namespace Boring32::Async
 			{
 				if (!m_mutex)
 					throw Error::Boring32Error("Cannot wait on null mutex");
-				if (!ReleaseMutex(m_mutex.GetHandle()))
+				if (!Win32::ReleaseMutex(m_mutex.GetHandle()))
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("Failed to release mutex", lastError);
 				}
 
@@ -282,7 +279,7 @@ export namespace Boring32::Async
 			///		Retrieves this Mutex's underlying handle.
 			/// </summary>
 			/// <returns>This Mutex's underlying handle</returns>
-			HANDLE GetHandle() const noexcept
+			Win32::HANDLE GetHandle() const noexcept
 			{
 				return m_mutex.GetHandle();
 			}

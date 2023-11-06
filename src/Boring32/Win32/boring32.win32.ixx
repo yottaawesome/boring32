@@ -341,6 +341,9 @@ export namespace Boring32::Win32
 	using ::CreateSemaphoreW;
 	using ::OpenSemaphoreW;
 	using ::QueueUserAPC;
+	using ::CreateMutexW;
+	using ::OpenMutexW;
+	using ::ReleaseMutex;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;

@@ -1,7 +1,5 @@
 export module boring32.async:semaphore;
 import <string>;
-import <stdexcept>;
-import <format>;
 import <chrono>;
 import boring32.win32;
 import boring32.error;
