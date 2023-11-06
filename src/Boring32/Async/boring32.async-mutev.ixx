@@ -7,7 +7,7 @@ import :event;
 export namespace Boring32::Async
 {
 	// TODO: what is this even supposed to do again?
-	class Mutev
+	class Mutev final
 	{
 		public:
 			enum class Active : unsigned
@@ -18,12 +18,16 @@ export namespace Boring32::Async
 			};
 
 		public:
-			virtual ~Mutev()
+			~Mutev()
 			{
 				Close();
 			}
 
 			Mutev() = default;
+			Mutev(const Mutev& other) = default;
+			Mutev& operator=(const Mutev& other) = default;
+			Mutev(Mutev&& other) noexcept = default;
+			Mutev& operator=(Mutev&& other) noexcept = default;
 
 			Mutev(const Active currentActive)
 				: m_currentActive(currentActive)
@@ -31,35 +35,15 @@ export namespace Boring32::Async
 				Set(m_currentActive);
 			}
 
-			Mutev(const Mutev& other)
-			{
-				Copy(other);
-			}
-
-			virtual Mutev& operator=(const Mutev& other)
-			{
-				return Copy(other);
-			}
-
-			Mutev(Mutev&& other) noexcept
-			{
-				Move(other);
-			}
-
-			virtual Mutev& operator=(Mutev&& other) noexcept
-			{
-				return Move(other);
-			}
-
 		public:
-			virtual void Close()
+			void Close()
 			{
 				m_first.Close();
 				m_second.Close();
 				m_currentActive = Active::None;
 			}
 
-			virtual void Set(const Active currentActive)
+			void Set(const Active currentActive)
 			{
 				switch (currentActive)
 				{
@@ -90,12 +74,12 @@ export namespace Boring32::Async
 				m_currentActive = currentActive;
 			}
 
-			virtual Active GetCurrentActive() const noexcept
+			Active GetCurrentActive() const noexcept
 			{
 				return m_currentActive;
 			}
 
-			virtual Active Switch()
+			Active Switch()
 			{
 				if (m_currentActive == Active::None)
 					Set(Active::First);
@@ -106,29 +90,7 @@ export namespace Boring32::Async
 				return m_currentActive;
 			}
 
-		protected:
-			virtual Mutev& Copy(const Mutev& other)
-			{
-				if (this == &other)
-					return *this;
-
-				m_first = other.m_first;
-				m_second = other.m_first;
-				m_currentActive = other.m_currentActive;
-
-				return *this;
-			}
-
-			virtual Mutev& Move(Mutev& other) noexcept
-			{
-				m_first = std::move(other.m_first);
-				m_second = std::move(other.m_first);
-				m_currentActive = other.m_currentActive;
-
-				return *this;
-			}
-
-		protected:
+		private:
 			Event m_first{ false, true, false };
 			Event m_second{ false, true, false };
 			Active m_currentActive = Active::None;
