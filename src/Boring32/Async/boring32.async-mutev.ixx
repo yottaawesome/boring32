@@ -1,13 +1,12 @@
 export module boring32.async:mutev;
-import <stdexcept>;
 import <format>;
 import <string>;
-import <win32.hpp>;
-import :event;
 import boring32.error;
+import :event;
 
 export namespace Boring32::Async
 {
+	// TODO: what is this even supposed to do again?
 	class Mutev
 	{
 		public:
@@ -24,16 +23,10 @@ export namespace Boring32::Async
 				Close();
 			}
 
-			Mutev() 
-				: m_first(false, true, false, L""),
-				m_second(false, true, false, L""),
-				m_currentActive(Active::None)
-			{ }
+			Mutev() = default;
 
 			Mutev(const Active currentActive)
-				: m_first(false, true, false, L""),
-				m_second(false, true, false, L""),
-				m_currentActive(currentActive)
+				: m_currentActive(currentActive)
 			{
 				Set(m_currentActive);
 			}
@@ -70,28 +63,28 @@ export namespace Boring32::Async
 			{
 				switch (currentActive)
 				{
-				case Active::None:
-					m_first.Reset();
-					m_second.Reset();
-					break;
+					case Active::None:
+						m_first.Reset();
+						m_second.Reset();
+						break;
 
-				case Active::First:
-					m_first.Signal();
-					m_second.Reset();
-					break;
+					case Active::First:
+						m_first.Signal();
+						m_second.Reset();
+						break;
 
-				case Active::Second:
-					m_first.Reset();
-					m_second.Signal();
-					break;
+					case Active::Second:
+						m_first.Reset();
+						m_second.Signal();
+						break;
 
-				default:
-					throw Error::Boring32Error(
-						std::format(
-							"Unknown active value {}",
-							static_cast<unsigned>(currentActive)
-						)
-					);
+					default:
+						throw Error::Boring32Error(
+							std::format(
+								"Unknown active value {}",
+								static_cast<unsigned>(currentActive)
+							)
+						);
 				}
 
 				m_currentActive = currentActive;
@@ -136,8 +129,8 @@ export namespace Boring32::Async
 			}
 
 		protected:
-			Event m_first;
-			Event m_second;
-			Active m_currentActive;
+			Event m_first{ false, true, false };
+			Event m_second{ false, true, false };
+			Active m_currentActive = Active::None;
 	};
 }
