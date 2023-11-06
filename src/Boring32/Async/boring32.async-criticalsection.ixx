@@ -4,15 +4,15 @@ import boring32.win32;
 
 export namespace Boring32::Async
 {
-	class CriticalSection
+	class CriticalSection final
 	{
 		public:
 			~CriticalSection()
 			{
 				Win32::DeleteCriticalSection(&m_criticalSection);
 			}
-			CriticalSection() = delete;
-			// Non-movable and non-copyable
+			// Non-movable and non-copyable, because the underlying
+			// primitive is not movable and not copyable.
 			CriticalSection(const CriticalSection&) = delete;
 			CriticalSection& operator=(const CriticalSection&) = delete;
 			CriticalSection(const CriticalSection&&) = delete;
