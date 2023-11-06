@@ -107,6 +107,8 @@ export namespace Boring32::Win32
 	using ::JOBOBJECT_EXTENDED_LIMIT_INFORMATION;
 	using ::JOBOBJECTINFOCLASS;
 	using ::SRWLOCK;
+	using ::PROCESS_INFORMATION;
+	using ::PAPCFUNC;
 
 	enum class FileMapAccess : unsigned long
 	{
@@ -338,6 +340,7 @@ export namespace Boring32::Win32
 	using ::ReleaseSemaphore;
 	using ::CreateSemaphoreW;
 	using ::OpenSemaphoreW;
+	using ::QueueUserAPC;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;

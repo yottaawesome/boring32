@@ -2,7 +2,7 @@ export module boring32.async:apcthread;
 import <iostream>;
 import <format>;
 import <functional>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 import :thread;
 import :event;
@@ -13,7 +13,7 @@ export namespace Boring32::Async
 	class APCThread : public Thread
 	{
 		public:
-			using ApcFunctionSignature = PAPCFUNC;
+			using ApcFunctionSignature = Win32::PAPCFUNC;
 
 		public:
 			APCThread() = default;
@@ -29,7 +29,7 @@ export namespace Boring32::Async
 
 				QueueAPC(
 					InternalAPC<T, M>,
-					reinterpret_cast<ULONG_PTR>(arg)
+					reinterpret_cast<Win32::ULONG_PTR>(arg)
 				);
 			}
 
@@ -39,7 +39,7 @@ export namespace Boring32::Async
 			{
 				QueueAPC(
 					InternalAPC<T>,
-					reinterpret_cast<ULONG_PTR>(const_cast<T*>(&apc))
+					reinterpret_cast<Win32::ULONG_PTR>(const_cast<T*>(&apc))
 				);
 			}
 
@@ -49,13 +49,13 @@ export namespace Boring32::Async
 			{
 				QueueAPC(
 					InternalHeapAPC<T>,
-					reinterpret_cast<ULONG_PTR>(new T(std::move(apc)))
+					reinterpret_cast<Win32::ULONG_PTR>(new T(std::move(apc)))
 				);
 			}
 
 			auto QueueAPC(
 				ApcFunctionSignature apc, 
-				const ULONG_PTR arg
+				const Win32::ULONG_PTR arg
 			) -> void
 			{
 				if (!m_threadHandle)
@@ -68,14 +68,14 @@ export namespace Boring32::Async
 						)
 					);
 
-				const DWORD status = QueueUserAPC(
+				const Win32::DWORD status = Win32::QueueUserAPC(
 					apc,
 					m_threadHandle,
 					arg
 				);
 				if (!status)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("QueueUserAPC() failed", lastError);
 				}
 			}
@@ -91,17 +91,17 @@ export namespace Boring32::Async
 				while (true)
 				{
 					// Do an alertable wait
-					const DWORD waitResult = WaitForSingleObjectEx(
+					const Win32::DWORD waitResult = Win32::WaitForSingleObjectEx(
 						m_wait.GetHandle(),
-						INFINITE,
+						Win32::Infinite,
 						true
 					);
 
 					// This is our signal to exit
-					if (waitResult == WAIT_OBJECT_0)
+					if (waitResult == Win32::WaitObject0)
 						return 0;
 					// Results other than WAIT_IO_COMPLETION are unexpected
-					if (waitResult != WAIT_IO_COMPLETION)
+					if (waitResult != Win32::WaitIoCompletion)
 					{
 						std::wcerr << std::format(
 							L"Unexpected WaitForSingleObjectEx(): {}",
@@ -115,7 +115,7 @@ export namespace Boring32::Async
 			}
 
 			template<typename T>
-			static void InternalAPC(ULONG_PTR arg)
+			static void InternalAPC(Win32::ULONG_PTR arg)
 				requires std::is_invocable_v<T>
 			{
 				const T& apc = *reinterpret_cast<T*>(arg);
@@ -123,7 +123,7 @@ export namespace Boring32::Async
 			}
 
 			template<typename T>
-			static void InternalHeapAPC(ULONG_PTR arg)
+			static void InternalHeapAPC(Win32::ULONG_PTR arg)
 				requires std::is_invocable_v<T>
 			{
 				T* apc = reinterpret_cast<T*>(arg);
@@ -139,7 +139,7 @@ export namespace Boring32::Async
 			};
 
 			template<typename T, typename M>
-			static void InternalAPC(ULONG_PTR arg)
+			static void InternalAPC(Win32::ULONG_PTR arg)
 			{
 				auto* apc = reinterpret_cast<InstanceMethod<T, M>*>(arg);
 				//(apc->Instance.*apc->Method)();

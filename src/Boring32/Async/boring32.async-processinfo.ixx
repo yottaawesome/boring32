@@ -1,5 +1,5 @@
 export module boring32.async:processinfo;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.raii;
 
 export namespace Boring32::Async
@@ -42,37 +42,37 @@ export namespace Boring32::Async
 			{
 				if (m_processInfo.hProcess)
 				{
-					CloseHandle(m_processInfo.hProcess);
+					Win32::CloseHandle(m_processInfo.hProcess);
 					m_processInfo.hProcess = nullptr;
 				}
 				if (m_processInfo.hThread)
 				{
-					CloseHandle(m_processInfo.hThread);
+					Win32::CloseHandle(m_processInfo.hThread);
 					m_processInfo.hThread = nullptr;
 				}
 			}
 
-			virtual PROCESS_INFORMATION& GetProcessInfo() noexcept
+			virtual Win32::PROCESS_INFORMATION& GetProcessInfo() noexcept
 			{
 				return m_processInfo;
 			}
 
-			virtual const PROCESS_INFORMATION& GetProcessInfo() const noexcept
+			virtual const Win32::PROCESS_INFORMATION& GetProcessInfo() const noexcept
 			{
 				return m_processInfo;
 			}
 
-			virtual PROCESS_INFORMATION* operator&() noexcept
+			virtual Win32::PROCESS_INFORMATION* operator&() noexcept
 			{
 				return &m_processInfo;
 			}
 
-			virtual HANDLE GetProcessHandle() const noexcept
+			virtual Win32::HANDLE GetProcessHandle() const noexcept
 			{
 				return m_processInfo.hProcess;
 			}
 
-			virtual HANDLE GetThreadHandle() const noexcept
+			virtual Win32::HANDLE GetThreadHandle() const noexcept
 			{
 				return m_processInfo.hThread;
 			}
@@ -103,6 +103,6 @@ export namespace Boring32::Async
 			}
 
 		protected:
-			PROCESS_INFORMATION m_processInfo{ 0 };
+			Win32::PROCESS_INFORMATION m_processInfo{ 0 };
 	};
 }
