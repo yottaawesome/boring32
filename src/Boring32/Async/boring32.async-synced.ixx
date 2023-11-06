@@ -1,35 +1,36 @@
 export module boring32.async:synced;
 import <functional>;
-import <win32.hpp>;
+import boring32.win32;
 import :criticalsectionlock;
 
 export namespace Boring32::Async
 {
 	template<typename T>
-	class Synced
+	class Synced final
 	{
 		public:
-			virtual ~Synced()
+			~Synced()
 			{
-				DeleteCriticalSection(&m_cs);
+				Win32::DeleteCriticalSection(&m_cs);
 			}
 
-			Synced() 
-			requires std::is_trivially_constructible<T>::value
+			Synced(const Synced&) = delete;
+			Synced operator=(const Synced&) = delete;
+
+			Synced() requires std::is_trivially_constructible<T>::value
 			{ 
-				InitializeCriticalSection(&m_cs); 
+				Win32::InitializeCriticalSection(&m_cs);
 			}
 
 			template<typename...Args>
 			Synced(Args... args)
 				: m_protected(args...)
 			{
-				InitializeCriticalSection(&m_cs);
+				Win32::InitializeCriticalSection(&m_cs);
 			}
 
 		public:
-			T operator()()
-			requires (std::is_copy_constructible<T>::value || std::is_copy_assignable<T>::value)
+			T operator()() requires (std::is_copy_constructible<T>::value || std::is_copy_assignable<T>::value)
 			{
 				CriticalSectionLock cs(m_cs);
 				return m_protected;
@@ -41,24 +42,22 @@ export namespace Boring32::Async
 				return X(m_protected);
 			}
 
-			Synced<T> operator=(const T& other)
-			requires std::is_copy_assignable<T>::value
+			Synced<T> operator=(const T& other) requires std::is_copy_assignable<T>::value
 			{
 				CriticalSectionLock cs(m_cs);
 				m_protected = other;
 				return *this;
 			}
 
-			Synced<T> operator=(T&& other) noexcept
-			requires std::is_move_assignable<T>::value
+			Synced<T> operator=(T&& other) noexcept requires std::is_move_assignable<T>::value
 			{
 				CriticalSectionLock cs(m_cs);
 				m_protected = other;
 				return *this;
 			}
 
-		protected:
+		private:
 			T m_protected;
-			CRITICAL_SECTION m_cs;
+			Win32::CRITICAL_SECTION m_cs;
 	};
 }
