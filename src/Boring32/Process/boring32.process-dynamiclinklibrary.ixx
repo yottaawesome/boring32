@@ -1,6 +1,5 @@
 export module boring32.process:dynamiclinklibrary;
 import <string>;
-import <stdexcept>;
 import <format>;
 import <iostream>;
 import boring32.win32;
