@@ -97,8 +97,16 @@ export namespace Boring32::COM
 				if (m_isInitialised)
 					return;
 
-				// Initialise COM for this thread
-				Win32::HRESULT hr = Win32::CoInitializeEx(nullptr, m_apartmentThreadingMode);
+				// Initialise COM for this thread.
+				Win32::HRESULT hr = Win32::CoInitializeEx(
+					nullptr,
+					// "In addition to the flags already mentioned, it is a good idea 
+					// to set the COINIT_DISABLE_OLE1DDE flag in the dwCoInit parameter. 
+					// Setting this flag avoids some overhead associated with Object 
+					// Linking and Embedding (OLE) 1.0, an obsolete technology."
+					// https://learn.microsoft.com/en-us/windows/win32/learnwin32/initializing-the-com-library
+					m_apartmentThreadingMode | Win32::COINIT::COINIT_DISABLE_OLE1DDE
+				);
 				if (Failed(hr))
 					throw Error::COMError("CoInitializeEx() failed", hr);
 

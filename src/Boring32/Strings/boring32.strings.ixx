@@ -89,6 +89,67 @@ export namespace Boring32::Strings
 		return wstrTo;
 	}
 
+	// trim from start (in place)
+	void LeftTrim(std::string& s)
+	{
+		s.erase(
+			s.begin(),
+			std::find_if(
+				s.begin(),
+				s.end(),
+				[](int ch) { return !std::isspace(ch); }
+			)
+		);
+	}
+
+	// trim from end (in place)
+	void RightTrim(std::string& s)
+	{
+		s.erase(
+			std::find_if(
+				s.rbegin(), 
+				s.rend(), 
+				[](int ch) { return !std::isspace(ch); }
+			).base(), 
+			s.end()
+		);
+	}
+
+	// trim from both ends (in place)
+	void Trim(std::string& s)
+	{
+		LeftTrim(s);
+		RightTrim(s);
+	}
+
+	// trim from start (in place)
+	void LeftTrim(std::wstring& s)
+	{
+		s.erase(
+			s.begin(),
+			std::find_if(
+				s.begin(),
+				s.end(),
+				[](int ch) { return !std::isspace(ch); }
+			)
+		);
+	}
+
+	// trim from end (in place)
+	void RightTrim(std::wstring& s)
+	{
+		s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) {
+			return !std::isspace(ch);
+			}).base(), s.end());
+	}
+
+	// trim from both ends (in place)
+	void Trim(std::wstring& s)
+	{
+		LeftTrim(s);
+		RightTrim(s);
+	}
+
 	std::vector<std::wstring> TokeniseString(
 		const std::wstring& stringToTokenise,
 		const std::wstring& delimiter
