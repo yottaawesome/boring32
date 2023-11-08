@@ -194,6 +194,7 @@ export namespace Boring32::COM
 
 		// Internal
 		private:
+			// Not sure if this is something that makes sense.
 			void Copy(const COMThreadScope& other)
 			{
 				Uninitialise();
