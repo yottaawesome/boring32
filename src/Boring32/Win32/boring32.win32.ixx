@@ -116,6 +116,7 @@ export namespace Boring32::Win32
 	using ::PTP_WORK;
 	using ::TP_POOL;
 	using ::TP_CALLBACK_ENVIRON;
+	using ::OVERLAPPED;
 
 	enum class FileMapAccess : unsigned long
 	{
@@ -213,6 +214,17 @@ export namespace Boring32::Win32
 		constexpr auto MoreData = ERROR_MORE_DATA;
 		constexpr auto InsufficientBuffer = ERROR_INSUFFICIENT_BUFFER;
 		constexpr auto Timeout = ERROR_TIMEOUT;
+		constexpr auto IoPending = ERROR_IO_PENDING;
+	}
+
+	namespace NTStatus // winnt.h
+	{
+		constexpr auto Pending = STATUS_PENDING;
+	}
+
+	namespace WinError // winerror.h
+	{
+		constexpr auto NoError = NOERROR;
 	}
 
 	enum class RPCCAuthLevel : unsigned long
