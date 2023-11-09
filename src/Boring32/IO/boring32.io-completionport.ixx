@@ -1,5 +1,5 @@
 export module boring32.io:completionport;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.raii;
 import boring32.error;
 
@@ -13,8 +13,8 @@ export namespace Boring32::IO
 			CompletionPort(const unsigned maxThreads)
 			{
 				// https://docs.microsoft.com/en-us/windows/win32/fileio/createiocompletionport
-				m_completionPort = CreateIoCompletionPort(
-					INVALID_HANDLE_VALUE,
+				m_completionPort = Win32::CreateIoCompletionPort(
+					Win32::InvalidHandleValue,
 					nullptr,
 					0,
 					maxThreads
@@ -22,44 +22,44 @@ export namespace Boring32::IO
 			}
 
 		public:
-			virtual void Associate(HANDLE device, const ULONG_PTR completionKey)
+			virtual void Associate(Win32::HANDLE device, const Win32::ULONG_PTR completionKey)
 			{
 				if (!device)
 					throw Error::Boring32Error("device cannot be null");
 
-				if (!CreateIoCompletionPort(device, m_completionPort.GetHandle(), completionKey, 0))
+				if (!Win32::CreateIoCompletionPort(device, m_completionPort.GetHandle(), completionKey, 0))
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("CreateIoCompletionPort() failed", lastError);
 				}
 			}
 
-			virtual HANDLE GetHandle() const noexcept
+			virtual Win32::HANDLE GetHandle() const noexcept
 			{
 				return m_completionPort;
 			}
 
 			virtual bool GetCompletionStatus()
 			{
-				DWORD bytesTransferred = 0;
-				ULONG_PTR completionKey = 0;
-				OVERLAPPED* overlapped = nullptr;
+				Win32::DWORD bytesTransferred = 0;
+				Win32::ULONG_PTR completionKey = 0;
+				Win32::OVERLAPPED* overlapped = nullptr;
 				// https://learn.microsoft.com/en-us/windows/win32/api/ioapiset/nf-ioapiset-getqueuedcompletionstatus
 				// See also https://learn.microsoft.com/en-us/windows/win32/fileio/getqueuedcompletionstatusex-func
-				const bool success = GetQueuedCompletionStatus(
+				const bool success = Win32::GetQueuedCompletionStatus(
 					m_completionPort,
 					&bytesTransferred,
 					&completionKey,
 					&overlapped,
-					INFINITE
+					Win32::Infinite
 				);
 
 				if (!success)
 				{
-					const DWORD lastError = GetLastError();
+					const Win32::DWORD lastError = Win32::GetLastError();
 					if (!overlapped)
 					{
-						if (lastError != ERROR_ABANDONED_WAIT_0)
+						if (lastError != Win32::ErrorCodes::AbandonedWait0)
 							throw Error::Win32Error("GetQueuedCompletionStatus() failed", lastError);
 					}
 					else

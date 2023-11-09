@@ -215,6 +215,7 @@ export namespace Boring32::Win32
 
 	namespace ErrorCodes
 	{
+		constexpr auto NoError = NOERROR;
 		constexpr auto Success = ERROR_SUCCESS;
 		constexpr auto BufferOverflow = ERROR_BUFFER_OVERFLOW;
 		constexpr auto UnknownProperty = ERROR_UNKNOWN_PROPERTY;
@@ -223,16 +224,12 @@ export namespace Boring32::Win32
 		constexpr auto InsufficientBuffer = ERROR_INSUFFICIENT_BUFFER;
 		constexpr auto Timeout = ERROR_TIMEOUT;
 		constexpr auto IoPending = ERROR_IO_PENDING;
+		constexpr auto AbandonedWait0 = ERROR_ABANDONED_WAIT_0;
 	}
 
 	namespace NTStatus // winnt.h
 	{
 		constexpr auto Pending = STATUS_PENDING;
-	}
-
-	namespace WinError // winerror.h
-	{
-		constexpr auto NoError = NOERROR;
 	}
 
 	enum class RPCCAuthLevel : unsigned long
@@ -420,6 +417,8 @@ export namespace Boring32::Win32
 	using ::MoveFileExW;
 	using ::WriteFile;
 	using ::ReadFile;
+	using ::CreateIoCompletionPort;
+	using ::GetQueuedCompletionStatus;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
