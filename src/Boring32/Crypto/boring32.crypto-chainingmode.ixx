@@ -1,7 +1,7 @@
 export module boring32.crypto:chainingmode;
 import <map>;
 import <string>;
-import <win32.hpp>;
+import boring32.win32;
 
 export namespace Boring32::Crypto
 {
@@ -19,11 +19,11 @@ export namespace Boring32::Crypto
 	const std::wstring& ChainingModeToString(const ChainingMode cm)
 	{
 		static std::map<ChainingMode, std::wstring> modes {
-			{ ChainingMode::CipherBlockChaining,	BCRYPT_CHAIN_MODE_CBC },
-			{ ChainingMode::CbcMac,					BCRYPT_CHAIN_MODE_CCM },
-			{ ChainingMode::CipherFeedback,			BCRYPT_CHAIN_MODE_CFB },
-			{ ChainingMode::ElectronicCodebook,		BCRYPT_CHAIN_MODE_ECB },
-			{ ChainingMode::GaloisCounterMode,		BCRYPT_CHAIN_MODE_GCM }
+			{ ChainingMode::CipherBlockChaining,	Win32::BCryptChainingMode::CipherBlockChaining },
+			{ ChainingMode::CbcMac,					Win32::BCryptChainingMode::CbcMac },
+			{ ChainingMode::CipherFeedback,			Win32::BCryptChainingMode::CipherFeedback },
+			{ ChainingMode::ElectronicCodebook,		Win32::BCryptChainingMode::ElectronicCodebook },
+			{ ChainingMode::GaloisCounterMode,		Win32::BCryptChainingMode::GaloisCounterMode }
 		};
 		return modes.at(cm);
 	};

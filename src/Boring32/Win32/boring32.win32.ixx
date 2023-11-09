@@ -120,6 +120,7 @@ export namespace Boring32::Win32
 	using ::VS_FIXEDFILEINFO;
 	using ::COMPRESSOR_HANDLE;
 	using ::DECOMPRESSOR_HANDLE;
+	using ::BCRYPT_KEY_HANDLE;
 
 	enum class CompressionType : DWORD
 	{
@@ -227,6 +228,15 @@ export namespace Boring32::Win32
 	constexpr auto Infinite = INFINITE;
 
 	constexpr auto CryptProtectMemoryBlockSize = CRYPTPROTECTMEMORY_BLOCK_SIZE;
+
+	namespace BCryptChainingMode
+	{
+		constexpr auto CipherBlockChaining = BCRYPT_CHAIN_MODE_CBC;
+		constexpr auto CbcMac = BCRYPT_CHAIN_MODE_CCM;
+		constexpr auto CipherFeedback = BCRYPT_CHAIN_MODE_CFB;
+		constexpr auto ElectronicCodebook = BCRYPT_CHAIN_MODE_ECB;
+		constexpr auto GaloisCounterMode = BCRYPT_CHAIN_MODE_GCM;
+	}
 
 	enum class EncryptionType : DWORD
 	{
@@ -451,6 +461,7 @@ export namespace Boring32::Win32
 	using ::ResetDecompressor;
 	using ::CryptProtectMemory;
 	using ::CryptUnprotectMemory;
+	using ::BCryptDestroyKey;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;

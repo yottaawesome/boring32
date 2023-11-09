@@ -2,13 +2,13 @@ export module boring32.crypto:cryptokey;
 import <string>;
 import <vector>;
 import <memory>;
-import <win32.hpp>;
+import boring32.win32;
 
 export namespace Boring32::Crypto
 {
-	std::shared_ptr<void> Generate(BCRYPT_KEY_HANDLE ptr)
+	std::shared_ptr<void> Generate(Win32::BCRYPT_KEY_HANDLE ptr)
 	{
-		return std::shared_ptr<void>{ ptr, BCryptDestroyKey };
+		return std::shared_ptr<void>{ ptr, Win32::BCryptDestroyKey };
 	}
 }
 
@@ -40,7 +40,7 @@ export namespace Boring32::Crypto
 
 		public:
 			CryptoKey(
-				BCRYPT_KEY_HANDLE const keyHandle,
+				Win32::BCRYPT_KEY_HANDLE const keyHandle,
 				std::vector<std::byte>&& keyObject
 			) : m_keyHandle(keyHandle),
 				m_keyObject(std::move(keyObject))
@@ -56,7 +56,7 @@ export namespace Boring32::Crypto
 			{
 				if (m_keyHandle)
 				{
-					BCryptDestroyKey(m_keyHandle);
+					Win32::BCryptDestroyKey(m_keyHandle);
 					m_keyHandle = nullptr;
 				}
 			}
@@ -73,7 +73,7 @@ export namespace Boring32::Crypto
 
 		private:
 			// We can duplicate this key, but for now, just share it
-			BCRYPT_KEY_HANDLE m_keyHandle = nullptr;
+			Win32::BCRYPT_KEY_HANDLE m_keyHandle = nullptr;
 			std::vector<std::byte> m_keyObject;
 	};
 }
