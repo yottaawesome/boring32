@@ -1,28 +1,28 @@
 export module boring32.compression:deleters;
 import <memory>;
-import <win32.hpp>;
+import boring32.win32;
 
 export namespace Boring32::Compression 
 {
 	struct CompressorDeleter final
 	{
-		void operator()(COMPRESSOR_HANDLE handle)
+		void operator()(Win32::COMPRESSOR_HANDLE handle)
 		{
-			CloseCompressor(handle);
+			Win32::CloseCompressor(handle);
 		}
 	};
 	using CompressorUniquePtr = std::unique_ptr<
-		std::remove_pointer<COMPRESSOR_HANDLE>::type, 
+		std::remove_pointer<Win32::COMPRESSOR_HANDLE>::type,
 		CompressorDeleter>;
 	
 	struct DecompressorDeleter final
 	{
-		void operator()(DECOMPRESSOR_HANDLE handle)
+		void operator()(Win32::DECOMPRESSOR_HANDLE handle)
 		{
-			CloseDecompressor(handle);
+			Win32::CloseDecompressor(handle);
 		}
 	};
 	using DecompressorUniquePtr = std::unique_ptr<
-		std::remove_pointer<DECOMPRESSOR_HANDLE>::type, 
+		std::remove_pointer<Win32::DECOMPRESSOR_HANDLE>::type,
 		DecompressorDeleter>;
 }

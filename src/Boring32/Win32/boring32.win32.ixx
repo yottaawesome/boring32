@@ -118,6 +118,17 @@ export namespace Boring32::Win32
 	using ::TP_CALLBACK_ENVIRON;
 	using ::OVERLAPPED;
 	using ::VS_FIXEDFILEINFO;
+	using ::COMPRESSOR_HANDLE;
+	using ::DECOMPRESSOR_HANDLE;
+
+	enum class CompressionType : DWORD
+	{
+		NotSet = 0,
+		MSZIP = COMPRESSION_FORMAT_LZNT1,
+		XPRESS = COMPRESSION_FORMAT_XPRESS,
+		XPRESSHuffman = COMPRESSION_FORMAT_XPRESS_HUFF,
+		LZMS = COMPRESSION_FORMAT_XP10
+	};
 
 	namespace MemoryProtection
 	{
@@ -421,6 +432,14 @@ export namespace Boring32::Win32
 	using ::ReadFile;
 	using ::CreateIoCompletionPort;
 	using ::GetQueuedCompletionStatus;
+	using ::Compress;
+	using ::ResetCompressor;
+	using ::CreateCompressor;
+	using ::CloseCompressor;
+	using ::CloseDecompressor;
+	using ::Decompress;
+	using ::CreateDecompressor;
+	using ::ResetDecompressor;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;

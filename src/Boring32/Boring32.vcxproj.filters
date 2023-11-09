@@ -28,7 +28,6 @@
     <ClCompile Include="Compression\boring32.compression.ixx" />
     <ClCompile Include="Compression\boring32.compression-compressor.ixx" />
     <ClCompile Include="Compression\boring32.compression-decompressor.ixx" />
-    <ClCompile Include="Compression\boring32.compression-compressiontype.ixx" />
     <ClCompile Include="Time\boring32.time.ixx" />
     <ClCompile Include="Process\boring32.process-dynamiclinklibrary.ixx" />
     <ClCompile Include="Util\boring32.util.ixx" />
@@ -225,5 +224,6 @@
     <ClCompile Include="Native\boring32.native.ixx" />
     <ClCompile Include="Win32\boring32.win32.ixx" />
     <ClCompile Include="Async\boring32.async-waitable.ixx" />
+    <ClCompile Include="Compression\boring32.compression-types.ixx" />
   </ItemGroup>
 </Project>

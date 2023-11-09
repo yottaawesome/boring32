@@ -220,6 +220,7 @@
     <ClCompile Include="Compression\boring32.compression-cabinet.ixx" />
     <ClCompile Include="Compression\boring32.compression-compressionerror.ixx" />
     <ClCompile Include="Compression\boring32.compression-deleters.ixx" />
+    <ClCompile Include="Compression\boring32.compression-types.ixx" />
     <ClCompile Include="Computer\boring32.computer-functions.ixx" />
     <ClCompile Include="Computer\boring32.computer-processinfo.ixx" />
     <ClCompile Include="Computer\boring32.computer.ixx" />
@@ -366,7 +367,6 @@
     <ClCompile Include="Compression\boring32.compression-compressor.ixx" />
     <ClCompile Include="Compression\boring32.compression-decompressor.ixx" />
     <ClCompile Include="Compression\boring32.compression.ixx" />
-    <ClCompile Include="Compression\boring32.compression-compressiontype.ixx" />
     <ClCompile Include="COM\boring32.com-comthreadscope.ixx" />
     <ClCompile Include="FileSystem\boring32.filesystem-file.ixx" />
     <ClCompile Include="RAII\boring32.raii-win32handle.ixx" />

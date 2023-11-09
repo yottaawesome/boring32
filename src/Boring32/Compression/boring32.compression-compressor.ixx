@@ -1,9 +1,8 @@
 export module boring32.compression:compressor;
 import <iostream>;
 import <vector>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
-import :compressiontype;
 import :deleters;
 import :compressionerror;
 
@@ -35,7 +34,7 @@ export namespace Boring32::Compression
 			}
 
 			Compressor(Compressor&& other) noexcept
-				: m_type(CompressionType::NotSet)
+				: m_type(Win32::CompressionType::NotSet)
 			{
 				Move(other);
 			}
@@ -46,7 +45,7 @@ export namespace Boring32::Compression
 			}
 
 		public:
-			Compressor(const CompressionType type)
+			Compressor(const Win32::CompressionType type)
 				: m_type(type)
 			{
 				Create();
@@ -70,7 +69,7 @@ export namespace Boring32::Compression
 
 				size_t compressedBufferSize = 0;
 				// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-compress
-				const bool succeeded = Compress(
+				const bool succeeded = Win32::Compress(
 					m_compressor.get(),     //  Compressor Handle
 					&buffer[0],             //  Input buffer, Uncompressed data
 					buffer.size(),          //  Uncompressed data size
@@ -78,8 +77,8 @@ export namespace Boring32::Compression
 					0,                      //  Compressed Buffer size
 					&compressedBufferSize	//  Compressed Data size
 				);
-				const DWORD lastError = GetLastError();
-				if (!succeeded && lastError != ERROR_INSUFFICIENT_BUFFER)
+				const Win32::DWORD lastError = Win32::GetLastError();
+				if (!succeeded && lastError != Win32::ErrorCodes::InsufficientBuffer)
 				{
 					Error::ThrowNested(
 						Error::Win32Error("Compress() failed", lastError),
@@ -93,7 +92,7 @@ export namespace Boring32::Compression
 			///		Returns the type of algorithm of this compressor.
 			/// </summary>
 			/// <returns>The algorithm used by this compressor.</returns>
-			[[nodiscard]] CompressionType GetType() const noexcept
+			[[nodiscard]] Win32::CompressionType GetType() const noexcept
 			{
 				return m_type;
 			}
@@ -115,7 +114,7 @@ export namespace Boring32::Compression
 				std::vector<std::byte> returnVal(GetCompressedSize(buffer));
 				size_t compressedBufferSize = 0;
 				// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-compress
-				const bool succeeded = Compress(
+				const bool succeeded = Win32::Compress(
 					m_compressor.get(),     //  Compressor Handle
 					&buffer[0],             //  Input buffer, Uncompressed data
 					buffer.size(),          //  Uncompressed data size
@@ -125,7 +124,7 @@ export namespace Boring32::Compression
 				);
 				if (!succeeded)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					Error::ThrowNested(
 						Error::Win32Error("Compress() failed", lastError),
 						CompressionError("An error occurred compressing")
@@ -141,10 +140,10 @@ export namespace Boring32::Compression
 			void Close()
 			{
 				m_compressor.reset();
-				m_type = CompressionType::NotSet;
+				m_type = Win32::CompressionType::NotSet;
 			}
 
-			[[nodiscard]] COMPRESSOR_HANDLE GetHandle() const noexcept
+			[[nodiscard]] Win32::COMPRESSOR_HANDLE GetHandle() const noexcept
 			{
 				return m_compressor.get();
 			}
@@ -154,9 +153,9 @@ export namespace Boring32::Compression
 				if (!m_compressor)
 					throw CompressionError("Compressor handle is null");
 				// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-resetcompressor
-				if (!ResetCompressor(m_compressor.get()))
+				if (!Win32::ResetCompressor(m_compressor.get()))
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					Error::ThrowNested(
 						Error::Win32Error("ResetCompressor() failed", lastError),
 						CompressionError("An error occurred resetting the compressor")
@@ -167,18 +166,18 @@ export namespace Boring32::Compression
 		private:
 			void Create()
 			{
-				if (m_type == CompressionType::NotSet)
+				if (m_type == Win32::CompressionType::NotSet)
 					return;
-				COMPRESSOR_HANDLE handle;
+				Win32::COMPRESSOR_HANDLE handle;
 				// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-createcompressor
-				const bool succeeded = CreateCompressor(
+				const bool succeeded = Win32::CreateCompressor(
 					static_cast<DWORD>(m_type),	// Algorithm
 					nullptr,		// AllocationRoutines
 					&handle			// CompressorHandle
 				);
 				if (!succeeded)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					Error::ThrowNested(
 						Error::Win32Error("CreateCompressor() failed", lastError),
 						CompressionError("An error occurred creating the compressor")
@@ -207,7 +206,7 @@ export namespace Boring32::Compression
 			}
 
 		private:
-			CompressionType m_type = CompressionType::NotSet;
+			Win32::CompressionType m_type = Win32::CompressionType::NotSet;
 			CompressorUniquePtr m_compressor;
 	};
 }
