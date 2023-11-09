@@ -2,8 +2,7 @@ export module boring32.async:syncedcontainer;
 import <vector>;
 import <functional>;
 import <algorithm>;
-import <source_location>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 import :criticalsectionlock;
 
@@ -15,20 +14,20 @@ export namespace Boring32::Async
 		public:
 			virtual ~SyncedContainer()
 			{
-				DeleteCriticalSection(&m_cs);
+				Win32::DeleteCriticalSection(&m_cs);
 			}
 
 			SyncedContainer()
 				requires std::is_trivially_constructible<T>::value
 			{
-				InitializeCriticalSection(&m_cs);
+				Win32::InitializeCriticalSection(&m_cs);
 			}
 
 			template<typename...Args>
 			SyncedContainer(Args... args)
 				: m_protected(args...)
 			{
-				InitializeCriticalSection(&m_cs);
+				Win32::InitializeCriticalSection(&m_cs);
 			}
 
 		public:
@@ -74,7 +73,7 @@ export namespace Boring32::Async
 			{
 				CriticalSectionLock cs(m_cs);
 				if (index >= m_protected.size())
-					throw Error::Boring32Error(std::source_location::current(), "Invalid index");
+					throw Error::Boring32Error("Invalid index");
 				return func(m_protected[index]);
 			}
 
@@ -102,7 +101,7 @@ export namespace Boring32::Async
 			{
 				CriticalSectionLock cs(m_cs);
 				if (index >= m_protected.size())
-					throw Error::Boring32Error(std::source_location::current(), "Invalid index");
+					throw Error::Boring32Error("Invalid index");
 				return m_protected[index];
 			}
 
@@ -177,7 +176,7 @@ export namespace Boring32::Async
 			{
 				CriticalSectionLock cs(m_cs);
 				if (index >= m_protected.size())
-					throw Error::Boring32Error(std::source_location::current(), "Invalid index");
+					throw Error::Boring32Error("Invalid index");
 				auto returnVal = m_protected[index];
 				m_protected.erase(m_protected.begin() + index);
 				return returnVal;
@@ -185,6 +184,6 @@ export namespace Boring32::Async
 			
 		protected:
 			T m_protected;
-			CRITICAL_SECTION m_cs;
+			Win32::CRITICAL_SECTION m_cs;
 	};
 }
