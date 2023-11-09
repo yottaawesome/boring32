@@ -10,8 +10,6 @@ export namespace Boring32::Async
 	class Process final
 	{
 		public:
-			virtual ~Process() = default;
-
 			Process() = default;
 
 			Process(Process&& other) noexcept = default;
