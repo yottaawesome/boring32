@@ -1,7 +1,6 @@
 export module boring32.async:timerqueue;
-import <stdexcept>;
-import <win32.hpp>;
 import <iostream>;
+import boring32.win32;
 import boring32.error;
 import :event;
 
@@ -31,7 +30,7 @@ export namespace Boring32::Async
 			{
 				if (!m_completionEvent)
 					throw Error::Boring32Error("completionEvent cannot be nullptr");
-				if (m_completionEvent == INVALID_HANDLE_VALUE)
+				if (m_completionEvent == Win32::InvalidHandleValue)
 					throw Error::Boring32Error("completionEvent cannot be INVALID_HANDLE_VALUE");
 				InternalCreate();
 			}
@@ -58,16 +57,16 @@ export namespace Boring32::Async
 				if (!m_timer)
 					return;
 
-				HANDLE argValue = INVALID_HANDLE_VALUE; // waits for all callbacks on deletion
+				Win32::HANDLE argValue = Win32::InvalidHandleValue; // waits for all callbacks on deletion
 				if (m_completionEvent)
 					argValue = m_completionEvent.GetHandle(); // waits for all callbacks on deletion and signals event
 				else if (!m_waitForAllCallbacks)
 					argValue = nullptr; // does not wait
 
 				//https://docs.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-deletetimerqueueex
-				if (!DeleteTimerQueueEx(m_timer, argValue))
+				if (!Win32::DeleteTimerQueueEx(m_timer, argValue))
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("DeleteTimerQueueEx() failed", lastError);
 				}
 				m_timer = nullptr;
@@ -84,7 +83,7 @@ export namespace Boring32::Async
 				return false;
 			}
 
-			HANDLE GetHandle() const noexcept
+			Win32::HANDLE GetHandle() const noexcept
 			{
 				return m_timer;
 			}
@@ -93,10 +92,10 @@ export namespace Boring32::Async
 			void InternalCreate()
 			{
 				//https://docs.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-createtimerqueue
-				m_timer = CreateTimerQueue();
+				m_timer = Win32::CreateTimerQueue();
 				if (m_timer == nullptr)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("CreateTimerQueue() failed", lastError);
 				}
 			}
@@ -114,7 +113,7 @@ export namespace Boring32::Async
 			}
 
 		private:
-			HANDLE m_timer = nullptr;
+			Win32::HANDLE m_timer = nullptr;
 			Async::Event m_completionEvent;
 			bool m_waitForAllCallbacks = false;
 	};

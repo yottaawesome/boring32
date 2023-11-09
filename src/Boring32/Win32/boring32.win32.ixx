@@ -371,6 +371,8 @@ export namespace Boring32::Win32
 	using ::ChangeTimerQueueTimer;
 	using ::DeleteTimerQueueTimer;
 	using ::CreateTimerQueueTimer;
+	using ::CreateTimerQueue;
+	using ::DeleteTimerQueueEx;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
