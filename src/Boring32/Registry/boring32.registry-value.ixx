@@ -70,9 +70,16 @@ export namespace Boring32::Registry
 	struct FixedString
 	{
 		wchar_t buf[N]{};
-		constexpr FixedString(const wchar_t(&arg)[N]) noexcept
+		//constexpr FixedString(const wchar_t(&arg)[N]) noexcept
+		//{
+		//	std::copy_n(arg, N, buf);
+		//	//for (unsigned i = 0; i < N; i++)
+		//		//buf[i] = arg[i];
+		//}
+
+		constexpr FixedString(const wchar_t* arg) noexcept
 		{
-			std::copy_n(str, N, data);
+			std::copy_n(arg, N, buf);
 			//for (unsigned i = 0; i < N; i++)
 				//buf[i] = arg[i];
 		}
@@ -82,13 +89,15 @@ export namespace Boring32::Registry
 			return buf;
 		}
 
-		constexpr operator std::string_view() const noexcept
+		constexpr operator std::wstring_view() const noexcept
 		{
 			return { buf, N };
 		}
 	};
 	template<size_t N>
 	FixedString(wchar_t const (&)[N]) -> FixedString<N>;
+	template<size_t N>
+	FixedString(const wchar_t*) -> FixedString<N>;
 
 	template <typename T>
 	constexpr bool always_false = std::false_type::value;
