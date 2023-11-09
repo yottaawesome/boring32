@@ -1,8 +1,7 @@
 export module boring32.winhttp:websocketsettings;
 import boring32.crypto;
-import :session;
 import <string>;
-import <Windows.h>;
+import :session;
 
 export namespace Boring32::WinHttp::WebSockets
 {
@@ -15,6 +14,6 @@ export namespace Boring32::WinHttp::WebSockets
 		std::wstring ConnectionHeaders;
 		Session WinHttpSession;
 		Crypto::Certificate ClientCert;
-		UINT BufferBlockSize = 2048;
+		unsigned BufferBlockSize = 2048;
 	};
 }
