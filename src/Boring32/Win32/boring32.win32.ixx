@@ -117,6 +117,7 @@ export namespace Boring32::Win32
 	using ::TP_POOL;
 	using ::TP_CALLBACK_ENVIRON;
 	using ::OVERLAPPED;
+	using ::VS_FIXEDFILEINFO;
 
 	namespace MemoryProtection
 	{
@@ -187,6 +188,8 @@ export namespace Boring32::Win32
 	constexpr const wchar_t* InstallProperty_PackageName = INSTALLPROPERTY_PACKAGENAME;
 
 	const HANDLE InvalidHandleValue = INVALID_HANDLE_VALUE;
+
+	constexpr auto SddlRevision1 = SDDL_REVISION_1;
 
 	constexpr unsigned long GenericRead = GENERIC_READ;
 	constexpr unsigned long GenericWrite = GENERIC_WRITE;
@@ -409,6 +412,14 @@ export namespace Boring32::Win32
 	using ::CreateFileMappingW;
 	using ::OpenFileMappingW;
 	using ::UnmapViewOfFile;
+	using ::GetFileVersionInfoSizeW;
+	using ::GetFileVersionInfoW;
+	using ::VerQueryValueW;
+	using ::CreateDirectoryW;
+	using ::ConvertStringSecurityDescriptorToSecurityDescriptorW;
+	using ::MoveFileExW;
+	using ::WriteFile;
+	using ::ReadFile;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
