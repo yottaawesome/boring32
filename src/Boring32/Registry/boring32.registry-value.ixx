@@ -72,14 +72,19 @@ export namespace Boring32::Registry
 		wchar_t buf[N]{};
 		constexpr FixedString(const wchar_t(&arg)[N]) noexcept
 		{
-			//buf = arg;
-			for (unsigned i = 0; i < N; i++)
-				buf[i] = arg[i];
+			std::copy_n(str, N, data);
+			//for (unsigned i = 0; i < N; i++)
+				//buf[i] = arg[i];
 		}
 
 		constexpr operator const wchar_t* () const noexcept
 		{
 			return buf;
+		}
+
+		constexpr operator std::string_view() const noexcept
+		{
+			return { buf, N };
 		}
 	};
 	template<size_t N>
