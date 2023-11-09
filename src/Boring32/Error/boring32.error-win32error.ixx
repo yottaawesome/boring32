@@ -1,7 +1,6 @@
 export module boring32.error:win32error;
 import <string>;
 import <format>;
-import <stdexcept>;
 import <stacktrace>;
 import <source_location>;
 import :boring32error;
@@ -77,7 +76,7 @@ export namespace Boring32::Error
 				const std::stacktrace& trace
 			)
 			{
-				std::string m_message = Boring32::Error::TranslateErrorCode<std::string>(
+				std::string m_message = Error::TranslateErrorCode<std::string>(
 					errorCode,
 					moduleName
 				);

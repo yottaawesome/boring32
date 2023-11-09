@@ -1,5 +1,4 @@
 export module boring32.compression:compressionerror;
-import <stdexcept>;
 import <string>;
 import <stacktrace>;
 import <source_location>;

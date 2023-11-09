@@ -4,7 +4,6 @@ import <string>;
 import <future>;
 import <memory>;
 import <algorithm>;
-import <stdexcept>;
 import <iostream>;
 import <win32.hpp>;
 import boring32.async;

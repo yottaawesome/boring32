@@ -1,6 +1,5 @@
 export module boring32.async:memorymappedfile;
 import <string>;
-import <stdexcept>;
 import <format>;
 import <iostream>;
 import <win32.hpp>;

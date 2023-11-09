@@ -1,5 +1,4 @@
 export module boring32.async:slimreadwritelock;
-import <stdexcept>;
 import <functional>;
 import boring32.win32;
 

@@ -1,7 +1,6 @@
 export module boring32.async:eventloop;
 import <vector>;
 import <functional>;
-import <stdexcept>;
 import <algorithm>;
 import boring32.error;
 import boring32.win32;

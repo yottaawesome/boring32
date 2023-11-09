@@ -1,7 +1,6 @@
 export module boring32.security:functions;
 import <string>;
 import <vector>;
-import <stdexcept>;
 import <format>;
 import <iostream>;
 import <win32.hpp>;

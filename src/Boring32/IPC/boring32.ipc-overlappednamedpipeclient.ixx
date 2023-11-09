@@ -1,5 +1,4 @@
 export module boring32.ipc:overlappednamedpipeclient;
-import <stdexcept>;
 import <format>;
 import <iostream>; 
 import <string>;

@@ -1,8 +1,7 @@
 export module boring32.xaudio2:engine;
 import <win32.hpp>;
-import :xaudio2error;
 import boring32.error;
-import <stdexcept>;
+import :xaudio2error;
 
 export namespace Boring32::XAudio2
 {

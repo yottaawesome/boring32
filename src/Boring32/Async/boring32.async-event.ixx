@@ -1,6 +1,5 @@
 export module boring32.async:event;
 import <string>;
-import <stdexcept>;
 import <iostream>;
 import <chrono>;
 import <format>;

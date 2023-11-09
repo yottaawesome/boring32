@@ -1,6 +1,5 @@
 export module boring32.async:filemapping;
 import <string>;
-import <stdexcept>;
 import boring32.win32;
 import boring32.raii;
 import boring32.error;

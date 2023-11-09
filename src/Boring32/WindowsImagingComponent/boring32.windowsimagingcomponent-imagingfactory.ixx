@@ -1,6 +1,5 @@
 export module boring32.windowsimagingcomponent:imagingfactory;
 import <string>;
-import <stdexcept>;
 import <win32.hpp>;
 import boring32.error;
 

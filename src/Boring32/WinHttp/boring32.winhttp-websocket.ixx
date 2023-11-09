@@ -5,15 +5,14 @@ import <atomic>;
 import <memory>;
 import <future>;
 import <win32.hpp>;
-import <stdexcept>;
 import <sstream>;
 import <iostream>;
 import boring32.error;
-import :proxyinfo;
 import boring32.util;
+import boring32.async;
+import :proxyinfo;
 import :websocketstatus;
 import :websocketsettings;
-import boring32.async;
 import :winhttphandle;
 import :session;
 

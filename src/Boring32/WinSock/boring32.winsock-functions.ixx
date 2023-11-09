@@ -3,7 +3,6 @@ import <iostream>;
 import <vector>;
 import <ostream>;
 import <string>;
-import <stdexcept>;
 import <win32.hpp>;
 import :winsockerror;
 import boring32.raii;

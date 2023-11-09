@@ -1,6 +1,5 @@
 export module boring32.async:synchronizationbarrier;
 import <string>;
-import <stdexcept>;
 import boring32.win32;
 import boring32.error;
 

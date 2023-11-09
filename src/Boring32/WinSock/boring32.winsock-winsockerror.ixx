@@ -1,7 +1,6 @@
 export module boring32.winsock:winsockerror;
 import boring32.error;
 import <string>;
-import <stdexcept>;
 import <source_location>;
 import <stacktrace>;
 import <win32.hpp>;

@@ -1,6 +1,5 @@
 export module boring32.async:overlappedio;
 import <vector>;
-import <stdexcept>;
 import boring32.error;
 import :overlappedop;
 
