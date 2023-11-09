@@ -1,15 +1,15 @@
 export module boring32.async:synchronizationbarrier;
 import <string>;
 import <stdexcept>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 
 export namespace Boring32::Async
 {
-	class SynchronizationBarrier
+	class SynchronizationBarrier final
 	{
 		public:
-			virtual ~SynchronizationBarrier()
+			~SynchronizationBarrier()
 			{
 				Close();
 			}
@@ -22,37 +22,37 @@ export namespace Boring32::Async
 				m_barrier{ 0 }
 			{
 				//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-initializesynchronizationbarrier
-				if (!InitializeSynchronizationBarrier(&m_barrier, m_totalThreads, m_spinCount))
+				if (!Win32::InitializeSynchronizationBarrier(&m_barrier, m_totalThreads, m_spinCount))
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("InitializeSynchronizationBarrier() failed", lastError);
 				}
 				m_isInitialized = true;
 			}
 
 		public:
-			virtual void Close()
+			void Close()
 			{
 				if (m_isInitialized)
 				{
 					//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-deletesynchronizationbarrier
-					DeleteSynchronizationBarrier(&m_barrier);
+					Win32::DeleteSynchronizationBarrier(&m_barrier);
 					m_isInitialized = false;
 				}
 			}
 
-			virtual bool Enter(const DWORD flags)
+			bool Enter(const Win32::DWORD flags)
 			{
 				if (!m_isInitialized)
 					throw Error::Boring32Error("Barrier is not initialised");
 				//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-entersynchronizationbarrier
-				return EnterSynchronizationBarrier(&m_barrier, flags);
+				return Win32::EnterSynchronizationBarrier(&m_barrier, flags);
 			}
 
-		protected:
+		private:
 			long m_totalThreads = 0;
 			long m_spinCount = 0;
 			bool m_isInitialized = false;
-			SYNCHRONIZATION_BARRIER m_barrier{ 0 };
+			Win32::SYNCHRONIZATION_BARRIER m_barrier{ 0 };
 	};
 }
