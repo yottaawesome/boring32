@@ -1,7 +1,7 @@
 export module boring32.msi:functions;
 import <vector>;
 import <string>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 
 export namespace Boring32::MSI
@@ -16,24 +16,24 @@ export namespace Boring32::MSI
 	{
 		std::vector<InstalledProduct> returnValue;
 
-		DWORD index = 0;
+		Win32::DWORD index = 0;
 		while (true)
 		{
 			std::wstring productCode(38, '\0');
 			// https://learn.microsoft.com/en-us/windows/win32/api/msi/nf-msi-msienumproductsexw
-			const unsigned status = MsiEnumProductsExW(
+			const unsigned status = Win32::MsiEnumProductsExW(
 				nullptr,
 				nullptr,
-				MSIINSTALLCONTEXT_MACHINE,
+				Win32::MsiInstallContextMachine,
 				index,
 				productCode.data(),
 				nullptr,
 				nullptr,
 				nullptr
 			);
-			if (status == ERROR_NO_MORE_ITEMS)
+			if (status == Win32::ErrorCodes::NoMoreItems)
 				return returnValue;
-			if (status != ERROR_SUCCESS)
+			if (status != Win32::ErrorCodes::Success)
 				throw Error::Win32Error("MsiEnumProductsExW() failed", status);
 
 			returnValue.emplace_back(std::move(productCode));
@@ -54,37 +54,37 @@ export namespace Boring32::MSI
 
 		// See https://learn.microsoft.com/en-us/windows/win32/msi/required-properties
 		// and https://learn.microsoft.com/en-us/windows/win32/msi/properties
-		DWORD characters = 0;
+		Win32::DWORD characters = 0;
 		// https://learn.microsoft.com/en-us/windows/win32/api/msi/nf-msi-msigetproductinfow
 		// https://learn.microsoft.com/en-us/windows/win32/api/msi/nf-msi-msigetproductinfoexw
-		unsigned status = MsiGetProductInfoExW(
+		unsigned status = Win32::MsiGetProductInfoExW(
 			productCode.c_str(),
 			nullptr,
-			MSIINSTALLCONTEXT_MACHINE,
+			Win32::MsiInstallContextMachine,
 			propertyName.c_str(),
 			nullptr,
 			&characters
 		);
-		if (status == ERROR_UNKNOWN_PROPERTY)
+		if (status == Win32::ErrorCodes::UnknownProperty)
 			return {};
-		if (status != ERROR_SUCCESS)
+		if (status != Win32::ErrorCodes::Success)
 			throw Error::Win32Error("MsiGetProductInfoExW() failed [1]", status);
 
 		// The returned character count excludes the null terminator,
 		// but this is required, so we bump the value.
 		characters++;
 		std::wstring returnValue(characters, '\0');
-		status = MsiGetProductInfoExW(
+		status = Win32::MsiGetProductInfoExW(
 			productCode.data(),
 			nullptr,
-			MSIINSTALLCONTEXT_MACHINE,
+			Win32::MsiInstallContextMachine,
 			propertyName.c_str(),
 			returnValue.data(),
 			&characters
 		);
-		if (status == ERROR_UNKNOWN_PROPERTY)
+		if (status == Win32::ErrorCodes::UnknownProperty)
 			return {};
-		if (status != ERROR_SUCCESS)
+		if (status != Win32::ErrorCodes::Success)
 			throw Error::Win32Error("MsiGetProductInfoExW() failed [2]", status);
 
 		returnValue.resize(characters);
@@ -107,8 +107,8 @@ export namespace Boring32::MSI
 			return {};
 		return {
 			.ProductCode = product.ProductCode,
-			.Name = GetMsiProperty(product.ProductCode, INSTALLPROPERTY_PRODUCTNAME),
-			.OriginalMsiPackage = GetMsiProperty(product.ProductCode, INSTALLPROPERTY_PACKAGENAME)
+			.Name = GetMsiProperty(product.ProductCode, Win32::InstallProperty_ProductName),
+			.OriginalMsiPackage = GetMsiProperty(product.ProductCode, Win32::InstallProperty_PackageName)
 		};
 	}
 
@@ -120,7 +120,7 @@ export namespace Boring32::MSI
 		{
 			std::wstring name = GetMsiProperty(
 				code.ProductCode, 
-				INSTALLPROPERTY_PRODUCTNAME
+				Win32::InstallProperty_ProductName
 			);
 			if (name != productName)
 				continue;
@@ -128,7 +128,7 @@ export namespace Boring32::MSI
 			return {
 				.ProductCode = code.ProductCode,
 				.Name = std::move(productName),
-				.OriginalMsiPackage = GetMsiProperty(code.ProductCode, INSTALLPROPERTY_PACKAGENAME)
+				.OriginalMsiPackage = GetMsiProperty(code.ProductCode, Win32::InstallProperty_PackageName)
 			};
 		}
 		return {};

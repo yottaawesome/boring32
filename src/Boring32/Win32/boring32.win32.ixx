@@ -187,6 +187,8 @@ export namespace Boring32::Win32
 	constexpr const wchar_t* InstallProperty_ProductName = INSTALLPROPERTY_PRODUCTNAME;
 	constexpr const wchar_t* InstallProperty_PackageName = INSTALLPROPERTY_PACKAGENAME;
 
+	constexpr auto MsiInstallContextMachine = MSIINSTALLCONTEXT_MACHINE;
+
 	const HANDLE InvalidHandleValue = INVALID_HANDLE_VALUE;
 
 	constexpr auto SddlRevision1 = SDDL_REVISION_1;
