@@ -226,6 +226,15 @@ export namespace Boring32::Win32
 
 	constexpr auto Infinite = INFINITE;
 
+	constexpr auto CryptProtectMemoryBlockSize = CRYPTPROTECTMEMORY_BLOCK_SIZE;
+
+	enum class EncryptionType : DWORD
+	{
+		SameProcess = CRYPTPROTECTMEMORY_SAME_PROCESS,
+		CrossProcess = CRYPTPROTECTMEMORY_CROSS_PROCESS,
+		SameLogon = CRYPTPROTECTMEMORY_SAME_LOGON
+	};
+
 	namespace ErrorCodes
 	{
 		constexpr auto NoError = NOERROR;
@@ -440,6 +449,8 @@ export namespace Boring32::Win32
 	using ::Decompress;
 	using ::CreateDecompressor;
 	using ::ResetDecompressor;
+	using ::CryptProtectMemory;
+	using ::CryptUnprotectMemory;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;

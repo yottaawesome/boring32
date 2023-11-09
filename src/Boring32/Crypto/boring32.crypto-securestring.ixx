@@ -2,18 +2,11 @@ export module boring32.crypto:securestring;
 import <string>;
 import <vector>;
 import <algorithm>; // for std::fill()
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 
 export namespace Boring32::Crypto
 {
-	enum class EncryptionType : DWORD
-	{
-		SameProcess = CRYPTPROTECTMEMORY_SAME_PROCESS,
-		CrossProcess = CRYPTPROTECTMEMORY_CROSS_PROCESS,
-		SameLogon = CRYPTPROTECTMEMORY_SAME_LOGON
-	};
-
 	class ScopedString final
 	{
 		public:
@@ -90,7 +83,7 @@ export namespace Boring32::Crypto
 				SetValueAndEncrypt(value);
 			}
 
-			SecureString(const std::wstring& value, const EncryptionType encryptionType)
+			SecureString(const std::wstring& value, const Win32::EncryptionType encryptionType)
 			{
 				SetValueAndEncrypt(value);
 			}
@@ -131,13 +124,13 @@ export namespace Boring32::Crypto
 				// decrypt. Strictly speaking, keeping this data
 				// violates Shannon's perfect secrecy rule on encrypted 
 				// data, but we can live with it
-				m_characters = static_cast<DWORD>(value.size());
+				m_characters = static_cast<Win32::DWORD>(value.size());
 
 				// Figure out if we need to align to the encryption block size
-				const DWORD bytesOfPlainData = static_cast<DWORD>(value.size() * sizeof(wchar_t));
-				const DWORD bytesModBlock = bytesOfPlainData % CRYPTPROTECTMEMORY_BLOCK_SIZE;
-				const DWORD bytesOfEncryptedData = bytesModBlock
-					? bytesOfPlainData + CRYPTPROTECTMEMORY_BLOCK_SIZE - bytesModBlock
+				const Win32::DWORD bytesOfPlainData = static_cast<Win32::DWORD>(value.size() * sizeof(wchar_t));
+				const Win32::DWORD bytesModBlock = bytesOfPlainData % Win32::CryptProtectMemoryBlockSize;
+				const Win32::DWORD bytesOfEncryptedData = bytesModBlock
+					? bytesOfPlainData + Win32::CryptProtectMemoryBlockSize - bytesModBlock
 					: bytesOfPlainData;
 
 				// Copy our plain data across to the buffer that will be
@@ -200,14 +193,14 @@ export namespace Boring32::Crypto
 				if (m_protectedString.empty())
 					throw Error::Boring32Error("Nothing to encrypt");
 
-				const bool succeeded = CryptProtectMemory(
+				const bool succeeded = Win32::CryptProtectMemory(
 					reinterpret_cast<void*>(&m_protectedString[0]),
-					static_cast<DWORD>(m_protectedString.size() * sizeof(wchar_t)),
-					static_cast<DWORD>(m_encryptionType)
+					static_cast<Win32::DWORD>(m_protectedString.size() * sizeof(wchar_t)),
+					static_cast<Win32::DWORD>(m_encryptionType)
 				);
 				if (!succeeded)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("CryptProtectMemory() failed", lastError);
 				}
 				m_isEncrypted = true;
@@ -220,14 +213,14 @@ export namespace Boring32::Crypto
 				if (m_protectedString.empty())
 					throw Error::Boring32Error("Nothing to decrypt");
 
-				const bool succeeded = CryptUnprotectMemory(
+				const bool succeeded = Win32::CryptUnprotectMemory(
 					reinterpret_cast<void*>(&m_protectedString[0]),
-					static_cast<DWORD>(m_protectedString.size() * sizeof(wchar_t)),
-					static_cast<DWORD>(m_encryptionType)
+					static_cast<Win32::DWORD>(m_protectedString.size() * sizeof(wchar_t)),
+					static_cast<Win32::DWORD>(m_encryptionType)
 				);
 				if (!succeeded)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("CryptUnprotectMemory() failed", lastError);
 				}
 				m_isEncrypted = false;
@@ -263,8 +256,8 @@ export namespace Boring32::Crypto
 			}
 
 		private:
-			EncryptionType m_encryptionType = EncryptionType::SameProcess;
-			DWORD m_characters = 0;
+			Win32::EncryptionType m_encryptionType = Win32::EncryptionType::SameProcess;
+			Win32::DWORD m_characters = 0;
 			std::wstring m_protectedString;
 			bool m_isEncrypted = false;
 	};
