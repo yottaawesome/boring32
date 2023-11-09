@@ -1,8 +1,8 @@
 export module boring32.async:timerqueuetimercallback;
 import <iostream>;
-import <win32.hpp>;
-import :timerqueuetimer;
+import boring32.win32;
 import boring32.error;
+import :timerqueuetimer;
 
 export namespace Boring32::Async
 {
@@ -15,19 +15,19 @@ export namespace Boring32::Async
 			TimerQueueTimerCallback() = default;
 			
 			TimerQueueTimerCallback(
-				HANDLE timerQueue,
-				const DWORD dueTime,
-				const DWORD period,
-				const DWORD flags
+				Win32::HANDLE timerQueue,
+				const Win32::DWORD dueTime,
+				const Win32::DWORD period,
+				const Win32::DWORD flags
 			) : TimerQueueTimer(timerQueue, dueTime, period, flags, InternalCallback, this)
 			{ }
 			
 			TimerQueueTimerCallback(
-				HANDLE timerQueue,
-				const DWORD dueTime,
-				const DWORD period,
-				const DWORD flags,
-				HANDLE completionEvent
+				Win32::HANDLE timerQueue,
+				const Win32::DWORD dueTime,
+				const Win32::DWORD period,
+				const Win32::DWORD flags,
+				Win32::HANDLE completionEvent
 			) : TimerQueueTimer(timerQueue, dueTime, period, flags, InternalCallback, this)
 			{ }
 
