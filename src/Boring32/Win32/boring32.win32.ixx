@@ -109,6 +109,7 @@ export namespace Boring32::Win32
 	using ::SRWLOCK;
 	using ::PROCESS_INFORMATION;
 	using ::PAPCFUNC;
+	using ::STARTUPINFO;
 
 	enum class FileMapAccess : unsigned long
 	{
@@ -348,6 +349,7 @@ export namespace Boring32::Win32
 	using ::WaitOnAddress;
 	using ::WakeByAddressSingle;
 	using ::WakeByAddressAll;
+	using ::CreateProcessW;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
