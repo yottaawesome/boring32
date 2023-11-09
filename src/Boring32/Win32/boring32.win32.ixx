@@ -150,6 +150,11 @@ export namespace Boring32::Win32
 		return HRESULT_SEVERITY(hr);
 	}
 
+	inline bool HrFailed(const HRESULT hr) noexcept
+	{
+		return FAILED(hr);
+	}
+
 	template<typename T = LPCTSTR>
 	inline consteval T MsiDbOpen_CreateDirect() noexcept { return (T)MSIDBOPEN_CREATEDIRECT; }
 
@@ -354,6 +359,14 @@ export namespace Boring32::Win32
 	using ::InitializeSynchronizationBarrier;
 	using ::EnterSynchronizationBarrier;
 	using ::DeleteSynchronizationBarrier;
+	using ::TerminateThread;
+	using ::SuspendThread;
+	using ::ResumeThread;
+	using ::GetExitCodeThread;
+	using ::SetThreadDescription;
+	using ::GetThreadDescription;
+	using ::_beginthreadex;
+	using ::_get_errno;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
