@@ -121,6 +121,70 @@ export namespace Boring32::Win32
 	using ::COMPRESSOR_HANDLE;
 	using ::DECOMPRESSOR_HANDLE;
 	using ::BCRYPT_KEY_HANDLE;
+	using ::LPWSTR;
+	using ::BYTE;
+	using ::DATA_BLOB;
+	using ::PUCHAR;
+	using ::PCCERT_CHAIN_CONTEXT;
+	using ::CERT_CHAIN_CONTEXT;
+	using ::CERT_NAME_BLOB;
+	using ::HCERTSTORE;
+	using ::CERT_CHAIN_FIND_BY_ISSUER_PARA;
+	using ::CERT_CONTEXT;
+	using ::PCCERT_CONTEXT;
+	using ::CERT_ENHKEY_USAGE;
+	using ::CERT_USAGE_MATCH;
+	using ::CERT_CHAIN_PARA;
+	using ::CRYPTUI_WIZ_IMPORT_SRC_INFO;
+
+	// See https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindcertificateinstore
+	enum class StoreFindType : DWORD
+	{
+		Any = CERT_FIND_ANY,
+		CertId = CERT_FIND_CERT_ID,
+		CtlUsage = CERT_FIND_CTL_USAGE,
+		EnhKeyUsage = CERT_FIND_ENHKEY_USAGE,
+		Existing = CERT_FIND_EXISTING,
+		Hash = CERT_FIND_HASH,
+		HasPrivateKey = CERT_FIND_HAS_PRIVATE_KEY,
+		IssuerAttr = CERT_FIND_ISSUER_ATTR,
+		IssuerName = CERT_FIND_ISSUER_NAME,
+		IssuerOf = CERT_FIND_ISSUER_OF,
+		IssuerStr = CERT_FIND_ISSUER_STR,
+		KeyIdentifier = CERT_FIND_KEY_IDENTIFIER,
+		KeySpec = CERT_FIND_KEY_SPEC,
+		Md5Hash = CERT_FIND_MD5_HASH,
+		FindProperty = CERT_FIND_PROPERTY,
+		PublicKey = CERT_FIND_PUBLIC_KEY,
+		Sha1Hash = CERT_FIND_SHA1_HASH,
+		SignatureHash = CERT_FIND_SIGNATURE_HASH,
+		SubjectAttr = CERT_FIND_SUBJECT_ATTR,
+		SubjectCert = CERT_FIND_SUBJECT_CERT,
+		SubjectName = CERT_FIND_SUBJECT_NAME,
+		SubjectStr = CERT_FIND_SUBJECT_STR,
+		CrossCertDistPoints = CERT_FIND_CROSS_CERT_DIST_POINTS,
+		PubKeyMd5Hash = CERT_FIND_PUBKEY_MD5_HASH
+	};
+
+	constexpr auto CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS = 0x0002; // not defined according to msdn
+	constexpr auto CryptUiWizIgnoreNoUiFlagForCsps = CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS;
+	constexpr auto CryptUiWizNoUi = CRYPTUI_WIZ_NO_UI;
+	constexpr auto CryptUiWizImportAllowCert = CRYPTUI_WIZ_IMPORT_ALLOW_CERT;
+
+	constexpr auto UsageMatchTypeAnd = USAGE_MATCH_TYPE_AND;
+
+	enum class EncryptOptions
+	{
+		LocalMachine = CRYPTPROTECT_LOCAL_MACHINE,
+		UiForbidden = CRYPTPROTECT_UI_FORBIDDEN,
+		Audit = CRYPTPROTECT_AUDIT
+	};
+
+	enum class DecryptOptions
+	{
+		UiForbidden = CRYPTPROTECT_UI_FORBIDDEN,
+		VerifyProtection = CRYPTPROTECT_VERIFY_PROTECTION
+	};
 
 	enum class CompressionType : DWORD
 	{
@@ -229,6 +293,22 @@ export namespace Boring32::Win32
 
 	constexpr auto CryptProtectMemoryBlockSize = CRYPTPROTECTMEMORY_BLOCK_SIZE;
 
+	constexpr auto CryptStringBase64 = CRYPT_STRING_BASE64;
+	constexpr auto CryptStringNoCrLf = CRYPT_STRING_NOCRLF;
+
+	constexpr auto X509AsnEncoding = X509_ASN_ENCODING;
+	constexpr auto CertX500NameStr = CERT_X500_NAME_STR;
+	constexpr auto CertBaneStrForceUtf8DirStrFlag = CERT_NAME_STR_FORCE_UTF8_DIR_STR_FLAG;
+	constexpr auto CertChainFindByIssuer = CERT_CHAIN_FIND_BY_ISSUER;
+	constexpr auto CertChainRevocationCheckChainExcludeRoot = CERT_CHAIN_REVOCATION_CHECK_CHAIN_EXCLUDE_ROOT;
+	constexpr auto Pkcs7AsnEncoding = PKCS_7_ASN_ENCODING;
+	constexpr auto CertFindHasPrivateKey = CERT_FIND_HAS_PRIVATE_KEY;
+
+	inline bool BCryptSuccess(NTSTATUS status) noexcept
+	{
+		return BCRYPT_SUCCESS(status);
+	}
+
 	namespace BCryptChainingMode
 	{
 		constexpr auto CipherBlockChaining = BCRYPT_CHAIN_MODE_CBC;
@@ -262,6 +342,11 @@ export namespace Boring32::Win32
 	namespace NTStatus // winnt.h
 	{
 		constexpr auto Pending = STATUS_PENDING;
+	}
+
+	namespace CryptoErrorCodes
+	{
+		constexpr auto NotFound = CRYPT_E_NOT_FOUND;
 	}
 
 	enum class RPCCAuthLevel : unsigned long
@@ -462,6 +547,20 @@ export namespace Boring32::Win32
 	using ::CryptProtectMemory;
 	using ::CryptUnprotectMemory;
 	using ::BCryptDestroyKey;
+	using ::CryptProtectData;
+	using ::CryptUnprotectData;
+	using ::BCryptEncrypt;
+	using ::BCryptDecrypt;
+	using ::CryptBinaryToStringA;
+	using ::CryptBinaryToStringW;
+	using ::CertStrToNameW;
+	using ::CertNameToStrW;
+	using ::CertFindChainInStore;
+	using ::CertDuplicateCertificateChain;
+	using ::CertGetCertificateChain;
+	using ::CryptUIWizImport;
+	using ::CertFreeCertificateChain;
+	using ::CertFindCertificateInStore;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;

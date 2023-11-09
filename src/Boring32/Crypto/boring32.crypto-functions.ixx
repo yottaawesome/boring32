@@ -2,6 +2,7 @@ export module boring32.crypto:functions;
 import <string>;
 import <vector>;
 import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 import :cryptokey;
 
@@ -9,19 +10,6 @@ export namespace Boring32::Crypto
 {
 	// See also a complete example on MSDN at:
 	// https://docs.microsoft.com/en-us/windows/win32/seccrypto/example-c-program-using-cryptprotectdata
-
-	enum class EncryptOptions
-	{
-		LocalMachine = CRYPTPROTECT_LOCAL_MACHINE,
-		UiForbidden = CRYPTPROTECT_UI_FORBIDDEN,
-		Audit = CRYPTPROTECT_AUDIT
-	};
-
-	enum class DecryptOptions
-	{
-		UiForbidden = CRYPTPROTECT_UI_FORBIDDEN,
-		VerifyProtection = CRYPTPROTECT_VERIFY_PROTECTION
-	};
 
 	std::vector<std::byte> Encrypt(
 		const std::vector<std::byte>& data,
@@ -498,64 +486,61 @@ export namespace Boring32::Crypto
 		}
 	}
 
-	PCCERT_CHAIN_CONTEXT GenerateChainFrom(
-		PCCERT_CONTEXT contextToBuildFrom,
-		HCERTSTORE store
+	Win32::PCCERT_CHAIN_CONTEXT GenerateChainFrom(
+		Win32::PCCERT_CONTEXT contextToBuildFrom,
+		Win32::HCERTSTORE store
 	)
 	{
 		if (!contextToBuildFrom)
 			throw Error::Boring32Error("contextToBuildFrom is null");
 
-		PCCERT_CHAIN_CONTEXT chainContext = nullptr;
-		CERT_ENHKEY_USAGE enhkeyUsage{
+		Win32::PCCERT_CHAIN_CONTEXT chainContext = nullptr;
+		Win32::CERT_ENHKEY_USAGE enhkeyUsage{
 			.cUsageIdentifier = 0,
 			.rgpszUsageIdentifier = nullptr
 		};
-		CERT_USAGE_MATCH certUsage{
-			.dwType = USAGE_MATCH_TYPE_AND,
+		Win32::CERT_USAGE_MATCH certUsage{
+			.dwType = Win32::UsageMatchTypeAnd,
 			.Usage = enhkeyUsage
 		};
-		CERT_CHAIN_PARA certChainParams{
+		Win32::CERT_CHAIN_PARA certChainParams{
 			.cbSize = sizeof(certChainParams),
 			.RequestedUsage = certUsage
 		};
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certgetcertificatechain
 		// https://docs.microsoft.com/en-us/windows/win32/seccrypto/example-c-program-creating-a-certificate-chain
-		const bool succeeded = CertGetCertificateChain(
+		const bool succeeded = Win32::CertGetCertificateChain(
 			nullptr,
 			contextToBuildFrom,
 			nullptr,
 			store,
 			&certChainParams,
-			CERT_CHAIN_REVOCATION_CHECK_CHAIN_EXCLUDE_ROOT,
+			Win32::CertChainRevocationCheckChainExcludeRoot,
 			nullptr,
 			&chainContext
 		);
 		if (!succeeded)
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error("CertGetCertificateChain() failed", lastError);
 		}
 		return chainContext;
 	}
 
-
 	void ImportCertToStore(
-		const HCERTSTORE store, 
-		const CRYPTUI_WIZ_IMPORT_SRC_INFO& info
+		const Win32::HCERTSTORE store,
+		const Win32::CRYPTUI_WIZ_IMPORT_SRC_INFO& info
 	)
 	{
 		if (!store)
 			throw Error::Boring32Error("store is nullptr");
 
-		constexpr DWORD CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS = 0x0002;
-		constexpr DWORD flags = CRYPTUI_WIZ_NO_UI
-			| CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS
-			| CRYPTUI_WIZ_IMPORT_ALLOW_CERT;
+		constexpr Win32::DWORD flags =
+			Win32::CryptUiWizNoUi | Win32::CryptUiWizIgnoreNoUiFlagForCsps | Win32::CryptUiWizImportAllowCert;
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/nf-cryptuiapi-cryptuiwizimport
-		const bool succeeded = CryptUIWizImport(
+		const bool succeeded = Win32::CryptUIWizImport(
 			flags,
 			nullptr,
 			nullptr,
@@ -564,7 +549,7 @@ export namespace Boring32::Crypto
 		);
 		if (!succeeded)
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error(
 				"CryptUIWizImport() failed",
 				lastError
@@ -572,37 +557,10 @@ export namespace Boring32::Crypto
 		}
 	}
 
-	// See https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindcertificateinstore
-	enum class StoreFindType : DWORD
-	{
-		Any = CERT_FIND_ANY,
-		CertId = CERT_FIND_CERT_ID,
-		CtlUsage = CERT_FIND_CTL_USAGE,
-		EnhKeyUsage = CERT_FIND_ENHKEY_USAGE,
-		Existing = CERT_FIND_EXISTING,
-		Hash = CERT_FIND_HASH,
-		HasPrivateKey = CERT_FIND_HAS_PRIVATE_KEY,
-		IssuerAttr = CERT_FIND_ISSUER_ATTR,
-		IssuerName = CERT_FIND_ISSUER_NAME,
-		IssuerOf = CERT_FIND_ISSUER_OF,
-		IssuerStr = CERT_FIND_ISSUER_STR,
-		KeyIdentifier = CERT_FIND_KEY_IDENTIFIER,
-		KeySpec = CERT_FIND_KEY_SPEC,
-		Md5Hash = CERT_FIND_MD5_HASH,
-		FindProperty = CERT_FIND_PROPERTY,
-		PublicKey = CERT_FIND_PUBLIC_KEY,
-		Sha1Hash = CERT_FIND_SHA1_HASH,
-		SignatureHash = CERT_FIND_SIGNATURE_HASH,
-		SubjectAttr = CERT_FIND_SUBJECT_ATTR,
-		SubjectCert = CERT_FIND_SUBJECT_CERT,
-		SubjectName = CERT_FIND_SUBJECT_NAME,
-		SubjectStr = CERT_FIND_SUBJECT_STR,
-		CrossCertDistPoints = CERT_FIND_CROSS_CERT_DIST_POINTS,
-		PubKeyMd5Hash = CERT_FIND_PUBKEY_MD5_HASH
-	};
+	using StoreFindType = Win32::StoreFindType;
 
-	PCCERT_CONTEXT GetCertByArg(
-		HCERTSTORE certStore,
+	Win32::PCCERT_CONTEXT GetCertByArg(
+		Win32::HCERTSTORE certStore,
 		const StoreFindType searchFlag,
 		const void* arg
 	)
@@ -611,20 +569,20 @@ export namespace Boring32::Crypto
 			throw Error::Boring32Error("CertStore cannot be null");
 
 		// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindcertificateinstore
-		PCCERT_CONTEXT certContext = static_cast<PCCERT_CONTEXT>(
-			CertFindCertificateInStore(
+		Win32::PCCERT_CONTEXT certContext = static_cast<Win32::PCCERT_CONTEXT>(
+			Win32::CertFindCertificateInStore(
 				certStore,
-				X509_ASN_ENCODING | PKCS_7_ASN_ENCODING | CERT_FIND_HAS_PRIVATE_KEY,
+				Win32::X509AsnEncoding | Win32::Pkcs7AsnEncoding | Win32::CertFindHasPrivateKey,
 				0,
-				static_cast<DWORD>(searchFlag),
+				static_cast<Win32::DWORD>(searchFlag),
 				arg,
 				nullptr
 			)
 		);
 		if (!certContext)
 		{
-			const DWORD lastError = GetLastError();
-			if (lastError != CRYPT_E_NOT_FOUND)
+			const Win32::DWORD lastError = Win32::GetLastError();
+			if (lastError != Win32::CryptoErrorCodes::NotFound)
 				throw Error::Win32Error("CertFindCertificateInStore() failed", lastError);
 		}
 
