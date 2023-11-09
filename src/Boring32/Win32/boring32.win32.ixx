@@ -111,6 +111,7 @@ export namespace Boring32::Win32
 	using ::PAPCFUNC;
 	using ::STARTUPINFO;
 	using ::SYNCHRONIZATION_BARRIER;
+	using ::WAITORTIMERCALLBACK;
 
 	enum class FileMapAccess : unsigned long
 	{
@@ -367,6 +368,9 @@ export namespace Boring32::Win32
 	using ::GetThreadDescription;
 	using ::_beginthreadex;
 	using ::_get_errno;
+	using ::ChangeTimerQueueTimer;
+	using ::DeleteTimerQueueTimer;
+	using ::CreateTimerQueueTimer;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
