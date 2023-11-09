@@ -136,6 +136,7 @@ export namespace Boring32::Win32
 	using ::CERT_USAGE_MATCH;
 	using ::CERT_CHAIN_PARA;
 	using ::CRYPTUI_WIZ_IMPORT_SRC_INFO;
+	using ::LPSTR;
 
 	// See https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindcertificateinstore
 	enum class StoreFindType : DWORD
@@ -298,7 +299,7 @@ export namespace Boring32::Win32
 
 	constexpr auto X509AsnEncoding = X509_ASN_ENCODING;
 	constexpr auto CertX500NameStr = CERT_X500_NAME_STR;
-	constexpr auto CertBaneStrForceUtf8DirStrFlag = CERT_NAME_STR_FORCE_UTF8_DIR_STR_FLAG;
+	constexpr auto CertNameStrForceUtf8DirStrFlag = CERT_NAME_STR_FORCE_UTF8_DIR_STR_FLAG;
 	constexpr auto CertChainFindByIssuer = CERT_CHAIN_FIND_BY_ISSUER;
 	constexpr auto CertChainRevocationCheckChainExcludeRoot = CERT_CHAIN_REVOCATION_CHECK_CHAIN_EXCLUDE_ROOT;
 	constexpr auto Pkcs7AsnEncoding = PKCS_7_ASN_ENCODING;
@@ -561,6 +562,7 @@ export namespace Boring32::Win32
 	using ::CryptUIWizImport;
 	using ::CertFreeCertificateChain;
 	using ::CertFindCertificateInStore;
+	using ::CryptStringToBinaryW;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;

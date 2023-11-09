@@ -1,7 +1,6 @@
 export module boring32.crypto:functions;
 import <string>;
 import <vector>;
-import <win32.hpp>;
 import boring32.win32;
 import boring32.error;
 import :cryptokey;
@@ -17,27 +16,27 @@ export namespace Boring32::Crypto
 		const std::wstring& description
 	)
 	{
-		DATA_BLOB dataIn{
-			.cbData = static_cast<DWORD>(data.size()),
-			.pbData = reinterpret_cast<BYTE*>(const_cast<std::byte*>(&data[0]))
+		Win32::DATA_BLOB dataIn{
+			.cbData = static_cast<Win32::DWORD>(data.size()),
+			.pbData = reinterpret_cast<Win32::BYTE*>(const_cast<std::byte*>(&data[0]))
 		};
 
-		DATA_BLOB additionalEntropy{ 0 };
+		Win32::DATA_BLOB additionalEntropy{ 0 };
 		if (!password.empty())
 		{
-			additionalEntropy.pbData = reinterpret_cast<BYTE*>(const_cast<wchar_t*>(&password[0]));
-			additionalEntropy.cbData = static_cast<DWORD>(password.size() * sizeof(wchar_t));
+			additionalEntropy.pbData = reinterpret_cast<Win32::BYTE*>(const_cast<wchar_t*>(&password[0]));
+			additionalEntropy.cbData = static_cast<Win32::DWORD>(password.size() * sizeof(wchar_t));
 		}
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata
-		DATA_BLOB encryptedBlob{ 0 };
+		Win32::DATA_BLOB encryptedBlob{ 0 };
 		const wchar_t* descriptionCStr = description.empty()
 			? nullptr
 			: description.c_str();
-		DATA_BLOB* const entropy = password.empty()
+		Win32::DATA_BLOB* const entropy = password.empty()
 			? nullptr
 			: &additionalEntropy;
-		const bool succeeded = CryptProtectData(
+		const bool succeeded = Win32::CryptProtectData(
 			&dataIn,					// The data to encrypt.
 			descriptionCStr,			// An optional description string.
 			entropy,					// Optional additional entropy to
@@ -50,7 +49,7 @@ export namespace Boring32::Crypto
 		);
 		if (!succeeded)
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error("CryptProtectData() failed", lastError);
 		}
 
@@ -61,7 +60,7 @@ export namespace Boring32::Crypto
 			(std::byte*)encryptedBlob.pbData + encryptedBlob.cbData
 		);
 		if (encryptedBlob.pbData)
-			LocalFree(encryptedBlob.pbData);
+			Win32::LocalFree(encryptedBlob.pbData);
 
 		return returnValue;
 	}
@@ -86,24 +85,24 @@ export namespace Boring32::Crypto
 		std::wstring& outDescription
 	)
 	{
-		DATA_BLOB encryptedBlob;
-		encryptedBlob.pbData = (BYTE*)&encryptedData[0];
-		encryptedBlob.cbData = (DWORD)encryptedData.size();
+		Win32::DATA_BLOB encryptedBlob;
+		encryptedBlob.pbData = (Win32::BYTE*)&encryptedData[0];
+		encryptedBlob.cbData = (Win32::DWORD)encryptedData.size();
 
-		DATA_BLOB additionalEntropy{ 0 };
+		Win32::DATA_BLOB additionalEntropy{ 0 };
 		if (!password.empty())
 		{
-			additionalEntropy.pbData = reinterpret_cast<BYTE*>(const_cast<wchar_t*>(&password[0]));
-			additionalEntropy.cbData = static_cast<DWORD>(password.size() * sizeof(wchar_t));
+			additionalEntropy.pbData = reinterpret_cast<Win32::BYTE*>(const_cast<wchar_t*>(&password[0]));
+			additionalEntropy.cbData = static_cast<Win32::DWORD>(password.size() * sizeof(wchar_t));
 		}
 
-		DATA_BLOB decryptedBlob;
-		LPWSTR descrOut = nullptr;
-		DATA_BLOB* const entropy = password.empty()
+		Win32::DATA_BLOB decryptedBlob;
+		Win32::LPWSTR descrOut = nullptr;
+		Win32::DATA_BLOB* const entropy = password.empty()
 			? nullptr
 			: &additionalEntropy;
 		// https://docs.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptunprotectdata
-		const bool succeeded = CryptUnprotectData(
+		const bool succeeded = Win32::CryptUnprotectData(
 			&encryptedBlob,				// the encrypted data
 			&descrOut,					// Optional description
 			entropy,					// Optional additional entropy
@@ -116,14 +115,14 @@ export namespace Boring32::Crypto
 		);
 		if (!succeeded)
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error("CryptUnprotectData() failed", lastError);
 		}
 
 		if (descrOut)
 		{
 			outDescription = descrOut;
-			LocalFree(descrOut);
+			Win32::LocalFree(descrOut);
 		}
 
 		std::wstring returnValue(
@@ -131,41 +130,41 @@ export namespace Boring32::Crypto
 			decryptedBlob.cbData / sizeof(wchar_t)
 		);
 		if (decryptedBlob.pbData)
-			LocalFree(decryptedBlob.pbData);
+			Win32::LocalFree(decryptedBlob.pbData);
 
 		return returnValue;
 	}
 
 	std::vector<std::byte> Decrypt(
-		const DWORD blockByteLength,
+		const Win32::DWORD blockByteLength,
 		const CryptoKey& key,
 		const std::vector<std::byte>& iv,
 		const std::vector<std::byte>& cypherText,
-		const DWORD flags
+		const Win32::DWORD flags
 	)
 	{
 		if (!key.GetHandle())
 			throw Error::Boring32Error("key is null");
 
 		// IV is optional
-		PUCHAR pIV = nullptr;
-		ULONG ivSize = 0;
+		Win32::PUCHAR pIV = nullptr;
+		Win32::ULONG ivSize = 0;
 		if (!iv.empty())
 		{
 			// Do all cipher algs require this?
 			if (iv.size() != blockByteLength)
 				throw Error::Boring32Error("IV must be the same size as the AES block length");
-			pIV = reinterpret_cast<PUCHAR>(const_cast<std::byte*>(&iv[0]));
-			ivSize = static_cast<ULONG>(iv.size());
+			pIV = reinterpret_cast<Win32::PUCHAR>(const_cast<std::byte*>(&iv[0]));
+			ivSize = static_cast<Win32::ULONG>(iv.size());
 		}
 
 		// Determine the byte size of the decrypted data
-		DWORD cbData = 0;
+		Win32::DWORD cbData = 0;
 		// https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptdecrypt
-		NTSTATUS status = BCryptDecrypt(
+		Win32::NTSTATUS status = Win32::BCryptDecrypt(
 			key.GetHandle(),
-			reinterpret_cast<PUCHAR>(const_cast<std::byte*>(&cypherText[0])),
-			static_cast<ULONG>(cypherText.size()),
+			reinterpret_cast<Win32::PUCHAR>(const_cast<std::byte*>(&cypherText[0])),
+			static_cast<Win32::ULONG>(cypherText.size()),
 			nullptr,
 			pIV,
 			ivSize,
@@ -174,24 +173,24 @@ export namespace Boring32::Crypto
 			&cbData,
 			flags
 		);
-		if (!BCRYPT_SUCCESS(status))
+		if (!Win32::BCryptSuccess(status))
 			throw Error::NTStatusError("BCryptDecrypt() failed to count bytes", status);
 
 		// Actually do the decryption
 		std::vector<std::byte> plainText(cbData, std::byte{ 0 });
-		status = BCryptDecrypt(
+		status = Win32::BCryptDecrypt(
 			key.GetHandle(),
-			reinterpret_cast<PUCHAR>(const_cast<std::byte*>(&cypherText[0])),
-			static_cast<ULONG>(cypherText.size()),
+			reinterpret_cast<Win32::PUCHAR>(const_cast<std::byte*>(&cypherText[0])),
+			static_cast<Win32::ULONG>(cypherText.size()),
 			nullptr,
 			pIV,
 			ivSize,
-			reinterpret_cast<PUCHAR>(&plainText[0]),
-			static_cast<ULONG>(plainText.size()),
+			reinterpret_cast<Win32::PUCHAR>(&plainText[0]),
+			static_cast<Win32::ULONG>(plainText.size()),
 			&cbData,
 			flags
 		);
-		if (!BCRYPT_SUCCESS(status))
+		if (!Win32::BCryptSuccess(status))
 			throw Error::NTStatusError("BCryptDecrypt() failed to decrypt", status);
 
 		plainText.resize(cbData);
@@ -199,34 +198,34 @@ export namespace Boring32::Crypto
 	}
 
 	std::vector<std::byte> Encrypt(
-		const DWORD blockByteLength,
+		const Win32::DWORD blockByteLength,
 		const CryptoKey& key,
 		const std::vector<std::byte>& iv,
 		const std::vector<std::byte>& plainText,
-		const DWORD flags
+		const Win32::DWORD flags
 	)
 	{
 		if (!key.GetHandle())
 			throw Error::Boring32Error("key is null");
 
 		// IV is optional
-		PUCHAR pIV = nullptr;
-		ULONG ivSize = 0;
+		Win32::PUCHAR pIV = nullptr;
+		Win32::ULONG ivSize = 0;
 		if (!iv.empty())
 		{
 			if (iv.size() != blockByteLength)
 				throw Error::Boring32Error("IV must be the same size as the AES block lenth");
-			pIV = reinterpret_cast<PUCHAR>(const_cast<std::byte*>(&iv[0]));
-			ivSize = static_cast<ULONG>(iv.size());
+			pIV = reinterpret_cast<Win32::PUCHAR>(const_cast<std::byte*>(&iv[0]));
+			ivSize = static_cast<Win32::ULONG>(iv.size());
 		}
 
 		// Determine the byte size of the encrypted data
-		DWORD cbData = 0;
+		Win32::DWORD cbData = 0;
 		// https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptencrypt
-		NTSTATUS status = BCryptEncrypt(
+		Win32::NTSTATUS status = Win32::BCryptEncrypt(
 			key.GetHandle(),
-			reinterpret_cast<PUCHAR>(const_cast<std::byte*>(&plainText[0])),
-			static_cast<ULONG>(plainText.size()),
+			reinterpret_cast<Win32::PUCHAR>(const_cast<std::byte*>(&plainText[0])),
+			static_cast<Win32::ULONG>(plainText.size()),
 			nullptr,
 			pIV,
 			ivSize,
@@ -235,24 +234,24 @@ export namespace Boring32::Crypto
 			&cbData,
 			flags
 		);
-		if (!BCRYPT_SUCCESS(status))
+		if (!Win32::BCryptSuccess(status))
 			throw Error::NTStatusError("BCryptEncrypt() failed to count bytes", status);
 
 		// Actually do the encryption
 		std::vector<std::byte> cypherText(cbData, std::byte{ 0 });
-		status = BCryptEncrypt(
+		status = Win32::BCryptEncrypt(
 			key.GetHandle(),
-			reinterpret_cast<PUCHAR>(const_cast<std::byte*>(&plainText[0])),
-			static_cast<ULONG>(plainText.size()),
+			reinterpret_cast<Win32::PUCHAR>(const_cast<std::byte*>(&plainText[0])),
+			static_cast<Win32::ULONG>(plainText.size()),
 			nullptr,
 			pIV,
 			ivSize,
-			reinterpret_cast<PUCHAR>(&cypherText[0]),
-			static_cast<ULONG>(cypherText.size()),
+			reinterpret_cast<Win32::PUCHAR>(&cypherText[0]),
+			static_cast<Win32::ULONG>(cypherText.size()),
 			&cbData,
 			flags
 		);
-		if (!BCRYPT_SUCCESS(status))
+		if (!Win32::BCryptSuccess(status))
 			throw Error::NTStatusError("BCryptEncrypt() failed to encrypt", status);
 
 		return cypherText;
@@ -261,25 +260,26 @@ export namespace Boring32::Crypto
 	std::string ToBase64String(const std::vector<std::byte>& bytes)
 	{
 		// Determine the required size -- this includes the null terminator
-		DWORD size = 0;
-		bool succeeded = CryptBinaryToStringA(
-			reinterpret_cast<BYTE*>(const_cast<std::byte*>(&bytes[0])),
-			static_cast<DWORD>(bytes.size()),
-			CRYPT_STRING_BASE64 | CRYPT_STRING_NOCRLF,
+		Win32::DWORD size = 0;
+		constexpr Win32::DWORD flags = Win32::CryptStringBase64 | Win32::CryptStringNoCrLf;
+		bool succeeded = Win32::CryptBinaryToStringA(
+			reinterpret_cast<Win32::BYTE*>(const_cast<std::byte*>(&bytes[0])),
+			static_cast<Win32::DWORD>(bytes.size()),
+			flags,
 			nullptr,
 			&size
 		);
 		if (!succeeded)
 			throw Error::Win32Error("CryptBinaryToStringA() failed when calculating size");
 		if (size == 0)
-			return "";
+			return {};
 
 		std::string returnVal(size, L'\0');
-		succeeded = CryptBinaryToStringA(
-			reinterpret_cast<BYTE*>(const_cast<std::byte*>(&bytes[0])),
-			static_cast<DWORD>(bytes.size()),
-			CRYPT_STRING_BASE64 | CRYPT_STRING_NOCRLF,
-			static_cast<LPSTR>(&returnVal[0]),
+		succeeded = Win32::CryptBinaryToStringA(
+			reinterpret_cast<Win32::BYTE*>(const_cast<std::byte*>(&bytes[0])),
+			static_cast<Win32::DWORD>(bytes.size()),
+			flags,
+			static_cast<Win32::LPSTR>(&returnVal[0]),
 			&size
 		);
 		if (!succeeded)
@@ -294,26 +294,27 @@ export namespace Boring32::Crypto
 	std::wstring ToBase64WString(const std::vector<std::byte>& bytes)
 	{
 		// Determine the required size -- this includes the null terminator
-		DWORD size = 0;
+		Win32::DWORD size = 0;
+		constexpr Win32::DWORD flags = Win32::CryptStringBase64 | Win32::CryptStringNoCrLf;
 		// https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptbinarytostringw
-		bool succeeded = CryptBinaryToStringW(
-			reinterpret_cast<BYTE*>(const_cast<std::byte*>(&bytes[0])),
-			static_cast<DWORD>(bytes.size()),
-			CRYPT_STRING_BASE64 | CRYPT_STRING_NOCRLF,
+		bool succeeded = Win32::CryptBinaryToStringW(
+			reinterpret_cast<Win32::BYTE*>(const_cast<std::byte*>(&bytes[0])),
+			static_cast<Win32::DWORD>(bytes.size()),
+			flags,
 			nullptr,
 			&size
 		);
 		if (!succeeded)
 			throw Error::Win32Error("CryptBinaryToStringW() failed when calculating size");
 		if (size == 0)
-			return L"";
+			return {};
 
 		std::wstring returnVal(size, L'\0');
-		succeeded = CryptBinaryToStringW(
-			reinterpret_cast<BYTE*>(const_cast<std::byte*>(&bytes[0])),
-			static_cast<DWORD>(bytes.size()),
-			CRYPT_STRING_BASE64 | CRYPT_STRING_NOCRLF,
-			static_cast<LPWSTR>(&returnVal[0]),
+		succeeded = Win32::CryptBinaryToStringW(
+			reinterpret_cast<Win32::BYTE*>(const_cast<std::byte*>(&bytes[0])),
+			static_cast<Win32::DWORD>(bytes.size()),
+			flags,
+			static_cast<Win32::LPWSTR>(&returnVal[0]),
 			&size
 		);
 		if (!succeeded)
@@ -327,11 +328,11 @@ export namespace Boring32::Crypto
 
 	std::vector<std::byte> ToBinary(const std::wstring& base64)
 	{
-		DWORD byteSize = 0;
-		bool succeeded = CryptStringToBinaryW(
+		Win32::DWORD byteSize = 0;
+		bool succeeded = Win32::CryptStringToBinaryW(
 			&base64[0],
 			0,
-			CRYPT_STRING_BASE64,
+			Win32::CryptStringBase64,
 			nullptr,
 			&byteSize,
 			nullptr,
@@ -341,11 +342,11 @@ export namespace Boring32::Crypto
 			throw Error::Win32Error("CryptStringToBinaryW() failed when calculating size");
 
 		std::vector<std::byte> returnVal(byteSize);
-		succeeded = CryptStringToBinaryW(
+		succeeded = Win32::CryptStringToBinaryW(
 			&base64[0],
 			0,
-			CRYPT_STRING_BASE64,
-			reinterpret_cast<BYTE*>(&returnVal[0]),
+			Win32::CryptStringBase64,
+			reinterpret_cast<Win32::BYTE*>(&returnVal[0]),
 			&byteSize,
 			nullptr,
 			nullptr
@@ -359,14 +360,14 @@ export namespace Boring32::Crypto
 
 	std::vector<std::byte> EncodeAsnString(const std::wstring& name)
 	{
-		DWORD encoded = 0;
+		Win32::DWORD encoded = 0;
 		// CERT_NAME_STR_FORCE_UTF8_DIR_STR_FLAG is required or the encoding
 		// produces subtle differences in the encoded bytes (DC3 vs FF in 
 		// original buffer), which causes the match to fail
 		// See https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certstrtonamew
-		const DWORD flags = CERT_X500_NAME_STR | CERT_NAME_STR_FORCE_UTF8_DIR_STR_FLAG;
-		bool succeeded = CertStrToNameW(
-			X509_ASN_ENCODING,
+		const Win32::DWORD flags = Win32::CertX500NameStr | Win32::CertNameStrForceUtf8DirStrFlag;
+		bool succeeded = Win32::CertStrToNameW(
+			Win32::X509AsnEncoding,
 			name.c_str(),
 			flags,
 			nullptr,
@@ -376,23 +377,23 @@ export namespace Boring32::Crypto
 		);
 		if (!succeeded)
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error("CertStrToNameW() failed", lastError);
 		}
 
 		std::vector<std::byte> bytes(encoded);
-		succeeded = CertStrToNameW(
-			X509_ASN_ENCODING,
+		succeeded = Win32::CertStrToNameW(
+			Win32::X509AsnEncoding,
 			name.c_str(),
 			flags,
 			nullptr,
-			reinterpret_cast<BYTE*>(&bytes[0]),
+			reinterpret_cast<Win32::BYTE*>(&bytes[0]),
 			&encoded,
 			nullptr
 		);
 		if (!succeeded)
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error("CertStrToNameW() failed", lastError);
 		}
 
@@ -401,14 +402,14 @@ export namespace Boring32::Crypto
 	}
 
 	std::wstring FormatAsnNameBlob(
-		const CERT_NAME_BLOB& certName,
-		const DWORD format
+		const Win32::CERT_NAME_BLOB& certName,
+		const Win32::DWORD format
 	)
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certnametostrw
-		DWORD characterSize = CertNameToStrW(
-			X509_ASN_ENCODING,
-			const_cast<CERT_NAME_BLOB*>(&certName),
+		Win32::DWORD characterSize = Win32::CertNameToStrW(
+			Win32::X509AsnEncoding,
+			const_cast<Win32::CERT_NAME_BLOB*>(&certName),
 			format,
 			nullptr,
 			0
@@ -417,20 +418,20 @@ export namespace Boring32::Crypto
 			return L"";
 
 		std::wstring name(characterSize, '\0');
-		characterSize = CertNameToStrW(
-			X509_ASN_ENCODING,
-			const_cast<CERT_NAME_BLOB*>(&certName),
+		characterSize = Win32::CertNameToStrW(
+			Win32::X509AsnEncoding,
+			const_cast<Win32::CERT_NAME_BLOB*>(&certName),
 			format,
 			&name[0],
-			static_cast<DWORD>(name.size())
+			static_cast<Win32::DWORD>(name.size())
 		);
 		name.pop_back(); // remove excess null character
 
 		return name;
 	}
 
-	std::vector<PCCERT_CHAIN_CONTEXT> FindChainInStore(
-		HCERTSTORE hCertStore,
+	std::vector<Win32::PCCERT_CHAIN_CONTEXT> FindChainInStore(
+		Win32::HCERTSTORE hCertStore,
 		const std::wstring& issuer
 	)
 	{
@@ -439,29 +440,29 @@ export namespace Boring32::Crypto
 		if (issuer.empty())
 			throw Error::Boring32Error("issuer cannot be empty string");
 
-		std::vector<PCCERT_CHAIN_CONTEXT> returnValue;
+		std::vector<Win32::PCCERT_CHAIN_CONTEXT> returnValue;
 		std::vector<std::byte> encodedIssuer = EncodeAsnString(issuer);
-		CERT_NAME_BLOB nameBlob{
-			.cbData = static_cast<DWORD>(encodedIssuer.size()),
-			.pbData = reinterpret_cast<BYTE*>(&encodedIssuer[0])
+		Win32::CERT_NAME_BLOB nameBlob{
+			.cbData = static_cast<Win32::DWORD>(encodedIssuer.size()),
+			.pbData = reinterpret_cast<Win32::BYTE*>(&encodedIssuer[0])
 		};
 		// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_chain_find_by_issuer_para
-		CERT_CHAIN_FIND_BY_ISSUER_PARA findParams{
+		Win32::CERT_CHAIN_FIND_BY_ISSUER_PARA findParams{
 			.cbSize = sizeof(findParams),
 			.pszUsageIdentifier = 0, //szOID_PKIX_KP_CLIENT_AUTH,
 			.dwKeySpec = 0,
 			.cIssuer = 1,
 			.rgIssuer = &nameBlob
 		};
-		PCCERT_CHAIN_CONTEXT chain = nullptr;
+		Win32::PCCERT_CHAIN_CONTEXT chain = nullptr;
 		while (true)
 		{
 			// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindchaininstore
-			chain = CertFindChainInStore(
+			chain = Win32::CertFindChainInStore(
 				hCertStore,
-				X509_ASN_ENCODING,
+				Win32::X509AsnEncoding,
 				0, // dwFindFlags,
-				CERT_CHAIN_FIND_BY_ISSUER, // dwFindType,
+				Win32::CertChainFindByIssuer, // dwFindType,
 				&findParams,
 				chain
 			);
@@ -472,14 +473,14 @@ export namespace Boring32::Crypto
 			// CertFindChainInStore frees the chain in each call, so we need
 			// to duplicate it to retain a valid handle.
 			// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certduplicatecertificatechain
-			PCCERT_CHAIN_CONTEXT duplicate = CertDuplicateCertificateChain(chain);
+			Win32::PCCERT_CHAIN_CONTEXT duplicate = Win32::CertDuplicateCertificateChain(chain);
 			if (!duplicate)
 			{
 				// For some reason, we've failed to duplicate the chain; delete 
 				// the current chain and bail. Like CertFindChainInStore(),
 				// CertDuplicateCertificateChain() does not appear to provide any 
 				// mechanism to determine why it failed.
-				CertFreeCertificateChain(chain);
+				Win32::CertFreeCertificateChain(chain);
 				throw Error::Win32Error("CertDuplicateCertificateChain() failed");
 			}
 			returnValue.push_back(duplicate);
