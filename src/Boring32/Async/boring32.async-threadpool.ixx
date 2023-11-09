@@ -1,26 +1,25 @@
 export module boring32.async:threadpool;
 import <functional>;
 import <memory>;
-import <source_location>;
 import <tuple>;
 import <iostream>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 
 export namespace Boring32::Async::ThreadPools
 {
 	typedef void
 		(*ThreadPoolCallback)(
-			PTP_CALLBACK_INSTANCE Instance,
+			Win32::PTP_CALLBACK_INSTANCE Instance,
 			void* Parameter,
-			PTP_WORK              Work
+			Win32::PTP_WORK              Work
 		);
 
 	class ThreadPool final
 	{
 		public:
 			using LambdaCallback = std::function<
-				void(PTP_CALLBACK_INSTANCE Instance, void*, PTP_WORK)
+				void(Win32::PTP_CALLBACK_INSTANCE Instance, void*, Win32::PTP_WORK)
 			>;
 			using WorkParamTuple = std::tuple<LambdaCallback&, void*>;
 
@@ -28,11 +27,11 @@ export namespace Boring32::Async::ThreadPools
 			struct WorkItem
 			{
 				using Lambda = std::function<
-					void(PTP_CALLBACK_INSTANCE Instance, T, PTP_WORK)
+					void(Win32::PTP_CALLBACK_INSTANCE Instance, T, Win32::PTP_WORK)
 				>;
 				Lambda Callback;
 				T Parameter = nullptr;
-				PTP_WORK Item = nullptr;
+				Win32::PTP_WORK Item = nullptr;
 			};
 
 			// https://docs.microsoft.com/en-us/windows/win32/procthread/using-the-thread-pool-functions
@@ -43,7 +42,7 @@ export namespace Boring32::Async::ThreadPools
 
 			ThreadPool() = default;
 
-			ThreadPool(const DWORD minThreads, const DWORD maxThreads)
+			ThreadPool(const Win32::DWORD minThreads, const Win32::DWORD maxThreads)
 				: m_pool(nullptr),
 				m_environ({ 0 }),
 				m_minThreads(minThreads),
@@ -53,18 +52,18 @@ export namespace Boring32::Async::ThreadPools
 			}
 
 		public:
-			DWORD GetMinThread() const noexcept
+			Win32::DWORD GetMinThread() const noexcept
 			{
 				return m_minThreads;
 			}
 
-			DWORD GetMaxThread() const noexcept
+			Win32::DWORD GetMaxThread() const noexcept
 			{
 				return m_maxThreads;
 			}
 
 		public:
-			void SetMinAndMaxThreads(const DWORD min, const DWORD max)
+			void SetMinAndMaxThreads(const Win32::DWORD min, const Win32::DWORD max)
 			{
 				if (!m_pool)
 					throw Error::Boring32Error("m_pool is nullptr");
@@ -73,7 +72,7 @@ export namespace Boring32::Async::ThreadPools
 				SetMaxThreads(max);
 			}
 
-			void SetMaxThreads(const DWORD value)
+			void SetMaxThreads(const Win32::DWORD value)
 			{
 				if (!m_pool)
 					throw Error::Boring32Error("m_pool is nullptr");
@@ -81,19 +80,19 @@ export namespace Boring32::Async::ThreadPools
 
 				// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-setthreadpoolthreadmaximum
 				m_maxThreads = value;
-				SetThreadpoolThreadMaximum(m_pool.get(), m_maxThreads);
+				Win32::SetThreadpoolThreadMaximum(m_pool.get(), m_maxThreads);
 			}
 
-			void SetMinThreads(const DWORD value)
+			void SetMinThreads(const Win32::DWORD value)
 			{
 				if (!m_pool)
 					throw Error::Boring32Error("m_pool is nullptr");
 				ValidateArgs(value, m_maxThreads);
 
 				// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-setthreadpoolthreadminimum
-				if (!SetThreadpoolThreadMinimum(m_pool.get(), value))
+				if (!Win32::SetThreadpoolThreadMinimum(m_pool.get(), value))
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("SetThreadpoolThreadMinimum() failed", lastError);
 				}
 
@@ -105,7 +104,7 @@ export namespace Boring32::Async::ThreadPools
 				if (m_pool)
 				{
 					// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-destroythreadpoolenvironment
-					DestroyThreadpoolEnvironment(&m_environ);
+					Win32::DestroyThreadpoolEnvironment(&m_environ);
 					m_pool = nullptr;
 				}
 				m_environ = { 0 };
@@ -114,7 +113,7 @@ export namespace Boring32::Async::ThreadPools
 			}
 
 			[[nodiscard("Return value should remain live until callback is fully completed")]]
-			PTP_WORK CreateWork(
+			Win32::PTP_WORK CreateWork(
 				ThreadPoolCallback& callback,
 				void* param
 			)
@@ -127,14 +126,14 @@ export namespace Boring32::Async::ThreadPools
 				// https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms687396(v=vs.85)
 				// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-closethreadpoolwork
 				// https://docs.microsoft.com/en-us/archive/msdn-magazine/2011/august/windows-with-c-the-windows-thread-pool-and-work
-				const PTP_WORK item = CreateThreadpoolWork(
+				const Win32::PTP_WORK item = Win32::CreateThreadpoolWork(
 					callback,
 					param,
 					&m_environ
 				);
 				if (!item)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("CreateThreadPool() failed", lastError);
 				}
 
@@ -147,16 +146,15 @@ export namespace Boring32::Async::ThreadPools
 				if (!m_pool)
 					throw Error::Boring32Error("m_pool is nullptr");
 
-				outWorkItem.Item = CreateThreadpoolWork(
+				outWorkItem.Item = Win32::CreateThreadpoolWork(
 					InternalCallback, 
 					&outWorkItem, 
 					&m_environ
 				);
 				if (!outWorkItem.Item)
 				{
-					const auto location = std::source_location::current();
 					// using current() directly causes a compiler internal error
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("CreateThreadpoolWork() failed", lastError);
 				}
 			}
@@ -164,31 +162,31 @@ export namespace Boring32::Async::ThreadPools
 			template<typename T>
 			void CreateWork(WorkItem<T>&& workItem) = delete;
 
-			void SubmitWork(PTP_WORK workItem)
+			void SubmitWork(Win32::PTP_WORK workItem)
 			{
 				if (!m_pool)
 					throw Error::Boring32Error("m_pool is nullptr");
 				if (!workItem)
 					throw Error::Boring32Error("workItem is nullptr");
-				SubmitThreadpoolWork(workItem);
+				Win32::SubmitThreadpoolWork(workItem);
 			}
 
 			void SetCallbackRunsLong()
 			{
 				//https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setthreadpoolcallbackrunslong
-				SetThreadpoolCallbackRunsLong(&m_environ);
+				Win32::SetThreadpoolCallbackRunsLong(&m_environ);
 			}
 
-			std::shared_ptr<TP_POOL> GetPoolHandle() const noexcept
+			std::shared_ptr<Win32::TP_POOL> GetPoolHandle() const noexcept
 			{
 				return m_pool;
 			}
 
 		protected:
 			static void InternalCallback(
-				PTP_CALLBACK_INSTANCE instance, 
+				Win32::PTP_CALLBACK_INSTANCE instance,
 				void* parameter, 
-				PTP_WORK work
+				Win32::PTP_WORK work
 			)
 			{
 				// We cast this to a void, but the callback will know the correct type
@@ -206,7 +204,7 @@ export namespace Boring32::Async::ThreadPools
 				}
 			}
 
-			static void ValidateArgs(const DWORD minThreads, const DWORD maxThreads)
+			static void ValidateArgs(const Win32::DWORD minThreads, const Win32::DWORD maxThreads)
 			{
 				if (minThreads < 1)
 					throw Error::Boring32Error("minThreads cannot be less than 1");
@@ -243,27 +241,27 @@ export namespace Boring32::Async::ThreadPools
 
 				// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-createthreadpool
 				// https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-closethreadpool
-				m_pool = std::shared_ptr<TP_POOL>(
-					CreateThreadpool(nullptr), 
-					CloseThreadpool
+				m_pool = std::shared_ptr<Win32::TP_POOL>(
+					Win32::CreateThreadpool(nullptr), 
+					Win32::CloseThreadpool
 				);
 				if (!m_pool)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("CreateThreadPool() failed", lastError);
 				}
 
 				SetMinAndMaxThreads(m_minThreads, m_maxThreads);
 				// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-initializethreadpoolenvironment
-				InitializeThreadpoolEnvironment(&m_environ);
+				Win32::InitializeThreadpoolEnvironment(&m_environ);
 				// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setthreadpoolcallbackpool
-				SetThreadpoolCallbackPool(&m_environ, m_pool.get());
+				Win32::SetThreadpoolCallbackPool(&m_environ, m_pool.get());
 			}
 
 		protected:
-			std::shared_ptr<TP_POOL> m_pool;
-			TP_CALLBACK_ENVIRON m_environ{ 0 };
-			DWORD m_minThreads = 0;
-			DWORD m_maxThreads = 0;
+			std::shared_ptr<Win32::TP_POOL> m_pool;
+			Win32::TP_CALLBACK_ENVIRON m_environ{ 0 };
+			Win32::DWORD m_minThreads = 0;
+			Win32::DWORD m_maxThreads = 0;
 	};
 }

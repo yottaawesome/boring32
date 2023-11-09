@@ -112,6 +112,10 @@ export namespace Boring32::Win32
 	using ::STARTUPINFO;
 	using ::SYNCHRONIZATION_BARRIER;
 	using ::WAITORTIMERCALLBACK;
+	using ::PTP_CALLBACK_INSTANCE;
+	using ::PTP_WORK;
+	using ::TP_POOL;
+	using ::TP_CALLBACK_ENVIRON;
 
 	enum class FileMapAccess : unsigned long
 	{
@@ -373,6 +377,16 @@ export namespace Boring32::Win32
 	using ::CreateTimerQueueTimer;
 	using ::CreateTimerQueue;
 	using ::DeleteTimerQueueEx;
+	using ::SetThreadpoolThreadMaximum;
+	using ::SetThreadpoolThreadMinimum;
+	using ::DestroyThreadpoolEnvironment;
+	using ::CreateThreadpoolWork;
+	using ::SubmitThreadpoolWork;
+	using ::InitializeThreadpoolEnvironment;
+	using ::SetThreadpoolCallbackPool;
+	using ::SetThreadpoolCallbackRunsLong;
+	using ::CreateThreadpool;
+	using ::CloseThreadpool;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
