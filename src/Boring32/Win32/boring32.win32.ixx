@@ -118,6 +118,11 @@ export namespace Boring32::Win32
 	using ::TP_CALLBACK_ENVIRON;
 	using ::OVERLAPPED;
 
+	namespace MemoryProtection
+	{
+		constexpr auto PageReadWrite = PAGE_READWRITE;
+	}
+
 	enum class FileMapAccess : unsigned long
 	{
 		All = FILE_MAP_ALL_ACCESS,
@@ -399,6 +404,11 @@ export namespace Boring32::Win32
 	using ::SetThreadpoolCallbackRunsLong;
 	using ::CreateThreadpool;
 	using ::CloseThreadpool;
+	using ::RtlSecureZeroMemory;
+	using ::MapViewOfFile;
+	using ::CreateFileMappingW;
+	using ::OpenFileMappingW;
+	using ::UnmapViewOfFile;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
