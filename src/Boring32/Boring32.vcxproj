@@ -285,6 +285,7 @@
     <ClCompile Include="Registry\boring32.registry-key.ixx" />
     <ClCompile Include="Registry\boring32.registry-value.ixx" />
     <ClCompile Include="Security\boring32.security-constants.ixx" />
+    <ClCompile Include="Security\boring32.security-encodedpointer.ixx" />
     <ClCompile Include="Security\boring32.security-functions.ixx" />
     <ClCompile Include="Security\boring32.security-impersonationcontext.ixx" />
     <ClCompile Include="Security\boring32.security-lsaunicodestring.cpp">

@@ -563,6 +563,8 @@ export namespace Boring32::Win32
 	using ::CertFreeCertificateChain;
 	using ::CertFindCertificateInStore;
 	using ::CryptStringToBinaryW;
+	using ::EncodePointer;
+	using ::DecodePointer;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
