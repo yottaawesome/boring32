@@ -6,10 +6,9 @@ export namespace Boring32::Security
 	template<typename T>
 	class EncodedPointer final
 	{
-		EncodedPointer(const T* ptr)
-		{
-			m_encoded = Win32::EncodePointer(ptr);
-		}
+		EncodedPointer(const T* ptr) noexcept
+			: m_encoded(Win32::EncodePointer(ptr))
+		{ }
 
 		public:
 			T* operator->() noexcept
@@ -32,7 +31,7 @@ export namespace Boring32::Security
 				return Win32::DecodePointer(m_encoded);
 			}
 
-			EncodedPointer& operator=(const T* other)
+			EncodedPointer& operator=(const T* other) noexcept
 			{
 				m_encoded = other;
 				return *this;
