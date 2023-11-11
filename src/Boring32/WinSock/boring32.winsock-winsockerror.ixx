@@ -3,7 +3,6 @@ import boring32.error;
 import <string>;
 import <source_location>;
 import <stacktrace>;
-import <win32.hpp>;
 
 export namespace Boring32::WinSock
 {

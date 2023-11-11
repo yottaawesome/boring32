@@ -268,6 +268,11 @@ export namespace Boring32::Win32
 
 	const HANDLE InvalidHandleValue = INVALID_HANDLE_VALUE;
 
+	// This an option for converting macros to constexpr without having the preprocessor
+	// mess up the constexpr variable's name. Another option is to add the prefix _ to
+	// be a suffix instead.
+	constexpr const wchar_t* _INSTALLPROPERTY_PACKAGENAME = INSTALLPROPERTY_PACKAGENAME;
+
 	constexpr auto SddlRevision1 = SDDL_REVISION_1;
 
 	constexpr unsigned long GenericRead = GENERIC_READ;

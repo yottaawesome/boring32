@@ -226,5 +226,11 @@
     <ClCompile Include="Async\boring32.async-waitable.ixx" />
     <ClCompile Include="Compression\boring32.compression-types.ixx" />
     <ClCompile Include="Security\boring32.security-encodedpointer.ixx" />
+    <ClCompile Include="StrongTypes\boring32.strongtypes.ixx" />
+    <ClCompile Include="StrongTypes\boring32.strongtypes-crtp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StrongTypes\boring32.strongtypes-functionalities.ixx" />
+    <ClCompile Include="StrongTypes\boring32.strongtypes-impl.ixx" />
   </ItemGroup>
 </Project>
