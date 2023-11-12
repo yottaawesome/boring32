@@ -74,9 +74,9 @@ namespace Boring32::Async
         return piProcInfo;
     }
 
-    std::string Parse(const std::string& cmd)
+    std::string ParseWMICGetBios(const std::string& cmdOutput)
     {
-        std::vector tokens = Strings::TokeniseString(cmd, "\r\r\n");
+        std::vector tokens = Strings::TokeniseString(cmdOutput, "\r\r\n");
         bool nextLine = false;
         std::string serialNumber;
         for (const std::string token : tokens)
@@ -111,12 +111,6 @@ export namespace Boring32::Async
         if (cmd.empty())
             throw Error::Boring32Error("Please specify a cmd command.");
 
-        Win32::HANDLE hChildStd_IN_Rd = nullptr;
-        Win32::HANDLE hChildStd_IN_Wr = nullptr;
-        Win32::HANDLE hChildStd_OUT_Rd = nullptr;
-        Win32::HANDLE hChildStd_OUT_Wr = nullptr;
-        Win32::HANDLE hInputFile = nullptr;
-
         // Set the bInheritHandle flag so pipe handles are inherited.
         Win32::SECURITY_ATTRIBUTES saAttr{
             .nLength = sizeof(Win32::SECURITY_ATTRIBUTES),
@@ -125,12 +119,15 @@ export namespace Boring32::Async
         };
 
         // Create a pipe for the child process's STDOUT. 
+        Win32::HANDLE hChildStd_OUT_Rd = nullptr;
+        Win32::HANDLE hChildStd_OUT_Wr = nullptr;
         if (!Win32::CreatePipe(&hChildStd_OUT_Rd, &hChildStd_OUT_Wr, &saAttr, 0))
         {
             const auto lastError = GetLastError();
             throw Error::Win32Error("CreatePipe() failed", lastError);
         }
         HandleUniquePtr ptrChildStdOutWr = HandleUniquePtr(hChildStd_OUT_Wr);
+        HandleUniquePtr ptrChildStdOutRd = HandleUniquePtr(hChildStd_OUT_Rd);
 
         // Ensure the read handle to the pipe for STDOUT is not inherited.
         if (!Win32::SetHandleInformation(hChildStd_OUT_Rd, Win32::HandleFlagInherit, 0))
@@ -138,15 +135,17 @@ export namespace Boring32::Async
             const auto lastError = GetLastError();
             throw Error::Win32Error("CreatePipe() failed", lastError);
         }
-        HandleUniquePtr ptrChildStdOutRd = HandleUniquePtr(hChildStd_OUT_Rd);
 
         // Create a pipe for the child process's STDIN. 
+        Win32::HANDLE hChildStd_IN_Rd = nullptr;
+        Win32::HANDLE hChildStd_IN_Wr = nullptr;
         if (!Win32::CreatePipe(&hChildStd_IN_Rd, &hChildStd_IN_Wr, &saAttr, 0))
         {
             const auto lastError = GetLastError();
             throw Error::Win32Error("CreatePipe() failed", lastError);
         }
         HandleUniquePtr ptrChildStdInRd = HandleUniquePtr(hChildStd_IN_Rd);
+        HandleUniquePtr ptrChildStdInWr = HandleUniquePtr(hChildStd_IN_Wr);
 
         // Ensure the write handle to the pipe for STDIN is not inherited. 
         if (!Win32::SetHandleInformation(hChildStd_IN_Wr, Win32::HandleFlagInherit, 0))
@@ -154,7 +153,6 @@ export namespace Boring32::Async
             const auto lastError = GetLastError();
             throw Error::Win32Error("CreatePipe() failed", lastError);
         }
-        HandleUniquePtr ptrChildStdInWr = HandleUniquePtr(hChildStd_IN_Wr);
 
         // Create the child process. 
         Win32::PROCESS_INFORMATION childProc = CreateChildProcess(
@@ -186,11 +184,19 @@ export namespace Boring32::Async
         {
             return Exec<FParser>(std::wstring{ FCmd });
         }
-    };
 
-    constexpr Strings::FixedString GetBiosCommand = LR"(C:\Windows\System32\cmd.exe /c wmic bios get serialnumber)";
+        static auto Exec()
+        {
+            return ::Exec<FParser>(std::wstring{ FCmd });
+        }
+    };   
+}
+
+export namespace Boring32::Async::Commands
+{
+    constexpr Strings::FixedString GetWMICBiosCommand = LR"(C:\Windows\System32\cmd.exe /c wmic bios get serialnumber)";
 
     // Once MSVC supports C++23's static operator(), this can be simplified
     // into a using statement.
-    constexpr CmdRunner<GetBiosCommand, Parse> GetBIOS;
+    constexpr CmdRunner<GetWMICBiosCommand, ParseWMICGetBios> GetBIOS;
 }
