@@ -18,15 +18,14 @@ namespace Boring32::Async
 
     std::string ReadFromPipe(Win32::HANDLE hChildStd_OUT_Rd)
     {
-        Win32::DWORD dwRead;
         char chBuf[BUFSIZE];
-        bool bSuccess = false;
         Win32::HANDLE hParentStdOut = Win32::GetStdHandle(Win32::StdOutputHandle);
 
         std::string result;
         for (;;)
         {
-            bSuccess = Win32::ReadFile(hChildStd_OUT_Rd, chBuf, BUFSIZE, &dwRead, nullptr);
+            Win32::DWORD dwRead;
+            bool bSuccess = Win32::ReadFile(hChildStd_OUT_Rd, chBuf, BUFSIZE, &dwRead, nullptr);
             if (!bSuccess || dwRead == 0)
                 break;
 
