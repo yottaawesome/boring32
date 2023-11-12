@@ -174,6 +174,8 @@ export namespace Boring32::Win32
 
 	constexpr auto UsageMatchTypeAnd = USAGE_MATCH_TYPE_AND;
 
+	const auto StdOutputHandle = STD_OUTPUT_HANDLE;
+
 	enum class EncryptOptions
 	{
 		LocalMachine = CRYPTPROTECT_LOCAL_MACHINE,
@@ -272,6 +274,8 @@ export namespace Boring32::Win32
 	// mess up the constexpr variable's name. Another option is to add the prefix _ to
 	// be a suffix instead.
 	constexpr const wchar_t* _INSTALLPROPERTY_PACKAGENAME = INSTALLPROPERTY_PACKAGENAME;
+
+	constexpr auto StartFUsesStdHandle = STARTF_USESTDHANDLES;
 
 	constexpr auto SddlRevision1 = SDDL_REVISION_1;
 
@@ -570,6 +574,9 @@ export namespace Boring32::Win32
 	using ::CryptStringToBinaryW;
 	using ::EncodePointer;
 	using ::DecodePointer;
+	using ::GetStdHandle;
+	using ::CreatePipe;
+	using ::SetHandleInformation;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;

@@ -185,6 +185,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Async\boring32.async-apcthread.ixx" />
+    <ClCompile Include="Async\boring32.async-cmdrunner.ixx" />
     <ClCompile Include="Async\boring32.async-concepts.ixx" />
     <ClCompile Include="Async\boring32.async-criticalsection.ixx" />
     <ClCompile Include="Async\boring32.async-eventloop.ixx" />

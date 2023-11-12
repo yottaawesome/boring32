@@ -151,6 +151,36 @@ export namespace Boring32::Strings
 		RightTrim(s);
 	}
 
+	std::vector<std::string> TokeniseString(
+		const std::string& stringToTokenise,
+		const std::string& delimiter
+	)
+	{
+		size_t position = 0;
+		// If we don't find it at all, add the whole string
+		if (stringToTokenise.find(delimiter, position) == std::string::npos)
+			return { stringToTokenise };
+
+		std::vector<std::string> results;
+		std::string intermediateString = stringToTokenise;
+		while ((position = intermediateString.find(delimiter)) != std::string::npos)
+		{
+			// split and add to the results
+			std::string split = intermediateString.substr(0, position);
+			results.push_back(split);
+
+			// move up our position
+			position += delimiter.length();
+			intermediateString = intermediateString.substr(position);
+
+			// On the last iteration, enter the remainder
+			if (intermediateString.find(delimiter) == std::string::npos)
+				results.push_back(intermediateString);
+		}
+
+		return results;
+	}
+
 	std::vector<std::wstring> TokeniseString(
 		const std::wstring& stringToTokenise,
 		const std::wstring& delimiter
