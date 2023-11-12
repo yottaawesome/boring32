@@ -4,6 +4,7 @@ import <vector>;
 import <algorithm>;
 import boring32.win32;
 import boring32.error;
+export import :fixedstring;
 
 export namespace Boring32::Strings
 {

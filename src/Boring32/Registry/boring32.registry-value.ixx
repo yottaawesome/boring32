@@ -3,6 +3,7 @@ import <string>;
 import <tuple>;
 import <win32.hpp>;
 import boring32.error;
+import boring32.strings;
 
 export namespace Boring32::Registry
 {
@@ -66,39 +67,6 @@ export namespace Boring32::Registry
 			T m_value;
 	};
 
-	template <size_t N>
-	struct FixedString
-	{
-		wchar_t buf[N]{};
-		//constexpr FixedString(const wchar_t(&arg)[N]) noexcept
-		//{
-		//	std::copy_n(arg, N, buf);
-		//	//for (unsigned i = 0; i < N; i++)
-		//		//buf[i] = arg[i];
-		//}
-
-		constexpr FixedString(const wchar_t* arg) noexcept
-		{
-			std::copy_n(arg, N, buf);
-			//for (unsigned i = 0; i < N; i++)
-				//buf[i] = arg[i];
-		}
-
-		constexpr operator const wchar_t* () const noexcept
-		{
-			return buf;
-		}
-
-		constexpr operator std::wstring_view() const noexcept
-		{
-			return { buf, N };
-		}
-	};
-	template<size_t N>
-	FixedString(wchar_t const (&)[N]) -> FixedString<N>;
-	template<size_t N>
-	FixedString(const wchar_t*) -> FixedString<N>;
-
 	template <typename T>
 	constexpr bool always_false = std::false_type::value;
 
@@ -129,7 +97,7 @@ export namespace Boring32::Registry
 		{F()} -> std::convertible_to<std::invoke_result_t<OP<V, std::invoke_result_t<decltype(F)>>>>;
 	};
 
-	template<HKEY TParentKey, FixedString TSubKey, FixedString TValueName, ValueTypes TValueType, auto TDefaultValue = [] {} >
+	template<HKEY TParentKey, Strings::FixedString TSubKey, Strings::FixedString TValueName, ValueTypes TValueType, auto TDefaultValue = [] {} >
 		requires CheckInvocable<TDefaultValue, TValueType> // not really required due to the static_asserts below
 	class RegistryValue
 	{

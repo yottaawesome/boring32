@@ -232,5 +232,6 @@
     </ClCompile>
     <ClCompile Include="StrongTypes\boring32.strongtypes-functionalities.ixx" />
     <ClCompile Include="StrongTypes\boring32.strongtypes-impl.ixx" />
+    <ClCompile Include="Strings\boring32.strings-fixedstring.ixx" />
   </ItemGroup>
 </Project>

@@ -686,7 +686,7 @@ void DontDoThis()
 	std::cout << sv;
 }
 
-template<Boring32::Registry::FixedString TName, Boring32::Registry::ValueTypes TType, auto DefaultGetter = [] {} >
+template<Boring32::Strings::FixedString TName, Boring32::Registry::ValueTypes TType, auto DefaultGetter = [] {} >
 using RegValue = Boring32::Registry::RegistryValue<
 	HKEY_LOCAL_MACHINE,
 	LR"(SOFTWARE\Microsoft\OneDrive)",

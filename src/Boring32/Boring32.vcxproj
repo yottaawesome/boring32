@@ -318,6 +318,7 @@
     <ClCompile Include="SSPI\NTLM\boring32.sspi.provider.ntlm.ixx" />
     <ClCompile Include="SSPI\PKU2U\boring32.sspi.provider.pku2u.ixx" />
     <ClCompile Include="SSPI\Schannel\boring32.sspi.provider.schannel.ixx" />
+    <ClCompile Include="Strings\boring32.strings-fixedstring.ixx" />
     <ClCompile Include="StrongTypes\boring32.strongtypes-crtp.cpp">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModuleInternalPartition</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCppModuleInternalPartition</CompileAs>
