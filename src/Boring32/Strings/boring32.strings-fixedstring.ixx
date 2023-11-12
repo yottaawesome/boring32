@@ -6,6 +6,8 @@ export namespace Boring32::Strings
 	template <size_t N>
 	struct FixedString
 	{
+		// There's a consteval bug in the compiler.
+		// See https://developercommunity.visualstudio.com/t/consteval-function-unexpectedly-returns/10501040
 		wchar_t buf[N]{};
 		
 		constexpr FixedString(const wchar_t(&arg)[N]) noexcept
@@ -26,6 +28,16 @@ export namespace Boring32::Strings
 		}
 
 		constexpr operator std::wstring_view() const noexcept
+		{
+			return { buf, N };
+		}
+
+		operator std::wstring() const noexcept
+		{
+			return { buf, N };
+		}
+
+		std::wstring ToString() const noexcept
 		{
 			return { buf, N };
 		}
