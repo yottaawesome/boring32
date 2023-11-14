@@ -1,58 +1,58 @@
 export module boring32.xaudio2:functions;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 
 namespace Boring32::XAudio2
 {
-	constexpr DWORD fourccRIFF = 'FFIR';
-	constexpr DWORD fourccDATA = 'atad';
-	constexpr DWORD fourccFMT = 'tmf'; // originally ' tmf';
-	constexpr DWORD fourccWAVE = 'EVAW';
-	constexpr DWORD fourccXWMA = 'AMWX';
-	constexpr DWORD fourccDPDS = 'sdpd';
+	constexpr Win32::DWORD fourccRIFF = 'FFIR';
+	constexpr Win32::DWORD fourccDATA = 'atad';
+	constexpr Win32::DWORD fourccFMT = 'tmf'; // originally ' tmf';
+	constexpr Win32::DWORD fourccWAVE = 'EVAW';
+	constexpr Win32::DWORD fourccXWMA = 'AMWX';
+	constexpr Win32::DWORD fourccDPDS = 'sdpd';
 }
 
 export namespace Boring32::XAudio2
 {
 	void FindChunk(
-		HANDLE hFile, 
-		DWORD fourcc, 
-		DWORD& dwChunkSize,
-		DWORD& dwChunkDataPosition
+		Win32::HANDLE hFile, 
+		Win32::DWORD fourcc, 
+		Win32::DWORD& dwChunkSize,
+		Win32::DWORD& dwChunkDataPosition
 	)
     {
-        DWORD result = SetFilePointer(hFile, 0, nullptr, FILE_BEGIN);
-        if (result == INVALID_SET_FILE_POINTER)
+        Win32::DWORD result = Win32::SetFilePointer(hFile, 0, nullptr, Win32::FileBegin);
+        if (result == Win32::InvalidSetFilePointer)
             throw Error::Win32Error(
-                "SetFilePointer() failed",
-                GetLastError()
+                "Win32::SetFilePointer() failed",
+                Win32::GetLastError()
             );
 
-        DWORD dwChunkType;
-        DWORD dwChunkDataSize;
-        DWORD dwRIFFDataSize = 0;
-        DWORD dwFileType;
-        DWORD bytesRead = 0;
-        DWORD dwOffset = 0;
+        Win32::DWORD dwChunkType;
+        Win32::DWORD dwChunkDataSize;
+        Win32::DWORD dwRIFFDataSize = 0;
+        Win32::DWORD dwFileType;
+        Win32::DWORD bytesRead = 0;
+        Win32::DWORD dwOffset = 0;
 
-        HRESULT hr = S_OK;
-        while (hr == S_OK)
+        Win32::HRESULT hr = Win32::S_Ok;
+        while (hr == Win32::S_Ok)
         {
-            DWORD dwRead;
-            if (!ReadFile(hFile, &dwChunkType, sizeof(DWORD), &dwRead, nullptr))
+            Win32::DWORD dwRead;
+            if (!Win32::ReadFile(hFile, &dwChunkType, sizeof(Win32::DWORD), &dwRead, nullptr))
             {
-                const auto lastError = GetLastError();
+                const auto lastError = Win32::GetLastError();
                 throw Error::Win32Error(
-                    "ReadFile() failed",
+                    "Win32::ReadFile() failed",
                     lastError
                 );
             }
 
-            if (!ReadFile(hFile, &dwChunkDataSize, sizeof(DWORD), &dwRead, nullptr))
+            if (!Win32::ReadFile(hFile, &dwChunkDataSize, sizeof(Win32::DWORD), &dwRead, nullptr))
             {
-                const auto lastError = GetLastError();
+                const auto lastError = Win32::GetLastError();
                 throw Error::Win32Error(
-                    "ReadFile() failed",
+                    "Win32::ReadFile() failed",
                     lastError
                 );
             }
@@ -62,34 +62,34 @@ export namespace Boring32::XAudio2
                 case fourccRIFF:
                     dwRIFFDataSize = dwChunkDataSize;
                     dwChunkDataSize = 4;
-                    if (!ReadFile(hFile, &dwFileType, sizeof(DWORD), &dwRead, nullptr))
+                    if (!Win32::ReadFile(hFile, &dwFileType, sizeof(Win32::DWORD), &dwRead, nullptr))
                     {
-                        const auto lastError = GetLastError();
+                        const auto lastError = Win32::GetLastError();
                         throw Error::Win32Error(
-                            "ReadFile() failed",
+                            "Win32::ReadFile() failed",
                             lastError
                         );
                     }
                     break;
 
                 default:
-                    result = SetFilePointer(
+                    result = Win32::SetFilePointer(
                         hFile,
                         dwChunkDataSize,
                         nullptr,
-                        FILE_CURRENT
+                        Win32::FileCurrent
                     );
-                    if (result == INVALID_SET_FILE_POINTER)
+                    if (result == Win32::InvalidSetFilePointer)
                     {
-                        const auto lastError = GetLastError();
+                        const auto lastError = Win32::GetLastError();
                         throw Error::Win32Error(
-                            "SetFilePointer() failed",
+                            "Win32::SetFilePointer() failed",
                             lastError
                         );
                     }
             }
 
-            dwOffset += sizeof(DWORD) * 2;
+            dwOffset += sizeof(Win32::DWORD) * 2;
 
             if (dwChunkType == fourcc)
             {

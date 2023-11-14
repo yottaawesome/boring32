@@ -1,5 +1,5 @@
 export module boring32.xaudio2:sourcevoice;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 import :xaudio2error;
 import :voice;
@@ -17,7 +17,7 @@ export namespace Boring32::XAudio2
 
 			SourceVoice(const SourceVoice&) = delete;
 			SourceVoice(SourceVoice&&) noexcept = default;
-			SourceVoice(IXAudio2SourceVoice* voice)
+			SourceVoice(Win32::IXAudio2SourceVoice* voice)
 				: m_voice(voice)
 			{
 				if (!voice)
@@ -39,6 +39,6 @@ export namespace Boring32::XAudio2
 			}
 
 		protected:
-			IXAudio2SourceVoice* m_voice;
+			Win32::IXAudio2SourceVoice* m_voice;
 	};
 }

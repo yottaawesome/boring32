@@ -1,5 +1,5 @@
 export module boring32.xaudio2:masteringvoice;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 import :xaudio2error;
 import :voice;
@@ -14,7 +14,7 @@ export namespace Boring32::XAudio2
 			virtual ~MasteringVoice() = default;
 			MasteringVoice(const MasteringVoice&) = delete;
 			MasteringVoice(MasteringVoice&&) noexcept = default;
-			MasteringVoice(IXAudio2MasteringVoice* voice)
+			MasteringVoice(Win32::IXAudio2MasteringVoice* voice)
 				: m_voice(voice)
 			{
 				if (!voice)
@@ -35,12 +35,12 @@ export namespace Boring32::XAudio2
 				}
 			}
 
-			virtual IXAudio2MasteringVoice* Get() const noexcept
+			virtual Win32::IXAudio2MasteringVoice* Get() const noexcept
 			{
 				return m_voice;
 			}
 
 		protected:
-			IXAudio2MasteringVoice* m_voice;
+			Win32::IXAudio2MasteringVoice* m_voice;
 	};
 }

@@ -1,5 +1,5 @@
 export module boring32.xaudio2:engine;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 import :xaudio2error;
 
@@ -25,14 +25,14 @@ export namespace Boring32::XAudio2
 
 			virtual void Initialise()
 			{
-				const HRESULT hr = XAudio2Create(&m_engine, 0, XAUDIO2_DEFAULT_PROCESSOR);
-				if (FAILED(hr)) Error::ThrowNested(
+				const Win32::HRESULT hr = Win32::XAudio2Create(&m_engine, 0, Win32::XAudio2DefaultProcessor);
+				if (Win32::HrFailed(hr)) Error::ThrowNested(
 					Error::COMError("Failed to create XAudio2 engine", hr),
 					XAudio2Error("An error occurred when initialising the XAudio2 engine")
 				);
 			}
 
 		protected:
-			Microsoft::WRL::ComPtr<IXAudio2> m_engine;
+			Win32::ComPtr<Win32::IXAudio2> m_engine;
 	};
 }

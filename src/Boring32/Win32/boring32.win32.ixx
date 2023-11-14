@@ -138,6 +138,12 @@ export namespace Boring32::Win32
 	using ::CRYPTUI_WIZ_IMPORT_SRC_INFO;
 	using ::LPSTR;
 
+	using ::IXAudio2;
+	using ::IXAudio2MasteringVoice;
+	using ::IXAudio2SourceVoice;
+
+	using ::Microsoft::WRL::ComPtr;
+
 	// See https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindcertificateinstore
 	enum class StoreFindType : DWORD
 	{
@@ -269,7 +275,10 @@ export namespace Boring32::Win32
 	constexpr auto MsiInstallContextMachine = MSIINSTALLCONTEXT_MACHINE;
 
 	const HANDLE InvalidHandleValue = INVALID_HANDLE_VALUE;
-
+	const auto InvalidSetFilePointer = INVALID_SET_FILE_POINTER;
+	const auto FileCurrent = FILE_CURRENT;
+	constexpr auto FileBegin = FILE_BEGIN;
+	constexpr auto S_Ok = S_OK;
 	// This an option for converting macros to constexpr without having the preprocessor
 	// mess up the constexpr variable's name. Another option is to add the prefix _ to
 	// be a suffix instead.
@@ -405,6 +414,8 @@ export namespace Boring32::Win32
 	};
 
 	constexpr auto JobObjectAllAccess = JOB_OBJECT_ALL_ACCESS;
+
+	constexpr auto XAudio2DefaultProcessor = XAUDIO2_DEFAULT_PROCESSOR;
 
 	using ::K32EnumDeviceDrivers;
 	using ::K32EnumProcesses;
@@ -577,6 +588,8 @@ export namespace Boring32::Win32
 	using ::GetStdHandle;
 	using ::CreatePipe;
 	using ::SetHandleInformation;
+	using ::XAudio2Create;
+	using ::SetFilePointer;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
