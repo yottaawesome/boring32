@@ -1,6 +1,6 @@
 export module boring32.time:datetime;
 import <cstdint>;
-import <win32.hpp>;
+import boring32.win32;
 import :functions;
 import boring32.error;
 
@@ -14,7 +14,7 @@ export namespace Boring32::Time
 			
 			DateTime()
 			{
-				GetSystemTimeAsFileTime(&m_ft);
+				Win32::GetSystemTimeAsFileTime(&m_ft);
 			}
 
 			DateTime(const DateTime& dateTime) = default;
@@ -24,16 +24,16 @@ export namespace Boring32::Time
 			DateTime& operator=(DateTime&&) noexcept = default;
 
 		public:
-			DateTime(const SYSTEMTIME& st)
+			DateTime(const Win32::SYSTEMTIME& st)
 			{
-				if (!SystemTimeToFileTime(&st, &m_ft))
+				if (!Win32::SystemTimeToFileTime(&st, &m_ft))
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("SystemTimeToFileTime() failed", lastError);
 				}
 			}
 
-			DateTime(const FILETIME& ft)
+			DateTime(const Win32::FILETIME& ft)
 				: m_ft(ft)
 			{ }
 
@@ -66,13 +66,13 @@ export namespace Boring32::Time
 				SetNewTotal(ToNanosecondTicks() + nsTicks);
 			}
 
-			SYSTEMTIME ToSystemTime() const
+			Win32::SYSTEMTIME ToSystemTime() const
 			{
-				SYSTEMTIME st;
+				Win32::SYSTEMTIME st;
 				// https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-filetimetosystemtime
-				if (!FileTimeToSystemTime(&m_ft, &st))
+				if (!Win32::FileTimeToSystemTime(&m_ft, &st))
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("FileTimeToSystemTime() failed", lastError);
 				}
 				return st;
@@ -81,16 +81,16 @@ export namespace Boring32::Time
 		private:
 			void SetNewTotal(const uint64_t newTotal)
 			{
-				const LARGE_INTEGER li{
+				const Win32::LARGE_INTEGER li{
 					.QuadPart = static_cast<long long>(newTotal)
 				};
 				m_ft = {
 					.dwLowDateTime = li.LowPart,
-					.dwHighDateTime = static_cast<DWORD>(li.HighPart)
+					.dwHighDateTime = static_cast<Win32::DWORD>(li.HighPart)
 				};
 			}
 
 		private:
-			FILETIME m_ft{ 0 };
+			Win32::FILETIME m_ft{ 0 };
 	};
 }

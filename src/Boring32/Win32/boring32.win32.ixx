@@ -137,6 +137,8 @@ export namespace Boring32::Win32
 	using ::CERT_CHAIN_PARA;
 	using ::CRYPTUI_WIZ_IMPORT_SRC_INFO;
 	using ::LPSTR;
+	using ::SYSTEMTIME;
+	using ::FILETIME;
 
 	using ::IXAudio2;
 	using ::IXAudio2MasteringVoice;
@@ -590,6 +592,9 @@ export namespace Boring32::Win32
 	using ::SetHandleInformation;
 	using ::XAudio2Create;
 	using ::SetFilePointer;
+	using ::SystemTimeToFileTime;
+	using ::GetSystemTimeAsFileTime;
+	using ::FileTimeToSystemTime;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
