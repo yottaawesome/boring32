@@ -1,24 +1,24 @@
 export module boring32.time:functions;
 import <string>;
-import <win32.hpp>;
-import boring32.error;
 import <sstream>;
 import <format>;
+import boring32.error;
+import boring32.win32;
 
 export namespace Boring32::Time
 {
-	SYSTEMTIME LargeIntegerTimeToSystemTime(const LARGE_INTEGER& li)
+	Win32::SYSTEMTIME LargeIntegerTimeToSystemTime(const Win32::LARGE_INTEGER& li)
 	{
-		const FILETIME ft{
+		const Win32::FILETIME ft{
 			.dwLowDateTime = li.LowPart,
-			.dwHighDateTime = static_cast<DWORD>(li.HighPart)
+			.dwHighDateTime = static_cast<Win32::DWORD>(li.HighPart)
 		};
 
-		SYSTEMTIME st;
+		Win32::SYSTEMTIME st;
 		// https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-filetimetosystemtime
-		if (!FileTimeToSystemTime(&ft, &st))
+		if (!Win32::FileTimeToSystemTime(&ft, &st))
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error("FileTimeToSystemTime() failed", lastError);
 		}
 		return st;
@@ -27,11 +27,11 @@ export namespace Boring32::Time
 	std::wstring GetTimeAsUTCString(const SYSTEMTIME& st)
 	{
 		// Format date buffer
-		constexpr UINT dateStringLength = 9;
+		constexpr unsigned dateStringLength = 9;
 		wchar_t dateString[dateStringLength];
 		// https://docs.microsoft.com/en-us/windows/win32/api/datetimeapi/nf-datetimeapi-getdateformatex
-		int status = GetDateFormatEx(
-			LOCALE_NAME_INVARIANT,
+		int status = Win32::GetDateFormatEx(
+			Win32::LocaleNameInvariant,
 			0,
 			&st,
 			L"yyyyMMdd",
@@ -41,16 +41,16 @@ export namespace Boring32::Time
 		);
 		if (!status)
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error("GetDateFormatEx() failed", lastError);
 		}
 
 		// Format time buffer
-		constexpr UINT timeStringLength = 9;
+		constexpr unsigned timeStringLength = 9;
 		wchar_t timeString[timeStringLength];
 		// https://docs.microsoft.com/en-us/windows/win32/api/datetimeapi/nf-datetimeapi-gettimeformatex
-		status = GetTimeFormatEx(
-			LOCALE_NAME_INVARIANT,
+		status = Win32::GetTimeFormatEx(
+			Win32::LocaleNameInvariant,
 			0,
 			&st,
 			L"HH:mm:ss",
@@ -59,16 +59,16 @@ export namespace Boring32::Time
 		);
 		if (!status)
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error("GetTimeFormatEx() failed", lastError);
 		}
 
-		TIME_ZONE_INFORMATION tzi;
+		Win32::TIME_ZONE_INFORMATION tzi;
 		// https://docs.microsoft.com/en-us/windows/win32/api/datetimeapi/nf-datetimeapi-gettimeformatex
-		const DWORD tziStatus = GetTimeZoneInformation(&tzi);
-		if (tziStatus == TIME_ZONE_ID_INVALID)
+		const Win32::DWORD tziStatus = Win32::GetTimeZoneInformation(&tzi);
+		if (tziStatus == Win32::TimeZoneIdInvalid)
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error("GetTimeZoneInformation() failed", lastError);
 		}
 
@@ -76,24 +76,24 @@ export namespace Boring32::Time
 		return std::vformat(L"{}-{}.{}{:+}", std::make_wformat_args(dateString, timeString, st.wMilliseconds, actualBias));
 	}
 
-	uint64_t FromFileTime(const FILETIME& ft)
+	uint64_t FromFileTime(const Win32::FILETIME& ft)
 	{
-		const ULARGE_INTEGER uli = {
+		const Win32::ULARGE_INTEGER uli = {
 			.LowPart = ft.dwLowDateTime,
 			.HighPart = ft.dwHighDateTime
 		};
 		return uli.QuadPart;
 	}
 
-	DWORD SystemTimeToShortISODate(const SYSTEMTIME& st)
+	Win32::DWORD SystemTimeToShortISODate(const Win32::SYSTEMTIME& st)
 	{
 		return std::stoul(std::format(L"{}{}{}", st.wYear, st.wMonth, st.wDay));
 	}
 
-	DWORD SystemTimeToShortISODate()
+	Win32::DWORD SystemTimeToShortISODate()
 	{
-		SYSTEMTIME st;
-		GetSystemTime(&st);
+		Win32::SYSTEMTIME st;
+		Win32::GetSystemTime(&st);
 		return SystemTimeToShortISODate(st);
 	}
 
@@ -104,12 +104,12 @@ export namespace Boring32::Time
 		static constexpr size_t UnixTimeStart = 0x019DB1DED53E8000;
 		static constexpr size_t TicksPerSecond = 10000000; //a tick is 100ns
 
-		FILETIME ft;
-		GetSystemTimeAsFileTime(&ft); //returns ticks in UTC
+		Win32::FILETIME ft;
+		Win32::GetSystemTimeAsFileTime(&ft); //returns ticks in UTC
 
 		//Copy the low and high parts of FILETIME into a LARGE_INTEGER
 		//This is so we can access the full 64-bits as an Int64 without causing an alignment fault
-		LARGE_INTEGER li;
+		Win32::LARGE_INTEGER li;
 		li.LowPart = ft.dwLowDateTime;
 		li.HighPart = ft.dwHighDateTime;
 
@@ -118,14 +118,14 @@ export namespace Boring32::Time
 	}
 
 	std::wstring FormatTime(
-		const SYSTEMTIME& time,
+		const Win32::SYSTEMTIME& time,
 		const std::wstring& format,
-		const std::wstring& locale = LOCALE_NAME_INVARIANT,
-		const DWORD flags = 0
+		const std::wstring& locale = Win32::LocaleNameInvariant,
+		const Win32::DWORD flags = 0
 	)
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/datetimeapi/nf-datetimeapi-gettimeformatex
-		int charactersNeeded = GetTimeFormatEx(
+		int charactersNeeded = Win32::GetTimeFormatEx(
 			locale.c_str(),
 			flags,
 			&time,
@@ -135,12 +135,12 @@ export namespace Boring32::Time
 		);
 		if (!charactersNeeded)
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error("GetTimeFormatEx() failed", lastError);
 		}
 
 		std::wstring returnVal(charactersNeeded, '\0');
-		charactersNeeded = GetTimeFormatEx(
+		charactersNeeded = Win32::GetTimeFormatEx(
 			locale.c_str(),
 			flags,
 			&time,
@@ -150,7 +150,7 @@ export namespace Boring32::Time
 		);
 		if (!charactersNeeded)
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error("GetTimeFormatEx() failed", lastError);
 		}
 
@@ -161,11 +161,11 @@ export namespace Boring32::Time
 	std::wstring FormatDate(
 		const SYSTEMTIME& date,
 		const std::wstring& format,
-		const std::wstring& locale = LOCALE_NAME_INVARIANT
+		const std::wstring& locale = Win32::LocaleNameInvariant
 	)
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/datetimeapi/nf-datetimeapi-getdateformatex
-		int charactersRequired = GetDateFormatEx(
+		int charactersRequired = Win32::GetDateFormatEx(
 			locale.c_str(),
 			0,
 			&date,
@@ -176,12 +176,12 @@ export namespace Boring32::Time
 		);
 		if (!charactersRequired)
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error("GetDateFormatEx() failed", lastError);
 		}
 
 		std::wstring formattedString(charactersRequired, '\0');
-		charactersRequired = GetDateFormatEx(
+		charactersRequired = Win32::GetDateFormatEx(
 			locale.c_str(),
 			0,
 			&date,
@@ -192,7 +192,7 @@ export namespace Boring32::Time
 		);
 		if (!charactersRequired)
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error("GetDateFormatEx() failed", lastError);
 		}
 
@@ -200,13 +200,13 @@ export namespace Boring32::Time
 	}
 
 	std::wstring FormatDate(
-		const SYSTEMTIME& date,
-		const DWORD flags,
-		const std::wstring& locale = LOCALE_NAME_INVARIANT
+		const Win32::SYSTEMTIME& date,
+		const Win32::DWORD flags,
+		const std::wstring& locale = Win32::LocaleNameInvariant
 	)
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/datetimeapi/nf-datetimeapi-getdateformatex
-		int charactersRequired = GetDateFormatEx(
+		int charactersRequired = Win32::GetDateFormatEx(
 			locale.c_str(),
 			flags,
 			&date,
@@ -217,12 +217,12 @@ export namespace Boring32::Time
 		);
 		if (!charactersRequired)
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error("GetDateFormatEx() failed", lastError);
 		}
 
 		std::wstring formattedString(charactersRequired, '\0');
-		charactersRequired = GetDateFormatEx(
+		charactersRequired = Win32::GetDateFormatEx(
 			locale.c_str(),
 			flags,
 			&date,
@@ -233,7 +233,7 @@ export namespace Boring32::Time
 		);
 		if (!charactersRequired)
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error("GetDateFormatEx() failed", lastError);
 		}
 

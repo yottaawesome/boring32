@@ -139,6 +139,7 @@ export namespace Boring32::Win32
 	using ::LPSTR;
 	using ::SYSTEMTIME;
 	using ::FILETIME;
+	using ::TIME_ZONE_INFORMATION;
 
 	using ::IXAudio2;
 	using ::IXAudio2MasteringVoice;
@@ -175,6 +176,7 @@ export namespace Boring32::Win32
 		PubKeyMd5Hash = CERT_FIND_PUBKEY_MD5_HASH
 	};
 
+	constexpr auto TimeZoneIdInvalid = TIME_ZONE_ID_INVALID;
 	constexpr auto CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS = 0x0002; // not defined according to msdn
 	constexpr auto CryptUiWizIgnoreNoUiFlagForCsps = CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS;
 	constexpr auto CryptUiWizNoUi = CRYPTUI_WIZ_NO_UI;
@@ -324,6 +326,8 @@ export namespace Boring32::Win32
 	constexpr auto CertChainRevocationCheckChainExcludeRoot = CERT_CHAIN_REVOCATION_CHECK_CHAIN_EXCLUDE_ROOT;
 	constexpr auto Pkcs7AsnEncoding = PKCS_7_ASN_ENCODING;
 	constexpr auto CertFindHasPrivateKey = CERT_FIND_HAS_PRIVATE_KEY;
+
+	constexpr auto LocaleNameInvariant = LOCALE_NAME_INVARIANT;
 
 	inline bool BCryptSuccess(NTSTATUS status) noexcept
 	{
@@ -595,6 +599,10 @@ export namespace Boring32::Win32
 	using ::SystemTimeToFileTime;
 	using ::GetSystemTimeAsFileTime;
 	using ::FileTimeToSystemTime;
+	using ::GetDateFormatEx;
+	using ::GetTimeFormatEx;
+	using ::GetTimeZoneInformation;
+	using ::GetSystemTime;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
