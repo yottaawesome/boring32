@@ -631,6 +631,7 @@ export namespace Boring32::Win32
 	using ::PeekNamedPipe;
 	using ::CreateMailslotW;
 	using ::ConnectNamedPipe;
+	using ::GlobalFree;
 
 	using ::CLSCTX;
 	using ::_bstr_t;
@@ -721,4 +722,19 @@ export namespace Boring32::Win32
 	using ::WICDecodeOptions;
 	using ::IWICFormatConverter;
 	using ::IWICImagingFactory;
+
+	namespace WinHttp
+	{
+		using ::URL_COMPONENTS;
+		using ::WinHttpCrackUrl;
+		using ::HINTERNET;
+		using ::WINHTTP_AUTOPROXY_OPTIONS;
+		using ::WinHttpGetProxyForUrl;
+		constexpr auto _WINHTTP_ACCESS_TYPE_NAMED_PROXY = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
+		constexpr auto _WINHTTP_AUTOPROXY_CONFIG_URL = WINHTTP_AUTOPROXY_CONFIG_URL;
+		using ::WinHttpGetProxyForUrl;
+		constexpr auto _WINHTTP_OPTION_PROXY = WINHTTP_OPTION_PROXY;
+		using ::WinHttpSetOption;
+		using ::WINHTTP_PROXY_INFO;
+	}
 }

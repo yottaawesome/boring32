@@ -1,6 +1,6 @@
 export module boring32.winhttp:decomposedurl;
 import <string>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 
 export namespace Boring32::WinHttp
@@ -28,8 +28,8 @@ export namespace Boring32::WinHttp
 			void Crack()
 			{
 				// https://learn.microsoft.com/en-us/windows/win32/api/winhttp/ns-winhttp-url_components
-				URL_COMPONENTS components{
-					.dwStructSize = sizeof(URL_COMPONENTS),
+				Win32::WinHttp::URL_COMPONENTS components{
+					.dwStructSize = sizeof(Win32::WinHttp::URL_COMPONENTS),
 					.dwSchemeLength = (DWORD)-1,
 					.dwHostNameLength = (DWORD)-1,
 					.nPort = 0,
@@ -39,9 +39,9 @@ export namespace Boring32::WinHttp
 					.dwExtraInfoLength = (DWORD)-1
 				};
 				// https://learn.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpcrackurl
-				if (!WinHttpCrackUrl(m_url.c_str(), 0, 0, &components))
+				if (!Win32::WinHttp::WinHttpCrackUrl(m_url.c_str(), 0, 0, &components))
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("WinHttpCrackUrl() failed", lastError);
 				}
 
