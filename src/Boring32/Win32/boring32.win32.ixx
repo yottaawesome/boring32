@@ -715,4 +715,10 @@ export namespace Boring32::Win32
 	using ::GetModuleFileNameW;
 	using ::IID_INetworkListManager;
 	using ::INetworkListManager;
+
+	using ::CLSID_WICImagingFactory2;
+	using ::IWICBitmapDecoder;
+	using ::WICDecodeOptions;
+	using ::IWICFormatConverter;
+	using ::IWICImagingFactory;
 }

@@ -1,7 +1,7 @@
 export module boring32.windowsimagingcomponent:imagingfactory;
 import <string>;
-import <win32.hpp>;
 import boring32.error;
+import boring32.win32;
 
 export namespace Boring32::WindowsImagingComponent
 {
@@ -17,14 +17,14 @@ export namespace Boring32::WindowsImagingComponent
 			ImagingFactory()
 			{
 				// https://docs.microsoft.com/en-us/windows/win32/api/wincodec/nn-wincodec-iwicimagingfactory
-				const HRESULT hr = CoCreateInstance(
-					CLSID_WICImagingFactory,
+				const Win32::HRESULT hr = Win32::CoCreateInstance(
+					Win32::CLSID_WICImagingFactory2,
 					nullptr,
-					CLSCTX_INPROC_SERVER,
+					Win32::CLSCTX::CLSCTX_INPROC_SERVER,
 					__uuidof (**(&m_imagingFactory)), 
 					&m_imagingFactory
 				);
-				if (FAILED(hr))
+				if (Win32::HrFailed(hr))
 					throw Error::COMError("CoCreateInstance() failed", hr);
 			}
 
@@ -55,7 +55,7 @@ export namespace Boring32::WindowsImagingComponent
 				m_imagingFactory = nullptr;
 			}
 
-			Microsoft::WRL::ComPtr<IWICBitmapDecoder> CreateDecoderFromFilename(
+			Win32::ComPtr<Win32::IWICBitmapDecoder> CreateDecoderFromFilename(
 				const std::wstring& path
 			)
 			{
@@ -64,29 +64,29 @@ export namespace Boring32::WindowsImagingComponent
 				if (!m_imagingFactory)
 					throw Error::Boring32Error("m_imagingFactory is nullptr");
 
-				Microsoft::WRL::ComPtr<IWICBitmapDecoder> result;
+				Win32::ComPtr<Win32::IWICBitmapDecoder> result;
 				// https://docs.microsoft.com/en-us/windows/win32/api/wincodec/nf-wincodec-iwicimagingfactory-createdecoderfromfilename
-				const HRESULT hr = m_imagingFactory->CreateDecoderFromFilename(
+				const Win32::HRESULT hr = m_imagingFactory->CreateDecoderFromFilename(
 					path.c_str(),
 					nullptr,
-					GENERIC_READ,
-					WICDecodeMetadataCacheOnLoad,
+					Win32::GenericRead,
+					Win32::WICDecodeOptions::WICDecodeMetadataCacheOnLoad,
 					&result
 				);
-				if (FAILED(hr))
+				if (Win32::HrFailed(hr))
 					throw Error::COMError("CreateDecoderFromFilename() failed", hr);
 
 				return result;
 			}
 
-			Microsoft::WRL::ComPtr<IWICFormatConverter> CreateFormatConverter()
+			Win32::ComPtr<Win32::IWICFormatConverter> CreateFormatConverter()
 			{
 				if (!m_imagingFactory)
 					throw Error::Boring32Error("m_imagingFactory is nullptr");
 
-				Microsoft::WRL::ComPtr<IWICFormatConverter> pConverter;
-				const HRESULT hr = m_imagingFactory->CreateFormatConverter(&pConverter);
-				if (FAILED(hr))
+				Win32::ComPtr<Win32::IWICFormatConverter> pConverter;
+				const Win32::HRESULT hr = m_imagingFactory->CreateFormatConverter(&pConverter);
+				if (Win32::HrFailed(hr))
 					throw Error::COMError("CreateFormatConverter() failed", hr);
 
 				return pConverter;
@@ -114,6 +114,6 @@ export namespace Boring32::WindowsImagingComponent
 			}
 
 		private:
-			Microsoft::WRL::ComPtr<IWICImagingFactory> m_imagingFactory;
+			Win32::ComPtr<Win32::IWICImagingFactory> m_imagingFactory;
 	};
 }
