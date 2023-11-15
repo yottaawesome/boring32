@@ -614,6 +614,8 @@ export namespace Boring32::Win32
 	using ::QueryServiceStatusEx;
 	using ::ControlServiceExW;
 	using ::QueryServiceConfigW;
+	using ::OpenSCManagerW;
+	using ::OpenServiceW;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
@@ -624,6 +626,8 @@ export namespace Boring32::Win32
 	constexpr auto _SERVICE_CONTROL_STATUS_REASON_INFO = SERVICE_CONTROL_STATUS_REASON_INFO;
 	constexpr auto _SERVICE_CONTROL_STOP = SERVICE_CONTROL_STOP;
 	constexpr auto _SERVICE_RUNNING = SERVICE_RUNNING;
+	constexpr auto _SERVICES_ACTIVE_DATABASE = SERVICES_ACTIVE_DATABASE;
+	using ::SC_STATUS_TYPE;
 
 	using ::QUERY_SERVICE_CONFIGW;
 	using ::SERVICE_STATUS_PROCESS;
