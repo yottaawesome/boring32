@@ -696,4 +696,12 @@ export namespace Boring32::Win32
 	constexpr auto _PIPE_WAIT = PIPE_WAIT;
 	constexpr auto _PIPE_REJECT_REMOTE_CLIENTS = PIPE_REJECT_REMOTE_CLIENTS;
 	constexpr auto _PIPE_ACCEPT_REMOTE_CLIENTS = PIPE_ACCEPT_REMOTE_CLIENTS;
+
+	using ::IIDFromString;
+	using ::UuidFromStringW;
+	using ::RPC_STATUS; 
+	using ::RPC_WSTR;
+	constexpr auto _RPC_S_OK = RPC_S_OK;
+	using ::UuidIsNil;
+	using ::GUID;
 }

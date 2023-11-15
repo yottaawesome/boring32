@@ -1,9 +1,9 @@
 export module boring32.util:guid;
 import <string>;
-import <win32.hpp>;
-import :functions;
+import boring32.win32;
 import boring32.error;
 import boring32.strings;
+import :functions;
 
 export namespace Boring32::Util
 {
@@ -38,11 +38,11 @@ export namespace Boring32::Util
 					throw Error::Boring32Error("GUID cannot be an empty string");
 				// Accepts {} around the GUID
 				// See https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-iidfromstring
-				const HRESULT hr = IIDFromString(
+				const Win32::HRESULT hr = Win32::IIDFromString(
 					guidString.GuidString.c_str(), 
 					&m_guid
 				);
-				if (hr != S_OK)
+				if (hr != Win32::S_Ok)
 					throw Error::COMError("IIDFromString() failed", hr);
 			}
 
@@ -55,15 +55,15 @@ export namespace Boring32::Util
 				// https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-clsidfromstring
 				// https://docs.microsoft.com/en-us/windows/win32/api/rpcdce/nf-rpcdce-uuidfromstringw
 				// https://docs.microsoft.com/en-us/windows/win32/shell/guidfromstring
-				const RPC_WSTR cString = RPC_WSTR(guidString.GuidString.c_str());
+				const Win32::RPC_WSTR cString = Win32::RPC_WSTR(guidString.GuidString.c_str());
 				// Does not accept {} around the GUID
-				const RPC_STATUS status = UuidFromStringW(
+				const Win32::RPC_STATUS status = Win32::UuidFromStringW(
 					cString,
 					&m_guid
 				);
 				// https://docs.microsoft.com/en-us/windows/win32/rpc/rpc-return-values
 				// Not sure if this works, as RPC_STATUS is a long, not an unsigned long
-				if (status != RPC_S_OK)
+				if (status != Win32::_RPC_S_OK)
 					throw Error::Win32Error("UuidFromStringW() failed", status);
 			}
 
@@ -107,15 +107,15 @@ export namespace Boring32::Util
 
 			bool IsNil() const noexcept
 			{
-				RPC_STATUS out;
-				const int status = UuidIsNil(
-					const_cast<GUID*>(&m_guid),
+				Win32::RPC_STATUS out;
+				const int status = Win32::UuidIsNil(
+					const_cast<Win32::GUID*>(&m_guid),
 					&out
 				);
 				return status;
 			}
 
 		private:
-			GUID m_guid = { 0 };
+			Win32::GUID m_guid = { 0 };
 	};
 }
