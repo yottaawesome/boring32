@@ -2,7 +2,7 @@ export module boring32.services:service;
 import <vector>;
 import <string>;
 import <utility>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 import :raii;
 
@@ -32,7 +32,7 @@ export namespace Boring32::Services
 				if (!m_service)
 					throw Error::Boring32Error("m_service is nullptr");
 
-				std::vector<LPCWSTR> argv;
+				std::vector<Win32::LPCWSTR> argv;
 				for (const std::wstring& arg : args)
 				{
 					if (arg.empty())
@@ -40,14 +40,14 @@ export namespace Boring32::Services
 					argv.push_back(&arg[0]);
 				}
 
-				const bool succeeded = StartServiceW(
+				const bool succeeded = Win32::StartServiceW(
 					m_service.get(),
-					static_cast<DWORD>(argv.size()),
+					static_cast<Win32::DWORD>(argv.size()),
 					&argv[0]
 				);
 				if (!succeeded)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("StartServiceW() failed", lastError);
 				}
 			}
@@ -58,20 +58,20 @@ export namespace Boring32::Services
 					throw Error::Boring32Error("m_service is nullptr");
 
 				// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_control_status_reason_paramsw
-				SERVICE_CONTROL_STATUS_REASON_PARAMS params
+				Win32::SERVICE_CONTROL_STATUS_REASON_PARAMS params
 				{
-					.dwReason = SERVICE_STOP_REASON_FLAG_PLANNED & SERVICE_STOP_REASON_MAJOR_NONE & SERVICE_STOP_REASON_MINOR_NONE,
+					.dwReason = Win32::_SERVICE_STOP_REASON_FLAG_PLANNED & Win32::_SERVICE_STOP_REASON_MAJOR_NONE & Win32::_SERVICE_STOP_REASON_MINOR_NONE,
 				};
 				// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-controlserviceexw
-				const bool succeeded = ControlServiceExW(
+				const bool succeeded = Win32::ControlServiceExW(
 					m_service.get(),
-					SERVICE_CONTROL_STOP,
-					SERVICE_CONTROL_STATUS_REASON_INFO,
+					Win32::_SERVICE_CONTROL_STOP,
+					Win32::_SERVICE_CONTROL_STATUS_REASON_INFO,
 					&params
 				);
 				if (!succeeded)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("ControlServiceExW() failed", lastError);
 				}
 			}
@@ -81,9 +81,9 @@ export namespace Boring32::Services
 				if (!m_service)
 					throw Error::Boring32Error("m_service is nullptr");
 
-				if (!DeleteService(m_service.get()))
+				if (!Win32::DeleteService(m_service.get()))
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("service parameter cannot be null", lastError);
 				}
 				m_service = nullptr;
@@ -92,7 +92,7 @@ export namespace Boring32::Services
 			std::wstring GetDisplayName() const
 			{
 				std::vector<std::byte> buffer = GetConfigBuffer();
-				auto config = reinterpret_cast<QUERY_SERVICE_CONFIGW*>(&buffer[0]);
+				auto config = reinterpret_cast<Win32::QUERY_SERVICE_CONFIGW*>(&buffer[0]);
 				return config->lpDisplayName;
 			}
 
@@ -102,26 +102,26 @@ export namespace Boring32::Services
 					throw Error::Boring32Error("m_service is nullptr");
 
 				// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_status_process
-				SERVICE_STATUS_PROCESS status{ 0 };
-				DWORD bufSize;
+				Win32::SERVICE_STATUS_PROCESS status{ 0 };
+				Win32::DWORD bufSize;
 				// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-queryservicestatusex
-				const bool succeeded = QueryServiceStatusEx(
+				const bool succeeded = Win32::QueryServiceStatusEx(
 					m_service.get(),
 					// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-scmr/a7de3a4b-0b9e-4b9b-8863-b3dbc9bbe02b
-					SC_STATUS_TYPE::SC_STATUS_PROCESS_INFO,
+					Win32::SC_STATUS_TYPE::SC_STATUS_PROCESS_INFO,
 					reinterpret_cast<LPBYTE>(&status),
 					sizeof(status),
 					&bufSize
 				);
 				if (!succeeded)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("QueryServiceStatusEx() failed", lastError);
 				}
-				return status.dwCurrentState == SERVICE_RUNNING;
+				return status.dwCurrentState == Win32::_SERVICE_RUNNING;
 			}
 			
-			SC_HANDLE GetHandle() const noexcept
+			Win32::SC_HANDLE GetHandle() const noexcept
 			{
 				return m_service.get();
 			}
@@ -136,20 +136,20 @@ export namespace Boring32::Services
 					throw Error::Boring32Error("m_service is nullptr");
 
 				// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_control_status_reason_paramsw
-				SERVICE_CONTROL_STATUS_REASON_PARAMS params
+				Win32::SERVICE_CONTROL_STATUS_REASON_PARAMS params
 				{
 					.pszComment = const_cast<wchar_t*>(comment.c_str())
 				};
 				// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-controlserviceexw
-				const bool succeeded = ControlServiceExW(
+				const bool succeeded = Win32::ControlServiceExW(
 					m_service.get(),
 					controlCode,
-					SERVICE_CONTROL_STATUS_REASON_INFO,
+					Win32::_SERVICE_CONTROL_STATUS_REASON_INFO,
 					&params
 				);
 				if (!succeeded)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("ControlServiceExW() failed", lastError);
 				}
 			}
@@ -160,27 +160,27 @@ export namespace Boring32::Services
 				if (!m_service)
 					throw Error::Boring32Error("m_service is nullptr");
 
-				DWORD bytesNeeded = 0;
-				bool succeeded = QueryServiceConfigW(
+				Win32::DWORD bytesNeeded = 0;
+				bool succeeded = Win32::QueryServiceConfigW(
 					m_service.get(),
 					nullptr,
 					0,
 					&bytesNeeded
 				);
-				const auto lastError = GetLastError();
-				if (lastError != ERROR_INSUFFICIENT_BUFFER)
+				const auto lastError = Win32::GetLastError();
+				if (lastError != Win32::ErrorCodes::InsufficientBuffer)
 					throw Error::Win32Error("QueryServiceConfigW() failed", lastError);
 
 				std::vector<std::byte> buffer(bytesNeeded);
 				succeeded = QueryServiceConfigW(
 					m_service.get(),
-					reinterpret_cast<QUERY_SERVICE_CONFIGW*>(&buffer[0]),
-					static_cast<DWORD>(buffer.size()),
+					reinterpret_cast<Win32::QUERY_SERVICE_CONFIGW*>(&buffer[0]),
+					static_cast<Win32::DWORD>(buffer.size()),
 					&bytesNeeded
 				);
 				if (!succeeded)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("QueryServiceConfigW() failed", lastError);
 				}
 				return buffer;

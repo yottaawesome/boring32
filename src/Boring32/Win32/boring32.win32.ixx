@@ -141,6 +141,7 @@ export namespace Boring32::Win32
 	using ::FILETIME;
 	using ::TIME_ZONE_INFORMATION;
 	using ::SC_HANDLE;
+	using ::LPCWSTR;
 
 	using ::IXAudio2;
 	using ::IXAudio2MasteringVoice;
@@ -176,6 +177,8 @@ export namespace Boring32::Win32
 		CrossCertDistPoints = CERT_FIND_CROSS_CERT_DIST_POINTS,
 		PubKeyMd5Hash = CERT_FIND_PUBKEY_MD5_HASH
 	};
+
+	using ::SERVICE_CONTROL_STATUS_REASON_PARAMS;
 
 	constexpr auto TimeZoneIdInvalid = TIME_ZONE_ID_INVALID;
 	constexpr auto CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS = 0x0002; // not defined according to msdn
@@ -605,7 +608,24 @@ export namespace Boring32::Win32
 	using ::GetTimeZoneInformation;
 	using ::GetSystemTime;
 	using ::CloseServiceHandle;
+	using ::StartServiceW;
+	using ::ControlServiceExW;
+	using ::DeleteService;
+	using ::QueryServiceStatusEx;
+	using ::ControlServiceExW;
+	using ::QueryServiceConfigW;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;
+
+	constexpr auto _SERVICE_STOP_REASON_FLAG_PLANNED = SERVICE_STOP_REASON_FLAG_PLANNED;
+	constexpr auto _SERVICE_STOP_REASON_MAJOR_NONE = SERVICE_STOP_REASON_MAJOR_NONE;
+	constexpr auto _SERVICE_STOP_REASON_MINOR_NONE = SERVICE_STOP_REASON_MINOR_NONE;
+	constexpr auto _SERVICE_CONTROL_STATUS_REASON_INFO = SERVICE_CONTROL_STATUS_REASON_INFO;
+	constexpr auto _SERVICE_CONTROL_STOP = SERVICE_CONTROL_STOP;
+	constexpr auto _SERVICE_RUNNING = SERVICE_RUNNING;
+
+	using ::QUERY_SERVICE_CONFIGW;
+	using ::SERVICE_STATUS_PROCESS;
+	using ::SC_STATUS_TYPE;
 }
