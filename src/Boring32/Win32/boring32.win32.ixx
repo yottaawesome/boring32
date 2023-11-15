@@ -736,5 +736,9 @@ export namespace Boring32::Win32
 		constexpr auto _WINHTTP_OPTION_PROXY = WINHTTP_OPTION_PROXY;
 		using ::WinHttpSetOption;
 		using ::WINHTTP_PROXY_INFO;
+		constexpr auto _WINHTTP_NO_PROXY_NAME = WINHTTP_NO_PROXY_NAME;
+		using ::WinHttpOpen;
+		constexpr auto _WINHTTP_NO_PROXY_BYPASS = WINHTTP_NO_PROXY_BYPASS;
+		using ::WinHttpCloseHandle;
 	}
 }

@@ -1,7 +1,7 @@
 export module boring32.winhttp:session;
 import <string>;
 import <memory>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 import :winhttphandle;
 import :proxytype;
@@ -122,33 +122,33 @@ export namespace Boring32::WinHttp
 			{
 				if (m_userAgent.empty())
 					throw WinHttpError("UserAgent cannot be empty");
-				if (static_cast<DWORD>(m_proxyType) == WINHTTP_ACCESS_TYPE_NAMED_PROXY && m_namedProxy.empty())
+				if (static_cast<Win32::DWORD>(m_proxyType) == Win32::WinHttp::_WINHTTP_ACCESS_TYPE_NAMED_PROXY && m_namedProxy.empty())
 					throw WinHttpError("ProxyName parameter is required when access type is NamedProxy");
 
-				const wchar_t* proxyType = static_cast<DWORD>(m_proxyType) == WINHTTP_ACCESS_TYPE_NAMED_PROXY
+				const wchar_t* proxyType = static_cast<Win32::DWORD>(m_proxyType) == Win32::WinHttp::_WINHTTP_ACCESS_TYPE_NAMED_PROXY
 					? m_namedProxy.c_str()
-					: WINHTTP_NO_PROXY_NAME;
+					: (wchar_t*)Win32::WinHttp::_WINHTTP_NO_PROXY_NAME;
 				const wchar_t* proxyBypass = m_proxyBypass.empty()
-					? WINHTTP_NO_PROXY_BYPASS
+					? (wchar_t*)Win32::WinHttp::_WINHTTP_NO_PROXY_BYPASS
 					: m_proxyBypass.c_str();
 				// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpopen
-				const HINTERNET handle = WinHttpOpen(
+				const Win32::WinHttp::HINTERNET handle = Win32::WinHttp::WinHttpOpen(
 					m_userAgent.c_str(),
-					static_cast<DWORD>(m_proxyType),
+					static_cast<Win32::DWORD>(m_proxyType),
 					proxyType,
 					proxyBypass,
 					0
 				);
 				if (!handle)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					Error::ThrowNested(
 						Error::Win32Error("WinHttpOpen() failed", lastError),
 						WinHttpError("Failed to open WinHttpSession handle")
 					);
 				}
 
-				m_session = SharedWinHttpSession(handle, WinHttpCloseHandle);
+				m_session = SharedWinHttpSession(handle, Win32::WinHttp::WinHttpCloseHandle);
 			}
 
 			virtual Session& Copy(const Session& other)
