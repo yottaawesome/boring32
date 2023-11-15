@@ -1,9 +1,9 @@
 export module boring32.services:servicecontrolmanager;
 import <string>;
-import <win32.hpp>;
-import :raii;
-import :service;
+import boring32.win32;
 import boring32.error;
+import :service;
+import :raii;
 
 export namespace Boring32::Services
 {
@@ -19,7 +19,7 @@ export namespace Boring32::Services
 		public:
 			ServiceControlManager()
 			{
-				Open(SC_MANAGER_ALL_ACCESS);
+				Open(Win32::_SC_MANAGER_ALL_ACCESS);
 			}
 
 			ServiceControlManager(const unsigned desiredAccess)
@@ -43,7 +43,7 @@ export namespace Boring32::Services
 				const std::wstring& name
 			)
 			{
-				return AccessService(name, SERVICE_ALL_ACCESS);
+				return AccessService(name, Win32::_SERVICE_ALL_ACCESS);
 			}
 
 			Service AccessService(
@@ -55,20 +55,20 @@ export namespace Boring32::Services
 					throw Error::Boring32Error("m_scm is null");
 
 				// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openservicew
-				SC_HANDLE serviceHandle = OpenServiceW(
+				Win32::SC_HANDLE serviceHandle = Win32::OpenServiceW(
 					m_scm.get(),
 					name.c_str(),
 					desiredAccess
 				);
 				if (!serviceHandle)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("OpenServiceW() failed", lastError);
 				}
 				return { CreateSharedPtr(serviceHandle) };
 			}
 
-			SC_HANDLE GetHandle() const noexcept
+			Win32::SC_HANDLE GetHandle() const noexcept
 			{
 				return m_scm.get();
 			}
@@ -77,14 +77,14 @@ export namespace Boring32::Services
 			void Open(const unsigned desiredAccess)
 			{
 				// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openscmanagerw
-				SC_HANDLE schSCManager = OpenSCManagerW(
+				Win32::SC_HANDLE schSCManager = Win32::OpenSCManagerW(
 					nullptr,        // local computer
 					nullptr,        // ServicesActive database 
 					desiredAccess   // full access rights
 				);
 				if (!schSCManager)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("OpenSCManagerW() failed", lastError);
 				}
 				m_scm = CreateSharedPtr(schSCManager);
