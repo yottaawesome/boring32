@@ -617,6 +617,15 @@ export namespace Boring32::Win32
 	using ::OpenSCManagerW;
 	using ::OpenServiceW;
 	using ::CoCreateInstance;
+	using ::HeapCreate;
+	using ::HeapCompact;
+	using ::HeapValidate;
+	using ::HeapLock;
+	using ::HeapUnlock;
+	using ::HeapAlloc;
+	using ::HeapDestroy;
+	using ::HeapFree;
+	using ::GetProcessHeap;
 
 	using ::CLSCTX;
 	using ::_bstr_t;
@@ -642,4 +651,36 @@ export namespace Boring32::Win32
 	using ::QUERY_SERVICE_CONFIGW;
 	using ::SERVICE_STATUS_PROCESS;
 	using ::SC_STATUS_TYPE;
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc
+	enum class AllocationType
+	{
+		Commit = MEM_COMMIT,
+		Reserve = MEM_RESERVE,
+		Reset = MEM_RESET,
+		Undo = MEM_RESET_UNDO
+	};
+
+	enum class AllocationTypeOptional
+	{
+		LargePages = MEM_LARGE_PAGES,
+		Physical = MEM_PHYSICAL,
+		TopDown = MEM_TOP_DOWN,
+		WriteWatch = MEM_WRITE_WATCH
+	};
+
+	enum class HeapCreateOptions : ::DWORD
+	{
+		EnableExecute = HEAP_CREATE_ENABLE_EXECUTE,
+		GenerateExceptions = HEAP_GENERATE_EXCEPTIONS,
+		NoSerialise = HEAP_NO_SERIALIZE
+	};
+
+	enum class HeapAllocOptions : ::DWORD
+	{
+		None = 0,
+		ZeroMemory = HEAP_ZERO_MEMORY,
+		GenerateExceptions = HEAP_GENERATE_EXCEPTIONS,
+		NoSerialise = HEAP_NO_SERIALIZE
+	};
 }

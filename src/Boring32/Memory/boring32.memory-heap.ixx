@@ -1,24 +1,12 @@
 export module boring32.memory:heap;
 import <memory>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 
 export namespace Boring32::Memory
 {
-	enum class HeapCreateOptions : DWORD
-	{
-		EnableExecute = HEAP_CREATE_ENABLE_EXECUTE,
-		GenerateExceptions = HEAP_GENERATE_EXCEPTIONS,
-		NoSerialise = HEAP_NO_SERIALIZE
-	};
-
-	enum class HeapAllocOptions : DWORD
-	{
-		None = 0,
-		ZeroMemory = HEAP_ZERO_MEMORY,
-		GenerateExceptions = HEAP_GENERATE_EXCEPTIONS,
-		NoSerialise = HEAP_NO_SERIALIZE
-	};
+	using HeapCreateOptions = Win32::HeapCreateOptions;
+	using HeapAllocOptions = Win32::HeapAllocOptions;
 
 	class Heap final
 	{
@@ -44,24 +32,24 @@ export namespace Boring32::Memory
 			}
 
 		public:
-			Heap(HANDLE heap)
+			Heap(Win32::HANDLE heap)
 			{
 				if (!heap)
 					throw Error::Boring32Error("Must pass in a valid heap pointer");
 				m_heap = heap;
 			}
 
-			Heap(const DWORD options, const DWORD initialSize, const DWORD maxSize = 0)
+			Heap(const Win32::DWORD options, const Win32::DWORD initialSize, const Win32::DWORD maxSize = 0)
 			{
 				// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapcreate
-				m_heap = HeapCreate(
+				m_heap = Win32::HeapCreate(
 					options,
 					initialSize,
 					maxSize
 				);
 				if (!m_heap)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("HeapCreate() failed", lastError);
 				}
 			}
@@ -71,9 +59,9 @@ export namespace Boring32::Memory
 			{
 				// Don't destroy the process' default heap, 
 				// only special-purpose heaps
-				if (m_heap && m_heap != GetProcessHeap())
+				if (m_heap && m_heap != Win32::GetProcessHeap())
 				{
-					HeapDestroy(m_heap);
+					Win32::HeapDestroy(m_heap);
 					m_heap = nullptr;
 				}
 			}
@@ -81,14 +69,14 @@ export namespace Boring32::Memory
 			size_t Compact()
 			{
 				// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapcompact
-				const size_t size = HeapCompact(
+				const size_t size = Win32::HeapCompact(
 					m_heap,
 					0
 				);
 				if (size == 0)
 				{
-					const auto lastError = GetLastError();
-					if (lastError == NO_ERROR)
+					const auto lastError = Win32::GetLastError();
+					if (lastError == Win32::ErrorCodes::NoError)
 						return 0;
 					throw Error::Win32Error("HeapCompact() failed", lastError);
 				}
@@ -101,7 +89,7 @@ export namespace Boring32::Memory
 			) noexcept
 			{
 				// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapvalidate
-				return HeapValidate(
+				return Win32::HeapValidate(
 					m_heap,
 					synchronised ? 0 : 0x01, //HEAP_NO_SERIALISE,
 					ptr
@@ -111,12 +99,12 @@ export namespace Boring32::Memory
 			void Lock()
 			{
 				// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heaplock
-				const bool success = HeapLock(
+				const bool success = Win32::HeapLock(
 					m_heap
 				);
 				if (!success)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("HeapLock() failed", lastError);
 				}
 			}
@@ -124,37 +112,37 @@ export namespace Boring32::Memory
 			void Unlock()
 			{
 				// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapunlock
-				const bool success = HeapUnlock(
+				const bool success = Win32::HeapUnlock(
 					m_heap
 				);
 				if (!success)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("HeapUnlock() failed", lastError);
 				}
 			}
 
-			[[nodiscard]] void* New(const size_t bytes, const DWORD options = 0)
+			[[nodiscard]] void* New(const size_t bytes, const Win32::DWORD options = 0)
 			{
 				// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapalloc
-				void* allocation = HeapAlloc(m_heap, options, bytes);
+				void* allocation = Win32::HeapAlloc(m_heap, options, bytes);
 				if (!allocation)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("HeapAlloc() failed", lastError);
 				}
 				return allocation;
 			}
 
 			template<typename T>
-			[[nodiscard]] T* New(const DWORD options = 0)
+			[[nodiscard]] T* New(const Win32::DWORD options = 0)
 			{
 				void* ptr = New(sizeof(T), options);
 				return new(ptr) T();
 			}
 
 			template<typename T, typename...Args>
-			[[nodiscard]] T* New(const DWORD options = 0, Args&... args)
+			[[nodiscard]] T* New(const Win32::DWORD options = 0, Args&... args)
 			{
 				void* ptr = New(sizeof(T), options);
 				return new(ptr) T(args...);
@@ -183,12 +171,12 @@ export namespace Boring32::Memory
 				);
 			}
 
-			void Delete(void* ptr, const DWORD options = 0)
+			void Delete(void* ptr, const Win32::DWORD options = 0)
 			{
 				// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapfree
-				if (ptr && !HeapFree(m_heap, options, ptr))
+				if (ptr && !Win32::HeapFree(m_heap, options, ptr))
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("HeapFree() failed", lastError);
 				}
 			}
@@ -205,9 +193,9 @@ export namespace Boring32::Memory
 			}
 
 		private:
-			HANDLE m_heap = nullptr;
+			Win32::HANDLE m_heap = nullptr;
 	};
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-getprocessheap
-	const HANDLE Heap::ProcessHeap = GetProcessHeap();
+	const Win32::HANDLE Heap::ProcessHeap = GetProcessHeap();
 }
