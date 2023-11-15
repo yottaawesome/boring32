@@ -81,12 +81,12 @@ export namespace Boring32::Util
 			bool operator==(const GloballyUniqueID& other) const noexcept
 			{
 				// https://docs.microsoft.com/en-us/windows/win32/api/guiddef/nf-guiddef-isequalguid
-				return IsEqualGUID(m_guid, other.m_guid);
+				return Win32::IsEqualGUID(m_guid, other.m_guid);
 			}
 
 			bool operator==(const GUID& other) const noexcept
 			{
-				return IsEqualGUID(m_guid, other);
+				return Win32::IsEqualGUID(m_guid, other);
 			}
 
 		public:

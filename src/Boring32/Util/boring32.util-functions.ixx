@@ -2,7 +2,7 @@ export module boring32.util:functions;
 import <string>;
 import <chrono>;
 import <vector>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 
 export namespace Boring32::Util
@@ -57,36 +57,36 @@ export namespace Boring32::Util
 	{
 		constexpr size_t blockSize = 2048;
 		std::wstring filePath(L"\0", 0);
-		DWORD status = ERROR_INSUFFICIENT_BUFFER;
-		while (status == ERROR_INSUFFICIENT_BUFFER)
+		Win32::DWORD status = Win32::ErrorCodes::InsufficientBuffer;
+		while (status == Win32::ErrorCodes::InsufficientBuffer)
 		{
 			filePath.resize(filePath.size() + blockSize);
-			status = GetModuleFileNameW(nullptr, &filePath[0], static_cast<DWORD>(filePath.size()));
+			status = Win32::GetModuleFileNameW(nullptr, &filePath[0], static_cast<Win32::DWORD>(filePath.size()));
 			if (!status)
 			{
-				const auto lastError = GetLastError();
+				const auto lastError = Win32::GetLastError();
 				throw Error::Win32Error("GetModuleFileNameW() failed", lastError);
 			}
 		}
 
-		const HRESULT result = PathCchRemoveFileSpec(&filePath[0], filePath.size());
-		if (result != S_OK && result != S_FALSE)
+		const Win32::HRESULT result = Win32::PathCchRemoveFileSpec(&filePath[0], filePath.size());
+		if (result != Win32::S_Ok && result != Win32::_S_FALSE)
 			throw Error::COMError("PathCchRemoveFileSpec() failed", result);
 		filePath = filePath.c_str();
 
 		return filePath;
 	}
 
-	SYSTEMTIME LargeIntegerTimeToSystemTime(const LARGE_INTEGER& li)
+	Win32::SYSTEMTIME LargeIntegerTimeToSystemTime(const Win32::LARGE_INTEGER& li)
 	{
-		SYSTEMTIME st{ 0 };
-		FILETIME ft{
+		Win32::SYSTEMTIME st{ 0 };
+		Win32::FILETIME ft{
 			.dwLowDateTime = li.LowPart,
-			.dwHighDateTime = static_cast<DWORD>(li.HighPart)
+			.dwHighDateTime = static_cast<Win32::DWORD>(li.HighPart)
 		};
-		if (!FileTimeToSystemTime(&ft, &st))
+		if (!Win32::FileTimeToSystemTime(&ft, &st))
 		{
-			const auto lastError = GetLastError();
+			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error("FileTimeToSystemTime() failed", lastError);
 		}
 		return st;
@@ -99,7 +99,7 @@ export namespace Boring32::Util
 		return ch::duration_cast<ch::seconds>(rightNow.time_since_epoch()).count();
 	}
 
-	size_t GetMillisToMinuteBoundary(const SYSTEMTIME& time, const size_t minuteBoundary) noexcept
+	size_t GetMillisToMinuteBoundary(const Win32::SYSTEMTIME& time, const size_t minuteBoundary) noexcept
 	{
 		size_t minutesToMillis = static_cast<size_t>(time.wMinute) * 60 * 1000;
 		minutesToMillis += static_cast<size_t>(time.wSecond) * 1000;
@@ -109,7 +109,7 @@ export namespace Boring32::Util
 	}
 
 	size_t GetMillisToSecondBoundary(
-		const SYSTEMTIME& time, 
+		const Win32::SYSTEMTIME& time,
 		const size_t secondBoundary
 	) noexcept
 	{
@@ -120,10 +120,10 @@ export namespace Boring32::Util
 	}
 
 	// Adapted from https://stackoverflow.com/a/19941516/7448661
-	std::wstring GetGuidAsWString(const GUID& guid)
+	std::wstring GetGuidAsWString(const Win32::GUID& guid)
 	{
 		std::wstring rawGuid(64, '\0');
-		int numberOfChars = StringFromGUID2(guid, &rawGuid[0], 64);
+		int numberOfChars = Win32::StringFromGUID2(guid, &rawGuid[0], 64);
 		if (numberOfChars == 0)
 			throw Error::Boring32Error("StringFromGUID2() failed");
 		rawGuid.resize(numberOfChars - 1); // remove null terminator
@@ -132,18 +132,18 @@ export namespace Boring32::Util
 
 	std::wstring GetGuidAsWString()
 	{
-		GUID guidReference;
-		HRESULT result = CoCreateGuid(&guidReference);
-		if (FAILED(result))
+		Win32::GUID guidReference;
+		Win32::HRESULT result = Win32::CoCreateGuid(&guidReference);
+		if (Win32::HrFailed(result))
 			throw Error::COMError("CoCreateGuid() failed", result);
 		return GetGuidAsWString(guidReference);
 	}
 
 	GUID GenerateGUID()
 	{
-		GUID guid;
-		HRESULT result = CoCreateGuid(&guid);
-		if (FAILED(result))
+		Win32::GUID guid;
+		HRESULT result = Win32::CoCreateGuid(&guid);
+		if (Win32::HrFailed(result))
 			throw Error::COMError("CoCreateGuid() failed", result);
 		return guid;
 	}
@@ -151,28 +151,28 @@ export namespace Boring32::Util
 	bool IsConnectedToInternet()
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/netlistmgr/nn-netlistmgr-inetworklistmanager
-		Microsoft::WRL::ComPtr<INetworkListManager> networkListManager;
+		Win32::ComPtr<Win32::INetworkListManager> networkListManager;
 		// https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance
 		// https://docs.microsoft.com/en-us/windows/win32/learnwin32/creating-an-object-in-com
-		HRESULT result = CoCreateInstance(
-			CLSID_NetworkListManager,
+		Win32::HRESULT result = Win32::CoCreateInstance(
+			Win32::CLSID_NetworkListManager,
 			nullptr,
-			CLSCTX_INPROC_SERVER,
-			IID_INetworkListManager,
+			Win32::CLSCTX::CLSCTX_INPROC_SERVER,
+			Win32::IID_INetworkListManager,
 			reinterpret_cast<void**>(networkListManager.GetAddressOf())
 		);
-		if (FAILED(result))
+		if (Win32::HrFailed(result))
 			throw Error::COMError("CoCreateGuid() failed", result);
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/netlistmgr/ne-netlistmgr-nlm_connectivity
-		NLM_CONNECTIVITY connectivity;
+		Win32::NLM_CONNECTIVITY connectivity;
 		result = networkListManager->GetConnectivity(&connectivity);
-		if (FAILED(result))
+		if (Win32::HrFailed(result))
 			throw Error::COMError("GetConnectivity() failed", result);
 
-		if (connectivity & NLM_CONNECTIVITY::NLM_CONNECTIVITY_IPV4_INTERNET)
+		if (connectivity & Win32::NLM_CONNECTIVITY::NLM_CONNECTIVITY_IPV4_INTERNET)
 			return true;
-		if (connectivity & NLM_CONNECTIVITY::NLM_CONNECTIVITY_IPV6_INTERNET)
+		if (connectivity & Win32::NLM_CONNECTIVITY::NLM_CONNECTIVITY_IPV6_INTERNET)
 			return true;
 		return false;
 	}

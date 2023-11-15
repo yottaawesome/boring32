@@ -704,4 +704,15 @@ export namespace Boring32::Win32
 	constexpr auto _RPC_S_OK = RPC_S_OK;
 	using ::UuidIsNil;
 	using ::GUID;
+	using ::IsEqualGUID;
+
+	using ::PathCchRemoveFileSpec;
+	constexpr auto _S_FALSE = S_FALSE;
+	using ::StringFromGUID2;
+	using ::CoCreateGuid;
+	using ::CLSID_NetworkListManager;
+	using ::NLM_CONNECTIVITY;
+	using ::GetModuleFileNameW;
+	using ::IID_INetworkListManager;
+	using ::INetworkListManager;
 }
