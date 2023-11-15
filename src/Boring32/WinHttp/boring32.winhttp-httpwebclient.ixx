@@ -4,10 +4,11 @@ import <vector>;
 import <win32.hpp>;
 import <functional>;
 import <sstream>;
+import boring32.error;
+import boring32.win32;
 import :winhttphandle;
 import :requestresult;
 import :proxyinfo;
-import boring32.error;
 
 export namespace Boring32::WinHttp
 {
@@ -166,7 +167,7 @@ export namespace Boring32::WinHttp
 			)
 			{
 				// acceptHeader must be a null terminated array
-				std::vector<LPCWSTR> acceptHeader;
+				std::vector<Win32::LPCWSTR> acceptHeader;
 				if (m_acceptTypes.size() > 0)
 				{
 					acceptHeader.resize(m_acceptTypes.size() + 1);
@@ -175,37 +176,42 @@ export namespace Boring32::WinHttp
 				}
 
 				// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpopenrequest
-				WinHttpHandle hRequest = WinHttpOpenRequest(
+				const wchar_t* acceptTypes = 
+					m_acceptTypes.empty() ? (wchar_t*)Win32::WinHttp::_WINHTTP_DEFAULT_ACCEPT_TYPES
+					: (wchar_t*)&acceptHeader[0];
+				//if (not m_acceptTypes.empty())
+					//acceptTypes = (wchar_t*) &acceptHeader[0];
+				WinHttpHandle hRequest = Win32::WinHttp::WinHttpOpenRequest(
 					m_hConnect.Get(),
 					verb.c_str(),
 					path.c_str(),
 					nullptr,
-					WINHTTP_NO_REFERER,
-					m_acceptTypes.empty() ? WINHTTP_DEFAULT_ACCEPT_TYPES : &acceptHeader[0],
-					WINHTTP_FLAG_SECURE
+					(Win32::LPCWSTR)Win32::WinHttp::_WINHTTP_NO_REFERER,
+					(Win32::LPCWSTR*)acceptTypes,
+					Win32::WinHttp::_WINHTTP_FLAG_SECURE
 				);
 				if (!hRequest)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("WinHttpOpenRequest() failed", lastError);
 				}
 
 				if (m_ignoreSslErrors)
 				{
 					DWORD flags =
-						SECURITY_FLAG_IGNORE_UNKNOWN_CA |
-						SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE |
-						SECURITY_FLAG_IGNORE_CERT_CN_INVALID |
-						SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
-					const bool succeeded = WinHttpSetOption(
+						Win32::WinHttp::_SECURITY_FLAG_IGNORE_UNKNOWN_CA |
+						Win32::WinHttp::_SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE |
+						Win32::WinHttp::_SECURITY_FLAG_IGNORE_CERT_CN_INVALID |
+						Win32::WinHttp::_SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
+					const bool succeeded = Win32::WinHttp::WinHttpSetOption(
 						hRequest.Get(),
-						WINHTTP_OPTION_SECURITY_FLAGS,
+						Win32::WinHttp::_WINHTTP_OPTION_SECURITY_FLAGS,
 						&flags,
 						sizeof(flags)
 					);
 					if (!succeeded)
 					{
-						const auto lastError = GetLastError();
+						const auto lastError = Win32::GetLastError();
 						throw Error::Win32Error("WinHttpSetOption() failed", lastError);
 					}
 				}
@@ -312,7 +318,7 @@ export namespace Boring32::WinHttp
 			std::wstring m_userAgentName;
 			std::wstring m_serverToConnectTo;
 			std::wstring m_proxy;
-			UINT m_port = 0;
+			unsigned m_port = 0;
 			bool m_ignoreSslErrors = false;
 			std::vector<std::wstring> m_acceptTypes;
 			std::wstring m_additionalHeaders;
