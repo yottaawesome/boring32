@@ -626,6 +626,9 @@ export namespace Boring32::Win32
 	using ::HeapDestroy;
 	using ::HeapFree;
 	using ::GetProcessHeap;
+	using ::CreatePipe;
+	using ::SetNamedPipeHandleState;
+	using ::PeekNamedPipe;
 
 	using ::CLSCTX;
 	using ::_bstr_t;
