@@ -629,6 +629,7 @@ export namespace Boring32::Win32
 	using ::CreatePipe;
 	using ::SetNamedPipeHandleState;
 	using ::PeekNamedPipe;
+	using ::CreateMailslotW;
 
 	using ::CLSCTX;
 	using ::_bstr_t;

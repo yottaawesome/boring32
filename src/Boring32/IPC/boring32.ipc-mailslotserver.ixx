@@ -1,6 +1,6 @@
 export module boring32.ipc:mailslotserver;
 import <string>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 import boring32.raii;
 
@@ -23,7 +23,7 @@ export namespace Boring32::IPC
 					throw Error::Boring32Error("Name cannot be empty.");
 
 				// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createmailslotw
-				m_handle = CreateMailslotW(
+				m_handle = Win32::CreateMailslotW(
 					m_name.c_str(),
 					m_maxMessageSize,
 					m_readTimeoutMs,
@@ -31,7 +31,7 @@ export namespace Boring32::IPC
 				);
 				if (!m_handle)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("CreateMailslotW() failed", lastError);
 				}
 			}
