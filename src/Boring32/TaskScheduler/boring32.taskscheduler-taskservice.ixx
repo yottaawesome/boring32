@@ -1,9 +1,10 @@
 export module boring32.taskscheduler:taskservice;
 import :taskfolder;
 import <string>;
-import <win32.hpp>;
-import boring32.error;
 import <iostream>;
+import boring32.win32;
+import boring32.error;
+import boring32.win32;
 
 export namespace Boring32::TaskScheduler
 {
@@ -32,23 +33,23 @@ export namespace Boring32::TaskScheduler
 				if (m_taskService)
 					return;
 
-				HRESULT hr = CoCreateInstance(
-					CLSID_TaskScheduler,
+				Win32::HRESULT hr = Win32::CoCreateInstance(
+					Win32::CLSID_TaskScheduler,
 					nullptr,
-					CLSCTX_INPROC_SERVER,
-					IID_ITaskService,
+					Win32::CLSCTX::CLSCTX_INPROC_SERVER,
+					Win32::IID_ITaskService,
 					&m_taskService
 				);
-				if (FAILED(hr))
+				if (Win32::HrFailed(hr))
 					throw Error::COMError("Failed to create ITaskService", hr);
 
 				hr = m_taskService->Connect(
-					_variant_t(),
-					_variant_t(),
-					_variant_t(),
-					_variant_t()
+					Win32::_variant_t(),
+					Win32::_variant_t(),
+					Win32::_variant_t(),
+					Win32::_variant_t()
 				);
-				if (FAILED(hr))
+				if (Win32::HrFailed(hr))
 					throw Error::COMError("Failed to connect to Task Service", hr);
 			}
 
@@ -64,7 +65,6 @@ export namespace Boring32::TaskScheduler
 				return false;
 			}
 
-
 			virtual void Close() noexcept
 			{
 				if (m_taskService)
@@ -78,20 +78,20 @@ export namespace Boring32::TaskScheduler
 
 			virtual TaskFolder GetFolder(const std::wstring& path)
 			{
-				Microsoft::WRL::ComPtr<ITaskFolder> folder = nullptr;
-				HRESULT hr = m_taskService->GetFolder(_bstr_t(path.c_str()), &folder);
-				if (FAILED(hr))
+				Win32::ComPtr<Win32::ITaskFolder> folder = nullptr;
+				Win32::HRESULT hr = m_taskService->GetFolder(Win32::_bstr_t(path.c_str()), &folder);
+				if (Win32::HrFailed(hr))
 					throw Error::COMError("Failed to connect to Task Service", hr);
 				return folder;
 			}
 
-			virtual Microsoft::WRL::ComPtr<ITaskService> Get() const noexcept
+			virtual Win32::ComPtr<Win32::ITaskService> Get() const noexcept
 			{
 				return m_taskService;
 			}
 
 		protected:
 			// https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-itaskservice
-			Microsoft::WRL::ComPtr<ITaskService> m_taskService;
+			Win32::ComPtr<Win32::ITaskService> m_taskService;
 	};
 }

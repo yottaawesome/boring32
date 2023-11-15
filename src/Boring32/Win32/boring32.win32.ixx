@@ -616,8 +616,16 @@ export namespace Boring32::Win32
 	using ::QueryServiceConfigW;
 	using ::OpenSCManagerW;
 	using ::OpenServiceW;
+	using ::CoCreateInstance;
 
+	using ::CLSCTX;
+	using ::_bstr_t;
+	using ::ITaskService;
+	using ::ITaskFolder;
+	using ::CLSID_TaskScheduler;
+	using ::IID_ITaskService;
 	using ::IP_ADAPTER_ADDRESSES;
+	using ::_variant_t;
 	using ::GetAdaptersAddresses;
 
 	constexpr auto _SERVICE_STOP_REASON_FLAG_PLANNED = SERVICE_STOP_REASON_FLAG_PLANNED;
