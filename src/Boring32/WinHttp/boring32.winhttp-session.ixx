@@ -10,10 +10,10 @@ import :winhttperror;
 
 export namespace Boring32::WinHttp
 {
-	class Session
+	class Session final
 	{
 		public:
-			virtual ~Session()
+			~Session()
 			{
 				Close();
 			}
@@ -64,20 +64,20 @@ export namespace Boring32::WinHttp
 			}
 
 		public:
-			virtual Session& operator=(const Session& other)
+			Session& operator=(const Session& other)
 			{
 				Copy(other);
 				return *this;
 			}
 
-			virtual Session& operator=(Session&& other) noexcept
+			Session& operator=(Session&& other) noexcept
 			{
 				Move(other);
 				return *this;
 			}
 
 		public:
-			virtual HINTERNET GetSession() const noexcept
+			Win32::WinHttp::HINTERNET GetSession() const noexcept
 			{
 				return m_session.get();
 			}
@@ -88,7 +88,7 @@ export namespace Boring32::WinHttp
 			///		the session is destroyed. This method has no effect if no WinHttp
 			///		session is owned by this object.
 			/// </summary>
-			virtual void Close() noexcept
+			void Close() noexcept
 			{
 				m_session = nullptr;
 				m_proxyType = ProxyType::NoProxy;
@@ -97,28 +97,28 @@ export namespace Boring32::WinHttp
 				m_proxyBypass.clear();
 			}
 
-			virtual ProxyType GetProxyType() const noexcept
+			ProxyType GetProxyType() const noexcept
 			{
 				return m_proxyType;
 			}
 
-			virtual const std::wstring& GetUserAgent() const noexcept
+			const std::wstring& GetUserAgent() const noexcept
 			{
 				return m_userAgent;
 			}
 
-			virtual const std::wstring& GetNamedProxy() const noexcept
+			const std::wstring& GetNamedProxy() const noexcept
 			{
 				return m_namedProxy;
 			}
 
-			virtual const std::wstring& GetProxyBypass() const noexcept
+			const std::wstring& GetProxyBypass() const noexcept
 			{
 				return m_proxyBypass;
 			}
 
 		protected:
-			virtual void InternalCreate()
+			void InternalCreate()
 			{
 				if (m_userAgent.empty())
 					throw WinHttpError("UserAgent cannot be empty");
@@ -151,7 +151,7 @@ export namespace Boring32::WinHttp
 				m_session = SharedWinHttpSession(handle, Win32::WinHttp::WinHttpCloseHandle);
 			}
 
-			virtual Session& Copy(const Session& other)
+			Session& Copy(const Session& other)
 			{
 				if (this == &other)
 					return *this;
@@ -164,7 +164,7 @@ export namespace Boring32::WinHttp
 				return *this;
 			}
 
-			virtual Session& Move(Session& other) noexcept
+			Session& Move(Session& other) noexcept
 			{
 				Close();
 				m_session = std::move(other.m_session);
