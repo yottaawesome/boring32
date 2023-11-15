@@ -1,7 +1,7 @@
 export module boring32.ipc:overlappednamedpipeserver;
 import <iostream>;
 import <string>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.raii;
 import boring32.async;
 import boring32.error;
@@ -33,8 +33,8 @@ export namespace Boring32::IPC
 
 			OverlappedNamedPipeServer(
 				const std::wstring& pipeName, 
-				const DWORD size,
-				const DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
+				const Win32::DWORD size,
+				const Win32::DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
 				const std::wstring& sid,
 				const bool isInheritable,
 				const bool isLocalPipe
@@ -44,13 +44,13 @@ export namespace Boring32::IPC
 				maxInstances,
 				sid,
 				isInheritable,
-				PIPE_ACCESS_DUPLEX | FILE_FLAG_OVERLAPPED,
-				PIPE_TYPE_MESSAGE           // message type pipe 
-				| PIPE_READMODE_MESSAGE     // message-read mode
-				| PIPE_WAIT
+				Win32::_PIPE_ACCESS_DUPLEX | Win32::_FILE_FLAG_OVERLAPPED,
+				Win32::_PIPE_TYPE_MESSAGE           // message type pipe 
+				| Win32::_PIPE_READMODE_MESSAGE     // message-read mode
+				| Win32::_PIPE_WAIT
 				| (isLocalPipe
-					? PIPE_REJECT_REMOTE_CLIENTS
-					: PIPE_ACCEPT_REMOTE_CLIENTS)
+					? Win32::_PIPE_REJECT_REMOTE_CLIENTS
+					: Win32::_PIPE_ACCEPT_REMOTE_CLIENTS)
 			)
 			{
 				InternalCreatePipe();
@@ -58,12 +58,12 @@ export namespace Boring32::IPC
 
 			OverlappedNamedPipeServer(
 				const std::wstring& pipeName,
-				const DWORD size,
-				const DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
+				const Win32::DWORD size,
+				const Win32::DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
 				const std::wstring& sid,
 				const bool isInheritable,
-				const DWORD openMode,
-				const DWORD pipeMode
+				const Win32::DWORD openMode,
+				const Win32::DWORD pipeMode
 			) : NamedPipeServerBase(
 				pipeName,
 				size,
@@ -74,7 +74,7 @@ export namespace Boring32::IPC
 				pipeMode
 			)
 			{
-				m_openMode |= FILE_FLAG_OVERLAPPED; // Ensure we're overlapped
+				m_openMode |= Win32::_FILE_FLAG_OVERLAPPED; // Ensure we're overlapped
 				InternalCreatePipe();
 			}
 
@@ -95,9 +95,9 @@ export namespace Boring32::IPC
 				if (!m_pipe)
 					throw Error::Boring32Error("No valid pipe handle to connect");
 				oio = Async::OverlappedOp();
-				bool succeeded = ConnectNamedPipe(m_pipe.GetHandle(), oio.GetOverlapped());
+				bool succeeded = Win32::ConnectNamedPipe(m_pipe.GetHandle(), oio.GetOverlapped());
 				oio.LastError(GetLastError());
-				if (!succeeded && oio.LastError() != ERROR_IO_PENDING)
+				if (!succeeded && oio.LastError() != Win32::ErrorCodes::IoPending)
 					throw Error::Win32Error("ConnectNamedPipe() failed", oio.LastError());
 
 				/*
@@ -155,7 +155,7 @@ export namespace Boring32::IPC
 			}
 
 			virtual bool Read(
-				const DWORD noOfCharacters, 
+				const Win32::DWORD noOfCharacters,
 				Async::OverlappedIo& oio, 
 				const std::nothrow_t&
 			) noexcept try
@@ -179,19 +179,19 @@ export namespace Boring32::IPC
 					throw Error::Boring32Error("No pipe to write to");
 
 				oio = Async::OverlappedIo();
-				const bool succeeded = WriteFile(
+				const bool succeeded = Win32::WriteFile(
 					m_pipe.GetHandle(),     // handle to pipe 
 					&msg[0],                // buffer to write from 
-					static_cast<DWORD>(msg.size() * sizeof(wchar_t)), // number of bytes to write 
+					static_cast<Win32::DWORD>(msg.size() * sizeof(wchar_t)), // number of bytes to write 
 					nullptr,          // number of bytes written 
 					oio.GetOverlapped()       // overlapped I/O
 				);
-				oio.LastError(GetLastError());
-				if (!succeeded && oio.LastError() != ERROR_IO_PENDING)
+				oio.LastError(Win32::GetLastError());
+				if (!succeeded && oio.LastError() != Win32::ErrorCodes::IoPending)
 					throw Error::Win32Error("WriteFile() failed", oio.LastError());
 			}
 
-			virtual void InternalRead(const DWORD noOfCharacters, Async::OverlappedIo& oio)
+			virtual void InternalRead(const Win32::DWORD noOfCharacters, Async::OverlappedIo& oio)
 			{
 				if (!m_pipe)
 					throw Error::Boring32Error("No pipe to read from");
@@ -199,17 +199,17 @@ export namespace Boring32::IPC
 				oio = Async::OverlappedIo();
 				oio.IoBuffer.resize(noOfCharacters);
 
-				const bool succeeded = ReadFile(
+				const bool succeeded = Win32::ReadFile(
 					m_pipe.GetHandle(),                             // pipe handle 
 					&oio.IoBuffer[0],                               // buffer to receive reply 
 					static_cast<DWORD>(oio.IoBuffer.size() * sizeof(wchar_t)),   // size of buffer, in bytes
 					nullptr,                                        // number of bytes read 
 					oio.GetOverlapped());                           // overlapped
-				oio.LastError(GetLastError());
+				oio.LastError(Win32::GetLastError());
 				if (
 					!succeeded
-					&& oio.LastError() != ERROR_IO_PENDING
-					&& oio.LastError() != ERROR_MORE_DATA
+					&& oio.LastError() != Win32::ErrorCodes::IoPending
+					&& oio.LastError() != Win32::ErrorCodes::MoreData
 				)
 				{
 					throw Error::Win32Error("ReadFile() failed", oio.LastError());

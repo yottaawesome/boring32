@@ -630,6 +630,7 @@ export namespace Boring32::Win32
 	using ::SetNamedPipeHandleState;
 	using ::PeekNamedPipe;
 	using ::CreateMailslotW;
+	using ::ConnectNamedPipe;
 
 	using ::CLSCTX;
 	using ::_bstr_t;
@@ -687,4 +688,12 @@ export namespace Boring32::Win32
 		GenerateExceptions = HEAP_GENERATE_EXCEPTIONS,
 		NoSerialise = HEAP_NO_SERIALIZE
 	};
+
+	constexpr auto _PIPE_ACCESS_DUPLEX = PIPE_ACCESS_DUPLEX;
+	constexpr auto _FILE_FLAG_OVERLAPPED = FILE_FLAG_OVERLAPPED;
+	constexpr auto _PIPE_TYPE_MESSAGE = PIPE_TYPE_MESSAGE;
+	constexpr auto _PIPE_READMODE_MESSAGE = PIPE_READMODE_MESSAGE;
+	constexpr auto _PIPE_WAIT = PIPE_WAIT;
+	constexpr auto _PIPE_REJECT_REMOTE_CLIENTS = PIPE_REJECT_REMOTE_CLIENTS;
+	constexpr auto _PIPE_ACCEPT_REMOTE_CLIENTS = PIPE_ACCEPT_REMOTE_CLIENTS;
 }
