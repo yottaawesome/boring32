@@ -140,6 +140,7 @@ export namespace Boring32::Win32
 	using ::SYSTEMTIME;
 	using ::FILETIME;
 	using ::TIME_ZONE_INFORMATION;
+	using ::SC_HANDLE;
 
 	using ::IXAudio2;
 	using ::IXAudio2MasteringVoice;
@@ -603,6 +604,7 @@ export namespace Boring32::Win32
 	using ::GetTimeFormatEx;
 	using ::GetTimeZoneInformation;
 	using ::GetSystemTime;
+	using ::CloseServiceHandle;
 
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::GetAdaptersAddresses;

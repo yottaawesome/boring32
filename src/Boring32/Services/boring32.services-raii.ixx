@@ -1,21 +1,21 @@
 export module boring32.services:raii;
 import <memory>;
-import <win32.hpp>;
+import boring32.win32;
 
 namespace Boring32::Services
 {
 	struct ServiceHandleDeleter final
 	{
-		void operator()(SC_HANDLE handle) const noexcept
+		void operator()(Win32::SC_HANDLE handle) const noexcept
 		{
-			CloseServiceHandle(handle);
+			Win32::CloseServiceHandle(handle);
 		}
 	};
-	using ServiceHandleUniquePtr = std::unique_ptr<std::remove_pointer<SC_HANDLE>::type, ServiceHandleDeleter>;
-	using ServiceHandleSharedPtr = std::shared_ptr<std::remove_pointer<SC_HANDLE>::type>;
+	using ServiceHandleUniquePtr = std::unique_ptr<std::remove_pointer<Win32::SC_HANDLE>::type, ServiceHandleDeleter>;
+	using ServiceHandleSharedPtr = std::shared_ptr<std::remove_pointer<Win32::SC_HANDLE>::type>;
 
-	ServiceHandleSharedPtr CreateSharedPtr(SC_HANDLE handle)
+	ServiceHandleSharedPtr CreateSharedPtr(Win32::SC_HANDLE handle)
 	{
-		return ServiceHandleSharedPtr(handle, CloseServiceHandle);
+		return ServiceHandleSharedPtr(handle, Win32::CloseServiceHandle);
 	}
 }
