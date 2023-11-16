@@ -142,6 +142,7 @@ export namespace Boring32::Win32
 	using ::TIME_ZONE_INFORMATION;
 	using ::SC_HANDLE;
 	using ::LPCWSTR;
+	using ::DWORD_PTR;
 
 	using ::IXAudio2;
 	using ::IXAudio2MasteringVoice;
@@ -746,6 +747,7 @@ export namespace Boring32::Win32
 		using ::WinHttpReceiveResponse;
 		using ::WinHttpQueryDataAvailable;
 		using ::WinHttpReadData;
+		using ::WinHttpConnect;
 
 		constexpr auto _WINHTTP_NO_REFERER = WINHTTP_NO_REFERER;
 		constexpr auto _WINHTTP_DEFAULT_ACCEPT_TYPES = WINHTTP_DEFAULT_ACCEPT_TYPES;
@@ -761,5 +763,7 @@ export namespace Boring32::Win32
 		constexpr auto _WINHTTP_QUERY_FLAG_NUMBER = WINHTTP_QUERY_FLAG_NUMBER;
 		constexpr auto _WINHTTP_HEADER_NAME_BY_INDEX = WINHTTP_HEADER_NAME_BY_INDEX;
 		constexpr auto _WINHTTP_NO_HEADER_INDEX = WINHTTP_NO_HEADER_INDEX;
+		constexpr auto _WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY = WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY;
+		constexpr auto _WINHTTP_ACCESS_TYPE_NO_PROXY = WINHTTP_ACCESS_TYPE_NO_PROXY;
 	}
 }

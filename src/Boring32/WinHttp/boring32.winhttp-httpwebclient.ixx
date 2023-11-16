@@ -1,7 +1,6 @@
 export module boring32.winhttp:httpwebclient;
 import <string>;
 import <vector>;
-import <win32.hpp>;
 import <functional>;
 import <sstream>;
 import boring32.error;
@@ -36,7 +35,7 @@ export namespace Boring32::WinHttp
 				const std::wstring& userAgentName,
 				const std::wstring& serverToConnectTo,
 				const std::wstring& proxy,
-				const UINT port,
+				const unsigned port,
 				const bool ignoreSslErrors
 			) : m_userAgentName(userAgentName),
 				m_serverToConnectTo(serverToConnectTo),
@@ -49,7 +48,7 @@ export namespace Boring32::WinHttp
 				const std::wstring& userAgentName, 
 				const std::wstring& serverToConnectTo,
 				const std::wstring& proxy,
-				const UINT port,
+				const unsigned port,
 				const bool ignoreSslErrors,
 				const std::vector<std::wstring>& acceptTypes,
 				const std::wstring& additionalHeaders
@@ -126,16 +125,16 @@ export namespace Boring32::WinHttp
 			{
 				const bool useAutomaticProxy = m_proxy.empty();
 
-				m_hSession = WinHttpOpen(
+				m_hSession = Win32::WinHttp::WinHttpOpen(
 					m_userAgentName.c_str(),
-					useAutomaticProxy ? WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY : WINHTTP_ACCESS_TYPE_NO_PROXY,
-					useAutomaticProxy ? WINHTTP_NO_PROXY_NAME : m_proxy.c_str(),
-					WINHTTP_NO_PROXY_BYPASS,
+					useAutomaticProxy ? Win32::WinHttp::_WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY : Win32::WinHttp::_WINHTTP_ACCESS_TYPE_NO_PROXY,
+					useAutomaticProxy ? (Win32::LPCWSTR)Win32::WinHttp::_WINHTTP_NO_PROXY_NAME : m_proxy.c_str(),
+					(Win32::LPCWSTR)Win32::WinHttp::_WINHTTP_NO_PROXY_BYPASS,
 					0
 				);
 				if (!m_hSession)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("WinHttpOpen() failed", lastError);
 				}
 
@@ -145,7 +144,7 @@ export namespace Boring32::WinHttp
 				//	m_proxyInfo.SetOnSession(m_hSession.Get());
 				//}
 
-				m_hConnect = WinHttpConnect(
+				m_hConnect = Win32::WinHttp::WinHttpConnect(
 					m_hSession.Get(),
 					m_serverToConnectTo.c_str(),
 					m_port,
@@ -153,7 +152,7 @@ export namespace Boring32::WinHttp
 				);
 				if (!m_hConnect)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("WinHttpConnect() failed", lastError);
 				}
 			}
@@ -217,53 +216,51 @@ export namespace Boring32::WinHttp
 				}
 
 				// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpsendrequest
-				bool succeeded = WinHttpSendRequest(
+				bool succeeded = Win32::WinHttp::WinHttpSendRequest(
 					hRequest.Get(),
-					additionalHeaders.size() > 0
-					? additionalHeaders.c_str()
-					: WINHTTP_NO_ADDITIONAL_HEADERS,
+					additionalHeaders.size() > 0 ? additionalHeaders.c_str() : (wchar_t*)Win32::WinHttp::_WINHTTP_NO_ADDITIONAL_HEADERS,
 					-1L,
-					requestBody.size() > 0
-					? const_cast<char*>(&requestBody[0])
-					: WINHTTP_NO_REQUEST_DATA,
-					static_cast<DWORD>(requestBody.size()),
-					static_cast<DWORD>(requestBody.size()),
-					reinterpret_cast<DWORD_PTR>(this)
+					requestBody.size() > 0 ? const_cast<char*>(&requestBody[0]) : (char*)Win32::WinHttp::_WINHTTP_NO_REQUEST_DATA,
+					static_cast<Win32::DWORD>(requestBody.size()),
+					static_cast<Win32::DWORD>(requestBody.size()),
+					reinterpret_cast<Win32::DWORD_PTR>(this)
 				);
 				if (!succeeded)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("WinHttpSendRequest() failed", lastError);
 				}
 
 				// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpreceiveresponse
-				succeeded = WinHttpReceiveResponse(hRequest.Get(), nullptr);
+				succeeded = Win32::WinHttp::WinHttpReceiveResponse(hRequest.Get(), nullptr);
 				if (!succeeded)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("WinHttpReceiveResponse() failed", lastError);
 				}
 
 				// Get the status code of the response
-				DWORD statusCode = 0;
-				DWORD statusCodeSize = sizeof(statusCode);
+				Win32::DWORD statusCode = 0;
+				Win32::DWORD statusCodeSize = sizeof(statusCode);
 				// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpqueryheaders
-				WinHttpQueryHeaders(
+				Win32::DWORD headerIndex = Win32::WinHttp::_WINHTTP_NO_HEADER_INDEX;
+				Win32::WinHttp::WinHttpQueryHeaders(
 					hRequest.Get(),
-					WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
-					WINHTTP_HEADER_NAME_BY_INDEX,
+					Win32::WinHttp::_WINHTTP_QUERY_STATUS_CODE | Win32::WinHttp::_WINHTTP_QUERY_FLAG_NUMBER,
+					(Win32::LPCWSTR)Win32::WinHttp::_WINHTTP_HEADER_NAME_BY_INDEX,
 					&statusCode,
 					&statusCodeSize,
-					WINHTTP_NO_HEADER_INDEX);
+					&headerIndex
+				);
 
-				DWORD bytesOfDataAvailable = 0;
+				Win32::DWORD bytesOfDataAvailable = 0;
 				std::string response = "";
 				do
 				{
 					// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpquerydataavailable
-					if (!WinHttpQueryDataAvailable(hRequest.Get(), &bytesOfDataAvailable))
+					if (!Win32::WinHttp::WinHttpQueryDataAvailable(hRequest.Get(), &bytesOfDataAvailable))
 					{
-						const auto lastError = GetLastError();
+						const auto lastError = Win32::GetLastError();
 						throw Error::Win32Error("WinHttpQueryDataAvailable() failed", lastError);
 					}
 					if (bytesOfDataAvailable == 0)
@@ -271,10 +268,10 @@ export namespace Boring32::WinHttp
 
 					// Allocate space for the buffer.
 					std::vector<char> outBuffer(bytesOfDataAvailable);
-					DWORD downloadedBytes = 0;
+					Win32::DWORD downloadedBytes = 0;
 					// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpreaddata
 					// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpreaddataex
-					const bool succeeded = WinHttpReadData(
+					const bool succeeded = Win32::WinHttp::WinHttpReadData(
 						hRequest.Get(),
 						&outBuffer[0],
 						bytesOfDataAvailable,
@@ -282,7 +279,7 @@ export namespace Boring32::WinHttp
 					);
 					if (!succeeded)
 					{
-						const auto lastError = GetLastError();
+						const auto lastError = Win32::GetLastError();
 						throw Error::Win32Error("WinHttpQueryDataAvailable() failed", lastError);
 					}
 

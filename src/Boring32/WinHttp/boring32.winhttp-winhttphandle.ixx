@@ -1,58 +1,58 @@
 export module boring32.winhttp:winhttphandle;
 import <memory>;
-import <win32.hpp>;
+import boring32.win32;
 
 export namespace Boring32::WinHttp
 {
-	std::shared_ptr<void> CreateCloseableWinHttpHandle(HINTERNET handle)
+	std::shared_ptr<void> CreateCloseableWinHttpHandle(Win32::WinHttp::HINTERNET handle)
 	{
-		constexpr auto closeFunc = WinHttpCloseHandle;
+		constexpr auto closeFunc = Win32::WinHttp::WinHttpCloseHandle;
 		return { handle, closeFunc };
 	}
 
-	class WinHttpHandle
+	class WinHttpHandle final
 	{
 		public:
-			virtual ~WinHttpHandle() = default;
+			~WinHttpHandle() = default;
 			WinHttpHandle() = default;
 			WinHttpHandle(WinHttpHandle&& other) noexcept = default;
 			WinHttpHandle(const WinHttpHandle& other) = default;
-			WinHttpHandle(HINTERNET handle)
+			WinHttpHandle(Win32::WinHttp::HINTERNET handle)
 				: m_handle(CreateCloseableWinHttpHandle(handle))
 			{ }
 			
 		public:
-			virtual operator bool() const noexcept
+			operator bool() const noexcept
 			{
 				return m_handle.get() != nullptr;
 			}
 
-			virtual bool operator==(const HINTERNET other) const noexcept
+			bool operator==(const Win32::WinHttp::HINTERNET other) const noexcept
 			{
 				return m_handle.get() == other;
 			}
 
-			virtual WinHttpHandle& operator=(const HINTERNET handle)
+			WinHttpHandle& operator=(const Win32::WinHttp::HINTERNET handle)
 			{
 				m_handle = CreateCloseableWinHttpHandle(handle);
 				return *this;
 			}
 
-			virtual WinHttpHandle& operator=(WinHttpHandle&& other) noexcept = default;
-			virtual WinHttpHandle& operator=(const WinHttpHandle&) = default;
+			WinHttpHandle& operator=(WinHttpHandle&& other) noexcept = default;
+			WinHttpHandle& operator=(const WinHttpHandle&) = default;
 			
 		public:
-			virtual HINTERNET Get() const noexcept
+			Win32::WinHttp::HINTERNET Get() const noexcept
 			{
 				return m_handle.get();
 			}
 
-			virtual void Close()
+			void Close()
 			{
 				m_handle = nullptr;
 			}
 
-		protected:
+		private:
 			std::shared_ptr<void> m_handle;
 	};
 }
