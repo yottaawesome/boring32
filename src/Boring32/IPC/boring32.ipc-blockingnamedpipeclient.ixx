@@ -1,7 +1,7 @@
 export module boring32.ipc:blockingnamedpipeclient;
 import <vector>;
 import <string>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 import boring32.util;
 import :namedpipeclientbase;
@@ -84,18 +84,18 @@ export namespace Boring32::IPC
 				if (!m_handle)
 					throw Error::Boring32Error("No pipe to write to");
 
-				DWORD bytesWritten = 0;
+				Win32::DWORD bytesWritten = 0;
 				// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile
-				const bool successfulWrite = WriteFile(
+				const bool successfulWrite = Win32::WriteFile(
 					m_handle.GetHandle(),   // pipe handle 
 					&data[0],        // message 
-					static_cast<DWORD>(data.size()),         // message length 
+					static_cast<Win32::DWORD>(data.size()),         // message length 
 					&bytesWritten,      // bytes written 
 					nullptr				// not overlapped 
 				);
 				if (!successfulWrite)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("Failed to write to client pipe", lastError);
 				}
 			}
@@ -105,31 +105,31 @@ export namespace Boring32::IPC
 				if (!m_handle)
 					throw Error::Boring32Error("No pipe to read from");
 
-				constexpr DWORD blockSize = 1024;
+				constexpr Win32::DWORD blockSize = 1024;
 				std::vector<std::byte> dataBuffer(blockSize);
 
 				bool continueReading = true;
-				DWORD totalBytesRead = 0;
+				Win32::DWORD totalBytesRead = 0;
 				while (continueReading)
 				{
-					DWORD currentBytesRead = 0;
+					Win32::DWORD currentBytesRead = 0;
 					// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile
-					bool successfulRead = ReadFile(
+					bool successfulRead = Win32::ReadFile(
 						m_handle.GetHandle(),    // pipe handle 
 						&dataBuffer[0],    // buffer to receive reply 
-						static_cast<DWORD>(dataBuffer.size()),  // size of buffer 
+						static_cast<Win32::DWORD>(dataBuffer.size()),  // size of buffer 
 						&currentBytesRead,  // number of bytes read 
 						nullptr				// not overlapped
 					);
 					totalBytesRead += currentBytesRead;
 
-					const DWORD lastError = GetLastError();
-					if (successfulRead == false && lastError != ERROR_MORE_DATA)
+					const Win32::DWORD lastError = Win32::GetLastError();
+					if (successfulRead == false && lastError != Win32::ErrorCodes::MoreData)
 					{
 						const auto lastError = GetLastError();
 						throw Error::Win32Error("Failed to read from pipe", lastError);
 					}
-					if (lastError == ERROR_MORE_DATA)
+					if (lastError == Win32::ErrorCodes::MoreData)
 						dataBuffer.resize(dataBuffer.size() + blockSize);
 					continueReading = !successfulRead;
 				}
