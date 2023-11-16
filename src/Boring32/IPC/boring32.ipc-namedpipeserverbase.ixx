@@ -2,7 +2,7 @@ export module boring32.ipc:namedpipeserverbase;
 import <string>;
 import <iostream>;
 import <format>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 import boring32.raii;
 
@@ -19,7 +19,6 @@ export namespace Boring32::IPC
 
 			NamedPipeServerBase() = default;
 			
-
 			NamedPipeServerBase(const NamedPipeServerBase& other)
 				: NamedPipeServerBase()
 			{
@@ -45,8 +44,8 @@ export namespace Boring32::IPC
 		public:
 			NamedPipeServerBase(
 				const std::wstring& pipeName, 
-				const DWORD size,
-				const DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
+				const Win32::DWORD size,
+				const Win32::DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
 				const std::wstring& sid,
 				const bool isInheritable,
 				const bool isLocalPipe
@@ -56,28 +55,28 @@ export namespace Boring32::IPC
 				m_sid(sid),
 				m_isInheritable(isInheritable),
 				m_openMode(
-					PIPE_ACCESS_DUPLEX          // read/write access
+					Win32::_PIPE_ACCESS_DUPLEX          // read/write access
 				),
 				m_pipeMode(
-					PIPE_TYPE_MESSAGE           // message type pipe 
-					| PIPE_READMODE_MESSAGE     // message-read mode
-					| PIPE_WAIT
+					Win32::_PIPE_TYPE_MESSAGE           // message type pipe 
+					| Win32::_PIPE_READMODE_MESSAGE     // message-read mode
+					| Win32::_PIPE_WAIT
 				)
 			{
 				if (isLocalPipe)
-					m_pipeMode |= PIPE_ACCEPT_REMOTE_CLIENTS;
+					m_pipeMode |= Win32::_PIPE_ACCEPT_REMOTE_CLIENTS;
 				else
-					m_pipeMode |= PIPE_REJECT_REMOTE_CLIENTS;
+					m_pipeMode |= Win32::_PIPE_REJECT_REMOTE_CLIENTS;
 			}
 
 			NamedPipeServerBase(
 				const std::wstring& pipeName,
-				const DWORD size,
-				const DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
+				const Win32::DWORD size,
+				const Win32::DWORD maxInstances, // PIPE_UNLIMITED_INSTANCES
 				const std::wstring& sid,
 				const bool isInheritable,
-				const DWORD openMode,
-				const DWORD pipeMode
+				const Win32::DWORD openMode,
+				const Win32::DWORD pipeMode
 			) : m_pipeName(pipeName),
 				m_size(size),
 				m_maxInstances(maxInstances),
@@ -96,17 +95,17 @@ export namespace Boring32::IPC
 
 			virtual void Disconnect()
 			{
-				if (m_pipe != nullptr)
-					DisconnectNamedPipe(m_pipe.GetHandle());
+				if (m_pipe)
+					Win32::DisconnectNamedPipe(m_pipe.GetHandle());
 			}
 
 			virtual void Flush()
 			{
 				if (!m_pipe)
 					throw Error::Boring32Error("No pipe to flush");
-				if (!FlushFileBuffers(m_pipe.GetHandle()))
+				if (!Win32::FlushFileBuffers(m_pipe.GetHandle()))
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("Flush() failed", lastError);
 				}
 			}
@@ -121,35 +120,35 @@ export namespace Boring32::IPC
 				return m_pipeName;
 			}
 
-			virtual DWORD GetSize() const
+			virtual Win32::DWORD GetSize() const
 			{
 				return m_size;
 			}
 
-			virtual DWORD GetMaxInstances() const
+			virtual Win32::DWORD GetMaxInstances() const
 			{
 				return m_maxInstances;
 			}
 
-			virtual DWORD GetPipeMode() const
+			virtual Win32::DWORD GetPipeMode() const
 			{
 				return m_pipeMode;
 			}
 
-			virtual DWORD GetOpenMode() const
+			virtual Win32::DWORD GetOpenMode() const
 			{
 				return m_openMode;
 			}
 
-			virtual DWORD UnreadCharactersRemaining() const
+			virtual Win32::DWORD UnreadCharactersRemaining() const
 			{
-				DWORD charactersRemaining = 0;
+				Win32::DWORD charactersRemaining = 0;
 				InternalUnreadCharactersRemaining(charactersRemaining, true);
 				return charactersRemaining;
 			}
 
 			virtual bool UnreadCharactersRemaining(
-				DWORD& charactersRemaining, 
+				Win32::DWORD& charactersRemaining,
 				std::nothrow_t
 			) const noexcept 
 			{
@@ -160,7 +159,7 @@ export namespace Boring32::IPC
 			{
 				if (!m_pipe)
 					throw Error::Boring32Error("pipe is nullptr");
-				if (!CancelIo(m_pipe.GetHandle()))
+				if (!Win32::CancelIo(m_pipe.GetHandle()))
 				{
 					const auto lastError = GetLastError();
 					throw Error::Win32Error("CancelIo() failed", lastError);
@@ -182,19 +181,19 @@ export namespace Boring32::IPC
 				return false;
 			}
 
-			virtual void CancelCurrentProcessIo(OVERLAPPED* overlapped)
+			virtual void CancelCurrentProcessIo(Win32::OVERLAPPED* overlapped)
 			{
 				if (!m_pipe)
 					throw Error::Boring32Error("pipe is nullptr");
-				if (!CancelIoEx(m_pipe.GetHandle(), overlapped))
+				if (!Win32::CancelIoEx(m_pipe.GetHandle(), overlapped))
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("CancelIo() failed", lastError);
 				}
 			}
 
 			virtual bool CancelCurrentProcessIo(
-				OVERLAPPED* overlapped, 
+				Win32::OVERLAPPED* overlapped,
 				const std::nothrow_t&
 			) noexcept try
 			{
@@ -216,27 +215,27 @@ export namespace Boring32::IPC
 				if (!m_pipeName.starts_with(L"\\\\.\\pipe\\"))
 					m_pipeName = L"\\\\.\\pipe\\" + m_pipeName;
 
-				SECURITY_ATTRIBUTES sa{
+				Win32::SECURITY_ATTRIBUTES sa{
 					.nLength = sizeof(sa),
 					.bInheritHandle = m_isInheritable
 				};
 				if (!m_sid.empty())
 				{
-					const bool converted = ConvertStringSecurityDescriptorToSecurityDescriptorW(
+					const bool converted = Win32::ConvertStringSecurityDescriptorToSecurityDescriptorW(
 						m_sid.c_str(),
-						SDDL_REVISION_1,
+						Win32::SddlRevision1,
 						&sa.lpSecurityDescriptor,
 						nullptr
 					);
 					if (!converted)
 					{
-						const auto lastError = GetLastError();
+						const auto lastError = Win32::GetLastError();
 						throw Error::Win32Error("Failed to convert security descriptor", lastError);
 					}
 				}
 
 				// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createnamedpipea
-				m_pipe = CreateNamedPipeW(
+				m_pipe = Win32::CreateNamedPipeW(
 					m_pipeName.c_str(),             // pipe name
 					m_openMode,
 					m_pipeMode,
@@ -247,10 +246,10 @@ export namespace Boring32::IPC
 					!m_sid.empty() ? &sa : nullptr
 				);
 				if (!m_sid.empty())
-					LocalFree(sa.lpSecurityDescriptor);
+					Win32::LocalFree(sa.lpSecurityDescriptor);
 				if (!m_pipe)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("Failed to create named pipe", lastError);
 				}
 			}
@@ -281,14 +280,14 @@ export namespace Boring32::IPC
 			}
 
 			virtual bool InternalUnreadCharactersRemaining(
-				DWORD& charactersRemaining, 
+				Win32::DWORD& charactersRemaining,
 				const bool throwOnError
 			) const
 			{
 				if (!m_pipe)
 					return false;
 				charactersRemaining = 0;
-				bool succeeded = PeekNamedPipe(
+				bool succeeded = Win32::PeekNamedPipe(
 					m_pipe.GetHandle(),
 					nullptr,
 					0,
@@ -300,7 +299,7 @@ export namespace Boring32::IPC
 				{
 					if (throwOnError)
 					{
-						const auto lastError = GetLastError();
+						const auto lastError = Win32::GetLastError();
 						throw Error::Win32Error("PeekNamedPipe() failed", lastError);
 					}
 					return false;
@@ -314,10 +313,10 @@ export namespace Boring32::IPC
 			RAII::Win32Handle m_pipe;
 			std::wstring m_pipeName;
 			std::wstring m_sid;
-			DWORD m_size = 0;
-			DWORD m_maxInstances = 0;
+			Win32::DWORD m_size = 0;
+			Win32::DWORD m_maxInstances = 0;
 			bool m_isInheritable = false;
-			DWORD m_pipeMode = 0;
-			DWORD m_openMode = 0;
+			Win32::DWORD m_pipeMode = 0;
+			Win32::DWORD m_openMode = 0;
 	};
 }

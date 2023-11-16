@@ -699,6 +699,12 @@ export namespace Boring32::Win32
 	constexpr auto _PIPE_REJECT_REMOTE_CLIENTS = PIPE_REJECT_REMOTE_CLIENTS;
 	constexpr auto _PIPE_ACCEPT_REMOTE_CLIENTS = PIPE_ACCEPT_REMOTE_CLIENTS;
 
+	using ::DisconnectNamedPipe;
+	using ::FlushFileBuffers;
+	using ::CancelIo;
+	using ::CancelIoEx;
+	using ::CreateNamedPipeW;
+
 	using ::IIDFromString;
 	using ::UuidFromStringW;
 	using ::RPC_STATUS; 
