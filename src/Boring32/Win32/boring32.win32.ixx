@@ -367,6 +367,7 @@ export namespace Boring32::Win32
 		constexpr auto Timeout = ERROR_TIMEOUT;
 		constexpr auto IoPending = ERROR_IO_PENDING;
 		constexpr auto AbandonedWait0 = ERROR_ABANDONED_WAIT_0;
+		constexpr auto PipeBusy = ERROR_PIPE_BUSY;
 	}
 
 	namespace NTStatus // winnt.h
@@ -633,6 +634,7 @@ export namespace Boring32::Win32
 	using ::CreateMailslotW;
 	using ::ConnectNamedPipe;
 	using ::GlobalFree;
+	using ::WaitNamedPipeW;
 
 	using ::CLSCTX;
 	using ::_bstr_t;
@@ -729,6 +731,8 @@ export namespace Boring32::Win32
 	using ::WICDecodeOptions;
 	using ::IWICFormatConverter;
 	using ::IWICImagingFactory;
+
+	constexpr auto _OPEN_EXISTING = OPEN_EXISTING;
 
 	namespace WinHttp
 	{
