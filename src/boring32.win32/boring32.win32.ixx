@@ -649,6 +649,17 @@ export namespace Boring32::Win32
 	using ::GetSidSubAuthority;
 	using ::ConvertStringSidToSidW;
 	using ::AllocateAndInitializeSid;
+	using ::DeleteBoundaryDescriptor;
+	using ::ClosePrivateNamespace;
+	using ::CreateBoundaryDescriptorW;
+	using ::CreateWellKnownSid;
+	using ::AddSIDToBoundaryDescriptor;
+	using ::CreatePrivateNamespaceW;
+	using ::OpenPrivateNamespaceW;
+
+	using ::WELL_KNOWN_SID_TYPE;
+
+	constexpr auto _SECURITY_MAX_SID_SIZE = SECURITY_MAX_SID_SIZE;
 
 	// WLAN
 	using ::PWLAN_INTERFACE_INFO_LIST;
