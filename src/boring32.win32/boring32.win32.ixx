@@ -622,6 +622,18 @@ export namespace Boring32::Win32
 	using ::RegSaveKeyExW;
 	using ::RegCloseKey;
 
+
+	// WLAN
+	using ::PWLAN_INTERFACE_INFO_LIST;
+	using ::WLAN_INTERFACE_INFO_LIST;
+	using ::PWLAN_INTERFACE_INFO, ::WLAN_INTERFACE_INFO;
+	using ::WlanCloseHandle;
+	using ::WlanFreeMemory;
+	using ::WlanEnumInterfaces;
+	//
+
+
+
 	using ::SecBuffer;
 	using ::SecBufferDesc;
 	using ::SECURITY_STATUS;

@@ -2,14 +2,14 @@ export module boring32.wirelesslan:cleanup;
 import <iostream>;
 import <format>;
 import <memory>;
-import <win32.hpp>;
+import boring32.win32;
 
 namespace Boring32::WirelessLAN
 {
-    void CloseWLANHandle(HANDLE handle)
+    void CloseWLANHandle(Win32::HANDLE handle)
     {
         // https://docs.microsoft.com/en-us/windows/win32/api/wlanapi/nf-wlanapi-wlanclosehandle
-        if (DWORD status = WlanCloseHandle(handle, 0) != ERROR_SUCCESS)
+        if (Win32::DWORD status = Win32::WlanCloseHandle(handle, 0) != Win32::ErrorCodes::Success)
             std::wcerr << std::format(L"WlanCloseHandle() failed: {}\n", status);
     }
 
@@ -20,8 +20,8 @@ namespace Boring32::WirelessLAN
             CloseWLANHandle(handle);
         }
     };
-    using UniqueWLANHandle = std::unique_ptr<std::remove_pointer<HANDLE>::type, HandleDeleter>;
-    using SharedWLANHandle = std::shared_ptr<std::remove_pointer<HANDLE>::type>;
+    using UniqueWLANHandle = std::unique_ptr<std::remove_pointer<Win32::HANDLE>::type, HandleDeleter>;
+    using SharedWLANHandle = std::shared_ptr<std::remove_pointer<Win32::HANDLE>::type>;
     SharedWLANHandle CreateSharedWLANHandle(HANDLE handle)
     {
         return { handle, CloseWLANHandle };
@@ -32,13 +32,13 @@ namespace Boring32::WirelessLAN
         void operator()(void* handle)
         {
             // https://docs.microsoft.com/en-us/windows/win32/api/wlanapi/nf-wlanapi-wlanfreememory
-            WlanFreeMemory(handle);
+            Win32::WlanFreeMemory(handle);
         }
     };
     using UniqueWLANMemory = std::unique_ptr<void, MemoryDeleter>;
     using SharedWLANMemory = std::shared_ptr<void>;
     SharedWLANMemory CreateSharedWLANMemory(void* memory)
     {
-        return { memory, WlanFreeMemory };
+        return { memory, Win32::WlanFreeMemory };
     }
 }
