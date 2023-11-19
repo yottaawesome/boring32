@@ -700,11 +700,22 @@ export namespace Boring32::Win32
 	using ::_bstr_t;
 	using ::ITaskService;
 	using ::ITaskFolder;
+	using ::IRegisteredTask;
+	using ::ITaskDefinition;
+	using ::ITriggerCollection;
+	using ::ITrigger;
+	using ::IDailyTrigger;
+	using ::IRepetitionPattern;
+	using ::IRunningTask;
 	using ::CLSID_TaskScheduler;
 	using ::IID_ITaskService;
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::_variant_t;
+	using ::VARENUM;
+	using ::TASK_TRIGGER_TYPE2;
 	using ::GetAdaptersAddresses;
+	constexpr auto _VARIANT_TRUE = VARIANT_TRUE;
+	constexpr auto _VARIANT_FALSE = VARIANT_FALSE;
 
 	constexpr auto _RRF_RT_REG_SZ = RRF_RT_REG_SZ;
 	constexpr auto _RRF_RT_REG_DWORD = RRF_RT_REG_DWORD;

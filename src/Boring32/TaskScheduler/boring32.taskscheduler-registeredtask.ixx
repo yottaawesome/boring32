@@ -1,28 +1,26 @@
 export module boring32.taskscheduler:registeredtask;
 import <string>;
 import <vector>;
-import <win32.hpp>;
-import boring32.error;
 import <iostream>;
 import <format>;
+import boring32.win32;
+import boring32.error;
 
 namespace Boring32::TaskScheduler
 {
-	using Microsoft::WRL::ComPtr;
-
 	export class RegisteredTask
 	{
 		public:
 			virtual ~RegisteredTask() = default;
 			RegisteredTask(const RegisteredTask&) = default;
 			RegisteredTask(RegisteredTask&&) noexcept = default;
-			RegisteredTask(Microsoft::WRL::ComPtr<IRegisteredTask> registeredTask)
+			RegisteredTask(Win32::ComPtr<Win32::IRegisteredTask> registeredTask)
 				: m_registeredTask(std::move(registeredTask))
 			{
 				if (!m_registeredTask)
 					return;
-				const HRESULT hr = m_registeredTask->get_Definition(&m_taskDefinition);
-				if (FAILED(hr))
+				const Win32::HRESULT hr = m_registeredTask->get_Definition(&m_taskDefinition);
+				if (Win32::HrFailed(hr))
 					throw Error::COMError("Failed to get ITaskDefinition", hr);
 			}
 
@@ -37,9 +35,9 @@ namespace Boring32::TaskScheduler
 			{
 				CheckIsValid();
 
-				bstr_t taskName;
-				const HRESULT hr = m_registeredTask->get_Name(taskName.GetAddress());
-				if (FAILED(hr))
+				Win32::_bstr_t taskName;
+				const Win32::HRESULT hr = m_registeredTask->get_Name(taskName.GetAddress());
+				if (Win32::HrFailed(hr))
 					throw Error::COMError("Failed to get Task name", hr);
 
 				return { taskName, taskName.length() };
@@ -49,12 +47,12 @@ namespace Boring32::TaskScheduler
 			{
 				CheckIsValid();
 
-				const HRESULT hr = m_registeredTask->put_Enabled(
+				const Win32::HRESULT hr = m_registeredTask->put_Enabled(
 					isEnabled
-					? VARIANT_TRUE
-					: VARIANT_FALSE
+					? Win32::_VARIANT_TRUE
+					: Win32::_VARIANT_FALSE
 				);
-				if (FAILED(hr))
+				if (Win32::HrFailed(hr))
 					throw Error::COMError("Failed to set task enabled property", hr);
 
 				/*std::vector<ComPtr<ITrigger>> triggers = GetTriggers();
@@ -66,31 +64,31 @@ namespace Boring32::TaskScheduler
 				}*/
 			}
 
-			virtual Microsoft::WRL::ComPtr<IRegisteredTask> GetRegisteredTask() 
+			virtual Win32::ComPtr<Win32::IRegisteredTask> GetRegisteredTask()
 				const noexcept final
 			{
 				return m_registeredTask;
 			}
 
-			virtual Microsoft::WRL::ComPtr<ITaskDefinition> GetTaskDefinition() 
+			virtual Win32::ComPtr<Win32::ITaskDefinition> GetTaskDefinition()
 				const noexcept final
 			{
 				return m_taskDefinition;
 			}
 
-			virtual void SetRepetitionInterval(const DWORD intervalMinutes)
+			virtual void SetRepetitionInterval(const Win32::DWORD intervalMinutes)
 			{
-				std::vector<ComPtr<ITrigger>> triggers = GetTriggers();
+				std::vector<Win32::ComPtr<Win32::ITrigger>> triggers = GetTriggers();
 				for (auto& trigger : triggers)
 				{
-					ComPtr<IRepetitionPattern> pattern;
-					HRESULT hr = trigger->get_Repetition(&pattern);
-					if (FAILED(hr))
+					Win32::ComPtr<Win32::IRepetitionPattern> pattern;
+					Win32::HRESULT hr = trigger->get_Repetition(&pattern);
+					if (Win32::HrFailed(hr))
 						throw Error::COMError("Failed to get task repetition pattern", hr);
 
 					std::wstring interval = std::format(L"PT{}M", intervalMinutes);
-					hr = pattern->put_Interval(bstr_t(interval.c_str()));
-					if (FAILED(hr))
+					hr = pattern->put_Interval(Win32::_bstr_t(interval.c_str()));
+					if (Win32::HrFailed(hr))
 						throw Error::COMError("Failed to set trigger repetition pattern interval", hr);
 				}
 			}
@@ -115,9 +113,9 @@ namespace Boring32::TaskScheduler
 				// set to true or the task has been disabled. We can check for these 
 				// conditions, but COM does it for us and the error is descriptive, so no 
 				// need to bother.
-				ComPtr<IRunningTask> runningTask;
-				const HRESULT hr = m_registeredTask->Run(_variant_t(VT_NULL), &runningTask);
-				if (FAILED(hr))
+				Win32::ComPtr<Win32::IRunningTask> runningTask;
+				const Win32::HRESULT hr = m_registeredTask->Run(Win32::_variant_t(Win32::VARENUM::VT_NULL), &runningTask);
+				if (Win32::HrFailed(hr))
 					throw Error::COMError("Failed to start task", hr);
 			}
 
@@ -139,35 +137,35 @@ namespace Boring32::TaskScheduler
 			///		Thrown when a COM operation fails.
 			/// </exception>
 			/// <returns>The number of triggers updated.</returns>
-			virtual unsigned SetRandomDelay(const DWORD minutes)
+			virtual unsigned SetRandomDelay(const Win32::DWORD minutes)
 			{
-				std::vector<ComPtr<ITrigger>> triggers = GetTriggers();
+				std::vector<Win32::ComPtr<Win32::ITrigger>> triggers = GetTriggers();
 				const std::wstring delay = std::format(L"PT{}M", minutes);
 				unsigned triggersUpdated = 0;
 
 				for (const auto& trigger : triggers)
 				{
-					TASK_TRIGGER_TYPE2 type = TASK_TRIGGER_TYPE2::TASK_TRIGGER_EVENT;
-					HRESULT hr = trigger->get_Type(&type);
-					if (FAILED(hr))
+					Win32::TASK_TRIGGER_TYPE2 type = Win32::TASK_TRIGGER_TYPE2::TASK_TRIGGER_EVENT;
+					Win32::HRESULT hr = trigger->get_Type(&type);
+					if (Win32::HrFailed(hr))
 						throw Error::COMError("Failed to get ITrigger type", hr);
 
 					// Some, but not all, triggers support random delays, so we only
 					// set the daily one for now, as that's the one of interest.
 					switch (type)
 					{
-					case TASK_TRIGGER_TYPE2::TASK_TRIGGER_DAILY:
-					{
-						ComPtr<IDailyTrigger> dailyTrigger = (IDailyTrigger*)trigger.Get();
-						hr = dailyTrigger->put_RandomDelay(_bstr_t(delay.c_str()));
-						if (FAILED(hr))
-							throw Error::COMError("Failed to set trigger random delay", hr);
-						triggersUpdated++;
-						break;
-					}
+						case Win32::TASK_TRIGGER_TYPE2::TASK_TRIGGER_DAILY:
+						{
+							Win32::ComPtr<Win32::IDailyTrigger> dailyTrigger = (Win32::IDailyTrigger*)trigger.Get();
+							hr = dailyTrigger->put_RandomDelay(Win32::_bstr_t(delay.c_str()));
+							if (Win32::HrFailed(hr))
+								throw Error::COMError("Failed to set trigger random delay", hr);
+							triggersUpdated++;
+							break;
+						}
 
-					default:
-						std::wcerr << L"Did not set random delay for a trigger as it's not supported\n";
+						default:
+							std::wcerr << L"Did not set random delay for a trigger as it's not supported\n";
 					}
 				}
 
@@ -175,26 +173,26 @@ namespace Boring32::TaskScheduler
 			}
 
 		protected:
-			virtual std::vector<Microsoft::WRL::ComPtr<ITrigger>> GetTriggers()
+			virtual std::vector<Win32::ComPtr<Win32::ITrigger>> GetTriggers()
 			{
 				CheckIsValid();
 
-				ComPtr<ITriggerCollection> triggers;
-				HRESULT hr = m_taskDefinition->get_Triggers(&triggers);
-				if (FAILED(hr))
+				Win32::ComPtr<Win32::ITriggerCollection> triggers;
+				Win32::HRESULT hr = m_taskDefinition->get_Triggers(&triggers);
+				if (Win32::HrFailed(hr))
 					throw Error::COMError("Failed to get trigger collection", hr);
 
 				long count = 0;
 				hr = triggers->get_Count(&count);
-				if (FAILED(hr))
+				if (Win32::HrFailed(hr))
 					throw Error::COMError("Failed to get trigger collection count", hr);
 
-				std::vector<ComPtr<ITrigger>> returnVal;
+				std::vector<Win32::ComPtr<Win32::ITrigger>> returnVal;
 				for (int i = 1; i <= count; i++) // Collections start at 1
 				{
-					ComPtr<ITrigger> trigger = nullptr;
+					Win32::ComPtr<Win32::ITrigger> trigger = nullptr;
 					hr = triggers->get_Item(i, &trigger);
-					if (FAILED(hr))
+					if (Win32::HrFailed(hr))
 						throw Error::COMError("Failed to get trigger", hr);
 					returnVal.push_back(std::move(trigger));
 				}
@@ -211,8 +209,8 @@ namespace Boring32::TaskScheduler
 
 		protected:
 			// https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-iregisteredtask
-			Microsoft::WRL::ComPtr<IRegisteredTask> m_registeredTask;
+			Win32::ComPtr<Win32::IRegisteredTask> m_registeredTask;
 			// https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-itaskdefinition
-			Microsoft::WRL::ComPtr<ITaskDefinition> m_taskDefinition;
+			Win32::ComPtr<Win32::ITaskDefinition> m_taskDefinition;
 	};
 }
