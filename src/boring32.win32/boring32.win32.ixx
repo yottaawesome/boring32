@@ -151,6 +151,11 @@ export namespace Boring32::Win32
 
 	using ::SERVICE_CONTROL_STATUS_REASON_PARAMS;
 
+	WORD MakeWord(DWORD a, DWORD b)
+	{
+		return MAKEWORD(a, b);
+	}
+
 	const auto _HKEY_CLASSES_ROOT = HKEY_CLASSES_ROOT;
 	const auto _HKEY_CURRENT_CONFIG = HKEY_CURRENT_CONFIG;
 	const auto _HKEY_CURRENT_USER = HKEY_CURRENT_USER;
@@ -791,6 +796,13 @@ export namespace Boring32::Win32
 	using ::IWICImagingFactory;
 
 	constexpr auto _OPEN_EXISTING = OPEN_EXISTING;
+
+	namespace WinSock
+	{
+		using ::WSAData;
+		using ::WSAStartup;
+		using ::WSACleanup;
+	}
 
 	namespace WinHttp
 	{

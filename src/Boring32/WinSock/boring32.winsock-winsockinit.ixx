@@ -1,6 +1,6 @@
 export module boring32.winsock:winsockinit;
 import boring32.error;
-import <win32.hpp>;
+import boring32.win32;
 import :winsockerror;
 
 export namespace Boring32::WinSock
@@ -27,7 +27,7 @@ export namespace Boring32::WinSock
 
 			WinSockInit(WinSockInit&&) noexcept = delete;
 
-			WinSockInit(const DWORD highVersion, const DWORD lowVersion)
+			WinSockInit(const Win32::DWORD highVersion, const Win32::DWORD lowVersion)
 				: m_highVersion(highVersion), m_lowVersion(lowVersion)
 			{
 				Initialize();
@@ -48,7 +48,7 @@ export namespace Boring32::WinSock
 					return;
 
 				// https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-wsacleanup
-				const int error = WSACleanup();
+				const int error = Win32::WinSock::WSACleanup();
 				if (error) Error::ThrowNested(
 					Error::Win32Error("WSACleanup() failed", error, L"Ws2_32.dll"),
 					WinSockError("Failed to cleanup WinSock")
@@ -69,12 +69,12 @@ export namespace Boring32::WinSock
 				return false;
 			}
 
-			virtual DWORD GetLowVersion() const noexcept
+			virtual Win32::DWORD GetLowVersion() const noexcept
 			{
 				return m_lowVersion;
 			}
 
-			virtual DWORD GetHighVersion() const noexcept
+			virtual Win32::DWORD GetHighVersion() const noexcept
 			{
 				return m_highVersion;
 			}
@@ -83,7 +83,7 @@ export namespace Boring32::WinSock
 			virtual void Initialize()
 			{
 				//https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-wsastartup
-				const int error = WSAStartup(MAKEWORD(m_highVersion, m_lowVersion), &m_wsaData);
+				const int error = Win32::WinSock::WSAStartup(Win32::MakeWord(m_highVersion, m_lowVersion), &m_wsaData);
 				if (error) Error::ThrowNested(
 					Error::Win32Error("WSAStartup() failed", error, L"Ws2_32.dll"),
 					WinSockError("Failed to initialise WinSock")
@@ -107,8 +107,8 @@ export namespace Boring32::WinSock
 			}
 
 		protected:
-			WSAData m_wsaData;
-			DWORD m_lowVersion;
-			DWORD m_highVersion;
+			Win32::WinSock::WSAData m_wsaData;
+			Win32::DWORD m_lowVersion;
+			Win32::DWORD m_highVersion;
 	};
 }
