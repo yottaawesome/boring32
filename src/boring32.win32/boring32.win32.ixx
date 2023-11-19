@@ -97,6 +97,7 @@ export namespace Boring32::Win32
 	using ::LPOVERLAPPED;
 	using ::LPVOID;
 	using ::LPDWORD;
+	using ::LSA_UNICODE_STRING;
 
 	using ::IXAudio2;
 	using ::IXAudio2MasteringVoice;

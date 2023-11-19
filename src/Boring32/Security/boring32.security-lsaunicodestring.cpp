@@ -1,6 +1,6 @@
 module boring32.security:lsaunicodestring;
 import <string>;
-import <win32.hpp>;
+import boring32.win32;
 
 namespace Boring32::Security
 {
@@ -40,7 +40,7 @@ namespace Boring32::Security
 				return *this;
 			}
 
-			LSA_UNICODE_STRING* Get() noexcept
+			Win32::LSA_UNICODE_STRING* Get() noexcept
 			{
 				return &m_lsaStr;
 			}
@@ -65,6 +65,6 @@ namespace Boring32::Security
 			// We need this so the buffer pointed to by m_lsaStr is valid
 			// for temporary strings.
 			std::wstring m_string;
-			LSA_UNICODE_STRING m_lsaStr;
+			Win32::LSA_UNICODE_STRING m_lsaStr;
 	};
 }
