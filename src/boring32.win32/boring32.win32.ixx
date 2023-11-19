@@ -129,6 +129,22 @@ export namespace Boring32::Win32
 		PubKeyMd5Hash = CERT_FIND_PUBKEY_MD5_HASH
 	};
 
+	// https://docs.microsoft.com/en-us/windows/win32/sysinfo/registry-value-types
+	enum class ValueTypes : DWORD
+	{
+		None = REG_NONE,
+		Binary = REG_BINARY,
+		DWord = REG_DWORD,
+		DWordLittleEndian = REG_DWORD_LITTLE_ENDIAN,
+		DWordBigEndian = REG_DWORD_BIG_ENDIAN,
+		ExpandableString = REG_EXPAND_SZ,
+		Link = REG_LINK,
+		MultiString = REG_MULTI_SZ,
+		QWord = REG_QWORD,
+		QWordLittleEndian = REG_QWORD_LITTLE_ENDIAN,
+		String = REG_SZ,
+	};
+
 	using ::SERVICE_CONTROL_STATUS_REASON_PARAMS;
 
 	constexpr auto TimeZoneIdInvalid = TIME_ZONE_ID_INVALID;

@@ -1,27 +1,14 @@
 export module boring32.registry:value;
 import <string>;
 import <tuple>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 import boring32.strings;
 
 export namespace Boring32::Registry
 {
 	// https://docs.microsoft.com/en-us/windows/win32/sysinfo/registry-value-types
-	enum class ValueTypes : DWORD
-	{
-		None = REG_NONE,
-		Binary = REG_BINARY,
-		DWord = REG_DWORD,
-		DWordLittleEndian = REG_DWORD_LITTLE_ENDIAN,
-		DWordBigEndian = REG_DWORD_BIG_ENDIAN,
-		ExpandableString = REG_EXPAND_SZ,
-		Link = REG_LINK,
-		MultiString = REG_MULTI_SZ,
-		QWord = REG_QWORD,
-		QWordLittleEndian = REG_QWORD_LITTLE_ENDIAN,
-		String = REG_SZ,
-	};
+	using ValueTypes = Win32::ValueTypes;
 
 	template<ValueTypes V, typename T>
 	struct KeyValuePair
@@ -97,7 +84,7 @@ export namespace Boring32::Registry
 		{F()} -> std::convertible_to<std::invoke_result_t<OP<V, std::invoke_result_t<decltype(F)>>>>;
 	};
 
-	template<HKEY TParentKey, Strings::FixedString TSubKey, Strings::FixedString TValueName, ValueTypes TValueType, auto TDefaultValue = [] {} >
+	template<Win32::HKEY TParentKey, Strings::FixedString TSubKey, Strings::FixedString TValueName, ValueTypes TValueType, auto TDefaultValue = [] {} >
 		requires CheckInvocable<TDefaultValue, TValueType> // not really required due to the static_asserts below
 	class RegistryValue
 	{
@@ -124,21 +111,21 @@ export namespace Boring32::Registry
 				return TValueType;
 			}
 
-			static DWORD ReadDWord()
+			static Win32::DWORD ReadDWord()
 				requires (TValueType == ValueTypes::DWord)
 			{
-				DWORD out;
-				DWORD sizeInBytes = sizeof(out);
-				LSTATUS status = RegGetValueW(
+				Win32::DWORD out;
+				Win32::DWORD sizeInBytes = sizeof(out);
+				Win32::LSTATUS status = Win32::RegGetValueW(
 					TParentKey,
 					SubKey,
 					ValueName,
-					RRF_RT_REG_DWORD,
+					Win32::_RRF_RT_REG_DWORD,
 					nullptr,
 					&out,
 					&sizeInBytes
 				);
-				if (status != ERROR_SUCCESS)
+				if (status != Win32::ErrorCodes::Success)
 				{
 					if constexpr (ReturnDefault)
 						return TDefaultValue();
@@ -150,18 +137,18 @@ export namespace Boring32::Registry
 			static std::wstring ReadString()
 				requires (TValueType == ValueTypes::String)
 			{
-				DWORD sizeInBytes = 0;
+				Win32::DWORD sizeInBytes = 0;
 				// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew
-				LSTATUS statusCode = RegGetValueW(
+				Win32::LSTATUS statusCode = Win32::RegGetValueW(
 					TParentKey,
 					SubKey,
 					ValueName,
-					RRF_RT_REG_SZ,
+					Win32::_RRF_RT_REG_SZ,
 					nullptr,
 					nullptr,
 					&sizeInBytes
 				);
-				if (statusCode != ERROR_SUCCESS)
+				if (statusCode != Win32::ErrorCodes::Success)
 				{
 					if constexpr (ReturnDefault)
 						return TDefaultValue();
@@ -169,16 +156,16 @@ export namespace Boring32::Registry
 				}
 
 				std::wstring out(sizeInBytes / sizeof(wchar_t), '\0');
-				statusCode = RegGetValueW(
+				statusCode = Win32::RegGetValueW(
 					TParentKey,
 					SubKey,
 					ValueName,
-					RRF_RT_REG_SZ,
+					Win32::_RRF_RT_REG_SZ,
 					nullptr,
 					&out[0],
 					&sizeInBytes
 				);
-				if (statusCode != ERROR_SUCCESS)
+				if (statusCode != Win32::ErrorCodes::Success)
 				{
 					if constexpr (ReturnDefault)
 						return TDefaultValue();
@@ -198,7 +185,7 @@ export namespace Boring32::Registry
 			{
 				if constexpr (TValueType == ValueTypes::DWord)
 				{
-					static_assert(ThrowOnError or std::is_convertible_v<ReturnDefaultType, DWORD>, "Return type from default lambda should be DWORD or convertible to DWORD.");
+					static_assert(ThrowOnError or std::is_convertible_v<ReturnDefaultType, Win32::DWORD>, "Return type from default lambda should be DWORD or convertible to DWORD.");
 					return ReadDWord();
 				}
 				else if constexpr (TValueType == ValueTypes::String)
