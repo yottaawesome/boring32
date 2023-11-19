@@ -1,23 +1,23 @@
 export module boring32.security:securitydescriptor;
 import boring32.raii;
 import <string>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 
 export namespace Boring32::Security
 {
 	// See https://docs.microsoft.com/en-us/windows/win32/secauthz/access-control-components
-	class SecurityDescriptor
+	class SecurityDescriptor final
 	{
 		public:
 			struct Control
 			{
-				SECURITY_DESCRIPTOR_CONTROL Control;
-				DWORD Revision;
+				Win32::SECURITY_DESCRIPTOR_CONTROL Control;
+				Win32::DWORD Revision;
 			};
 
 		public:
-			virtual ~SecurityDescriptor() { Close(); }
+			~SecurityDescriptor() { Close(); }
 
 			SecurityDescriptor(SecurityDescriptor&& other) noexcept
 			{
@@ -33,82 +33,82 @@ export namespace Boring32::Security
 			}
 
 		public:
-			virtual SecurityDescriptor& operator=(const SecurityDescriptor&) = delete;
+			SecurityDescriptor& operator=(const SecurityDescriptor&) = delete;
 
-			virtual SecurityDescriptor& operator=(SecurityDescriptor&& other) noexcept
+			SecurityDescriptor& operator=(SecurityDescriptor&& other) noexcept
 			{
 				return Move(other);
 			}
 
 		public:
-			[[nodiscard]] virtual operator std::wstring() const noexcept
+			[[nodiscard]] operator std::wstring() const noexcept
 			{
 				return m_descriptorString;
 			}
 
-			[[nodiscard]] virtual operator PSECURITY_DESCRIPTOR() const noexcept
+			[[nodiscard]] operator Win32::PSECURITY_DESCRIPTOR() const noexcept
 			{
 				return m_descriptor.get();
 			}
 
 		public:
-			virtual void Close()
+			void Close()
 			{
 				m_descriptor.reset();
 			}
 
-			[[nodiscard]] virtual PSECURITY_DESCRIPTOR GetDescriptor() const noexcept
+			[[nodiscard]] Win32::PSECURITY_DESCRIPTOR GetDescriptor() const noexcept
 			{
 				return m_descriptor.get();
 			}
 			
-			[[nodiscard]] virtual const std::wstring& GetDescriptorString() const noexcept
+			[[nodiscard]] const std::wstring& GetDescriptorString() const noexcept
 			{
 				return m_descriptorString;
 			}
 
-			[[nodiscard]] virtual Control GetControl() const
+			[[nodiscard]] Control GetControl() const
 			{
 				SecurityDescriptor::Control c{ 0 };
 				// https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsecuritydescriptorcontrol
-				const bool success = GetSecurityDescriptorControl(
+				const bool success = Win32::GetSecurityDescriptorControl(
 					m_descriptor.get(),
 					&c.Control,
 					&c.Revision
 				);
 				if (!success)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("GetSecurityDescriptorControl() failed", lastError);
 				}
 				return c;
 			}
 
-		protected:
-			virtual void Create()
+		private:
+			void Create()
 			{
 				void* sd;
 				// https://docs.microsoft.com/en-us/windows/win32/secbp/creating-a-dacl
 				// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsecuritydescriptortosecuritydescriptora
-				const bool succeeded = ConvertStringSecurityDescriptorToSecurityDescriptorW(
+				const bool succeeded = Win32::ConvertStringSecurityDescriptorToSecurityDescriptorW(
 					m_descriptorString.c_str(),
-					SDDL_REVISION_1, // Must be SDDL_REVISION_1
+					Win32::SddlRevision1, // Must be SDDL_REVISION_1
 					&sd,
 					nullptr
 				);
 				if (!succeeded)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error(
 						"ConvertStringSecurityDescriptorToSecurityDescriptorW() failed",
 						lastError
 					);
 				}
 				m_descriptor =
-					RAII::LocalHeapUniquePtr<std::remove_pointer<PSECURITY_DESCRIPTOR>::type>(sd);
+					RAII::LocalHeapUniquePtr<std::remove_pointer<Win32::PSECURITY_DESCRIPTOR>::type>(sd);
 			}
 
-			virtual SecurityDescriptor& Move(SecurityDescriptor& other) noexcept
+			SecurityDescriptor& Move(SecurityDescriptor& other) noexcept
 			{
 				if (&other == this)
 					return *this;
@@ -117,8 +117,8 @@ export namespace Boring32::Security
 				return *this;
 			}
 
-		protected:
+		private:
 			std::wstring m_descriptorString;
-			RAII::LocalHeapUniquePtr<std::remove_pointer<PSECURITY_DESCRIPTOR>::type> m_descriptor;
+			RAII::LocalHeapUniquePtr<std::remove_pointer<Win32::PSECURITY_DESCRIPTOR>::type> m_descriptor;
 	};
 }

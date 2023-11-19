@@ -98,6 +98,8 @@ export namespace Boring32::Win32
 	using ::LPVOID;
 	using ::LPDWORD;
 	using ::LSA_UNICODE_STRING;
+	using ::SECURITY_DESCRIPTOR_CONTROL;
+	using ::PSECURITY_DESCRIPTOR;
 
 	using ::IXAudio2;
 	using ::IXAudio2MasteringVoice;
@@ -636,6 +638,7 @@ export namespace Boring32::Win32
 	using ::ImpersonateLoggedOnUser;
 	using ::RevertToSelf;
 	using ::RegOpenCurrentUser;
+	using ::GetSecurityDescriptorControl;
 
 
 	// WLAN
