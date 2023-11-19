@@ -623,6 +623,8 @@ export namespace Boring32::Win32
 	using ::RegCloseKey;
 	using ::FreeContextBuffer;
 
+	using ::SecBuffer;
+	using ::SecBufferDesc;
 	using ::SECURITY_STATUS;
 
 	enum class BufferType

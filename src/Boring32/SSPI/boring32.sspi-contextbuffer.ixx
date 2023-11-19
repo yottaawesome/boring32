@@ -1,6 +1,6 @@
 export module boring32.sspi:contextbuffer;
 import <vector>;
-import <win32.hpp>;
+import boring32.win32;
 
 export namespace Boring32::SSPI
 {
@@ -25,14 +25,14 @@ export namespace Boring32::SSPI
 		{
 			if (m_buffer.pvBuffer)
 			{
-				FreeContextBuffer(m_buffer.pvBuffer);
+				Win32::FreeContextBuffer(m_buffer.pvBuffer);
 				m_buffer = { 0 };
 			}
 		}
 
 		private:
-			SecBuffer m_buffer{ 0 };
-			SecBufferDesc m_desc{ 0 };
+			Win32::SecBuffer m_buffer{ 0 };
+			Win32::SecBufferDesc m_desc{ 0 };
 	};
 
 	
