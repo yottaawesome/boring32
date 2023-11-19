@@ -1,11 +1,7 @@
 export module boring32.sspi:buffertype;
-import <win32.hpp>;
+import boring32.win32;
 
 export namespace Boring32::SSPI
 {
-	enum class BufferType
-	{
-		Token = SECBUFFER_TOKEN,
-		Data = SECBUFFER_DATA
-	};
+	using BufferType = Win32::BufferType;
 }

@@ -625,6 +625,12 @@ export namespace Boring32::Win32
 
 	using ::SECURITY_STATUS;
 
+	enum class BufferType
+	{
+		Token = SECBUFFER_TOKEN,
+		Data = SECBUFFER_DATA
+	};
+
 	using ::HKEY__;
 
 	using ::CLSCTX;
