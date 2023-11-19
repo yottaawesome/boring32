@@ -791,6 +791,10 @@ export namespace Boring32::Win32
 
 	using ::HKEY__;
 
+	constexpr auto _DACL_SECURITY_INFORMATION=  DACL_SECURITY_INFORMATION;
+	
+	using ::TASK_CREATION;
+	using ::TASK_LOGON_TYPE;
 	using ::CLSCTX;
 	using ::_bstr_t;
 	using ::ITaskService;
@@ -798,6 +802,7 @@ export namespace Boring32::Win32
 	using ::IRegisteredTask;
 	using ::ITaskDefinition;
 	using ::ITriggerCollection;
+	using ::IRegisteredTaskCollection;
 	using ::ITrigger;
 	using ::IDailyTrigger;
 	using ::IRepetitionPattern;
