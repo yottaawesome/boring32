@@ -145,7 +145,17 @@ export namespace Boring32::Win32
 		String = REG_SZ,
 	};
 
+	constexpr auto _REG_LATEST_FORMAT = REG_LATEST_FORMAT;
+
+	constexpr auto _KEY_ALL_ACCESS = KEY_ALL_ACCESS;
+
 	using ::SERVICE_CONTROL_STATUS_REASON_PARAMS;
+
+	const auto _HKEY_CLASSES_ROOT = HKEY_CLASSES_ROOT;
+	const auto _HKEY_CURRENT_CONFIG = HKEY_CURRENT_CONFIG;
+	const auto _HKEY_CURRENT_USER = HKEY_CURRENT_USER;
+	const auto _HKEY_LOCAL_MACHINE = HKEY_LOCAL_MACHINE;
+	const auto _HKEY_USERS = HKEY_USERS;
 
 	constexpr auto TimeZoneIdInvalid = TIME_ZONE_ID_INVALID;
 	constexpr auto CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS = 0x0002; // not defined according to msdn
@@ -606,6 +616,12 @@ export namespace Boring32::Win32
 	using ::RegNotifyChangeKeyValue;
 	using ::SHDeleteKeyW;
 	using ::RegDeleteTreeW;
+	using ::RegOpenKeyExW;
+	using ::RegQueryInfoKeyW;
+	using ::RegEnumValueW;
+	using ::RegSaveKeyExW;
+	using ::RegCloseKey;
+	using ::HKEY__;
 
 	using ::CLSCTX;
 	using ::_bstr_t;
