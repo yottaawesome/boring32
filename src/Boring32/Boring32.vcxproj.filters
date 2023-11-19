@@ -155,17 +155,8 @@
     <ClCompile Include="WirelessLAN\boring32.wirelesslan.ixx" />
     <ClCompile Include="WirelessLAN\boring32.wirelesslan-session.ixx" />
     <ClCompile Include="WirelessLAN\boring32.wirelesslan-cleanup.ixx" />
-    <ClCompile Include="WirelessLAN\boring32.wirelesslan-session.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="WirelessLAN\boring32.wirelesslan-wirelessinterfaces.ixx" />
-    <ClCompile Include="WirelessLAN\boring32.wirelesslan-wirelessinterfaces.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="WirelessLAN\boring32.wirelesslan-wirelessinterface.ixx" />
-    <ClCompile Include="WirelessLAN\boring32.wirelesslan-wirelessinterface.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Computer\boring32.computer-processinfo.ixx" />
     <ClCompile Include="Networking\boring32.networking.ixx" />
     <ClCompile Include="Networking\boring32.networking-api.ixx" />
