@@ -192,7 +192,7 @@ export namespace Boring32::WinHttp::WebSockets
 				{
 					const Win32::DWORD success = Win32::WinHttp::WinHttpWebSocketClose(
 						m_winHttpWebSocket.Get(),
-						Win32::WinHttp::WINHTTP_WEB_SOCKET_SUCCESS_CLOSE_STATUS,
+						Win32::WinHttp::WINHTTP_WEB_SOCKET_CLOSE_STATUS::WINHTTP_WEB_SOCKET_SUCCESS_CLOSE_STATUS,
 						nullptr,
 						0
 					);

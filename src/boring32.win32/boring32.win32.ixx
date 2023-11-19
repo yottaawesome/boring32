@@ -867,7 +867,7 @@ export namespace Boring32::Win32
 		using ::WINHTTP_WEB_SOCKET_STATUS;
 		using ::WINHTTP_WEB_SOCKET_BUFFER_TYPE;
 		using ::WINHTTP_ASYNC_RESULT;
-		using ::WINHTTP_WEB_SOCKET_SUCCESS_CLOSE_STATUS;
+		using ::WINHTTP_WEB_SOCKET_CLOSE_STATUS;
 		using ::WinHttpCrackUrl;
 		using ::WinHttpGetProxyForUrl;
 		using ::WinHttpGetProxyForUrl;
@@ -888,6 +888,7 @@ export namespace Boring32::Win32
 		using ::WinHttpSetStatusCallback;
 		using ::WinHttpWebSocketClose;
 		using ::WinHttpQueryHeaders;
+		using ::WinHttpWebSocketSend;
 
 		constexpr auto _WINHTTP_ACCESS_TYPE_NAMED_PROXY = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
 		constexpr auto _WINHTTP_AUTOPROXY_CONFIG_URL = WINHTTP_AUTOPROXY_CONFIG_URL;
