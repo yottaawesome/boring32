@@ -626,13 +626,35 @@ export namespace Boring32::Win32
 	// WLAN
 	using ::PWLAN_INTERFACE_INFO_LIST;
 	using ::WLAN_INTERFACE_INFO_LIST;
+	using ::WLAN_OPCODE_VALUE_TYPE;
+	using ::WLAN_INTF_OPCODE;
 	using ::PWLAN_INTERFACE_INFO, ::WLAN_INTERFACE_INFO;
+	using ::DOT11_AUTH_CIPHER_PAIR;
+	using ::WLAN_AUTH_CIPHER_PAIR_LIST;
+	using ::WLAN_INTF_OPCODE;
+	using ::WLAN_CONNECTION_ATTRIBUTES;
+	using ::WLAN_STATISTICS;
+	using ::WLAN_INTERFACE_CAPABILITY;
+	using ::DOT11_BSS_TYPE;
 	using ::WlanCloseHandle;
 	using ::WlanFreeMemory;
 	using ::WlanEnumInterfaces;
+	using ::WlanQueryInterface;
+	using ::WlanGetInterfaceCapability;
+	// https://docs.microsoft.com/en-us/windows/win32/api/wlanapi/ne-wlanapi-wlan_interface_state-r1
+	enum class InterfaceState : int
+	{
+		// this is an enum type, so consider converting
+		NotReady = wlan_interface_state_not_ready,
+		Connected = wlan_interface_state_connected,
+		AdHocNetworkFormed = wlan_interface_state_ad_hoc_network_formed,
+		Disconnecting = wlan_interface_state_disconnecting,
+		Disconnected = wlan_interface_state_disconnected,
+		Associating = wlan_interface_state_associating,
+		Discovering = wlan_interface_state_discovering,
+		Authenticating = wlan_interface_state_authenticating
+	};
 	//
-
-
 
 	using ::SecBuffer;
 	using ::SecBufferDesc;
