@@ -401,6 +401,8 @@ export namespace Boring32::Win32
 	constexpr auto WaitAbandoned = WAIT_ABANDONED;
 	constexpr auto WaitIoCompletion = WAIT_IO_COMPLETION;
 
+	constexpr auto _KEY_READ = KEY_READ;
+
 	enum class WaitResult : unsigned long
 	{
 		Failed = WAIT_FAILED,
@@ -630,6 +632,9 @@ export namespace Boring32::Win32
 	using ::RegEnumValueW;
 	using ::RegSaveKeyExW;
 	using ::RegCloseKey;
+	using ::ImpersonateLoggedOnUser;
+	using ::RevertToSelf;
+	using ::RegOpenCurrentUser;
 
 
 	// WLAN

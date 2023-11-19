@@ -1,6 +1,6 @@
 export module boring32.security:impersonationcontext;
-import <win32.hpp>;
 import boring32.error;
+import boring32.win32;
 
 export namespace Boring32::Security
 {
@@ -18,15 +18,15 @@ export namespace Boring32::Security
 			{
 				Move(other);
 			}
-			ImpersonationContext(HANDLE const token)
+			ImpersonationContext(Win32::HANDLE const token)
 				: m_registryHive(nullptr)
 			{
-				if (!token || token == INVALID_HANDLE_VALUE)
+				if (!token || token == Win32::InvalidHandleValue)
 					throw Error::Boring32Error("token is invalid");
 				// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-impersonateloggedonuser
-				if (!ImpersonateLoggedOnUser(token))
+				if (!Win32::ImpersonateLoggedOnUser(token))
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("ImpersonateLoggedOnUser() failed", lastError);
 				}
 			}
@@ -40,20 +40,20 @@ export namespace Boring32::Security
 			{
 				if (m_registryHive)
 				{
-					RegCloseKey(m_registryHive);
+					Win32::RegCloseKey(m_registryHive);
 					m_registryHive = nullptr;
 				}
 				// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-reverttoself
-				return RevertToSelf();
+				return Win32::RevertToSelf();
 			}
 
-			virtual HKEY GetUserRegistry()
+			virtual Win32::HKEY GetUserRegistry()
 			{
 				if (m_registryHive == nullptr)
 				{
 					// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopencurrentuser
-					LSTATUS status = RegOpenCurrentUser(KEY_READ, &m_registryHive);
-					if (status != ERROR_SUCCESS)
+					Win32::LSTATUS status = Win32::RegOpenCurrentUser(Win32::_KEY_READ, &m_registryHive);
+					if (status != Win32::ErrorCodes::Success)
 						throw Error::NTStatusError("RegOpenCurrentUser() failed", status);
 				}
 				return m_registryHive;
@@ -68,6 +68,6 @@ export namespace Boring32::Security
 			}
 
 		protected:
-			HKEY m_registryHive;
+			Win32::HKEY m_registryHive;
 	};
 }
