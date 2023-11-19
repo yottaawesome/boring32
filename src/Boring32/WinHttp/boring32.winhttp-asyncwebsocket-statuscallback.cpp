@@ -1,6 +1,7 @@
 module boring32.winhttp:asyncwebsocket;
 import boring32.strings;
 import boring32.error;
+import boring32.win32;
 import <future>;
 import <string>;
 import <algorithm>;
@@ -57,11 +58,11 @@ namespace Boring32::WinHttp::WebSockets
 	}
 
 	void AsyncWebSocket::StatusCallback(
-		HINTERNET hInternet,
-		DWORD_PTR dwContext,
-		DWORD dwInternetStatus,
-		LPVOID lpvStatusInformation,
-		DWORD dwStatusInformationLength
+		Win32::WinHttp::HINTERNET hInternet,
+		Win32::DWORD_PTR dwContext,
+		Win32::DWORD dwInternetStatus,
+		Win32::LPVOID lpvStatusInformation,
+		Win32::DWORD dwStatusInformationLength
 	)
 	{
 		//std::wcout << L"AA " << GetCurrentThreadId() << std::endl;

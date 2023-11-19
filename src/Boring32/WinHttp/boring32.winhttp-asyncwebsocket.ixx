@@ -5,9 +5,9 @@ import <future>;
 import <memory>;
 import <algorithm>;
 import <iostream>;
-import <win32.hpp>;
 import boring32.async;
 import boring32.error;
+import boring32.win32;
 import :winhttphandle;
 import :websocketstatus;
 import :winhttphandle;
@@ -139,7 +139,7 @@ export namespace Boring32::WinHttp::WebSockets
 					reinterpret_cast<void*>(const_cast<char*>(&msg[0])),
 					static_cast<DWORD>(msg.size() * sizeof(char))
 				);
-				if (statusCode != ERROR_SUCCESS)
+				if (statusCode != Win32::ErrorCodes::Success)
 				{
 					m_status = WebSocketStatus::Error;
 					throw Error::Win32Error("WinHttpWebSocketSend() failed", statusCode);
@@ -161,7 +161,7 @@ export namespace Boring32::WinHttp::WebSockets
 					static_cast<DWORD>(buffer.size() * sizeof(char))
 				);
 				m_writeResult.Status = WriteResultStatus::Initiated;
-				if (statusCode != ERROR_SUCCESS)
+				if (statusCode != Win32::ErrorCodes::Success)
 				{
 					m_status = WebSocketStatus::Error;
 					m_writeResult.Status = WriteResultStatus::Error;
@@ -190,13 +190,13 @@ export namespace Boring32::WinHttp::WebSockets
 			{
 				if (m_winHttpWebSocket != nullptr && m_status == WebSocketStatus::Connected)
 				{
-					const DWORD success = WinHttpWebSocketClose(
+					const Win32::DWORD success = Win32::WinHttp::WinHttpWebSocketClose(
 						m_winHttpWebSocket.Get(),
-						WINHTTP_WEB_SOCKET_SUCCESS_CLOSE_STATUS,
+						Win32::WinHttp::WINHTTP_WEB_SOCKET_SUCCESS_CLOSE_STATUS,
 						nullptr,
 						0
 					);
-					if (success != ERROR_SUCCESS)
+					if (success != Win32::ErrorCodes::Success)
 					{
 						m_status = WebSocketStatus::Error;
 						throw Error::Win32Error("WinHttpWebSocketClose() failed", success);
@@ -262,16 +262,16 @@ export namespace Boring32::WinHttp::WebSockets
 				try
 				{
 					// Synchronous function
-					m_winHttpSession = WinHttpOpen(
+					m_winHttpSession = Win32::WinHttp::WinHttpOpen(
 						m_settings.UserAgent.c_str(),
-						WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY,
-						WINHTTP_NO_PROXY_NAME,
-						WINHTTP_NO_PROXY_BYPASS,
-						WINHTTP_FLAG_ASYNC
+						Win32::WinHttp::_WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY,
+						(Win32::LPCWSTR)Win32::WinHttp::_WINHTTP_NO_PROXY_NAME,
+						(Win32::LPCWSTR)Win32::WinHttp::_WINHTTP_NO_PROXY_BYPASS,
+						Win32::WinHttp::_WINHTTP_FLAG_ASYNC
 					);
 					if (!m_winHttpSession)
 					{
-						const auto lastError = GetLastError();
+						const auto lastError = Win32::GetLastError();
 						throw Error::Win32Error(
 							"WinHttpOpen() failed to open the WinHttp session",
 							lastError
@@ -279,7 +279,7 @@ export namespace Boring32::WinHttp::WebSockets
 					}
 
 					// Synchronous function
-					m_winHttpConnection = WinHttpConnect(
+					m_winHttpConnection = Win32::WinHttp::WinHttpConnect(
 						m_winHttpSession.Get(),
 						m_settings.Server.c_str(),
 						m_settings.Port,
@@ -287,38 +287,38 @@ export namespace Boring32::WinHttp::WebSockets
 					);
 					if (!m_winHttpConnection)
 					{
-						const auto lastError = GetLastError();
+						const auto lastError = Win32::GetLastError();
 						throw Error::Win32Error(
 							"WinHttpConnect() failed",
 							lastError
 						);
 					}
 
-					WINHTTP_STATUS_CALLBACK callbackStatus = WinHttpSetStatusCallback(
+					Win32::WinHttp::WINHTTP_STATUS_CALLBACK callbackStatus = Win32::WinHttp::WinHttpSetStatusCallback(
 						m_winHttpConnection.Get(),
 						StatusCallback,
-						WINHTTP_CALLBACK_FLAG_ALL_NOTIFICATIONS,
+						Win32::WinHttp::_WINHTTP_CALLBACK_FLAG_ALL_NOTIFICATIONS,
 						0
 					);
-					if (callbackStatus == WINHTTP_INVALID_STATUS_CALLBACK)
+					if (callbackStatus == Win32::WinHttp::_WINHTTP_INVALID_STATUS_CALLBACK)
 					{
-						const auto lastError = GetLastError();
+						const auto lastError = Win32::GetLastError();
 						throw Error::Win32Error(
 							"WinHttpSetStatusCallback() failed when setting callback",
 							lastError
 						);
 					}
 
-					DWORD_PTR _this = reinterpret_cast<DWORD_PTR>(this);
-					bool succeeded = WinHttpSetOption(
+					Win32::DWORD_PTR _this = reinterpret_cast<Win32::DWORD_PTR>(this);
+					bool succeeded = Win32::WinHttp::WinHttpSetOption(
 						m_winHttpConnection.Get(),
-						WINHTTP_OPTION_CONTEXT_VALUE,
+						Win32::WinHttp::_WINHTTP_OPTION_CONTEXT_VALUE,
 						reinterpret_cast<void*>(&_this),
-						sizeof(DWORD_PTR)
+						sizeof(Win32::DWORD_PTR)
 					);
 					if (!succeeded)
 					{
-						const auto lastError = GetLastError();
+						const auto lastError = Win32::GetLastError();
 						throw Error::Win32Error(
 							"WinHttpSetOption() failed when setting context value",
 							lastError
@@ -326,33 +326,33 @@ export namespace Boring32::WinHttp::WebSockets
 					}
 
 					// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpopenrequest
-					m_requestHandle = WinHttpOpenRequest(
+					m_requestHandle = Win32::WinHttp::WinHttpOpenRequest(
 						m_winHttpConnection.Get(),
 						L"GET",
 						path.c_str(),
 						nullptr,
 						nullptr,
 						nullptr,
-						WINHTTP_FLAG_SECURE
+						Win32::WinHttp::_WINHTTP_FLAG_SECURE
 					);
 					if (!m_requestHandle)
 					{
-						const auto lastError = GetLastError();
+						const auto lastError = Win32::GetLastError();
 						throw Error::Win32Error(
 							"WinHttpOpenRequest() failed",
 							lastError
 						);
 					}
 
-					succeeded = WinHttpSetOption(
+					succeeded = Win32::WinHttp::WinHttpSetOption(
 						m_requestHandle.Get(),
-						WINHTTP_OPTION_CONTEXT_VALUE,
+						Win32::WinHttp::_WINHTTP_OPTION_CONTEXT_VALUE,
 						reinterpret_cast<void*>(&_this),
-						sizeof(DWORD_PTR)
+						sizeof(Win32::DWORD_PTR)
 					);
 					if (!succeeded)
 					{
-						const auto lastError = GetLastError();
+						const auto lastError = Win32::GetLastError();
 						throw Error::Win32Error(
 							"WinHttpSetOption() failed when setting context value",
 							lastError
@@ -361,54 +361,54 @@ export namespace Boring32::WinHttp::WebSockets
 
 					if (m_settings.IgnoreSslErrors)
 					{
-						DWORD optionFlags = SECURITY_FLAG_IGNORE_ALL_CERT_ERRORS;
+						Win32::DWORD optionFlags = Win32::WinHttp::_SECURITY_FLAG_IGNORE_ALL_CERT_ERRORS;
 						// https://docs.microsoft.com/en-us/windows/win32/winhttp/option-flags
 						// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpsetoption
-						succeeded = WinHttpSetOption(
+						succeeded = Win32::WinHttp::WinHttpSetOption(
 							m_requestHandle.Get(),
-							WINHTTP_OPTION_SECURITY_FLAGS,
+							Win32::WinHttp::_WINHTTP_OPTION_SECURITY_FLAGS,
 							&optionFlags,
 							sizeof(optionFlags)
 						);
 						if (!succeeded)
 						{
-							const auto lastError = GetLastError();
+							const auto lastError = Win32::GetLastError();
 							throw Error::Win32Error("WinHttpSetOption() failed", lastError);
 						}
 					}
 
-					succeeded = WinHttpSetOption(
+					succeeded = Win32::WinHttp::WinHttpSetOption(
 						m_requestHandle.Get(),
-						WINHTTP_OPTION_UPGRADE_TO_WEB_SOCKET,
+						Win32::WinHttp::_WINHTTP_OPTION_UPGRADE_TO_WEB_SOCKET,
 						nullptr,
 						0
 					);
 					if (!succeeded)
 					{
-						const auto lastError = GetLastError();
+						const auto lastError = Win32::GetLastError();
 						throw Error::Win32Error("WinHttpSetOption() failed", lastError);
 					}
 
 					if (m_settings.ClientCert.GetCert())
 					{
 						// If so, we need to set the certificate option, and retry the request.
-						const bool setCertOption = WinHttpSetOption(
+						const bool setCertOption = Win32::WinHttp::WinHttpSetOption(
 							m_requestHandle.Get(),
-							WINHTTP_OPTION_CLIENT_CERT_CONTEXT,
+							Win32::WinHttp::_WINHTTP_OPTION_CLIENT_CERT_CONTEXT,
 							(void*)m_settings.ClientCert.GetCert(),
-							sizeof(CERT_CONTEXT)
+							sizeof(Win32::CERT_CONTEXT)
 						);
 						if (!setCertOption)
 						{
-							const auto lastError = GetLastError();
+							const auto lastError = Win32::GetLastError();
 							throw Error::Win32Error("WinHttpSetOption() failed for client certificate", lastError);
 						}
 					}
 
 					const wchar_t* connectionHeaders = m_settings.ConnectionHeaders.empty()
-						? WINHTTP_NO_ADDITIONAL_HEADERS
+						? (wchar_t*)Win32::WinHttp::_WINHTTP_NO_ADDITIONAL_HEADERS
 						: m_settings.ConnectionHeaders.c_str();
-					succeeded = WinHttpSendRequest(
+					succeeded = Win32::WinHttp::WinHttpSendRequest(
 						m_requestHandle.Get(),
 						connectionHeaders,
 						-1L,
@@ -419,7 +419,7 @@ export namespace Boring32::WinHttp::WebSockets
 					);
 					if (!succeeded)
 					{
-						const auto lastError = GetLastError();
+						const auto lastError = Win32::GetLastError();
 						throw Error::Win32Error(
 							"WinHttpSendRequest() failed on initial request",
 							lastError
@@ -460,7 +460,7 @@ export namespace Boring32::WinHttp::WebSockets
 				}
 
 				// This can potentially block
-				const DWORD statusCode = WinHttpWebSocketReceive(
+				const Win32::DWORD statusCode = Win32::WinHttp::WinHttpWebSocketReceive(
 					m_winHttpWebSocket.Get(),
 					currentBufferPointer,
 					m_bufferBlockSize,
@@ -468,7 +468,7 @@ export namespace Boring32::WinHttp::WebSockets
 					nullptr
 				);
 				// If the server terminates the connection, 12030 will returned.
-				if (statusCode != ERROR_SUCCESS)
+				if (statusCode != Win32::ErrorCodes::Success)
 				{
 					m_status = WebSocketStatus::Error;
 					m_readResult.Complete.Signal();
@@ -500,26 +500,26 @@ export namespace Boring32::WinHttp::WebSockets
 				if (!m_requestHandle)
 					throw Error::Boring32Error("m_requestHandle is nullptr");
 
-				m_winHttpWebSocket = WinHttpWebSocketCompleteUpgrade(m_requestHandle.Get(), 0);
+				m_winHttpWebSocket = Win32::WinHttp::WinHttpWebSocketCompleteUpgrade(m_requestHandle.Get(), 0);
 				if (!m_winHttpWebSocket)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error(
 						"WinHttpWebSocketCompleteUpgrade() failed",
 						lastError
 					);
 				}
 
-				DWORD_PTR dwThis = reinterpret_cast<DWORD_PTR>(this);
-				const bool succeeded = WinHttpSetOption(
+				Win32::DWORD_PTR dwThis = reinterpret_cast<Win32::DWORD_PTR>(this);
+				const bool succeeded = Win32::WinHttp::WinHttpSetOption(
 					m_winHttpWebSocket.Get(),
-					WINHTTP_OPTION_CONTEXT_VALUE,
+					Win32::WinHttp::_WINHTTP_OPTION_CONTEXT_VALUE,
 					reinterpret_cast<void*>(&dwThis),
-					sizeof(DWORD_PTR)
+					sizeof(Win32::DWORD_PTR)
 				);
 				if (!succeeded)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error(
 						"WinHttpSetOption() failed when setting context value",
 						lastError
@@ -533,11 +533,11 @@ export namespace Boring32::WinHttp::WebSockets
 			}
 
 			static void StatusCallback(
-				HINTERNET hInternet,
-				DWORD_PTR dwContext,
-				DWORD dwInternetStatus,
-				LPVOID lpvStatusInformation,
-				DWORD dwStatusInformationLength
+				Win32::WinHttp::HINTERNET hInternet,
+				Win32::DWORD_PTR dwContext,
+				Win32::DWORD dwInternetStatus,
+				Win32::LPVOID lpvStatusInformation,
+				Win32::DWORD dwStatusInformationLength
 			);
 			//static WebSocketReadResult AsyncReceive(AsyncWebSocket* socket);
 
@@ -549,12 +549,12 @@ export namespace Boring32::WinHttp::WebSockets
 			WebSocketStatus m_status;
 			WinHttpHandle m_requestHandle;
 			//CRITICAL_SECTION m_cs;
-			static DWORD m_bufferBlockSize;
+			static Win32::DWORD m_bufferBlockSize;
 			AsyncReadResult m_readResult;
 			ConnectionResult m_connectionResult;
 			WriteResult m_writeResult;
 	};
 	
-	DWORD AsyncWebSocket::m_bufferBlockSize = 1024;
+	Win32::DWORD AsyncWebSocket::m_bufferBlockSize = 1024;
 
 }

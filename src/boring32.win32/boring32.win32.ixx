@@ -95,6 +95,7 @@ export namespace Boring32::Win32
 	using ::HKEY;
 	using ::LONG;
 	using ::LPOVERLAPPED;
+	using ::LPVOID;
 
 	using ::IXAudio2;
 	using ::IXAudio2MasteringVoice;
@@ -858,19 +859,15 @@ export namespace Boring32::Win32
 	namespace WinHttp
 	{
 		using ::URL_COMPONENTS;
-		using ::WinHttpCrackUrl;
-		using ::HINTERNET;
 		using ::WINHTTP_AUTOPROXY_OPTIONS;
-		using ::WinHttpGetProxyForUrl;
-		constexpr auto _WINHTTP_ACCESS_TYPE_NAMED_PROXY = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
-		constexpr auto _WINHTTP_AUTOPROXY_CONFIG_URL = WINHTTP_AUTOPROXY_CONFIG_URL;
-		using ::WinHttpGetProxyForUrl;
-		constexpr auto _WINHTTP_OPTION_PROXY = WINHTTP_OPTION_PROXY;
-		using ::WinHttpSetOption;
+		using ::HINTERNET;
 		using ::WINHTTP_PROXY_INFO;
-		constexpr auto _WINHTTP_NO_PROXY_NAME = WINHTTP_NO_PROXY_NAME;
+		using ::WINHTTP_STATUS_CALLBACK;
+		using ::WinHttpCrackUrl;
+		using ::WinHttpGetProxyForUrl;
+		using ::WinHttpGetProxyForUrl;
+		using ::WinHttpSetOption;
 		using ::WinHttpOpen;
-		constexpr auto _WINHTTP_NO_PROXY_BYPASS = WINHTTP_NO_PROXY_BYPASS;
 		using ::WinHttpCloseHandle;
 		using ::WinHttpOpenRequest;
 		using ::WinHttpSendRequest;
@@ -879,7 +876,18 @@ export namespace Boring32::Win32
 		using ::WinHttpQueryDataAvailable;
 		using ::WinHttpReadData;
 		using ::WinHttpConnect;
+		using ::WinHttpSetOption;
+		using ::WinHttpWebSocketCompleteUpgrade;
+		using ::WinHttpWebSocketReceive;
+		using ::WinHttpSendRequest;
+		using ::WinHttpSetStatusCallback;
+		using ::WinHttpWebSocketClose;
 
+		constexpr auto _WINHTTP_ACCESS_TYPE_NAMED_PROXY = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
+		constexpr auto _WINHTTP_AUTOPROXY_CONFIG_URL = WINHTTP_AUTOPROXY_CONFIG_URL;
+		constexpr auto _WINHTTP_OPTION_PROXY = WINHTTP_OPTION_PROXY;
+		constexpr auto _WINHTTP_NO_PROXY_NAME = WINHTTP_NO_PROXY_NAME;
+		constexpr auto _WINHTTP_NO_PROXY_BYPASS = WINHTTP_NO_PROXY_BYPASS;
 		constexpr auto _WINHTTP_NO_REFERER = WINHTTP_NO_REFERER;
 		constexpr auto _WINHTTP_DEFAULT_ACCEPT_TYPES = WINHTTP_DEFAULT_ACCEPT_TYPES;
 		constexpr auto _WINHTTP_FLAG_SECURE = WINHTTP_FLAG_SECURE;
@@ -896,5 +904,14 @@ export namespace Boring32::Win32
 		constexpr auto _WINHTTP_NO_HEADER_INDEX = WINHTTP_NO_HEADER_INDEX;
 		constexpr auto _WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY = WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY;
 		constexpr auto _WINHTTP_ACCESS_TYPE_NO_PROXY = WINHTTP_ACCESS_TYPE_NO_PROXY;
+		constexpr auto _WINHTTP_OPTION_CONTEXT_VALUE = WINHTTP_OPTION_CONTEXT_VALUE;
+		constexpr auto _WINHTTP_OPTION_CLIENT_CERT_CONTEXT = WINHTTP_OPTION_CLIENT_CERT_CONTEXT;
+		constexpr auto _WINHTTP_OPTION_UPGRADE_TO_WEB_SOCKET = WINHTTP_OPTION_UPGRADE_TO_WEB_SOCKET;
+		constexpr auto _SECURITY_FLAG_IGNORE_ALL_CERT_ERRORS = SECURITY_FLAG_IGNORE_ALL_CERT_ERRORS;
+		const auto _WINHTTP_INVALID_STATUS_CALLBACK = WINHTTP_INVALID_STATUS_CALLBACK;
+		constexpr auto _WINHTTP_CALLBACK_FLAG_ALL_NOTIFICATIONS = WINHTTP_CALLBACK_FLAG_ALL_NOTIFICATIONS;
+		using ::WINHTTP_WEB_SOCKET_SUCCESS_CLOSE_STATUS;
+		constexpr auto _WINHTTP_FLAG_ASYNC = WINHTTP_FLAG_ASYNC;
+
 	}
 }
