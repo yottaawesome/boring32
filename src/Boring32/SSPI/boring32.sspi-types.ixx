@@ -1,6 +1,6 @@
 export module boring32.sspi:types;
 import <memory>;
-import <win32.hpp>;
+import boring32.win32;
 
 export namespace Boring32::SSPI
 {
@@ -8,13 +8,13 @@ export namespace Boring32::SSPI
 	{
 		void operator()(void* ptr)
 		{
-			FreeContextBuffer(ptr);
+			Win32::FreeContextBuffer(ptr);
 		}
 	};
 	using ContextBufferUniquePtr = std::unique_ptr<void, ContextBufferDeleter>;
 	using ContextBufferSharedPtr = std::shared_ptr<void>;
 	ContextBufferSharedPtr MakeContextBufferSharedPtr(void* ptr)
 	{
-		return { ptr, FreeContextBuffer };
+		return { ptr, Win32::FreeContextBuffer };
 	}
 }

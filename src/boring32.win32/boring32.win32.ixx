@@ -621,6 +621,10 @@ export namespace Boring32::Win32
 	using ::RegEnumValueW;
 	using ::RegSaveKeyExW;
 	using ::RegCloseKey;
+	using ::FreeContextBuffer;
+
+	using ::SECURITY_STATUS;
+
 	using ::HKEY__;
 
 	using ::CLSCTX;
