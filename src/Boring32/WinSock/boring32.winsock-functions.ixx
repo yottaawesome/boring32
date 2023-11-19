@@ -3,7 +3,7 @@ import <iostream>;
 import <vector>;
 import <ostream>;
 import <string>;
-import <win32.hpp>;
+import boring32.win32;
 import :winsockerror;
 import boring32.raii;
 import boring32.error;
@@ -12,16 +12,16 @@ import boring32.strings;
 
 namespace Boring32::WinSock
 {
-	struct OverlappedEx : public OVERLAPPED
+	struct OverlappedEx : public Win32::OVERLAPPED
 	{
-		OverlappedEx(Async::Event& a) : OVERLAPPED{}, e(a) {};
+		OverlappedEx(Async::Event& a) : Win32::OVERLAPPED{}, e(a) {};
 		Async::Event& e;
 	};
 
-	void WINAPI QueryCompleteCallback(
-		DWORD Error,
-		DWORD Bytes,
-		LPOVERLAPPED Overlapped
+	void __stdcall QueryCompleteCallback(
+		Win32::DWORD Error,
+		Win32::DWORD Bytes,
+		Win32::LPOVERLAPPED Overlapped
 	)
 	{
 		OverlappedEx* ex = (OverlappedEx*)Overlapped;
@@ -34,14 +34,14 @@ export namespace Boring32::WinSock
 	void IPv4NetworkAddressToString(const unsigned int ip, std::string& out)
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-htonl
-		const ULONG converted = htonl(ip);
+		const Win32::ULONG converted = Win32::WinSock::htonl(ip);
 
-		out.resize(INET6_ADDRSTRLEN);
+		out.resize(Win32::WinSock::_INET6_ADDRSTRLEN);
 		// https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-inet_ntop
-		PCSTR ipCString = inet_ntop(AF_INET6, &converted, &out[0], INET6_ADDRSTRLEN);
+		Win32::PCSTR ipCString = Win32::WinSock::inet_ntop(Win32::WinSock::_AF_INET6, &converted, &out[0], Win32::WinSock::_INET6_ADDRSTRLEN);
 		if (!ipCString)
 		{
-			const auto lastError = WSAGetLastError();
+			const auto lastError = Win32::WinSock::WSAGetLastError();
 			Error::ThrowNested(
 				Error::Win32Error("inet_ntop() failed", lastError, L"Ws2_32.dll"),
 				WinSockError("Could not convert IPv6 network address string")
@@ -54,14 +54,14 @@ export namespace Boring32::WinSock
 	void IPv6NetworkAddressToString(const unsigned int ip, std::string& out)
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-htonl
-		const ULONG converted = htonl(ip);
+		const Win32::ULONG converted = Win32::WinSock::htonl(ip);
 
-		out.resize(INET_ADDRSTRLEN);
+		out.resize(Win32::WinSock::_INET_ADDRSTRLEN);
 		// https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-inet_ntop
-		PCSTR ipCString = inet_ntop(AF_INET, &converted, &out[0], INET_ADDRSTRLEN);
+		Win32::PCSTR ipCString = Win32::WinSock::inet_ntop(Win32::WinSock::_AF_INET, &converted, &out[0], Win32::WinSock::_INET_ADDRSTRLEN);
 		if (!ipCString)
 		{
-			const auto lastError = WSAGetLastError();
+			const auto lastError = Win32::WinSock::WSAGetLastError();
 			Error::ThrowNested(
 				Error::Win32Error("inet_ntop() failed", lastError, L"Ws2_32.dll"),
 				WinSockError("Could not convert IPv4 network address string")
@@ -99,8 +99,8 @@ export namespace Boring32::WinSock
 
 	std::vector<NetworkingAddress> Resolve(const std::wstring& name)
 	{
-		PADDRINFOW resolvedNames = nullptr;
-		const int result = GetAddrInfoW(
+		Win32::WinSock::PADDRINFOW resolvedNames = nullptr;
+		const int result = Win32::WinSock::GetAddrInfoW(
 			name.c_str(),
 			L"domain",
 			nullptr,
@@ -115,15 +115,15 @@ export namespace Boring32::WinSock
 		}
 
 		std::vector<NetworkingAddress> names;
-		for (PADDRINFOW ptr = resolvedNames; ptr != nullptr; ptr = ptr->ai_next)
+		for (Win32::WinSock::PADDRINFOW ptr = resolvedNames; ptr != nullptr; ptr = ptr->ai_next)
 		{
 			switch (ptr->ai_family)
 			{
-			case AF_INET:
+			case Win32::WinSock::_AF_INET:
 			{
-				sockaddr_in* addr_in = (sockaddr_in*)ptr->ai_addr;
-				char ip[INET_ADDRSTRLEN];
-				inet_ntop(AF_INET, &(addr_in->sin_addr), ip, INET_ADDRSTRLEN);
+				Win32::WinSock::sockaddr_in* addr_in = (sockaddr_in*)ptr->ai_addr;
+				char ip[Win32::WinSock::_INET_ADDRSTRLEN];
+				Win32::WinSock::inet_ntop(Win32::WinSock::_AF_INET, &(addr_in->sin_addr), ip, Win32::WinSock::_INET_ADDRSTRLEN);
 				names.push_back({
 					.Family = AddressFamily::IPv4,
 					.Value = ip
@@ -131,11 +131,11 @@ export namespace Boring32::WinSock
 				break;
 			}
 
-			case AF_INET6:
+			case Win32::WinSock::_AF_INET6:
 			{
-				sockaddr_in6* addr_in6 = (sockaddr_in6*)ptr->ai_addr;
-				char ip[INET6_ADDRSTRLEN];
-				inet_ntop(AF_INET6, &(addr_in6->sin6_addr), ip, INET6_ADDRSTRLEN);
+				Win32::WinSock::sockaddr_in6* addr_in6 = (Win32::WinSock::sockaddr_in6*)ptr->ai_addr;
+				char ip[Win32::WinSock::_INET6_ADDRSTRLEN];
+				inet_ntop(Win32::WinSock::_AF_INET6, &(addr_in6->sin6_addr), ip, Win32::WinSock::_INET6_ADDRSTRLEN);
 				names.push_back({
 					.Family = AddressFamily::IPv6,
 					.Value = ip
@@ -146,28 +146,28 @@ export namespace Boring32::WinSock
 		}
 
 		if (resolvedNames)
-			FreeAddrInfoW(resolvedNames);
+			Win32::WinSock::FreeAddrInfoW(resolvedNames);
 
 		return names;
 	}
 
 	std::vector<NetworkingAddress> Resolve2(const std::wstring& name)
 	{
-		HANDLE  cancelHandle = nullptr;
-		PADDRINFOEXW queryResults = nullptr;
-		timeval t{
+		Win32::HANDLE cancelHandle = nullptr;
+		Win32::WinSock::PADDRINFOEXW queryResults = nullptr;
+		Win32::timeval t{
 			.tv_sec = 0,         /* seconds */
 			.tv_usec = 10        /* and microseconds */
 		};
 
 		Async::Event e(false, true, false);
 		OverlappedEx ov(e);
-		ADDRINFOEX hints{ .ai_family = AF_UNSPEC };
+		Win32::WinSock::ADDRINFOEX hints{ .ai_family = Win32::WinSock::_AF_UNSPEC };
 		//https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-getaddrinfoexw
-		const int error = GetAddrInfoExW(
+		const int error = Win32::WinSock::GetAddrInfoExW(
 			name.c_str(),
 			nullptr,
-			NS_ALL,
+			Win32::_NS_ALL,
 			nullptr,
 			&hints,
 			&queryResults,
@@ -176,50 +176,50 @@ export namespace Boring32::WinSock
 			QueryCompleteCallback,
 			&cancelHandle
 		);
-		if (error != WSA_IO_PENDING) Error::ThrowNested(
+		if (error != Win32::WinSock::_WSA_IO_PENDING) Error::ThrowNested(
 			Error::Win32Error("GetAddrInfoExW() failed", error, L"Ws2_32.dll"),
 			WinSockError("Could not get domain addr info")
 		);
 		e.WaitOnEvent();
 
-		if (ov.InternalHigh != NOERROR) Error::ThrowNested(
-			Error::Win32Error("GetAddrInfoExW() overlapped op failed", (DWORD)ov.InternalHigh),
+		if (ov.InternalHigh != Win32::ErrorCodes::NoError) Error::ThrowNested(
+			Error::Win32Error("GetAddrInfoExW() overlapped op failed", (Win32::DWORD)ov.InternalHigh),
 			WinSockError("Could not get domain addr info")
 		);
 
 		std::vector<NetworkingAddress> names;
-		for (PADDRINFOEXW ptr = queryResults; ptr != nullptr; ptr = ptr->ai_next)
+		for (Win32::WinSock::PADDRINFOEXW ptr = queryResults; ptr != nullptr; ptr = ptr->ai_next)
 		{
 			switch (ptr->ai_family)
 			{
-			case AF_INET:
-			{
-				std::string ip(INET_ADDRSTRLEN, '\0');
-				sockaddr_in* addr_in = (sockaddr_in*)ptr->ai_addr;
-				inet_ntop(AF_INET, &(addr_in->sin_addr), &ip[0], ip.length());
-				names.push_back({
-					.Family = AddressFamily::IPv4,
-					.Value = std::move(ip)
-					});
-				break;
-			}
+				case Win32::WinSock::_AF_INET:
+				{
+					std::string ip(Win32::WinSock::_INET_ADDRSTRLEN, '\0');
+					Win32::WinSock::sockaddr_in* addr_in = (Win32::WinSock::sockaddr_in*)ptr->ai_addr;
+					Win32::WinSock::inet_ntop(Win32::WinSock::_AF_INET, &(addr_in->sin_addr), &ip[0], ip.length());
+					names.push_back({
+						.Family = AddressFamily::IPv4,
+						.Value = std::move(ip)
+						});
+					break;
+				}
 
-			case AF_INET6:
-			{
-				std::string ip(INET6_ADDRSTRLEN, '\0');
-				sockaddr_in6* addr_in6 = (sockaddr_in6*)ptr->ai_addr;
-				inet_ntop(AF_INET6, &(addr_in6->sin6_addr), &ip[0], ip.length());
-				names.push_back({
-					.Family = AddressFamily::IPv6,
-					.Value = std::move(ip)
-					});
-				break;
-			}
+				case Win32::WinSock::_AF_INET6:
+				{
+					std::string ip(Win32::WinSock::_INET6_ADDRSTRLEN, '\0');
+					Win32::WinSock::sockaddr_in6* addr_in6 = (Win32::WinSock::sockaddr_in6*)ptr->ai_addr;
+					Win32::WinSock::inet_ntop(Win32::WinSock::_AF_INET6, &(addr_in6->sin6_addr), &ip[0], ip.length());
+					names.push_back({
+						.Family = AddressFamily::IPv6,
+						.Value = std::move(ip)
+						});
+					break;
+				}
 			}
 		}
 
 		if (queryResults)
-			FreeAddrInfoExW(queryResults);
+			Win32::WinSock::FreeAddrInfoExW(queryResults);
 
 		return names;
 	}
@@ -227,17 +227,17 @@ export namespace Boring32::WinSock
 	std::vector<NetworkingAddress> Resolve3(const std::wstring& name)
 	{
 		Async::Event opCompleted(false, true, false);
-		OVERLAPPED ov{ .hEvent = opCompleted.GetHandle() };
-		PADDRINFOEXW queryResults = nullptr;
-		timeval timeout{
+		Win32::OVERLAPPED ov{ .hEvent = opCompleted.GetHandle() };
+		Win32::WinSock::PADDRINFOEXW queryResults = nullptr;
+		Win32::timeval timeout{
 			.tv_sec = 10,         /* seconds */
 			.tv_usec = 0        /* and microseconds */
 		};
-		ADDRINFOEX hints{ .ai_family = AF_UNSPEC };
-		const int error = GetAddrInfoExW(
+		Win32::WinSock::ADDRINFOEX hints{ .ai_family = Win32::WinSock::_AF_UNSPEC };
+		const int error = Win32::WinSock::GetAddrInfoExW(
 			name.c_str(),
 			nullptr,
-			NS_DNS,
+			Win32::_NS_DNS,
 			nullptr,
 			&hints,
 			&queryResults,
@@ -246,50 +246,50 @@ export namespace Boring32::WinSock
 			nullptr,
 			nullptr
 		);
-		if (error != WSA_IO_PENDING) Error::ThrowNested(
+		if (error != Win32::WinSock::_WSA_IO_PENDING) Error::ThrowNested(
 			Error::Win32Error("GetAddrInfoExW() failed", error, L"Ws2_32.dll"),
 			WinSockError("Could not get domain addr info")
 		);
 
 		opCompleted.WaitOnEvent();
-		if (ov.InternalHigh != NOERROR) Error::ThrowNested(
-			Error::Win32Error("GetAddrInfoExW() overlapped op failed", (DWORD)ov.InternalHigh),
+		if (ov.InternalHigh != Win32::ErrorCodes::NoError) Error::ThrowNested(
+			Error::Win32Error("GetAddrInfoExW() overlapped op failed", (Win32::DWORD)ov.InternalHigh),
 			WinSockError("Could not get domain addr info")
 		);
 
 		std::vector<NetworkingAddress> names;
-		for (PADDRINFOEXW ptr = queryResults; ptr != nullptr; ptr = ptr->ai_next)
+		for (Win32::WinSock::PADDRINFOEXW ptr = queryResults; ptr != nullptr; ptr = ptr->ai_next)
 		{
 			switch (ptr->ai_family)
 			{
-			case AF_INET:
-			{
-				std::string ip(INET_ADDRSTRLEN, '\0');
-				sockaddr_in* addr_in = (sockaddr_in*)ptr->ai_addr;
-				inet_ntop(AF_INET, &(addr_in->sin_addr), &ip[0], ip.length());
-				names.push_back({
-					.Family = AddressFamily::IPv4,
-					.Value = std::move(ip)
+				case Win32::WinSock::_AF_INET:
+				{
+					std::string ip(Win32::WinSock::_INET_ADDRSTRLEN, '\0');
+					Win32::WinSock::sockaddr_in* addr_in = (Win32::WinSock::sockaddr_in*)ptr->ai_addr;
+					Win32::WinSock::inet_ntop(Win32::WinSock::_AF_INET, &(addr_in->sin_addr), &ip[0], ip.length());
+					names.push_back({
+						.Family = AddressFamily::IPv4,
+						.Value = std::move(ip)
 					});
-				break;
-			}
+					break;
+				}
 
-			case AF_INET6:
-			{
-				std::string ip(INET6_ADDRSTRLEN, '\0');
-				sockaddr_in6* addr_in6 = (sockaddr_in6*)ptr->ai_addr;
-				inet_ntop(AF_INET6, &(addr_in6->sin6_addr), &ip[0], ip.length());
-				names.push_back({
-					.Family = AddressFamily::IPv6,
-					.Value = std::move(ip)
+				case Win32::WinSock::_AF_INET6:
+				{
+					std::string ip(Win32::WinSock::_INET6_ADDRSTRLEN, '\0');
+					Win32::WinSock::sockaddr_in6* addr_in6 = (Win32::WinSock::sockaddr_in6*)ptr->ai_addr;
+					Win32::WinSock::inet_ntop(Win32::WinSock::_AF_INET6, &(addr_in6->sin6_addr), &ip[0], ip.length());
+					names.push_back({
+						.Family = AddressFamily::IPv6,
+						.Value = std::move(ip)
 					});
-				break;
-			}
+					break;
+				}
 			}
 		}
 
 		if (queryResults)
-			FreeAddrInfoExW(queryResults);
+			Win32::WinSock::FreeAddrInfoExW(queryResults);
 
 		return names;
 	}

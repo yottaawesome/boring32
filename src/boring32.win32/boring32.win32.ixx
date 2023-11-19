@@ -46,6 +46,7 @@ export namespace Boring32::Win32
 	using ::FILETIME;
 	using ::ULARGE_INTEGER;
 	using ::LPCSTR;
+	using ::PCSTR;
 	using ::COINIT;
 	using ::EOLE_AUTHENTICATION_CAPABILITIES;
 	using ::CRITICAL_SECTION;
@@ -93,6 +94,7 @@ export namespace Boring32::Win32
 	using ::LSTATUS;
 	using ::HKEY;
 	using ::LONG;
+	using ::LPOVERLAPPED;
 
 	using ::IXAudio2;
 	using ::IXAudio2MasteringVoice;
@@ -796,12 +798,34 @@ export namespace Boring32::Win32
 	using ::IWICImagingFactory;
 
 	constexpr auto _OPEN_EXISTING = OPEN_EXISTING;
-
+	using ::timeval;
+	constexpr auto _NS_ALL = NS_ALL;
+	constexpr auto _NS_DNS = NS_DNS;
 	namespace WinSock
 	{
+		using ::ADDRINFOW;
+		using ::ADDRINFOEXW;
+		using ::ADDRINFOEX;
 		using ::WSAData;
+		using ::PADDRINFOW;
+		using ::sockaddr_in;
+		using ::PADDRINFOEXW;
+		using ::sockaddr_in6;
+		using ::FreeAddrInfoW;
+		using ::FreeAddrInfoExW;
 		using ::WSAStartup;
 		using ::WSACleanup;
+		using ::htonl;
+		using ::inet_ntop;
+		using ::WSAGetLastError;
+		using ::GetAddrInfoW;
+		using ::GetAddrInfoExW;
+		constexpr auto _INET_ADDRSTRLEN = INET_ADDRSTRLEN;
+		constexpr auto _INET6_ADDRSTRLEN = INET6_ADDRSTRLEN;
+		constexpr auto _AF_INET = AF_INET;
+		constexpr auto _AF_INET6 = AF_INET6;
+		constexpr auto _AF_UNSPEC = AF_UNSPEC;
+		constexpr auto _WSA_IO_PENDING = WSA_IO_PENDING;
 	}
 
 	namespace WinHttp

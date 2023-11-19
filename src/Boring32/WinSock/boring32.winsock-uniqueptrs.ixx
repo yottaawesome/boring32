@@ -1,15 +1,15 @@
 export module boring32.winsock:uniqueptrs;
 import <memory>;
-import <win32.hpp>;
+import boring32.win32;
 
 export namespace Boring32::WinSock
 {
 	struct AddrInfoWDeleter final
 	{
-		void operator()(ADDRINFOW* obj)
+		void operator()(Win32::WinSock::ADDRINFOW* obj)
 		{
-			FreeAddrInfoW(obj);
+			Win32::WinSock::FreeAddrInfoW(obj);
 		}
 	};
-	using AddrInfoWUniquePtr = std::unique_ptr<ADDRINFOW, AddrInfoWDeleter>;
+	using AddrInfoWUniquePtr = std::unique_ptr<Win32::WinSock::ADDRINFOW, AddrInfoWDeleter>;
 }
