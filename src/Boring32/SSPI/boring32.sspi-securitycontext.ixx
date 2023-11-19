@@ -1,10 +1,10 @@
 export module boring32.sspi:securitycontext;
 import <vector>;
 import <string>;
-import <win32.hpp>;
-import :buffertype;
+import boring32.win32;
 import boring32.error;
 import boring32.com;
+import :buffertype;
 
 export namespace Boring32::SSPI
 {
@@ -33,29 +33,29 @@ export namespace Boring32::SSPI
 			{ }
 
 		public:
-			virtual void Init(PCredHandle credHandle)
+			virtual void Init(Win32::PCredHandle credHandle)
 			{
-				SecBufferDesc outBufferDesc{
+				Win32::SecBufferDesc outBufferDesc{
 					.ulVersion = 0,
 					.cBuffers = static_cast<unsigned>(m_outBuffers.size()),
 					.pBuffers = &m_outBuffers[0]
 				};
-				SecBufferDesc inBufferDesc{
+				Win32::SecBufferDesc inBufferDesc{
 					.ulVersion = 0,
 					.cBuffers = static_cast<unsigned>(m_inBuffers.size()),
 					.pBuffers = &m_inBuffers[0]
 				};
 
-				m_flags |= ISC_REQ_CONFIDENTIALITY;
+				m_flags |= Win32::_ISC_REQ_CONFIDENTIALITY;
 				if (m_sspiAllocatedBuffers)
-					m_flags |= ISC_REQ_ALLOCATE_MEMORY;
+					m_flags |= Win32::_ISC_REQ_ALLOCATE_MEMORY;
 
-				TimeStamp lifetime;
-				ULONG contextAttributes;
+				Win32::TimeStamp lifetime;
+				Win32::ULONG contextAttributes;
 				// https://learn.microsoft.com/en-us/windows/win32/secauthn/initializesecuritycontext--general
 				// https://learn.microsoft.com/en-us/windows/win32/secauthn/initializesecuritycontext--schannel
 				// https://learn.microsoft.com/en-us/windows/win32/api/sspi/nf-sspi-initializesecuritycontextw
-				const SECURITY_STATUS status = InitializeSecurityContextW(
+				const Win32::SECURITY_STATUS status = Win32::InitializeSecurityContextW(
 					credHandle,
 					&m_ctxHandle,
 					&m_target[0],
@@ -104,13 +104,13 @@ export namespace Boring32::SSPI
 			}
 
 		protected:
-			SecHandle m_context { 0 };
+			Win32::SecHandle m_context { 0 };
 			bool m_initialised = false;
-			std::vector<SecBuffer> m_inBuffers;
-			std::vector<SecBuffer> m_outBuffers;
+			std::vector<Win32::SecBuffer> m_inBuffers;
+			std::vector<Win32::SecBuffer> m_outBuffers;
 			unsigned m_flags = 0;
 			bool m_sspiAllocatedBuffers = false;
-			CtxtHandle m_ctxHandle { 0 };
+			Win32::CtxtHandle m_ctxHandle { 0 };
 			std::wstring m_target;
 	};
 }

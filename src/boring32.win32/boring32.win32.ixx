@@ -621,12 +621,31 @@ export namespace Boring32::Win32
 	using ::RegEnumValueW;
 	using ::RegSaveKeyExW;
 	using ::RegCloseKey;
-	using ::FreeContextBuffer;
 
 	using ::SecBuffer;
 	using ::SecBufferDesc;
 	using ::SECURITY_STATUS;
-
+	using ::SCHANNEL_CRED;
+	using ::CredHandle;
+	using ::PCredHandle;
+	using ::TimeStamp;
+	using ::SCH_CREDENTIALS;
+	using ::CtxtHandle;
+	using ::SecHandle;
+	using ::FreeContextBuffer;
+	using ::FreeCredentialsHandle;
+	using ::AcquireCredentialsHandleW;
+	using ::InitializeSecurityContextW;
+	constexpr auto _SEC_E_OK = SEC_E_OK;
+	constexpr auto _SP_PROT_TLS1 = SP_PROT_TLS1;
+	constexpr auto _SCH_CRED_NO_DEFAULT_CREDS = SCH_CRED_NO_DEFAULT_CREDS;
+	constexpr auto _SCH_CRED_MANUAL_CRED_VALIDATION = SCH_CRED_MANUAL_CRED_VALIDATION;
+	constexpr auto _SECPKG_CRED_OUTBOUND = SECPKG_CRED_OUTBOUND;
+	constexpr auto _UNISP_NAME_W = UNISP_NAME_W;
+	constexpr auto _SCHANNEL_CRED_VERSION = SCHANNEL_CRED_VERSION;
+	constexpr auto _SCH_CREDENTIALS_VERSION = SCH_CREDENTIALS_VERSION;
+	constexpr auto _ISC_REQ_CONFIDENTIALITY = ISC_REQ_CONFIDENTIALITY;
+	constexpr auto _ISC_REQ_ALLOCATE_MEMORY = ISC_REQ_ALLOCATE_MEMORY;
 	enum class BufferType
 	{
 		Token = SECBUFFER_TOKEN,
