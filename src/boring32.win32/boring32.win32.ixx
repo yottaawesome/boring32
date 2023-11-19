@@ -103,6 +103,15 @@ export namespace Boring32::Win32
 	using ::SID_IDENTIFIER_AUTHORITY;
 	using ::PSID_IDENTIFIER_AUTHORITY;
 	using ::PDWORD;
+	using ::LSA_HANDLE;
+	using ::LSA_OBJECT_ATTRIBUTES;
+	using ::ACCESS_MASK;
+
+	using ::LsaClose;
+	using ::LsaOpenPolicy;
+	using ::LsaNtStatusToWinError;
+	using ::LsaAddAccountRights;
+	using ::LsaRemoveAccountRights;
 
 	using ::IXAudio2;
 	using ::IXAudio2MasteringVoice;
@@ -656,6 +665,17 @@ export namespace Boring32::Win32
 	using ::AddSIDToBoundaryDescriptor;
 	using ::CreatePrivateNamespaceW;
 	using ::OpenPrivateNamespaceW;
+
+	// https://blog.katastros.com/a?ID=00750-8d94e2aa-ea28-4faf-b67d-57642f88b0bb
+	inline bool NT_SUCCESS(const NTSTATUS status) noexcept
+	{
+		return status >= 0;
+	}
+
+	inline bool NT_ERROR(const NTSTATUS status) noexcept
+	{
+		return status < 0;
+	}
 
 	using ::WELL_KNOWN_SID_TYPE;
 
