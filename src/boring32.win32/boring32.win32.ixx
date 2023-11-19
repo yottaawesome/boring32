@@ -108,7 +108,27 @@ export namespace Boring32::Win32
 	using ::ACCESS_MASK;
 	using ::SECURITY_IMPERSONATION_LEVEL;
 	using ::TOKEN_TYPE;
+	using ::LUID;
+	using ::TOKEN_PRIVILEGES;
+	using ::TOKEN_MANDATORY_LABEL;
+	using ::TOKEN_INFORMATION_CLASS;
+	using ::PTOKEN_GROUPS;
+	using ::SID_NAME_USE;
+	using ::PBYTE;
+	using ::LUID_AND_ATTRIBUTES;
+	using ::PRIVILEGE_SET;
+	using ::SID_NAME_USE;
 
+	constexpr auto _SE_PRIVILEGE_ENABLED = SE_PRIVILEGE_ENABLED;
+	constexpr auto _SE_GROUP_INTEGRITY = SE_GROUP_INTEGRITY;
+	constexpr auto _SE_GROUP_ENABLED = SE_GROUP_ENABLED;
+	constexpr auto _SE_GROUP_USE_FOR_DENY_ONLY = SE_GROUP_USE_FOR_DENY_ONLY;
+	constexpr auto _SE_PRIVILEGE_ENABLED_BY_DEFAULT = SE_PRIVILEGE_ENABLED_BY_DEFAULT;
+	constexpr auto _SE_PRIVILEGE_REMOVED= SE_PRIVILEGE_REMOVED;
+	constexpr auto _SE_PRIVILEGE_USED_FOR_ACCESS= SE_PRIVILEGE_USED_FOR_ACCESS;
+	constexpr auto _PRIVILEGE_SET_ALL_NECESSARY = PRIVILEGE_SET_ALL_NECESSARY;
+
+	using ::PrivilegeCheck;
 	using ::LsaClose;
 	using ::LsaOpenPolicy;
 	using ::LsaNtStatusToWinError;
@@ -116,6 +136,16 @@ export namespace Boring32::Win32
 	using ::LsaRemoveAccountRights;
 	using ::DuplicateTokenEx;
 	using ::GetCurrentProcess;
+	using ::OpenProcessToken;
+	using ::LookupPrivilegeValueW;
+	using ::AdjustTokenPrivileges;
+	using ::SetTokenInformation;
+	using ::GetTokenInformation;
+	using ::GetLengthSid;
+	using ::EqualSid;
+	using ::LookupAccountSidW;
+	using ::CheckTokenMembership;
+	using ::LookupPrivilegeNameW;
 
 	using ::IXAudio2;
 	using ::IXAudio2MasteringVoice;
@@ -372,6 +402,8 @@ export namespace Boring32::Win32
 		constexpr auto IoPending = ERROR_IO_PENDING;
 		constexpr auto AbandonedWait0 = ERROR_ABANDONED_WAIT_0;
 		constexpr auto PipeBusy = ERROR_PIPE_BUSY;
+		constexpr auto NoneMapped = ERROR_NONE_MAPPED;
+		constexpr auto NotAllAssigned = ERROR_NOT_ALL_ASSIGNED;
 	}
 
 	namespace NTStatus // winnt.h
@@ -719,6 +751,12 @@ export namespace Boring32::Win32
 	};
 	//
 
+	constexpr auto _SID_MAX_SUB_AUTHORITIES = SID_MAX_SUB_AUTHORITIES;
+	constexpr auto _TOKEN_QUERY = TOKEN_QUERY;
+
+	using ::PTOKEN_USER;
+	using ::TOKEN_USER;
+
 	using ::SecBuffer;
 	using ::SecBufferDesc;
 	using ::SECURITY_STATUS;
@@ -743,6 +781,8 @@ export namespace Boring32::Win32
 	constexpr auto _SCH_CREDENTIALS_VERSION = SCH_CREDENTIALS_VERSION;
 	constexpr auto _ISC_REQ_CONFIDENTIALITY = ISC_REQ_CONFIDENTIALITY;
 	constexpr auto _ISC_REQ_ALLOCATE_MEMORY = ISC_REQ_ALLOCATE_MEMORY;
+	constexpr auto _SECURITY_LOCAL_SYSTEM_RID = SECURITY_LOCAL_SYSTEM_RID;
+	constexpr ::SID_IDENTIFIER_AUTHORITY _SECURITY_NT_AUTHORITY = SECURITY_NT_AUTHORITY;
 	enum class BufferType
 	{
 		Token = SECBUFFER_TOKEN,
