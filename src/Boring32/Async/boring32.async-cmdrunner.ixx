@@ -10,9 +10,9 @@ namespace Boring32::Async
 {
     struct HandlerDeleter
     {
-        void operator()(Boring32::Win32::HANDLE h) { Boring32::Win32::CloseHandle(h); }
+        void operator()(Win32::HANDLE h) { Win32::CloseHandle(h); }
     };
-    using HandleUniquePtr = std::unique_ptr<std::remove_pointer_t<Boring32::Win32::HANDLE>, HandlerDeleter>;
+    using HandleUniquePtr = std::unique_ptr<std::remove_pointer_t<Win32::HANDLE>, HandlerDeleter>;
 
     constexpr int BUFSIZE = 4096;
 

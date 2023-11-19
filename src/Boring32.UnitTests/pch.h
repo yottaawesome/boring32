@@ -19,6 +19,7 @@
 #include <stacktrace>
 #include <source_location>
 #include <Windows.h>
+//#include <msi.h>
 #include "CppUnitTest.h"
 
 #endif //PCH_H

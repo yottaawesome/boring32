@@ -1,59 +1,6 @@
 module;
 
-// See https://learn.microsoft.com/en-us/cpp/build/walkthrough-header-units
-// https://learn.microsoft.com/en-us/cpp/build/walkthrough-import-stl-header-units
-#pragma warning(disable:4005)
-#pragma warning(disable:5106)
-// The above need to be disabled because of
-// https://developercommunity.visualstudio.com/t/warning-C4005:-Outptr:-macro-redefinit/1546919
-// No idea when this will get fixed, MS seems to be taking their time with it.
-// Including SDKDDKVer.h defines the highest available Windows platform.
-// If you wish to build your application for a previous Windows platform, include WinSDKVer.h and
-// set the _WIN32_WINNT macro to the platform you wish to support before including SDKDDKVer.h.
-#include <SDKDDKVer.h>
-#include <Windows.h>
-#include <Msi.h>
-#include <MsiQuery.h>
-#include <memoryapi.h>
-#include <Comdef.h>
-#include <sddl.h>
-#include <wlanapi.h> // unfortunately, not importable
-#include <wtypes.h>
-#include <guiddef.h>
-#include <pathcch.h> // unfortunately, not importable
-#include <Objbase.h>
-#include <netlistmgr.h>
-#include <Rpc.h>
-#include <shlwapi.h>
-#include <compressapi.h> //unfortunately, not importable
-#include <psapi.h> // module file mapping is invalid.
-#include <winsock2.h>
-#include <iphlpapi.h> // module file mapping is invalid.
-#include <iptypes.h> // module file mapping is invalid.
-#include <Ntsecapi.h>
-#include <taskschd.h>
-#include <wrl/client.h>
-#include <TlHelp32.h>
-#include <Jobapi2.h>
-#include <threadpoolapiset.h>
-#include <process.h>
-#include <bcrypt.h>
-#include <dpapi.h>
-#include <wincrypt.h>
-#include <cryptuiapi.h>
-#include <winnt.h>
-#include <wincodec.h>
-#include <xaudio2.h>
-#include <winhttp.h>
-#include <ws2tcpip.h>
-// See https://learn.microsoft.com/en-us/windows/win32/api/schannel/ns-schannel-sch_credentials
-#define SCHANNEL_USE_BLACKLISTS
-#include <schannel.h>
-#include <Schnlsp.h>
-// Must be defined for security.h
-// see https://stackoverflow.com/questions/11561475/sspi-header-file-fatal-error
-#define SECURITY_WIN32
-#include <security.h>
+#include "framework.h"
 
 export module boring32.win32;
 
@@ -143,6 +90,9 @@ export namespace Boring32::Win32
 	using ::SC_HANDLE;
 	using ::LPCWSTR;
 	using ::DWORD_PTR;
+	using ::LSTATUS;
+	using ::HKEY;
+	using ::LONG;
 
 	using ::IXAudio2;
 	using ::IXAudio2MasteringVoice;
@@ -635,6 +585,11 @@ export namespace Boring32::Win32
 	using ::ConnectNamedPipe;
 	using ::GlobalFree;
 	using ::WaitNamedPipeW;
+	using ::RegGetValueW;
+	using ::RegSetValueExW;
+	using ::RegNotifyChangeKeyValue;
+	using ::SHDeleteKeyW;
+	using ::RegDeleteTreeW;
 
 	using ::CLSCTX;
 	using ::_bstr_t;
@@ -645,6 +600,11 @@ export namespace Boring32::Win32
 	using ::IP_ADAPTER_ADDRESSES;
 	using ::_variant_t;
 	using ::GetAdaptersAddresses;
+
+	constexpr auto _RRF_RT_REG_SZ = RRF_RT_REG_SZ;
+	constexpr auto _RRF_RT_REG_DWORD = RRF_RT_REG_DWORD;
+	constexpr auto _RRF_RT_REG_QWORD = RRF_RT_REG_QWORD;
+	constexpr auto _REG_NOTIFY_CHANGE_LAST_SET = REG_NOTIFY_CHANGE_LAST_SET;
 
 	constexpr auto _SERVICE_STOP_REASON_FLAG_PLANNED = SERVICE_STOP_REASON_FLAG_PLANNED;
 	constexpr auto _SERVICE_STOP_REASON_MAJOR_NONE = SERVICE_STOP_REASON_MAJOR_NONE;
