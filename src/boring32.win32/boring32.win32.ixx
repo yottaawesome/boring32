@@ -100,6 +100,9 @@ export namespace Boring32::Win32
 	using ::LSA_UNICODE_STRING;
 	using ::SECURITY_DESCRIPTOR_CONTROL;
 	using ::PSECURITY_DESCRIPTOR;
+	using ::SID_IDENTIFIER_AUTHORITY;
+	using ::PSID_IDENTIFIER_AUTHORITY;
+	using ::PDWORD;
 
 	using ::IXAudio2;
 	using ::IXAudio2MasteringVoice;
@@ -639,7 +642,13 @@ export namespace Boring32::Win32
 	using ::RevertToSelf;
 	using ::RegOpenCurrentUser;
 	using ::GetSecurityDescriptorControl;
-
+	using ::ConvertSidToStringSidW;
+	using ::GetSidSubAuthorityCount;
+	using ::IsValidSid;
+	using ::GetSidIdentifierAuthority;
+	using ::GetSidSubAuthority;
+	using ::ConvertStringSidToSidW;
+	using ::AllocateAndInitializeSid;
 
 	// WLAN
 	using ::PWLAN_INTERFACE_INFO_LIST;

@@ -2,9 +2,9 @@ export module boring32.security:securityidentifier;
 import <vector>;
 import <string>;
 import <iostream>;
-import <win32.hpp>;
 import boring32.error;
 import boring32.raii;
+import boring32.win32;
 
 export namespace Boring32::Security
 {
@@ -45,8 +45,8 @@ export namespace Boring32::Security
 
 		public:
 			SecurityIdentifier(
-				const SID_IDENTIFIER_AUTHORITY& pIdentifierAuthority,
-				const std::vector<DWORD>& subAuthorities
+				const Win32::SID_IDENTIFIER_AUTHORITY& pIdentifierAuthority,
+				const std::vector<Win32::DWORD>& subAuthorities
 			) : m_sid(nullptr)
 			{
 				Create(pIdentifierAuthority, subAuthorities);
@@ -61,12 +61,12 @@ export namespace Boring32::Security
 		public:
 			operator std::wstring() const
 			{
-				LPWSTR string = nullptr;
+				Win32::LPWSTR string = nullptr;
 				// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertsidtostringsidw
-				const bool succeeded = ConvertSidToStringSidW(m_sid, &string);
+				const bool succeeded = Win32::ConvertSidToStringSidW(m_sid, &string);
 				if (!succeeded)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("ConvertSidToStringSidW() failed", lastError);
 				}
 				RAII::LocalHeapUniquePtr<wchar_t> ptr(string);
@@ -79,59 +79,59 @@ export namespace Boring32::Security
 				if (!m_sid)
 					return;
 				// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-freesid
-				if (FreeSid(m_sid))
+				if (Win32::FreeSid(m_sid))
 					std::wcerr << L"Failed to release SID\n";
 				m_sid = nullptr;
 			}
 
-			PSID GetSid() const noexcept
+			Win32::PSID GetSid() const noexcept
 			{
 				return m_sid;
 			}
 
-			BYTE GetSubAuthorityCount() const
+			Win32::BYTE GetSubAuthorityCount() const
 			{
 				if (!m_sid)
 					return 0;
-				if (!IsValidSid(m_sid))
+				if (!Win32::IsValidSid(m_sid))
 					throw Error::Boring32Error("Invalid SID");
 
 				// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsidsubauthoritycount
-				PUCHAR authorityCount = GetSidSubAuthorityCount(m_sid);
-				return static_cast<BYTE>(*authorityCount);
+				Win32::PUCHAR authorityCount = Win32::GetSidSubAuthorityCount(m_sid);
+				return static_cast<Win32::BYTE>(*authorityCount);
 			}
 
-			SID_IDENTIFIER_AUTHORITY GetIdentifierAuthority() const
+			Win32::SID_IDENTIFIER_AUTHORITY GetIdentifierAuthority() const
 			{
 				if (!m_sid)
 					throw Error::Boring32Error("No valid SID");
 				// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsididentifierauthority
-				if (PSID_IDENTIFIER_AUTHORITY identifier = GetSidIdentifierAuthority(m_sid))
+				if (Win32::PSID_IDENTIFIER_AUTHORITY identifier = Win32::GetSidIdentifierAuthority(m_sid))
 					return *identifier;
 
-				const auto lastError = GetLastError();
+				const auto lastError = Win32::GetLastError();
 				throw Error::Win32Error("GetSidIdentifierAuthority() failed", lastError);
 			}
 
-			DWORD GetSubAuthority(const DWORD index) const
+			Win32::DWORD GetSubAuthority(const Win32::DWORD index) const
 			{
 				if (!m_sid)
 					throw Error::Boring32Error("No valid SID");
 				// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsidsubauthority
-				if (PDWORD returnVal = GetSidSubAuthority(m_sid, index))
+				if (Win32::PDWORD returnVal = Win32::GetSidSubAuthority(m_sid, index))
 					return *returnVal;
 
-				const auto lastError = GetLastError();
+				const auto lastError = Win32::GetLastError();
 				throw Error::Win32Error("GetSidSubAuthority() failed", lastError);
 			}
 
-			std::vector<DWORD> GetAllSubAuthorities() const
+			std::vector<Win32::DWORD> GetAllSubAuthorities() const
 			{
 				if (!m_sid)
 					return {};
 
-				std::vector<DWORD> returnVal;
-				for (BYTE i = 0, count = GetSubAuthorityCount(); i < count; i++)
+				std::vector<Win32::DWORD> returnVal;
+				for (Win32::BYTE i = 0, count = GetSubAuthorityCount(); i < count; i++)
 					returnVal.push_back(GetSubAuthority(i));
 				return returnVal;
 			}
@@ -164,26 +164,26 @@ export namespace Boring32::Security
 				if (sidString.empty())
 					throw Error::Boring32Error("sidString cannot be empty");
 				// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw
-				if (!ConvertStringSidToSidW(sidString.c_str(), &m_sid))
+				if (!Win32::ConvertStringSidToSidW(sidString.c_str(), &m_sid))
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("ConvertStringSidToSidW() failed", lastError);
 				}
 			}
 
 			void Create(
-				const SID_IDENTIFIER_AUTHORITY& identifierAuthority,
-				const std::vector<DWORD>& subAuthorities
+				const Win32::SID_IDENTIFIER_AUTHORITY& identifierAuthority,
+				const std::vector<Win32::DWORD>& subAuthorities
 			)
 			{
 				// What's the reason for doing this?
-				std::vector<DWORD> subAuthorities2 = subAuthorities;
+				std::vector<Win32::DWORD> subAuthorities2 = subAuthorities;
 				if (subAuthorities2.size() != 8)
 					subAuthorities2.resize(8);
 
-				const bool succeeded = AllocateAndInitializeSid(
-					&const_cast<SID_IDENTIFIER_AUTHORITY&>(identifierAuthority),
-					static_cast<BYTE>(subAuthorities.size()),
+				const bool succeeded = Win32::AllocateAndInitializeSid(
+					&const_cast<Win32::SID_IDENTIFIER_AUTHORITY&>(identifierAuthority),
+					static_cast<Win32::BYTE>(subAuthorities.size()),
 					subAuthorities2[0],
 					subAuthorities2[1],
 					subAuthorities2[2],
@@ -196,12 +196,12 @@ export namespace Boring32::Security
 				);
 				if (!succeeded)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("Failed to initialise SID", lastError);
 				}
 			}
 			
 		private:
-			PSID m_sid = nullptr;
+			Win32::PSID m_sid = nullptr;
 	};
 }
