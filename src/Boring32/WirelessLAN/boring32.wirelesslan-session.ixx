@@ -1,8 +1,8 @@
 export module boring32.wirelesslan:session;
-import <win32.hpp>;
 import <format>;
 import <iostream>;
 import boring32.error;
+import boring32.win32;
 import :cleanup;
 import :wirelessinterfaces;
 
@@ -31,12 +31,12 @@ export namespace Boring32::WirelessLAN
 				m_negotiatedVersion = 0;
 			}
 
-			DWORD GetMaxClientVersion() const noexcept
+			Win32::DWORD GetMaxClientVersion() const noexcept
 			{
 				return m_maxClientVersion;
 			}
 
-			DWORD GetNegotiatedVersion() const noexcept
+			Win32::DWORD GetNegotiatedVersion() const noexcept
 			{
 				return m_negotiatedVersion;
 			}
@@ -49,14 +49,14 @@ export namespace Boring32::WirelessLAN
 					return m_wlanHandle;
 
 				// Open a WLAN session
-				HANDLE wlanHandle;
-				const DWORD status = WlanOpenHandle(
+				Win32::HANDLE wlanHandle;
+				const Win32::DWORD status = Win32::WlanOpenHandle(
 					m_maxClientVersion,
 					nullptr,
 					&m_negotiatedVersion,
 					&wlanHandle
 				);
-				if (status != ERROR_SUCCESS)
+				if (status != Win32::ErrorCodes::Success)
 					throw Boring32::Error::Win32Error("WlanOpenHandle() failed", status);
 				m_wlanHandle = CreateSharedWLANHandle(wlanHandle);
 				return m_wlanHandle;
@@ -64,8 +64,8 @@ export namespace Boring32::WirelessLAN
 			
 		private:
 			SharedWLANHandle m_wlanHandle;
-			DWORD m_maxClientVersion = 2;
-			DWORD m_negotiatedVersion = 0;
+			Win32::DWORD m_maxClientVersion = 2;
+			Win32::DWORD m_negotiatedVersion = 0;
 
 			// declared here due to initialisation order
 			// may need to reconsider this approach

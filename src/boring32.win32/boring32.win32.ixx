@@ -636,6 +636,7 @@ export namespace Boring32::Win32
 	using ::WLAN_STATISTICS;
 	using ::WLAN_INTERFACE_CAPABILITY;
 	using ::DOT11_BSS_TYPE;
+	using ::WlanOpenHandle;
 	using ::WlanCloseHandle;
 	using ::WlanFreeMemory;
 	using ::WlanEnumInterfaces;
