@@ -1,8 +1,8 @@
 export module boring32.security:token;
 import <string>;
-import <win32.hpp>;
 import boring32.raii;
 import boring32.error;
+import boring32.win32;
 import :constants;
 import :functions;
 
@@ -39,17 +39,17 @@ export namespace Boring32::Security
 			}
 
 		public:
-			Token(const DWORD desiredAccess)
+			Token(const Win32::DWORD desiredAccess)
 			{
-				m_token = GetProcessToken(GetCurrentProcess(), desiredAccess);
+				m_token = GetProcessToken(Win32::GetCurrentProcess(), desiredAccess);
 			}
 
-			Token(const HANDLE processHandle, const DWORD desiredAccess)
+			Token(const Win32::HANDLE processHandle, const Win32::DWORD desiredAccess)
 			{
 				m_token = GetProcessToken(processHandle, desiredAccess);
 			}
 
-			Token(const HANDLE token, const bool ownOrDuplicate)
+			Token(const Win32::HANDLE token, const bool ownOrDuplicate)
 			{
 				if (!token)
 					throw Error::Boring32Error("Token cannot be null");
@@ -61,17 +61,17 @@ export namespace Boring32::Security
 				}
 
 				// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-duplicatetokenex
-				const bool succeeded = DuplicateTokenEx(
+				const bool succeeded = Win32::DuplicateTokenEx(
 					token,
 					0,
 					nullptr,
-					SecurityImpersonation,
-					TokenPrimary,
+					Win32::SECURITY_IMPERSONATION_LEVEL::SecurityImpersonation,
+					Win32::TOKEN_TYPE::TokenPrimary,
 					&m_token
 				);
 				if (!succeeded)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("DuplicateTokenEx() failed", lastError);
 				}
 			}
@@ -109,17 +109,17 @@ export namespace Boring32::Security
 				Close();
 				if (other.m_token)
 				{
-					const bool succeeded = DuplicateTokenEx(
+					const bool succeeded = Win32::DuplicateTokenEx(
 						other.m_token.GetHandle(),
 						0,
 						nullptr,
-						SecurityImpersonation,
-						TokenPrimary,
+						Win32::SECURITY_IMPERSONATION_LEVEL::SecurityImpersonation,
+						Win32::TOKEN_TYPE::TokenPrimary,
 						&m_token
 					);
 					if (!succeeded)
 					{
-						const auto lastError = GetLastError();
+						const auto lastError = Win32::GetLastError();
 						throw Error::Win32Error("DuplicateTokenEx() failed", lastError);
 					}
 				}

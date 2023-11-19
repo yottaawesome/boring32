@@ -106,12 +106,16 @@ export namespace Boring32::Win32
 	using ::LSA_HANDLE;
 	using ::LSA_OBJECT_ATTRIBUTES;
 	using ::ACCESS_MASK;
+	using ::SECURITY_IMPERSONATION_LEVEL;
+	using ::TOKEN_TYPE;
 
 	using ::LsaClose;
 	using ::LsaOpenPolicy;
 	using ::LsaNtStatusToWinError;
 	using ::LsaAddAccountRights;
 	using ::LsaRemoveAccountRights;
+	using ::DuplicateTokenEx;
+	using ::GetCurrentProcess;
 
 	using ::IXAudio2;
 	using ::IXAudio2MasteringVoice;
