@@ -1,5 +1,5 @@
 export module boring32.winsock:socket;
-import "win32.hpp";
+import boring32.win32;
 import :winsockerror;
 
 export namespace Boring32::WinSock
@@ -21,7 +21,7 @@ export namespace Boring32::WinSock
 				Move(other);
 			}
 
-			Socket(const SOCKET socket)
+			Socket(const Win32::WinSock::SOCKET socket)
 			{
 				m_socket = socket;
 			}
@@ -33,14 +33,14 @@ export namespace Boring32::WinSock
 			)
 			{
 				// https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-socket
-				m_socket = socket(
+				m_socket = Win32::WinSock::socket(
 					addressFamily,
 					type,
 					protocol
 				);
-				if (m_socket == INVALID_SOCKET)
+				if (m_socket == Win32::WinSock::_INVALID_SOCKET)
 				{
-					const auto lastError = WSAGetLastError();
+					const auto lastError = Win32::WinSock::WSAGetLastError();
 					Error::ThrowNested(
 						Error::Win32Error("socket() failed", lastError, L"ws2_32.dll"),
 						WinSockError("Failed to open socket")
@@ -55,17 +55,17 @@ export namespace Boring32::WinSock
 			}
 
 			Socket& operator=(const Socket&) = delete;
-			operator SOCKET() const noexcept
+			operator Win32::WinSock::SOCKET() const noexcept
 			{
 				return m_socket;
 			}
 
-			SOCKET* operator&() noexcept
+			Win32::WinSock::SOCKET* operator&() noexcept
 			{
 				return &m_socket;
 			}
 
-			SOCKET operator*() noexcept
+			Win32::WinSock::SOCKET operator*() noexcept
 			{
 				return m_socket;
 			}
@@ -73,14 +73,14 @@ export namespace Boring32::WinSock
 		public:
 			void Close()
 			{
-				if (m_socket && m_socket != INVALID_SOCKET)
+				if (m_socket && m_socket != Win32::WinSock::_INVALID_SOCKET)
 				{
-					closesocket(m_socket);
-					m_socket = INVALID_SOCKET;
+					Win32::WinSock::closesocket(m_socket);
+					m_socket = Win32::WinSock::_INVALID_SOCKET;
 				}
 			}
 
-			SOCKET GetHandle() const noexcept
+			Win32::WinSock::SOCKET GetHandle() const noexcept
 			{
 				return m_socket;
 			}
@@ -90,11 +90,11 @@ export namespace Boring32::WinSock
 			{
 				Close();
 				m_socket = other.m_socket;
-				other.m_socket = INVALID_SOCKET;
+				other.m_socket = Win32::WinSock::_INVALID_SOCKET;
 				return *this;
 			}
 
 		private:
-			SOCKET m_socket = INVALID_SOCKET;
+			Win32::WinSock::SOCKET m_socket = Win32::WinSock::_INVALID_SOCKET;
 	};
 }

@@ -811,6 +811,7 @@ export namespace Boring32::Win32
 		using ::sockaddr_in;
 		using ::PADDRINFOEXW;
 		using ::sockaddr_in6;
+		using ::SOCKET;
 		using ::FreeAddrInfoW;
 		using ::FreeAddrInfoExW;
 		using ::WSAStartup;
@@ -820,12 +821,15 @@ export namespace Boring32::Win32
 		using ::WSAGetLastError;
 		using ::GetAddrInfoW;
 		using ::GetAddrInfoExW;
+		using ::closesocket;
+		using ::socket;
 		constexpr auto _INET_ADDRSTRLEN = INET_ADDRSTRLEN;
 		constexpr auto _INET6_ADDRSTRLEN = INET6_ADDRSTRLEN;
 		constexpr auto _AF_INET = AF_INET;
 		constexpr auto _AF_INET6 = AF_INET6;
 		constexpr auto _AF_UNSPEC = AF_UNSPEC;
 		constexpr auto _WSA_IO_PENDING = WSA_IO_PENDING;
+		constexpr auto _INVALID_SOCKET = INVALID_SOCKET;
 	}
 
 	namespace WinHttp
