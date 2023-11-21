@@ -11,7 +11,7 @@ import <iostream>;
 import <string>;
 import <filesystem>;
 import <vector>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.strings;
 import boring32.error;
 import :functions;
@@ -19,24 +19,8 @@ import :certificate;
 
 export namespace Boring32::Crypto
 {
-	enum class CertAddDisposition : DWORD
-	{
-		AddAlways = CERT_STORE_ADD_ALWAYS,
-		AddNew = CERT_STORE_ADD_NEW,
-		AddNewer = CERT_STORE_ADD_NEWER,
-		AddNewerInheritProperties = CERT_STORE_ADD_NEWER_INHERIT_PROPERTIES,
-		ReplaceExisting = CERT_STORE_ADD_REPLACE_EXISTING,
-		ReplaceExistingInheritProperties = CERT_STORE_ADD_REPLACE_EXISTING_INHERIT_PROPERTIES,
-		AddUseExisting = CERT_STORE_ADD_USE_EXISTING
-	};
-
-	enum class CertStoreCloseOptions : DWORD
-	{
-		Default = 0,
-		CheckNonFreedResources = CERT_CLOSE_STORE_CHECK_FLAG,
-		ForceFreeMemory = CERT_CLOSE_STORE_FORCE_FLAG
-	};
-	DEFINE_ENUM_FLAG_OPERATORS(CertStoreCloseOptions);
+	using CertAddDisposition = Win32::CertAddDisposition;
+	using CertStoreCloseOptions = Win32::CertStoreCloseOptions;
 
 	enum class CertStoreType
 	{
@@ -94,7 +78,7 @@ export namespace Boring32::Crypto
 			}
 
 			CertStore(
-				const HCERTSTORE certStore, 
+				const Win32::HCERTSTORE certStore, 
 				const CertStoreType storeType,
 				const bool ownedExclusively
 			) : m_certStore(certStore),
@@ -104,12 +88,12 @@ export namespace Boring32::Crypto
 				{
 					m_certStore = ownedExclusively
 						? certStore
-						: CertDuplicateStore(certStore);
+						: Win32::CertDuplicateStore(certStore);
 				}
 			}
 
 			CertStore(
-				const HCERTSTORE certStore, 
+				const Win32::HCERTSTORE certStore,
 				const CertStoreType storeType, 
 				const bool ownedExclusively,
 				const CertStoreCloseOptions closeOptions
@@ -121,7 +105,7 @@ export namespace Boring32::Crypto
 				{
 					m_certStore = ownedExclusively
 						? certStore
-						: CertDuplicateStore(certStore);
+						: Win32::CertDuplicateStore(certStore);
 				}
 			}
 
@@ -154,9 +138,9 @@ export namespace Boring32::Crypto
 					return;
 				// See https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certclosestore
 				// for additional resource notes under remarks
-				if (!CertCloseStore(m_certStore, (DWORD)m_closeOptions))
+				if (!Win32::CertCloseStore(m_certStore, (Win32::DWORD)m_closeOptions))
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					Error::Win32Error error("CertCloseStore() failed", lastError);
 					// ICEs -- disabled for now
 					std::wcerr << error.what() << std::endl;
@@ -164,7 +148,7 @@ export namespace Boring32::Crypto
 				m_certStore = nullptr;
 			}
 
-			[[nodiscard]] HCERTSTORE GetHandle() const noexcept
+			[[nodiscard]] Win32::HCERTSTORE GetHandle() const noexcept
 			{
 				return m_certStore;
 			}
@@ -180,24 +164,24 @@ export namespace Boring32::Crypto
 					throw Error::Boring32Error("m_certStore is null");
 
 				std::vector<Certificate> results;
-				PCCERT_CONTEXT currentCert = nullptr;
+				Win32::PCCERT_CONTEXT currentCert = nullptr;
 				// The cert is automatically freed by the next call to CertEnumCertificatesInStore
 				// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certenumcertificatesinstore
-				while (currentCert = CertEnumCertificatesInStore(m_certStore, currentCert))
+				while (currentCert = Win32::CertEnumCertificatesInStore(m_certStore, currentCert))
 				{
 					// I'm not sure if this intermediate error check is necessary.
 					// The MSDN sample doesn't do an error check, but I've added it
 					// just in case.
-					const DWORD lastError = GetLastError();
-					if (lastError != ERROR_FILE_NOT_FOUND)
+					const Win32::DWORD lastError = Win32::GetLastError();
+					if (lastError != Win32::ErrorCodes::FileNotFound)
 						throw Error::Win32Error(
 							"CertEnumCertificatesInStore() failed", 
 							lastError
 						);
 					results.emplace_back(currentCert, false);
 				}
-				const DWORD lastError = GetLastError();
-				if (lastError != CRYPT_E_NOT_FOUND && lastError != ERROR_NO_MORE_FILES)
+				const DWORD lastError = Win32::GetLastError();
+				if (lastError != Win32::CryptoErrorCodes::NotFound && lastError != Win32::ErrorCodes::NoMoreFiles)
 					throw Error::Win32Error("CertEnumCertificatesInStore() failed", lastError);
 
 				return results;
@@ -207,12 +191,12 @@ export namespace Boring32::Crypto
 				const std::wstring& subjectRdn
 			) const
 			{
-				PCCERT_CONTEXT currentCert = nullptr;
+				Win32::PCCERT_CONTEXT currentCert = nullptr;
 				Certificate cert;
-				while (currentCert = CertEnumCertificatesInStore(m_certStore, currentCert))
+				while (currentCert = Win32::CertEnumCertificatesInStore(m_certStore, currentCert))
 				{
 					cert.Attach(currentCert);
-					std::wstring name = cert.GetFormattedSubject(CERT_X500_NAME_STR);
+					std::wstring name = cert.GetFormattedSubject(Win32::CertX500NameStr);
 					if (name == subjectRdn)
 						return cert;
 
@@ -221,8 +205,8 @@ export namespace Boring32::Crypto
 					// GetFormattedSubjectName()
 					auto dummy = cert.Detach();
 				}
-				const DWORD lastError = GetLastError();
-				if (lastError != CRYPT_E_NOT_FOUND && lastError != ERROR_NO_MORE_FILES)
+				const Win32::DWORD lastError = Win32::GetLastError();
+				if (lastError != Win32::CryptoErrorCodes::NotFound && lastError != Win32::ErrorCodes::NoMoreFiles)
 					throw Error::Win32Error("CertEnumCertificatesInStore() failed", lastError);
 
 				return {};
@@ -232,22 +216,22 @@ export namespace Boring32::Crypto
 				const std::wstring& subjectCn
 			) const
 			{
-				PCCERT_CONTEXT currentCert = nullptr;
+				Win32::PCCERT_CONTEXT currentCert = nullptr;
 				while (currentCert = CertEnumCertificatesInStore(m_certStore, currentCert))
 				{
 					// The cert is automatically freed by the next call to CertEnumCertificatesInStore
 					// but Certificate also does its own cleanup, so signal that it needs to duplicate
 					// the handle
 					const Certificate cert(currentCert, false);
-					const std::wstring name = cert.GetFormattedSubject(CERT_X500_NAME_STR);
+					const std::wstring name = cert.GetFormattedSubject(Win32::CertX500NameStr);
 					const std::vector<std::wstring> tokens = Strings::TokeniseString(name, L", ");
 					for (const std::wstring& token : tokens)
 						if (token.starts_with(L"CN="))
 							if (subjectCn == Strings::Replace(token, L"CN=", L""))
 								return cert;
 				}
-				const DWORD lastError = GetLastError();
-				if (lastError != CRYPT_E_NOT_FOUND && lastError != ERROR_NO_MORE_FILES)
+				const Win32::DWORD lastError = Win32::GetLastError();
+				if (lastError != Win32::CryptoErrorCodes::NotFound && lastError != Win32::ErrorCodes::NoMoreFiles)
 					throw Error::Win32Error("CertEnumCertificatesInStore() failed", lastError);
 
 				return {};
@@ -261,7 +245,7 @@ export namespace Boring32::Crypto
 			}
 
 			[[nodiscard]] Certificate GetExisting(
-				const PCCERT_CONTEXT cert
+				const Win32::PCCERT_CONTEXT cert
 			) const
 			{
 				return { GetCertByArg(StoreFindType::Existing, cert), true };
@@ -272,9 +256,9 @@ export namespace Boring32::Crypto
 			) const
 			{
 				std::vector<std::byte> encodedBytes = EncodeAsnString(subjectName);
-				const CERT_NAME_BLOB blob{
-					.cbData = static_cast<DWORD>(encodedBytes.size()),
-					.pbData = reinterpret_cast<BYTE*>(&encodedBytes[0])
+				const Win32::CERT_NAME_BLOB blob{
+					.cbData = static_cast<Win32::DWORD>(encodedBytes.size()),
+					.pbData = reinterpret_cast<Win32::BYTE*>(&encodedBytes[0])
 				};
 				return { GetCertByArg(StoreFindType::SubjectName, &blob), true };
 			}
@@ -283,9 +267,9 @@ export namespace Boring32::Crypto
 				const std::vector<std::byte>& subjectName
 			) const
 			{
-				CERT_NAME_BLOB blob{
-					.cbData = static_cast<DWORD>(subjectName.size()),
-					.pbData = reinterpret_cast<BYTE*>(const_cast<std::byte*>(&subjectName[0]))
+				Win32::CERT_NAME_BLOB blob{
+					.cbData = static_cast<Win32::DWORD>(subjectName.size()),
+					.pbData = reinterpret_cast<Win32::BYTE*>(const_cast<std::byte*>(&subjectName[0]))
 				};
 				return { GetCertByArg(StoreFindType::SubjectName, &blob), true };
 			}
@@ -295,9 +279,9 @@ export namespace Boring32::Crypto
 			) const
 			{
 				std::vector<std::byte> encodedBytes = EncodeAsnString(subjectName);
-				const CERT_NAME_BLOB blob{
-					.cbData = static_cast<DWORD>(encodedBytes.size()),
-					.pbData = reinterpret_cast<BYTE*>(&encodedBytes[0])
+				const Win32::CERT_NAME_BLOB blob{
+					.cbData = static_cast<Win32::DWORD>(encodedBytes.size()),
+					.pbData = reinterpret_cast<Win32::BYTE*>(&encodedBytes[0])
 				};
 				return { GetCertByArg(StoreFindType::IssuerName, &blob), true };
 			}
@@ -314,9 +298,9 @@ export namespace Boring32::Crypto
 			) const
 			{
 				std::vector<std::byte> bytes = ToBinary(base64Signature);
-				const CRYPT_HASH_BLOB blob{
-					.cbData = static_cast<DWORD>(bytes.size()),
-					.pbData = reinterpret_cast<BYTE*>(&bytes[0])
+				const Win32::CRYPT_HASH_BLOB blob{
+					.cbData = static_cast<Win32::DWORD>(bytes.size()),
+					.pbData = reinterpret_cast<Win32::BYTE*>(&bytes[0])
 				};
 				return { GetCertByArg(StoreFindType::SignatureHash, &blob), true };
 			}
@@ -329,7 +313,7 @@ export namespace Boring32::Crypto
 			// Note that this function frees the cert. Increase the
 			// cert's reference count if this is not the wanted
 			// behaviour.
-			void DeleteCert(const CERT_CONTEXT* cert)
+			void DeleteCert(const Win32::CERT_CONTEXT* cert)
 			{
 				if (!cert)
 					throw Error::Boring32Error("cert is nullptr");
@@ -337,9 +321,9 @@ export namespace Boring32::Crypto
 					throw Error::Boring32Error("m_certStore is nullptr");
 
 				// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certdeletecertificatefromstore
-				if (!CertDeleteCertificateFromStore(cert))
+				if (!Win32::CertDeleteCertificateFromStore(cert))
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error(
 						"CertDeleteCertificateFromStore() failed",
 						lastError
@@ -347,7 +331,7 @@ export namespace Boring32::Crypto
 				}
 			}
 
-			void ImportCert(const CERT_CONTEXT* cert)
+			void ImportCert(const Win32::CERT_CONTEXT* cert)
 			{
 				if (!m_certStore)
 					throw Error::Boring32Error("m_certStore is nullptr");
@@ -355,9 +339,9 @@ export namespace Boring32::Crypto
 					throw Error::Boring32Error("cert is nullptr");
 
 				// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/ns-cryptuiapi-cryptui_wiz_import_src_info
-				CRYPTUI_WIZ_IMPORT_SRC_INFO info{
+				Win32::CRYPTUI_WIZ_IMPORT_SRC_INFO info{
 					.dwSize = sizeof(info),
-					.dwSubjectChoice = CRYPTUI_WIZ_IMPORT_SUBJECT_CERT_CONTEXT,
+					.dwSubjectChoice = Win32::_CRYPTUI_WIZ_IMPORT_SUBJECT_CERT_CONTEXT,
 					.pCertContext = cert,
 					.dwFlags = 0,
 					.pwszPassword = L""
@@ -374,9 +358,9 @@ export namespace Boring32::Crypto
 					throw Error::Boring32Error("m_certStore is nullptr");
 				// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/ns-cryptuiapi-cryptui_wiz_import_src_info
 				const std::wstring resolvedAbsolutePath = std::filesystem::absolute(path);
-				CRYPTUI_WIZ_IMPORT_SRC_INFO info{
+				Win32::CRYPTUI_WIZ_IMPORT_SRC_INFO info{
 					.dwSize = sizeof(info),
-					.dwSubjectChoice = CRYPTUI_WIZ_IMPORT_SUBJECT_FILE,
+					.dwSubjectChoice = Win32::_CRYPTUI_WIZ_IMPORT_SUBJECT_FILE,
 					.pwszFileName = resolvedAbsolutePath.c_str(),
 					.dwFlags = 0,
 					.pwszPassword = password.c_str()
@@ -384,7 +368,7 @@ export namespace Boring32::Crypto
 				ImportCertToStore(m_certStore, info);
 			}
 
-			void AddCertificate(const CERT_CONTEXT* cert, const CertAddDisposition disposition)
+			void AddCertificate(const Win32::CERT_CONTEXT* cert, const CertAddDisposition disposition)
 			{
 				if (!cert)
 					throw Error::Boring32Error("cert is null");
@@ -392,15 +376,15 @@ export namespace Boring32::Crypto
 					throw Error::Boring32Error("m_certStore is nullptr");
 
 				// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certaddcertificatecontexttostore
-				const bool succeeded = CertAddCertificateContextToStore(
+				const bool succeeded = Win32::CertAddCertificateContextToStore(
 					m_certStore,
 					cert,
-					static_cast<DWORD>(disposition),
+					static_cast<Win32::DWORD>(disposition),
 					nullptr
 				);
 				if (!succeeded)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error(
 						"CertAddCertificateContextToStore() failed",
 						lastError
@@ -408,7 +392,7 @@ export namespace Boring32::Crypto
 				}
 			}
 
-			PCCERT_CONTEXT GetCertByArg(
+			Win32::PCCERT_CONTEXT GetCertByArg(
 				const StoreFindType searchFlag,
 				const void* arg
 			) const
@@ -425,16 +409,16 @@ export namespace Boring32::Crypto
 				if (!m_certStore)
 					throw Error::Boring32Error("m_certStore is nullptr");
 
-				DWORD bytes = 0;
-				bool succeeded = CertGetStoreProperty(
+				Win32::DWORD bytes = 0;
+				bool succeeded = Win32::CertGetStoreProperty(
 					m_certStore,
-					CERT_STORE_LOCALIZED_NAME_PROP_ID,
+					Win32::_CERT_STORE_LOCALIZED_NAME_PROP_ID,
 					nullptr,
 					&bytes
 				);
 				if (!succeeded)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error(
 						"CertGetStoreProperty() failed",
 						lastError
@@ -442,15 +426,15 @@ export namespace Boring32::Crypto
 				}
 
 				std::wstring returnValue(bytes / sizeof(wchar_t), '\0');
-				succeeded = CertGetStoreProperty(
+				succeeded = Win32::CertGetStoreProperty(
 					m_certStore,
-					CERT_STORE_LOCALIZED_NAME_PROP_ID,
+					Win32::_CERT_STORE_LOCALIZED_NAME_PROP_ID,
 					&returnValue[0],
 					&bytes
 				);
 				if (!succeeded)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error(
 						"CertGetStoreProperty() failed",
 						lastError
@@ -477,7 +461,7 @@ export namespace Boring32::Crypto
 				m_closeOptions = other.m_closeOptions;
 				m_storeType = other.m_storeType;
 				if (other.m_certStore)
-					m_certStore = CertDuplicateStore(other.m_certStore);
+					m_certStore = Win32::CertDuplicateStore(other.m_certStore);
 				return *this;
 			}
 
@@ -509,17 +493,17 @@ export namespace Boring32::Crypto
 					{
 						// See https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopensystemstorew
 						// common store names: CA, MY, ROOT, SPC
-						m_certStore = CertOpenSystemStoreW(0, m_storeName.c_str());
+						m_certStore = Win32::CertOpenSystemStoreW(0, m_storeName.c_str());
 						break;
 					}
 
 					case CertStoreType::System:
 					{
-						m_certStore = CertOpenStore(
-							CERT_STORE_PROV_SYSTEM_REGISTRY_W,
-							PKCS_7_ASN_ENCODING | X509_ASN_ENCODING,
+						m_certStore = Win32::CertOpenStore(
+							Win32::_CERT_STORE_PROV_SYSTEM_REGISTRY_W,
+							Win32::Pkcs7AsnEncoding | Win32::X509AsnEncoding,
 							0,
-							CERT_STORE_OPEN_EXISTING_FLAG | CERT_SYSTEM_STORE_LOCAL_MACHINE,
+							Win32::_CERT_STORE_OPEN_EXISTING_FLAG | Win32::_CERT_SYSTEM_STORE_LOCAL_MACHINE,
 							m_storeName.c_str()
 						);
 						break;
@@ -527,11 +511,11 @@ export namespace Boring32::Crypto
 
 					case CertStoreType::InMemory:
 					{
-						m_certStore = CertOpenStore(
-							CERT_STORE_PROV_MEMORY,
-							PKCS_7_ASN_ENCODING | X509_ASN_ENCODING,
+						m_certStore = Win32::CertOpenStore(
+							Win32::_CERT_STORE_PROV_MEMORY,
+							Win32::Pkcs7AsnEncoding | Win32::X509AsnEncoding,
 							0,
-							CERT_SYSTEM_STORE_CURRENT_USER,
+							Win32::_CERT_SYSTEM_STORE_CURRENT_USER,
 							nullptr
 						);
 						break;
@@ -543,13 +527,13 @@ export namespace Boring32::Crypto
 
 				if (!m_certStore)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("CertOpenSystemStoreW() failed", lastError);
 				}
 			}
 
 		private:
-			HCERTSTORE m_certStore = nullptr;
+			Win32::HCERTSTORE m_certStore = nullptr;
 			std::wstring m_storeName;
 			CertStoreCloseOptions m_closeOptions = CertStoreCloseOptions::Default;
 			CertStoreType m_storeType = CertStoreType::CurrentUser;

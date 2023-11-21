@@ -220,9 +220,12 @@ export namespace Boring32::Win32
 
 	constexpr auto TimeZoneIdInvalid = TIME_ZONE_ID_INVALID;
 	constexpr auto CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS = 0x0002; // not defined according to msdn
+	constexpr auto _CRYPTUI_WIZ_IMPORT_SUBJECT_CERT_CONTEXT = CRYPTUI_WIZ_IMPORT_SUBJECT_CERT_CONTEXT;
 	constexpr auto CryptUiWizIgnoreNoUiFlagForCsps = CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS;
 	constexpr auto CryptUiWizNoUi = CRYPTUI_WIZ_NO_UI;
 	constexpr auto CryptUiWizImportAllowCert = CRYPTUI_WIZ_IMPORT_ALLOW_CERT;
+	constexpr auto _CRYPTUI_WIZ_IMPORT_SUBJECT_FILE = CRYPTUI_WIZ_IMPORT_SUBJECT_FILE;
+	using ::CRYPT_HASH_BLOB;
 
 	constexpr auto UsageMatchTypeAnd = USAGE_MATCH_TYPE_AND;
 
@@ -408,6 +411,8 @@ export namespace Boring32::Win32
 		constexpr auto PipeBusy = ERROR_PIPE_BUSY;
 		constexpr auto NoneMapped = ERROR_NONE_MAPPED;
 		constexpr auto NotAllAssigned = ERROR_NOT_ALL_ASSIGNED;
+		constexpr auto FileNotFound = ERROR_FILE_NOT_FOUND;
+		constexpr auto NoMoreFiles = ERROR_NO_MORE_FILES;
 	}
 
 	namespace NTStatus // winnt.h
@@ -716,6 +721,22 @@ export namespace Boring32::Win32
 	using ::CertDuplicateCertificateContext;
 	using ::CertGetCertificateContextProperty;
 	using ::CertVerifyCertificateChainPolicy;
+	using ::CertDuplicateStore;
+	using ::CertCloseStore;
+	using ::CertAddCertificateContextToStore;
+	using ::CertOpenSystemStoreW;
+	using ::CertOpenStore;
+	using ::CertEnumCertificatesInStore;
+	using ::CertDeleteCertificateFromStore;
+	using ::CertGetStoreProperty;
+
+	const auto _CERT_STORE_PROV_SYSTEM_REGISTRY_W = CERT_STORE_PROV_SYSTEM_REGISTRY_W;
+	constexpr auto _CERT_STORE_OPEN_EXISTING_FLAG = CERT_STORE_OPEN_EXISTING_FLAG;
+	constexpr auto _CERT_SYSTEM_STORE_LOCAL_MACHINE = CERT_SYSTEM_STORE_LOCAL_MACHINE;
+	const auto _CERT_STORE_PROV_MEMORY = CERT_STORE_PROV_MEMORY;
+	constexpr auto _CERT_SYSTEM_STORE_CURRENT_USER = CERT_SYSTEM_STORE_CURRENT_USER;
+
+	constexpr auto _CERT_STORE_LOCALIZED_NAME_PROP_ID = CERT_STORE_LOCALIZED_NAME_PROP_ID;
 	enum ChainVerificationPolicy : std::uintptr_t
 	{
 		Base = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_BASE),
@@ -727,6 +748,22 @@ export namespace Boring32::Win32
 		MicrosoftRoot = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_MICROSOFT_ROOT),
 		EV = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_EV),
 		SSLF12 = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_SSL_F12)
+	};
+	enum class CertAddDisposition : DWORD
+	{
+		AddAlways = CERT_STORE_ADD_ALWAYS,
+		AddNew = CERT_STORE_ADD_NEW,
+		AddNewer = CERT_STORE_ADD_NEWER,
+		AddNewerInheritProperties = CERT_STORE_ADD_NEWER_INHERIT_PROPERTIES,
+		ReplaceExisting = CERT_STORE_ADD_REPLACE_EXISTING,
+		ReplaceExistingInheritProperties = CERT_STORE_ADD_REPLACE_EXISTING_INHERIT_PROPERTIES,
+		AddUseExisting = CERT_STORE_ADD_USE_EXISTING
+	};
+	enum class CertStoreCloseOptions : DWORD
+	{
+		Default = 0,
+		CheckNonFreedResources = CERT_CLOSE_STORE_CHECK_FLAG,
+		ForceFreeMemory = CERT_CLOSE_STORE_FORCE_FLAG
 	};
 
 	using ::BCRYPT_ALG_HANDLE;
