@@ -397,9 +397,6 @@
     <ClCompile Include="XAudio2\boring32.xaudio2-xaudio2error.ixx" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Boring32.HeaderUnit\Boring32.HeaderUnit.vcxproj">
-      <Project>{396081f6-fee6-4a1a-b057-6a29b66fcaa6}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\boring32.win32\boring32.win32.vcxproj">
       <Project>{776fad4b-c69b-4bab-ad31-0022ec8ae66f}</Project>
     </ProjectReference>
