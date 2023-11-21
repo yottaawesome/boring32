@@ -1,26 +1,15 @@
 export module boring32.crypto:certificatechain;
 import <vector>;
-import <win32.hpp>;
 import <string>;
 import <format>;
+import boring32.win32;
 import boring32.error;
 import :certificate;
 import :functions;
 
 export namespace Boring32::Crypto
 {
-	enum ChainVerificationPolicy : std::uintptr_t
-	{
-		Base = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_BASE),
-		Authenticode = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_AUTHENTICODE),
-		AuthenticodeTS = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_AUTHENTICODE_TS),
-		SSL = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_SSL),
-		BasicConstraints = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_BASIC_CONSTRAINTS),
-		NTAuth = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_NT_AUTH),
-		MicrosoftRoot = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_MICROSOFT_ROOT),
-		EV = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_EV),
-		SSLF12 = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_SSL_F12)
-	};
+	using ChainVerificationPolicy = Win32::ChainVerificationPolicy;
 
 	class CertificateChain final
 	{
@@ -56,13 +45,13 @@ export namespace Boring32::Crypto
 
 		public:
 			CertificateChain(
-				PCCERT_CHAIN_CONTEXT chainContext,
+				Win32::PCCERT_CHAIN_CONTEXT chainContext,
 				const bool takeExclusiveOwnership
 			)
 			{
 				m_chainContext = takeExclusiveOwnership
 					? chainContext
-					: CertDuplicateCertificateChain(chainContext);
+					: Win32::CertDuplicateCertificateChain(chainContext);
 			}
 
 			CertificateChain(
@@ -77,7 +66,7 @@ export namespace Boring32::Crypto
 
 			CertificateChain(
 				const Certificate& contextToBuildFrom, 
-				HCERTSTORE store
+				Win32::HCERTSTORE store
 			)
 			{
 				m_chainContext = GenerateChainFrom(
@@ -91,7 +80,7 @@ export namespace Boring32::Crypto
 			{
 				if (m_chainContext)
 				{
-					CertFreeCertificateChain(m_chainContext);
+					Win32::CertFreeCertificateChain(m_chainContext);
 					m_chainContext = nullptr;
 				}
 			}
@@ -102,17 +91,17 @@ export namespace Boring32::Crypto
 				if (!m_chainContext)
 					throw Error::Boring32Error("m_chainContext is null");
 
-				CERT_CHAIN_POLICY_PARA para{
+				Win32::CERT_CHAIN_POLICY_PARA para{
 					.cbSize = sizeof(para),
 					.dwFlags = 0,
 					.pvExtraPolicyPara = nullptr
 				};
-				CERT_CHAIN_POLICY_STATUS status{
+				Win32::CERT_CHAIN_POLICY_STATUS status{
 					.cbSize = sizeof(status)
 				};
 				// https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certverifycertificatechainpolicy
-				const bool succeeded = CertVerifyCertificateChainPolicy(
-					reinterpret_cast<PCSTR>(policy),
+				const bool succeeded = Win32::CertVerifyCertificateChainPolicy(
+					reinterpret_cast<Win32::PCSTR>(policy),
 					m_chainContext,
 					&para,
 					&status
@@ -122,12 +111,12 @@ export namespace Boring32::Crypto
 				return status.dwError == 0;
 			}
 
-			PCCERT_CHAIN_CONTEXT GetChainContext() const noexcept
+			Win32::PCCERT_CHAIN_CONTEXT GetChainContext() const noexcept
 			{
 				return m_chainContext;
 			}
 
-			std::vector<Certificate> GetCertChainAt(const DWORD chainIndex) const
+			std::vector<Certificate> GetCertChainAt(const Win32::DWORD chainIndex) const
 			{
 				if (!m_chainContext)
 					throw Error::Boring32Error("m_chainContext is null");
@@ -142,7 +131,7 @@ export namespace Boring32::Crypto
 					);
 
 				std::vector<Certificate> certsInChain;
-				CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
+				Win32::CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
 				// This probably should never happen, but guard just in case
 				if (!simpleChain) 
 					throw Error::Boring32Error(
@@ -153,7 +142,7 @@ export namespace Boring32::Crypto
 					);
 
 				for (
-					DWORD certIndexInChain = 0;
+					Win32::DWORD certIndexInChain = 0;
 					certIndexInChain < simpleChain->cElement;
 					certIndexInChain++
 				)
@@ -168,8 +157,8 @@ export namespace Boring32::Crypto
 			}
 
 			Certificate GetCertAt(
-				const DWORD chainIndex, 
-				const DWORD certIndex
+				const Win32::DWORD chainIndex, 
+				const Win32::DWORD certIndex
 			) const
 			{
 				if (!m_chainContext)
@@ -183,7 +172,7 @@ export namespace Boring32::Crypto
 						chainIndex
 					);
 
-				CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
+				Win32::CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
 				if (!simpleChain)
 					throw Error::Boring32Error("simpleChain is null");
 				if (certIndex >= simpleChain->cElement)
@@ -199,7 +188,7 @@ export namespace Boring32::Crypto
 			}
 
 			Certificate GetFirstCertAt(
-				const DWORD chainIndex
+				const Win32::DWORD chainIndex
 			) const
 			{
 				if (!m_chainContext)
@@ -213,7 +202,7 @@ export namespace Boring32::Crypto
 						chainIndex
 					);
 
-				CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
+				Win32::CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
 				if (!simpleChain)
 					throw Error::Boring32Error("simpleChain is null");
 				if (simpleChain->cElement == 0)
@@ -222,7 +211,7 @@ export namespace Boring32::Crypto
 			}
 
 			Certificate GetLastCertAt(
-				const DWORD chainIndex
+				const Win32::DWORD chainIndex
 			) const
 			{
 				if (!m_chainContext)
@@ -236,7 +225,7 @@ export namespace Boring32::Crypto
 						chainIndex
 					);
 
-				CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
+				Win32::CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
 				if (!simpleChain)
 					throw Error::Boring32Error("simpleChain is null");
 				if (simpleChain->cElement == 0)
@@ -262,7 +251,7 @@ export namespace Boring32::Crypto
 
 				Close();
 				if (other.m_chainContext)
-					m_chainContext = CertDuplicateCertificateChain(other.m_chainContext);
+					m_chainContext = Win32::CertDuplicateCertificateChain(other.m_chainContext);
 
 				return *this;
 			}
@@ -280,6 +269,6 @@ export namespace Boring32::Crypto
 			}
 
 		private:
-			PCCERT_CHAIN_CONTEXT m_chainContext = nullptr;
+			Win32::PCCERT_CHAIN_CONTEXT m_chainContext = nullptr;
 	};
 }

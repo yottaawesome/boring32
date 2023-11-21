@@ -707,11 +707,27 @@ export namespace Boring32::Win32
 	using ::OpenPrivateNamespaceW;
 	using ::Sleep;
 
+	using ::CERT_SIMPLE_CHAIN;
+	using ::CERT_CHAIN_POLICY_PARA;
+	using ::CERT_CHAIN_POLICY_STATUS;
 	using ::CertVerifyTimeValidity;
 	using ::CertFreeCertificateContext;
 	using ::CertGetPublicKeyLength;
 	using ::CertDuplicateCertificateContext;
 	using ::CertGetCertificateContextProperty;
+	using ::CertVerifyCertificateChainPolicy;
+	enum ChainVerificationPolicy : std::uintptr_t
+	{
+		Base = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_BASE),
+		Authenticode = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_AUTHENTICODE),
+		AuthenticodeTS = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_AUTHENTICODE_TS),
+		SSL = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_SSL),
+		BasicConstraints = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_BASIC_CONSTRAINTS),
+		NTAuth = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_NT_AUTH),
+		MicrosoftRoot = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_MICROSOFT_ROOT),
+		EV = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_EV),
+		SSLF12 = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_SSL_F12)
+	};
 
 	using ::BCRYPT_ALG_HANDLE;
 	using ::BCRYPT_KEY_HANDLE;
