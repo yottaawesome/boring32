@@ -702,6 +702,21 @@ export namespace Boring32::Win32
 	using ::CreatePrivateNamespaceW;
 	using ::OpenPrivateNamespaceW;
 
+	using ::BCRYPT_ALG_HANDLE;
+	using ::BCRYPT_KEY_HANDLE;
+	using ::BCryptCloseAlgorithmProvider;
+	using ::BCryptGenerateSymmetricKey;
+	using ::BCryptGetProperty;
+	using ::BCryptSetProperty;
+	using ::BCryptEncrypt;
+	using ::BCryptDecrypt;
+	using ::BCryptOpenAlgorithmProvider;
+	constexpr auto _BCRYPT_OBJECT_LENGTH = BCRYPT_OBJECT_LENGTH;
+	constexpr auto _BCRYPT_BLOCK_LENGTH = BCRYPT_BLOCK_LENGTH;
+	constexpr auto _BCRYPT_CHAINING_MODE = BCRYPT_CHAINING_MODE;
+	constexpr auto _BCRYPT_AES_ALGORITHM = BCRYPT_AES_ALGORITHM;
+	constexpr auto _BCRYPT_BLOCK_PADDING = BCRYPT_BLOCK_PADDING;
+
 	// https://blog.katastros.com/a?ID=00750-8d94e2aa-ea28-4faf-b67d-57642f88b0bb
 	inline bool NT_SUCCESS(const NTSTATUS status) noexcept
 	{
