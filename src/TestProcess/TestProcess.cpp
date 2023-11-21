@@ -1,7 +1,6 @@
-#include <iostream>
-#include <chrono>
+import std;
+import std.compat;
 #include <Windows.h>
-#include <string>
 
 import boring32.async;
 import boring32.ipc;

@@ -96,8 +96,9 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
-      <EnableModules>true</EnableModules>
+      <EnableModules>false</EnableModules>
       <DisableSpecificWarnings>4005;5106</DisableSpecificWarnings>
+      <BuildStlModules>true</BuildStlModules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
