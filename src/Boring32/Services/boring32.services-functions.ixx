@@ -1,6 +1,6 @@
 export module boring32.services:functions;
-import <string>;
-import <format>;
+import std;
+import std.compat;
 import boring32.error;
 import boring32.win32;
 

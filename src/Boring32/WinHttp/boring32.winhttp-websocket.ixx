@@ -1,11 +1,6 @@
 export module boring32.winhttp:websocket;
-import <string>;
-import <vector>;
-import <atomic>;
-import <memory>;
-import <future>;
-import <sstream>;
-import <iostream>;
+import std;
+import std.compat;
 import boring32.error;
 import boring32.util;
 import boring32.async;

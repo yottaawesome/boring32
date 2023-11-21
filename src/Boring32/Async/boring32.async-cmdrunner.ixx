@@ -1,7 +1,6 @@
 export module boring32.async:cmdrunner;
-import <memory>;
-import <string>;
-import <vector>;
+import std;
+import std.compat;
 import boring32.win32;
 import boring32.error;
 import boring32.strings;

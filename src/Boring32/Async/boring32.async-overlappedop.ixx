@@ -1,5 +1,6 @@
 export module boring32.async:overlappedop;
-import <memory>;
+import std;
+import std.compat;
 import boring32.win32;
 import boring32.error;
 import :event;

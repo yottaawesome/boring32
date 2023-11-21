@@ -1,10 +1,6 @@
 export module boring32.async:event;
-import <string>;
-import <iostream>;
-import <chrono>;
-import <format>;
-import <optional>;
-import <source_location>;
+import std;
+import std.compat;
 import boring32.raii;
 import boring32.win32;
 import boring32.error;

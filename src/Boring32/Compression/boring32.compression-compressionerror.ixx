@@ -1,7 +1,6 @@
 export module boring32.compression:compressionerror;
-import <string>;
-import <stacktrace>;
-import <source_location>;
+import std;
+import std.compat;
 import boring32.error;
 
 export namespace Boring32::Compression

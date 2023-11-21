@@ -1,10 +1,8 @@
 export module boring32.error:ntstatuserror;
 import :boring32error;
 import :functions;
-import <string>;
-import <stacktrace>;
-import <source_location>;
-import <format>;
+import std;
+import std.compat;
 
 export namespace Boring32::Error
 {

@@ -1,7 +1,6 @@
 export module boring32.msi:database;
-import <string>;
-import <memory>;
-import <format>;
+import std;
+import std.compat;
 import boring32.win32;
 import boring32.error;
 

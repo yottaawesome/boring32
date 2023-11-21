@@ -1,5 +1,6 @@
 export module boring32.networking:api;
-import <vector>;
+import std;
+import std.compat;
 import boring32.error;
 import boring32.win32;
 

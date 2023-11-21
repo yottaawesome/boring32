@@ -10,14 +10,14 @@
 #define PCH_H
 
 // add headers that you want to pre-compile here
-#include <vector>
-#include <string>
-#include <thread>
-#include <chrono>
-#include <format>
-#include <stdexcept>
-#include <stacktrace>
-#include <source_location>
+//#include <vector>
+//#include <string>
+//#include <thread>
+//#include <chrono>
+//#include <format>
+//#include <stdexcept>
+//#include <stacktrace>
+//#include <source_location>
 #include <Windows.h>
 //#include <msi.h>
 #include "CppUnitTest.h"

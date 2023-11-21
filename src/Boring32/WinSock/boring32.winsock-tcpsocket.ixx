@@ -1,8 +1,6 @@
 export module boring32.winsock:tcpsocket;
-import <iostream>;
-import <format>;
-import <string>;
-import <vector>;
+import std;
+import std.compat;
 import boring32.win32;
 import boring32.error;
 import boring32.strings;

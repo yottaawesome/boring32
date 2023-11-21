@@ -1,7 +1,6 @@
 export module boring32.logging:functions;
-import <string>;
-import <source_location>;
-import <format>;
+import std;
+import std.compat;
 
 export namespace Boring32::Logging
 {

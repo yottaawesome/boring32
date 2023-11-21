@@ -1,7 +1,6 @@
 export module boring32.crypto:securestring;
-import <string>;
-import <vector>;
-import <algorithm>; // for std::fill()
+import std;
+import std.compat;
 import boring32.win32;
 import boring32.error;
 

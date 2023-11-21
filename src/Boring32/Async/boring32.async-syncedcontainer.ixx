@@ -1,7 +1,6 @@
 export module boring32.async:syncedcontainer;
-import <vector>;
-import <functional>;
-import <algorithm>;
+import std;
+import std.compat;
 import boring32.win32;
 import boring32.error;
 import :criticalsectionlock;

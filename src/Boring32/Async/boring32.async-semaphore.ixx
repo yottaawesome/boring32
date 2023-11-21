@@ -1,6 +1,6 @@
 export module boring32.async:semaphore;
-import <string>;
-import <chrono>;
+import std;
+import std.compat;
 import boring32.win32;
 import boring32.error;
 import boring32.raii;

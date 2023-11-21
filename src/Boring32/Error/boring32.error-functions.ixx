@@ -1,13 +1,6 @@
 export module boring32.error:functions;
-import <string>;
-import <iostream>;
-import <memory>;
-import <stdexcept>;
-import <sstream>;
-import <algorithm>;
-import <format>;
-import <stacktrace>;
-import <source_location>;
+import std;
+import std.compat;
 import boring32.win32;
 
 export namespace Boring32::Error

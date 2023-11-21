@@ -1,8 +1,6 @@
 export module boring32.winhttp:httpwebclient;
-import <string>;
-import <vector>;
-import <functional>;
-import <sstream>;
+import std;
+import std.compat;
 import boring32.error;
 import boring32.win32;
 import :winhttphandle;

@@ -1,7 +1,6 @@
 export module boring32.computer:processinfo;
-import <string>;
-import <vector>;
-import <memory>;
+import std;
+import std.compat;
 import boring32.win32;
 import boring32.raii;
 import boring32.error;

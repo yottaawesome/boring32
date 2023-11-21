@@ -1,5 +1,6 @@
 export module boring32.com:hresult;
-import <source_location>;
+import std;
+import std.compat;
 import boring32.win32;
 import boring32.error;
 import :functions;

@@ -1,6 +1,6 @@
 export module boring32.com:comthreadscope;
-import <atomic>;
-import <iostream>;
+import std;
+import std.compat;
 import boring32.win32;
 import boring32.error;
 import :functions;

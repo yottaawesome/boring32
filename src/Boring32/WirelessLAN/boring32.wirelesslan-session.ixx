@@ -1,6 +1,6 @@
 export module boring32.wirelesslan:session;
-import <format>;
-import <iostream>;
+import std;
+import std.compat;
 import boring32.error;
 import boring32.win32;
 import :cleanup;

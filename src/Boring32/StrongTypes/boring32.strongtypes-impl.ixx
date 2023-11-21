@@ -1,7 +1,6 @@
 export module boring32.strongtypes:impl;
-import <tuple>;
-import <type_traits>;
-import <utility>;
+import std;
+import std.compat;
 
 export namespace Boring32::StrongTypes
 {

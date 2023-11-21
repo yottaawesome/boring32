@@ -7,6 +7,9 @@ export module boring32.win32;
 // Experimental module intended to decouple the codebase from having to import Windows headers.
 export namespace Boring32::Win32
 {
+	constexpr auto _SECURITY_BUILTIN_DOMAIN_RID = SECURITY_BUILTIN_DOMAIN_RID;
+	constexpr auto _DOMAIN_ALIAS_RID_ADMINS = DOMAIN_ALIAS_RID_ADMINS;
+
 	using ::HMODULE;
 	using ::SECURITY_ATTRIBUTES;
 	using ::DWORD;

@@ -1,5 +1,6 @@
 export module boring32.security:token;
-import <string>;
+import std;
+import std.compat;
 import boring32.raii;
 import boring32.error;
 import boring32.win32;

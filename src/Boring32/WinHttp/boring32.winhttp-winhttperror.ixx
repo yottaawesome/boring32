@@ -1,8 +1,7 @@
 export module boring32.winhttp:winhttperror;
 import boring32.error;
-import <string>;
-import <source_location>;
-import <stacktrace>;
+import std;
+import std.compat;
 
 export namespace Boring32::WinHttp
 {

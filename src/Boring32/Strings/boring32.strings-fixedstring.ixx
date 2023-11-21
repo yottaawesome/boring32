@@ -1,5 +1,6 @@
 export module boring32.strings:fixedstring;
-import <string>;
+import std;
+import std.compat;
 
 export namespace Boring32::Strings
 {

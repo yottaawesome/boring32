@@ -1,7 +1,6 @@
 export module boring32.sspi:credential;
-import <memory>;
-import <source_location>;
-import <stacktrace>;
+import std;
+import std.compat;
 import boring32.win32;
 import boring32.error;
 
@@ -46,7 +45,7 @@ namespace Boring32::SSPI
 
 				// https://learn.microsoft.com/en-us/windows/win32/secauthn/acquirecredentialshandle--general
 				CredentialUniquePtr creds(new Win32::CredHandle{ 0 });
-				SECURITY_STATUS status = Win32::AcquireCredentialsHandleW(
+				Win32::SECURITY_STATUS status = Win32::AcquireCredentialsHandleW(
 					nullptr,
 					const_cast<wchar_t*>(Win32::_UNISP_NAME_W),
 					Win32::_SECPKG_CRED_OUTBOUND,

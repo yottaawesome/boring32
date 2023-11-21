@@ -1,10 +1,6 @@
 export module boring32.error:boring32error;
-import <stdexcept>;
-import <string>;
-import <string_view>;
-import <format>;
-import <source_location>;
-import <stacktrace>;
+import std;
+import std.compat;
 import :functions;
 
 export namespace Boring32::Error
@@ -79,10 +75,11 @@ export namespace Boring32::Error
 			) : std::exception(
 				GenerateErrorMessage(
 					location,
-					std::vformat(
+					""
+					/*std::vformat(
 						message,
 						std::make_format_args(std::forward<Args>(args)...)
-					),
+					)*/,
 					trace
 				).c_str())
 			{ }

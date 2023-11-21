@@ -1,5 +1,6 @@
 export module boring32.ipc:mailslotserver;
-import <string>;
+import std;
+import std.compat;
 import boring32.win32;
 import boring32.error;
 import boring32.raii;

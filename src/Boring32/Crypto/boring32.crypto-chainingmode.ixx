@@ -1,6 +1,6 @@
 export module boring32.crypto:chainingmode;
-import <map>;
-import <string>;
+import std;
+import std.compat;
 import boring32.win32;
 
 export namespace Boring32::Crypto

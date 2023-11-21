@@ -1,6 +1,6 @@
 export module boring32.wirelesslan:wirelessinterface;
-import <string>;
-import <vector>;
+import std;
+import std.compat;
 import boring32.win32;
 import boring32.util;
 import boring32.error;

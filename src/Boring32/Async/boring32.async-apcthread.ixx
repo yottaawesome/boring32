@@ -1,7 +1,6 @@
 export module boring32.async:apcthread;
-import <iostream>;
-import <format>;
-import <functional>;
+import std;
+import std.compat;
 import boring32.win32;
 import boring32.error;
 import :thread;

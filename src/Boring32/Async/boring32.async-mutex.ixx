@@ -1,8 +1,6 @@
 export module boring32.async:mutex;
-import <string>;
-import <chrono>;
-import <iostream>;
-import <atomic>;
+import std;
+import std.compat;
 import boring32.win32;
 import boring32.error;
 import boring32.raii;

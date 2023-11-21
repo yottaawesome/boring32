@@ -1,7 +1,6 @@
 export module boring32.strings;
-import <string>;
-import <vector>;
-import <algorithm>;
+import std;
+import std.compat;
 import boring32.win32;
 import boring32.error;
 export import :fixedstring;
@@ -248,17 +247,20 @@ export namespace Boring32::Strings
 	// Adapted from https://www.tutorialspoint.com/case-insensitive-string-comparison-in-cplusplus
 	bool DoCaseInsensitiveMatch(std::string str1, std::string str2)
 	{
+		// Weirdly, transform() fails to compile if passing to lower() directly to transform().
+		constexpr auto lower = [](char c) { return std::tolower(c); };
 		//convert s1 and s2 into lower case strings
-		std::transform(str1.begin(), str1.end(), str1.begin(), ::tolower);
-		std::transform(str2.begin(), str2.end(), str2.begin(), ::tolower);
+		std::transform(str1.begin(), str1.end(), str1.begin(), lower);
+		std::transform(str2.begin(), str2.end(), str2.begin(), lower);
 		return str1 == str2;
 	}
 
 	bool DoCaseInsensitiveMatch(std::wstring str1, std::wstring str2)
 	{
 		//convert s1 and s2 into lower case strings
-		std::transform(str1.begin(), str1.end(), str1.begin(), ::tolower);
-		std::transform(str2.begin(), str2.end(), str2.begin(), ::tolower);
+		constexpr auto lower = [](wchar_t c) { return std::tolower(c); };
+		std::transform(str1.begin(), str1.end(), str1.begin(), lower);
+		std::transform(str2.begin(), str2.end(), str2.begin(), lower);
 		return str1 == str2;
 	}
 

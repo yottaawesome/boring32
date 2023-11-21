@@ -1,8 +1,6 @@
 export module boring32.registry:key;
-import <memory>;
-import <vector>;
-import <utility>;
-import <iostream>;
+import std;
+import std.compat;
 import boring32.win32;
 import boring32.error;
 import :functions;

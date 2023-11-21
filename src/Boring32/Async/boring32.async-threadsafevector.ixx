@@ -1,8 +1,7 @@
 export module boring32.async:threadsafevector;
 
-import <algorithm>;
-import <functional>;
-import <vector>;
+import std;
+import std.compat;
 import boring32.win32;
 import :criticalsectionlock;
 import :criticalsection;

@@ -1,7 +1,6 @@
 export module boring32.wirelesslan:cleanup;
-import <iostream>;
-import <format>;
-import <memory>;
+import std;
+import std.compat;
 import boring32.win32;
 
 namespace Boring32::WirelessLAN
