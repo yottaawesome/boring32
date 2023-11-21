@@ -78,7 +78,7 @@ export namespace Boring32::WinHttp::WebSockets
 					int i = 0;
 					while (i < 5 && m_status == WebSocketStatus::Closing)
 					{
-						Sleep(100);
+						Win32::Sleep(100);
 						i++;
 					}
 				}
@@ -133,11 +133,11 @@ export namespace Boring32::WinHttp::WebSockets
 
 				m_writeResult.Status = WriteResultStatus::Initiated;
 				m_writeResult.Complete.Reset();
-				const DWORD statusCode = WinHttpWebSocketSend(
+				const Win32::DWORD statusCode = Win32::WinHttp::WinHttpWebSocketSend(
 					m_winHttpWebSocket.Get(),
-					WINHTTP_WEB_SOCKET_UTF8_MESSAGE_BUFFER_TYPE,
+					Win32::WinHttp::WINHTTP_WEB_SOCKET_BUFFER_TYPE::WINHTTP_WEB_SOCKET_UTF8_MESSAGE_BUFFER_TYPE,
 					reinterpret_cast<void*>(const_cast<char*>(&msg[0])),
-					static_cast<DWORD>(msg.size() * sizeof(char))
+					static_cast<Win32::DWORD>(msg.size() * sizeof(char))
 				);
 				if (statusCode != Win32::ErrorCodes::Success)
 				{
@@ -154,11 +154,11 @@ export namespace Boring32::WinHttp::WebSockets
 
 				m_writeResult.Status = WriteResultStatus::Initiated;
 				m_writeResult.Complete.Reset();
-				const DWORD statusCode = WinHttpWebSocketSend(
+				const Win32::DWORD statusCode = WinHttpWebSocketSend(
 					m_winHttpWebSocket.Get(),
-					WINHTTP_WEB_SOCKET_BINARY_MESSAGE_BUFFER_TYPE,
-					reinterpret_cast<PVOID>(const_cast<std::byte*>(&buffer[0])),
-					static_cast<DWORD>(buffer.size() * sizeof(char))
+					Win32::WinHttp::WINHTTP_WEB_SOCKET_BUFFER_TYPE::WINHTTP_WEB_SOCKET_BINARY_MESSAGE_BUFFER_TYPE,
+					reinterpret_cast<Win32::PVOID>(const_cast<std::byte*>(&buffer[0])),
+					static_cast<Win32::DWORD>(buffer.size() * sizeof(char))
 				);
 				m_writeResult.Status = WriteResultStatus::Initiated;
 				if (statusCode != Win32::ErrorCodes::Success)

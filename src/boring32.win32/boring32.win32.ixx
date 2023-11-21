@@ -119,6 +119,9 @@ export namespace Boring32::Win32
 	using ::PRIVILEGE_SET;
 	using ::SID_NAME_USE;
 
+	constexpr auto _CERT_SIGNATURE_HASH_PROP_ID = CERT_SIGNATURE_HASH_PROP_ID;
+	constexpr auto _CERT_SIGN_HASH_CNG_ALG_PROP_ID = CERT_SIGN_HASH_CNG_ALG_PROP_ID;
+
 	constexpr auto _SE_PRIVILEGE_ENABLED = SE_PRIVILEGE_ENABLED;
 	constexpr auto _SE_GROUP_INTEGRITY = SE_GROUP_INTEGRITY;
 	constexpr auto _SE_GROUP_ENABLED = SE_GROUP_ENABLED;
@@ -365,6 +368,7 @@ export namespace Boring32::Win32
 	constexpr auto CertChainRevocationCheckChainExcludeRoot = CERT_CHAIN_REVOCATION_CHECK_CHAIN_EXCLUDE_ROOT;
 	constexpr auto Pkcs7AsnEncoding = PKCS_7_ASN_ENCODING;
 	constexpr auto CertFindHasPrivateKey = CERT_FIND_HAS_PRIVATE_KEY;
+	constexpr auto _CERT_HASH_PROP_ID = CERT_HASH_PROP_ID;
 
 	constexpr auto LocaleNameInvariant = LOCALE_NAME_INVARIANT;
 
@@ -701,6 +705,13 @@ export namespace Boring32::Win32
 	using ::AddSIDToBoundaryDescriptor;
 	using ::CreatePrivateNamespaceW;
 	using ::OpenPrivateNamespaceW;
+	using ::Sleep;
+
+	using ::CertVerifyTimeValidity;
+	using ::CertFreeCertificateContext;
+	using ::CertGetPublicKeyLength;
+	using ::CertDuplicateCertificateContext;
+	using ::CertGetCertificateContextProperty;
 
 	using ::BCRYPT_ALG_HANDLE;
 	using ::BCRYPT_KEY_HANDLE;

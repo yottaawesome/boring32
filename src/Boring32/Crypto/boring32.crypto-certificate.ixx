@@ -1,7 +1,7 @@
 export module boring32.crypto:certificate;
 import <vector>;
 import <string>;
-import <win32.hpp>;
+import boring32.win32;
 import boring32.error;
 import :functions;
 
@@ -30,13 +30,13 @@ export namespace Boring32::Crypto
 				Move(other);
 			}
 
-			Certificate(PCCERT_CONTEXT certContext, const bool ownedExclusively)
+			Certificate(Win32::PCCERT_CONTEXT certContext, const bool ownedExclusively)
 			{
 				if (!certContext)
 					return;
 				m_certContext = ownedExclusively
 					? certContext
-					: CertDuplicateCertificateContext(certContext);
+					: Win32::CertDuplicateCertificateContext(certContext);
 			}
 
 		public:
@@ -50,7 +50,7 @@ export namespace Boring32::Crypto
 				return Move(other);
 			}
 
-			bool operator==(PCCERT_CONTEXT const other) const noexcept
+			bool operator==(Win32::PCCERT_CONTEXT const other) const noexcept
 			{
 				return m_certContext == other;
 			}
@@ -60,7 +60,7 @@ export namespace Boring32::Crypto
 				return m_certContext != nullptr;
 			}
 
-			operator PCCERT_CONTEXT() const noexcept
+			operator Win32::PCCERT_CONTEXT() const noexcept
 			{
 				return m_certContext;
 			}
@@ -70,7 +70,7 @@ export namespace Boring32::Crypto
 			{
 				if (m_certContext)
 				{
-					CertFreeCertificateContext(m_certContext);
+					Win32::CertFreeCertificateContext(m_certContext);
 					m_certContext = nullptr;
 				}
 			}
@@ -89,17 +89,17 @@ export namespace Boring32::Crypto
 				}
 			}
 
-			[[nodiscard]] PCCERT_CONTEXT GetCert() const noexcept
+			[[nodiscard]] Win32::PCCERT_CONTEXT GetCert() const noexcept
 			{
 				return m_certContext;
 			}
 
-			[[nodiscard]] std::wstring GetFormattedSubject(const DWORD format) const
+			[[nodiscard]] std::wstring GetFormattedSubject(const Win32::DWORD format) const
 			{
 				return FormatAsnNameBlob(m_certContext->pCertInfo->Subject, format);
 			}
 
-			[[nodiscard]] std::wstring GetFormattedIssuer(const DWORD format) const
+			[[nodiscard]] std::wstring GetFormattedIssuer(const Win32::DWORD format) const
 			{
 				return FormatAsnNameBlob(m_certContext->pCertInfo->Issuer, format);
 			}
@@ -110,7 +110,7 @@ export namespace Boring32::Crypto
 					throw Error::Boring32Error("m_certContext is nullptr");
 				if (!m_certContext->pCertInfo)
 					return {};
-				CERT_NAME_BLOB* blob = &m_certContext->pCertInfo->Issuer;
+				Win32::CERT_NAME_BLOB* blob = &m_certContext->pCertInfo->Issuer;
 				return {
 					reinterpret_cast<std::byte*>(blob->pbData),
 					reinterpret_cast<std::byte*>(blob->pbData + blob->cbData)
@@ -123,7 +123,7 @@ export namespace Boring32::Crypto
 					throw Error::Boring32Error("m_certContext is nullptr");
 				if (!m_certContext->pCertInfo)
 					return {};
-				CERT_NAME_BLOB* blob = &m_certContext->pCertInfo->Subject;
+				Win32::CERT_NAME_BLOB* blob = &m_certContext->pCertInfo->Subject;
 				return {
 					reinterpret_cast<std::byte*>(blob->pbData),
 					reinterpret_cast<std::byte*>(blob->pbData + blob->cbData)
@@ -132,12 +132,12 @@ export namespace Boring32::Crypto
 
 			[[nodiscard]] std::wstring GetSignature() const
 			{
-				return ToBase64WString(InternalCertGetProperty(CERT_SIGNATURE_HASH_PROP_ID));
+				return ToBase64WString(InternalCertGetProperty(Win32::_CERT_SIGNATURE_HASH_PROP_ID));
 			}
 
 			[[nodiscard]] std::wstring GetSignatureHashCngAlgorithm() const
 			{
-				std::vector<std::byte> bytes = InternalCertGetProperty(CERT_SIGN_HASH_CNG_ALG_PROP_ID);
+				std::vector<std::byte> bytes = InternalCertGetProperty(Win32::_CERT_SIGN_HASH_CNG_ALG_PROP_ID);
 				std::wstring result(
 					reinterpret_cast<wchar_t*>(&bytes[0]),
 					bytes.size() / sizeof(wchar_t)
@@ -147,9 +147,9 @@ export namespace Boring32::Crypto
 				return result;
 			}
 
-			[[nodiscard]] PCCERT_CONTEXT Detach() noexcept
+			[[nodiscard]] Win32::PCCERT_CONTEXT Detach() noexcept
 			{
-				PCCERT_CONTEXT temp = m_certContext;
+				Win32::PCCERT_CONTEXT temp = m_certContext;
 				m_certContext = nullptr;
 				return temp;
 			}
@@ -161,61 +161,61 @@ export namespace Boring32::Crypto
 				return GetTimeValidity(nullptr) == Certificate::CertTimeValidity::Valid;
 			}
 
-			[[nodiscard]] CertTimeValidity GetTimeValidity(FILETIME* const ft) const
+			[[nodiscard]] CertTimeValidity GetTimeValidity(Win32::FILETIME* const ft) const
 			{
 				if (!m_certContext)
 					throw Error::Boring32Error("m_certContext is nullptr");
 
 				// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certverifytimevalidity
-				const long value = CertVerifyTimeValidity(
+				const long value = Win32::CertVerifyTimeValidity(
 					ft,
 					m_certContext->pCertInfo
 				);
 				return static_cast<Certificate::CertTimeValidity>(value);
 			}
 
-			[[nodiscard]] const FILETIME& GetNotBefore() const
+			[[nodiscard]] const Win32::FILETIME& GetNotBefore() const
 			{
 				if (!m_certContext)
 					throw Error::Boring32Error("m_certContext is nullptr");
 				return m_certContext->pCertInfo->NotBefore;
 			}
 
-			[[nodiscard]] const FILETIME& GetNotAfter() const
+			[[nodiscard]] const Win32::FILETIME& GetNotAfter() const
 			{
 				if (!m_certContext)
 					throw Error::Boring32Error("m_certContext is nullptr");
 				return m_certContext->pCertInfo->NotAfter;
 			}
 
-			[[nodiscard]] DWORD GetPublicKeyBitLength() const
+			[[nodiscard]] Win32::DWORD GetPublicKeyBitLength() const
 			{
 				if (!m_certContext)
 					throw Error::Boring32Error("m_certContext is nullptr");
 				// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certgetpublickeylength
-				const DWORD length = CertGetPublicKeyLength(
-					X509_ASN_ENCODING | PKCS_7_ASN_ENCODING,
+				const Win32::DWORD length = Win32::CertGetPublicKeyLength(
+					Win32::X509AsnEncoding | Win32::Pkcs7AsnEncoding,
 					&m_certContext->pCertInfo->SubjectPublicKeyInfo
 				);
 				if (length == 0)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error("CertGetPublicKeyLength() failed", lastError);
 				}
 				return length;
 			}
 
-			[[nodiscard]] PCCERT_CONTEXT Duplicate() const noexcept
+			[[nodiscard]] Win32::PCCERT_CONTEXT Duplicate() const noexcept
 			{
 				return m_certContext
-					? CertDuplicateCertificateContext(m_certContext)
+					? Win32::CertDuplicateCertificateContext(m_certContext)
 					: nullptr;
 			}
 
 			[[nodiscard]] std::wstring GetHash() const
 			{
 				return m_certContext 
-					? ToBase64WString(InternalCertGetProperty(CERT_HASH_PROP_ID))
+					? ToBase64WString(InternalCertGetProperty(Win32::_CERT_HASH_PROP_ID))
 					: L"";
 			}
 
@@ -226,7 +226,7 @@ export namespace Boring32::Crypto
 					return *this;
 				Close();
 				if (other.m_certContext)
-					m_certContext = CertDuplicateCertificateContext(other.m_certContext);
+					m_certContext = Win32::CertDuplicateCertificateContext(other.m_certContext);
 				return *this;
 			}
 
@@ -239,14 +239,14 @@ export namespace Boring32::Crypto
 			}
 
 			std::vector<std::byte> InternalCertGetProperty(
-				const DWORD property
+				const Win32::DWORD property
 			) const
 			{
 				if (!m_certContext)
 					throw Error::Boring32Error("m_certContext is nullptr");
 
-				DWORD sizeInBytes = 0;
-				bool succeeded = CertGetCertificateContextProperty(
+				Win32::DWORD sizeInBytes = 0;
+				bool succeeded = Win32::CertGetCertificateContextProperty(
 					m_certContext,
 					property,
 					nullptr,
@@ -254,7 +254,7 @@ export namespace Boring32::Crypto
 				);
 				if (!succeeded)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error(
 						"CertGetCertificateContextProperty() failed (1)",
 						lastError
@@ -262,7 +262,7 @@ export namespace Boring32::Crypto
 				}
 
 				std::vector<std::byte> returnValue(sizeInBytes);
-				succeeded = CertGetCertificateContextProperty(
+				succeeded = Win32::CertGetCertificateContextProperty(
 					m_certContext,
 					property,
 					&returnValue[0],
@@ -270,7 +270,7 @@ export namespace Boring32::Crypto
 				);
 				if (!succeeded)
 				{
-					const auto lastError = GetLastError();
+					const auto lastError = Win32::GetLastError();
 					throw Error::Win32Error(
 						"CertGetCertificateContextProperty() failed (2)",
 						lastError
@@ -283,7 +283,7 @@ export namespace Boring32::Crypto
 
 		private:
 			// See https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context
-			PCCERT_CONTEXT m_certContext = nullptr;
+			Win32::PCCERT_CONTEXT m_certContext = nullptr;
 
 			/*
 			std::wstring Certificate::_GetSubjectName() const

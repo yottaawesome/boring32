@@ -268,7 +268,7 @@ export namespace Boring32::WinHttp::WebSockets
 					if (m_settings.WinHttpSession.GetSession() == nullptr)
 						throw Error::Boring32Error("WinHttp session cannot be null");
 
-					m_winHttpConnection = WinHttpConnect(
+					m_winHttpConnection = Win32::WinHttp::WinHttpConnect(
 						m_settings.WinHttpSession.GetSession(),
 						m_settings.Server.c_str(),
 						m_settings.Port,
