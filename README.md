@@ -21,7 +21,7 @@ The test project `Boring32.Tests` is a good reference of how to use `Boring32`, 
 
 ## Other notes
 
-`Boring32` is now fully module-based and has eliminated any direct reliance on the Windows headers. However, due to a [MSVC bug](https://developercommunity.visualstudio.com/t/VS2022-175-Preview-3---Compiler-bug-wit/10256508), the `CppUnitTestFramework` provided by Microsoft and used for writing the unit tests is incompatible with module-based projects, so I've chosen to disable the unit tests (by excluding them from the solution) for now until this issue gets resolved. Note that when the unit tests do get re-enabled, some unit tests will likely fail on your machine as they are referencing objects (e.g. certificates) in my local environment I use for testing Win32 API calls. You can safely ignore these failures or comment them out. 
+`Boring32` is now (2023-11-24) fully module-based and has eliminated any direct reliance on the Windows headers. However, due to a [MSVC bug](https://developercommunity.visualstudio.com/t/VS2022-175-Preview-3---Compiler-bug-wit/10256508), the `CppUnitTestFramework` provided by Microsoft and used for writing the unit tests is incompatible with module-based projects, so I've chosen to disable the unit tests (by excluding them from the solution) for now until this issue gets resolved. Note that when the unit tests do get re-enabled, some unit tests will likely fail on your machine as they are referencing objects (e.g. certificates) in my local environment I use for testing Win32 API calls. You can safely ignore these failures or comment them out. 
 
 ## Additional resources
 
