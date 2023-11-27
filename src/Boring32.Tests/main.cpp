@@ -744,7 +744,53 @@ void templateStuff()
 //	return -1;
 //}
 
+namespace TestRange
+{
+	struct XA
+	{
+		int Value = 0;
+		XA(){};
+		XA(int x) : Value(x) {}
+
+		auto operator<=>(const XA&) const = default;
+
+		XA operator+(const XA& other) noexcept
+		{
+			return Value + other.Value;
+		}
+
+		XA operator++(int) noexcept // pre-increment takes no argument
+		{
+			return XA{ Value++ };
+		}
+
+		XA& operator+=(const XA& other) noexcept
+		{
+			Value += other.Value;
+			return *this;
+		}
+	};
+
+	template<typename T>
+	concept Increment = requires(T t)
+	{
+		t++;
+	};
+
+	void Run()
+	{
+		Boring32::Util::Range<int> blahA(5, 10);
+
+		XA a(5);
+		XA b(10);
+		constexpr bool bb = Increment<XA>;
+		Boring32::Util::Range<XA> blahB(a, b);
+		blahB.Next(std::nothrow);
+	}
+}
+
 int main()
 {
+	TestRange::Run();
 	return 0;
 }

@@ -6,6 +6,7 @@ export import :switcher;
 export import :functions;
 export import :guid;
 export import :enumeration;
+export import :range;
 
 //#define colconc(str1,str2) #str1 ": " #str2
 

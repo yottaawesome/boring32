@@ -337,6 +337,7 @@
     <ClCompile Include="Util\boring32.util-enumeration.ixx" />
     <ClCompile Include="Util\boring32.util-functions.ixx" />
     <ClCompile Include="Util\boring32.util-globallyuniqueid.ixx" />
+    <ClCompile Include="Util\boring32.util-range.ixx" />
     <ClCompile Include="Util\boring32.util.ixx" />
     <ClCompile Include="Util\boring32.util-switcher.ixx" />
     <ClCompile Include="Native\boring32.native-defs.ixx" />
