@@ -305,6 +305,7 @@
     <ClCompile Include="Services\boring32.services-service.ixx" />
     <ClCompile Include="Services\boring32.services-servicecontrolmanager.ixx" />
     <ClCompile Include="Services\boring32.services.ixx" />
+    <ClCompile Include="Shell\boring32.shell.ixx" />
     <ClCompile Include="SSPI\boring32.sspi-buffertype.ixx" />
     <ClCompile Include="SSPI\boring32.sspi-contextbuffer.ixx" />
     <ClCompile Include="SSPI\boring32.sspi-credential.ixx" />

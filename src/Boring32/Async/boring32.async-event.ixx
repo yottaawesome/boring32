@@ -16,7 +16,6 @@ export namespace Boring32::Async
 		// The Six
 		public:
 			~Event() = default;
-			Event() = default;
 			Event(const Event& other) = default;
 			Event(Event&& other) noexcept = default;
 			Event& operator=(const Event& other) = default;

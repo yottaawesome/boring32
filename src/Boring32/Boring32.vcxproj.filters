@@ -225,5 +225,6 @@
     <ClCompile Include="Strings\boring32.strings-fixedstring.ixx" />
     <ClCompile Include="Async\boring32.async-cmdrunner.ixx" />
     <ClCompile Include="Util\boring32.util-range.ixx" />
+    <ClCompile Include="Shell\boring32.shell.ixx" />
   </ItemGroup>
 </Project>

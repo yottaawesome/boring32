@@ -44,6 +44,7 @@
 #include <cryptuiapi.h>
 #include <winnt.h>
 #include <wincodec.h>
+#include <Shlobj.h>
 #include <xaudio2.h>
 #include <winhttp.h>
 #include <ws2tcpip.h>

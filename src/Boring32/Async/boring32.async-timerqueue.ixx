@@ -59,8 +59,8 @@ export namespace Boring32::Async
 					return;
 
 				Win32::HANDLE argValue = Win32::InvalidHandleValue; // waits for all callbacks on deletion
-				if (m_completionEvent)
-					argValue = m_completionEvent.GetHandle(); // waits for all callbacks on deletion and signals event
+				if (m_completionEvent.has_value() and m_completionEvent.value())
+					argValue = m_completionEvent->GetHandle(); // waits for all callbacks on deletion and signals event
 				else if (!m_waitForAllCallbacks)
 					argValue = nullptr; // does not wait
 
@@ -115,7 +115,7 @@ export namespace Boring32::Async
 
 		private:
 			Win32::HANDLE m_timer = nullptr;
-			Async::Event m_completionEvent;
+			std::optional<Async::Event> m_completionEvent;
 			bool m_waitForAllCallbacks = false;
 	};
 }

@@ -29,6 +29,7 @@ import boring32.networking;
 import boring32.sspi;
 import boring32.memory;
 import boring32.registry;
+import boring32.shell;
 
 struct Test
 {
@@ -791,6 +792,10 @@ namespace TestRange
 
 int main()
 {
+	auto p = Boring32::Shell::GetKnownFolderPath(
+		Boring32::Win32::Shell::WellKnownFolders::FOLDERID_LocalAppData
+	);
+
 	TestRange::Run();
 	return 0;
 }
