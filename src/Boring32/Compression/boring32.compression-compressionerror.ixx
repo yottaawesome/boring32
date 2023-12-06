@@ -2,42 +2,31 @@ export module boring32.compression:compressionerror;
 import std;
 import std.compat;
 import boring32.error;
+import boring32.strings;
 
 export namespace Boring32::Compression
 {
-	class CompressionError : public Error::Boring32Error
+	class CompressionError final : public Error::Boring32Error
 	{
 		public:
-			virtual ~CompressionError() = default;
-			CompressionError() = default;
-			CompressionError(const CompressionError& other) = default;
-			virtual CompressionError& operator=(const CompressionError& other) = default;
-			CompressionError(CompressionError&& other) noexcept = default;
-			virtual CompressionError& operator=(CompressionError&& other) noexcept = default;
-
-		public:
 			CompressionError(
-				const std::string& message,
-				const std::source_location location = std::source_location::current(),
-				const std::stacktrace& trace = std::stacktrace::current()
-			) : Error::Boring32Error(message, location, trace)
-			{
-				GenerateErrorMessage(location, message, trace);
-			}
+				const Error::MessageLocationTrace& msg, 
+				auto&&...args
+			) : Error::Boring32Error(CompressionError::GenerateErrorMessage(msg, std::forward<decltype(args)>(args)...))
+			{ }
 
 		private:
-			Error::ExactMessage GenerateErrorMessage(
-				const std::source_location& location,
-				const std::string& message,
-				const std::stacktrace& trace
+			static Error::ExactMessage GenerateErrorMessage(
+				const Error::MessageLocationTrace& msg,
+				auto&&...args
 			)
 			{
-				return { 
+				return {
 					Error::FormatErrorMessage(
 						"Compression",
-						trace,
-						location,
-						message
+						msg.Trace,
+						msg.Location,
+						Strings::SafeVFormat(msg.Message, std::forward<decltype(args)>(args)...)
 					)
 				};
 			}

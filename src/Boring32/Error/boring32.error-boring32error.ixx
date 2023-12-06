@@ -51,7 +51,7 @@ export namespace Boring32::Error
 				: std::exception(msg.Message.c_str())
 			{ }
 
-			Boring32Error(const MessageLocationTrace msg)
+			Boring32Error(const MessageLocationTrace& msg, auto&&...args)
 				: std::exception(GenerateErrorMessage(
 					msg.Location,
 					std::string(msg.Message),
@@ -59,30 +59,30 @@ export namespace Boring32::Error
 				).c_str())
 			{ }
 
-			Boring32Error(
-				const std::string& message, 
-				const std::source_location& location,
-				const std::stacktrace& trace
-			) : std::exception(GenerateErrorMessage(location, message, trace).c_str())
-			{ }
+			//Boring32Error(
+			//	const std::string& message, 
+			//	const std::source_location& location,
+			//	const std::stacktrace& trace
+			//) : std::exception(GenerateErrorMessage(location, message, trace).c_str())
+			//{ }
 
-			template<typename...Args>
-			Boring32Error(
-				const std::string& message,
-				const std::source_location& location,
-				const std::stacktrace& trace,
-				Args&&...args
-			) : std::exception(
-				GenerateErrorMessage(
-					location,
-					""
-					/*std::vformat(
-						message,
-						std::make_format_args(std::forward<Args>(args)...)
-					)*/,
-					trace
-				).c_str())
-			{ }
+			//template<typename...Args>
+			//Boring32Error(
+			//	const std::string& message,
+			//	const std::source_location& location,
+			//	const std::stacktrace& trace,
+			//	Args&&...args
+			//) : std::exception(
+			//	GenerateErrorMessage(
+			//		location,
+			//		""
+			//		/*std::vformat(
+			//			message,
+			//			std::make_format_args(std::forward<Args>(args)...)
+			//		)*/,
+			//		trace
+			//	).c_str())
+			//{ }
 
 		private:
 			std::string GenerateErrorMessage(

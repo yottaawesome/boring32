@@ -30,6 +30,7 @@ import boring32.sspi;
 import boring32.memory;
 import boring32.registry;
 import boring32.shell;
+import boring32.strings;
 
 struct Test
 {
@@ -790,8 +791,32 @@ namespace TestRange
 	}
 }
 
+template<typename T>
+concept b = requires(T t)
+{
+	t == true;
+};
+
+struct LL
+{
+	operator bool() { return true; }
+};
+
+b auto F(bool B)
+{
+	if (B)
+		return true;
+}
+
 int main()
 {
+
+	const char* x = "{}";
+	const Boring32::Error::MessageLocationTrace e{ x };
+	Boring32::Strings::SafeVFormat < [](const std::exception&) noexcept -> std::string { return {}; } > (e.Message, "a");
+
+	F(true);
+
 	auto p = Boring32::Shell::GetKnownFolderPath(
 		Boring32::Win32::Shell::WellKnownFolders::FOLDERID_LocalAppData
 	);
