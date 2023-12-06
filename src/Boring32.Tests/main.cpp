@@ -806,6 +806,7 @@ b auto F(bool B)
 {
 	if (B)
 		return true;
+	return false;
 }
 
 int main()
