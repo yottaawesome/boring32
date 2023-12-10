@@ -809,8 +809,53 @@ b auto F(bool B)
 	return false;
 }
 
+template<typename T>
+concept SomeC = requires(T t)
+{
+	requires noexcept(t.What());
+};
+
+//template<typename T>
+//concept Formattable = std::convertible_to<T, Boring32::Strings::FixedStringN> or std::is_integral_v<T, int>;
+
+template<Boring32::Strings::FixedStringN TFmt, typename...TArgs>
+struct GG
+{
+	GG(TArgs&&...args)
+		: S(std::vformat(TFmt.ToView(), std::make_format_args(std::forward<TArgs>(args)...)))
+	{ }
+
+	const std::string& What() const noexcept
+	{
+		return S;
+	}
+
+	std::string S;
+};
+
+using CC = GG<"Haha {} {}", std::string_view, std::string_view, int>;
+using KK = GG<"Haha {} {}", std::string_view, std::string_view, int>;
+
+struct FF : public std::runtime_error
+{
+	const char* GHJ = "blah";
+	FF(SomeC auto&& s)
+		: std::runtime_error(s.What())
+	{ }
+};
+
 int main()
 {
+	try
+	{
+		//OO("A", "B", 1);
+		throw FF(KK{ "A", "B", 1 });
+	}
+	catch (const FF& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+
 
 	const char* x = "{}";
 	const Boring32::Error::MessageLocationTrace e{ x };

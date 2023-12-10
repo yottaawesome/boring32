@@ -5,13 +5,13 @@ import std.compat;
 export namespace Boring32::Strings
 {
 	template <size_t N>
-	struct FixedString
+	struct FixedStringW
 	{
 		// There's a consteval bug in the compiler.
 		// See https://developercommunity.visualstudio.com/t/consteval-function-unexpectedly-returns/10501040
 		wchar_t buf[N]{};
 		
-		constexpr FixedString(const wchar_t(&arg)[N]) noexcept
+		constexpr FixedStringW(const wchar_t(&arg)[N]) noexcept
 		{
 			std::copy_n(arg, N, buf);
 		}
@@ -42,7 +42,52 @@ export namespace Boring32::Strings
 		{
 			return { buf, N };
 		}
+
+		std::wstring_view ToView() const noexcept
+		{
+			return { buf, N };
+		}
 	};
 	template<size_t N>
-	FixedString(wchar_t const (&)[N]) -> FixedString<N>;
+	FixedStringW(wchar_t const (&)[N]) -> FixedStringW<N>;
+
+	template <size_t N>
+	struct FixedStringN
+	{
+		// There's a consteval bug in the compiler.
+		// See https://developercommunity.visualstudio.com/t/consteval-function-unexpectedly-returns/10501040
+		char buf[N]{};
+
+		constexpr FixedStringN(const char(&arg)[N]) noexcept
+		{
+			std::copy_n(arg, N, buf);
+		}
+
+		constexpr operator const char*() const noexcept
+		{
+			return buf;
+		}
+
+		constexpr operator std::string_view() const noexcept
+		{
+			return { buf, N };
+		}
+
+		operator std::string() const noexcept
+		{
+			return { buf, N };
+		}
+
+		std::string ToString() const noexcept
+		{
+			return { buf, N };
+		}
+
+		std::string_view ToView() const noexcept
+		{
+			return { buf, N };
+		}
+	};
+	template<size_t N>
+	FixedStringN(char* const (&)[N]) -> FixedStringN<N>;
 }

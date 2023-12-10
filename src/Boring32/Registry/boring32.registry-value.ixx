@@ -84,7 +84,7 @@ export namespace Boring32::Registry
 		{F()} -> std::convertible_to<std::invoke_result_t<OP<V, std::invoke_result_t<decltype(F)>>>>;
 	};
 
-	template<Win32::HKEY TParentKey, Strings::FixedString TSubKey, Strings::FixedString TValueName, ValueTypes TValueType, auto TDefaultValue = [] {} >
+	template<Win32::HKEY TParentKey, Strings::FixedStringW TSubKey, Strings::FixedStringW TValueName, ValueTypes TValueType, auto TDefaultValue = [] {} >
 		requires CheckInvocable<TDefaultValue, TValueType> // not really required due to the static_asserts below
 	class RegistryValue
 	{
