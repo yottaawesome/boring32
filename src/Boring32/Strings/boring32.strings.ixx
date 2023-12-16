@@ -336,4 +336,15 @@ export namespace Boring32::Strings
 		else
 			return std::wstring{};
 	}
+
+	template<typename...TArgs>
+	std::string Format(std::format_string<TArgs...> fmt, TArgs&&...args)
+	{
+		std::string buffer;
+		std::format_to(
+			std::back_inserter(buffer),
+			fmt,
+			std::forward<TArgs>(args)...);
+		return buffer;
+	}
 }
