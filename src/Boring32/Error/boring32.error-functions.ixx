@@ -3,6 +3,133 @@ import std;
 import std.compat;
 import boring32.win32;
 
+namespace Boring32::Error
+{
+    std::string FormatStackTrace(const std::stacktrace& trace)
+    {
+        constexpr std::string_view fmt = 
+R"(Entry:
+    Description: {}
+    Source file: {}
+    Source line: {}
+)";
+
+        std::string bt;
+        for (const std::stacktrace_entry& ste : trace)
+        {
+            // Break on this to avoid logging VC runtime functions
+            if (ste.description().contains("invoke_main"))
+                break;
+            bt += std::format(fmt, ste.description(), ste.source_file(), ste.source_file());
+        }
+        return bt;
+    }
+
+    template<typename TString>
+    struct ErrorCodeFormat final
+    {
+        static TString Format(
+            const Win32::DWORD errorCode,
+            const Win32::DWORD flags,
+            Win32::HMODULE moduleToSearch
+        )
+        {
+            void* messageBuffer = nullptr;
+            if constexpr (std::same_as<std::string, TString>)
+            {
+                Win32::FormatMessageA(
+                    flags,
+                    moduleToSearch,
+                    errorCode,
+                    0,
+                    reinterpret_cast<char*>(&messageBuffer),
+                    0,
+                    nullptr
+                );
+                if (!messageBuffer)
+                {
+                    const auto lastError = Win32::GetLastError();
+                    return std::format(
+                        "FormatMessageA() failed on code {} with error {}",
+                        errorCode,
+                        lastError
+                    );
+                }
+            }
+            else if constexpr (std::same_as<std::wstring, TString>)
+            {
+                Win32::FormatMessageW(
+                    flags,
+                    moduleToSearch,
+                    errorCode,
+                    0,
+                    reinterpret_cast<wchar_t*>(&messageBuffer),
+                    0,
+                    nullptr
+                );
+                if (!messageBuffer)
+                {
+                    const auto lastError = Win32::GetLastError();
+                    return std::format(
+                        L"FormatMessageW() failed on code {} with error {}",
+                        errorCode,
+                        lastError
+                    );
+                }
+            }
+
+            TString msg(static_cast<TString::pointer>(messageBuffer));
+            // This should never happen
+            // See also https://learn.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-raisefailfastexception
+            if (Win32::LocalFree(messageBuffer))
+                Win32::__fastfail(Win32::FailFast::FatalExit);
+
+            std::erase_if(msg, [](const TString::value_type x) { return x == '\n' || x == '\r'; });
+            return msg;
+        }
+    };
+
+    std::string& PrintExceptionToString(const std::exception& ex, std::string& ss)
+    {
+        ss += std::format("{}\n", ex.what());
+        try
+        {
+            std::rethrow_if_nested(ex);
+            return ss;
+        }
+        catch (const std::exception& ne)
+        {
+            return PrintExceptionToString(ne, ss);
+        }
+    }
+
+    std::string PrintExceptionToString(const std::exception& ex)
+    {
+        std::string ss;
+        return PrintExceptionToString(ex, ss);
+    }
+
+    void PrintExceptionInfo(const std::exception& e, const unsigned level = 0)
+    {
+        std::wcout << std::format("{}-> {}", std::string(level, '-'), e.what()).c_str() << std::endl;
+        try
+        {
+            rethrow_if_nested(e);
+        }
+        catch (const std::exception& ne)
+        {
+            PrintExceptionInfo(ne, level + 1);
+        }
+    }
+}
+
+namespace Boring32::Error::Formats
+{
+    constexpr std::string_view A = "{}: error at {}() in {}:{}:{}.\nStacktrace:\n{}";
+    constexpr std::string_view B = "{}: {} error at {}() in {}:{}:{}.\nStacktrace:\n{}";
+    constexpr std::string_view C = "{}: {} error {:#010X} ({}) at {}() in {}:{}:{}.\nStacktrace:\n{}";
+}
+
 export namespace Boring32::Error
 {
     // Parameters need to be templated, because throwing via
@@ -21,47 +148,6 @@ export namespace Boring32::Error
         throw_with_nested(ex2);
     }
 
-    template <typename EX1, typename EX2>
-    void ThrowNested2(const EX1* ex1, const EX2* ex2) try
-    {
-        throw ex1;
-    }
-    catch (...)
-    {
-        throw_with_nested(ex2);
-    }
-
-    void PrintExceptionInfo(const std::exception& e, const unsigned level = 0)
-    {
-        std::wcout << std::format("{}-> {}", std::string(level, '-'), e.what()).c_str() << std::endl;
-        try
-        {
-            rethrow_if_nested(e);
-        }
-        catch (const std::exception& ne)
-        {
-            PrintExceptionInfo(ne, level + 1);
-        }
-    }
-
-    std::string FormatStackTrace(const std::stacktrace& trace)
-    {
-        std::string bt;
-        for (const std::stacktrace_entry& ste : trace)
-        {
-            // Break on this to avoid logging VC runtime functions
-            if (ste.description().contains("invoke_main"))
-                break;
-            bt += std::format(
-                "Entry:\n\tDescription: {}\n\tSource file: {}\n\tSource line: {}\n",
-                ste.description(),
-                ste.source_file(),
-                ste.source_line()
-            );
-        }
-        return bt;
-    }
-
     std::string FormatErrorMessage(
         const std::stacktrace& trace,
         const std::source_location& location,
@@ -69,7 +155,7 @@ export namespace Boring32::Error
     )
     {
         return std::format(
-            "{}: error at {}() in {}:{}:{}. Stacktrace:\n{}",
+            Formats::A,
             message,
             location.function_name(),
             location.file_name(),
@@ -87,7 +173,7 @@ export namespace Boring32::Error
     )
     {
         return std::format(
-            "{}: {} error at {}() in {}:{}:{}. Stacktrace:\n{}",
+            Formats::B,
             message,
             errorType,
             location.function_name(),
@@ -95,23 +181,6 @@ export namespace Boring32::Error
             location.line(),
             location.column(),
             FormatStackTrace(trace)
-        );
-    }
-
-    std::string FormatErrorMessage(
-        const std::string& errorType,
-        const std::source_location& location,
-        const std::string& message
-    )
-    {
-        return std::format(
-            "{}: {} error at {}() in {}:{}:{}",
-            message,
-            errorType,
-            location.function_name(),
-            location.file_name(),
-            location.line(),
-            location.column()
         );
     }
 
@@ -125,7 +194,7 @@ export namespace Boring32::Error
     )
     {
         return std::format(
-            "{}: {} error {:#010X} ({}) at {}() in {}:{}:{}. Stacktrace:\n{}",
+            Formats::C,
             message,
             errorType,
             errorCode,
@@ -138,158 +207,32 @@ export namespace Boring32::Error
         );
     }
 
-    template<typename S>
-    S FormatCode(
-        const Win32::DWORD errorCode,
-        const Win32::DWORD flags,
-        Win32::HMODULE moduleToSearch
-    ) { return S(); }
+    template<typename TString>
+    concept WideOrNarrowString = std::same_as<std::string, TString> or std::same_as<std::wstring, TString>;
 
-    template<>
-    std::string FormatCode<std::string>(const Win32::DWORD errorCode, const Win32::DWORD flags, Win32::HMODULE moduleToSearch)
-    {
-        void* messageBuffer = nullptr;
-        Win32::FormatMessageA(
-            flags,
-            moduleToSearch,
-            errorCode,
-            0,
-            reinterpret_cast<char*>(&messageBuffer),
-            0,
-            nullptr
-        );
-        if (!messageBuffer)
-        {
-            const auto lastError = Win32::GetLastError();
-            return std::format(
-                "FormatMessageA() failed on code {} with error {}",
-                errorCode,
-                lastError
-            );
-        }
-
-        std::string msg(static_cast<char*>(messageBuffer));
-        if (Win32::LocalFree(messageBuffer))
-        {
-            const auto lastError = Win32::GetLastError();
-            std::wcerr << std::format(
-                L"LocalFree() failed: {}\n",
-                lastError
-            );
-        }
-
-        std::erase_if(msg, [](const char x) { return x == '\n' || x == '\r'; });
-
-        return msg;
-    }
-
-    template<>
-    std::wstring FormatCode<std::wstring>(
-        const Win32::DWORD errorCode,
-        const Win32::DWORD flags,
-        Win32::HMODULE moduleToSearch
-    )
-    {
-        void* messageBuffer = nullptr;
-        Win32::FormatMessageW(
-            flags,
-            moduleToSearch,
-            errorCode,
-            0,
-            reinterpret_cast<wchar_t*>(&messageBuffer),
-            0,
-            nullptr
-        );
-        if (!messageBuffer)
-        {
-            const auto lastError = Win32::GetLastError();
-            return std::format(
-                L"FormatMessageA() failed on code {} with error {}",
-                errorCode,
-                lastError
-            );
-        }
-
-        std::wstring msg(static_cast<wchar_t*>(messageBuffer));
-        if (Win32::LocalFree(messageBuffer))
-        {
-            const auto lastError = Win32::GetLastError();
-            std::wcerr << std::format(L"LocalFree() failed: {}\n", lastError);
-        }
-
-        std::erase_if(msg, [](const wchar_t x) { return x == '\n' || x == '\r'; });
-
-        return msg;
-    }
-
-    /// <summary>
-    ///     Translates Win32 errors, including COM errors, to human-readable error strings.
-    ///     Some error codes are defined in specific modules; pass in the module as the 
-    ///     second parameter for the function to translate such error codes.
-    /// </summary>
-    /// <typeparam name="STR_T">Either a wstring or string.</typeparam>
-    /// <typeparam name="STR_V">Leave this to resolve to wchar_t or char.</typeparam>
-    /// <param name="errorCode">The error code to translate.</param>
-    /// <param name="moduleName">Optional. The module name to translate from.</param>
-    /// <returns>The translated error string or a default error string if the function fails.</returns>
-    template<typename STR_T>
-    STR_T TranslateErrorCode(const Win32::DWORD errorCode, const std::wstring& moduleName)
-        requires std::is_same<std::string, STR_T>::value || std::is_same<std::wstring, STR_T>::value
+    // Translates Win32 errors, including COM errors, to human-readable error strings.
+    // Some error codes are defined in specific modules; pass in the module as the 
+    // second parameter for the function to translate such error codes.
+    template<WideOrNarrowString TString>
+    TString TranslateErrorCode(const Win32::DWORD errorCode, const std::wstring_view& moduleName = L"")
     {
         // Retrieve the system error message for the last-error code
-        Win32::HMODULE moduleHandle = moduleName.empty() ? nullptr : Win32::LoadLibraryW(moduleName.c_str());
+        Win32::HMODULE moduleHandle = moduleName.empty() ? nullptr : Win32::LoadLibraryW(moduleName.data());
         const Win32::DWORD flags =
             Win32::FormatMessageAllocateBuffer |
             Win32::FormatMessageFromSystem |
             Win32::FormatMessageIgnoreInserts |
             (moduleHandle ? Win32::FormatMessageFromHModule : 0);
-        const STR_T errorString = FormatCode<STR_T>(errorCode, flags, moduleHandle);
+        TString errorString = ErrorCodeFormat<TString>::Format(errorCode, flags, moduleHandle);
         if (moduleHandle)
             Win32::FreeLibrary(moduleHandle);
 
         return errorString;
     }
 
-    /// <summary>
-    ///     Translates a default Win32 or COM error code.
-    /// </summary>
-    /// <typeparam name="STR_T"></typeparam>
-    /// <param name="errorCode">The error code to translate.</param>
-    /// <returns>The translated error string or a default error string if the function fails.</returns>
-    template<typename STR_T>
-    STR_T TranslateErrorCode(const Win32::DWORD errorCode)
+    template<WideOrNarrowString TString>
+    TString GetNtStatusCode(const Win32::DWORD errorCode)
     {
-        return TranslateErrorCode<STR_T>(errorCode, L"");
-    }
-
-    template<typename STR_T>
-    STR_T GetNtStatusCode(const Win32::DWORD errorCode)
-    {
-        return TranslateErrorCode<STR_T>(errorCode, L"ntdll.dll");
-    }
-
-    std::string& PrintExceptionToString(
-        const std::exception& ex,
-        std::string& ss
-    )
-    {
-        ss += std::format("{}\n", ex.what());
-        try
-        {
-            std::rethrow_if_nested(ex);
-            return ss;
-        }
-        catch (const std::exception& ne)
-        {
-            return PrintExceptionToString(ne, ss);
-        }
-    }
-
-    std::string PrintExceptionToString(
-        const std::exception& ex
-    )
-    {
-        std::string ss;
-        return PrintExceptionToString(ex, ss);
+        return TranslateErrorCode<TString>(errorCode, L"ntdll.dll");
     }
 }

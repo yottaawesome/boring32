@@ -732,6 +732,15 @@ export namespace Boring32::Win32
 	using ::CertEnumCertificatesInStore;
 	using ::CertDeleteCertificateFromStore;
 	using ::CertGetStoreProperty;
+	using ::__fastfail;
+
+	namespace FailFast
+	{
+		enum
+		{
+			FatalExit = FAST_FAIL_FATAL_APP_EXIT // FatalAppExit is deffed to something else
+		};
+	}
 
 	const auto _CERT_STORE_PROV_SYSTEM_REGISTRY_W = CERT_STORE_PROV_SYSTEM_REGISTRY_W;
 	constexpr auto _CERT_STORE_OPEN_EXISTING_FLAG = CERT_STORE_OPEN_EXISTING_FLAG;
