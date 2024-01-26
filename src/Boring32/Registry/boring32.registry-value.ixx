@@ -134,6 +134,29 @@ export namespace Boring32::Registry
 				return out;
 			}
 
+			static uint64_t ReadQWord()
+				requires (TValueType == ValueTypes::QWord)
+			{
+				Win32::DWORD out;
+				Win32::DWORD sizeInBytes = sizeof(out);
+				Win32::LSTATUS status = Win32::RegGetValueW(
+					TParentKey,
+					SubKey,
+					ValueName,
+					Win32::_RRF_RT_REG_QWORD,
+					nullptr,
+					&out,
+					&sizeInBytes
+				);
+				if (status != Win32::ErrorCodes::Success)
+				{
+					if constexpr (ReturnDefault)
+						return TDefaultValue();
+					throw Error::Win32Error("RegGetValueW() failed", status);
+				}
+				return out;
+			}
+
 			static std::wstring ReadString()
 				requires (TValueType == ValueTypes::String)
 			{
@@ -179,8 +202,6 @@ export namespace Boring32::Registry
 				return out;
 			}
 
-			static void Blah(std::wstring_view s) {}
-
 			static auto Read()
 			{
 				if constexpr (TValueType == ValueTypes::DWord)
@@ -192,6 +213,11 @@ export namespace Boring32::Registry
 				{
 					static_assert(ThrowOnError or std::is_convertible_v<ReturnDefaultType, std::wstring>, "Return type from default lambda should be wstring or convertible to wstring.");
 					return ReadString();
+				}
+				else if constexpr (TValueType == ValueTypes::QWord)
+				{
+					static_assert(ThrowOnError or std::is_convertible_v<ReturnDefaultType, uint64_t>, "Return type from default lambda should be wstring or convertible to uint64_t.");
+					return ReadQWord();
 				}
 				else
 				{
