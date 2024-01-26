@@ -136,17 +136,17 @@ export namespace Boring32::Util
 
 			static_assert(
 				not HasSentinelMin<T> or UnderlyingType(D) >= UnderlyingType(T::SentinelMin),
-				"Default value must >= SentinelMin."
+				"Default value must be >= SentinelMin."
 			);
 			static_assert(
 				not HasSentinelMax<T> or UnderlyingType(D) <= UnderlyingType(T::SentinelMax),
-				"Default value must <= SentinelMax."
+				"Default value must be <= SentinelMax."
 			);
 			static_assert(
 				HasNoSentinels<T> 
 				or 
 				HasSentinels<T> and UnderlyingType(T::SentinelMin) != (UnderlyingType(T::SentinelMax) - 1),
-				"SentinelMin must be less than SentinelMax and SentinelMax cannot immediately follow SentinelMin."
+				"SentinelMin must be < SentinelMax and SentinelMax cannot immediately follow SentinelMin."
 			);
 	};
 
