@@ -31,4 +31,28 @@ export namespace Boring32::Concepts
 
 	template<typename T>
 	concept Pair = IsPairV<std::remove_cvref_t<T>>;
+
+	template<typename T>
+	struct IsArray : std::false_type {};
+
+	template<typename T, size_t N>
+	struct IsArray<std::array<T, N>> : std::true_type {};
+
+	template<typename T, size_t N>
+	constexpr bool IsArrayV = IsArray<T, N>;
+
+	template<typename T>
+	concept ArrayLike = IsArray<std::remove_cvref_t<T>>::value;
+
+	template<typename T>
+	struct IsVector : std::false_type {};
+
+	template<typename T>
+	struct IsVector<std::vector<T>> : std::true_type {};
+
+	template<typename T>
+	constexpr bool IsVectorV = IsVector<std::vector<T>>::value;
+
+	template<typename T>
+	concept VectorLike = IsArray<std::remove_cvref_t<T>>::value;
 }
