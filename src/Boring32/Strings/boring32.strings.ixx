@@ -3,6 +3,7 @@ import std;
 import std.compat;
 import boring32.win32;
 import boring32.error;
+import boring32.concepts;
 export import :fixedstring;
 
 export namespace Boring32::Strings
@@ -284,20 +285,6 @@ export namespace Boring32::Strings
 		return info;
 	}
 
-	// cvref is required
-	template<typename T>
-	concept IsString =
-		std::is_same_v<std::remove_cvref_t<T>, std::string>
-		or std::is_same_v<std::remove_cvref_t<T>, std::string_view>;
-
-	template<typename T>
-	concept IsWideString =
-		std::is_same_v<std::remove_cvref_t<T>, std::wstring>
-		or std::is_same_v<std::remove_cvref_t<T>, std::wstring_view>;
-
-	template<typename T>
-	concept IsStringType = IsString<T> or IsWideString<T>;
-
 	// Must be either nullptr, or a nothrowing invocable that accepts 
 	// an std::exception and returns something convertible to either 
 	// a string or wstring.
@@ -313,15 +300,15 @@ export namespace Boring32::Strings
 
 	template<IsExpectedInvocable auto TDefault = nullptr>
 	auto SafeVFormat(
-		IsStringType auto&& param,
+		Concepts::IsStringType auto&& param,
 		auto&&...args
 	) noexcept try
 	{
 		if constexpr (TDefault)
 		{
 			static_assert(
-				IsString<decltype(param)> and IsString<std::invoke_result_t<decltype(TDefault), std::exception>>
-				or IsWideString<decltype(param)> and IsWideString<std::invoke_result_t<decltype(TDefault), const std::exception&>>,
+				Concepts::IsString<decltype(param)> and Concepts::IsString<std::invoke_result_t<decltype(TDefault), std::exception>>
+				or Concepts::IsWideString<decltype(param)> and Concepts::IsWideString<std::invoke_result_t<decltype(TDefault), const std::exception&>>,
 				"Default function return type must match the type of string"
 			);
 		}
@@ -331,7 +318,7 @@ export namespace Boring32::Strings
 	{
 		if constexpr (TDefault)
 			return TDefault(ex);
-		else if constexpr (IsString<decltype(param)>)
+		else if constexpr (Concepts::IsString<decltype(param)>)
 			return std::string{};
 		else
 			return std::wstring{};

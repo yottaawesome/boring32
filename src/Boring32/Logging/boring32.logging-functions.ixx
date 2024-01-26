@@ -1,14 +1,10 @@
 export module boring32.logging:functions;
 import std;
 import std.compat;
+import boring32.concepts;
 
 export namespace Boring32::Logging
 {
-	template<typename T>
-	concept IsConvertibleToStringView = std::is_convertible_v<T, std::string_view>;
-	template<typename T>
-	concept IsConvertibleToWStringView = std::is_convertible_v<T, std::wstring_view>;
-
 	// Based on https://www.reddit.com/r/cpp_questions/comments/vl2n68/variadic_template_and_default_arguments/
 	struct MessageAndLocation
 	{
@@ -19,7 +15,7 @@ export namespace Boring32::Logging
 		MessageAndLocation(
 			T&& msg,
 			std::source_location loc = std::source_location::current()
-		) requires IsConvertibleToStringView<T>
+		) requires Concepts::IsConvertibleToStringView<T>
 			: message{ std::forward<T>(msg) },
 			loc{ loc }
 		{}
@@ -34,7 +30,7 @@ export namespace Boring32::Logging
 		MessageAndLocationW(
 			T&& msg,
 			std::source_location loc = std::source_location::current()
-		) requires IsConvertibleToWStringView<T>
+		) requires Concepts::IsConvertibleToWStringView<T>
 			: message{ std::forward<T>(msg) },
 			loc{ loc }
 		{}

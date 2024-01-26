@@ -2,6 +2,7 @@ export module boring32.error:functions;
 import std;
 import std.compat;
 import boring32.win32;
+import boring32.concepts;
 
 namespace Boring32::Error
 {
@@ -207,13 +208,10 @@ export namespace Boring32::Error
         );
     }
 
-    template<typename TString>
-    concept WideOrNarrowString = std::same_as<std::string, TString> or std::same_as<std::wstring, TString>;
-
     // Translates Win32 errors, including COM errors, to human-readable error strings.
     // Some error codes are defined in specific modules; pass in the module as the 
     // second parameter for the function to translate such error codes.
-    template<WideOrNarrowString TString>
+    template<Concepts::WideOrNarrowString TString>
     TString TranslateErrorCode(const Win32::DWORD errorCode, const std::wstring_view& moduleName = L"")
     {
         // Retrieve the system error message for the last-error code
@@ -230,7 +228,7 @@ export namespace Boring32::Error
         return errorString;
     }
 
-    template<WideOrNarrowString TString>
+    template<Concepts::WideOrNarrowString TString>
     TString GetNtStatusCode(const Win32::DWORD errorCode)
     {
         return TranslateErrorCode<TString>(errorCode, L"ntdll.dll");

@@ -55,4 +55,29 @@ export namespace Boring32::Concepts
 
 	template<typename T>
 	concept VectorLike = IsArray<std::remove_cvref_t<T>>::value;
+
+	template<typename T>
+	concept WideOrNarrowString 
+		= std::same_as<std::string, T> or std::same_as<std::wstring, T>;
+
+	template<typename T>
+	concept IsConvertibleToStringView = std::is_convertible_v<T, std::string_view>;
+	
+	template<typename T>
+	concept IsConvertibleToWStringView = std::is_convertible_v<T, std::wstring_view>;
+
+	// cvref is required
+	// TODO: eliminate duplicate concepts
+	template<typename T>
+	concept IsString =
+		std::is_same_v<std::remove_cvref_t<T>, std::string>
+		or std::is_same_v<std::remove_cvref_t<T>, std::string_view>;
+
+	template<typename T>
+	concept IsWideString =
+		std::is_same_v<std::remove_cvref_t<T>, std::wstring>
+		or std::is_same_v<std::remove_cvref_t<T>, std::wstring_view>;
+
+	template<typename T>
+	concept IsStringType = IsString<T> or IsWideString<T>;
 }
