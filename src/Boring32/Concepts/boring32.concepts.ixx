@@ -12,8 +12,23 @@ export namespace Boring32::Concepts
 	struct IsDuration<std::chrono::duration<Rep, Period>> : std::true_type {};
 
 	template<typename T>
+	constexpr bool IsDurationV = IsDuration<T>::value;
+
+	template<typename T>
 	concept Duration = IsDuration<T>::value;
 
 	template<typename T>
 	concept NullPtrOrInvocable = std::is_null_pointer_v<T> or std::invocable<T>;
+
+	template<typename T>
+	struct IsPair : std::false_type {};
+
+	template<typename T0, typename T1>
+	struct IsPair<std::pair<T0, T1>> : std::true_type {};
+
+	template<typename T>
+	constexpr bool IsPairV = IsPair<T>::value;
+
+	template<typename T>
+	concept Pair = IsPairV<std::remove_cvref_t<T>>;
 }
