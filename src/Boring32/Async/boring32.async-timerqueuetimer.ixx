@@ -4,7 +4,6 @@ import std.compat;
 import boring32.win32;
 import boring32.error;
 import :functions;
-import :concepts;
 
 export namespace Boring32::Async
 {

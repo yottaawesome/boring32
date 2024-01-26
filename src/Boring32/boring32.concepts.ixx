@@ -1,0 +1,19 @@
+export module boring32.concepts;
+import std;
+import std.compat;
+
+export namespace Boring32::Concepts
+{
+	// Adapted from https://stackoverflow.com/a/41851068/7448661
+	template<class T>
+	struct IsDuration : std::false_type {};
+
+	template<class Rep, class Period>
+	struct IsDuration<std::chrono::duration<Rep, Period>> : std::true_type {};
+
+	template<typename T>
+	concept Duration = IsDuration<T>::value;
+
+	template<typename T>
+	concept NullPtrOrInvocable = std::is_null_pointer_v<T> or std::invocable<T>;
+}

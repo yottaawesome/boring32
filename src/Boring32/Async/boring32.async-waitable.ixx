@@ -4,15 +4,15 @@ import std.compat;
 import boring32.win32;
 import boring32.error;
 import :functions;
-import :concepts;
+import boring32.concepts;
 
 export namespace Boring32::Async
 {
 	template<
-		NullPtrOrInvocable auto FWaitOperation = nullptr,
-		NullPtrOrInvocable auto FOnSuccess = nullptr,
-		NullPtrOrInvocable auto FOnTimeout = nullptr,
-		NullPtrOrInvocable auto FOnFailure = nullptr
+		Concepts::NullPtrOrInvocable auto FWaitOperation = nullptr,
+		Concepts::NullPtrOrInvocable auto FOnSuccess = nullptr,
+		Concepts::NullPtrOrInvocable auto FOnTimeout = nullptr,
+		Concepts::NullPtrOrInvocable auto FOnFailure = nullptr
 	>
 	class Waitable final
 	{
@@ -35,13 +35,13 @@ export namespace Boring32::Async
 				return m_handle; 
 			}
 
-			auto operator()(Duration auto duration, const bool alertable = false)
+			auto operator()(Concepts::Duration auto duration, const bool alertable = false)
 			{
 				return DoWaitAndGet(duration, alertable);
 			}
 
 		public:
-			Win32::WaitResult DoWaitAndGet(Duration auto duration, const bool alertable = false)
+			Win32::WaitResult DoWaitAndGet(Concepts::Duration auto duration, const bool alertable = false)
 			{
 				if constexpr (FWaitOperation != nullptr)
 				{
@@ -81,7 +81,7 @@ export namespace Boring32::Async
 				return m_lastWait;
 			}
 
-			Waitable& DoWait(Duration auto duration, const bool alertable = false)
+			Waitable& DoWait(Concepts::Duration auto duration, const bool alertable = false)
 			{
 				DoWaitAndGet(duration, alertable);
 				return *this;

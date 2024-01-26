@@ -186,7 +186,6 @@
   <ItemGroup>
     <ClCompile Include="Async\boring32.async-apcthread.ixx" />
     <ClCompile Include="Async\boring32.async-cmdrunner.ixx" />
-    <ClCompile Include="Async\boring32.async-concepts.ixx" />
     <ClCompile Include="Async\boring32.async-criticalsection.ixx" />
     <ClCompile Include="Async\boring32.async-eventloop.ixx" />
     <ClCompile Include="Async\boring32.async-functions.ixx" />
@@ -217,6 +216,7 @@
     <ClCompile Include="Async\boring32.async-threadsafevector.ixx" />
     <ClCompile Include="Async\boring32.async-timerqueuetimer.ixx" />
     <ClCompile Include="Async\boring32.async-timerqueuetimercallback.ixx" />
+    <ClCompile Include="boring32.concepts.ixx" />
     <ClCompile Include="boring32.ixx" />
     <ClCompile Include="Compression\boring32.compression-cabinet.ixx" />
     <ClCompile Include="Compression\boring32.compression-compressionerror.ixx" />

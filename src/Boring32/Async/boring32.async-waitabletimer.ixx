@@ -5,7 +5,7 @@ import boring32.error;
 import boring32.raii;
 import boring32.win32;
 import :functions;
-import :concepts;
+import boring32.concepts;
 
 //https://docs.microsoft.com/en-us/windows/win32/sync/using-a-waitable-timer-with-an-asynchronous-procedure-call
 export namespace Boring32::Async
@@ -160,7 +160,7 @@ export namespace Boring32::Async
 			}
 
 			bool WaitOnTimer(
-				const Duration auto time, 
+				const Concepts::Duration auto time,
 				const bool alertable
 			)
 			{
@@ -171,7 +171,7 @@ export namespace Boring32::Async
 
 			template<typename T>
 			bool WaitOnTimer(
-				const Duration auto time,
+				const Concepts::Duration auto time,
 				const bool alertable,
 				const std::nothrow_t&
 			) try

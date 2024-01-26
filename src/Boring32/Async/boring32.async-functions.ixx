@@ -5,13 +5,13 @@ import boring32.win32;
 import boring32.raii;
 import boring32.strings;
 import boring32.error;
-import :concepts;
+import boring32.concepts;
 
 export namespace Boring32::Async
 {
 	// https://stackoverflow.com/questions/37918168/pass-stdchronoduration-by-value-or-by-reference-to-const
 	// https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-signalobjectandwait
-	template<typename T> requires IsDuration<T>
+	template<typename T> requires Concepts::IsDuration<T>
 	Win32::WaitResult SignalAndWait(
 		Win32::HANDLE const objectToSignal,
 		Win32::HANDLE const objectToWaitOn,
@@ -82,7 +82,7 @@ export namespace Boring32::Async
 
 	Win32::WaitResult WaitFor(
 		const Win32::HANDLE handle,
-		const Duration auto& time,
+		const Concepts::Duration auto& time,
 		const bool isAlertable
 	)
 	{
@@ -183,7 +183,7 @@ export namespace Boring32::Async
 	Win32::DWORD WaitFor(
 		const std::vector<Win32::HANDLE>& handles,
 		const bool waitForAll,
-		const Duration auto& time,
+		const Concepts::Duration auto& time,
 		const bool alertable
 	)
 	{

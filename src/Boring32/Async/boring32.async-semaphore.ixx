@@ -4,7 +4,7 @@ import std.compat;
 import boring32.win32;
 import boring32.error;
 import boring32.raii;
-import :concepts;
+import boring32.concepts;
 
 export namespace Boring32::Async
 {
@@ -131,7 +131,7 @@ export namespace Boring32::Async
 			}
 
 			bool Acquire(
-				const Duration auto& time,
+				const Concepts::Duration auto& time,
 				const bool isAlertable
 			)
 			{

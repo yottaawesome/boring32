@@ -4,7 +4,7 @@ import std.compat;
 import boring32.raii;
 import boring32.win32;
 import boring32.error;
-import :concepts;
+import boring32.concepts;
 
 export namespace Boring32::Async
 {
@@ -183,7 +183,7 @@ export namespace Boring32::Async
 			}
 
 			bool WaitOnEvent(
-				const Duration auto& time,
+				const Concepts::Duration auto& time,
 				const bool alertable
 			) const
 			{
@@ -211,7 +211,7 @@ export namespace Boring32::Async
 			}
 
 			bool WaitOnEvent(
-				const Duration auto& time,
+				const Concepts::Duration auto& time,
 				const bool alertable, 
 				const std::nothrow_t&
 			) const noexcept try
