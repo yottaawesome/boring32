@@ -873,8 +873,6 @@ export namespace Boring32::Win32
 	constexpr auto _VARIANT_TRUE = VARIANT_TRUE;
 	constexpr auto _VARIANT_FALSE = VARIANT_FALSE;
 
-	
-
 	constexpr auto _SERVICE_STOP_REASON_FLAG_PLANNED = SERVICE_STOP_REASON_FLAG_PLANNED;
 	constexpr auto _SERVICE_STOP_REASON_MAJOR_NONE = SERVICE_STOP_REASON_MAJOR_NONE;
 	constexpr auto _SERVICE_STOP_REASON_MINOR_NONE = SERVICE_STOP_REASON_MINOR_NONE;
@@ -965,270 +963,272 @@ export namespace Boring32::Win32
 	using ::timeval;
 	constexpr auto _NS_ALL = NS_ALL;
 	constexpr auto _NS_DNS = NS_DNS;
-	namespace WinSock
-	{
-		using ::ADDRINFOW;
-		using ::ADDRINFOEXW;
-		using ::ADDRINFOEX;
-		using ::WSAData;
-		using ::PADDRINFOW;
-		using ::sockaddr_in;
-		using ::PADDRINFOEXW;
-		using ::sockaddr_in6;
-		using ::SOCKET;
-		using ::IPPROTO;
-		using ::FreeAddrInfoW;
-		using ::FreeAddrInfoExW;
-		using ::WSAStartup;
-		using ::WSACleanup;
-		using ::htonl;
-		using ::inet_ntop;
-		using ::WSAGetLastError;
-		using ::GetAddrInfoW;
-		using ::GetAddrInfoExW;
-		using ::closesocket;
-		using ::socket;
-		using ::send;
-		using ::recv;
-		using ::getsockopt;
-		using ::connect;
-		using ::setsockopt;
-		constexpr auto _INET_ADDRSTRLEN = INET_ADDRSTRLEN;
-		constexpr auto _INET6_ADDRSTRLEN = INET6_ADDRSTRLEN;
-		constexpr auto _AF_INET = AF_INET;
-		constexpr auto _AF_INET6 = AF_INET6;
-		constexpr auto _AF_UNSPEC = AF_UNSPEC;
-		constexpr auto _WSA_IO_PENDING = WSA_IO_PENDING;
-		constexpr auto _INVALID_SOCKET = INVALID_SOCKET;
-		constexpr auto _IPPROTO_IP = IPPROTO_IP;
-		constexpr auto _SOCK_STREAM = SOCK_STREAM;
-		constexpr auto _SOCKET_ERROR = SOCKET_ERROR;
-		constexpr auto _IP_TTL = IP_TTL;
-		constexpr auto _TCP_MAXRT = TCP_MAXRT;
-		constexpr auto _IPV6_UNICAST_HOPS = IPV6_UNICAST_HOPS;
-	}
-
-	namespace WinHttp
-	{
-		using ::URL_COMPONENTS;
-		using ::WINHTTP_AUTOPROXY_OPTIONS;
-		using ::HINTERNET;
-		using ::WINHTTP_PROXY_INFO;
-		using ::WINHTTP_STATUS_CALLBACK;
-		using ::WINHTTP_WEB_SOCKET_STATUS;
-		using ::WINHTTP_WEB_SOCKET_BUFFER_TYPE;
-		using ::WINHTTP_ASYNC_RESULT;
-		using ::WINHTTP_WEB_SOCKET_CLOSE_STATUS;
-		using ::WinHttpCrackUrl;
-		using ::WinHttpGetProxyForUrl;
-		using ::WinHttpGetProxyForUrl;
-		using ::WinHttpSetOption;
-		using ::WinHttpOpen;
-		using ::WinHttpCloseHandle;
-		using ::WinHttpOpenRequest;
-		using ::WinHttpSendRequest;
-		using ::WinHttpQueryHeaders;
-		using ::WinHttpReceiveResponse;
-		using ::WinHttpQueryDataAvailable;
-		using ::WinHttpReadData;
-		using ::WinHttpConnect;
-		using ::WinHttpSetOption;
-		using ::WinHttpWebSocketCompleteUpgrade;
-		using ::WinHttpWebSocketReceive;
-		using ::WinHttpSendRequest;
-		using ::WinHttpSetStatusCallback;
-		using ::WinHttpWebSocketClose;
-		using ::WinHttpQueryHeaders;
-		using ::WinHttpWebSocketSend;
-
-		constexpr auto _WINHTTP_ACCESS_TYPE_NAMED_PROXY = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
-		constexpr auto _WINHTTP_AUTOPROXY_CONFIG_URL = WINHTTP_AUTOPROXY_CONFIG_URL;
-		constexpr auto _WINHTTP_OPTION_PROXY = WINHTTP_OPTION_PROXY;
-		constexpr auto _WINHTTP_NO_PROXY_NAME = WINHTTP_NO_PROXY_NAME;
-		constexpr auto _WINHTTP_NO_PROXY_BYPASS = WINHTTP_NO_PROXY_BYPASS;
-		constexpr auto _WINHTTP_NO_REFERER = WINHTTP_NO_REFERER;
-		constexpr auto _WINHTTP_DEFAULT_ACCEPT_TYPES = WINHTTP_DEFAULT_ACCEPT_TYPES;
-		constexpr auto _WINHTTP_FLAG_SECURE = WINHTTP_FLAG_SECURE;
-		constexpr auto _WINHTTP_OPTION_SECURITY_FLAGS = WINHTTP_OPTION_SECURITY_FLAGS;
-		constexpr auto _SECURITY_FLAG_IGNORE_UNKNOWN_CA = SECURITY_FLAG_IGNORE_UNKNOWN_CA;
-		constexpr auto _SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE = SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE;
-		constexpr auto _SECURITY_FLAG_IGNORE_CERT_CN_INVALID = SECURITY_FLAG_IGNORE_CERT_CN_INVALID;
-		constexpr auto _SECURITY_FLAG_IGNORE_CERT_DATE_INVALID = SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
-		constexpr auto _WINHTTP_NO_ADDITIONAL_HEADERS = WINHTTP_NO_ADDITIONAL_HEADERS;
-		constexpr auto _WINHTTP_NO_REQUEST_DATA = WINHTTP_NO_REQUEST_DATA;
-		constexpr auto _WINHTTP_QUERY_STATUS_CODE = WINHTTP_QUERY_STATUS_CODE;
-		constexpr auto _WINHTTP_QUERY_FLAG_NUMBER = WINHTTP_QUERY_FLAG_NUMBER;
-		constexpr auto _WINHTTP_HEADER_NAME_BY_INDEX = WINHTTP_HEADER_NAME_BY_INDEX;
-		constexpr auto _WINHTTP_NO_HEADER_INDEX = WINHTTP_NO_HEADER_INDEX;
-		constexpr auto _WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY = WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY;
-		constexpr auto _WINHTTP_ACCESS_TYPE_NO_PROXY = WINHTTP_ACCESS_TYPE_NO_PROXY;
-		constexpr auto _WINHTTP_OPTION_CONTEXT_VALUE = WINHTTP_OPTION_CONTEXT_VALUE;
-		constexpr auto _WINHTTP_OPTION_CLIENT_CERT_CONTEXT = WINHTTP_OPTION_CLIENT_CERT_CONTEXT;
-		constexpr auto _WINHTTP_OPTION_UPGRADE_TO_WEB_SOCKET = WINHTTP_OPTION_UPGRADE_TO_WEB_SOCKET;
-		constexpr auto _SECURITY_FLAG_IGNORE_ALL_CERT_ERRORS = SECURITY_FLAG_IGNORE_ALL_CERT_ERRORS;
-		const auto _WINHTTP_INVALID_STATUS_CALLBACK = WINHTTP_INVALID_STATUS_CALLBACK;
-		constexpr auto _WINHTTP_CALLBACK_FLAG_ALL_NOTIFICATIONS = WINHTTP_CALLBACK_FLAG_ALL_NOTIFICATIONS;
-		constexpr auto _WINHTTP_FLAG_ASYNC = WINHTTP_FLAG_ASYNC;
-		constexpr auto _WINHTTP_CALLBACK_STATUS_REQUEST_SENT = WINHTTP_CALLBACK_STATUS_REQUEST_SENT;
-		constexpr auto _WINHTTP_CALLBACK_STATUS_HEADERS_AVAILABLE = WINHTTP_CALLBACK_STATUS_HEADERS_AVAILABLE;
-		constexpr auto _WINHTTP_CALLBACK_STATUS_READ_COMPLETE = WINHTTP_CALLBACK_STATUS_READ_COMPLETE;
-		constexpr auto _WINHTTP_CALLBACK_STATUS_WRITE_COMPLETE = WINHTTP_CALLBACK_STATUS_WRITE_COMPLETE;
-		constexpr auto _WINHTTP_CALLBACK_STATUS_REQUEST_ERROR = WINHTTP_CALLBACK_STATUS_REQUEST_ERROR;
-		constexpr auto _API_RECEIVE_RESPONSE = API_RECEIVE_RESPONSE;
-		constexpr auto _API_QUERY_DATA_AVAILABLE = API_QUERY_DATA_AVAILABLE;
-		constexpr auto _API_READ_DATA = API_READ_DATA;
-		constexpr auto _API_WRITE_DATA = API_WRITE_DATA;
-		constexpr auto _API_SEND_REQUEST = API_SEND_REQUEST;
-		constexpr auto _WINHTTP_CALLBACK_STATUS_CLOSE_COMPLETE = WINHTTP_CALLBACK_STATUS_CLOSE_COMPLETE;
-	}
-
-	namespace Shell
-	{
-		using WellKnownFolder = ::GUID;
-		// https://learn.microsoft.com/en-us/windows/win32/shell/knownfolderid
-		namespace WellKnownFolders
-		{
-			using 
-				::FOLDERID_AccountPictures,
-				::FOLDERID_AddNewPrograms,
-				::FOLDERID_AdminTools,
-				::FOLDERID_AppDataDesktop,
-				::FOLDERID_AppDataDocuments,
-				::FOLDERID_AppDataFavorites,
-				::FOLDERID_AppDataProgramData,
-				::FOLDERID_ApplicationShortcuts,
-				::FOLDERID_AppsFolder,
-				::FOLDERID_AppUpdates,
-				::FOLDERID_CameraRoll,
-				::FOLDERID_CDBurning,
-				::FOLDERID_ChangeRemovePrograms,
-				::FOLDERID_CommonAdminTools,
-				::FOLDERID_CommonOEMLinks,
-				::FOLDERID_CommonPrograms,
-				::FOLDERID_CommonStartMenu,
-				::FOLDERID_CommonStartup,
-				::FOLDERID_CommonTemplates,
-				::FOLDERID_ComputerFolder,
-				::FOLDERID_ConflictFolder,
-				::FOLDERID_ConnectionsFolder,
-				::FOLDERID_Contacts,
-				::FOLDERID_ControlPanelFolder,
-				::FOLDERID_Cookies,
-				::FOLDERID_Desktop,
-				::FOLDERID_DeviceMetadataStore,
-				::FOLDERID_Documents,
-				::FOLDERID_DocumentsLibrary,
-				::FOLDERID_Downloads,
-				::FOLDERID_Favorites,
-				::FOLDERID_Fonts,
-				::FOLDERID_Games,
-				::FOLDERID_GameTasks,
-				::FOLDERID_History,
-				::FOLDERID_HomeGroup,
-				::FOLDERID_HomeGroupCurrentUser,
-				::FOLDERID_ImplicitAppShortcuts,
-				::FOLDERID_InternetCache,
-				::FOLDERID_InternetFolder,
-				::FOLDERID_Libraries,
-				::FOLDERID_Links,
-				::FOLDERID_LocalAppData,
-				::FOLDERID_LocalAppDataLow,
-				::FOLDERID_LocalizedResourcesDir,
-				::FOLDERID_Music,
-				::FOLDERID_MusicLibrary,
-				::FOLDERID_NetHood,
-				::FOLDERID_NetworkFolder,
-				::FOLDERID_Objects3D,
-				::FOLDERID_OriginalImages,
-				::FOLDERID_PhotoAlbums,
-				::FOLDERID_PicturesLibrary,
-				::FOLDERID_Playlists,
-				::FOLDERID_PrintersFolder,
-				::FOLDERID_PrintHood,
-				::FOLDERID_Profile,
-				::FOLDERID_ProgramData,
-				::FOLDERID_ProgramFiles,
-				::FOLDERID_ProgramFilesX64,
-				::FOLDERID_ProgramFilesX86,
-				::FOLDERID_ProgramFilesCommon,
-				::FOLDERID_ProgramFilesCommonX64,
-				::FOLDERID_ProgramFilesCommonX86,
-				::FOLDERID_Programs,
-				::FOLDERID_Public,
-				::FOLDERID_PublicDesktop,
-				::FOLDERID_PublicDocuments,
-				::FOLDERID_PublicDownloads,
-				::FOLDERID_PublicGameTasks,
-				::FOLDERID_PublicLibraries,
-				::FOLDERID_PublicMusic,
-				::FOLDERID_PublicPictures,
-				::FOLDERID_PublicRingtones,
-				::FOLDERID_PublicUserTiles,
-				::FOLDERID_PublicVideos,
-				::FOLDERID_QuickLaunch,
-				::FOLDERID_Recent,
-				//::FOLDERID_RecordedTV, // Not used. This value is undefined as of Windows 7.
-				::FOLDERID_RecordedTVLibrary,
-				::FOLDERID_RecycleBinFolder,
-				::FOLDERID_ResourceDir,
-				::FOLDERID_Ringtones,
-				::FOLDERID_RoamingAppData,
-				::FOLDERID_RoamedTileImages,
-				::FOLDERID_RoamingTiles,
-				::FOLDERID_SampleMusic,
-				::FOLDERID_SamplePictures,
-				::FOLDERID_SamplePlaylists,
-				::FOLDERID_SampleVideos,
-				::FOLDERID_SavedGames,
-				::FOLDERID_SavedPictures,
-				::FOLDERID_SavedPicturesLibrary,
-				::FOLDERID_SavedSearches,
-				::FOLDERID_Screenshots,
-				::FOLDERID_SEARCH_CSC,
-				::FOLDERID_SearchHistory,
-				::FOLDERID_SearchHome,
-				::FOLDERID_SEARCH_MAPI,
-				::FOLDERID_SearchTemplates,
-				::FOLDERID_SendTo,
-				::FOLDERID_SidebarDefaultParts,
-				::FOLDERID_SidebarParts,
-				::FOLDERID_SkyDrive,
-				::FOLDERID_SkyDriveCameraRoll,
-				::FOLDERID_SkyDriveDocuments,
-				::FOLDERID_SkyDrivePictures,
-				::FOLDERID_StartMenu,
-				::FOLDERID_Startup,
-				::FOLDERID_SyncManagerFolder,
-				::FOLDERID_SyncResultsFolder,
-				::FOLDERID_SyncSetupFolder,
-				::FOLDERID_System,
-				::FOLDERID_SystemX86,
-				::FOLDERID_Templates,
-				//::FOLDERID_TreeProperties, // Not used in Windows Vista. Unsupported as of Windows 7.
-				::FOLDERID_UserPinned,
-				::FOLDERID_UserProfiles,
-				::FOLDERID_UserProgramFiles,
-				::FOLDERID_UserProgramFilesCommon,
-				::FOLDERID_UsersFiles,
-				::FOLDERID_UsersLibraries,
-				::FOLDERID_Videos,
-				::FOLDERID_VideosLibrary,
-				::FOLDERID_Windows;
-		}
-
-		namespace KnownFolderFlags
-		{
-			using ::KNOWN_FOLDER_FLAG;
-		}
-
-		using ::IKnownFolder;
-		using ::IKnownFolderManager;
-
-		using ::SHGetKnownFolderPath;
-	}
-
+	
 	using ::CoTaskMemFree;
 }
+
+export namespace Boring32::Win32::WinSock
+{
+	using ::ADDRINFOW;
+	using ::ADDRINFOEXW;
+	using ::ADDRINFOEX;
+	using ::WSAData;
+	using ::PADDRINFOW;
+	using ::sockaddr_in;
+	using ::PADDRINFOEXW;
+	using ::sockaddr_in6;
+	using ::SOCKET;
+	using ::IPPROTO;
+	using ::FreeAddrInfoW;
+	using ::FreeAddrInfoExW;
+	using ::WSAStartup;
+	using ::WSACleanup;
+	using ::htonl;
+	using ::inet_ntop;
+	using ::WSAGetLastError;
+	using ::GetAddrInfoW;
+	using ::GetAddrInfoExW;
+	using ::closesocket;
+	using ::socket;
+	using ::send;
+	using ::recv;
+	using ::getsockopt;
+	using ::connect;
+	using ::setsockopt;
+	constexpr auto _INET_ADDRSTRLEN = INET_ADDRSTRLEN;
+	constexpr auto _INET6_ADDRSTRLEN = INET6_ADDRSTRLEN;
+	constexpr auto _AF_INET = AF_INET;
+	constexpr auto _AF_INET6 = AF_INET6;
+	constexpr auto _AF_UNSPEC = AF_UNSPEC;
+	constexpr auto _WSA_IO_PENDING = WSA_IO_PENDING;
+	constexpr auto _INVALID_SOCKET = INVALID_SOCKET;
+	constexpr auto _IPPROTO_IP = IPPROTO_IP;
+	constexpr auto _SOCK_STREAM = SOCK_STREAM;
+	constexpr auto _SOCKET_ERROR = SOCKET_ERROR;
+	constexpr auto _IP_TTL = IP_TTL;
+	constexpr auto _TCP_MAXRT = TCP_MAXRT;
+	constexpr auto _IPV6_UNICAST_HOPS = IPV6_UNICAST_HOPS;
+}
+
+export namespace Boring32::Win32::WinHttp
+{
+	using ::URL_COMPONENTS;
+	using ::WINHTTP_AUTOPROXY_OPTIONS;
+	using ::HINTERNET;
+	using ::WINHTTP_PROXY_INFO;
+	using ::WINHTTP_STATUS_CALLBACK;
+	using ::WINHTTP_WEB_SOCKET_STATUS;
+	using ::WINHTTP_WEB_SOCKET_BUFFER_TYPE;
+	using ::WINHTTP_ASYNC_RESULT;
+	using ::WINHTTP_WEB_SOCKET_CLOSE_STATUS;
+	using ::WinHttpCrackUrl;
+	using ::WinHttpGetProxyForUrl;
+	using ::WinHttpGetProxyForUrl;
+	using ::WinHttpSetOption;
+	using ::WinHttpOpen;
+	using ::WinHttpCloseHandle;
+	using ::WinHttpOpenRequest;
+	using ::WinHttpSendRequest;
+	using ::WinHttpQueryHeaders;
+	using ::WinHttpReceiveResponse;
+	using ::WinHttpQueryDataAvailable;
+	using ::WinHttpReadData;
+	using ::WinHttpConnect;
+	using ::WinHttpSetOption;
+	using ::WinHttpWebSocketCompleteUpgrade;
+	using ::WinHttpWebSocketReceive;
+	using ::WinHttpSendRequest;
+	using ::WinHttpSetStatusCallback;
+	using ::WinHttpWebSocketClose;
+	using ::WinHttpQueryHeaders;
+	using ::WinHttpWebSocketSend;
+
+	constexpr auto _WINHTTP_ACCESS_TYPE_NAMED_PROXY = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
+	constexpr auto _WINHTTP_AUTOPROXY_CONFIG_URL = WINHTTP_AUTOPROXY_CONFIG_URL;
+	constexpr auto _WINHTTP_OPTION_PROXY = WINHTTP_OPTION_PROXY;
+	constexpr auto _WINHTTP_NO_PROXY_NAME = WINHTTP_NO_PROXY_NAME;
+	constexpr auto _WINHTTP_NO_PROXY_BYPASS = WINHTTP_NO_PROXY_BYPASS;
+	constexpr auto _WINHTTP_NO_REFERER = WINHTTP_NO_REFERER;
+	constexpr auto _WINHTTP_DEFAULT_ACCEPT_TYPES = WINHTTP_DEFAULT_ACCEPT_TYPES;
+	constexpr auto _WINHTTP_FLAG_SECURE = WINHTTP_FLAG_SECURE;
+	constexpr auto _WINHTTP_OPTION_SECURITY_FLAGS = WINHTTP_OPTION_SECURITY_FLAGS;
+	constexpr auto _SECURITY_FLAG_IGNORE_UNKNOWN_CA = SECURITY_FLAG_IGNORE_UNKNOWN_CA;
+	constexpr auto _SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE = SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE;
+	constexpr auto _SECURITY_FLAG_IGNORE_CERT_CN_INVALID = SECURITY_FLAG_IGNORE_CERT_CN_INVALID;
+	constexpr auto _SECURITY_FLAG_IGNORE_CERT_DATE_INVALID = SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
+	constexpr auto _WINHTTP_NO_ADDITIONAL_HEADERS = WINHTTP_NO_ADDITIONAL_HEADERS;
+	constexpr auto _WINHTTP_NO_REQUEST_DATA = WINHTTP_NO_REQUEST_DATA;
+	constexpr auto _WINHTTP_QUERY_STATUS_CODE = WINHTTP_QUERY_STATUS_CODE;
+	constexpr auto _WINHTTP_QUERY_FLAG_NUMBER = WINHTTP_QUERY_FLAG_NUMBER;
+	constexpr auto _WINHTTP_HEADER_NAME_BY_INDEX = WINHTTP_HEADER_NAME_BY_INDEX;
+	constexpr auto _WINHTTP_NO_HEADER_INDEX = WINHTTP_NO_HEADER_INDEX;
+	constexpr auto _WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY = WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY;
+	constexpr auto _WINHTTP_ACCESS_TYPE_NO_PROXY = WINHTTP_ACCESS_TYPE_NO_PROXY;
+	constexpr auto _WINHTTP_OPTION_CONTEXT_VALUE = WINHTTP_OPTION_CONTEXT_VALUE;
+	constexpr auto _WINHTTP_OPTION_CLIENT_CERT_CONTEXT = WINHTTP_OPTION_CLIENT_CERT_CONTEXT;
+	constexpr auto _WINHTTP_OPTION_UPGRADE_TO_WEB_SOCKET = WINHTTP_OPTION_UPGRADE_TO_WEB_SOCKET;
+	constexpr auto _SECURITY_FLAG_IGNORE_ALL_CERT_ERRORS = SECURITY_FLAG_IGNORE_ALL_CERT_ERRORS;
+	const auto _WINHTTP_INVALID_STATUS_CALLBACK = WINHTTP_INVALID_STATUS_CALLBACK;
+	constexpr auto _WINHTTP_CALLBACK_FLAG_ALL_NOTIFICATIONS = WINHTTP_CALLBACK_FLAG_ALL_NOTIFICATIONS;
+	constexpr auto _WINHTTP_FLAG_ASYNC = WINHTTP_FLAG_ASYNC;
+	constexpr auto _WINHTTP_CALLBACK_STATUS_REQUEST_SENT = WINHTTP_CALLBACK_STATUS_REQUEST_SENT;
+	constexpr auto _WINHTTP_CALLBACK_STATUS_HEADERS_AVAILABLE = WINHTTP_CALLBACK_STATUS_HEADERS_AVAILABLE;
+	constexpr auto _WINHTTP_CALLBACK_STATUS_READ_COMPLETE = WINHTTP_CALLBACK_STATUS_READ_COMPLETE;
+	constexpr auto _WINHTTP_CALLBACK_STATUS_WRITE_COMPLETE = WINHTTP_CALLBACK_STATUS_WRITE_COMPLETE;
+	constexpr auto _WINHTTP_CALLBACK_STATUS_REQUEST_ERROR = WINHTTP_CALLBACK_STATUS_REQUEST_ERROR;
+	constexpr auto _API_RECEIVE_RESPONSE = API_RECEIVE_RESPONSE;
+	constexpr auto _API_QUERY_DATA_AVAILABLE = API_QUERY_DATA_AVAILABLE;
+	constexpr auto _API_READ_DATA = API_READ_DATA;
+	constexpr auto _API_WRITE_DATA = API_WRITE_DATA;
+	constexpr auto _API_SEND_REQUEST = API_SEND_REQUEST;
+	constexpr auto _WINHTTP_CALLBACK_STATUS_CLOSE_COMPLETE = WINHTTP_CALLBACK_STATUS_CLOSE_COMPLETE;
+}
+
+export namespace Boring32::Win32::Shell
+{
+	using WellKnownFolder = ::GUID;
+	// https://learn.microsoft.com/en-us/windows/win32/shell/knownfolderid
+	namespace WellKnownFolders
+	{
+		using
+			::FOLDERID_AccountPictures,
+			::FOLDERID_AddNewPrograms,
+			::FOLDERID_AdminTools,
+			::FOLDERID_AppDataDesktop,
+			::FOLDERID_AppDataDocuments,
+			::FOLDERID_AppDataFavorites,
+			::FOLDERID_AppDataProgramData,
+			::FOLDERID_ApplicationShortcuts,
+			::FOLDERID_AppsFolder,
+			::FOLDERID_AppUpdates,
+			::FOLDERID_CameraRoll,
+			::FOLDERID_CDBurning,
+			::FOLDERID_ChangeRemovePrograms,
+			::FOLDERID_CommonAdminTools,
+			::FOLDERID_CommonOEMLinks,
+			::FOLDERID_CommonPrograms,
+			::FOLDERID_CommonStartMenu,
+			::FOLDERID_CommonStartup,
+			::FOLDERID_CommonTemplates,
+			::FOLDERID_ComputerFolder,
+			::FOLDERID_ConflictFolder,
+			::FOLDERID_ConnectionsFolder,
+			::FOLDERID_Contacts,
+			::FOLDERID_ControlPanelFolder,
+			::FOLDERID_Cookies,
+			::FOLDERID_Desktop,
+			::FOLDERID_DeviceMetadataStore,
+			::FOLDERID_Documents,
+			::FOLDERID_DocumentsLibrary,
+			::FOLDERID_Downloads,
+			::FOLDERID_Favorites,
+			::FOLDERID_Fonts,
+			::FOLDERID_Games,
+			::FOLDERID_GameTasks,
+			::FOLDERID_History,
+			::FOLDERID_HomeGroup,
+			::FOLDERID_HomeGroupCurrentUser,
+			::FOLDERID_ImplicitAppShortcuts,
+			::FOLDERID_InternetCache,
+			::FOLDERID_InternetFolder,
+			::FOLDERID_Libraries,
+			::FOLDERID_Links,
+			::FOLDERID_LocalAppData,
+			::FOLDERID_LocalAppDataLow,
+			::FOLDERID_LocalizedResourcesDir,
+			::FOLDERID_Music,
+			::FOLDERID_MusicLibrary,
+			::FOLDERID_NetHood,
+			::FOLDERID_NetworkFolder,
+			::FOLDERID_Objects3D,
+			::FOLDERID_OriginalImages,
+			::FOLDERID_PhotoAlbums,
+			::FOLDERID_PicturesLibrary,
+			::FOLDERID_Playlists,
+			::FOLDERID_PrintersFolder,
+			::FOLDERID_PrintHood,
+			::FOLDERID_Profile,
+			::FOLDERID_ProgramData,
+			::FOLDERID_ProgramFiles,
+			::FOLDERID_ProgramFilesX64,
+			::FOLDERID_ProgramFilesX86,
+			::FOLDERID_ProgramFilesCommon,
+			::FOLDERID_ProgramFilesCommonX64,
+			::FOLDERID_ProgramFilesCommonX86,
+			::FOLDERID_Programs,
+			::FOLDERID_Public,
+			::FOLDERID_PublicDesktop,
+			::FOLDERID_PublicDocuments,
+			::FOLDERID_PublicDownloads,
+			::FOLDERID_PublicGameTasks,
+			::FOLDERID_PublicLibraries,
+			::FOLDERID_PublicMusic,
+			::FOLDERID_PublicPictures,
+			::FOLDERID_PublicRingtones,
+			::FOLDERID_PublicUserTiles,
+			::FOLDERID_PublicVideos,
+			::FOLDERID_QuickLaunch,
+			::FOLDERID_Recent,
+			//::FOLDERID_RecordedTV, // Not used. This value is undefined as of Windows 7.
+			::FOLDERID_RecordedTVLibrary,
+			::FOLDERID_RecycleBinFolder,
+			::FOLDERID_ResourceDir,
+			::FOLDERID_Ringtones,
+			::FOLDERID_RoamingAppData,
+			::FOLDERID_RoamedTileImages,
+			::FOLDERID_RoamingTiles,
+			::FOLDERID_SampleMusic,
+			::FOLDERID_SamplePictures,
+			::FOLDERID_SamplePlaylists,
+			::FOLDERID_SampleVideos,
+			::FOLDERID_SavedGames,
+			::FOLDERID_SavedPictures,
+			::FOLDERID_SavedPicturesLibrary,
+			::FOLDERID_SavedSearches,
+			::FOLDERID_Screenshots,
+			::FOLDERID_SEARCH_CSC,
+			::FOLDERID_SearchHistory,
+			::FOLDERID_SearchHome,
+			::FOLDERID_SEARCH_MAPI,
+			::FOLDERID_SearchTemplates,
+			::FOLDERID_SendTo,
+			::FOLDERID_SidebarDefaultParts,
+			::FOLDERID_SidebarParts,
+			::FOLDERID_SkyDrive,
+			::FOLDERID_SkyDriveCameraRoll,
+			::FOLDERID_SkyDriveDocuments,
+			::FOLDERID_SkyDrivePictures,
+			::FOLDERID_StartMenu,
+			::FOLDERID_Startup,
+			::FOLDERID_SyncManagerFolder,
+			::FOLDERID_SyncResultsFolder,
+			::FOLDERID_SyncSetupFolder,
+			::FOLDERID_System,
+			::FOLDERID_SystemX86,
+			::FOLDERID_Templates,
+			//::FOLDERID_TreeProperties, // Not used in Windows Vista. Unsupported as of Windows 7.
+			::FOLDERID_UserPinned,
+			::FOLDERID_UserProfiles,
+			::FOLDERID_UserProgramFiles,
+			::FOLDERID_UserProgramFilesCommon,
+			::FOLDERID_UsersFiles,
+			::FOLDERID_UsersLibraries,
+			::FOLDERID_Videos,
+			::FOLDERID_VideosLibrary,
+			::FOLDERID_Windows;
+	}
+
+	namespace KnownFolderFlags
+	{
+		using ::KNOWN_FOLDER_FLAG;
+	}
+
+	using ::IKnownFolder;
+	using ::IKnownFolderManager;
+
+	using ::SHGetKnownFolderPath;
+}
+
 
 export namespace Boring32::Win32::Winreg
 {
