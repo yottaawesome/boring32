@@ -182,6 +182,8 @@ namespace Boring32::Registry
 			{
 				if constexpr (ThrowOnError)
 					throw Error::Win32Error("RegGetValueW() failed", status);
+				else if (std::invocable<decltype(DefaultValue)>)
+					return std::wstring{ DefaultValue() };
 				else
 					return DefaultValue();
 			}
@@ -198,10 +200,18 @@ namespace Boring32::Registry
 		}
 	}
 
-	template<bool ThrowOnError = true, auto DefaultValue = [] { return DWORD{}; } >
+	template<bool ThrowOnError = true, Concepts::NullPtrOrInvocable auto DefaultValue = nullptr>
 	Win32::DWORD ReadDWord(Win32::HKEY ParentKey, const wchar_t* SubKey, const wchar_t* ValueName) noexcept(not ThrowOnError)
 	{
-		static_assert(ThrowOnError or std::convertible_to<std::invoke_result_t<decltype(DefaultValue)>, DWORD>);
+		static_assert(
+			ThrowOnError 
+			or (
+				not std::is_null_pointer_v<decltype(DefaultValue)>
+				and std::is_invocable_v<decltype(DefaultValue)>
+				and std::is_convertible_v<std::invoke_result_t<decltype(DefaultValue)>, DWORD>
+			),
+			"Either ThrowOnError must be true or DefaultValue must be an invocable returning a DWORD"
+		);
 
 		Win32::DWORD out;
 		Win32::DWORD sizeInBytes = sizeof(out);
@@ -218,8 +228,10 @@ namespace Boring32::Registry
 		{
 			if constexpr (ThrowOnError)
 				throw Error::Win32Error("RegGetValueW() failed", status);
+			else if (std::invocable<decltype(DefaultValue)>)
+				return Win32::DWORD{ DefaultValue() };
 			else
-				return DefaultValue();
+				return 0;
 		}
 		return out;
 	}
