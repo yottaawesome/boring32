@@ -95,7 +95,6 @@ export namespace Boring32::Win32
 	using ::LPCWSTR;
 	using ::DWORD_PTR;
 	using ::LSTATUS;
-	using ::HKEY;
 	using ::LONG;
 	using ::LPOVERLAPPED;
 	using ::LPVOID;
@@ -188,27 +187,6 @@ export namespace Boring32::Win32
 		PubKeyMd5Hash = CERT_FIND_PUBKEY_MD5_HASH
 	};
 
-	// https://docs.microsoft.com/en-us/windows/win32/sysinfo/registry-value-types
-	enum class ValueTypes : DWORD
-	{
-		None = REG_NONE,
-		Binary = REG_BINARY,
-		DWord = REG_DWORD,
-		DWordLittleEndian = REG_DWORD_LITTLE_ENDIAN,
-		DWordBigEndian = REG_DWORD_BIG_ENDIAN,
-		ExpandableString = REG_EXPAND_SZ,
-		Link = REG_LINK,
-		MultiString = REG_MULTI_SZ,
-		QWord = REG_QWORD,
-		QWordLittleEndian = REG_QWORD_LITTLE_ENDIAN,
-		String = REG_SZ,
-	};
-
-	constexpr auto _REG_LATEST_FORMAT = REG_LATEST_FORMAT;
-
-	constexpr auto _KEY_ALL_ACCESS = KEY_ALL_ACCESS;
-	constexpr auto _KEY_SET_VALUE = KEY_SET_VALUE;
-
 	using ::SERVICE_CONTROL_STATUS_REASON_PARAMS;
 
 	WORD MakeWord(DWORD a, DWORD b)
@@ -216,11 +194,7 @@ export namespace Boring32::Win32
 		return MAKEWORD(a, b);
 	}
 
-	const auto _HKEY_CLASSES_ROOT = HKEY_CLASSES_ROOT;
-	const auto _HKEY_CURRENT_CONFIG = HKEY_CURRENT_CONFIG;
-	const auto _HKEY_CURRENT_USER = HKEY_CURRENT_USER;
-	const auto _HKEY_LOCAL_MACHINE = HKEY_LOCAL_MACHINE;
-	const auto _HKEY_USERS = HKEY_USERS;
+	
 
 	constexpr auto TimeZoneIdInvalid = TIME_ZONE_ID_INVALID;
 	constexpr auto CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS = 0x0002; // not defined according to msdn
@@ -685,21 +659,11 @@ export namespace Boring32::Win32
 	using ::CreateMailslotW;
 	using ::ConnectNamedPipe;
 	using ::GlobalFree;
-	using ::WaitNamedPipeW;
-	using ::RegGetValueW;
-	using ::RegSetValueExW;
-	using ::RegNotifyChangeKeyValue;
 	using ::SHDeleteKeyW;
-	using ::RegDeleteTreeW;
-	using ::RegOpenKeyExW;
-	using ::RegQueryInfoKeyW;
-	using ::RegEnumValueW;
-	using ::RegSaveKeyExW;
-	using ::RegDeleteValueW;
-	using ::RegCloseKey;
-	using ::ImpersonateLoggedOnUser;
+	using ::WaitNamedPipeW;
+
 	using ::RevertToSelf;
-	using ::RegOpenCurrentUser;
+	using ::ImpersonateLoggedOnUser;
 	using ::GetSecurityDescriptorControl;
 	using ::ConvertSidToStringSidW;
 	using ::GetSidSubAuthorityCount;
@@ -882,7 +846,6 @@ export namespace Boring32::Win32
 		Data = SECBUFFER_DATA
 	};
 
-	using ::HKEY__;
 
 	constexpr auto _DACL_SECURITY_INFORMATION=  DACL_SECURITY_INFORMATION;
 	
@@ -910,10 +873,7 @@ export namespace Boring32::Win32
 	constexpr auto _VARIANT_TRUE = VARIANT_TRUE;
 	constexpr auto _VARIANT_FALSE = VARIANT_FALSE;
 
-	constexpr auto _RRF_RT_REG_SZ = RRF_RT_REG_SZ;
-	constexpr auto _RRF_RT_REG_DWORD = RRF_RT_REG_DWORD;
-	constexpr auto _RRF_RT_REG_QWORD = RRF_RT_REG_QWORD;
-	constexpr auto _REG_NOTIFY_CHANGE_LAST_SET = REG_NOTIFY_CHANGE_LAST_SET;
+	
 
 	constexpr auto _SERVICE_STOP_REASON_FLAG_PLANNED = SERVICE_STOP_REASON_FLAG_PLANNED;
 	constexpr auto _SERVICE_STOP_REASON_MAJOR_NONE = SERVICE_STOP_REASON_MAJOR_NONE;
@@ -1268,4 +1228,54 @@ export namespace Boring32::Win32
 	}
 
 	using ::CoTaskMemFree;
+}
+
+export namespace Boring32::Win32::Winreg
+{
+	using ::HKEY;
+	using ::HKEY__;
+
+	const auto _HKEY_CLASSES_ROOT = HKEY_CLASSES_ROOT;
+	const auto _HKEY_CURRENT_CONFIG = HKEY_CURRENT_CONFIG;
+	const auto _HKEY_CURRENT_USER = HKEY_CURRENT_USER;
+	const auto _HKEY_LOCAL_MACHINE = HKEY_LOCAL_MACHINE;
+	const auto _HKEY_USERS = HKEY_USERS;
+
+	constexpr auto _RRF_RT_REG_SZ = RRF_RT_REG_SZ;
+	constexpr auto _RRF_RT_REG_DWORD = RRF_RT_REG_DWORD;
+	constexpr auto _RRF_RT_REG_QWORD = RRF_RT_REG_QWORD;
+	constexpr auto _REG_NOTIFY_CHANGE_LAST_SET = REG_NOTIFY_CHANGE_LAST_SET;
+
+	constexpr auto _REG_LATEST_FORMAT = REG_LATEST_FORMAT;
+	constexpr auto _KEY_ALL_ACCESS = KEY_ALL_ACCESS;
+	constexpr auto _KEY_SET_VALUE = KEY_SET_VALUE;
+
+	// https://docs.microsoft.com/en-us/windows/win32/sysinfo/registry-value-types
+	enum class ValueTypes : DWORD
+	{
+		None = REG_NONE,
+		Binary = REG_BINARY,
+		DWord = REG_DWORD,
+		DWordLittleEndian = REG_DWORD_LITTLE_ENDIAN,
+		DWordBigEndian = REG_DWORD_BIG_ENDIAN,
+		ExpandableString = REG_EXPAND_SZ,
+		Link = REG_LINK,
+		MultiString = REG_MULTI_SZ,
+		QWord = REG_QWORD,
+		QWordLittleEndian = REG_QWORD_LITTLE_ENDIAN,
+		String = REG_SZ,
+	};
+
+	using ::RegGetValueW;
+	using ::RegSetValueExW;
+	using ::RegNotifyChangeKeyValue;
+	using ::RegDeleteTreeW;
+	using ::RegOpenKeyExW;
+	using ::RegQueryInfoKeyW;
+	using ::RegEnumValueW;
+	using ::RegSaveKeyExW;
+	using ::RegDeleteValueW;
+	using ::RegCloseKey;
+	using ::RegCreateKeyExW;
+	using ::RegOpenCurrentUser;
 }

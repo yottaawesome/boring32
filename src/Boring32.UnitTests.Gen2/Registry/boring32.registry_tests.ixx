@@ -17,7 +17,7 @@ export namespace unit_tests::registry
 					[] {
 						try
 						{
-							using registry_value_t = Registry::RegistryValue<Win32::_HKEY_LOCAL_MACHINE, L"A", L"A", Win32::ValueTypes::DWord>;
+							using registry_value_t = Registry::RegistryValue<Win32::Winreg::_HKEY_LOCAL_MACHINE, L"A", L"A", Win32::Winreg::ValueTypes::DWord>;
 							auto result = registry_value_t::Read();
 							assert::is_true(false);
 						}
@@ -31,7 +31,7 @@ export namespace unit_tests::registry
 				unit_tests::testing::test{
 					"Test DWORD default return",
 					[] {
-						using registry_value_t = Registry::RegistryValue<Win32::_HKEY_LOCAL_MACHINE, L"A", L"A", Win32::ValueTypes::DWord>;
+						using registry_value_t = Registry::RegistryValue<Win32::Winreg::_HKEY_LOCAL_MACHINE, L"A", L"A", Win32::Winreg::ValueTypes::DWord>;
 						auto result = registry_value_t::Read<false, [] { return 1; }>();
 						assert::is_true(result == 1);
 					}
@@ -42,7 +42,7 @@ export namespace unit_tests::registry
 					[] {
 						try
 						{
-							using registry_value_t = Registry::RegistryValue<Win32::_HKEY_LOCAL_MACHINE, L"A", L"A", Win32::ValueTypes::QWord>;
+							using registry_value_t = Registry::RegistryValue<Win32::Winreg::_HKEY_LOCAL_MACHINE, L"A", L"A", Win32::Winreg::ValueTypes::QWord>;
 							auto result = registry_value_t::Read();
 							assert::is_true(false);
 						}
@@ -56,7 +56,7 @@ export namespace unit_tests::registry
 				unit_tests::testing::test{
 					"Test QWORD default return",
 					[] {
-						using registry_value_t = Registry::RegistryValue<Win32::_HKEY_LOCAL_MACHINE, L"A", L"A", Win32::ValueTypes::QWord>;
+						using registry_value_t = Registry::RegistryValue<Win32::Winreg::_HKEY_LOCAL_MACHINE, L"A", L"A", Win32::Winreg::ValueTypes::QWord>;
 						auto result = registry_value_t::Read<false, [] { return 1; }>();
 						assert::is_true(result == 1);
 					}
@@ -67,7 +67,7 @@ export namespace unit_tests::registry
 					[] {
 						try
 						{
-							using registry_value_t = Registry::RegistryValue<Win32::_HKEY_LOCAL_MACHINE, L"A", L"A", Win32::ValueTypes::String>;
+							using registry_value_t = Registry::RegistryValue<Win32::Winreg::_HKEY_LOCAL_MACHINE, L"A", L"A", Win32::Winreg::ValueTypes::String>;
 							auto result = registry_value_t::Read();
 							assert::is_true(false);
 						}
@@ -81,7 +81,7 @@ export namespace unit_tests::registry
 				unit_tests::testing::test{
 					"Test wstring default return",
 					[] {
-						using registry_value_t = Registry::RegistryValue<Win32::_HKEY_LOCAL_MACHINE, L"A", L"A", Win32::ValueTypes::String>;
+						using registry_value_t = Registry::RegistryValue<Win32::Winreg::_HKEY_LOCAL_MACHINE, L"A", L"A", Win32::Winreg::ValueTypes::String>;
 						auto result = registry_value_t::Read<false, [] { return L""; } >();
 						assert::is_true(result == L"");
 					}

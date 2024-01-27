@@ -8,7 +8,7 @@ import boring32.strings;
 export namespace Boring32::Registry
 {
 	// https://docs.microsoft.com/en-us/windows/win32/sysinfo/registry-value-types
-	using ValueTypes = Win32::ValueTypes;
+	using ValueTypes = Win32::Winreg::ValueTypes;
 
 	template<ValueTypes V, typename T>
 	struct KeyValuePair

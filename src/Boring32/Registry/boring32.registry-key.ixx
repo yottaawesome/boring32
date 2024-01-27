@@ -26,14 +26,14 @@ export namespace Boring32::Registry
 			Key& operator=(Key&& other) noexcept = default;
 
 		public:
-			Key(const Win32::HKEY key, const std::wstring& subkey)
-				: m_access(Win32::_KEY_ALL_ACCESS)
+			Key(const Win32::Winreg::HKEY key, const std::wstring& subkey)
+				: m_access(Win32::Winreg::_KEY_ALL_ACCESS)
 			{
 				InternalOpen(key, subkey);
 			}
 
 			Key(
-				const Win32::HKEY key,
+				const Win32::Winreg::HKEY key,
 				const std::wstring& subkey, 
 				const Win32::DWORD access
 			) : m_access(access)
@@ -42,17 +42,17 @@ export namespace Boring32::Registry
 			}
 
 			Key(
-				const Win32::HKEY key,
+				const Win32::Winreg::HKEY key,
 				const std::wstring& subkey, 
 				const std::nothrow_t&
 			) noexcept
-				: m_access(Win32::_KEY_ALL_ACCESS)
+				: m_access(Win32::Winreg::_KEY_ALL_ACCESS)
 			{
 				InternalOpen(key, subkey, std::nothrow);
 			}
 
 			Key(
-				const Win32::HKEY key,
+				const Win32::Winreg::HKEY key,
 				const std::wstring& subkey, 
 				const Win32::DWORD access,
 				const std::nothrow_t&
@@ -63,13 +63,13 @@ export namespace Boring32::Registry
 			}
 
 
-			Key(const HKEY key)
+			Key(const Win32::Winreg::HKEY key)
 				: m_key(CreateRegKeyPtr(key)),
-				m_access(Win32::_KEY_ALL_ACCESS)
+				m_access(Win32::Winreg::_KEY_ALL_ACCESS)
 			{}
 
 		public:
-			Key& operator=(const HKEY other)
+			Key& operator=(const Win32::Winreg::HKEY other)
 			{
 				m_key = CreateRegKeyPtr(other);
 				return *this;
@@ -86,7 +86,7 @@ export namespace Boring32::Registry
 				m_key = nullptr;
 			}
 
-			HKEY GetKey() const noexcept
+			Win32::Winreg::HKEY GetKey() const noexcept
 			{
 				return m_key.get();
 			}
@@ -118,7 +118,7 @@ export namespace Boring32::Registry
 					throw Error::Boring32Error("m_key is null");
 
 				// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw
-				const Win32::LSTATUS status = Win32::RegSetValueExW(
+				const Win32::LSTATUS status = Win32::Winreg::RegSetValueExW(
 					m_key.get(),
 					valueName.c_str(),
 					0,
@@ -135,7 +135,7 @@ export namespace Boring32::Registry
 				const Win32::DWORD value
 			)
 			{
-				Registry::WriteValue(m_key.get(), valueName, (Win32::DWORD)Win32::ValueTypes::DWord, value);
+				Registry::WriteValue(m_key.get(), valueName, (Win32::DWORD)Win32::Winreg::ValueTypes::DWord, value);
 			}
 
 			void WriteValue(
@@ -143,7 +143,7 @@ export namespace Boring32::Registry
 				const size_t value
 			)
 			{
-				Registry::WriteValue(m_key.get(), valueName, (Win32::DWORD)Win32::ValueTypes::QWord, value);
+				Registry::WriteValue(m_key.get(), valueName, (Win32::DWORD)Win32::Winreg::ValueTypes::QWord, value);
 			}
 
 			void Export(const std::wstring& path, const Win32::DWORD flags)
@@ -151,11 +151,11 @@ export namespace Boring32::Registry
 				if (!m_key)
 					throw Error::Boring32Error("m_key is null");
 
-				const Win32::LSTATUS status = Win32::RegSaveKeyExW(
+				const Win32::LSTATUS status = Win32::Winreg::RegSaveKeyExW(
 					m_key.get(),
 					path.c_str(),
 					nullptr,
-					Win32::_REG_LATEST_FORMAT
+					Win32::Winreg::_REG_LATEST_FORMAT
 				);
 				if (status != Win32::ErrorCodes::Success)
 					throw Error::Win32Error("RegSaveKeyExW() failed", status);
@@ -182,7 +182,7 @@ export namespace Boring32::Registry
 					Win32::DWORD valueNameCharacterLength = maxValueNameCharacterLength;
 					KeyValues valueToAdd{};
 					// https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regenumvaluew
-					const Win32::DWORD status = Win32::RegEnumValueW(
+					const Win32::DWORD status = Win32::Winreg::RegEnumValueW(
 						m_key.get(),
 						index,
 						&valueNameBuffer[0],
@@ -214,7 +214,7 @@ export namespace Boring32::Registry
 			{
 				Win32::DWORD subkeys;
 				// https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryinfokeyw
-				const Win32::LSTATUS status = Win32::RegQueryInfoKeyW(
+				const Win32::LSTATUS status = Win32::Winreg::RegQueryInfoKeyW(
 					m_key.get(),
 					nullptr,
 					nullptr,
@@ -241,29 +241,29 @@ export namespace Boring32::Registry
 				return IsPredefinedKey(m_key.get());
 			}
 
-			static bool IsPredefinedKey(Win32::HKEY const key) noexcept
+			static bool IsPredefinedKey(Win32::Winreg::HKEY const key) noexcept
 			{
-				if (key == Win32::_HKEY_CLASSES_ROOT)
+				if (key == Win32::Winreg::_HKEY_CLASSES_ROOT)
 					return true;
-				if (key == Win32::_HKEY_CURRENT_CONFIG)
+				if (key == Win32::Winreg::_HKEY_CURRENT_CONFIG)
 					return true;
-				if (key == Win32::_HKEY_CURRENT_USER)
+				if (key == Win32::Winreg::_HKEY_CURRENT_USER)
 					return true;
-				if (key == Win32::_HKEY_LOCAL_MACHINE)
+				if (key == Win32::Winreg::_HKEY_LOCAL_MACHINE)
 					return true;
-				if (key == Win32::_HKEY_USERS)
+				if (key == Win32::Winreg::_HKEY_USERS)
 					return true;
 				return false;
 			}
 
 		private:
 			void InternalOpen(
-				const Win32::HKEY superKey,
+				const Win32::Winreg::HKEY superKey,
 				const std::wstring& subkey
 			)
 			{
-				Win32::HKEY key = nullptr;
-				const Win32::LSTATUS status = Win32::RegOpenKeyExW(
+				Win32::Winreg::HKEY key = nullptr;
+				const Win32::LSTATUS status = Win32::Winreg::RegOpenKeyExW(
 					superKey,
 					subkey.c_str(),
 					0,
@@ -279,7 +279,7 @@ export namespace Boring32::Registry
 			}
 
 			void InternalOpen(
-				const Win32::HKEY key,
+				const Win32::Winreg::HKEY key,
 				const std::wstring& subkey, 
 				const std::nothrow_t&
 			) noexcept try
@@ -291,20 +291,20 @@ export namespace Boring32::Registry
 				std::wcerr << ex.what() << std::endl;
 			}
 
-			static std::shared_ptr<Win32::HKEY__> CreateRegKeyPtr(Win32::HKEY key)
+			static std::shared_ptr<Win32::Winreg::HKEY__> CreateRegKeyPtr(Win32::Winreg::HKEY key)
 			{
 				return {
 					key,
-					[](const Win32::HKEY val)
+					[](const Win32::Winreg::HKEY val)
 					{
 						if (!Key::IsPredefinedKey(val))
-							Win32::RegCloseKey(val);
+							Win32::Winreg::RegCloseKey(val);
 					}
 				};
 			}
 
 		private:
-			std::shared_ptr<Win32::HKEY__> m_key;
+			std::shared_ptr<Win32::Winreg::HKEY__> m_key;
 			Win32::DWORD m_access = 0;
 	};
 }

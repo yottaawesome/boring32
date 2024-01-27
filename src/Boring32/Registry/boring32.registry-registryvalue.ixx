@@ -8,7 +8,7 @@ import boring32.concepts;
 
 namespace Boring32::Registry
 {
-	using ValueTypes = Win32::ValueTypes;
+	using ValueTypes = Win32::Winreg::ValueTypes;
 
 	template<ValueTypes T, typename TInvokeResult>
 	struct OP
@@ -42,14 +42,14 @@ namespace Boring32::Registry
 	};
 
 	template<ValueTypes TValueType, typename TValue, bool ThrowOnError = true>
-	void SetValue(Win32::HKEY parentKey, const wchar_t* subKey, const wchar_t* valueName, const TValue& value)
+	void SetValue(Win32::Winreg::HKEY parentKey, const wchar_t* subKey, const wchar_t* valueName, const TValue& value)
 	{
-		Win32::HKEY key = nullptr;
-		Win32::LSTATUS status = Win32::RegOpenKeyExW(
+		Win32::Winreg::HKEY key = nullptr;
+		Win32::LSTATUS status = Win32::Winreg::RegOpenKeyExW(
 			parentKey,
 			subKey,
 			0,
-			Win32::_KEY_SET_VALUE,
+			Win32::Winreg::_KEY_SET_VALUE,
 			&key
 		);
 		if constexpr (ThrowOnError)
@@ -58,12 +58,12 @@ namespace Boring32::Registry
 
 		if constexpr (TValueType == ValueTypes::DWord or TValueType == ValueTypes::QWord)
 		{
-			status = Win32::RegSetValueExW(
+			status = Win32::Winreg::RegSetValueExW(
 				key,
 				valueName,
 				0,
 				Win32::DWORD(TValueType),
-				reinterpret_cast<BYTE*>(const_cast<TValue*>(&value)),
+				reinterpret_cast<Win32::BYTE*>(const_cast<TValue*>(&value)),
 				sizeof(value)
 			);
 		}
@@ -71,20 +71,20 @@ namespace Boring32::Registry
 		{
 			static_assert(std::convertible_to<TValue, std::wstring_view>);
 			std::wstring_view str{ value };
-			status = Win32::RegSetValueExW(
+			status = Win32::Winreg::RegSetValueExW(
 				key,
 				valueName,
 				0,
 				Win32::DWORD(TValueType),
-				reinterpret_cast<BYTE*>(const_cast<wchar_t*>(str.data())),
-				static_cast<DWORD>((str.size() + 1) * sizeof(wchar_t))
+				reinterpret_cast<Win32::BYTE*>(const_cast<wchar_t*>(str.data())),
+				static_cast<Win32::DWORD>((str.size() + 1) * sizeof(wchar_t))
 			);
 		}
 		else
 		{
 			static_assert(Concepts::AlwaysFalse<TValue>);
 		}
-		Win32::RegCloseKey(key);
+		Win32::Winreg::RegCloseKey(key);
 
 		if constexpr (ThrowOnError)
 			if (status != Win32::ErrorCodes::Success)
@@ -116,7 +116,7 @@ namespace Boring32::Registry
 	};
 
 	template<ValueTypes TValueType, bool ThrowOnError = true, Concepts::NullPtrOrInvocable auto DefaultValue = nullptr, typename TraitType = ValueTraits<TValueType>>
-	TraitType::ReturnType ReadValue(Win32::HKEY ParentKey, const wchar_t* SubKey, const wchar_t* ValueName)
+	TraitType::ReturnType ReadValue(Win32::Winreg::HKEY ParentKey, const wchar_t* SubKey, const wchar_t* ValueName)
 	{
 		if constexpr (TValueType == ValueTypes::DWord or TValueType == ValueTypes::QWord)
 		{
@@ -124,7 +124,7 @@ namespace Boring32::Registry
 			ReturnType out{};
 
 			Win32::DWORD sizeInBytes = sizeof(out);
-			Win32::LSTATUS status = Win32::RegGetValueW(
+			Win32::LSTATUS status = Win32::Winreg::RegGetValueW(
 				ParentKey,
 				SubKey,
 				ValueName,
@@ -148,11 +148,11 @@ namespace Boring32::Registry
 		{
 			Win32::DWORD sizeInBytes = 0;
 			// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew
-			Win32::LSTATUS status = Win32::RegGetValueW(
+			Win32::LSTATUS status = Win32::Winreg::RegGetValueW(
 				ParentKey,
 				SubKey,
 				ValueName,
-				Win32::_RRF_RT_REG_SZ,
+				Win32::Winreg::_RRF_RT_REG_SZ,
 				nullptr,
 				nullptr,
 				&sizeInBytes
@@ -168,11 +168,11 @@ namespace Boring32::Registry
 			}
 
 			std::wstring out(sizeInBytes / sizeof(wchar_t), '\0');
-			status = Win32::RegGetValueW(
+			status = Win32::Winreg::RegGetValueW(
 				ParentKey,
 				SubKey,
 				ValueName,
-				Win32::_RRF_RT_REG_SZ,
+				Win32::Winreg::_RRF_RT_REG_SZ,
 				nullptr,
 				&out[0],
 				&sizeInBytes
@@ -201,7 +201,7 @@ namespace Boring32::Registry
 
 	template<bool ThrowOnError = true, Concepts::NullPtrOrInvocable auto DefaultValue = nullptr>
 	Win32::DWORD ReadDWord(
-		Win32::HKEY ParentKey, 
+		Win32::Winreg::HKEY ParentKey,
 		const wchar_t* SubKey, 
 		const wchar_t* ValueName
 	) noexcept(not ThrowOnError)
@@ -218,11 +218,11 @@ namespace Boring32::Registry
 
 		Win32::DWORD out;
 		Win32::DWORD sizeInBytes = sizeof(out);
-		Win32::LSTATUS status = Win32::RegGetValueW(
+		Win32::LSTATUS status = Win32::Winreg::RegGetValueW(
 			ParentKey,
 			SubKey,
 			ValueName,
-			Win32::_RRF_RT_REG_DWORD,
+			Win32::Winreg::_RRF_RT_REG_DWORD,
 			nullptr,
 			&out,
 			&sizeInBytes
@@ -241,7 +241,7 @@ namespace Boring32::Registry
 
 	template<bool ThrowOnError = true, Concepts::NullPtrOrInvocable auto DefaultValue = nullptr>
 	uint64_t ReadQWord(
-		Win32::HKEY ParentKey, 
+		Win32::Winreg::HKEY ParentKey,
 		const wchar_t* SubKey, 
 		const wchar_t* ValueName
 	) noexcept(not ThrowOnError)
@@ -258,11 +258,11 @@ namespace Boring32::Registry
 
 		uint64_t out;
 		Win32::DWORD sizeInBytes = sizeof(out);
-		Win32::LSTATUS status = Win32::RegGetValueW(
+		Win32::LSTATUS status = Win32::Winreg::RegGetValueW(
 			ParentKey,
 			SubKey,
 			ValueName,
-			Win32::_RRF_RT_REG_QWORD,
+			Win32::Winreg::_RRF_RT_REG_QWORD,
 			nullptr,
 			&out,
 			&sizeInBytes
@@ -281,7 +281,7 @@ namespace Boring32::Registry
 
 	template<bool ThrowOnError = true, Concepts::NullPtrOrInvocable auto DefaultValue = nullptr>
 	std::wstring ReadString(
-		Win32::HKEY ParentKey, 
+		Win32::Winreg::HKEY ParentKey,
 		const wchar_t* SubKey, 
 		const wchar_t* ValueName
 	) noexcept(not ThrowOnError)
@@ -298,11 +298,11 @@ namespace Boring32::Registry
 
 		Win32::DWORD sizeInBytes = 0;
 		// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew
-		Win32::LSTATUS status = Win32::RegGetValueW(
+		Win32::LSTATUS status = Win32::Winreg::RegGetValueW(
 			ParentKey,
 			SubKey,
 			ValueName,
-			Win32::_RRF_RT_REG_SZ,
+			Win32::Winreg::_RRF_RT_REG_SZ,
 			nullptr,
 			nullptr,
 			&sizeInBytes
@@ -318,11 +318,11 @@ namespace Boring32::Registry
 		}
 
 		std::wstring out(sizeInBytes / sizeof(wchar_t), '\0');
-		status = Win32::RegGetValueW(
+		status = Win32::Winreg::RegGetValueW(
 			ParentKey,
 			SubKey,
 			ValueName,
-			Win32::_RRF_RT_REG_SZ,
+			Win32::Winreg::_RRF_RT_REG_SZ,
 			nullptr,
 			&out[0],
 			&sizeInBytes
@@ -346,17 +346,17 @@ namespace Boring32::Registry
 
 	template<bool ThrowOnError = true>
 	void DeleteValue(
-		Win32::HKEY ParentKey,
+		Win32::Winreg::HKEY ParentKey,
 		const wchar_t* SubKey,
 		const wchar_t* ValueName
 	)
 	{
-		Win32::HKEY key = nullptr;
-		Win32::LSTATUS status = Win32::RegOpenKeyExW(
+		Win32::Winreg::HKEY key = nullptr;
+		Win32::LSTATUS status = Win32::Winreg::RegOpenKeyExW(
 			ParentKey,
 			SubKey,
 			0,
-			Win32::_KEY_SET_VALUE,
+			Win32::Winreg::_KEY_SET_VALUE,
 			&key
 		);
 		if constexpr (ThrowOnError)
@@ -365,11 +365,11 @@ namespace Boring32::Registry
 			else
 				return;
 
-		status = Win32::RegDeleteValueW(
+		status = Win32::Winreg::RegDeleteValueW(
 			key,
 			ValueName
 		);
-		Win32::RegCloseKey(key);
+		Win32::Winreg::RegCloseKey(key);
 		if constexpr (ThrowOnError)
 			if (status != Win32::ErrorCodes::Success)
 				throw Error::Win32Error("Failed to delete registry value", status);
@@ -378,28 +378,76 @@ namespace Boring32::Registry
 
 export namespace Boring32::Registry
 {
-	template<Win32::HKEY Parent>
+	template<Win32::Winreg::HKEY Parent>
 	struct SuperKeyName
 	{
 		static constexpr std::wstring_view Name =
 			[]() constexpr
 			{
-				if constexpr (Parent == Win32::_HKEY_CLASSES_ROOT)
+				if constexpr (Parent == Win32::Winreg::_HKEY_CLASSES_ROOT)
 					return L"HKEY_CLASSES_ROOT";
-				else if constexpr (Parent == Win32::_HKEY_CURRENT_CONFIG)
+				else if constexpr (Parent == Win32::Winreg::_HKEY_CURRENT_CONFIG)
 					return L"HKEY_CURRENT_CONFIG";
-				else if constexpr (Parent == Win32::_HKEY_CURRENT_USER)
+				else if constexpr (Parent == Win32::Winreg::_HKEY_CURRENT_USER)
 					return L"HKEY_CURRENT_USER";
-				else if constexpr (Parent == Win32::_HKEY_LOCAL_MACHINE)
+				else if constexpr (Parent == Win32::Winreg::_HKEY_LOCAL_MACHINE)
 					return L"HKEY_LOCAL_MACHINE";
-				else if constexpr (Parent == Win32::_HKEY_USERS)
+				else if constexpr (Parent == Win32::Winreg::_HKEY_USERS)
 					return L"HKEY_USERS";
 				else
 					return L"Unknown";
 			}();
 	};
 
-	template<Win32::HKEY TParentKey, Strings::FixedStringW TSubKey, Strings::FixedStringW TValueName, ValueTypes TValueType, bool DefaultThrowOnError = true>
+	struct HKEYDeleter final
+	{
+		void operator()(Win32::Winreg::HKEY ptr)
+		{
+			Win32::Winreg::RegCloseKey(ptr);
+		}
+	};
+	using HKEYUniquePtr = std::unique_ptr<std::remove_pointer<Win32::Winreg::HKEY>::type, HKEYDeleter>;
+
+	template<Win32::Winreg::HKEY TParentKey, Strings::FixedStringW TSubKey, bool DefaultThrowOnError = true>
+	struct RegistryKey
+	{
+		static constexpr const wchar_t* SubKey = TSubKey;
+
+		template<bool ThrowOnError = DefaultThrowOnError>
+		static HKEYUniquePtr Create()
+		{
+			DWORD Win32::disposition = 0;
+			Win32::Winreg::HKEY result = nullptr;
+			const Win32::LSTATUS status = Win32::Winreg::RegCreateKeyExW(
+				TParentKey,
+				TSubKey,
+				0,
+				nullptr,
+				0,
+				Win32::Winreg::_KEY_ALL_ACCESS,
+				nullptr,
+				&result,
+				&disposition
+			);
+			if constexpr (ThrowOnError)
+			{
+				if (status != Win32::ErrorCodes::Success)
+				{
+					const auto lastError = Win32::GetLastError();
+					throw Error::Win32Error("RegCreateKeyExW() failed", lastError);
+				}
+			}
+			return HKEYUniquePtr(result);
+		}
+
+		template<bool ThrowOnError = DefaultThrowOnError>
+		static void Delete()
+		{
+
+		}
+	};
+
+	template<Win32::Winreg::HKEY TParentKey, Strings::FixedStringW TSubKey, Strings::FixedStringW TValueName, ValueTypes TValueType, bool DefaultThrowOnError = true>
 	class RegistryValue
 	{
 		static constexpr const wchar_t* SubKey = TSubKey;
@@ -440,8 +488,4 @@ export namespace Boring32::Registry
 				DeleteValue<ThrowOnError>(TParentKey, SubKey, ValueName);
 			}
 	};
-
-	
-
-	using V = SuperKeyName<Win32::_HKEY_CLASSES_ROOT>;
 }

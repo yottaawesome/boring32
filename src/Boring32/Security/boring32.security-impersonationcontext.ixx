@@ -14,12 +14,10 @@ export namespace Boring32::Security
 			}
 			ImpersonationContext(const ImpersonationContext&) = delete;
 			ImpersonationContext(ImpersonationContext&& other) noexcept
-				: m_registryHive(nullptr)
 			{
 				Move(other);
 			}
 			ImpersonationContext(Win32::HANDLE const token)
-				: m_registryHive(nullptr)
 			{
 				if (!token || token == Win32::InvalidHandleValue)
 					throw Error::Boring32Error("token is invalid");
@@ -40,19 +38,19 @@ export namespace Boring32::Security
 			{
 				if (m_registryHive)
 				{
-					Win32::RegCloseKey(m_registryHive);
+					Win32::Winreg::RegCloseKey(m_registryHive);
 					m_registryHive = nullptr;
 				}
 				// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-reverttoself
 				return Win32::RevertToSelf();
 			}
 
-			virtual Win32::HKEY GetUserRegistry()
+			virtual Win32::Winreg::HKEY GetUserRegistry()
 			{
 				if (m_registryHive == nullptr)
 				{
 					// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopencurrentuser
-					Win32::LSTATUS status = Win32::RegOpenCurrentUser(Win32::_KEY_READ, &m_registryHive);
+					Win32::LSTATUS status = Win32::Winreg::RegOpenCurrentUser(Win32::_KEY_READ, &m_registryHive);
 					if (status != Win32::ErrorCodes::Success)
 						throw Error::NTStatusError("RegOpenCurrentUser() failed", status);
 				}
@@ -68,6 +66,6 @@ export namespace Boring32::Security
 			}
 
 		protected:
-			Win32::HKEY m_registryHive;
+			Win32::Winreg::HKEY m_registryHive = nullptr;
 	};
 }
