@@ -378,12 +378,34 @@ namespace Boring32::Registry
 
 export namespace Boring32::Registry
 {
+	template<Win32::HKEY Parent>
+	struct SuperKeyName
+	{
+		static constexpr std::wstring_view Name =
+			[]() constexpr
+			{
+				if constexpr (Parent == Win32::_HKEY_CLASSES_ROOT)
+					return L"HKEY_CLASSES_ROOT";
+				else if constexpr (Parent == Win32::_HKEY_CURRENT_CONFIG)
+					return L"HKEY_CURRENT_CONFIG";
+				else if constexpr (Parent == Win32::_HKEY_CURRENT_USER)
+					return L"HKEY_CURRENT_USER";
+				else if constexpr (Parent == Win32::_HKEY_LOCAL_MACHINE)
+					return L"HKEY_LOCAL_MACHINE";
+				else if constexpr (Parent == Win32::_HKEY_USERS)
+					return L"HKEY_USERS";
+				else
+					return L"Unknown";
+			}();
+	};
+
 	template<Win32::HKEY TParentKey, Strings::FixedStringW TSubKey, Strings::FixedStringW TValueName, ValueTypes TValueType, bool DefaultThrowOnError = true>
 	class RegistryValue
 	{
 		static constexpr const wchar_t* SubKey = TSubKey;
 		static constexpr const wchar_t* ValueName = TValueName;
-		
+		static constexpr std::wstring_view Name = SuperKeyName<TParentKey>::Name;
+
 		public:
 			static constexpr const wchar_t* GetSubKey() noexcept
 			{
@@ -419,44 +441,7 @@ export namespace Boring32::Registry
 			}
 	};
 
-	template<Win32::HKEY Parent>
-	struct SuperKeyName
-	{
-		std::wstring_view Name =
-			[]() constexpr
-			{
-				if constexpr (Parent == Win32::_HKEY_CLASSES_ROOT)
-					return L"HKEY_CLASSES_ROOT";
-				else if constexpr (Parent == Win32::_HKEY_CURRENT_CONFIG)
-					return L"HKEY_CURRENT_CONFIG";
-				else if constexpr (Parent == Win32::_HKEY_CURRENT_USER)
-					return L"HKEY_CURRENT_USER";
-				else if constexpr (Parent == Win32::_HKEY_LOCAL_MACHINE)
-					return L"HKEY_LOCAL_MACHINE";
-				else if constexpr (Parent == Win32::_HKEY_USERS)
-					return L"HKEY_USERS";
-				else
-					return L"";
-			}();
-	};
+	
 
-	// Test objects
-	using M = RegistryValue<Win32::_HKEY_LOCAL_MACHINE, L"A", L"A", ValueTypes::DWord>;
-	using N = RegistryValue<Win32::_HKEY_LOCAL_MACHINE, L"A", L"A", ValueTypes::QWord>;
-	using O = RegistryValue<Win32::_HKEY_LOCAL_MACHINE, L"A", L"A", ValueTypes::String>;
-	void XX()
-	{
-	//	//constexpr SuperKeyName<Win32::_HKEY_USERS> ll;
-	//	//P<SuperKeyName<Win32::_HKEY_USERS>> p;
-
-		M::Read<false, [] { return 1; }>();
-		N::Read<false, [] { return 1; }>();
-		O::Read<false, [] { return L""; }>();
-		O::Delete();
-
-		ReadString(nullptr, nullptr, nullptr);
-
-	//	M::Set(1ull);
-	//	O::Set(L"a");
-	}
+	using V = SuperKeyName<Win32::_HKEY_CLASSES_ROOT>;
 }
