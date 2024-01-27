@@ -207,6 +207,7 @@ export namespace Boring32::Win32
 	constexpr auto _REG_LATEST_FORMAT = REG_LATEST_FORMAT;
 
 	constexpr auto _KEY_ALL_ACCESS = KEY_ALL_ACCESS;
+	constexpr auto _KEY_SET_VALUE = KEY_SET_VALUE;
 
 	using ::SERVICE_CONTROL_STATUS_REASON_PARAMS;
 

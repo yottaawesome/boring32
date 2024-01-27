@@ -226,5 +226,6 @@
     <ClCompile Include="Util\boring32.util-range.ixx" />
     <ClCompile Include="Shell\boring32.shell.ixx" />
     <ClCompile Include="Concepts\boring32.concepts.ixx" />
+    <ClCompile Include="Registry\boring32.registry-registryvalue.ixx" />
   </ItemGroup>
 </Project>
