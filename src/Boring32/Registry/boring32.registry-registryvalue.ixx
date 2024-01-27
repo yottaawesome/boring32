@@ -97,33 +97,32 @@ namespace Boring32::Registry
 	template<>
 	struct ValueTraits<ValueTypes::DWord>
 	{
-		using IntegralType = Win32::DWORD;
+		using ReturnType = Win32::DWORD;
 		static constexpr Win32::DWORD RawType = Win32::DWORD(ValueTypes::DWord);
-		static constexpr size_t Size = sizeof(IntegralType);
+		static constexpr size_t Size = sizeof(ReturnType);
 	};
 	template<>
 	struct ValueTraits<ValueTypes::QWord>
 	{
-		using IntegralType = uint64_t;
+		using ReturnType = uint64_t;
 		static constexpr Win32::DWORD RawType = Win32::DWORD(ValueTypes::QWord);
-		static constexpr size_t Size = sizeof(IntegralType);
+		static constexpr size_t Size = sizeof(ReturnType);
 	};
 	template<>
 	struct ValueTraits<ValueTypes::String>
 	{
-		using IntegralType = std::wstring;
+		using ReturnType = std::wstring;
 		static constexpr Win32::DWORD RawType = Win32::DWORD(ValueTypes::String);
 	};
 
-	template<ValueTypes TValueType, bool ThrowOnError = true, Concepts::NullPtrOrInvocable auto DefaultValue = nullptr>
-	auto ReadValue(Win32::HKEY ParentKey, const wchar_t* SubKey, const wchar_t* ValueName)
+	template<ValueTypes TValueType, bool ThrowOnError = true, Concepts::NullPtrOrInvocable auto DefaultValue = nullptr, typename TraitType = ValueTraits<TValueType>>
+	TraitType::ReturnType ReadValue(Win32::HKEY ParentKey, const wchar_t* SubKey, const wchar_t* ValueName)
 	{
 		if constexpr (TValueType == ValueTypes::DWord or TValueType == ValueTypes::QWord)
 		{
-			using TraitType = ValueTraits<TValueType>;
-			using IntegralType = typename TraitType::IntegralType;
-			IntegralType out{};
-			
+			using ReturnType = typename TraitType::ReturnType;
+			ReturnType out{};
+
 			Win32::DWORD sizeInBytes = sizeof(out);
 			Win32::LSTATUS status = Win32::RegGetValueW(
 				ParentKey,
@@ -139,9 +138,9 @@ namespace Boring32::Registry
 				if constexpr (ThrowOnError)
 					throw Error::Win32Error("RegGetValueW() failed", status);
 				else if (std::invocable<decltype(DefaultValue)>)
-					return static_cast<IntegralType>(DefaultValue());
+					return static_cast<ReturnType>(DefaultValue());
 				else
-					return IntegralType{};
+					return {};
 			}
 			return out;
 		}
@@ -163,9 +162,9 @@ namespace Boring32::Registry
 				if constexpr (ThrowOnError)
 					throw Error::Win32Error("RegGetValueW() failed", status);
 				else if (std::invocable<decltype(DefaultValue)>)
-					return std::wstring{ DefaultValue() };
+					return { DefaultValue() };
 				else
-					return std::wstring{};
+					return {};
 			}
 
 			std::wstring out(sizeInBytes / sizeof(wchar_t), '\0');
@@ -183,9 +182,9 @@ namespace Boring32::Registry
 				if constexpr (ThrowOnError)
 					throw Error::Win32Error("RegGetValueW() failed", status);
 				else if (std::invocable<decltype(DefaultValue)>)
-					return std::wstring{ DefaultValue() };
+					return { DefaultValue() };
 				else
-					return DefaultValue();
+					return {};
 			}
 
 			out.resize(sizeInBytes / sizeof(wchar_t));
@@ -201,7 +200,11 @@ namespace Boring32::Registry
 	}
 
 	template<bool ThrowOnError = true, Concepts::NullPtrOrInvocable auto DefaultValue = nullptr>
-	Win32::DWORD ReadDWord(Win32::HKEY ParentKey, const wchar_t* SubKey, const wchar_t* ValueName) noexcept(not ThrowOnError)
+	Win32::DWORD ReadDWord(
+		Win32::HKEY ParentKey, 
+		const wchar_t* SubKey, 
+		const wchar_t* ValueName
+	) noexcept(not ThrowOnError)
 	{
 		static_assert(
 			ThrowOnError 
@@ -236,10 +239,22 @@ namespace Boring32::Registry
 		return out;
 	}
 
-	template<bool ThrowOnError = true, auto DefaultValue = [] { return 0ull; } >
-	uint64_t ReadQWord(Win32::HKEY ParentKey, const wchar_t* SubKey, const wchar_t* ValueName) noexcept(not ThrowOnError)
+	template<bool ThrowOnError = true, Concepts::NullPtrOrInvocable auto DefaultValue = nullptr>
+	uint64_t ReadQWord(
+		Win32::HKEY ParentKey, 
+		const wchar_t* SubKey, 
+		const wchar_t* ValueName
+	) noexcept(not ThrowOnError)
 	{
-		static_assert(ThrowOnError or std::convertible_to<std::invoke_result_t<decltype(DefaultValue)>, uint64_t>);
+		static_assert(
+			ThrowOnError
+			or (
+				not std::is_null_pointer_v<decltype(DefaultValue)>
+				and std::is_invocable_v<decltype(DefaultValue)>
+				and std::is_convertible_v<std::invoke_result_t<decltype(DefaultValue)>, DWORD>
+			),
+			"Either ThrowOnError must be true or DefaultValue must be an invocable returning a uint64_t"
+		);
 
 		uint64_t out;
 		Win32::DWORD sizeInBytes = sizeof(out);
@@ -256,16 +271,30 @@ namespace Boring32::Registry
 		{
 			if constexpr (ThrowOnError)
 				throw Error::Win32Error("RegGetValueW() failed", status);
+			else if constexpr (std::is_invocable_v<decltype(DefaultValue)>)
+				return { DefaultValue() };
 			else
-				return DefaultValue();
+				return {};
 		}
 		return out;
 	}
 
-	template<bool ThrowOnError = true, auto DefaultValue = [] { return 0ull; } >
-	std::wstring ReadString(Win32::HKEY ParentKey, const wchar_t* SubKey, const wchar_t* ValueName) noexcept(not ThrowOnError)
+	template<bool ThrowOnError = true, Concepts::NullPtrOrInvocable auto DefaultValue = nullptr>
+	std::wstring ReadString(
+		Win32::HKEY ParentKey, 
+		const wchar_t* SubKey, 
+		const wchar_t* ValueName
+	) noexcept(not ThrowOnError)
 	{
-		static_assert(ThrowOnError or std::convertible_to<std::invoke_result_t<decltype(DefaultValue)>, std::wstring>);
+		static_assert(
+			ThrowOnError
+			or (
+				not std::is_null_pointer_v<decltype(DefaultValue)>
+				and std::is_invocable_v<decltype(DefaultValue)>
+				//and std::is_convertible_v<std::invoke_result_t<decltype(DefaultValue)>, DWORD>
+			),
+			"Either ThrowOnError must be true or DefaultValue must be an invocable returning a wstring"
+		);
 
 		Win32::DWORD sizeInBytes = 0;
 		// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew
@@ -282,8 +311,10 @@ namespace Boring32::Registry
 		{
 			if constexpr (ThrowOnError)
 				throw Error::Win32Error("RegGetValueW() failed", status);
+			else if constexpr (std::is_invocable_v<decltype(DefaultValue)>)
+				return { DefaultValue() };
 			else
-				return DefaultValue();
+				return {};
 		}
 
 		std::wstring out(sizeInBytes / sizeof(wchar_t), '\0');
@@ -300,8 +331,10 @@ namespace Boring32::Registry
 		{
 			if constexpr (ThrowOnError)
 				throw Error::Win32Error("RegGetValueW() failed", status);
+			else if constexpr (std::is_invocable_v<decltype(DefaultValue)>)
+				return { DefaultValue() };
 			else
-				return DefaultValue();
+				return {};
 		}
 
 		out.resize(sizeInBytes / sizeof(wchar_t));
@@ -310,12 +343,42 @@ namespace Boring32::Registry
 			out.pop_back();
 		return out;
 	}
+
+	template<bool ThrowOnError = true>
+	void DeleteValue(
+		Win32::HKEY ParentKey,
+		const wchar_t* SubKey,
+		const wchar_t* ValueName
+	)
+	{
+		Win32::HKEY key = nullptr;
+		Win32::LSTATUS status = Win32::RegOpenKeyExW(
+			ParentKey,
+			SubKey,
+			0,
+			Win32::_KEY_SET_VALUE,
+			&key
+		);
+		if constexpr (ThrowOnError)
+			if (status != Win32::ErrorCodes::Success)
+				throw Error::Win32Error("Failed to open registry key", status);
+			else
+				return;
+
+		status = Win32::RegDeleteValueW(
+			key,
+			ValueName
+		);
+		Win32::RegCloseKey(key);
+		if constexpr (ThrowOnError)
+			if (status != Win32::ErrorCodes::Success)
+				throw Error::Win32Error("Failed to delete registry value", status);
+	}
 }
 
 export namespace Boring32::Registry
 {
-	template<Win32::HKEY TParentKey, Strings::FixedStringW TSubKey, Strings::FixedStringW TValueName, ValueTypes TValueType>
-		//requires CheckInvocable<TDefaultValue, TValueType> // not really required due to the static_asserts below
+	template<Win32::HKEY TParentKey, Strings::FixedStringW TSubKey, Strings::FixedStringW TValueName, ValueTypes TValueType, bool DefaultThrowOnError = true>
 	class RegistryValue
 	{
 		static constexpr const wchar_t* SubKey = TSubKey;
@@ -337,80 +400,22 @@ export namespace Boring32::Registry
 				return TValueType;
 			}
 
-			template<bool ThrowOnError = true, auto TDefaultValue = [] {}>
+			template<bool ThrowOnError = DefaultThrowOnError, Concepts::NullPtrOrInvocable auto TDefaultValue = nullptr>
 			static auto Read() noexcept(not ThrowOnError)
 			{
-				using ReturnDefaultType = std::invoke_result_t<decltype(TDefaultValue)>;
-
-				if constexpr (TValueType == ValueTypes::DWord)
-				{
-					static_assert(ThrowOnError or std::is_convertible_v<ReturnDefaultType, Win32::DWORD>, "Return type from default lambda should be DWORD or convertible to DWORD.");
-					return ReadValue<TValueType, ThrowOnError, TDefaultValue>(TParentKey, SubKey, ValueName);
-				}
-				else if constexpr (TValueType == ValueTypes::QWord)
-				{
-					static_assert(ThrowOnError or std::is_convertible_v<ReturnDefaultType, uint64_t>, "Return type from default lambda should be wstring or convertible to uint64_t.");
-					return ReadValue<TValueType, ThrowOnError, TDefaultValue>(TParentKey, SubKey, ValueName);
-				}
-				else if constexpr (TValueType == ValueTypes::String)
-				{
-					static_assert(ThrowOnError or std::is_convertible_v<ReturnDefaultType, std::wstring>, "Return type from default lambda should be wstring or convertible to wstring.");
-					return ReadValue<ThrowOnError, TDefaultValue>(TParentKey, SubKey, ValueName);
-				}
-				else
-				{
-					using T = RegistryValue<TParentKey, TSubKey, TValueName, TValueType>;
-					static_assert(Concepts::AlwaysFalse<T>, "Unhandled value");
-				}
+				return ReadValue<TValueType, ThrowOnError, TDefaultValue>(TParentKey, SubKey, ValueName);
 			}
 
-			static void Set(const auto& value)
+			template<bool ThrowOnError = DefaultThrowOnError>
+			static void Set(const auto& value) noexcept(not ThrowOnError)
 			{
-				using TValue = decltype(value);
-				if constexpr (TValueType == ValueTypes::DWord)
-				{
-					static_assert(std::convertible_to<TValue, Win32::DWORD>, "Value should be DWORD or convertible to DWORD.");
-				}
-				else if constexpr (TValueType == ValueTypes::String)
-				{
-					static_assert(std::convertible_to<TValue, std::wstring>, "Value should be wstring or convertible to wstring.");
-				}
-				else if constexpr (TValueType == ValueTypes::QWord)
-				{
-					static_assert(std::convertible_to<TValue, uint64_t>, "Value should be uint64_t or convertible to uint64_t.");
-				}
-				else
-				{
-					using T = RegistryValue<TParentKey, TSubKey, TValueName, TValueType>;
-					static_assert(Concepts::AlwaysFalse<T>, "Unhandled value");
-				}
-
-				SetValue<TValueType>(TParentKey, SubKey, ValueName, value);
+				SetValue<TValueType, ThrowOnError>(TParentKey, SubKey, ValueName, value);
 			}
 
-			template<bool Throw = true>
-			void Delete()
+			template<bool ThrowOnError = DefaultThrowOnError>
+			static void Delete() noexcept(not ThrowOnError)
 			{
-				Win32::HKEY key = nullptr;
-				const Win32::LSTATUS status = Win32::RegOpenKeyExW(
-					TParentKey,
-					SubKey,
-					0,
-					Win32::_KEY_SET_VALUE,
-					&key
-				);
-				if constexpr (Throw)
-					if (status != Win32::ErrorCodes::Success)
-						throw Error::Win32Error("Failed to open registry key", status);
-
-				status = RegDeleteValueW(
-					key,
-					ValueName
-				);
-				Win32::RegCloseKey(key);
-				if constexpr (Throw)
-					if (status != Win32::ErrorCodes::Success)
-						throw Error::Win32Error("Failed to delete registry value", status);
+				DeleteValue<ThrowOnError>(TParentKey, SubKey, ValueName);
 			}
 	};
 
@@ -446,7 +451,11 @@ export namespace Boring32::Registry
 
 		M::Read<false, [] { return 1; }>();
 		N::Read<false, [] { return 1; }>();
-	//	O::Read<false, [] { return L""; }>();
+		O::Read<false, [] { return L""; }>();
+		O::Delete();
+
+		ReadString(nullptr, nullptr, nullptr);
+
 	//	M::Set(1ull);
 	//	O::Set(L"a");
 	}

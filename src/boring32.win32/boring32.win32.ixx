@@ -695,6 +695,7 @@ export namespace Boring32::Win32
 	using ::RegQueryInfoKeyW;
 	using ::RegEnumValueW;
 	using ::RegSaveKeyExW;
+	using ::RegDeleteValueW;
 	using ::RegCloseKey;
 	using ::ImpersonateLoggedOnUser;
 	using ::RevertToSelf;
