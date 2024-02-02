@@ -30,22 +30,22 @@ export namespace Boring32::Strings
 
 		constexpr operator std::wstring_view() const noexcept
 		{
-			return { buf, N };
+			return { buf };
 		}
 
 		operator std::wstring() const noexcept
 		{
-			return { buf, N };
+			return { buf };
 		}
 
 		std::wstring ToString() const noexcept
 		{
-			return { buf, N };
+			return { buf };
 		}
 
 		std::wstring_view ToView() const noexcept
 		{
-			return { buf, N };
+			return { buf };
 		}
 	};
 	template<size_t N>
@@ -70,22 +70,22 @@ export namespace Boring32::Strings
 
 		constexpr operator std::string_view() const noexcept
 		{
-			return { buf, N };
+			return { buf };
 		}
 
 		operator std::string() const noexcept
 		{
-			return { buf, N };
+			return { buf };
 		}
 
 		std::string ToString() const noexcept
 		{
-			return { buf, N };
+			return { buf };
 		}
 
 		std::string_view ToView() const noexcept
 		{
-			return { buf, N };
+			return { buf };
 		}
 	};
 	template<size_t N>
