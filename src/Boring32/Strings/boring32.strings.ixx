@@ -124,6 +124,22 @@ export namespace Boring32::Strings
 		}
 	}
 
+	template<typename TString>
+	struct AutoString
+	{
+		AutoString(const Concepts::AnyString auto& from)
+			requires std::same_as<TString, std::string>
+			: Value{ ToNarrow(from) } { }
+		AutoString(const Concepts::AnyString auto& from) 
+			requires std::same_as<TString, std::wstring>
+			: Value{ ToWide(from) } { }
+		TString Value;
+		operator TString() { return Value; };
+	};
+
+	using AutoAnsi = AutoString<std::string>;
+	using AutoWide = AutoString<std::wstring>;
+
 	// trim from start (in place)
 	void LeftTrim(std::string& s)
 	{

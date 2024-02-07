@@ -66,6 +66,28 @@ export namespace unit_tests::strings
 						assert::is_true(std::same_as<decltype(value), std::wstring>);
 						assert::is_true(value == L"Test");
 					}
+				},
+				unit_tests::testing::test{
+					"Test AutoAnsi",
+					[] {
+						constexpr auto f = [](const Boring32::Strings::AutoAnsi& s)
+						{
+							return s.Value;
+						};
+
+						assert::is_true(f(L"aaaa") == "aaaa");
+					}
+				},
+				unit_tests::testing::test{
+					"Test AutoWide",
+					[] {
+						constexpr auto f = [](const Boring32::Strings::AutoWide& s)
+						{
+							return s.Value;
+						};
+
+						assert::is_true(f("aaaa") == L"aaaa");
+					}
 				}
 			);
 		}
