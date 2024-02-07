@@ -27,5 +27,8 @@
     <ClCompile Include="Registry\boring32.registry_tests.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Strings\boring32.strings_tests.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

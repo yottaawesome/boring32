@@ -81,6 +81,9 @@ export namespace Boring32::Concepts
 	template<typename T>
 	concept IsStringType = IsString<T> or IsWideString<T>;
 
+	template<typename T>
+	concept AnyString = std::convertible_to<T, std::string_view> or std::convertible_to<T, std::wstring_view>;
+
 	template <typename T>
 	constexpr bool AlwaysFalse = std::false_type::value;
 }

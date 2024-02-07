@@ -135,6 +135,7 @@
     <ClCompile Include="boring32.unit_tests.ixx" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Registry\boring32.registry_tests.ixx" />
+    <ClCompile Include="Strings\boring32.strings_tests.ixx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\boring32.win32\boring32.win32.vcxproj">

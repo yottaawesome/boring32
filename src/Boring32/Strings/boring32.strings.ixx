@@ -90,6 +90,40 @@ export namespace Boring32::Strings
 		return wstrTo;
 	}
 
+	auto ToNarrow(const Concepts::AnyString auto& from)
+	{
+		using T = std::remove_cvref_t<decltype(from)>;
+		if constexpr (std::same_as<T, std::string>)
+		{
+			return from;
+		}
+		else if constexpr (std::convertible_to<T, std::string_view>)
+		{
+			return std::string{ from };
+		}
+		else
+		{
+			return ConvertString(from);
+		}
+	}
+
+	auto ToWide(const Concepts::AnyString auto& from)
+	{
+		using T = std::remove_cvref_t<decltype(from)>;
+		if constexpr (std::same_as<T, std::wstring>)
+		{
+			return from;
+		}
+		else if constexpr (std::convertible_to<T, std::wstring_view>)
+		{
+			return std::wstring{ from };
+		}
+		else
+		{
+			return ConvertString(from);
+		}
+	}
+
 	// trim from start (in place)
 	void LeftTrim(std::string& s)
 	{
