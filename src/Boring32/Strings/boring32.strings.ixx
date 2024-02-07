@@ -134,7 +134,8 @@ export namespace Boring32::Strings
 			requires std::same_as<TString, std::wstring>
 			: Value{ ToWide(from) } { }
 		TString Value;
-		operator TString() { return Value; };
+		operator const TString&() const { return Value; };
+		operator TString() const { return Value; };
 	};
 
 	using AutoAnsi = AutoString<std::string>;
