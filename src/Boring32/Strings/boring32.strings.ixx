@@ -93,7 +93,11 @@ export namespace Boring32::Strings
 	auto ToNarrow(const Concepts::AnyString auto& from)
 	{
 		using T = std::remove_cvref_t<decltype(from)>;
-		if constexpr (std::same_as<T, std::string>)
+		if constexpr (std::same_as<decltype(from), std::string&&>)
+		{
+			return std::wstring{ std::move(from) };
+		}
+		else if constexpr (std::same_as<T, std::string>)
 		{
 			return from;
 		}
@@ -107,10 +111,15 @@ export namespace Boring32::Strings
 		}
 	}
 
-	auto ToWide(const Concepts::AnyString auto& from)
+	auto ToWide(Concepts::AnyString auto&& from)
 	{
 		using T = std::remove_cvref_t<decltype(from)>;
-		if constexpr (std::same_as<T, std::wstring>)
+
+		if constexpr (std::same_as<decltype(from), std::wstring&&>)
+		{
+			return std::wstring{ std::move(from) };
+		}
+		else if constexpr (std::same_as<T, std::wstring>)
 		{
 			return from;
 		}
@@ -127,12 +136,12 @@ export namespace Boring32::Strings
 	template<typename TString>
 	struct AutoString
 	{
-		AutoString(const Concepts::AnyString auto& from)
+		AutoString(Concepts::AnyString auto&& from)
 			requires std::same_as<TString, std::string>
-			: Value{ ToNarrow(from) } { }
-		AutoString(const Concepts::AnyString auto& from) 
+			: Value{ ToNarrow(std::forward<decltype(from)>(from)) } { }
+		AutoString(Concepts::AnyString auto&& from) 
 			requires std::same_as<TString, std::wstring>
-			: Value{ ToWide(from) } { }
+			: Value{ ToWide(std::forward<decltype(from)>(from)) } { }
 		TString Value;
 		operator const TString&() const { return Value; };
 		operator TString() const { return Value; };
