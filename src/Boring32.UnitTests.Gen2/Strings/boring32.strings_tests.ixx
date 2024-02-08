@@ -85,6 +85,7 @@ export namespace unit_tests::strings
 						{
 							return s.Value;
 						};
+						Boring32::Strings::AutoWide s;
 						assert::is_true(f("aaaa") == L"aaaa");
 					}
 				}

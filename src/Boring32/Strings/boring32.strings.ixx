@@ -153,53 +153,46 @@ export namespace Boring32::Strings
 	struct AutoString
 	{
 		using StringType = TString;
+		using ViewType = std::conditional_t<std::same_as<TString, std::string>, std::string_view, std::wstring_view>;
 
 		AutoString() = default;
 		AutoString(Concepts::AnyString auto&& from)
 			: Value{ To<TString>(std::forward<decltype(from)>(from)) } { }
 		
+		// operators
 		explicit operator const TString&() const { return Value; }
-		
-		explicit operator TString() const { return Value; }
-
-		explicit operator std::string_view() const
-			requires std::same_as<TString, std::string> 
-		{ 
-			return { Value }; 
-		}
-
-		explicit operator std::wstring_view() const
-			requires std::same_as<TString, std::wstring> 
-		{ 
-			return { Value }; 
-		}
-
+		explicit operator TString()	const { return Value; }
+		explicit operator ViewType() const { return { Value }; }
 		bool operator==(Concepts::AnyString auto&& other) const
 		{
-			return Value == To<TString>(std::forward<decltype(other)>(other));
+			if constexpr (std::same_as<StringType, std::remove_cvref_t<decltype(other)>>)
+				return Value == other;
+			else
+				return Value == To<TString>(std::forward<decltype(other)>(other));
 		}
-
 		void operator+=(Concepts::AnyString auto&& other)
 		{
 			Value += To<std::string>(std::forward<decltype(other)>(other));
 		}
+		template<typename T>
+		bool operator==(const AutoString<T>& other) const
+		{
+			if constexpr (std::same_as<StringType, T>)
+				return Value == other.Value;
+			else 
+				return Value == To<TString>(other.Value);
+		}
 
+		// useful string functions
 		constexpr auto begin() const noexcept { return Value.begin(); }
 		constexpr auto end() const noexcept { return Value.end(); }
 		constexpr auto c_str() const noexcept { return Value.c_str(); }
 		constexpr auto data() const noexcept { return Value.data(); }
 
+		TString Value{};
 		/*friend bool operator==(const AutoString<std::string>& lhs, const AutoString<std::string>& rhs);
 		friend bool operator==(const AutoString<std::string>& lhs, const AutoString<std::wstring>& rhs);
 		friend bool operator==(const AutoString<std::wstring>& lhs, const AutoString<std::wstring>& rhs);*/
-
-		template<typename T>
-		bool operator==(const AutoString<T>& other) const
-		{
-			return Value == To<TString>(other.Value);
-		}
-
-		TString Value;
 	};
 
 	using AutoAnsi = AutoString<std::string>;
