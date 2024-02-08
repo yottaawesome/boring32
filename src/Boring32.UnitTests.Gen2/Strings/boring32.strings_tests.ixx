@@ -16,7 +16,7 @@ export namespace unit_tests::strings
 					"Test wchar_t* to std::string",
 					[] {
 						const wchar_t* test = L"Test";
-						auto value = Boring32::Strings::ToNarrow(test);
+						auto value = Boring32::Strings::To<std::string>(test);
 						assert::is_true(std::same_as<decltype(value), std::string>);
 						assert::is_true(value == "Test");
 					}
@@ -25,7 +25,7 @@ export namespace unit_tests::strings
 					"Test std::wstring_view to std::string",
 					[] {
 						std::wstring_view test = L"Test";
-						auto value = Boring32::Strings::ToNarrow(test);
+						auto value = Boring32::Strings::To<std::string>(test);
 						assert::is_true(std::same_as<decltype(value), std::string>);
 						assert::is_true(value == "Test");
 					}
@@ -34,7 +34,7 @@ export namespace unit_tests::strings
 					"Test std::wstring to std::string",
 					[] {
 						std::wstring test{L"Test"};
-						auto value = Boring32::Strings::ToNarrow(test);
+						auto value = Boring32::Strings::To<std::string>(test);
 						assert::is_true(std::same_as<decltype(value), std::string>);
 						assert::is_true(value == "Test");
 					}
@@ -44,7 +44,7 @@ export namespace unit_tests::strings
 					"Test char* to std::wstring",
 					[] {
 						const char* test = "Test";
-						auto value = Boring32::Strings::ToWide(test);
+						auto value = Boring32::Strings::To<std::wstring>(test);
 						assert::is_true(std::same_as<decltype(value), std::wstring>);
 						assert::is_true(value == L"Test");
 					}
@@ -53,7 +53,7 @@ export namespace unit_tests::strings
 					"Test string_view to std::wstring",
 					[] {
 						std::string_view test = "Test";
-						auto value = Boring32::Strings::ToWide(test);
+						auto value = Boring32::Strings::To<std::wstring>(test);
 						assert::is_true(std::same_as<decltype(value), std::wstring>);
 						assert::is_true(value == L"Test");
 					}
@@ -62,7 +62,7 @@ export namespace unit_tests::strings
 					"Test std::string to std::wstring",
 					[] {
 						std::string test = "Test";
-						auto value = Boring32::Strings::ToWide(test);
+						auto value = Boring32::Strings::To<std::wstring>(test);
 						assert::is_true(std::same_as<decltype(value), std::wstring>);
 						assert::is_true(value == L"Test");
 					}
@@ -85,7 +85,6 @@ export namespace unit_tests::strings
 						{
 							return s.Value;
 						};
-
 						assert::is_true(f("aaaa") == L"aaaa");
 					}
 				}

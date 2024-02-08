@@ -8,7 +8,7 @@ export import :fixedstring;
 
 export namespace Boring32::Strings
 {
-	std::string ConvertString(const std::wstring_view wstr)
+	std::string ConvertString(std::wstring_view wstr)
 	{
 		if (wstr.empty())
 			return {};
@@ -51,7 +51,7 @@ export namespace Boring32::Strings
 		return strTo;
 	}
 
-	std::wstring ConvertString(const std::string_view str)
+	std::wstring ConvertString(std::string_view str)
 	{
 		if (str.empty())
 			return {};
@@ -90,20 +90,12 @@ export namespace Boring32::Strings
 		return wstrTo;
 	}
 
-	auto ToNarrow(const Concepts::AnyString auto& from)
+	template<Concepts::WideOrNarrowString TString>
+	auto To(Concepts::AnyString auto&& from)
 	{
-		using T = std::remove_cvref_t<decltype(from)>;
-		if constexpr (std::same_as<decltype(from), std::string&&>)
+		if constexpr (std::is_constructible_v<TString, decltype(from)>)
 		{
-			return std::wstring{ std::move(from) };
-		}
-		else if constexpr (std::same_as<T, std::string>)
-		{
-			return from;
-		}
-		else if constexpr (std::convertible_to<T, std::string_view>)
-		{
-			return std::string{ from };
+			return TString{ std::forward<decltype(from)>(from) };
 		}
 		else
 		{
@@ -111,40 +103,103 @@ export namespace Boring32::Strings
 		}
 	}
 
-	auto ToWide(Concepts::AnyString auto&& from)
+	/* old implementation
+	template<Concepts::WideOrNarrowString TString>
+	auto To(const Concepts::AnyString auto& from)
 	{
-		using T = std::remove_cvref_t<decltype(from)>;
 
-		if constexpr (std::same_as<decltype(from), std::wstring&&>)
+		if constexpr (std::same_as<TString, std::string>)
 		{
-			return std::wstring{ std::move(from) };
-		}
-		else if constexpr (std::same_as<T, std::wstring>)
-		{
-			return from;
-		}
-		else if constexpr (std::convertible_to<T, std::wstring_view>)
-		{
-			return std::wstring{ from };
+			if constexpr (std::same_as<decltype(from), std::string&&>)
+			{
+				return std::string{ std::move(from) };
+			}
+			else if constexpr (std::same_as<T, std::string>)
+			{
+				return from;
+			}
+			else if constexpr (std::convertible_to<T, std::string_view>)
+			{
+				return std::string{ from };
+			}
+			else
+			{
+				return ConvertString(from);
+			}
 		}
 		else
 		{
-			return ConvertString(from);
+			if constexpr (std::same_as<decltype(from), std::wstring&&>)
+			{
+				return std::wstring{ std::move(from) };
+			}
+			else if constexpr (std::same_as<T, std::wstring>) // covers wstring& and const wstring&.
+			{
+				return from;
+			}
+			else if constexpr (std::convertible_to<T, std::wstring_view>)
+			{
+				return std::wstring{ from };
+			}
+			else
+			{
+				return ConvertString(from);
+			}
 		}
 	}
+	*/
 
-	template<typename TString>
+	template<Concepts::WideOrNarrowString TString>
 	struct AutoString
 	{
+		using StringType = TString;
+
+		AutoString() = default;
 		AutoString(Concepts::AnyString auto&& from)
-			requires std::same_as<TString, std::string>
-			: Value{ ToNarrow(std::forward<decltype(from)>(from)) } { }
-		AutoString(Concepts::AnyString auto&& from) 
-			requires std::same_as<TString, std::wstring>
-			: Value{ ToWide(std::forward<decltype(from)>(from)) } { }
+			: Value{ To<TString>(std::forward<decltype(from)>(from)) } { }
+		
+		explicit operator const TString&() const { return Value; }
+		
+		explicit operator TString() const { return Value; }
+
+		explicit operator std::string_view() const
+			requires std::same_as<TString, std::string> 
+		{ 
+			return { Value }; 
+		}
+
+		explicit operator std::wstring_view() const
+			requires std::same_as<TString, std::wstring> 
+		{ 
+			return { Value }; 
+		}
+
+		bool operator==(Concepts::AnyString auto&& other) const
+		{
+			return Value == To<TString>(std::forward<decltype(other)>(other));
+		}
+
+		void operator+=(Concepts::AnyString auto&& other)
+		{
+			Value += To<std::string>(std::forward<decltype(other)>(other));
+		}
+
+		constexpr auto begin() const noexcept { return Value.begin(); }
+		constexpr auto end() const noexcept { return Value.end(); }
+		constexpr auto c_str() const noexcept { return Value.c_str(); }
+		constexpr auto data() const noexcept { return Value.data(); }
+
+		/*friend bool operator==(const AutoString<std::string>& lhs, const AutoString<std::string>& rhs);
+		friend bool operator==(const AutoString<std::string>& lhs, const AutoString<std::wstring>& rhs);
+		friend bool operator==(const AutoString<std::wstring>& lhs, const AutoString<std::wstring>& rhs);*/
+
+		template<typename T>
+		bool operator==(const AutoString<T>& other) const
+		{
+			return Value == To<TString>(other.Value);
+		}
+
 		TString Value;
-		operator const TString&() const { return Value; };
-		operator TString() const { return Value; };
 	};
 
 	using AutoAnsi = AutoString<std::string>;
