@@ -3,6 +3,7 @@ import std;
 import std.compat;
 import boring32.win32;
 import boring32.error;
+import boring32.concepts;
 
 export namespace Boring32::Util
 {
@@ -174,5 +175,14 @@ export namespace Boring32::Util
 		if (connectivity & Win32::NLM_CONNECTIVITY::NLM_CONNECTIVITY_IPV6_INTERNET)
 			return true;
 		return false;
+	}
+
+	template <Concepts::Variant TVariant, size_t N = 0>
+	void RuntimeSet(TVariant& tup, size_t idx)
+	{
+		if (N == idx)
+			tup = std::variant_alternative_t<N, TVariant>{};
+		if constexpr (N + 1 < std::variant_size_v<TVariant>)
+			RuntimeSet<TVariant, N + 1>(tup, idx);
 	}
 }

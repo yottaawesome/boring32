@@ -86,4 +86,16 @@ export namespace Boring32::Concepts
 
 	template <typename T>
 	constexpr bool AlwaysFalse = std::false_type::value;
+
+	template<typename T>
+	struct IsVariant : std::false_type {};
+
+	template<typename ...Args>
+	struct IsVariant<std::variant<Args...>> : std::true_type {};
+
+	template<typename T>
+	constexpr bool IsVariantV = IsVariant<T>::value;
+
+	template<typename T>
+	concept Variant = IsVariantV<T>;
 }
