@@ -98,4 +98,7 @@ export namespace Boring32::Concepts
 
 	template<typename T>
 	concept Variant = IsVariantV<T>;
+
+	template<typename T, typename...R>
+	concept OneOf = (std::same_as<T, R> or ...);
 }

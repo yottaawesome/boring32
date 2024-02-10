@@ -91,9 +91,13 @@ export namespace Boring32::Strings
 	}
 
 	template<Concepts::WideOrNarrowString TString>
-	auto To(Concepts::AnyString auto&& from)
+	decltype(auto) To(Concepts::AnyString auto&& from)
 	{
-		if constexpr (std::is_constructible_v<TString, decltype(from)>)
+		if constexpr (Concepts::OneOf<decltype(from), TString&, const TString&>)
+		{
+			return from;
+		}
+		else if constexpr (std::is_constructible_v<TString, decltype(from)>)
 		{
 			return TString{ std::forward<decltype(from)>(from) };
 		}
