@@ -7,7 +7,6 @@ import boring32.strings;
 import :uniqueptrs;
 import :winsockerror;
 
-
 export namespace Boring32::WinSock
 {
 
@@ -51,7 +50,7 @@ export namespace Boring32::WinSock
 					return;
 
 				Win32::WinSock::ADDRINFOW hints{
-					.ai_family = Win32::WinSock::_AF_INET,
+					.ai_family = Win32::WinSock::AddressFamily::IPv4,
 					.ai_socktype = Win32::WinSock::_SOCK_STREAM,
 					.ai_protocol = Win32::WinSock::IPPROTO::IPPROTO_TCP
 				};
@@ -62,7 +61,7 @@ export namespace Boring32::WinSock
 				const int status = Win32::WinSock::GetAddrInfoW(
 					m_host.c_str(),
 					portNumber.c_str(),
-					nullptr,
+					&hints,
 					&addrInfoResult
 				);
 				if (status) Error::ThrowNested(
@@ -201,12 +200,12 @@ export namespace Boring32::WinSock
 				Win32::DWORD argument;
 				switch (m_addressFamily)
 				{
-					case Win32::WinSock::_AF_INET:
+					case Win32::WinSock::AddressFamily::IPv4:
 						layer = Win32::WinSock::_IPPROTO_IP;
 						argument = Win32::WinSock::_IP_TTL;
 						break;
 
-					case Win32::WinSock::_AF_INET6:
+					case Win32::WinSock::AddressFamily::IPv6:
 						layer = Win32::WinSock::IPPROTO::IPPROTO_IPV6;
 						argument = Win32::WinSock::_IPV6_UNICAST_HOPS;
 						break;

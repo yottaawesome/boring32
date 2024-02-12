@@ -36,7 +36,7 @@ export namespace Boring32::WinSock
 
 		out.resize(Win32::WinSock::_INET6_ADDRSTRLEN);
 		// https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-inet_ntop
-		Win32::PCSTR ipCString = Win32::WinSock::inet_ntop(Win32::WinSock::_AF_INET6, &converted, &out[0], Win32::WinSock::_INET6_ADDRSTRLEN);
+		Win32::PCSTR ipCString = Win32::WinSock::inet_ntop(Win32::WinSock::AddressFamily::IPv6, &converted, &out[0], Win32::WinSock::_INET6_ADDRSTRLEN);
 		if (!ipCString)
 		{
 			const auto lastError = Win32::WinSock::WSAGetLastError();
@@ -56,7 +56,7 @@ export namespace Boring32::WinSock
 
 		out.resize(Win32::WinSock::_INET_ADDRSTRLEN);
 		// https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-inet_ntop
-		Win32::PCSTR ipCString = Win32::WinSock::inet_ntop(Win32::WinSock::_AF_INET, &converted, &out[0], Win32::WinSock::_INET_ADDRSTRLEN);
+		Win32::PCSTR ipCString = Win32::WinSock::inet_ntop(Win32::WinSock::AddressFamily::IPv4, &converted, &out[0], Win32::WinSock::_INET_ADDRSTRLEN);
 		if (!ipCString)
 		{
 			const auto lastError = Win32::WinSock::WSAGetLastError();
@@ -117,29 +117,29 @@ export namespace Boring32::WinSock
 		{
 			switch (ptr->ai_family)
 			{
-			case Win32::WinSock::_AF_INET:
-			{
-				Win32::WinSock::sockaddr_in* addr_in = (sockaddr_in*)ptr->ai_addr;
-				char ip[Win32::WinSock::_INET_ADDRSTRLEN];
-				Win32::WinSock::inet_ntop(Win32::WinSock::_AF_INET, &(addr_in->sin_addr), ip, Win32::WinSock::_INET_ADDRSTRLEN);
-				names.push_back({
-					.Family = AddressFamily::IPv4,
-					.Value = ip
-					});
-				break;
-			}
+				case Win32::WinSock::AddressFamily::IPv4:
+				{
+					Win32::WinSock::sockaddr_in* addr_in = (sockaddr_in*)ptr->ai_addr;
+					char ip[Win32::WinSock::_INET_ADDRSTRLEN];
+					Win32::WinSock::inet_ntop(Win32::WinSock::AddressFamily::IPv4, &(addr_in->sin_addr), ip, Win32::WinSock::_INET_ADDRSTRLEN);
+					names.push_back({
+						.Family = AddressFamily::IPv4,
+						.Value = ip
+						});
+					break;
+				}
 
-			case Win32::WinSock::_AF_INET6:
-			{
-				Win32::WinSock::sockaddr_in6* addr_in6 = (Win32::WinSock::sockaddr_in6*)ptr->ai_addr;
-				char ip[Win32::WinSock::_INET6_ADDRSTRLEN];
-				inet_ntop(Win32::WinSock::_AF_INET6, &(addr_in6->sin6_addr), ip, Win32::WinSock::_INET6_ADDRSTRLEN);
-				names.push_back({
-					.Family = AddressFamily::IPv6,
-					.Value = ip
+				case Win32::WinSock::AddressFamily::IPv6:
+				{
+					Win32::WinSock::sockaddr_in6* addr_in6 = (Win32::WinSock::sockaddr_in6*)ptr->ai_addr;
+					char ip[Win32::WinSock::_INET6_ADDRSTRLEN];
+					inet_ntop(Win32::WinSock::AddressFamily::IPv6, &(addr_in6->sin6_addr), ip, Win32::WinSock::_INET6_ADDRSTRLEN);
+					names.push_back({
+						.Family = AddressFamily::IPv6,
+						.Value = ip
 					});
-				break;
-			}
+					break;
+				}
 			}
 		}
 
@@ -160,7 +160,7 @@ export namespace Boring32::WinSock
 
 		Async::Event e(false, true, false);
 		OverlappedEx ov(e);
-		Win32::WinSock::ADDRINFOEX hints{ .ai_family = Win32::WinSock::_AF_UNSPEC };
+		Win32::WinSock::ADDRINFOEX hints{ .ai_family = Win32::WinSock::AddressFamily::IPv4 };
 		//https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-getaddrinfoexw
 		const int error = Win32::WinSock::GetAddrInfoExW(
 			name.c_str(),
@@ -190,11 +190,11 @@ export namespace Boring32::WinSock
 		{
 			switch (ptr->ai_family)
 			{
-				case Win32::WinSock::_AF_INET:
+				case Win32::WinSock::AddressFamily::IPv4:
 				{
 					std::string ip(Win32::WinSock::_INET_ADDRSTRLEN, '\0');
 					Win32::WinSock::sockaddr_in* addr_in = (Win32::WinSock::sockaddr_in*)ptr->ai_addr;
-					Win32::WinSock::inet_ntop(Win32::WinSock::_AF_INET, &(addr_in->sin_addr), &ip[0], ip.length());
+					Win32::WinSock::inet_ntop(Win32::WinSock::AddressFamily::IPv4, &(addr_in->sin_addr), &ip[0], ip.length());
 					names.push_back({
 						.Family = AddressFamily::IPv4,
 						.Value = std::move(ip)
@@ -202,11 +202,11 @@ export namespace Boring32::WinSock
 					break;
 				}
 
-				case Win32::WinSock::_AF_INET6:
+				case Win32::WinSock::AddressFamily::IPv6:
 				{
 					std::string ip(Win32::WinSock::_INET6_ADDRSTRLEN, '\0');
 					Win32::WinSock::sockaddr_in6* addr_in6 = (Win32::WinSock::sockaddr_in6*)ptr->ai_addr;
-					Win32::WinSock::inet_ntop(Win32::WinSock::_AF_INET6, &(addr_in6->sin6_addr), &ip[0], ip.length());
+					Win32::WinSock::inet_ntop(Win32::WinSock::AddressFamily::IPv6, &(addr_in6->sin6_addr), &ip[0], ip.length());
 					names.push_back({
 						.Family = AddressFamily::IPv6,
 						.Value = std::move(ip)
@@ -231,7 +231,7 @@ export namespace Boring32::WinSock
 			.tv_sec = 10,         /* seconds */
 			.tv_usec = 0        /* and microseconds */
 		};
-		Win32::WinSock::ADDRINFOEX hints{ .ai_family = Win32::WinSock::_AF_UNSPEC };
+		Win32::WinSock::ADDRINFOEX hints{ .ai_family = Win32::WinSock::AddressFamily::Unspecified };
 		const int error = Win32::WinSock::GetAddrInfoExW(
 			name.c_str(),
 			nullptr,
@@ -260,11 +260,11 @@ export namespace Boring32::WinSock
 		{
 			switch (ptr->ai_family)
 			{
-				case Win32::WinSock::_AF_INET:
+				case Win32::WinSock::AddressFamily::IPv4:
 				{
 					std::string ip(Win32::WinSock::_INET_ADDRSTRLEN, '\0');
 					Win32::WinSock::sockaddr_in* addr_in = (Win32::WinSock::sockaddr_in*)ptr->ai_addr;
-					Win32::WinSock::inet_ntop(Win32::WinSock::_AF_INET, &(addr_in->sin_addr), &ip[0], ip.length());
+					Win32::WinSock::inet_ntop(Win32::WinSock::AddressFamily::IPv4, &(addr_in->sin_addr), &ip[0], ip.length());
 					names.push_back({
 						.Family = AddressFamily::IPv4,
 						.Value = std::move(ip)
@@ -272,11 +272,11 @@ export namespace Boring32::WinSock
 					break;
 				}
 
-				case Win32::WinSock::_AF_INET6:
+				case Win32::WinSock::AddressFamily::IPv6:
 				{
 					std::string ip(Win32::WinSock::_INET6_ADDRSTRLEN, '\0');
 					Win32::WinSock::sockaddr_in6* addr_in6 = (Win32::WinSock::sockaddr_in6*)ptr->ai_addr;
-					Win32::WinSock::inet_ntop(Win32::WinSock::_AF_INET6, &(addr_in6->sin6_addr), &ip[0], ip.length());
+					Win32::WinSock::inet_ntop(Win32::WinSock::AddressFamily::IPv6, &(addr_in6->sin6_addr), &ip[0], ip.length());
 					names.push_back({
 						.Family = AddressFamily::IPv6,
 						.Value = std::move(ip)

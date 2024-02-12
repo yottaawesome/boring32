@@ -227,5 +227,6 @@
     <ClCompile Include="Shell\boring32.shell.ixx" />
     <ClCompile Include="Concepts\boring32.concepts.ixx" />
     <ClCompile Include="Registry\boring32.registry-registryvalue.ixx" />
+    <ClCompile Include="WinSock\boring32.winsock-resolvedname.ixx" />
   </ItemGroup>
 </Project>

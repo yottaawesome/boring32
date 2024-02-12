@@ -997,9 +997,17 @@ export namespace Boring32::Win32::WinSock
 	using ::setsockopt;
 	constexpr auto _INET_ADDRSTRLEN = INET_ADDRSTRLEN;
 	constexpr auto _INET6_ADDRSTRLEN = INET6_ADDRSTRLEN;
-	constexpr auto _AF_INET = AF_INET;
-	constexpr auto _AF_INET6 = AF_INET6;
-	constexpr auto _AF_UNSPEC = AF_UNSPEC;
+
+	namespace AddressFamily
+	{
+		enum
+		{
+			IPv4 = AF_INET,
+			IPv6 = AF_INET6,
+			Unspecified = AF_UNSPEC
+		};
+	}
+	
 	constexpr auto _WSA_IO_PENDING = WSA_IO_PENDING;
 	constexpr auto _INVALID_SOCKET = INVALID_SOCKET;
 	constexpr auto _IPPROTO_IP = IPPROTO_IP;

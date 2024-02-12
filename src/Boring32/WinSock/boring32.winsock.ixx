@@ -6,3 +6,4 @@ export import :winsockerror;
 export import :winsockinit; 
 export import :tcpsocket; 
 export import :socket;
+export import :resolvedname;
