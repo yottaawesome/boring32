@@ -11,13 +11,13 @@ import :resolvedname;
 export namespace Boring32::WinSock
 {
 	// Based on https://docs.microsoft.com/en-us/windows/win32/winsock/winsock-client-application
-	class TCPSocket
+	class TCPSocket final
 	{
 		public:
 			static const Win32::WinSock::SOCKET InvalidSocket;
 
 		public:
-			virtual ~TCPSocket()
+			~TCPSocket()
 			{
 				Close();
 			}
@@ -37,14 +37,14 @@ export namespace Boring32::WinSock
 			{ }
 
 		public:
-			virtual TCPSocket& operator=(const TCPSocket& other) = delete;
-			virtual TCPSocket& operator=(TCPSocket&& other) noexcept
+			TCPSocket& operator=(const TCPSocket& other) = delete;
+			TCPSocket& operator=(TCPSocket&& other) noexcept
 			{
 				return Move(other);
 			}
 
 		public:
-			virtual void Open()
+			void Open()
 			{
 				if (m_socket && m_socket != InvalidSocket)
 					return;
@@ -60,12 +60,12 @@ export namespace Boring32::WinSock
 				m_addressFamily = m_addrPtr->ai_family;
 			}
 
-			virtual void Connect()
+			void Connect()
 			{
 				Connect(0, 0);
 			}
 
-			virtual void Connect(const Win32::DWORD socketTTL, const Win32::DWORD maxRetryTimeout)
+			void Connect(const Win32::DWORD socketTTL, const Win32::DWORD maxRetryTimeout)
 			{
 				Open();
 				if (socketTTL)
@@ -94,7 +94,7 @@ export namespace Boring32::WinSock
 				}
 			}
 
-			virtual void Close()
+			void Close()
 			{
 				if (!m_socket)
 					return;
@@ -105,7 +105,7 @@ export namespace Boring32::WinSock
 				m_socket = InvalidSocket;
 			}
 
-			virtual void Send(const std::vector<std::byte>& data)
+			void Send(const std::vector<std::byte>& data)
 			{
 				if (!m_socket || m_socket == InvalidSocket)
 					throw Error::Boring32Error("Socket is not valid");
@@ -138,7 +138,7 @@ export namespace Boring32::WinSock
 				}
 			}
 
-			virtual std::vector<std::byte> Receive(const unsigned bytesToRead)
+			std::vector<std::byte> Receive(const unsigned bytesToRead)
 			{
 				if (!m_socket || m_socket == InvalidSocket)
 					throw WinSockError("Socket is not valid");
@@ -161,7 +161,7 @@ export namespace Boring32::WinSock
 				return recvbuf;
 			}
 
-			virtual void SetSocketTTL(const Win32::DWORD ttl)
+			void SetSocketTTL(const Win32::DWORD ttl)
 			{
 				if (!m_socket || m_socket == InvalidSocket)
 					throw WinSockError("Not in a valid state to set TTL support");
@@ -222,7 +222,7 @@ export namespace Boring32::WinSock
 				}
 			}
 
-			virtual void SetMaxRetryTimeout(const Win32::DWORD timeoutSeconds)
+			void SetMaxRetryTimeout(const Win32::DWORD timeoutSeconds)
 			{
 				if (!m_socket || m_socket == InvalidSocket)
 					throw WinSockError("Not in a valid state to set TTL support");
@@ -265,23 +265,23 @@ export namespace Boring32::WinSock
 			}
 
 		public:
-			virtual const std::wstring& GetHost() const noexcept
+			const std::wstring& GetHost() const noexcept
 			{
 				return m_host;
 			}
 
-			virtual unsigned GetPort() const noexcept
+			unsigned GetPort() const noexcept
 			{
 				return m_portNumber;
 			}
 
-			virtual SOCKET GetHandle() const noexcept
+			SOCKET GetHandle() const noexcept
 			{
 				return m_socket;
 			}
 
-		protected:
-			virtual TCPSocket& Move(TCPSocket& other) noexcept
+		private:
+			TCPSocket& Move(TCPSocket& other) noexcept
 			{
 				Close();
 				m_host = std::move(other.m_host);
@@ -289,11 +289,9 @@ export namespace Boring32::WinSock
 				m_socket = other.m_socket;
 				other.m_socket = InvalidSocket;
 				m_addressFamily = other.m_addressFamily;
-
-				return *this;
 			}
 
-		protected:
+		private:
 			std::wstring m_host;
 			unsigned m_portNumber = 0;
 			Win32::WinSock::SOCKET m_socket = Win32::WinSock::_INVALID_SOCKET; // doesn't work with unique_ptr
