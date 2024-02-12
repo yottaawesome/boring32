@@ -1000,7 +1000,7 @@ export namespace Boring32::Win32::WinSock
 
 	namespace AddressFamily
 	{
-		enum
+		enum Family
 		{
 			IPv4 = AF_INET,
 			IPv6 = AF_INET6,
