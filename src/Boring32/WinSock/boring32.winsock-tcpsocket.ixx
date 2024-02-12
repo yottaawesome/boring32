@@ -6,10 +6,10 @@ import boring32.error;
 import boring32.strings;
 import :uniqueptrs;
 import :winsockerror;
+import :resolvedname;
 
 export namespace Boring32::WinSock
 {
-
 	// Based on https://docs.microsoft.com/en-us/windows/win32/winsock/winsock-client-application
 	class TCPSocket
 	{
@@ -49,45 +49,15 @@ export namespace Boring32::WinSock
 				if (m_socket && m_socket != InvalidSocket)
 					return;
 
-				Win32::WinSock::ADDRINFOW hints{
-					.ai_family = Win32::WinSock::AddressFamily::IPv4,
-					.ai_socktype = Win32::WinSock::_SOCK_STREAM,
-					.ai_protocol = Win32::WinSock::IPPROTO::IPPROTO_TCP
+				ResolvedName name{ 
+					m_host, 
+					m_portNumber , 
+					Win32::WinSock::AddressFamily::IPv4 , 
+					Win32::WinSock::IPPROTO::IPPROTO_TCP, 
+					Win32::WinSock::_SOCK_STREAM 
 				};
-
-				Win32::WinSock::ADDRINFOW* addrInfoResult;
-				// https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-getaddrinfow
-				std::wstring portNumber = m_portNumber ? std::to_wstring(m_portNumber) : L"";
-				const int status = Win32::WinSock::GetAddrInfoW(
-					m_host.c_str(),
-					portNumber.c_str(),
-					&hints,
-					&addrInfoResult
-				);
-				if (status) Error::ThrowNested(
-					Error::Win32Error("GetAddrInfoW() failed", status, L"ws2_32.dll"),
-					WinSockError("Failed to get address info")
-				);
-				if (!addrInfoResult)
-					throw WinSockError("GetAddrInfoW() did not find any valid interfaces");
-				m_addrPtr = AddrInfoWUniquePtr(addrInfoResult);
-
-				// https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-socket
-				m_socket = Win32::WinSock::socket(
-					addrInfoResult->ai_family,
-					addrInfoResult->ai_socktype,
-					addrInfoResult->ai_protocol
-				);
-				if (m_socket == Win32::WinSock::_INVALID_SOCKET)
-				{
-					const auto lastError = Win32::WinSock::WSAGetLastError();
-					Error::ThrowNested(
-						Error::Win32Error("socket() failed", lastError, L"ws2_32.dll"),
-						WinSockError("Failed to open socket")
-					);
-				}
-
-				m_addressFamily = addrInfoResult->ai_family;
+				m_addrPtr = std::move(name.AddrInfo);
+				m_addressFamily = m_addrPtr->ai_family;
 			}
 
 			virtual void Connect()

@@ -10,7 +10,7 @@ export namespace Boring32::WinSock
 	struct ResolvedName
 	{
 		std::wstring Name{};
-		unsigned short Port = 80;
+		unsigned Port = 80;
 		Win32::WinSock::AddressFamily::Family AddressType = Win32::WinSock::AddressFamily::Unspecified;
 		Win32::WinSock::IPPROTO Protocol = Win32::WinSock::IPPROTO::IPPROTO_TCP;
 		int SocketType = Win32::WinSock::_SOCK_STREAM;
@@ -18,7 +18,7 @@ export namespace Boring32::WinSock
 
 		static AddrInfoWUniquePtr Resolve(
 			std::wstring_view name,
-			unsigned short port,
+			unsigned port,
 			Win32::WinSock::AddressFamily::Family addressType,
 			Win32::WinSock::IPPROTO protocol,
 			int socketType
