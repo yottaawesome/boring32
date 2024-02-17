@@ -704,8 +704,10 @@ export namespace Boring32::Win32
 	namespace WinSafer
 	{
 		using ::SAFER_LEVEL_HANDLE;
-		using ::SaferCreateLevel;
-		using ::SaferCloseLevel;
+		using 
+			::SaferCreateLevel,
+			::SaferCloseLevel,
+			::SaferComputeTokenFromLevel;
 
 		enum class Scope
 		{
@@ -726,9 +728,16 @@ export namespace Boring32::Win32
 		{
 			Open = SAFER_LEVEL_OPEN
 		};
+
+		enum TokenFlags : ::DWORD
+		{
+			NullIfEqual = SAFER_TOKEN_NULL_IF_EQUAL,
+			CompareOnly = SAFER_TOKEN_COMPARE_ONLY,
+			MakeInert = SAFER_TOKEN_MAKE_INERT,
+			WantFlags = SAFER_TOKEN_WANT_FLAGS
+		};
 	}
 	
-
 	namespace FailFast
 	{
 		enum
