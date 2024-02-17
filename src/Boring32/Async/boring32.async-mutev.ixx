@@ -1,6 +1,5 @@
 export module boring32.async:mutev;
-import std;
-import std.compat;
+import boring32.shared;
 import boring32.error;
 import :event;
 

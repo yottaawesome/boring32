@@ -130,7 +130,7 @@
       <EnableModules>false</EnableModules>
       <ErrorReporting>Send</ErrorReporting>
       <DisableSpecificWarnings>4005;5106;4067</DisableSpecificWarnings>
-      <BuildStlModules>true</BuildStlModules>
+      <BuildStlModules>false</BuildStlModules>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -173,7 +173,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnableModules>false</EnableModules>
       <DisableSpecificWarnings>4005;5106;4067</DisableSpecificWarnings>
-      <BuildStlModules>true</BuildStlModules>
+      <BuildStlModules>false</BuildStlModules>
       <ErrorReporting>Send</ErrorReporting>
     </ClCompile>
     <Link>

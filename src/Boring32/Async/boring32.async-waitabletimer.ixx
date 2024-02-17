@@ -1,9 +1,7 @@
 export module boring32.async:waitabletimer;
-import std;
-import std.compat;
+import boring32.shared;
 import boring32.error;
 import boring32.raii;
-import boring32.win32;
 import :functions;
 import boring32.concepts;
 

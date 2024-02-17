@@ -23,5 +23,8 @@
     <ClCompile Include="boring32.win32.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="boring32.shared.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
