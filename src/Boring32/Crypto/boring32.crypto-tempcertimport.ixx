@@ -1,6 +1,5 @@
 export module boring32.crypto:tempcertimport;
-import std;
-import std.compat;
+import boring32.shared;
 import :certificate;
 import :certstore;
 

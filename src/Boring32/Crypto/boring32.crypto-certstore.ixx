@@ -7,9 +7,7 @@ module;
 //#include <winnt.h>
 
 export module boring32.crypto:certstore;
-import std;
-import std.compat;
-import boring32.win32;
+import boring32.shared;
 import boring32.strings;
 import boring32.error;
 import :functions;
