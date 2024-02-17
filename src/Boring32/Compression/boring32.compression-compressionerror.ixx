@@ -1,6 +1,5 @@
 export module boring32.compression:compressionerror;
-import std;
-import std.compat;
+import boring32.shared;
 import boring32.error;
 import boring32.strings;
 
