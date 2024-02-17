@@ -1,5 +1,5 @@
 export module boring32.com:functions;
-import boring32.win32;
+import boring32.shared;
 
 export namespace Boring32::COM
 {
