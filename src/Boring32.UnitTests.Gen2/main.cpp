@@ -5,6 +5,11 @@ import boring32.unit_tests;
 
 int main()
 {
+    [](this auto&& self)
+    {
+
+    }();
+
     unit_tests::testing::run(
         unit_tests::registry::registry_value_tests{},
         unit_tests::strings::strings_tests{}

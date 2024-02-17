@@ -290,6 +290,7 @@
     <ClCompile Include="Security\boring32.security-encodedpointer.ixx" />
     <ClCompile Include="Security\boring32.security-functions.ixx" />
     <ClCompile Include="Security\boring32.security-impersonationcontext.ixx" />
+    <ClCompile Include="Security\boring32.security-level.ixx" />
     <ClCompile Include="Security\boring32.security-lsaunicodestring.cpp">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModuleInternalPartition</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCppModuleInternalPartition</CompileAs>

@@ -700,6 +700,35 @@ export namespace Boring32::Win32
 	using ::CertGetStoreProperty;
 	using ::__fastfail;
 
+
+	namespace WinSafer
+	{
+		using ::SAFER_LEVEL_HANDLE;
+		using ::SaferCreateLevel;
+		using ::SaferCloseLevel;
+
+		enum class Scope
+		{
+			Machine = SAFER_SCOPEID_MACHINE,
+			User = SAFER_SCOPEID_USER
+		};
+
+		enum class Level
+		{
+			Constrained = SAFER_LEVELID_CONSTRAINED,
+			Disallowed = SAFER_LEVELID_DISALLOWED,
+			FullyTrusted = SAFER_LEVELID_FULLYTRUSTED,
+			NormalUser = SAFER_LEVELID_NORMALUSER,
+			Untrusted = SAFER_LEVELID_UNTRUSTED
+		};
+
+		enum class Flags
+		{
+			Open = SAFER_LEVEL_OPEN
+		};
+	}
+	
+
 	namespace FailFast
 	{
 		enum

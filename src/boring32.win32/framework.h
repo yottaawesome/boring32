@@ -56,3 +56,4 @@
 // see https://stackoverflow.com/questions/11561475/sspi-header-file-fatal-error
 #define SECURITY_WIN32
 #include <security.h>
+#include <winsafer.h>

@@ -14,7 +14,7 @@ export namespace Boring32::WinSock
 	class TCPSocket final
 	{
 		public:
-			static const Win32::WinSock::SOCKET InvalidSocket;
+			static constexpr Win32::WinSock::SOCKET InvalidSocket = Win32::WinSock::_INVALID_SOCKET;
 
 		public:
 			~TCPSocket()
@@ -299,5 +299,4 @@ export namespace Boring32::WinSock
 			AddrInfoWUniquePtr m_addrPtr;
 	};		
 	
-	const Win32::WinSock::SOCKET TCPSocket::InvalidSocket = Win32::WinSock::_INVALID_SOCKET;
 }
