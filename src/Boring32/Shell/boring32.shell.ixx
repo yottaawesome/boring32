@@ -1,6 +1,5 @@
 export module boring32.shell;
-import std;
-import boring32.win32;
+import boring32.shared;
 import boring32.error;
 
 namespace Boring32::Shell
