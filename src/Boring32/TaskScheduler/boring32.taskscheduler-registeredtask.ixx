@@ -4,10 +4,10 @@ import boring32.error;
 
 namespace Boring32::TaskScheduler
 {
-	export class RegisteredTask
+	export class RegisteredTask final
 	{
 		public:
-			virtual ~RegisteredTask() = default;
+			~RegisteredTask() = default;
 			RegisteredTask(const RegisteredTask&) = default;
 			RegisteredTask(RegisteredTask&&) noexcept = default;
 			RegisteredTask(Win32::ComPtr<Win32::IRegisteredTask> registeredTask)
@@ -21,13 +21,13 @@ namespace Boring32::TaskScheduler
 			}
 
 		public:
-			virtual void Close() noexcept
+			void Close() noexcept
 			{
 				m_registeredTask = nullptr;
 				m_taskDefinition = nullptr;
 			}
 
-			virtual std::wstring GetName() const
+			std::wstring GetName() const
 			{
 				CheckIsValid();
 
@@ -39,7 +39,7 @@ namespace Boring32::TaskScheduler
 				return { taskName, taskName.length() };
 			}
 
-			virtual void SetEnabled(const bool isEnabled)
+			void SetEnabled(const bool isEnabled)
 			{
 				CheckIsValid();
 
@@ -60,19 +60,19 @@ namespace Boring32::TaskScheduler
 				}*/
 			}
 
-			virtual Win32::ComPtr<Win32::IRegisteredTask> GetRegisteredTask()
-				const noexcept final
+			Win32::ComPtr<Win32::IRegisteredTask> GetRegisteredTask()
+				const noexcept
 			{
 				return m_registeredTask;
 			}
 
-			virtual Win32::ComPtr<Win32::ITaskDefinition> GetTaskDefinition()
-				const noexcept final
+			Win32::ComPtr<Win32::ITaskDefinition> GetTaskDefinition()
+				const noexcept
 			{
 				return m_taskDefinition;
 			}
 
-			virtual void SetRepetitionInterval(const Win32::DWORD intervalMinutes)
+			void SetRepetitionInterval(const Win32::DWORD intervalMinutes)
 			{
 				std::vector<Win32::ComPtr<Win32::ITrigger>> triggers = GetTriggers();
 				for (auto& trigger : triggers)
@@ -101,7 +101,7 @@ namespace Boring32::TaskScheduler
 			/// <exception cref="ComError">
 			///		Thrown when a COM operation fails.
 			/// </exception>
-			virtual void Run()
+			void Run()
 			{
 				CheckIsValid();
 
@@ -133,7 +133,7 @@ namespace Boring32::TaskScheduler
 			///		Thrown when a COM operation fails.
 			/// </exception>
 			/// <returns>The number of triggers updated.</returns>
-			virtual unsigned SetRandomDelay(const Win32::DWORD minutes)
+			unsigned SetRandomDelay(const Win32::DWORD minutes)
 			{
 				std::vector<Win32::ComPtr<Win32::ITrigger>> triggers = GetTriggers();
 				const std::wstring delay = std::format(L"PT{}M", minutes);
@@ -168,8 +168,8 @@ namespace Boring32::TaskScheduler
 				return triggersUpdated;
 			}
 
-		protected:
-			virtual std::vector<Win32::ComPtr<Win32::ITrigger>> GetTriggers()
+		private:
+			std::vector<Win32::ComPtr<Win32::ITrigger>> GetTriggers()
 			{
 				CheckIsValid();
 
@@ -195,7 +195,7 @@ namespace Boring32::TaskScheduler
 				return returnVal;
 			}
 
-			virtual void CheckIsValid() const
+			void CheckIsValid() const
 			{
 				if (!m_registeredTask)
 					throw Error::Boring32Error("m_registeredTask is nullptr");
@@ -203,7 +203,7 @@ namespace Boring32::TaskScheduler
 					throw Error::Boring32Error("m_taskDefinition is nullptr");
 			}
 
-		protected:
+		private:
 			// https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-iregisteredtask
 			Win32::ComPtr<Win32::IRegisteredTask> m_registeredTask;
 			// https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-itaskdefinition

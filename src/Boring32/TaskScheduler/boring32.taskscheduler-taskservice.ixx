@@ -5,27 +5,27 @@ import boring32.error;
 
 export namespace Boring32::TaskScheduler
 {
-	class TaskService
+	class TaskService final
 	{
 		public:
-			virtual ~TaskService() = default;
+			~TaskService() = default;
 			TaskService() = default;
 			TaskService(const TaskService&) = default;
 			TaskService(TaskService&&) = default;
 
 		public:
-			virtual operator bool() const noexcept
+			operator bool() const noexcept
 			{
 				return m_taskService != nullptr;
 			}
 
-			virtual bool operator==(const TaskService& other) const noexcept
+			bool operator==(const TaskService& other) const noexcept
 			{
 				return m_taskService == other.m_taskService;
 			}
 
 		public:
-			virtual void Connect()
+			void Connect()
 			{
 				if (m_taskService)
 					return;
@@ -50,7 +50,7 @@ export namespace Boring32::TaskScheduler
 					throw Error::COMError("Failed to connect to Task Service", hr);
 			}
 
-			virtual bool Connect(const std::nothrow_t&) noexcept try
+			bool Connect(const std::nothrow_t&) noexcept try
 			{
 				Connect();
 				return true;
@@ -62,18 +62,18 @@ export namespace Boring32::TaskScheduler
 				return false;
 			}
 
-			virtual void Close() noexcept
+			void Close() noexcept
 			{
 				if (m_taskService)
 					m_taskService = nullptr;
 			}
 
-			virtual TaskFolder GetRootFolder()
+			TaskFolder GetRootFolder()
 			{
 				return GetFolder(L"\\");
 			}
 
-			virtual TaskFolder GetFolder(const std::wstring& path)
+			TaskFolder GetFolder(const std::wstring& path)
 			{
 				Win32::ComPtr<Win32::ITaskFolder> folder = nullptr;
 				Win32::HRESULT hr = m_taskService->GetFolder(Win32::_bstr_t(path.c_str()), &folder);
@@ -82,12 +82,12 @@ export namespace Boring32::TaskScheduler
 				return folder;
 			}
 
-			virtual Win32::ComPtr<Win32::ITaskService> Get() const noexcept
+			Win32::ComPtr<Win32::ITaskService> Get() const noexcept
 			{
 				return m_taskService;
 			}
 
-		protected:
+		private:
 			// https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-itaskservice
 			Win32::ComPtr<Win32::ITaskService> m_taskService;
 	};
