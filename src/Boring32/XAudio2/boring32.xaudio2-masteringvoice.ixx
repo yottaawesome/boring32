@@ -1,5 +1,5 @@
 export module boring32.xaudio2:masteringvoice;
-import boring32.win32;
+import boring32.shared;
 import boring32.error;
 import :xaudio2error;
 import :voice;

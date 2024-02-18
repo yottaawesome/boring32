@@ -1,5 +1,5 @@
 export module boring32.xaudio2:functions;
-import boring32.win32;
+import boring32.shared;
 import boring32.error;
 
 namespace Boring32::XAudio2
