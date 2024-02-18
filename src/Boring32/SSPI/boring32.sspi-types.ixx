@@ -1,7 +1,5 @@
 export module boring32.sspi:types;
-import std;
-import std.compat;
-import boring32.win32;
+import boring32.shared;
 
 export namespace Boring32::SSPI
 {

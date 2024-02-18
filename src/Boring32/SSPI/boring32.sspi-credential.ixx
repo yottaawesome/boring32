@@ -1,7 +1,5 @@
 export module boring32.sspi:credential;
-import std;
-import std.compat;
-import boring32.win32;
+import boring32.shared;
 import boring32.error;
 
 namespace Boring32::SSPI
