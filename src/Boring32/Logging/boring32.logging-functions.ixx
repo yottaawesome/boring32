@@ -1,6 +1,5 @@
 export module boring32.logging:functions;
-import std;
-import std.compat;
+import boring32.shared;
 import boring32.concepts;
 
 export namespace Boring32::Logging
