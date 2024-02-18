@@ -1,6 +1,5 @@
 export module boring32.strongtypes:impl;
-import std;
-import std.compat;
+import boring32.shared;
 
 export namespace Boring32::StrongTypes
 {
