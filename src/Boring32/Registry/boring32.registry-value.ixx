@@ -1,7 +1,5 @@
 export module boring32.registry:value;
-import std;
-import std.compat;
-import boring32.win32;
+import boring32.shared;
 import boring32.error;
 import boring32.strings;
 
