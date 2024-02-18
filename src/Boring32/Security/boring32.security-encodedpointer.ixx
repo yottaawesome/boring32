@@ -1,5 +1,5 @@
 export module boring32.security:encodedpointer;
-import boring32.win32;
+import boring32.shared;
 
 export namespace Boring32::Security
 {
