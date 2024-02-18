@@ -1,5 +1,5 @@
 export module boring32.winsock:socket;
-import boring32.win32;
+import boring32.shared;
 import :winsockerror;
 
 export namespace Boring32::WinSock

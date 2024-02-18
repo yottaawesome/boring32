@@ -1,7 +1,6 @@
 export module boring32.winsock:winsockerror;
+import boring32.shared;
 import boring32.error;
-import std;
-import std.compat;
 
 export namespace Boring32::WinSock
 {
