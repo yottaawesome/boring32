@@ -1,5 +1,5 @@
 export module boring32.util:range;
-import std;
+import boring32.shared;
 import boring32.error;
 
 namespace
