@@ -20,7 +20,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Boring32.HeaderUnit", "Bori
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Manual", "Manual", "{8515BDBB-B8A0-44D4-916C-90C6F9C5A255}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Boring32.Win32", "boring32.win32\boring32.win32.vcxproj", "{776FAD4B-C69B-4BAB-AD31-0022EC8AE66F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Boring32.Shared", "boring32.shared\boring32.shared.vcxproj", "{776FAD4B-C69B-4BAB-AD31-0022EC8AE66F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Boring32.UnitTests.Gen2", "Boring32.UnitTests.Gen2\Boring32.UnitTests.Gen2.vcxproj", "{90CC9774-3C9B-488A-BE98-E55A034EB96B}"
 EndProject
