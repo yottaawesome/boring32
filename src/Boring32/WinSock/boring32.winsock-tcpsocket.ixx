@@ -20,7 +20,9 @@ export namespace Boring32::WinSock
 				Close();
 			}
 
-			TCPSocket() = default;
+			TCPSocket()
+			{
+			}
 
 			TCPSocket(const TCPSocket& other) = delete;
 
@@ -32,7 +34,21 @@ export namespace Boring32::WinSock
 			TCPSocket(const std::wstring host, const unsigned portNumber)
 				: m_host(std::move(host)),
 				m_portNumber(portNumber)
-			{ }
+			{ 
+				m_socket = Win32::WinSock::socket(
+					Win32::WinSock::AddressFamily::IPv4,
+					Win32::WinSock::_SOCK_STREAM,
+					Win32::WinSock::_IPPROTO_TCP
+				);
+				if (m_socket == Win32::WinSock::_INVALID_SOCKET)
+				{
+					const auto lastError = Win32::WinSock::WSAGetLastError();
+					Error::ThrowNested(
+						Error::Win32Error("socket() failed", lastError, L"ws2_32.dll"),
+						WinSockError("Failed to open socket")
+					);
+				}
+			}
 
 		public:
 			TCPSocket& operator=(const TCPSocket& other) = delete;
@@ -44,8 +60,7 @@ export namespace Boring32::WinSock
 		public:
 			void Open()
 			{
-				if (m_socket && m_socket != InvalidSocket)
-					return;
+
 
 				ResolvedName name{ 
 					m_host, 

@@ -1054,6 +1054,7 @@ export namespace Boring32::Win32::WinSock
 	constexpr auto _IP_TTL = IP_TTL;
 	constexpr auto _TCP_MAXRT = TCP_MAXRT;
 	constexpr auto _IPV6_UNICAST_HOPS = IPV6_UNICAST_HOPS;
+	constexpr auto _IPPROTO_TCP = IPPROTO_TCP;
 }
 
 export namespace Boring32::Win32::WinHttp

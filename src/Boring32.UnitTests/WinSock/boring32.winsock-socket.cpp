@@ -61,6 +61,7 @@ namespace WinSock
 			{
 				Boring32::WinSock::WinSockInit init(2, 2);
 				Boring32::WinSock::TCPSocket socket(L"www.google.com", 80);
+				socket.Open();
 				socket.Connect();
 				socket.Close();
 				Assert::IsTrue(socket.GetHandle() == Boring32::WinSock::TCPSocket::InvalidSocket);
