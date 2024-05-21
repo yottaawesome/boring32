@@ -11,7 +11,7 @@ namespace MSI
 		public:
 			TEST_METHOD(TestGetInstalledProducts)
 			{
-				std::vector<Boring32::MSI::InstalledProduct> products
+				std::vector products
 					= Boring32::MSI::GetInstalledProducts();
 				Assert::IsFalse(products.empty());
 			}

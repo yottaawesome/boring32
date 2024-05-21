@@ -10,7 +10,7 @@ namespace Util
 		public:
 			TEST_METHOD(TestToByteVector)
 			{
-				std::vector<std::byte> bytes = Boring32::Util::ToByteVector(0x0, 0x1, 0x2, 0x3);
+				std::vector bytes = Boring32::Util::ToByteVector(0x0, 0x1, 0x2, 0x3);
 				Assert::IsTrue(bytes.size() == 4);
 				for(int i = 0; i < bytes.size(); i++)
 					Assert::IsTrue(bytes[i] == (std::byte)i);

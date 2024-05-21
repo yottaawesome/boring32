@@ -38,7 +38,7 @@ namespace Error
 						}
 						catch (const std::exception& ex)
 						{
-							std::string ss = Boring32::Error::PrintExceptionToString(ex);
+							std::string ss = ::Boring32::Error::PrintExceptionToString(ex);
 							Assert::IsFalse(ss.empty());
 						}
 					}

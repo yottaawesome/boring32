@@ -287,6 +287,7 @@ export namespace Boring32::WinSock
 				m_socket = other.m_socket;
 				other.m_socket = InvalidSocket;
 				m_addressFamily = other.m_addressFamily;
+				return *this;
 			}
 
 		private:

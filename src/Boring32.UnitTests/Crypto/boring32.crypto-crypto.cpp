@@ -10,7 +10,7 @@ namespace Crypto
 		public:
 			TEST_METHOD(TestEncryptString)
 			{
-				std::vector<std::byte> encryptedData =
+				std::vector encryptedData =
 					Boring32::Crypto::Encrypt(
 						L"Hello, world!",
 						L"TestPassword",

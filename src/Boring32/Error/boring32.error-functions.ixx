@@ -102,12 +102,6 @@ R"(Entry:
         }
     }
 
-    std::string PrintExceptionToString(const std::exception& ex)
-    {
-        std::string ss;
-        return PrintExceptionToString(ex, ss);
-    }
-
     void PrintExceptionInfo(const std::exception& e, const unsigned level = 0)
     {
         std::wcout << std::format("{}-> {}", std::string(level, '-'), e.what()).c_str() << std::endl;
@@ -131,6 +125,12 @@ namespace Boring32::Error::Formats
 
 export namespace Boring32::Error
 {
+    std::string PrintExceptionToString(const std::exception& ex)
+    {
+        std::string ss;
+        return PrintExceptionToString(ex, ss);
+    }
+
     // Parameters need to be templated, because throwing via
     // reference type will cause copy construction of the wrong
     // type, effectively causing slicing.

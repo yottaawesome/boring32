@@ -11,7 +11,7 @@ namespace Strings
 			TEST_METHOD(TestTokeniseString1)
 			{
 				std::wstring test = L"Hello,World,";
-				std::vector<std::wstring> strings = Boring32::Strings::TokeniseString(test, L",");
+				std::vector strings = Boring32::Strings::TokeniseString(test, L",");
 				Assert::IsTrue(strings.size() == 3);
 			}
 

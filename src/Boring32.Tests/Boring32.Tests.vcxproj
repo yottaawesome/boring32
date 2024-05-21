@@ -207,9 +207,6 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\boring32.win32\boring32.win32.vcxproj">
-      <Project>{776fad4b-c69b-4bab-ad31-0022ec8ae66f}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\Boring32\Boring32.vcxproj">
       <Project>{32c00709-6709-46d8-9167-4456047a2060}</Project>
     </ProjectReference>
