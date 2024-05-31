@@ -172,7 +172,7 @@ export namespace Boring32::Async
         }
     }
 
-    template<Strings::FixedStringW FCmd, auto FParser = nullptr>
+    template<Strings::FixedString FCmd, auto FParser = nullptr>
     struct CmdRunner
     {
         // Once MSVC supports C++23's static operator(), this can made static.
@@ -190,7 +190,7 @@ export namespace Boring32::Async
 
 export namespace Boring32::Async::Commands
 {
-    constexpr Strings::FixedStringW GetWMICBiosCommand = LR"(C:\Windows\System32\cmd.exe /c wmic bios get serialnumber)";
+    constexpr Strings::FixedString GetWMICBiosCommand = LR"(C:\Windows\System32\cmd.exe /c wmic bios get serialnumber)";
 
     // Once MSVC supports C++23's static operator(), this can be simplified
     // into a using statement.

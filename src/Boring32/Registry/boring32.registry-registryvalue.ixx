@@ -406,7 +406,7 @@ export namespace Boring32::Registry
 	};
 	using HKEYUniquePtr = std::unique_ptr<std::remove_pointer<Win32::Winreg::HKEY>::type, HKEYDeleter>;
 
-	template<Win32::Winreg::HKEY TParentKey, Strings::FixedStringW TSubKey, bool DefaultThrowOnError = true>
+	template<Win32::Winreg::HKEY TParentKey, Strings::FixedString TSubKey, bool DefaultThrowOnError = true>
 	struct RegistryKey
 	{
 		static constexpr const wchar_t* SubKey = TSubKey;
@@ -445,7 +445,12 @@ export namespace Boring32::Registry
 		}
 	};
 
-	template<Win32::Winreg::HKEY TParentKey, Strings::FixedStringW TSubKey, Strings::FixedStringW TValueName, ValueTypes TValueType, bool DefaultThrowOnError = true>
+	template<
+		Win32::Winreg::HKEY TParentKey, 
+		Strings::FixedString TSubKey, 
+		Strings::FixedString TValueName, 
+		ValueTypes TValueType, 
+		bool DefaultThrowOnError = true>
 	class RegistryValue
 	{
 		static constexpr const wchar_t* SubKey = TSubKey;
