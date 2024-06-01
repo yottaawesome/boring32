@@ -447,8 +447,8 @@ export namespace Boring32::Registry
 
 	template<
 		Win32::Winreg::HKEY TParentKey, 
-		Strings::FixedString TSubKey, 
-		Strings::FixedString TValueName, 
+		Strings::WideFixedString TSubKey, 
+		Strings::WideFixedString TValueName,
 		ValueTypes TValueType, 
 		bool DefaultThrowOnError = true>
 	class RegistryValue

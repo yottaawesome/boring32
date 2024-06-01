@@ -3,7 +3,16 @@ import boring32.shared;
 
 export namespace Boring32::Strings
 {
-	template <typename TChar, typename TView, typename TString, size_t N>
+	template<typename T>
+	concept ValidCharType = std::same_as<T, char> or std::same_as<T, wchar_t>;
+
+	template<typename T>
+	concept ValidViewType = std::same_as<T, std::string_view> or std::same_as<T, std::wstring_view>;
+
+	template<typename T>
+	concept ValidStringType = std::same_as<T, std::string> or std::same_as<T, std::wstring>;
+
+	template <ValidCharType TChar, ValidViewType TView, ValidStringType TString, size_t N>
 	struct FixedString
 	{
 		using CharType = TChar;
@@ -55,4 +64,9 @@ export namespace Boring32::Strings
 	FixedString(char const (&)[N]) -> FixedString<char, std::string_view, std::string, N>;
 	template<size_t N>
 	FixedString(wchar_t const (&)[N]) -> FixedString<wchar_t, std::wstring_view, std::wstring, N>;
+
+	template<size_t N>
+	using WideFixedString = FixedString<wchar_t, std::wstring_view, std::wstring, N>;
+	template<size_t N>
+	using NarrowFixedString = FixedString<char, std::string_view, std::string, N>;
 }
