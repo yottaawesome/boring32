@@ -3,6 +3,7 @@ import boring32.shared;
 
 export namespace Boring32::Strings
 {
+	// See https://dev.to/sgf4/strings-as-template-parameters-c20-4joh
 	template<typename T>
 	concept ValidCharType = std::same_as<T, char> or std::same_as<T, wchar_t>;
 
@@ -59,11 +60,43 @@ export namespace Boring32::Strings
 		{
 			return { buf };
 		}
+
+		consteval bool operator==(const FixedString<TChar, TView, TString, N> str) const
+		{
+			return std::equal(str.buf, str.buf + N, buf);
+		}
+
+		template<ValidCharType TChar, ValidViewType TView, ValidStringType TString, std::size_t N2>
+		consteval bool operator==(const FixedString<TChar, TView, TString, N2> s) const
+		{
+			return false;
+		}
+
+		template<std::size_t N2>
+		consteval FixedString<TChar, TView, TString, N + N2 - 1> operator+(const FixedString<TChar, TView, TString, N2> str) const
+		{
+			TChar newchar[N + N2 - 1]{};
+			std::copy_n(buf, N - 1, newchar);
+			std::copy_n(str.buf, N2, newchar + N - 1);
+			return newchar;
+		}
 	};
 	template<size_t N>
 	FixedString(char const (&)[N]) -> FixedString<char, std::string_view, std::string, N>;
 	template<size_t N>
 	FixedString(wchar_t const (&)[N]) -> FixedString<wchar_t, std::wstring_view, std::wstring, N>;
+
+	template<ValidCharType TChar, ValidViewType TView, ValidStringType TString, std::size_t s1, std::size_t s2>
+	consteval auto operator+(FixedString<TChar, TView, TString, s1> fs, const TChar(&str)[s2])
+	{
+		return fs + FixedString<TChar, TView, TString, s2>(str);
+	}
+
+	template<ValidCharType TChar, ValidViewType TView, ValidStringType TString, std::size_t s1, std::size_t s2>
+	consteval auto operator+(const TChar(&str)[s2], FixedString<TChar, TView, TString, s1> fs)
+	{
+		return FixedString<s2>(str) + fs;
+	}
 
 	template<size_t N>
 	using WideFixedString = FixedString<wchar_t, std::wstring_view, std::wstring, N>;
