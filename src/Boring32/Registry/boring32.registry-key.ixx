@@ -133,7 +133,7 @@ export namespace Boring32::Registry
 				const Win32::DWORD value
 			)
 			{
-				Registry::WriteValue(m_key.get(), valueName, (Win32::DWORD)Win32::Winreg::ValueTypes::DWord, value);
+				Registry::WriteValue(m_key.get(), valueName, value);
 			}
 
 			void WriteValue(
@@ -141,7 +141,7 @@ export namespace Boring32::Registry
 				const size_t value
 			)
 			{
-				Registry::WriteValue(m_key.get(), valueName, (Win32::DWORD)Win32::Winreg::ValueTypes::QWord, value);
+				Registry::WriteValue(m_key.get(), valueName, value);
 			}
 
 			void Export(const std::wstring& path, const Win32::DWORD flags)

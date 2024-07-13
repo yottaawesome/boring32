@@ -2,10 +2,20 @@ export module boring32.registry:functions;
 import boring32.shared;
 import boring32.error;
 import boring32.async;
+import boring32.concepts;
 
 export namespace Boring32::Registry
 {
-	template<typename T, Win32::DWORD dataType>
+	template<typename T>
+	struct RegistryValueMap {};
+	template<>
+	struct RegistryValueMap<std::wstring> { static constexpr int Type = Win32::Winreg::_RRF_RT_REG_SZ; };
+	template<>
+	struct RegistryValueMap<Win32::DWORD> { static constexpr int Type = Win32::Winreg::_RRF_RT_REG_DWORD; };
+	template<>
+	struct RegistryValueMap<size_t> { static constexpr int Type = Win32::Winreg::_RRF_RT_REG_QWORD; };
+
+	template<Concepts::OneOf<std::wstring, Win32::DWORD, size_t> T>
 	T GetValue(const Win32::Winreg::HKEY key, const std::wstring& valueName)
 	{
 		if (!key)
@@ -17,7 +27,7 @@ export namespace Boring32::Registry
 			key,
 			nullptr,
 			valueName.c_str(),
-			dataType,
+			RegistryValueMap<T>::Type,
 			nullptr,
 			&out,
 			&sizeInBytes
@@ -28,7 +38,7 @@ export namespace Boring32::Registry
 	}
 
 	template<>
-	std::wstring GetValue<std::wstring, Win32::Winreg::_RRF_RT_REG_SZ>(
+	std::wstring GetValue<std::wstring>(
 		const Win32::Winreg::HKEY key,
 		const std::wstring& valueName
 	)
@@ -79,24 +89,23 @@ export namespace Boring32::Registry
 
 	void GetValue(const Win32::Winreg::HKEY key, const std::wstring& valueName, std::wstring& out)
 	{
-		out = GetValue<std::wstring, Win32::Winreg::_RRF_RT_REG_SZ>(key, valueName);
+		out = GetValue<std::wstring>(key, valueName);
 	}
 
 	void GetValue(const Win32::Winreg::HKEY key, const std::wstring& valueName, Win32::DWORD& out)
 	{
-		out = GetValue<Win32::DWORD, Win32::Winreg::_RRF_RT_REG_DWORD>(key, valueName);
+		out = GetValue<Win32::DWORD>(key, valueName);
 	}
 
 	void GetValue(const Win32::Winreg::HKEY key, const std::wstring& valueName, size_t& out)
 	{
-		out = GetValue<Win32::DWORD, Win32::Winreg::_RRF_RT_REG_QWORD>(key, valueName);
+		out = GetValue<size_t>(key, valueName);
 	}
 
 	template<typename T>
 	void WriteValue(
 		const Win32::Winreg::HKEY key,
 		const std::wstring& valueName,
-		const Win32::DWORD type,
 		const T& value
 	)
 	{
@@ -107,7 +116,7 @@ export namespace Boring32::Registry
 			key,
 			valueName.c_str(),
 			0,
-			type,
+			RegistryValueMap<T>::Type,
 			reinterpret_cast<Win32::BYTE*>(const_cast<T*>(&value)),
 			sizeof(value)
 		);
