@@ -1282,6 +1282,17 @@ export namespace Boring32::Win32::Winreg
 	using ::HKEY;
 	using ::HKEY__;
 
+	namespace Keys
+	{
+		template<HKEY VKey>
+		struct Key
+		{
+			operator HKEY() const noexcept { return VKey; }
+		};
+
+		constexpr Key<HKEY_CLASSES_ROOT> HKCR;
+	}
+
 	const auto _HKEY_CLASSES_ROOT = HKEY_CLASSES_ROOT;
 	const auto _HKEY_CURRENT_CONFIG = HKEY_CURRENT_CONFIG;
 	const auto _HKEY_CURRENT_USER = HKEY_CURRENT_USER;
