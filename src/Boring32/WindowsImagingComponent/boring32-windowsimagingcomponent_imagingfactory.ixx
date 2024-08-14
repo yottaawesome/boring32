@@ -1,4 +1,4 @@
-export module boring32.windowsimagingcomponent:imagingfactory;
+export module boring32:windowsimagingcomponent_imagingfactory;
 import boring32.shared;
 import boring32.error;
 

@@ -24,3 +24,4 @@ export import :networking;
 export import :process;
 export import :mediafoundation;
 export import :filesystem;
+export import :windowsimagingcomponent;

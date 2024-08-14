@@ -82,8 +82,8 @@
     <ClCompile Include="WinHttp\boring32.winhttp-proxytype.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-httpwebclient.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-requestresult.ixx" />
-    <ClCompile Include="WindowsImagingComponent\boring32.windowsimagingcomponent.ixx" />
-    <ClCompile Include="WindowsImagingComponent\boring32.windowsimagingcomponent-imagingfactory.ixx" />
+    <ClCompile Include="WindowsImagingComponent\boring32-windowsimagingcomponent.ixx" />
+    <ClCompile Include="WindowsImagingComponent\boring32-windowsimagingcomponent_imagingfactory.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-websocket.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-websocketstatus.ixx" />
