@@ -12,7 +12,6 @@ import boring32.error;
 import boring32.raii;
 import boring32.security;
 import boring32.com;
-import boring32.filesystem;
 import boring32.winhttp;
 import boring32.winsock;
 import boring32.compression;

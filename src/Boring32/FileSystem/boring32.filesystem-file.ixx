@@ -1,4 +1,4 @@
-export module boring32.filesystem:file;
+export module boring32:filesystem_file;
 import boring32.shared;
 import boring32.raii;
 import boring32.error;

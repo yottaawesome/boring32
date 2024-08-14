@@ -1,4 +1,4 @@
-export module boring32.filesystem:functions;
+export module boring32:filesystem_functions;
 import boring32.shared;
 import boring32.error;
 import boring32.strings;
