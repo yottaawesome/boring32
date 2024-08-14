@@ -1,8 +1,8 @@
-export module boring32.time:datetime;
+export module boring32:time_datetime;
 import <cstdint>;
 import boring32.shared;
 import boring32.error;
-import :functions;
+import :time_functions;
 
 export namespace Boring32::Time
 {

@@ -1,4 +1,4 @@
-export module boring32.time:functions;
+export module boring32:time_functions;
 import boring32.shared;
 import boring32.error;
 

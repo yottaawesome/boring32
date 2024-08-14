@@ -18,7 +18,6 @@ import boring32.winsock;
 import boring32.compression;
 import boring32.util;
 import boring32.services;
-import boring32.time;
 import boring32.computer;
 import boring32.async;
 import boring32.computer;
