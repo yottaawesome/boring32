@@ -3,7 +3,6 @@ import std.compat;
 ////import <win32.hpp>;
 import boring32.async;
 import boring32.win32;
-import boring32.wirelesslan;
 //#include "versionhelpers.h"
 //#include "Experiments1Main.hpp"
 //
@@ -22,7 +21,6 @@ import boring32.services;
 import boring32.time;
 import boring32.computer;
 import boring32.async;
-import boring32.wirelesslan;
 import boring32.computer;
 import boring32.networking;
 import boring32.sspi;
@@ -30,6 +28,7 @@ import boring32.memory;
 import boring32.registry;
 import boring32.shell;
 import boring32.strings;
+import boring32;
 
 struct Test
 {

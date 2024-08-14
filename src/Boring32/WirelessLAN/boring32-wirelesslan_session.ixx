@@ -1,15 +1,14 @@
-export module boring32.wirelesslan:session;
+export module boring32:wirelesslan_session;
 import boring32.shared;
 import boring32.error;
-import :cleanup;
-import :wirelessinterfaces;
+import :wirelesslan_cleanup;
+import :wirelesslan_wirelessinterfaces;
 
 export namespace Boring32::WirelessLAN
 {
 	class Session final
 	{
 		public:
-			~Session() = default; 
 			Session()
 				: Interfaces(Open())
 			{}

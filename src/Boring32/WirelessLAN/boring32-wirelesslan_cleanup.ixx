@@ -1,4 +1,4 @@
-export module boring32.wirelesslan:cleanup;
+export module boring32:wirelesslan_cleanup;
 import boring32.shared;
 
 namespace Boring32::WirelessLAN

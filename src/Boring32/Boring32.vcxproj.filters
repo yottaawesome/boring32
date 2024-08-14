@@ -152,11 +152,11 @@
     <ClCompile Include="Computer\boring32.computer-functions.ixx" />
     <ClCompile Include="Async\boring32.async-synced.ixx" />
     <ClCompile Include="Async\boring32.async-syncedcontainer.ixx" />
-    <ClCompile Include="WirelessLAN\boring32.wirelesslan.ixx" />
-    <ClCompile Include="WirelessLAN\boring32.wirelesslan-session.ixx" />
-    <ClCompile Include="WirelessLAN\boring32.wirelesslan-cleanup.ixx" />
-    <ClCompile Include="WirelessLAN\boring32.wirelesslan-wirelessinterfaces.ixx" />
-    <ClCompile Include="WirelessLAN\boring32.wirelesslan-wirelessinterface.ixx" />
+    <ClCompile Include="WirelessLAN\boring32-wirelesslan.ixx" />
+    <ClCompile Include="WirelessLAN\boring32-wirelesslan_session.ixx" />
+    <ClCompile Include="WirelessLAN\boring32-wirelesslan_cleanup.ixx" />
+    <ClCompile Include="WirelessLAN\boring32-wirelesslan_wirelessinterfaces.ixx" />
+    <ClCompile Include="WirelessLAN\boring32-wirelesslan_wirelessinterface.ixx" />
     <ClCompile Include="Computer\boring32.computer-processinfo.ixx" />
     <ClCompile Include="Networking\boring32.networking.ixx" />
     <ClCompile Include="Networking\boring32.networking-api.ixx" />

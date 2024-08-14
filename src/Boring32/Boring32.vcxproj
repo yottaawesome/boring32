@@ -388,11 +388,11 @@
     <ClCompile Include="Strings\boring32.strings.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket-statuscallback.cpp" />
     <ClCompile Include="WinSock\boring32.winsock.ixx" />
-    <ClCompile Include="WirelessLAN\boring32.wirelesslan-wirelessinterface.ixx" />
-    <ClCompile Include="WirelessLAN\boring32.wirelesslan-wirelessinterfaces.ixx" />
-    <ClCompile Include="WirelessLAN\boring32.wirelesslan-session.ixx" />
-    <ClCompile Include="WirelessLAN\boring32.wirelesslan-cleanup.ixx" />
-    <ClCompile Include="WirelessLAN\boring32.wirelesslan.ixx" />
+    <ClCompile Include="WirelessLAN\boring32-wirelesslan_wirelessinterface.ixx" />
+    <ClCompile Include="WirelessLAN\boring32-wirelesslan_wirelessinterfaces.ixx" />
+    <ClCompile Include="WirelessLAN\boring32-wirelesslan_session.ixx" />
+    <ClCompile Include="WirelessLAN\boring32-wirelesslan_cleanup.ixx" />
+    <ClCompile Include="WirelessLAN\boring32-wirelesslan.ixx" />
     <ClCompile Include="XAudio2\boring32-xaudio2_audiograph.ixx" />
     <ClCompile Include="XAudio2\boring32-xaudio2_functions.ixx" />
     <ClCompile Include="XAudio2\boring32-xaudio2.ixx" />
