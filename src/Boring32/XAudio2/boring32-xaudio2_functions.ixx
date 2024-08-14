@@ -1,4 +1,4 @@
-export module boring32.xaudio2:functions;
+export module boring32:xaudio2_functions;
 import boring32.shared;
 import boring32.error;
 

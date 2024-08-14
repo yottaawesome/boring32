@@ -16,7 +16,6 @@ import boring32.com;
 import boring32.filesystem;
 import boring32.winhttp;
 import boring32.winsock;
-import boring32.xaudio2;
 import boring32.compression;
 import boring32.util;
 import boring32.services;

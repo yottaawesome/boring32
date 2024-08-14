@@ -393,14 +393,14 @@
     <ClCompile Include="WirelessLAN\boring32.wirelesslan-session.ixx" />
     <ClCompile Include="WirelessLAN\boring32.wirelesslan-cleanup.ixx" />
     <ClCompile Include="WirelessLAN\boring32.wirelesslan.ixx" />
-    <ClCompile Include="XAudio2\boring32.xaudio2-audiograph.ixx" />
-    <ClCompile Include="XAudio2\boring32.xaudio2-functions.ixx" />
-    <ClCompile Include="XAudio2\boring32.xaudio2.ixx" />
-    <ClCompile Include="XAudio2\boring32.xaudio2-engine.ixx" />
-    <ClCompile Include="XAudio2\boring32.xaudio2-masteringvoice.ixx" />
-    <ClCompile Include="XAudio2\boring32.xaudio2-sourcevoice.ixx" />
-    <ClCompile Include="XAudio2\boring32.xaudio2-voice.ixx" />
-    <ClCompile Include="XAudio2\boring32.xaudio2-xaudio2error.ixx" />
+    <ClCompile Include="XAudio2\boring32-xaudio2_audiograph.ixx" />
+    <ClCompile Include="XAudio2\boring32-xaudio2_functions.ixx" />
+    <ClCompile Include="XAudio2\boring32-xaudio2.ixx" />
+    <ClCompile Include="XAudio2\boring32-xaudio2_engine.ixx" />
+    <ClCompile Include="XAudio2\boring32-xaudio2_masteringvoice.ixx" />
+    <ClCompile Include="XAudio2\boring32-xaudio2_sourcevoice.ixx" />
+    <ClCompile Include="XAudio2\boring32-xaudio2_voice.ixx" />
+    <ClCompile Include="XAudio2\boring32-xaudio2_xaudio2error.ixx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\boring32.shared\boring32.shared.vcxproj">
