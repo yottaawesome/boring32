@@ -21,11 +21,9 @@ import boring32.services;
 import boring32.computer;
 import boring32.async;
 import boring32.computer;
-import boring32.networking;
 import boring32.sspi;
 import boring32.memory;
 import boring32.registry;
-import boring32.shell;
 import boring32.strings;
 import boring32;
 

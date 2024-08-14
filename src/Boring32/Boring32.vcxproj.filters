@@ -158,8 +158,8 @@
     <ClCompile Include="WirelessLAN\boring32-wirelesslan_wirelessinterfaces.ixx" />
     <ClCompile Include="WirelessLAN\boring32-wirelesslan_wirelessinterface.ixx" />
     <ClCompile Include="Computer\boring32.computer-processinfo.ixx" />
-    <ClCompile Include="Networking\boring32.networking.ixx" />
-    <ClCompile Include="Networking\boring32.networking-api.ixx" />
+    <ClCompile Include="Networking\boring32-networking.ixx" />
+    <ClCompile Include="Networking\boring32-networking_api.ixx" />
     <ClCompile Include="IPC\boring32.ipc-mailslotserver.ixx" />
     <ClCompile Include="Security\boring32.security-securityattributes.ixx" />
     <ClCompile Include="boring32.ixx" />

@@ -1,4 +1,4 @@
-export module boring32.networking:api;
+export module boring32:networking_api;
 import boring32.shared;
 import boring32.error;
 

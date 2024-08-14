@@ -275,8 +275,8 @@
     <ClCompile Include="MSI\boring32.msi-package.ixx" />
     <ClCompile Include="MSI\boring32.msi-product.ixx" />
     <ClCompile Include="MSI\boring32.msi.ixx" />
-    <ClCompile Include="Networking\boring32.networking-api.ixx" />
-    <ClCompile Include="Networking\boring32.networking.ixx" />
+    <ClCompile Include="Networking\boring32-networking_api.ixx" />
+    <ClCompile Include="Networking\boring32-networking.ixx" />
     <ClCompile Include="Process\boring32.process-dynamiclinklibrary.ixx" />
     <ClCompile Include="Process\boring32.process.ixx" />
     <ClCompile Include="RAII\boring32.raii-handle.ixx" />
