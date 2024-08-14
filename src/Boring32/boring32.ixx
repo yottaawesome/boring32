@@ -23,3 +23,4 @@ export import :time;
 export import :shell;
 export import :networking;
 export import :process;
+export import :mediafoundation;
