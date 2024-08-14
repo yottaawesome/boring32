@@ -1,4 +1,4 @@
-export module boring32.process:dynamiclinklibrary;
+export module boring32:process_dynamiclinklibrary;
 import boring32.shared;
 import boring32.error;
 
