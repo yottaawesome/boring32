@@ -18,7 +18,7 @@ export import boring32.networking;
 export import boring32.sspi;
 export import boring32.memory;
 export import boring32.registry;
-export import boring32.shell;
 export import :wirelesslan;
 export import :xaudio2;
 export import :time;
+export import :shell;

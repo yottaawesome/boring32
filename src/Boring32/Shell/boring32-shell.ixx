@@ -1,4 +1,4 @@
-export module boring32.shell;
+export module boring32:shell;
 import boring32.shared;
 import boring32.error;
 
