@@ -249,9 +249,9 @@
     <ClCompile Include="Error\boring32.error.ixx" />
     <ClCompile Include="Error\boring32.error-ntstatuserror.ixx" />
     <ClCompile Include="Error\boring32.error-win32error.ixx" />
-    <ClCompile Include="FileSystem\boring32.filesystem-directory.ixx" />
-    <ClCompile Include="FileSystem\boring32.filesystem-functions.ixx" />
-    <ClCompile Include="FileSystem\boring32.filesystem.ixx" />
+    <ClCompile Include="FileSystem\boring32-filesystem_directory.ixx" />
+    <ClCompile Include="FileSystem\boring32-filesystem_functions.ixx" />
+    <ClCompile Include="FileSystem\boring32-filesystem.ixx" />
     <ClCompile Include="IO\boring32.io-completionport.ixx" />
     <ClCompile Include="IO\boring32.io.ixx" />
     <ClCompile Include="IPC\boring32.ipc-blockingnamedpipeclient.ixx" />
@@ -263,8 +263,8 @@
     <ClCompile Include="IPC\boring32.ipc-namedpipeserverbase.ixx" />
     <ClCompile Include="IPC\boring32.ipc-overlappednamedpipeclient.ixx" />
     <ClCompile Include="IPC\boring32.ipc-overlappednamedpipeserver.ixx" />
-    <ClCompile Include="Logging\boring32.logging-functions.ixx" />
-    <ClCompile Include="Logging\boring32.logging.ixx" />
+    <ClCompile Include="Logging\boring32-logging_functions.ixx" />
+    <ClCompile Include="Logging\boring32-logging.ixx" />
     <ClCompile Include="MediaFoundation\boring32-mediafoundation.ixx" />
     <ClCompile Include="Memory\boring32.memory-functions.ixx" />
     <ClCompile Include="Memory\boring32.memory-heap.ixx" />
@@ -383,7 +383,7 @@
     <ClCompile Include="Compression\boring32.compression-decompressor.ixx" />
     <ClCompile Include="Compression\boring32.compression.ixx" />
     <ClCompile Include="COM\boring32.com-comthreadscope.ixx" />
-    <ClCompile Include="FileSystem\boring32.filesystem-file.ixx" />
+    <ClCompile Include="FileSystem\boring32-filesystem_file.ixx" />
     <ClCompile Include="RAII\boring32.raii-win32handle.ixx" />
     <ClCompile Include="Strings\boring32.strings.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket-statuscallback.cpp" />

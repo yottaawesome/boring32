@@ -25,3 +25,4 @@ export import :process;
 export import :mediafoundation;
 export import :filesystem;
 export import :windowsimagingcomponent;
+export import :logging;

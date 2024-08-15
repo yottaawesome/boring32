@@ -22,7 +22,7 @@
     <ClCompile Include="Async\boring32.async-threadpool.ixx" />
     <ClCompile Include="Async\boring32.async-semaphore.ixx" />
     <ClCompile Include="Async\boring32.async-filemapping.ixx" />
-    <ClCompile Include="FileSystem\boring32.filesystem-file.ixx" />
+    <ClCompile Include="FileSystem\boring32-filesystem_file.ixx" />
     <ClCompile Include="RAII\boring32.raii-win32handle.ixx" />
     <ClCompile Include="COM\boring32.com-comthreadscope.ixx" />
     <ClCompile Include="Compression\boring32.compression.ixx" />
@@ -87,7 +87,7 @@
     <ClCompile Include="WinHttp\boring32.winhttp-websocket.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-websocketstatus.ixx" />
-    <ClCompile Include="FileSystem\boring32.filesystem.ixx" />
+    <ClCompile Include="FileSystem\boring32-filesystem.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocketsettings.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-websocketsettings.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-proxyinfo.ixx" />
@@ -111,7 +111,7 @@
     <ClCompile Include="Security\boring32.security.ixx" />
     <ClCompile Include="RAII\boring32.raii.ixx" />
     <ClCompile Include="Process\boring32.process.ixx" />
-    <ClCompile Include="FileSystem\boring32.filesystem-functions.ixx" />
+    <ClCompile Include="FileSystem\boring32-filesystem_functions.ixx" />
     <ClCompile Include="COM\boring32.com.ixx" />
     <ClCompile Include="Crypto\boring32.crypto.ixx" />
     <ClCompile Include="XAudio2\boring32-xaudio2.ixx" />
@@ -172,8 +172,8 @@
     <ClCompile Include="IO\boring32.io-completionport.ixx" />
     <ClCompile Include="Security\boring32.security-policy.ixx" />
     <ClCompile Include="Security\boring32.security-lsaunicodestring.cpp" />
-    <ClCompile Include="Logging\boring32.logging.ixx" />
-    <ClCompile Include="Logging\boring32.logging-functions.ixx" />
+    <ClCompile Include="Logging\boring32-logging.ixx" />
+    <ClCompile Include="Logging\boring32-logging_functions.ixx" />
     <ClCompile Include="SSPI\boring32.sspi.ixx" />
     <ClCompile Include="SSPI\boring32.sspi-credential.ixx" />
     <ClCompile Include="SSPI\boring32.sspi-securitycontext.ixx" />
@@ -201,7 +201,7 @@
     <ClCompile Include="Async\boring32.async-sharedmap.ixx" />
     <ClCompile Include="Async\boring32.async-criticalsection.ixx" />
     <ClCompile Include="Async\boring32.async-apcthread.ixx" />
-    <ClCompile Include="FileSystem\boring32.filesystem-directory.ixx" />
+    <ClCompile Include="FileSystem\boring32-filesystem_directory.ixx" />
     <ClCompile Include="MSI\boring32.msi.ixx" />
     <ClCompile Include="MSI\boring32.msi-functions.ixx" />
     <ClCompile Include="MSI\boring32.msi-database.ixx" />
