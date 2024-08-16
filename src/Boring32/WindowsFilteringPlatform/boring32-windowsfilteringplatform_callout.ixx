@@ -1,4 +1,4 @@
-export module boring32.windowsfilteringplatform:callout;
+export module boring32:windowsfilteringplatform_callout;
 
 export namespace Boring32::WindowsFilteringPlatform
 {

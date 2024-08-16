@@ -26,3 +26,4 @@ export import :mediafoundation;
 export import :filesystem;
 export import :windowsimagingcomponent;
 export import :logging;
+export import :windowsfilteringplatform;
