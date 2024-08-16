@@ -148,8 +148,8 @@
     <ClCompile Include="Services\boring32-services_functions.ixx" />
     <ClCompile Include="RAII\boring32.raii-handle.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-handles.ixx" />
-    <ClCompile Include="Computer\boring32.computer.ixx" />
-    <ClCompile Include="Computer\boring32.computer-functions.ixx" />
+    <ClCompile Include="Computer\boring32-computer.ixx" />
+    <ClCompile Include="Computer\boring32-computer_functions.ixx" />
     <ClCompile Include="Async\boring32.async-synced.ixx" />
     <ClCompile Include="Async\boring32.async-syncedcontainer.ixx" />
     <ClCompile Include="WirelessLAN\boring32-wirelesslan.ixx" />
@@ -157,7 +157,7 @@
     <ClCompile Include="WirelessLAN\boring32-wirelesslan_cleanup.ixx" />
     <ClCompile Include="WirelessLAN\boring32-wirelesslan_wirelessinterfaces.ixx" />
     <ClCompile Include="WirelessLAN\boring32-wirelesslan_wirelessinterface.ixx" />
-    <ClCompile Include="Computer\boring32.computer-processinfo.ixx" />
+    <ClCompile Include="Computer\boring32-computer_processinfo.ixx" />
     <ClCompile Include="Networking\boring32-networking.ixx" />
     <ClCompile Include="Networking\boring32-networking_api.ixx" />
     <ClCompile Include="IPC\boring32.ipc-mailslotserver.ixx" />
@@ -192,12 +192,12 @@
     <ClCompile Include="SSPI\Schannel\boring32.sspi.provider.schannel.ixx" />
     <ClCompile Include="COM\boring32.com-hresult.ixx" />
     <ClCompile Include="WinSock\boring32.winsock-socket.ixx" />
-    <ClCompile Include="Memory\boring32.memory.ixx" />
-    <ClCompile Include="Memory\boring32.memory-functions.ixx" />
-    <ClCompile Include="Memory\boring32.memory-heap.ixx" />
+    <ClCompile Include="Memory\boring32-memory.ixx" />
+    <ClCompile Include="Memory\boring32-memory-functions.ixx" />
+    <ClCompile Include="Memory\boring32-memory-heap.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-registeredtask.ixx" />
     <ClCompile Include="Util\boring32.util-enumeration.ixx" />
-    <ClCompile Include="Memory\boring32.memory-virtualaddress.ixx" />
+    <ClCompile Include="Memory\boring32-memory-virtualaddress.ixx" />
     <ClCompile Include="Async\boring32.async-sharedmap.ixx" />
     <ClCompile Include="Async\boring32.async-criticalsection.ixx" />
     <ClCompile Include="Async\boring32.async-apcthread.ixx" />

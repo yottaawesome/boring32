@@ -223,9 +223,9 @@
     <ClCompile Include="Compression\boring32-compression_compressionerror.ixx" />
     <ClCompile Include="Compression\boring32-compression_deleters.ixx" />
     <ClCompile Include="Compression\boring32-compression_types.ixx" />
-    <ClCompile Include="Computer\boring32.computer-functions.ixx" />
-    <ClCompile Include="Computer\boring32.computer-processinfo.ixx" />
-    <ClCompile Include="Computer\boring32.computer.ixx" />
+    <ClCompile Include="Computer\boring32-computer_functions.ixx" />
+    <ClCompile Include="Computer\boring32-computer_processinfo.ixx" />
+    <ClCompile Include="Computer\boring32-computer.ixx" />
     <ClCompile Include="COM\boring32.com-functions.ixx" />
     <ClCompile Include="COM\boring32.com-hresult.ixx" />
     <ClCompile Include="COM\boring32.com.ixx" />
@@ -266,10 +266,10 @@
     <ClCompile Include="Logging\boring32-logging_functions.ixx" />
     <ClCompile Include="Logging\boring32-logging.ixx" />
     <ClCompile Include="MediaFoundation\boring32-mediafoundation.ixx" />
-    <ClCompile Include="Memory\boring32.memory-functions.ixx" />
-    <ClCompile Include="Memory\boring32.memory-heap.ixx" />
-    <ClCompile Include="Memory\boring32.memory-virtualaddress.ixx" />
-    <ClCompile Include="Memory\boring32.memory.ixx" />
+    <ClCompile Include="Memory\boring32-memory-functions.ixx" />
+    <ClCompile Include="Memory\boring32-memory-heap.ixx" />
+    <ClCompile Include="Memory\boring32-memory-virtualaddress.ixx" />
+    <ClCompile Include="Memory\boring32-memory.ixx" />
     <ClCompile Include="MSI\boring32-msi_database.ixx" />
     <ClCompile Include="MSI\boring32-msi_functions.ixx" />
     <ClCompile Include="MSI\boring32-msi_package.ixx" />

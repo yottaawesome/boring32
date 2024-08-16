@@ -1,4 +1,4 @@
-export module boring32.computer:functions;
+export module boring32:computer_functions;
 import boring32.shared;
 import boring32.error;
 

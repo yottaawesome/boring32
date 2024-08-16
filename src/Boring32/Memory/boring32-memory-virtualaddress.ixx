@@ -1,4 +1,4 @@
-export module boring32.memory:virtualaddress;
+export module boring32:memory_virtualaddress;
 
 export namespace Boring32::Memory
 {

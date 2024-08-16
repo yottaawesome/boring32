@@ -1,8 +1,8 @@
-export module boring32.computer:processinfo;
+export module boring32:computer_processinfo;
 import boring32.shared;
 import boring32.raii;
 import boring32.error;
-import :functions;
+import :computer_functions;
 
 export namespace Boring32::Computer
 {
@@ -18,7 +18,6 @@ export namespace Boring32::Computer
 	class ProcessInfo final
 	{
 		public:
-			~ProcessInfo() = default;
 			ProcessInfo() = default;
 			ProcessInfo(const ProcessInfo&) = default;
 			ProcessInfo(ProcessInfo&&) noexcept = default;

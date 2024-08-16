@@ -1,4 +1,4 @@
-export module boring32.memory:heap;
+export module boring32:memory_heap;
 import boring32.shared;
 import boring32.error;
 

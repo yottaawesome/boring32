@@ -2,7 +2,7 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-import boring32.computer;
+import boring32;
 
 namespace Computer
 {
