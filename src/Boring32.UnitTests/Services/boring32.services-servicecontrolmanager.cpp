@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 
-import boring32.services;
+import boring32;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace Services

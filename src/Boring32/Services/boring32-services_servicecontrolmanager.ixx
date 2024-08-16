@@ -1,8 +1,8 @@
-export module boring32.services:servicecontrolmanager;
+export module boring32:services_servicecontrolmanager;
 import boring32.shared;
 import boring32.error;
-import :service;
-import :raii;
+import :services_service;
+import :services_raii;
 
 export namespace Boring32::Services
 {

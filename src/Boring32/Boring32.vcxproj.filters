@@ -144,8 +144,8 @@
     <ClCompile Include="WinHttp\boring32.winhttp.ixx" />
     <ClCompile Include="Async\boring32.async.ixx" />
     <ClCompile Include="Util\boring32.util-globallyuniqueid.ixx" />
-    <ClCompile Include="Services\boring32.services.ixx" />
-    <ClCompile Include="Services\boring32.services-functions.ixx" />
+    <ClCompile Include="Services\boring32-services.ixx" />
+    <ClCompile Include="Services\boring32-services_functions.ixx" />
     <ClCompile Include="RAII\boring32.raii-handle.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-handles.ixx" />
     <ClCompile Include="Computer\boring32.computer.ixx" />
@@ -165,9 +165,9 @@
     <ClCompile Include="boring32.ixx" />
     <ClCompile Include="Time\boring32-time_datetime.ixx" />
     <ClCompile Include="Time\boring32-time_functions.ixx" />
-    <ClCompile Include="Services\boring32.services-servicecontrolmanager.ixx" />
-    <ClCompile Include="Services\boring32.services-raii.ixx" />
-    <ClCompile Include="Services\boring32.services-service.ixx" />
+    <ClCompile Include="Services\boring32-services_servicecontrolmanager.ixx" />
+    <ClCompile Include="Services\boring32-services_raii.ixx" />
+    <ClCompile Include="Services\boring32-services_service.ixx" />
     <ClCompile Include="IO\boring32.io.ixx" />
     <ClCompile Include="IO\boring32.io-completionport.ixx" />
     <ClCompile Include="Security\boring32.security-policy.ixx" />

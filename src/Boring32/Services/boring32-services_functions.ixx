@@ -1,4 +1,4 @@
-export module boring32.services:functions;
+export module boring32:services_functions;
 import boring32.shared;
 import boring32.error;
 

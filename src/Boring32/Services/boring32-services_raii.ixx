@@ -1,4 +1,4 @@
-export module boring32.services:raii;
+export module boring32:services_raii;
 import boring32.shared;
 
 namespace Boring32::Services
