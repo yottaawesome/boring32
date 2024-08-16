@@ -27,3 +27,4 @@ export import :filesystem;
 export import :windowsimagingcomponent;
 export import :logging;
 export import :windowsfilteringplatform;
+export import :native;

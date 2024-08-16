@@ -209,8 +209,8 @@
     <ClCompile Include="MSI\boring32.msi-product.ixx" />
     <ClCompile Include="Compression\boring32.compression-cabinet.ixx" />
     <ClCompile Include="WinHttp\boring32.winhttp-decomposedurl.ixx" />
-    <ClCompile Include="Native\boring32.native-defs.ixx" />
-    <ClCompile Include="Native\boring32.native-ntdll.ixx" />
+    <ClCompile Include="Native\boring32-native_defs.ixx" />
+    <ClCompile Include="Native\boring32-native_ntdll.ixx" />
     <ClCompile Include="Native\boring32.native.ixx" />
     <ClCompile Include="Async\boring32.async-waitable.ixx" />
     <ClCompile Include="Compression\boring32.compression-types.ixx" />

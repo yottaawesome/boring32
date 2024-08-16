@@ -344,8 +344,8 @@
     <ClCompile Include="Util\boring32.util-range.ixx" />
     <ClCompile Include="Util\boring32.util.ixx" />
     <ClCompile Include="Util\boring32.util-switcher.ixx" />
-    <ClCompile Include="Native\boring32.native-defs.ixx" />
-    <ClCompile Include="Native\boring32.native-ntdll.ixx" />
+    <ClCompile Include="Native\boring32-native_defs.ixx" />
+    <ClCompile Include="Native\boring32-native_ntdll.ixx" />
     <ClCompile Include="Native\boring32.native.ixx" />
     <ClCompile Include="WindowsImagingComponent\boring32-windowsimagingcomponent_imagingfactory.ixx" />
     <ClCompile Include="WindowsImagingComponent\boring32-windowsimagingcomponent.ixx" />

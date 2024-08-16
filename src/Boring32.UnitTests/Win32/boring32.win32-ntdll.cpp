@@ -2,7 +2,7 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-import boring32.native;
+import boring32;
 
 namespace Win32
 {
