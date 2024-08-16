@@ -219,10 +219,10 @@
     <ClCompile Include="Async\boring32.async-timerqueuetimercallback.ixx" />
     <ClCompile Include="Concepts\boring32.concepts.ixx" />
     <ClCompile Include="boring32.ixx" />
-    <ClCompile Include="Compression\boring32.compression-cabinet.ixx" />
-    <ClCompile Include="Compression\boring32.compression-compressionerror.ixx" />
-    <ClCompile Include="Compression\boring32.compression-deleters.ixx" />
-    <ClCompile Include="Compression\boring32.compression-types.ixx" />
+    <ClCompile Include="Compression\boring32-compression_cabinet.ixx" />
+    <ClCompile Include="Compression\boring32-compression_compressionerror.ixx" />
+    <ClCompile Include="Compression\boring32-compression_deleters.ixx" />
+    <ClCompile Include="Compression\boring32-compression_types.ixx" />
     <ClCompile Include="Computer\boring32.computer-functions.ixx" />
     <ClCompile Include="Computer\boring32.computer-processinfo.ixx" />
     <ClCompile Include="Computer\boring32.computer.ixx" />
@@ -379,9 +379,9 @@
     <ClCompile Include="WinSock\boring32.winsock-winsockerror.ixx" />
     <ClCompile Include="WinSock\boring32.winsock-winsockinit.ixx" />
     <ClCompile Include="Async\boring32.async-semaphore.ixx" />
-    <ClCompile Include="Compression\boring32.compression-compressor.ixx" />
-    <ClCompile Include="Compression\boring32.compression-decompressor.ixx" />
-    <ClCompile Include="Compression\boring32.compression.ixx" />
+    <ClCompile Include="Compression\boring32-compression_compressor.ixx" />
+    <ClCompile Include="Compression\boring32-compression_decompressor.ixx" />
+    <ClCompile Include="Compression\boring32-compression.ixx" />
     <ClCompile Include="COM\boring32.com-comthreadscope.ixx" />
     <ClCompile Include="FileSystem\boring32-filesystem_file.ixx" />
     <ClCompile Include="RAII\boring32.raii-win32handle.ixx" />

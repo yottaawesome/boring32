@@ -14,7 +14,6 @@ import boring32.security;
 import boring32.com;
 import boring32.winhttp;
 import boring32.winsock;
-import boring32.compression;
 import boring32.util;
 import boring32.computer;
 import boring32.async;

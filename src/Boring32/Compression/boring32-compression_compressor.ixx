@@ -1,8 +1,8 @@
-export module boring32.compression:compressor;
+export module boring32:compression_compressor;
 import boring32.shared;
 import boring32.error;
-import :deleters;
-import :compressionerror;
+import :compression_deleters;
+import :compression_compressionerror;
 
 /// <summary>
 /// For reference of the Compression API, see: https://docs.microsoft.com/en-us/windows/win32/cmpapi/using-the-compression-api

@@ -1,4 +1,4 @@
-export module boring32.compression:compressionerror;
+export module boring32:compression_compressionerror;
 import boring32.shared;
 import boring32.error;
 import boring32.strings;

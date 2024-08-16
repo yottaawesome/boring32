@@ -1,4 +1,4 @@
-export module boring32.compression:deleters;
+export module boring32:compression_deleters;
 import boring32.shared;
 
 export namespace Boring32::Compression 

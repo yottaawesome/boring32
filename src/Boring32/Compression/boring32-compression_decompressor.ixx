@@ -1,8 +1,8 @@
-export module boring32.compression:decompressor;
+export module boring32:compression_decompressor;
 import boring32.shared;
 import boring32.error;
-import :deleters;
-import :compressionerror;
+import :compression_deleters;
+import :compression_compressionerror;
 
 export namespace Boring32::Compression
 {
