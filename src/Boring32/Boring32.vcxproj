@@ -239,9 +239,9 @@
     <ClCompile Include="Crypto\boring32.crypto-securestring.ixx" />
     <ClCompile Include="Crypto\boring32.crypto-tempcertimport.ixx" />
     <ClCompile Include="Crypto\boring32.crypto.ixx" />
-    <ClCompile Include="DataStructures\boring32.datastructures-cappedstack.ixx" />
-    <ClCompile Include="DataStructures\boring32.datastructures.ixx" />
-    <ClCompile Include="DataStructures\boring32.datastructures-singlylinkedlist.ixx" />
+    <ClCompile Include="DataStructures\boring32-datastructures_cappedstack.ixx" />
+    <ClCompile Include="DataStructures\boring32-datastructures.ixx" />
+    <ClCompile Include="DataStructures\boring32-datastructures_singlylinkedlist.ixx" />
     <ClCompile Include="Error\boring32.error-boring32error.ixx" />
     <ClCompile Include="Error\boring32.error-comerror.ixx" />
     <ClCompile Include="Error\boring32.error-errorbase.ixx" />
@@ -277,8 +277,8 @@
     <ClCompile Include="MSI\boring32-msi.ixx" />
     <ClCompile Include="Networking\boring32-networking_api.ixx" />
     <ClCompile Include="Networking\boring32-networking.ixx" />
-    <ClCompile Include="Process\boring32.process-dynamiclinklibrary.ixx" />
-    <ClCompile Include="Process\boring32.process.ixx" />
+    <ClCompile Include="Process\boring32-process_dynamiclinklibrary.ixx" />
+    <ClCompile Include="Process\boring32-process.ixx" />
     <ClCompile Include="RAII\boring32.raii-handle.ixx" />
     <ClCompile Include="RAII\boring32.raii.ixx" />
     <ClCompile Include="RAII\boring32.raii-uniqueptrs.ixx" />

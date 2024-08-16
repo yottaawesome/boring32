@@ -1,7 +1,7 @@
 #include "pch.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-import boring32.datastructures;
+import boring32;
 
 namespace DataStructures
 {

@@ -29,3 +29,4 @@ export import :logging;
 export import :windowsfilteringplatform;
 export import :native;
 export import :msi;
+export import :datastructures;

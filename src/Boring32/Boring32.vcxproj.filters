@@ -29,11 +29,11 @@
     <ClCompile Include="Compression\boring32.compression-compressor.ixx" />
     <ClCompile Include="Compression\boring32.compression-decompressor.ixx" />
     <ClCompile Include="Time\boring32-time.ixx" />
-    <ClCompile Include="Process\boring32.process-dynamiclinklibrary.ixx" />
+    <ClCompile Include="Process\boring32-process_dynamiclinklibrary.ixx" />
     <ClCompile Include="Util\boring32.util.ixx" />
-    <ClCompile Include="DataStructures\boring32.datastructures-cappedstack.ixx" />
-    <ClCompile Include="DataStructures\boring32.datastructures-singlylinkedlist.ixx" />
-    <ClCompile Include="DataStructures\boring32.datastructures.ixx" />
+    <ClCompile Include="DataStructures\boring32-datastructures_cappedstack.ixx" />
+    <ClCompile Include="DataStructures\boring32-datastructures_singlylinkedlist.ixx" />
+    <ClCompile Include="DataStructures\boring32-datastructures.ixx" />
     <ClCompile Include="Registry\boring32.registry-key.ixx" />
     <ClCompile Include="Registry\boring32.registry-functions.ixx" />
     <ClCompile Include="Registry\boring32.registry.ixx" />
@@ -110,7 +110,7 @@
     <ClCompile Include="Async\boring32.async-overlappedop.ixx" />
     <ClCompile Include="Security\boring32.security.ixx" />
     <ClCompile Include="RAII\boring32.raii.ixx" />
-    <ClCompile Include="Process\boring32.process.ixx" />
+    <ClCompile Include="Process\boring32-process.ixx" />
     <ClCompile Include="FileSystem\boring32-filesystem_functions.ixx" />
     <ClCompile Include="COM\boring32.com.ixx" />
     <ClCompile Include="Crypto\boring32.crypto.ixx" />

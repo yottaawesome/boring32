@@ -1,4 +1,4 @@
-export module boring32.datastructures:singlylinkedlist;
+export module boring32:datastructures_singlylinkedlist;
 import <malloc.h>;
 import boring32.shared;
 import boring32.error;

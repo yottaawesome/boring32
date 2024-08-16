@@ -1,4 +1,4 @@
-export module boring32.datastructures:cappedstack;
+export module boring32:datastructures_cappedstack;
 import boring32.shared;
 import boring32.error;
 
