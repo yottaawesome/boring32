@@ -1,4 +1,4 @@
-export module boring32.msi:functions;
+export module boring32:msi_functions;
 import boring32.shared;
 import boring32.error;
 

@@ -270,11 +270,11 @@
     <ClCompile Include="Memory\boring32.memory-heap.ixx" />
     <ClCompile Include="Memory\boring32.memory-virtualaddress.ixx" />
     <ClCompile Include="Memory\boring32.memory.ixx" />
-    <ClCompile Include="MSI\boring32.msi-database.ixx" />
-    <ClCompile Include="MSI\boring32.msi-functions.ixx" />
-    <ClCompile Include="MSI\boring32.msi-package.ixx" />
-    <ClCompile Include="MSI\boring32.msi-product.ixx" />
-    <ClCompile Include="MSI\boring32.msi.ixx" />
+    <ClCompile Include="MSI\boring32-msi_database.ixx" />
+    <ClCompile Include="MSI\boring32-msi_functions.ixx" />
+    <ClCompile Include="MSI\boring32-msi_package.ixx" />
+    <ClCompile Include="MSI\boring32-msi_product.ixx" />
+    <ClCompile Include="MSI\boring32-msi.ixx" />
     <ClCompile Include="Networking\boring32-networking_api.ixx" />
     <ClCompile Include="Networking\boring32-networking.ixx" />
     <ClCompile Include="Process\boring32.process-dynamiclinklibrary.ixx" />
@@ -346,7 +346,7 @@
     <ClCompile Include="Util\boring32.util-switcher.ixx" />
     <ClCompile Include="Native\boring32-native_defs.ixx" />
     <ClCompile Include="Native\boring32-native_ntdll.ixx" />
-    <ClCompile Include="Native\boring32.native.ixx" />
+    <ClCompile Include="Native\boring32-native.ixx" />
     <ClCompile Include="WindowsImagingComponent\boring32-windowsimagingcomponent_imagingfactory.ixx" />
     <ClCompile Include="WindowsImagingComponent\boring32-windowsimagingcomponent.ixx" />
     <ClCompile Include="WindowsFilteringPlatform\boring32-windowsfilteringplatform_callout.ixx" />
