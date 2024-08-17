@@ -1,4 +1,4 @@
-export module boring32.sspi:contextbuffer;
+export module boring32:sspi_contextbuffer;
 import boring32.shared;
 
 export namespace Boring32::SSPI

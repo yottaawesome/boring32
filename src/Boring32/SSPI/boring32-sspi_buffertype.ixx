@@ -1,4 +1,4 @@
-export module boring32.sspi:buffertype;
+export module boring32:sspi_buffertype;
 import boring32.shared;
 
 export namespace Boring32::SSPI

@@ -14,7 +14,6 @@ import boring32.security;
 import boring32.com;
 import boring32.util;
 import boring32.async;
-import boring32.sspi;
 import boring32.registry;
 import boring32.strings;
 import boring32;

@@ -1,4 +1,4 @@
-export module boring32.sspi:credential;
+export module boring32:sspi_credential;
 import boring32.shared;
 import boring32.error;
 
