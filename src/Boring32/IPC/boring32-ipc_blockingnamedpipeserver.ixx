@@ -1,9 +1,9 @@
-export module boring32.ipc:blockingnamedpipeserver;
+export module boring32:ipc_blockingnamedpipeserver;
 import boring32.shared;
 import boring32.util;
 import boring32.raii;
 import boring32.error;
-import :namedpipeserverbase;
+import :ipc_namedpipeserverbase;
 
 export namespace Boring32::IPC
 {

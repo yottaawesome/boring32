@@ -3,7 +3,6 @@ import std.compat;
 #include <Windows.h>
 
 import boring32.async;
-import boring32.ipc;
 import boring32;
 import boring32.util;
 import test;

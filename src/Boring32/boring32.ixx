@@ -30,3 +30,4 @@ export import :sspi;
 export import :strongtypes;
 export import :security;
 export import :registry;
+export import :ipc;

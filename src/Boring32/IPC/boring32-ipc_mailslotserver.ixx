@@ -1,4 +1,4 @@
-export module boring32.ipc:mailslotserver;
+export module boring32:ipc_mailslotserver;
 import boring32.shared;
 import boring32.error;
 import boring32.raii;

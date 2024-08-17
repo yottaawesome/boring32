@@ -1,9 +1,9 @@
-export module boring32.ipc:overlappednamedpipeserver;
+export module boring32:ipc_overlappednamedpipeserver;
 import boring32.shared;
 import boring32.raii;
 import boring32.async;
 import boring32.error;
-import :namedpipeserverbase;
+import :ipc_namedpipeserverbase;
 
 export namespace Boring32::IPC
 {

@@ -1,4 +1,4 @@
-export module boring32.ipc:namedpipeserverbase;
+export module boring32:ipc_namedpipeserverbase;
 import boring32.shared;
 import boring32.error;
 import boring32.raii;

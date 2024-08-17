@@ -1,4 +1,4 @@
-export module boring32.ipc:anonymouspipe;
+export module boring32:ipc_anonymouspipe;
 import boring32.shared;
 import boring32.raii;
 import boring32.strings;
