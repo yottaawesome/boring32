@@ -1,11 +1,11 @@
-export module boring32.winhttp:asyncwebsocket;
+export module boring32:winhttp_asyncwebsocket;
 import boring32.shared;
 import boring32.async;
 import boring32.error;
-import :winhttphandle;
-import :websocketstatus;
-import :winhttphandle;
-import :asyncwebsocketsettings;
+import :winhttp_winhttphandle;
+import :winhttp_websocketstatus;
+import :winhttp_winhttphandle;
+import :winhttp_asyncwebsocketsettings;
 
 export namespace Boring32::WinHttp::WebSockets
 {

@@ -1,4 +1,4 @@
-export module boring32.winhttp:requestresult;
+export module boring32:winhttp_requestresult;
 import boring32.shared;
 
 export namespace Boring32::WinHttp

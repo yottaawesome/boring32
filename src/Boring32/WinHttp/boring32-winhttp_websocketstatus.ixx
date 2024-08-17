@@ -1,4 +1,4 @@
-export module boring32.winhttp:websocketstatus;
+export module boring32:winhttp_websocketstatus;
 
 export namespace Boring32::WinHttp::WebSockets
 {

@@ -2,7 +2,7 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-import boring32.winhttp;
+import boring32;
 
 namespace WinHttp
 {

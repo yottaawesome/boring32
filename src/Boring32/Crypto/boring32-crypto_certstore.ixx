@@ -6,12 +6,12 @@ module;
 //#include <cryptuiapi.h>
 //#include <winnt.h>
 
-export module boring32.crypto:certstore;
+export module boring32:crypto_certstore;
 import boring32.shared;
 import boring32.strings;
 import boring32.error;
-import :functions;
-import :certificate;
+import :crypto_functions;
+import :crypto_certificate;
 
 export namespace Boring32::Crypto
 {

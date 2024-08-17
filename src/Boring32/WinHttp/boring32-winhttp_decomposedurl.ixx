@@ -1,4 +1,4 @@
-export module boring32.winhttp:decomposedurl;
+export module boring32:winhttp_decomposedurl;
 import boring32.shared;
 import boring32.error;
 

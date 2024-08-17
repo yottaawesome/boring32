@@ -1,4 +1,4 @@
-export module boring32.crypto:cryptokey;
+export module boring32:crypto_cryptokey;
 import boring32.shared;
 
 export namespace Boring32::Crypto

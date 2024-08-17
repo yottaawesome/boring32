@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket-statuscallback.cpp">
+    <ClCompile Include="WinHttp\boring32-winhttp_asyncwebsocket_statuscallback.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Strings\boring32.strings.ixx" />
@@ -55,9 +55,9 @@
     <ClCompile Include="Async\boring32.async-timerqueue.ixx" />
     <ClCompile Include="Async\boring32.async-mutev.ixx" />
     <ClCompile Include="Async\boring32.async-threadsafevector.ixx" />
-    <ClCompile Include="Crypto\boring32.crypto-tempcertimport.ixx" />
-    <ClCompile Include="Crypto\boring32.crypto-functions.ixx" />
-    <ClCompile Include="Crypto\boring32.crypto-cryptokey.ixx" />
+    <ClCompile Include="Crypto\boring32-crypto_tempcertimport.ixx" />
+    <ClCompile Include="Crypto\boring32-crypto_functions.ixx" />
+    <ClCompile Include="Crypto\boring32-crypto_cryptokey.ixx" />
     <ClCompile Include="Async\boring32.async-timerqueuetimer.ixx" />
     <ClCompile Include="Async\boring32.async-timerqueuetimercallback.ixx" />
     <ClCompile Include="IPC\boring32.ipc-anonymouspipe.ixx" />
@@ -66,37 +66,37 @@
     <ClCompile Include="IPC\boring32.ipc-namedpipeclientbase.ixx" />
     <ClCompile Include="IPC\boring32.ipc-namedpipeserverbase.ixx" />
     <ClCompile Include="IPC\boring32.ipc-blockingnamedpipeserver.ixx" />
-    <ClCompile Include="Crypto\boring32.crypto-certificate.ixx" />
-    <ClCompile Include="Crypto\boring32.crypto-aesencryption.ixx" />
+    <ClCompile Include="Crypto\boring32-crypto_certificate.ixx" />
+    <ClCompile Include="Crypto\boring32-crypto_aesencryption.ixx" />
     <ClCompile Include="Security\boring32.security-functions.ixx" />
     <ClCompile Include="Security\boring32.security-token.ixx" />
     <ClCompile Include="Security\boring32.security-constants.ixx" />
     <ClCompile Include="Security\boring32.security-privatenamespace.ixx" />
     <ClCompile Include="Security\boring32.security-impersonationcontext.ixx" />
     <ClCompile Include="Security\boring32.security-securityidentifier.ixx" />
-    <ClCompile Include="Crypto\boring32.crypto-securestring.ixx" />
-    <ClCompile Include="Crypto\boring32.crypto-certstore.ixx" />
-    <ClCompile Include="Crypto\boring32.crypto-chainingmode.ixx" />
-    <ClCompile Include="Crypto\boring32.crypto-certificatechain.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp-winhttphandle.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp-proxytype.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp-httpwebclient.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp-requestresult.ixx" />
+    <ClCompile Include="Crypto\boring32-crypto_securestring.ixx" />
+    <ClCompile Include="Crypto\boring32-crypto_certstore.ixx" />
+    <ClCompile Include="Crypto\boring32-crypto_chainingmode.ixx" />
+    <ClCompile Include="Crypto\boring32-crypto_certificatechain.ixx" />
+    <ClCompile Include="WinHttp\boring32-winhttp_winhttphandle.ixx" />
+    <ClCompile Include="WinHttp\boring32-winhttp_proxytype.ixx" />
+    <ClCompile Include="WinHttp\boring32-winhttp_httpwebclient.ixx" />
+    <ClCompile Include="WinHttp\boring32-winhttp_requestresult.ixx" />
     <ClCompile Include="WindowsImagingComponent\boring32-windowsimagingcomponent.ixx" />
     <ClCompile Include="WindowsImagingComponent\boring32-windowsimagingcomponent_imagingfactory.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp-websocket.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocket.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp-websocketstatus.ixx" />
+    <ClCompile Include="WinHttp\boring32-winhttp_websocket.ixx" />
+    <ClCompile Include="WinHttp\boring32-winhttp_asyncwebsocket.ixx" />
+    <ClCompile Include="WinHttp\boring32-winhttp_websocketstatus.ixx" />
     <ClCompile Include="FileSystem\boring32-filesystem.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp-asyncwebsocketsettings.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp-websocketsettings.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp-proxyinfo.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp-session.ixx" />
+    <ClCompile Include="WinHttp\boring32-winhttp_asyncwebsocketsettings.ixx" />
+    <ClCompile Include="WinHttp\boring32-winhttp_websocketsettings.ixx" />
+    <ClCompile Include="WinHttp\boring32-winhttp_proxyinfo.ixx" />
+    <ClCompile Include="WinHttp\boring32-winhttp_session.ixx" />
     <ClCompile Include="Async\boring32.async-slimreadwritelock.ixx" />
     <ClCompile Include="Async\boring32.async-eventloop.ixx" />
     <ClCompile Include="Error\boring32.error-errorbase.ixx" />
     <ClCompile Include="Util\boring32.util-switcher.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp-winhttperror.ixx" />
+    <ClCompile Include="WinHttp\boring32-winhttp_winhttperror.ixx" />
     <ClCompile Include="Security\boring32.security-securitydescriptor.ixx" />
     <ClCompile Include="Async\boring32.async-processinfo.ixx" />
     <ClCompile Include="Async\boring32.async-process.ixx" />
@@ -113,7 +113,7 @@
     <ClCompile Include="Process\boring32-process.ixx" />
     <ClCompile Include="FileSystem\boring32-filesystem_functions.ixx" />
     <ClCompile Include="COM\boring32.com.ixx" />
-    <ClCompile Include="Crypto\boring32.crypto.ixx" />
+    <ClCompile Include="Crypto\boring32-crypto.ixx" />
     <ClCompile Include="XAudio2\boring32-xaudio2.ixx" />
     <ClCompile Include="XAudio2\boring32-xaudio2_engine.ixx" />
     <ClCompile Include="XAudio2\boring32-xaudio2_voice.ixx" />
@@ -141,13 +141,13 @@
     <ClCompile Include="WinSock\boring32.winsock-winsockerror.ixx" />
     <ClCompile Include="WinSock\boring32.winsock.ixx" />
     <ClCompile Include="Util\boring32.util-functions.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp.ixx" />
+    <ClCompile Include="WinHttp\boring32-winhttp.ixx" />
     <ClCompile Include="Async\boring32.async.ixx" />
     <ClCompile Include="Util\boring32.util-globallyuniqueid.ixx" />
     <ClCompile Include="Services\boring32-services.ixx" />
     <ClCompile Include="Services\boring32-services_functions.ixx" />
     <ClCompile Include="RAII\boring32.raii-handle.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp-handles.ixx" />
+    <ClCompile Include="WinHttp\boring32-winhttp_handles.ixx" />
     <ClCompile Include="Computer\boring32-computer.ixx" />
     <ClCompile Include="Computer\boring32-computer_functions.ixx" />
     <ClCompile Include="Async\boring32.async-synced.ixx" />
@@ -208,7 +208,7 @@
     <ClCompile Include="MSI\boring32-msi_package.ixx" />
     <ClCompile Include="MSI\boring32-msi_product.ixx" />
     <ClCompile Include="Compression\boring32-compression_cabinet.ixx" />
-    <ClCompile Include="WinHttp\boring32.winhttp-decomposedurl.ixx" />
+    <ClCompile Include="WinHttp\boring32-winhttp_decomposedurl.ixx" />
     <ClCompile Include="Native\boring32-native_defs.ixx" />
     <ClCompile Include="Native\boring32-native_ntdll.ixx" />
     <ClCompile Include="Native\boring32-native.ixx" />

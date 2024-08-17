@@ -1,4 +1,4 @@
-export module boring32.winhttp:winhttperror;
+export module boring32:winhttp_winhttperror;
 import boring32.error;
 import boring32.shared;
 

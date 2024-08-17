@@ -1,10 +1,10 @@
-export module boring32.winhttp:session;
+export module boring32:winhttp_session;
 import boring32.shared;
 import boring32.error;
-import :winhttphandle;
-import :proxytype;
-import :handles;
-import :winhttperror;
+import :winhttp_winhttphandle;
+import :winhttp_proxytype;
+import :winhttp_handles;
+import :winhttp_winhttperror;
 
 export namespace Boring32::WinHttp
 {

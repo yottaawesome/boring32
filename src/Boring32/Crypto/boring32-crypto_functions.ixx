@@ -1,7 +1,7 @@
-export module boring32.crypto:functions;
+export module boring32:crypto_functions;
 import boring32.shared;
 import boring32.error;
-import :cryptokey;
+import :crypto_cryptokey;
 
 export namespace Boring32::Crypto
 {

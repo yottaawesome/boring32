@@ -1,8 +1,8 @@
-export module boring32.crypto:certificatechain;
+export module boring32:crypto_certificatechain;
 import boring32.shared;
 import boring32.error;
-import :certificate;
-import :functions;
+import :crypto_certificate;
+import :crypto_functions;
 
 export namespace Boring32::Crypto
 {

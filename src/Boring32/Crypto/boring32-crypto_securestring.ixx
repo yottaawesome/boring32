@@ -1,4 +1,4 @@
-export module boring32.crypto:securestring;
+export module boring32:crypto_securestring;
 import boring32.shared;
 import boring32.error;
 

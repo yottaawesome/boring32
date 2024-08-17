@@ -1,7 +1,7 @@
-export module boring32.crypto:tempcertimport;
+export module boring32:crypto_tempcertimport;
 import boring32.shared;
-import :certificate;
-import :certstore;
+import :crypto_certificate;
+import :crypto_certstore;
 
 export namespace Boring32::Crypto
 {

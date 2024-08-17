@@ -1,4 +1,4 @@
-export module boring32.winhttp:proxyinfo;
+export module boring32:winhttp_proxyinfo;
 import boring32.shared;
 import boring32.error;
 

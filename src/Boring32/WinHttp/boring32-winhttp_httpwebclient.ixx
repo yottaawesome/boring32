@@ -1,9 +1,9 @@
-export module boring32.winhttp:httpwebclient;
+export module boring32:winhttp_httpwebclient;
 import boring32.shared;
 import boring32.error;
-import :winhttphandle;
-import :requestresult;
-import :proxyinfo;
+import :winhttp_winhttphandle;
+import :winhttp_requestresult;
+import :winhttp_proxyinfo;
 
 export namespace Boring32::WinHttp
 {
