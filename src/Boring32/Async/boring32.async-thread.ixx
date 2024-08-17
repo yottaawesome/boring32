@@ -1,8 +1,8 @@
-export module boring32.async:thread;
+export module boring32:async_thread;
 import boring32.shared;
 import boring32.error;
 import boring32.raii;
-import :event;
+import :async_event;
 
 export namespace Boring32::Async
 {

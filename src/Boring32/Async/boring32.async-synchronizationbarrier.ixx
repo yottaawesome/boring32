@@ -1,4 +1,4 @@
-export module boring32.async:synchronizationbarrier;
+export module boring32:async_synchronizationbarrier;
 import boring32.shared;
 import boring32.error;
 

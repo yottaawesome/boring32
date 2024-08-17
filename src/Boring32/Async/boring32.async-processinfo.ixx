@@ -1,4 +1,4 @@
-export module boring32.async:processinfo;
+export module boring32:async_processinfo;
 import boring32.win32;
 import boring32.raii;
 

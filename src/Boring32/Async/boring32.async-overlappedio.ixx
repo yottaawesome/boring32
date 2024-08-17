@@ -1,7 +1,7 @@
-export module boring32.async:overlappedio;
+export module boring32:async_overlappedio;
 import boring32.shared;
 import boring32.error;
-import :overlappedop;
+import :async_overlappedop;
 
 export namespace Boring32::Async
 {

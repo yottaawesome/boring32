@@ -1,4 +1,4 @@
-export module boring32.async:filemapping;
+export module boring32:async_filemapping;
 import boring32.shared;
 import boring32.raii;
 import boring32.error;

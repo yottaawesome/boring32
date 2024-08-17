@@ -1,4 +1,4 @@
-export module boring32.async:semaphore;
+export module boring32:async_semaphore;
 import boring32.shared;
 import boring32.error;
 import boring32.raii;

@@ -2,8 +2,8 @@ export module boring32:winsock_functions;
 import boring32.shared;
 import boring32.raii;
 import boring32.error;
-import boring32.async;
 import boring32.strings;
+import :async;
 import :winsock_winsockerror;
 
 namespace Boring32::WinSock

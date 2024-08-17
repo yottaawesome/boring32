@@ -1,7 +1,7 @@
 export module boring32:ipc_overlappednamedpipeclient;
 import boring32.shared;
-import boring32.async;
 import boring32.error;
+import :async;
 import :ipc_namedpipeclientbase;
 
 export namespace Boring32::IPC

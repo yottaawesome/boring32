@@ -1,4 +1,4 @@
-export module boring32.async:memorymappedfile;
+export module boring32:async_memorymappedfile;
 import boring32.shared;
 import boring32.raii;
 import boring32.error;

@@ -1,4 +1,4 @@
-export module boring32.async:criticalsection;
+export module boring32:async_criticalsection;
 import boring32.error;
 import boring32.win32;
 

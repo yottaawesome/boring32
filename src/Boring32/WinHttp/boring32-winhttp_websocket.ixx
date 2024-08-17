@@ -2,12 +2,12 @@ export module boring32:winhttp_websocket;
 import boring32.shared;
 import boring32.error;
 import boring32.util;
-import boring32.async;
 import :winhttp_proxyinfo;
 import :winhttp_websocketstatus;
 import :winhttp_websocketsettings;
 import :winhttp_winhttphandle;
 import :winhttp_session;
+import :async;
 
 namespace Boring32::WinHttp::WebSockets
 {

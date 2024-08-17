@@ -1,6 +1,6 @@
-export module boring32.async:memorymappedview;
+export module boring32:async_memorymappedview;
 import boring32.shared;
-import :memorymappedfile;
+import :async_memorymappedfile;
 
 export namespace Boring32::Async
 {

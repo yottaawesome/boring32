@@ -1,6 +1,6 @@
-export module boring32.async:synced;
+export module boring32:async_synced;
 import boring32.shared;
-import :criticalsectionlock;
+import :async_criticalsectionlock;
 
 export namespace Boring32::Async
 {

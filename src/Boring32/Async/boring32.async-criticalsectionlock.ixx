@@ -1,4 +1,4 @@
-export module boring32.async:criticalsectionlock;
+export module boring32:async_criticalsectionlock;
 import boring32.win32;
 
 export namespace Boring32::Async

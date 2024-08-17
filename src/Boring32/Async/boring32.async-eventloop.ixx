@@ -1,7 +1,7 @@
-export module boring32.async:eventloop;
+export module boring32:async_eventloop;
 import boring32.shared;
 import boring32.error;
-import :criticalsectionlock;
+import :async_criticalsectionlock;
 
 export namespace Boring32::Async
 {

@@ -1,4 +1,4 @@
-export module boring32.async:event;
+export module boring32:async_event;
 import boring32.shared;
 import boring32.raii;
 import boring32.error;

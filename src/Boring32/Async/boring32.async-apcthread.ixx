@@ -1,8 +1,8 @@
-export module boring32.async:apcthread;
+export module boring32:async_apcthread;
 import boring32.shared;
 import boring32.error;
-import :thread;
-import :event;
+import :async_thread;
+import :async_event;
 
 export namespace Boring32::Async
 {

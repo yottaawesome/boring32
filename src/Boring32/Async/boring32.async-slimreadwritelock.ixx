@@ -1,4 +1,4 @@
-export module boring32.async:slimreadwritelock;
+export module boring32:async_slimreadwritelock;
 import boring32.shared;
 
 export namespace Boring32::Async

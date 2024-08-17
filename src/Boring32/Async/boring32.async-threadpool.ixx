@@ -1,4 +1,4 @@
-export module boring32.async:threadpool;
+export module boring32:async_threadpool;
 import boring32.shared;
 import boring32.error;
 

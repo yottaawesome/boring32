@@ -1,4 +1,4 @@
-export module boring32.async:waitableaddress;
+export module boring32:async_waitableaddress;
 import boring32.win32;
 import boring32.error;
 

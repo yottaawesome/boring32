@@ -1,7 +1,6 @@
 ﻿import std;
 import std.compat;
 ////import <win32.hpp>;
-import boring32.async;
 import boring32.win32;
 //#include "versionhelpers.h"
 //#include "Experiments1Main.hpp"
@@ -10,7 +9,6 @@ import boring32.raii;
 import boring32.error;
 import boring32.raii;
 import boring32.util;
-import boring32.async;
 import boring32.strings;
 import boring32;
 

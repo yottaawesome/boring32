@@ -1,7 +1,7 @@
-export module boring32.async:mutev;
+export module boring32:async_mutev;
 import boring32.shared;
 import boring32.error;
-import :event;
+import :async_event;
 
 export namespace Boring32::Async
 {

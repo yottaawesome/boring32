@@ -1,9 +1,9 @@
-export module boring32.async:mutex;
+export module boring32:async_mutex;
 import boring32.shared;
 import boring32.error;
 import boring32.raii;
-import :functions;
 import boring32.concepts;
+import :async_functions;
 
 export namespace Boring32::Async
 {

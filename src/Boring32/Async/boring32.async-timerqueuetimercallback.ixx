@@ -1,7 +1,7 @@
-export module boring32.async:timerqueuetimercallback;
+export module boring32:async_timerqueuetimercallback;
 import boring32.shared;
 import boring32.error;
-import :timerqueuetimer;
+import :async_timerqueuetimer;
 
 export namespace Boring32::Async
 {

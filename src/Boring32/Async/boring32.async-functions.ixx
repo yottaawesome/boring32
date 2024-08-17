@@ -1,4 +1,4 @@
-export module boring32.async:functions;
+export module boring32:async_functions;
 import boring32.shared;
 import boring32.raii;
 import boring32.strings;

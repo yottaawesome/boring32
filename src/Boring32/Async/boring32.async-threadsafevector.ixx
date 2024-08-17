@@ -1,8 +1,8 @@
-export module boring32.async:threadsafevector;
+export module boring32:async_threadsafevector;
 import boring32.shared;
-import :criticalsectionlock;
-import :criticalsection;
-import :event;
+import :async_criticalsectionlock;
+import :async_criticalsection;
+import :async_event;
 
 export namespace Boring32::Async
 {

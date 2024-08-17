@@ -1,8 +1,8 @@
-export module boring32.async:waitabletimer;
+export module boring32:async_waitabletimer;
 import boring32.shared;
 import boring32.error;
 import boring32.raii;
-import :functions;
+import :async_functions;
 import boring32.concepts;
 
 //https://docs.microsoft.com/en-us/windows/win32/sync/using-a-waitable-timer-with-an-asynchronous-procedure-call
