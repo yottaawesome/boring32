@@ -1,4 +1,4 @@
-export module boring32.security:saferlevel;
+export module boring32:security_saferlevel;
 import boring32.shared;
 import boring32.error;
 

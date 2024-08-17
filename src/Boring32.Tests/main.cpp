@@ -10,7 +10,6 @@ import boring32.raii;
 import boring32.strings;
 import boring32.error;
 import boring32.raii;
-import boring32.security;
 import boring32.com;
 import boring32.util;
 import boring32.async;

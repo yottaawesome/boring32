@@ -4,7 +4,7 @@ import std.compat;
 
 import boring32.async;
 import boring32.ipc;
-import boring32.security;
+import boring32;
 import boring32.util;
 import test;
 

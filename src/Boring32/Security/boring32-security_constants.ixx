@@ -1,4 +1,4 @@
-export module boring32.security:constants;
+export module boring32:security_constants;
 import boring32.shared;
 
 export namespace Boring32::Security::Constants

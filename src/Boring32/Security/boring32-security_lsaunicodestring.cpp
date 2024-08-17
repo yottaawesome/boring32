@@ -1,4 +1,4 @@
-module boring32.security:lsaunicodestring;
+module boring32:security_lsaunicodestring;
 import boring32.shared;
 
 namespace Boring32::Security

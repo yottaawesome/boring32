@@ -1,4 +1,4 @@
-export module boring32.security:policy;
+export module boring32:security_policy;
 // https://www.mschaef.com/windows_h_is_wierd
 //#define WIN32_NO_STATUS
 //#include <Windows.h>
@@ -8,7 +8,7 @@ export module boring32.security:policy;
 //#include <Ntsecapi.h>
 import boring32.shared;
 import boring32.error;
-import :lsaunicodestring;
+import :security_lsaunicodestring;
 
 namespace Boring32::Security
 {

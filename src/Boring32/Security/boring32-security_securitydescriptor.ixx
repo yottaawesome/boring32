@@ -1,4 +1,4 @@
-export module boring32.security:securitydescriptor;
+export module boring32:security_securitydescriptor;
 import boring32.shared;
 import boring32.error;
 import boring32.raii;

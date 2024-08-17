@@ -68,12 +68,12 @@
     <ClCompile Include="IPC\boring32.ipc-blockingnamedpipeserver.ixx" />
     <ClCompile Include="Crypto\boring32-crypto_certificate.ixx" />
     <ClCompile Include="Crypto\boring32-crypto_aesencryption.ixx" />
-    <ClCompile Include="Security\boring32.security-functions.ixx" />
-    <ClCompile Include="Security\boring32.security-token.ixx" />
-    <ClCompile Include="Security\boring32.security-constants.ixx" />
-    <ClCompile Include="Security\boring32.security-privatenamespace.ixx" />
-    <ClCompile Include="Security\boring32.security-impersonationcontext.ixx" />
-    <ClCompile Include="Security\boring32.security-securityidentifier.ixx" />
+    <ClCompile Include="Security\boring32-security_functions.ixx" />
+    <ClCompile Include="Security\boring32-security_token.ixx" />
+    <ClCompile Include="Security\boring32-security_constants.ixx" />
+    <ClCompile Include="Security\boring32-security_privatenamespace.ixx" />
+    <ClCompile Include="Security\boring32-security_impersonationcontext.ixx" />
+    <ClCompile Include="Security\boring32-security_securityidentifier.ixx" />
     <ClCompile Include="Crypto\boring32-crypto_securestring.ixx" />
     <ClCompile Include="Crypto\boring32-crypto_certstore.ixx" />
     <ClCompile Include="Crypto\boring32-crypto_chainingmode.ixx" />
@@ -97,7 +97,7 @@
     <ClCompile Include="Error\boring32.error-errorbase.ixx" />
     <ClCompile Include="Util\boring32.util-switcher.ixx" />
     <ClCompile Include="WinHttp\boring32-winhttp_winhttperror.ixx" />
-    <ClCompile Include="Security\boring32.security-securitydescriptor.ixx" />
+    <ClCompile Include="Security\boring32-security_securitydescriptor.ixx" />
     <ClCompile Include="Async\boring32.async-processinfo.ixx" />
     <ClCompile Include="Async\boring32.async-process.ixx" />
     <ClCompile Include="Async\boring32.async-memorymappedfile.ixx" />
@@ -108,7 +108,7 @@
     <ClCompile Include="Async\boring32.async-thread.ixx" />
     <ClCompile Include="Async\boring32.async-overlappedio.ixx" />
     <ClCompile Include="Async\boring32.async-overlappedop.ixx" />
-    <ClCompile Include="Security\boring32.security.ixx" />
+    <ClCompile Include="Security\boring32-security.ixx" />
     <ClCompile Include="RAII\boring32.raii.ixx" />
     <ClCompile Include="Process\boring32-process.ixx" />
     <ClCompile Include="FileSystem\boring32-filesystem_functions.ixx" />
@@ -161,7 +161,7 @@
     <ClCompile Include="Networking\boring32-networking.ixx" />
     <ClCompile Include="Networking\boring32-networking_api.ixx" />
     <ClCompile Include="IPC\boring32.ipc-mailslotserver.ixx" />
-    <ClCompile Include="Security\boring32.security-securityattributes.ixx" />
+    <ClCompile Include="Security\boring32-security_securityattributes.ixx" />
     <ClCompile Include="boring32.ixx" />
     <ClCompile Include="Time\boring32-time_datetime.ixx" />
     <ClCompile Include="Time\boring32-time_functions.ixx" />
@@ -170,8 +170,8 @@
     <ClCompile Include="Services\boring32-services_service.ixx" />
     <ClCompile Include="IO\boring32.io.ixx" />
     <ClCompile Include="IO\boring32.io-completionport.ixx" />
-    <ClCompile Include="Security\boring32.security-policy.ixx" />
-    <ClCompile Include="Security\boring32.security-lsaunicodestring.cpp" />
+    <ClCompile Include="Security\boring32-security_policy.ixx" />
+    <ClCompile Include="Security\boring32-security_lsaunicodestring.cpp" />
     <ClCompile Include="Logging\boring32-logging.ixx" />
     <ClCompile Include="Logging\boring32-logging_functions.ixx" />
     <ClCompile Include="SSPI\boring32-sspi.ixx" />
@@ -214,7 +214,7 @@
     <ClCompile Include="Native\boring32-native.ixx" />
     <ClCompile Include="Async\boring32.async-waitable.ixx" />
     <ClCompile Include="Compression\boring32-compression_types.ixx" />
-    <ClCompile Include="Security\boring32.security-encodedpointer.ixx" />
+    <ClCompile Include="Security\boring32-security_encodedpointer.ixx" />
     <ClCompile Include="StrongTypes\boring32-strongtypes.ixx" />
     <ClCompile Include="StrongTypes\boring32-strongtypes_crtp.cpp">
       <Filter>Source Files</Filter>
@@ -228,6 +228,6 @@
     <ClCompile Include="Concepts\boring32.concepts.ixx" />
     <ClCompile Include="Registry\boring32.registry-registryvalue.ixx" />
     <ClCompile Include="WinSock\boring32-winsock_resolvedname.ixx" />
-    <ClCompile Include="Security\boring32.security-level.ixx" />
+    <ClCompile Include="Security\boring32-security_level.ixx" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-export module boring32.security:impersonationcontext;
+export module boring32:security_impersonationcontext;
 import boring32.error;
 import boring32.shared;
 

@@ -1,9 +1,9 @@
-export module boring32.security:token;
+export module boring32:security_token;
 import boring32.shared;
 import boring32.raii;
 import boring32.error;
-import :constants;
-import :functions;
+import :security_constants;
+import :security_functions;
 
 export namespace Boring32::Security
 {

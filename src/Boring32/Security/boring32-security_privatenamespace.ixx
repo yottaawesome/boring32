@@ -1,4 +1,4 @@
-export module boring32.security:privatenamespace;
+export module boring32:security_privatenamespace;
 import boring32.shared;
 import boring32.raii;
 import boring32.win32;
