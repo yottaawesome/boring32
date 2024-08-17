@@ -215,12 +215,12 @@
     <ClCompile Include="Async\boring32.async-waitable.ixx" />
     <ClCompile Include="Compression\boring32-compression_types.ixx" />
     <ClCompile Include="Security\boring32.security-encodedpointer.ixx" />
-    <ClCompile Include="StrongTypes\boring32.strongtypes.ixx" />
-    <ClCompile Include="StrongTypes\boring32.strongtypes-crtp.cpp">
+    <ClCompile Include="StrongTypes\boring32-strongtypes.ixx" />
+    <ClCompile Include="StrongTypes\boring32-strongtypes_crtp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StrongTypes\boring32.strongtypes-functionalities.ixx" />
-    <ClCompile Include="StrongTypes\boring32.strongtypes-impl.ixx" />
+    <ClCompile Include="StrongTypes\boring32-strongtypes_functionalities.ixx" />
+    <ClCompile Include="StrongTypes\boring32-strongtypes_impl.ixx" />
     <ClCompile Include="Strings\boring32.strings-fixedstring.ixx" />
     <ClCompile Include="Async\boring32.async-cmdrunner.ixx" />
     <ClCompile Include="Util\boring32.util-range.ixx" />

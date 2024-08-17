@@ -1,7 +1,7 @@
-export module boring32.strongtypes:functionalities;
+export module boring32:strongtypes_functionalities;
 import boring32.shared;
-import :crtp;
-import :impl;
+import :strongtypes_crtp;
+import :strongtypes_impl;
 
 export namespace Boring32::StrongTypes
 {

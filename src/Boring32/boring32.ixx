@@ -29,3 +29,4 @@ export import :crypto;
 export import :winhttp;
 export import :winsock;
 export import :sspi;
+export import :strongtypes;

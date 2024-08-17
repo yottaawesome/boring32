@@ -1,4 +1,4 @@
-module boring32.strongtypes:crtp;
+module boring32:strongtypes_crtp;
 
 namespace Boring32::StrongTypes
 {

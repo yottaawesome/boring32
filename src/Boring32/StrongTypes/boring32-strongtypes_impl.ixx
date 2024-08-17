@@ -1,4 +1,4 @@
-export module boring32.strongtypes:impl;
+export module boring32:strongtypes_impl;
 import boring32.shared;
 
 export namespace Boring32::StrongTypes
