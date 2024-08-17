@@ -1,8 +1,8 @@
 export module boring32:async_semaphore;
 import boring32.shared;
-import boring32.error;
-import boring32.raii;
-import boring32.concepts;
+import :error;
+import :raii;
+import :concepts;
 
 export namespace Boring32::Async
 {

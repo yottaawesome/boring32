@@ -1,10 +1,10 @@
-export module boring32.strings;
+export module boring32:strings;
 import std;
 import std.compat;
 import boring32.win32;
-import boring32.error;
-import boring32.concepts;
-export import :fixedstring;
+import :error;
+import :concepts;
+export import :strings_fixedstring;
 
 export namespace Boring32::Strings
 {

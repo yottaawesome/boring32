@@ -217,7 +217,7 @@
     <ClCompile Include="Async\boring32-async_threadsafevector.ixx" />
     <ClCompile Include="Async\boring32-async_timerqueuetimer.ixx" />
     <ClCompile Include="Async\boring32-async_timerqueuetimercallback.ixx" />
-    <ClCompile Include="Concepts\boring32.concepts.ixx" />
+    <ClCompile Include="Concepts\boring32-concepts.ixx" />
     <ClCompile Include="boring32.ixx" />
     <ClCompile Include="Compression\boring32-compression_cabinet.ixx" />
     <ClCompile Include="Compression\boring32-compression_compressionerror.ixx" />
@@ -242,13 +242,13 @@
     <ClCompile Include="DataStructures\boring32-datastructures_cappedstack.ixx" />
     <ClCompile Include="DataStructures\boring32-datastructures.ixx" />
     <ClCompile Include="DataStructures\boring32-datastructures_singlylinkedlist.ixx" />
-    <ClCompile Include="Error\boring32.error-boring32error.ixx" />
-    <ClCompile Include="Error\boring32.error-comerror.ixx" />
-    <ClCompile Include="Error\boring32.error-errorbase.ixx" />
-    <ClCompile Include="Error\boring32.error-functions.ixx" />
-    <ClCompile Include="Error\boring32.error.ixx" />
-    <ClCompile Include="Error\boring32.error-ntstatuserror.ixx" />
-    <ClCompile Include="Error\boring32.error-win32error.ixx" />
+    <ClCompile Include="Error\boring32-error_boring32error.ixx" />
+    <ClCompile Include="Error\boring32-error_comerror.ixx" />
+    <ClCompile Include="Error\boring32-error_errorbase.ixx" />
+    <ClCompile Include="Error\boring32-error_functions.ixx" />
+    <ClCompile Include="Error\boring32-error.ixx" />
+    <ClCompile Include="Error\boring32-error_ntstatuserror.ixx" />
+    <ClCompile Include="Error\boring32-error_win32error.ixx" />
     <ClCompile Include="FileSystem\boring32-filesystem_directory.ixx" />
     <ClCompile Include="FileSystem\boring32-filesystem_functions.ixx" />
     <ClCompile Include="FileSystem\boring32-filesystem.ixx" />
@@ -279,9 +279,9 @@
     <ClCompile Include="Networking\boring32-networking.ixx" />
     <ClCompile Include="Process\boring32-process_dynamiclinklibrary.ixx" />
     <ClCompile Include="Process\boring32-process.ixx" />
-    <ClCompile Include="RAII\boring32.raii-handle.ixx" />
-    <ClCompile Include="RAII\boring32.raii.ixx" />
-    <ClCompile Include="RAII\boring32.raii-uniqueptrs.ixx" />
+    <ClCompile Include="RAII\boring32-raii_handle.ixx" />
+    <ClCompile Include="RAII\boring32-raii.ixx" />
+    <ClCompile Include="RAII\boring32-raii_uniqueptrs.ixx" />
     <ClCompile Include="Registry\boring32-registry_functions.ixx" />
     <ClCompile Include="Registry\boring32-registry_registryvalue.ixx" />
     <ClCompile Include="Registry\boring32-registry.ixx" />
@@ -323,7 +323,7 @@
     <ClCompile Include="SSPI\NTLM\boring32-sspi_provider_ntlm.ixx" />
     <ClCompile Include="SSPI\PKU2U\boring32-sspi_provider_pku2u.ixx" />
     <ClCompile Include="SSPI\Schannel\boring32-sspi_provider_schannel.ixx" />
-    <ClCompile Include="Strings\boring32.strings-fixedstring.ixx" />
+    <ClCompile Include="Strings\boring32-strings_fixedstring.ixx" />
     <ClCompile Include="StrongTypes\boring32-strongtypes_crtp.cpp">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModuleInternalPartition</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCppModuleInternalPartition</CompileAs>
@@ -338,12 +338,12 @@
     <ClCompile Include="Time\boring32-time_datetime.ixx" />
     <ClCompile Include="Time\boring32-time_functions.ixx" />
     <ClCompile Include="Time\boring32-time.ixx" />
-    <ClCompile Include="Util\boring32.util-enumeration.ixx" />
-    <ClCompile Include="Util\boring32.util-functions.ixx" />
-    <ClCompile Include="Util\boring32.util-globallyuniqueid.ixx" />
-    <ClCompile Include="Util\boring32.util-range.ixx" />
-    <ClCompile Include="Util\boring32.util.ixx" />
-    <ClCompile Include="Util\boring32.util-switcher.ixx" />
+    <ClCompile Include="Util\boring32-util_enumeration.ixx" />
+    <ClCompile Include="Util\boring32-util_functions.ixx" />
+    <ClCompile Include="Util\boring32-util_globallyuniqueid.ixx" />
+    <ClCompile Include="Util\boring32-util_range.ixx" />
+    <ClCompile Include="Util\boring32-util.ixx" />
+    <ClCompile Include="Util\boring32-util_switcher.ixx" />
     <ClCompile Include="Native\boring32-native_defs.ixx" />
     <ClCompile Include="Native\boring32-native_ntdll.ixx" />
     <ClCompile Include="Native\boring32-native.ixx" />
@@ -384,8 +384,8 @@
     <ClCompile Include="Compression\boring32-compression.ixx" />
     <ClCompile Include="COM\boring32-com_comthreadscope.ixx" />
     <ClCompile Include="FileSystem\boring32-filesystem_file.ixx" />
-    <ClCompile Include="RAII\boring32.raii-win32handle.ixx" />
-    <ClCompile Include="Strings\boring32.strings.ixx" />
+    <ClCompile Include="RAII\boring32-raii_win32handle.ixx" />
+    <ClCompile Include="Strings\boring32-strings.ixx" />
     <ClCompile Include="WinHttp\boring32-winhttp_asyncwebsocket_statuscallback.cpp" />
     <ClCompile Include="WinSock\boring32-winsock.ixx" />
     <ClCompile Include="WirelessLAN\boring32-wirelesslan_wirelessinterface.ixx" />

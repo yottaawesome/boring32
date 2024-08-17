@@ -1,4 +1,4 @@
-export module boring32.strings:fixedstring;
+export module boring32:strings_fixedstring;
 import boring32.shared;
 
 export namespace Boring32::Strings

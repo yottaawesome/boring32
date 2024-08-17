@@ -1,7 +1,7 @@
 module boring32:winhttp_asyncwebsocket;
-import boring32.strings;
-import boring32.error;
 import boring32.shared;
+import :strings;
+import :error;
 
 namespace Boring32::WinHttp::WebSockets
 {

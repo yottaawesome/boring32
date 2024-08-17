@@ -1,4 +1,4 @@
-export module boring32.util:switcher;
+export module boring32:util_switcher;
 
 export namespace Boring32::Util
 {

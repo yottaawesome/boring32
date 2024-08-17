@@ -1,7 +1,7 @@
 export module boring32:winsock_tcpsocket;
 import boring32.shared;
-import boring32.error;
-import boring32.strings;
+import :error;
+import :strings;
 import :winsock_uniqueptrs;
 import :winsock_winsockerror;
 import :winsock_resolvedname;

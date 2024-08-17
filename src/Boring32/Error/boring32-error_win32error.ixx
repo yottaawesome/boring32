@@ -1,7 +1,7 @@
-export module boring32.error:win32error;
+export module boring32:error_win32error;
 import boring32.shared;
-import :boring32error;
-import :functions;
+import :error_boring32error;
+import :error_functions;
 
 export namespace Boring32::Error
 {

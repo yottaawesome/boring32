@@ -1,6 +1,6 @@
 export module boring32:logging_functions;
 import boring32.shared;
-import boring32.concepts;
+import :concepts;
 
 export namespace Boring32::Logging
 {

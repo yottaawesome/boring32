@@ -1,4 +1,4 @@
-export module boring32.raii:handle;
+export module boring32:raii_handle;
 import boring32.shared;
 //https://docs.microsoft.com/en-us/windows/win32/sysinfo/kernel-objects
 

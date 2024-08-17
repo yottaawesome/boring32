@@ -1,7 +1,7 @@
 export module boring32:async_cmdrunner;
 import boring32.shared;
-import boring32.error;
-import boring32.strings;
+import :error;
+import :strings;
 
 namespace Boring32::Async
 {

@@ -1,9 +1,9 @@
 export module boring32:async_functions;
 import boring32.shared;
-import boring32.raii;
-import boring32.strings;
-import boring32.error;
-import boring32.concepts;
+import :raii;
+import :strings;
+import :error;
+import :concepts;
 
 export namespace Boring32::Async
 {

@@ -1,6 +1,6 @@
 export module boring32:services_service;
 import boring32.shared;
-import boring32.error;
+import :error;
 import :services_raii;
 
 export namespace Boring32::Services

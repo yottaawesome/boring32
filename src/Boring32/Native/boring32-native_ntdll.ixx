@@ -1,6 +1,6 @@
 export module boring32:native_ntdll;
-import boring32.error;
 import boring32.shared;
+import :error;
 import :native_defs;
 
 export namespace Boring32::Native

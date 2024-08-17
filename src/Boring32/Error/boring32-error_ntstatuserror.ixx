@@ -1,7 +1,7 @@
-export module boring32.error:ntstatuserror;
-import :boring32error;
-import :functions;
+export module boring32:error_ntstatuserror;
 import boring32.shared;
+import :error_boring32error;
+import :error_functions;
 
 export namespace Boring32::Error
 {

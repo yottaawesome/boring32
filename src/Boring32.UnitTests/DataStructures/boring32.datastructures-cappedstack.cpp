@@ -2,7 +2,6 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 import boring32;
-import boring32.error;
 
 namespace DataStructures
 {

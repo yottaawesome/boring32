@@ -7,7 +7,7 @@ export module boring32:security_policy;
 //#include <winnt.h>
 //#include <Ntsecapi.h>
 import boring32.shared;
-import boring32.error;
+import :error;
 import :security_lsaunicodestring;
 
 namespace Boring32::Security

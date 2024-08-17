@@ -1,5 +1,5 @@
 export module boring32.unit_tests:strings_tests;
-import boring32.strings;
+import boring32;
 import boring32.win32;
 import :framework;
 

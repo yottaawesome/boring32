@@ -8,8 +8,8 @@ module;
 
 export module boring32:crypto_certstore;
 import boring32.shared;
-import boring32.strings;
-import boring32.error;
+import :strings;
+import :error;
 import :crypto_functions;
 import :crypto_certificate;
 

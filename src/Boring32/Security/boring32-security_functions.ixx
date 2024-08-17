@@ -1,7 +1,7 @@
 export module boring32:security_functions;
 import boring32.shared;
-import boring32.raii;
-import boring32.error;
+import :raii;
+import :error;
 import :security_constants;
 
 namespace Boring32::Security

@@ -2,8 +2,7 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-import boring32.util;
-import boring32.error;
+import boring32;
 
 namespace Util
 {

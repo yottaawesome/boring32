@@ -1,7 +1,7 @@
 export module boring32:async_filemapping;
 import boring32.shared;
-import boring32.raii;
-import boring32.error;
+import :raii;
+import :error;
 
 #define LODWORD(_qw)    ((DWORD)(_qw))
 #define HIDWORD(_qw)    ((DWORD)(((_qw) >> 32) & 0xffffffff))

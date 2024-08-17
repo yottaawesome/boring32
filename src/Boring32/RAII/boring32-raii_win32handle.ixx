@@ -1,6 +1,6 @@
-export module boring32.raii:win32handle;
+export module boring32:raii_win32handle;
 import boring32.shared;
-import boring32.error;
+import :error;
 
 export namespace Boring32::RAII
 {

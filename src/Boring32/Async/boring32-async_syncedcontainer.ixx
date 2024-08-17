@@ -2,7 +2,7 @@ export module boring32:async_syncedcontainer;
 import std;
 import std.compat;
 import boring32.win32;
-import boring32.error;
+import :error;
 import :async_criticalsectionlock;
 
 export namespace Boring32::Async

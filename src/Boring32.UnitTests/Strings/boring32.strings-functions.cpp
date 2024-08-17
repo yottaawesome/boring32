@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 
-import boring32.strings;
+import boring32;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace Strings

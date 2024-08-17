@@ -1,8 +1,8 @@
-export module boring32.util:guid;
+export module boring32:util_guid;
 import boring32.shared;
-import boring32.error;
-import boring32.strings;
-import :functions;
+import :error;
+import :strings;
+import :util_functions;
 
 export namespace Boring32::Util
 {

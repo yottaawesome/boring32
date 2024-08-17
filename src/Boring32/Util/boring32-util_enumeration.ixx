@@ -1,6 +1,6 @@
-export module boring32.util:enumeration;
+export module boring32:util_enumeration;
 import boring32.shared;
-import boring32.error;
+import :error;
 
 export namespace Boring32::Util
 {

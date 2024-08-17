@@ -1,5 +1,5 @@
 export module boring32:security_impersonationcontext;
-import boring32.error;
+import :error;
 import boring32.shared;
 
 export namespace Boring32::Security

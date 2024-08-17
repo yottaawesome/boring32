@@ -1,6 +1,6 @@
 export module boring32:winsock_resolvedname;
 import boring32.shared;
-import boring32.error;
+import :error;
 import :winsock_uniqueptrs;
 import :winsock_winsockerror;
 

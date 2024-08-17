@@ -1,8 +1,8 @@
 export module boring32:async_waitable;
 import boring32.shared;
-import boring32.error;
+import :error;
 import :async_functions;
-import boring32.concepts;
+import :concepts;
 
 export namespace Boring32::Async
 {

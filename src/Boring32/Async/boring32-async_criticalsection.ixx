@@ -1,6 +1,6 @@
 export module boring32:async_criticalsection;
-import boring32.error;
 import boring32.win32;
+import :error;
 
 export namespace Boring32::Async
 {

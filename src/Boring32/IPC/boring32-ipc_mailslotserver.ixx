@@ -1,7 +1,7 @@
 export module boring32:ipc_mailslotserver;
 import boring32.shared;
-import boring32.error;
-import boring32.raii;
+import :error;
+import :raii;
 
 export namespace Boring32::IPC
 {

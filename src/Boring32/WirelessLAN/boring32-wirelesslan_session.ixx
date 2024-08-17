@@ -1,6 +1,6 @@
 export module boring32:wirelesslan_session;
 import boring32.shared;
-import boring32.error;
+import :error;
 import :wirelesslan_cleanup;
 import :wirelesslan_wirelessinterfaces;
 

@@ -1,7 +1,7 @@
 export module boring32:registry_functions;
 import boring32.shared;
-import boring32.error;
-import boring32.concepts;
+import :error;
+import :concepts;
 import :async;
 
 export namespace Boring32::Registry

@@ -1,7 +1,7 @@
 export module boring32:computer_processinfo;
 import boring32.shared;
-import boring32.raii;
-import boring32.error;
+import :raii;
+import :error;
 import :computer_functions;
 
 export namespace Boring32::Computer

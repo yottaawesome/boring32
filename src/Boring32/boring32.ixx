@@ -1,9 +1,8 @@
 export module boring32;
-export import boring32.raii;
-export import boring32.strings;
-export import boring32.error;
-export import boring32.util;
-export import boring32.concepts;
+export import :raii;
+export import :strings;
+export import :error;
+export import :util;
 export import :wirelesslan;
 export import :xaudio2;
 export import :time;
@@ -34,3 +33,4 @@ export import :com;
 export import :io;
 export import :async;
 export import :taskscheduler;
+export import :concepts;

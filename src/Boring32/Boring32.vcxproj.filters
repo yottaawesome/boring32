@@ -18,19 +18,19 @@
     <ClCompile Include="WinHttp\boring32-winhttp_asyncwebsocket_statuscallback.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Strings\boring32.strings.ixx" />
+    <ClCompile Include="Strings\boring32-strings.ixx" />
     <ClCompile Include="Async\boring32-async_threadpool.ixx" />
     <ClCompile Include="Async\boring32-async_semaphore.ixx" />
     <ClCompile Include="Async\boring32-async_filemapping.ixx" />
     <ClCompile Include="FileSystem\boring32-filesystem_file.ixx" />
-    <ClCompile Include="RAII\boring32.raii-win32handle.ixx" />
+    <ClCompile Include="RAII\boring32-raii_win32handle.ixx" />
     <ClCompile Include="COM\boring32-com_comthreadscope.ixx" />
     <ClCompile Include="Compression\boring32-compression.ixx" />
     <ClCompile Include="Compression\boring32-compression_compressor.ixx" />
     <ClCompile Include="Compression\boring32-compression_decompressor.ixx" />
     <ClCompile Include="Time\boring32-time.ixx" />
     <ClCompile Include="Process\boring32-process_dynamiclinklibrary.ixx" />
-    <ClCompile Include="Util\boring32.util.ixx" />
+    <ClCompile Include="Util\boring32-util.ixx" />
     <ClCompile Include="DataStructures\boring32-datastructures_cappedstack.ixx" />
     <ClCompile Include="DataStructures\boring32-datastructures_singlylinkedlist.ixx" />
     <ClCompile Include="DataStructures\boring32-datastructures.ixx" />
@@ -40,18 +40,18 @@
     <ClCompile Include="TaskScheduler\boring32-taskscheduler_taskfolder.ixx" />
     <ClCompile Include="TaskScheduler\boring32-taskscheduler_taskservice.ixx" />
     <ClCompile Include="TaskScheduler\boring32-taskscheduler.ixx" />
-    <ClCompile Include="Error\boring32.error-functions.ixx" />
-    <ClCompile Include="Error\boring32.error-win32error.ixx" />
-    <ClCompile Include="Error\boring32.error.ixx" />
-    <ClCompile Include="Error\boring32.error-comerror.ixx" />
-    <ClCompile Include="Error\boring32.error-ntstatuserror.ixx" />
+    <ClCompile Include="Error\boring32-error_functions.ixx" />
+    <ClCompile Include="Error\boring32-error_win32error.ixx" />
+    <ClCompile Include="Error\boring32-error.ixx" />
+    <ClCompile Include="Error\boring32-error_comerror.ixx" />
+    <ClCompile Include="Error\boring32-error_ntstatuserror.ixx" />
     <ClCompile Include="Async\boring32-async_job.ixx" />
     <ClCompile Include="Async\boring32-async_mutex.ixx" />
     <ClCompile Include="Async\boring32-async_synchronizationbarrier.ixx" />
     <ClCompile Include="Async\boring32-async_criticalsectionlock.ixx" />
     <ClCompile Include="Async\boring32-async_waitabletimer.ixx" />
     <ClCompile Include="Async\boring32-async_event.ixx" />
-    <ClCompile Include="RAII\boring32.raii-uniqueptrs.ixx" />
+    <ClCompile Include="RAII\boring32-raii_uniqueptrs.ixx" />
     <ClCompile Include="Async\boring32-async_timerqueue.ixx" />
     <ClCompile Include="Async\boring32-async_mutev.ixx" />
     <ClCompile Include="Async\boring32-async_threadsafevector.ixx" />
@@ -94,8 +94,8 @@
     <ClCompile Include="WinHttp\boring32-winhttp_session.ixx" />
     <ClCompile Include="Async\boring32-async_slimreadwritelock.ixx" />
     <ClCompile Include="Async\boring32-async_eventloop.ixx" />
-    <ClCompile Include="Error\boring32.error-errorbase.ixx" />
-    <ClCompile Include="Util\boring32.util-switcher.ixx" />
+    <ClCompile Include="Error\boring32-error_errorbase.ixx" />
+    <ClCompile Include="Util\boring32-util_switcher.ixx" />
     <ClCompile Include="WinHttp\boring32-winhttp_winhttperror.ixx" />
     <ClCompile Include="Security\boring32-security_securitydescriptor.ixx" />
     <ClCompile Include="Async\boring32-async_processinfo.ixx" />
@@ -109,7 +109,7 @@
     <ClCompile Include="Async\boring32-async_overlappedio.ixx" />
     <ClCompile Include="Async\boring32-async_overlappedop.ixx" />
     <ClCompile Include="Security\boring32-security.ixx" />
-    <ClCompile Include="RAII\boring32.raii.ixx" />
+    <ClCompile Include="RAII\boring32-raii.ixx" />
     <ClCompile Include="Process\boring32-process.ixx" />
     <ClCompile Include="FileSystem\boring32-filesystem_functions.ixx" />
     <ClCompile Include="COM\boring32-com.ixx" />
@@ -121,7 +121,7 @@
     <ClCompile Include="XAudio2\boring32-xaudio2_masteringvoice.ixx" />
     <ClCompile Include="XAudio2\boring32-xaudio2_sourcevoice.ixx" />
     <ClCompile Include="XAudio2\boring32-xaudio2_functions.ixx" />
-    <ClCompile Include="Error\boring32.error-boring32error.ixx" />
+    <ClCompile Include="Error\boring32-error_boring32error.ixx" />
     <ClCompile Include="XAudio2\boring32-xaudio2_xaudio2error.ixx" />
     <ClCompile Include="Compression\boring32-compression_compressionerror.ixx" />
     <ClCompile Include="Compression\boring32-compression_deleters.ixx" />
@@ -140,13 +140,13 @@
     <ClCompile Include="WinSock\boring32-winsock_uniqueptrs.ixx" />
     <ClCompile Include="WinSock\boring32-winsock_winsockerror.ixx" />
     <ClCompile Include="WinSock\boring32-winsock.ixx" />
-    <ClCompile Include="Util\boring32.util-functions.ixx" />
+    <ClCompile Include="Util\boring32-util_functions.ixx" />
     <ClCompile Include="WinHttp\boring32-winhttp.ixx" />
     <ClCompile Include="Async\boring32-async.ixx" />
-    <ClCompile Include="Util\boring32.util-globallyuniqueid.ixx" />
+    <ClCompile Include="Util\boring32-util_globallyuniqueid.ixx" />
     <ClCompile Include="Services\boring32-services.ixx" />
     <ClCompile Include="Services\boring32-services_functions.ixx" />
-    <ClCompile Include="RAII\boring32.raii-handle.ixx" />
+    <ClCompile Include="RAII\boring32-raii_handle.ixx" />
     <ClCompile Include="WinHttp\boring32-winhttp_handles.ixx" />
     <ClCompile Include="Computer\boring32-computer.ixx" />
     <ClCompile Include="Computer\boring32-computer_functions.ixx" />
@@ -196,7 +196,7 @@
     <ClCompile Include="Memory\boring32-memory-functions.ixx" />
     <ClCompile Include="Memory\boring32-memory-heap.ixx" />
     <ClCompile Include="TaskScheduler\boring32-taskscheduler_registeredtask.ixx" />
-    <ClCompile Include="Util\boring32.util-enumeration.ixx" />
+    <ClCompile Include="Util\boring32-util_enumeration.ixx" />
     <ClCompile Include="Memory\boring32-memory-virtualaddress.ixx" />
     <ClCompile Include="Async\boring32-async_sharedmap.ixx" />
     <ClCompile Include="Async\boring32-async_criticalsection.ixx" />
@@ -221,11 +221,11 @@
     </ClCompile>
     <ClCompile Include="StrongTypes\boring32-strongtypes_functionalities.ixx" />
     <ClCompile Include="StrongTypes\boring32-strongtypes_impl.ixx" />
-    <ClCompile Include="Strings\boring32.strings-fixedstring.ixx" />
+    <ClCompile Include="Strings\boring32-strings_fixedstring.ixx" />
     <ClCompile Include="Async\boring32-async_cmdrunner.ixx" />
-    <ClCompile Include="Util\boring32.util-range.ixx" />
+    <ClCompile Include="Util\boring32-util_range.ixx" />
     <ClCompile Include="Shell\boring32-shell.ixx" />
-    <ClCompile Include="Concepts\boring32.concepts.ixx" />
+    <ClCompile Include="Concepts\boring32-concepts.ixx" />
     <ClCompile Include="Registry\boring32-registry_registryvalue.ixx" />
     <ClCompile Include="WinSock\boring32-winsock_resolvedname.ixx" />
     <ClCompile Include="Security\boring32-security_level.ixx" />

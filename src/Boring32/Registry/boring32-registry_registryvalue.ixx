@@ -1,8 +1,8 @@
 export module boring32:registry_registryvalue;
 import boring32.shared;
-import boring32.error;
-import boring32.strings;
-import boring32.concepts;
+import :error;
+import :strings;
+import :concepts;
 
 namespace Boring32::Registry
 {
