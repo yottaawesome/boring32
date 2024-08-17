@@ -1,4 +1,4 @@
-export module boring32.com:functions;
+export module boring32:com_functions;
 import boring32.shared;
 
 export namespace Boring32::COM

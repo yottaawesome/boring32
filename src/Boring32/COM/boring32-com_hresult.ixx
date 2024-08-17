@@ -1,7 +1,7 @@
-export module boring32.com:hresult;
+export module boring32:com_hresult;
 import boring32.shared;
 import boring32.error;
-import :functions;
+import :com_functions;
 
 export namespace Boring32::COM
 {

@@ -24,7 +24,7 @@
     <ClCompile Include="Async\boring32.async-filemapping.ixx" />
     <ClCompile Include="FileSystem\boring32-filesystem_file.ixx" />
     <ClCompile Include="RAII\boring32.raii-win32handle.ixx" />
-    <ClCompile Include="COM\boring32.com-comthreadscope.ixx" />
+    <ClCompile Include="COM\boring32-com_comthreadscope.ixx" />
     <ClCompile Include="Compression\boring32-compression.ixx" />
     <ClCompile Include="Compression\boring32-compression_compressor.ixx" />
     <ClCompile Include="Compression\boring32-compression_decompressor.ixx" />
@@ -112,7 +112,7 @@
     <ClCompile Include="RAII\boring32.raii.ixx" />
     <ClCompile Include="Process\boring32-process.ixx" />
     <ClCompile Include="FileSystem\boring32-filesystem_functions.ixx" />
-    <ClCompile Include="COM\boring32.com.ixx" />
+    <ClCompile Include="COM\boring32-com.ixx" />
     <ClCompile Include="Crypto\boring32-crypto.ixx" />
     <ClCompile Include="XAudio2\boring32-xaudio2.ixx" />
     <ClCompile Include="XAudio2\boring32-xaudio2_engine.ixx" />
@@ -182,7 +182,7 @@
     <ClCompile Include="SSPI\boring32-sspi_contextbuffer.ixx" />
     <ClCompile Include="SSPI\boring32-sspi_sizedcontextbuffer.ixx" />
     <ClCompile Include="SSPI\boring32-sspi_buffertype.ixx" />
-    <ClCompile Include="COM\boring32.com-functions.ixx" />
+    <ClCompile Include="COM\boring32-com_functions.ixx" />
     <ClCompile Include="SSPI\Credential\boring32-sspi_provider_credential.ixx" />
     <ClCompile Include="SSPI\Digest\boring32-sspi_provider_digest.ixx" />
     <ClCompile Include="SSPI\Kerberos\boring32-sspi_provider_kerberos.ixx" />
@@ -190,7 +190,7 @@
     <ClCompile Include="SSPI\NTLM\boring32-sspi_provider_ntlm.ixx" />
     <ClCompile Include="SSPI\PKU2U\boring32-sspi_provider_pku2u.ixx" />
     <ClCompile Include="SSPI\Schannel\boring32-sspi_provider_schannel.ixx" />
-    <ClCompile Include="COM\boring32.com-hresult.ixx" />
+    <ClCompile Include="COM\boring32-com_hresult.ixx" />
     <ClCompile Include="WinSock\boring32-winsock_socket.ixx" />
     <ClCompile Include="Memory\boring32-memory.ixx" />
     <ClCompile Include="Memory\boring32-memory-functions.ixx" />
