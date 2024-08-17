@@ -134,12 +134,12 @@
     <ClCompile Include="WindowsFilteringPlatform\boring32-windowsfilteringplatform_filter.ixx" />
     <ClCompile Include="WindowsFilteringPlatform\boring32-windowsfilteringplatform_providercontext.ixx" />
     <ClCompile Include="WindowsFilteringPlatform\boring32-windowsfilteringplatform_functions.ixx" />
-    <ClCompile Include="WinSock\boring32.winsock-winsockinit.ixx" />
-    <ClCompile Include="WinSock\boring32.winsock-functions.ixx" />
-    <ClCompile Include="WinSock\boring32.winsock-tcpsocket.ixx" />
-    <ClCompile Include="WinSock\boring32.winsock-uniqueptrs.ixx" />
-    <ClCompile Include="WinSock\boring32.winsock-winsockerror.ixx" />
-    <ClCompile Include="WinSock\boring32.winsock.ixx" />
+    <ClCompile Include="WinSock\boring32-winsock_winsockinit.ixx" />
+    <ClCompile Include="WinSock\boring32-winsock_functions.ixx" />
+    <ClCompile Include="WinSock\boring32-winsock_tcpsocket.ixx" />
+    <ClCompile Include="WinSock\boring32-winsock_uniqueptrs.ixx" />
+    <ClCompile Include="WinSock\boring32-winsock_winsockerror.ixx" />
+    <ClCompile Include="WinSock\boring32-winsock.ixx" />
     <ClCompile Include="Util\boring32.util-functions.ixx" />
     <ClCompile Include="WinHttp\boring32-winhttp.ixx" />
     <ClCompile Include="Async\boring32.async.ixx" />
@@ -191,7 +191,7 @@
     <ClCompile Include="SSPI\PKU2U\boring32.sspi.provider.pku2u.ixx" />
     <ClCompile Include="SSPI\Schannel\boring32.sspi.provider.schannel.ixx" />
     <ClCompile Include="COM\boring32.com-hresult.ixx" />
-    <ClCompile Include="WinSock\boring32.winsock-socket.ixx" />
+    <ClCompile Include="WinSock\boring32-winsock_socket.ixx" />
     <ClCompile Include="Memory\boring32-memory.ixx" />
     <ClCompile Include="Memory\boring32-memory-functions.ixx" />
     <ClCompile Include="Memory\boring32-memory-heap.ixx" />
@@ -227,7 +227,7 @@
     <ClCompile Include="Shell\boring32-shell.ixx" />
     <ClCompile Include="Concepts\boring32.concepts.ixx" />
     <ClCompile Include="Registry\boring32.registry-registryvalue.ixx" />
-    <ClCompile Include="WinSock\boring32.winsock-resolvedname.ixx" />
+    <ClCompile Include="WinSock\boring32-winsock_resolvedname.ixx" />
     <ClCompile Include="Security\boring32.security-level.ixx" />
   </ItemGroup>
 </Project>

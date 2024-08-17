@@ -1,4 +1,4 @@
-export module boring32.winsock:uniqueptrs;
+export module boring32:winsock_uniqueptrs;
 import boring32.shared;
 
 export namespace Boring32::WinSock

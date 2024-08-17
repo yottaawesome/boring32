@@ -1,7 +1,7 @@
-export module boring32.winsock:winsockinit;
+export module boring32:winsock_winsockinit;
 import boring32.error;
 import boring32.shared;
-import :winsockerror;
+import :winsock_winsockerror;
 
 export namespace Boring32::WinSock
 {

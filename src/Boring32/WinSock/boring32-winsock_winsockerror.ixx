@@ -1,4 +1,4 @@
-export module boring32.winsock:winsockerror;
+export module boring32:winsock_winsockerror;
 import boring32.shared;
 import boring32.error;
 
