@@ -34,9 +34,9 @@
     <ClCompile Include="DataStructures\boring32-datastructures_cappedstack.ixx" />
     <ClCompile Include="DataStructures\boring32-datastructures_singlylinkedlist.ixx" />
     <ClCompile Include="DataStructures\boring32-datastructures.ixx" />
-    <ClCompile Include="Registry\boring32.registry-key.ixx" />
-    <ClCompile Include="Registry\boring32.registry-functions.ixx" />
-    <ClCompile Include="Registry\boring32.registry.ixx" />
+    <ClCompile Include="Registry\boring32-registry_key.ixx" />
+    <ClCompile Include="Registry\boring32-registry_functions.ixx" />
+    <ClCompile Include="Registry\boring32-registry.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskfolder.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskservice.ixx" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler.ixx" />
@@ -125,7 +125,7 @@
     <ClCompile Include="XAudio2\boring32-xaudio2_xaudio2error.ixx" />
     <ClCompile Include="Compression\boring32-compression_compressionerror.ixx" />
     <ClCompile Include="Compression\boring32-compression_deleters.ixx" />
-    <ClCompile Include="Registry\boring32.registry-value.ixx" />
+    <ClCompile Include="Registry\boring32-registry_value.ixx" />
     <ClCompile Include="Async\boring32.async-waitableaddress.ixx" />
     <ClCompile Include="WindowsFilteringPlatform\boring32-windowsfilteringplatform.ixx" />
     <ClCompile Include="WindowsFilteringPlatform\boring32-windowsfilteringplatform_engine.ixx" />
@@ -226,7 +226,7 @@
     <ClCompile Include="Util\boring32.util-range.ixx" />
     <ClCompile Include="Shell\boring32-shell.ixx" />
     <ClCompile Include="Concepts\boring32.concepts.ixx" />
-    <ClCompile Include="Registry\boring32.registry-registryvalue.ixx" />
+    <ClCompile Include="Registry\boring32-registry_registryvalue.ixx" />
     <ClCompile Include="WinSock\boring32-winsock_resolvedname.ixx" />
     <ClCompile Include="Security\boring32-security_level.ixx" />
   </ItemGroup>

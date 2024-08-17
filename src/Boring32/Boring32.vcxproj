@@ -282,11 +282,11 @@
     <ClCompile Include="RAII\boring32.raii-handle.ixx" />
     <ClCompile Include="RAII\boring32.raii.ixx" />
     <ClCompile Include="RAII\boring32.raii-uniqueptrs.ixx" />
-    <ClCompile Include="Registry\boring32.registry-functions.ixx" />
-    <ClCompile Include="Registry\boring32.registry-registryvalue.ixx" />
-    <ClCompile Include="Registry\boring32.registry.ixx" />
-    <ClCompile Include="Registry\boring32.registry-key.ixx" />
-    <ClCompile Include="Registry\boring32.registry-value.ixx" />
+    <ClCompile Include="Registry\boring32-registry_functions.ixx" />
+    <ClCompile Include="Registry\boring32-registry_registryvalue.ixx" />
+    <ClCompile Include="Registry\boring32-registry.ixx" />
+    <ClCompile Include="Registry\boring32-registry_key.ixx" />
+    <ClCompile Include="Registry\boring32-registry_value.ixx" />
     <ClCompile Include="Security\boring32-security_constants.ixx" />
     <ClCompile Include="Security\boring32-security_encodedpointer.ixx" />
     <ClCompile Include="Security\boring32-security_functions.ixx" />

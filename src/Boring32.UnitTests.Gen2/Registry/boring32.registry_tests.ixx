@@ -1,5 +1,5 @@
 export module boring32.unit_tests:registry_tests;
-import boring32.registry;
+import boring32;
 import boring32.win32;
 import :framework;
 

@@ -1,4 +1,4 @@
-export module boring32.registry:registryvalue;
+export module boring32:registry_registryvalue;
 import boring32.shared;
 import boring32.error;
 import boring32.strings;

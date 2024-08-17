@@ -1,8 +1,8 @@
-export module boring32.registry:key;
+export module boring32:registry_key;
 import boring32.shared;
 import boring32.error;
-import :functions;
-import :value;
+import :registry_functions;
+import :registry_value;
 
 export namespace Boring32::Registry
 {
