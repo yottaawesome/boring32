@@ -1,4 +1,4 @@
-export module boring32.taskscheduler:registeredtask;
+export module boring32:taskscheduler_registeredtask;
 import boring32.shared;
 import boring32.error;
 
