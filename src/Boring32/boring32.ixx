@@ -31,3 +31,4 @@ export import :security;
 export import :registry;
 export import :ipc;
 export import :com;
+export import :io;

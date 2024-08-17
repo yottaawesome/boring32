@@ -168,8 +168,8 @@
     <ClCompile Include="Services\boring32-services_servicecontrolmanager.ixx" />
     <ClCompile Include="Services\boring32-services_raii.ixx" />
     <ClCompile Include="Services\boring32-services_service.ixx" />
-    <ClCompile Include="IO\boring32.io.ixx" />
-    <ClCompile Include="IO\boring32.io-completionport.ixx" />
+    <ClCompile Include="IO\boring32-io.ixx" />
+    <ClCompile Include="IO\boring32-io_completionport.ixx" />
     <ClCompile Include="Security\boring32-security_policy.ixx" />
     <ClCompile Include="Security\boring32-security_lsaunicodestring.cpp" />
     <ClCompile Include="Logging\boring32-logging.ixx" />

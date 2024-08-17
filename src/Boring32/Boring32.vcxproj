@@ -252,8 +252,8 @@
     <ClCompile Include="FileSystem\boring32-filesystem_directory.ixx" />
     <ClCompile Include="FileSystem\boring32-filesystem_functions.ixx" />
     <ClCompile Include="FileSystem\boring32-filesystem.ixx" />
-    <ClCompile Include="IO\boring32.io-completionport.ixx" />
-    <ClCompile Include="IO\boring32.io.ixx" />
+    <ClCompile Include="IO\boring32-io_completionport.ixx" />
+    <ClCompile Include="IO\boring32-io.ixx" />
     <ClCompile Include="IPC\boring32-ipc_blockingnamedpipeclient.ixx" />
     <ClCompile Include="IPC\boring32-ipc_blockingnamedpipeserver.ixx" />
     <ClCompile Include="IPC\boring32-ipc_anonymouspipe.ixx" />
