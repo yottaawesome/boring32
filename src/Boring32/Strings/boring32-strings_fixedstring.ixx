@@ -112,7 +112,7 @@ export namespace Boring32::Strings
 	}
 
 	template<size_t N>
-	using WideFixedString = FixedString<wchar_t, std::wstring_view, std::wstring, N>;
+	using FixedStringW = FixedString<wchar_t, std::wstring_view, std::wstring, N>;
 	template<size_t N>
-	using NarrowFixedString = FixedString<char, std::string_view, std::string, N>;
+	using FixedStringA = FixedString<char, std::string_view, std::string, N>;
 }
