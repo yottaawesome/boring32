@@ -215,6 +215,7 @@
     <ClCompile Include="Security\boring32.security-securitydescriptor.cpp" />
     <ClCompile Include="Security\boring32.security-functions.cpp" />
     <ClCompile Include="Services\boring32.services-servicecontrolmanager.cpp" />
+    <ClCompile Include="Strings\boring32-strings_fixedstring.cpp" />
     <ClCompile Include="Strings\boring32.strings-functions.cpp" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskservice.cpp" />
     <ClCompile Include="TaskScheduler\boring32.taskscheduler-taskfolder.cpp" />

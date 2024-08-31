@@ -168,6 +168,9 @@
     <ClCompile Include="Async\Async\boring32.async-waitable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Strings\boring32-strings_fixedstring.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">

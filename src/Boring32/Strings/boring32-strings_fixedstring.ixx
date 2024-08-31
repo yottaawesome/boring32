@@ -22,7 +22,7 @@ export namespace Boring32::Strings
 
 		TChar buf[N]{};
 
-		consteval FixedString(const TChar(&arg)[N]) noexcept
+		constexpr FixedString(const TChar(&arg)[N]) noexcept
 		{
 			std::copy_n(arg, N, buf);
 		}
@@ -41,12 +41,12 @@ export namespace Boring32::Strings
 			return buf;
 		}
 
-		consteval TView ToView() const noexcept
+		constexpr TView ToView() const noexcept
 		{
 			return { buf };
 		}
 
-		consteval operator TView() const noexcept
+		constexpr operator TView() const noexcept
 		{
 			return { buf };
 		}
@@ -61,19 +61,32 @@ export namespace Boring32::Strings
 			return { buf };
 		}
 
-		consteval bool operator==(const FixedString<TChar, TView, TString, N> str) const
+		template<size_t M>
+		constexpr bool operator==(const TChar(&str)[M]) const noexcept
+		{
+			return false;
+		}
+
+		constexpr bool operator==(const TChar(&str)[N]) const noexcept
+		{
+			return std::equal(str, str + N, buf);
+		}
+
+		constexpr bool operator==(const FixedString<TChar, TView, TString, N> str) const
 		{
 			return std::equal(str.buf, str.buf + N, buf);
 		}
 
+		constexpr size_t Size() const noexcept { return N-1; }
+
 		template<ValidCharType TChar, ValidViewType TView, ValidStringType TString, std::size_t N2>
-		consteval bool operator==(const FixedString<TChar, TView, TString, N2> s) const
+		constexpr bool operator==(const FixedString<TChar, TView, TString, N2> s) const
 		{
 			return false;
 		}
 
 		template<std::size_t N2>
-		consteval FixedString<TChar, TView, TString, N + N2 - 1> operator+(const FixedString<TChar, TView, TString, N2> str) const
+		constexpr FixedString<TChar, TView, TString, N + N2 - 1> operator+(const FixedString<TChar, TView, TString, N2> str) const
 		{
 			TChar newchar[N + N2 - 1]{};
 			std::copy_n(buf, N - 1, newchar);
@@ -87,13 +100,13 @@ export namespace Boring32::Strings
 	FixedString(wchar_t const (&)[N]) -> FixedString<wchar_t, std::wstring_view, std::wstring, N>;
 
 	template<ValidCharType TChar, ValidViewType TView, ValidStringType TString, std::size_t s1, std::size_t s2>
-	consteval auto operator+(FixedString<TChar, TView, TString, s1> fs, const TChar(&str)[s2])
+	constexpr auto operator+(FixedString<TChar, TView, TString, s1> fs, const TChar(&str)[s2])
 	{
 		return fs + FixedString<TChar, TView, TString, s2>(str);
 	}
 
 	template<ValidCharType TChar, ValidViewType TView, ValidStringType TString, std::size_t s1, std::size_t s2>
-	consteval auto operator+(const TChar(&str)[s2], FixedString<TChar, TView, TString, s1> fs)
+	constexpr auto operator+(const TChar(&str)[s2], FixedString<TChar, TView, TString, s1> fs)
 	{
 		return FixedString<s2>(str) + fs;
 	}
