@@ -8,22 +8,12 @@ export namespace Boring32::Time
 {
 	class DateTime final
 	{
-		// The Six
 		public:
-			virtual ~DateTime() = default;
-			
 			DateTime()
 			{
 				Win32::GetSystemTimeAsFileTime(&m_ft);
 			}
 
-			DateTime(const DateTime& dateTime) = default;
-			DateTime& operator=(const DateTime&) = default;
-
-			DateTime(DateTime&& dateTime) noexcept = default;
-			DateTime& operator=(DateTime&&) noexcept = default;
-
-		public:
 			DateTime(const Win32::SYSTEMTIME& st)
 			{
 				if (!Win32::SystemTimeToFileTime(&st, &m_ft))
