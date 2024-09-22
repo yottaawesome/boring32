@@ -229,5 +229,6 @@
     <ClCompile Include="Registry\boring32-registry_registryvalue.ixx" />
     <ClCompile Include="WinSock\boring32-winsock_resolvedname.ixx" />
     <ClCompile Include="Security\boring32-security_level.ixx" />
+    <ClCompile Include="Error\boring32-error_win32errorcodes.ixx" />
   </ItemGroup>
 </Project>

@@ -189,7 +189,7 @@ export namespace Boring32::Win32
 
 	using ::SERVICE_CONTROL_STATUS_REASON_PARAMS;
 
-	WORD MakeWord(DWORD a, DWORD b)
+	constexpr WORD MakeWord(DWORD a, DWORD b)
 	{
 		return MAKEWORD(a, b);
 	}
@@ -244,12 +244,12 @@ export namespace Boring32::Win32
 		Write = FILE_MAP_WRITE
 	};
 
-	inline ::DWORD LowDWord(auto _qw) noexcept
+	inline constexpr ::DWORD LowDWord(auto _qw) noexcept
 	{
 		return LODWORD(_qw);
 	}
 
-	inline ::DWORD HighDWord(auto _qw) noexcept
+	inline constexpr ::DWORD HighDWord(auto _qw) noexcept
 	{
 		return HIDWORD(_qw);
 	}
@@ -259,22 +259,22 @@ export namespace Boring32::Win32
 		return MAKE_HRESULT(severity, facility, code);
 	}
 
-	inline long Facility(const HRESULT hr) noexcept
+	inline constexpr long Facility(const HRESULT hr) noexcept
 	{
 		return HRESULT_FACILITY(hr);
 	}
 
-	inline long Code(const HRESULT hr) noexcept
+	inline constexpr long Code(const HRESULT hr) noexcept
 	{
 		return HRESULT_CODE(hr);
 	}
 
-	inline long Severity(const HRESULT hr) noexcept
+	inline constexpr long Severity(const HRESULT hr) noexcept
 	{
 		return HRESULT_SEVERITY(hr);
 	}
 
-	inline bool HrFailed(const HRESULT hr) noexcept
+	inline constexpr bool HrFailed(const HRESULT hr) noexcept
 	{
 		return FAILED(hr);
 	}
