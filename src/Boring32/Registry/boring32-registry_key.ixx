@@ -241,15 +241,15 @@ export namespace Boring32::Registry
 
 			static bool IsPredefinedKey(Win32::Winreg::HKEY const key) noexcept
 			{
-				if (key == Win32::Winreg::_HKEY_CLASSES_ROOT)
+				if (key == Win32::Winreg::Keys::HKCR)
 					return true;
-				if (key == Win32::Winreg::_HKEY_CURRENT_CONFIG)
+				if (key == Win32::Winreg::Keys::HKCC)
 					return true;
-				if (key == Win32::Winreg::_HKEY_CURRENT_USER)
+				if (key == Win32::Winreg::Keys::HKCU)
 					return true;
-				if (key == Win32::Winreg::_HKEY_LOCAL_MACHINE)
+				if (key == Win32::Winreg::Keys::HKLM)
 					return true;
-				if (key == Win32::Winreg::_HKEY_USERS)
+				if (key == Win32::Winreg::Keys::HKU)
 					return true;
 				return false;
 			}

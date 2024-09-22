@@ -4,6 +4,15 @@ module;
 
 export module boring32.win32;
 
+template<auto VValue, typename TValue = decltype(VValue)>
+struct Constant
+{
+	constexpr operator TValue() const noexcept
+	{
+		return VValue;
+	}
+};
+
 // Experimental module intended to decouple the codebase from having to import Windows headers.
 export namespace Boring32::Win32
 {
@@ -207,7 +216,7 @@ export namespace Boring32::Win32
 
 	constexpr auto UsageMatchTypeAnd = USAGE_MATCH_TYPE_AND;
 
-	const auto StdOutputHandle = STD_OUTPUT_HANDLE;
+	constexpr Constant<STD_OUTPUT_HANDLE> StdOutputHandle;
 
 	enum class EncryptOptions
 	{
@@ -244,37 +253,37 @@ export namespace Boring32::Win32
 		Write = FILE_MAP_WRITE
 	};
 
-	inline constexpr ::DWORD LowDWord(auto _qw) noexcept
+	constexpr ::DWORD LowDWord(auto _qw) noexcept
 	{
 		return LODWORD(_qw);
 	}
 
-	inline constexpr ::DWORD HighDWord(auto _qw) noexcept
+	constexpr ::DWORD HighDWord(auto _qw) noexcept
 	{
 		return HIDWORD(_qw);
 	}
 
-	inline HRESULT MakeHResult(const long severity, const long facility, const long code) noexcept
+	constexpr HRESULT MakeHResult(const long severity, const long facility, const long code) noexcept
 	{
 		return MAKE_HRESULT(severity, facility, code);
 	}
 
-	inline constexpr long Facility(const HRESULT hr) noexcept
+	constexpr long Facility(const HRESULT hr) noexcept
 	{
 		return HRESULT_FACILITY(hr);
 	}
 
-	inline constexpr long Code(const HRESULT hr) noexcept
+	constexpr long Code(const HRESULT hr) noexcept
 	{
 		return HRESULT_CODE(hr);
 	}
 
-	inline constexpr long Severity(const HRESULT hr) noexcept
+	constexpr long Severity(const HRESULT hr) noexcept
 	{
 		return HRESULT_SEVERITY(hr);
 	}
 
-	inline constexpr bool HrFailed(const HRESULT hr) noexcept
+	constexpr bool HrFailed(const HRESULT hr) noexcept
 	{
 		return FAILED(hr);
 	}
@@ -353,7 +362,7 @@ export namespace Boring32::Win32
 
 	constexpr auto LocaleNameInvariant = LOCALE_NAME_INVARIANT;
 
-	inline bool BCryptSuccess(NTSTATUS status) noexcept
+	constexpr bool BCryptSuccess(NTSTATUS status) noexcept
 	{
 		return BCRYPT_SUCCESS(status);
 	}
@@ -798,12 +807,12 @@ export namespace Boring32::Win32
 	constexpr auto _BCRYPT_BLOCK_PADDING = BCRYPT_BLOCK_PADDING;
 
 	// https://blog.katastros.com/a?ID=00750-8d94e2aa-ea28-4faf-b67d-57642f88b0bb
-	inline bool NT_SUCCESS(const NTSTATUS status) noexcept
+	constexpr bool NT_SUCCESS(const NTSTATUS status) noexcept
 	{
 		return status >= 0;
 	}
 
-	inline bool NT_ERROR(const NTSTATUS status) noexcept
+	constexpr bool NT_ERROR(const NTSTATUS status) noexcept
 	{
 		return status < 0;
 	}
@@ -1287,17 +1296,15 @@ export namespace Boring32::Win32::Winreg
 		template<HKEY VKey>
 		struct Key
 		{
-			operator HKEY() const noexcept { return VKey; }
+			constexpr operator HKEY() const noexcept { return VKey; }
 		};
 
 		constexpr Key<HKEY_CLASSES_ROOT> HKCR;
+		constexpr Key<HKEY_CURRENT_CONFIG> HKCC;
+		constexpr Key<HKEY_CURRENT_USER> HKCU;
+		constexpr Key<HKEY_LOCAL_MACHINE> HKLM;
+		constexpr Key<HKEY_USERS> HKU;
 	}
-
-	const auto _HKEY_CLASSES_ROOT = HKEY_CLASSES_ROOT;
-	const auto _HKEY_CURRENT_CONFIG = HKEY_CURRENT_CONFIG;
-	const auto _HKEY_CURRENT_USER = HKEY_CURRENT_USER;
-	const auto _HKEY_LOCAL_MACHINE = HKEY_LOCAL_MACHINE;
-	const auto _HKEY_USERS = HKEY_USERS;
 
 	constexpr auto _RRF_RT_REG_SZ = RRF_RT_REG_SZ;
 	constexpr auto _RRF_RT_REG_DWORD = RRF_RT_REG_DWORD;

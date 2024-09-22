@@ -382,15 +382,15 @@ export namespace Boring32::Registry
 		static constexpr std::wstring_view Name =
 			[]() constexpr
 			{
-				if constexpr (Parent == Win32::Winreg::_HKEY_CLASSES_ROOT)
+				if constexpr (Parent == Win32::Winreg::Keys::HKCC)
 					return L"HKEY_CLASSES_ROOT";
-				else if constexpr (Parent == Win32::Winreg::_HKEY_CURRENT_CONFIG)
+				else if constexpr (Parent == Win32::Winreg::Keys::HKCC)
 					return L"HKEY_CURRENT_CONFIG";
-				else if constexpr (Parent == Win32::Winreg::_HKEY_CURRENT_USER)
+				else if constexpr (Parent == Win32::Winreg::Keys::HKCU)
 					return L"HKEY_CURRENT_USER";
-				else if constexpr (Parent == Win32::Winreg::_HKEY_LOCAL_MACHINE)
+				else if constexpr (Parent == Win32::Winreg::Keys::HKLM)
 					return L"HKEY_LOCAL_MACHINE";
-				else if constexpr (Parent == Win32::Winreg::_HKEY_USERS)
+				else if constexpr (Parent == Win32::Winreg::Keys::HKU)
 					return L"HKEY_USERS";
 				else
 					return L"Unknown";

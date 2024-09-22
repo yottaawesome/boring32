@@ -49,6 +49,11 @@ export namespace Boring32::Error
 			: m_value(value)
 		{ }
 
+		constexpr operator bool() const noexcept
+		{
+			return m_value == 0; // ERROR_SUCCESS
+		}
+
 		constexpr operator Win32::DWORD() const noexcept
 		{
 			return m_value;
@@ -71,11 +76,7 @@ export namespace Boring32::Error
 			return m_value;
 		}
 
+		private:
 		DWORD m_value = 0;
 	};
-
-	namespace Codes
-	{
-		constexpr Win32ErrorCode IoPending = Win32::ErrorCodes::IoPending;
-	}
 }
