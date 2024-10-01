@@ -13,7 +13,7 @@ export namespace Boring32::COM
 		constexpr HResult(const Win32::HRESULT hr) noexcept
 			: m_hr(hr) { }
 
-		HResult(const long severity, const long facility, const long code) noexcept
+		constexpr HResult(const long severity, const long facility, const long code) noexcept
 		{
 			m_hr = Win32::MakeHResult(severity, facility, code);
 		}
