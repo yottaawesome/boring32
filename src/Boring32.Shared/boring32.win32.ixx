@@ -19,116 +19,388 @@ export namespace Boring32::Win32
 	constexpr auto _SECURITY_BUILTIN_DOMAIN_RID = SECURITY_BUILTIN_DOMAIN_RID;
 	constexpr auto _DOMAIN_ALIAS_RID_ADMINS = DOMAIN_ALIAS_RID_ADMINS;
 
-	using ::HMODULE;
-	using ::SECURITY_ATTRIBUTES;
-	using ::DWORD;
-	using ::UINT;
-	using ::USHORT;
-	using ::HANDLE;
-	using ::PHANDLE;
-	using ::UNICODE_STRING;
-	using ::PUNICODE_STRING;
-	using ::PVOID;
-	using ::ULONG_PTR;
-	using ::SIZE_T;
-	using ::PSIZE_T;
-	using ::PLARGE_INTEGER;
-	using ::LARGE_INTEGER;
-	using ::ULONG;
-	using ::PHANDLE;
-	using ::ACCESS_MASK;
-	using ::PULONG;
-	using ::HMODULE;
-	using ::NTSTATUS;
-	using ::BOOL;
-	using ::MSIHANDLE;
-	using ::MSIINSTALLCONTEXT;
-	using ::PMSIHANDLE;
-	using ::PSID;
-	using ::HRESULT;
-	using ::SLIST_ENTRY;
-	using ::PSLIST_ENTRY;
-	using ::SLIST_HEADER;
-	using ::PSLIST_HEADER;
-	using ::MEMORYSTATUSEX;
-	using ::SYSTEM_INFO;
-	using ::SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX;
-	using ::LOGICAL_PROCESSOR_RELATIONSHIP;
-	using ::COMPUTER_NAME_FORMAT;
-	using ::FILETIME;
-	using ::ULARGE_INTEGER;
-	using ::LPCSTR;
-	using ::PCSTR;
-	using ::COINIT;
-	using ::EOLE_AUTHENTICATION_CAPABILITIES;
-	using ::CRITICAL_SECTION;
-	using ::PROCESSENTRY32W;
-	using ::PTIMERAPCROUTINE;
-	using ::JOBOBJECT_EXTENDED_LIMIT_INFORMATION;
-	using ::JOBOBJECTINFOCLASS;
-	using ::SRWLOCK;
-	using ::PROCESS_INFORMATION;
-	using ::PAPCFUNC;
-	using ::STARTUPINFO;
-	using ::SYNCHRONIZATION_BARRIER;
-	using ::WAITORTIMERCALLBACK;
-	using ::PTP_CALLBACK_INSTANCE;
-	using ::PTP_WORK;
-	using ::TP_POOL;
-	using ::TP_CALLBACK_ENVIRON;
-	using ::OVERLAPPED;
-	using ::VS_FIXEDFILEINFO;
-	using ::COMPRESSOR_HANDLE;
-	using ::DECOMPRESSOR_HANDLE;
-	using ::BCRYPT_KEY_HANDLE;
-	using ::LPWSTR;
-	using ::BYTE;
-	using ::DATA_BLOB;
-	using ::PUCHAR;
-	using ::PCCERT_CHAIN_CONTEXT;
-	using ::CERT_CHAIN_CONTEXT;
-	using ::CERT_NAME_BLOB;
-	using ::HCERTSTORE;
-	using ::CERT_CHAIN_FIND_BY_ISSUER_PARA;
-	using ::CERT_CONTEXT;
-	using ::PCCERT_CONTEXT;
-	using ::CERT_ENHKEY_USAGE;
-	using ::CERT_USAGE_MATCH;
-	using ::CERT_CHAIN_PARA;
-	using ::CRYPTUI_WIZ_IMPORT_SRC_INFO;
-	using ::LPSTR;
-	using ::SYSTEMTIME;
-	using ::FILETIME;
-	using ::TIME_ZONE_INFORMATION;
-	using ::SC_HANDLE;
-	using ::LPCWSTR;
-	using ::DWORD_PTR;
-	using ::LSTATUS;
-	using ::LONG;
-	using ::LPOVERLAPPED;
-	using ::LPVOID;
-	using ::LPDWORD;
-	using ::LSA_UNICODE_STRING;
-	using ::SECURITY_DESCRIPTOR_CONTROL;
-	using ::PSECURITY_DESCRIPTOR;
-	using ::SID_IDENTIFIER_AUTHORITY;
-	using ::PSID_IDENTIFIER_AUTHORITY;
-	using ::PDWORD;
-	using ::LSA_HANDLE;
-	using ::LSA_OBJECT_ATTRIBUTES;
-	using ::ACCESS_MASK;
-	using ::SECURITY_IMPERSONATION_LEVEL;
-	using ::TOKEN_TYPE;
-	using ::LUID;
-	using ::TOKEN_PRIVILEGES;
-	using ::TOKEN_MANDATORY_LABEL;
-	using ::TOKEN_INFORMATION_CLASS;
-	using ::PTOKEN_GROUPS;
-	using ::SID_NAME_USE;
-	using ::PBYTE;
-	using ::LUID_AND_ATTRIBUTES;
-	using ::PRIVILEGE_SET;
-	using ::SID_NAME_USE;
+	using 
+		::HMODULE,
+		::SECURITY_ATTRIBUTES,
+		::DWORD,
+		::UINT,
+		::USHORT,
+		::HANDLE,
+		::PHANDLE,
+		::UNICODE_STRING,
+		::PUNICODE_STRING,
+		::PVOID,
+		::ULONG_PTR,
+		::SIZE_T,
+		::PSIZE_T,
+		::PLARGE_INTEGER,
+		::LARGE_INTEGER,
+		::ULONG,
+		::PHANDLE,
+		::ACCESS_MASK,
+		::PULONG,
+		::HMODULE,
+		::NTSTATUS,
+		::BOOL,
+		::MSIHANDLE,
+		::MSIINSTALLCONTEXT,
+		::PMSIHANDLE,
+		::PSID,
+		::HRESULT,
+		::SLIST_ENTRY,
+		::PSLIST_ENTRY,
+		::SLIST_HEADER,
+		::PSLIST_HEADER,
+		::MEMORYSTATUSEX,
+		::SYSTEM_INFO,
+		::SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX,
+		::LOGICAL_PROCESSOR_RELATIONSHIP,
+		::COMPUTER_NAME_FORMAT,
+		::FILETIME,
+		::ULARGE_INTEGER,
+		::LPCSTR,
+		::PCSTR,
+		::COINIT,
+		::EOLE_AUTHENTICATION_CAPABILITIES,
+		::CRITICAL_SECTION,
+		::PROCESSENTRY32W,
+		::PTIMERAPCROUTINE,
+		::JOBOBJECT_EXTENDED_LIMIT_INFORMATION,
+		::JOBOBJECTINFOCLASS,
+		::SRWLOCK,
+		::PROCESS_INFORMATION,
+		::PAPCFUNC,
+		::STARTUPINFO,
+		::SYNCHRONIZATION_BARRIER,
+		::WAITORTIMERCALLBACK,
+		::PTP_CALLBACK_INSTANCE,
+		::PTP_WORK,
+		::TP_POOL,
+		::TP_CALLBACK_ENVIRON,
+		::OVERLAPPED,
+		::VS_FIXEDFILEINFO,
+		::COMPRESSOR_HANDLE,
+		::DECOMPRESSOR_HANDLE,
+		::BCRYPT_KEY_HANDLE,
+		::LPWSTR,
+		::BYTE,
+		::DATA_BLOB,
+		::PUCHAR,
+		::PCCERT_CHAIN_CONTEXT,
+		::CERT_CHAIN_CONTEXT,
+		::CERT_NAME_BLOB,
+		::HCERTSTORE,
+		::CERT_CHAIN_FIND_BY_ISSUER_PARA,
+		::CERT_CONTEXT,
+		::PCCERT_CONTEXT,
+		::CERT_ENHKEY_USAGE,
+		::CERT_USAGE_MATCH,
+		::CERT_CHAIN_PARA,
+		::CRYPTUI_WIZ_IMPORT_SRC_INFO,
+		::LPSTR,
+		::SYSTEMTIME,
+		::FILETIME,
+		::TIME_ZONE_INFORMATION,
+		::SC_HANDLE,
+		::LPCWSTR,
+		::DWORD_PTR,
+		::LSTATUS,
+		::LONG,
+		::LPOVERLAPPED,
+		::LPVOID,
+		::LPDWORD,
+		::LSA_UNICODE_STRING,
+		::SECURITY_DESCRIPTOR_CONTROL,
+		::PSECURITY_DESCRIPTOR,
+		::SID_IDENTIFIER_AUTHORITY,
+		::PSID_IDENTIFIER_AUTHORITY,
+		::PDWORD,
+		::LSA_HANDLE,
+		::LSA_OBJECT_ATTRIBUTES,
+		::ACCESS_MASK,
+		::SECURITY_IMPERSONATION_LEVEL,
+		::TOKEN_TYPE,
+		::LUID,
+		::TOKEN_PRIVILEGES,
+		::TOKEN_MANDATORY_LABEL,
+		::TOKEN_INFORMATION_CLASS,
+		::PTOKEN_GROUPS,
+		::SID_NAME_USE,
+		::PBYTE,
+		::LUID_AND_ATTRIBUTES,
+		::PRIVILEGE_SET,
+		::SID_NAME_USE,
+		::PrivilegeCheck,
+		::LsaClose,
+		::LsaOpenPolicy,
+		::LsaNtStatusToWinError,
+		::LsaAddAccountRights,
+		::LsaRemoveAccountRights,
+		::DuplicateTokenEx,
+		::GetCurrentProcess,
+		::OpenProcessToken,
+		::LookupPrivilegeValueW,
+		::AdjustTokenPrivileges,
+		::SetTokenInformation,
+		::GetTokenInformation,
+		::GetLengthSid,
+		::EqualSid,
+		::LookupAccountSidW,
+		::CheckTokenMembership,
+		::LookupPrivilegeNameW,
+		::K32EnumDeviceDrivers,
+		::K32EnumProcesses,
+		::GetLastError,
+		::GetProcAddress,
+		::GetModuleHandleW,
+		::DuplicateHandle,
+		::GetCurrentProcess,
+		::GetHandleInformation,
+		::SetHandleInformation,
+		::GetProcAddress,
+		::FormatMessageA,
+		::FormatMessageW,
+		::LoadLibraryW,
+		::LoadLibraryExW,
+		::FreeLibrary,
+		::MsiIsProductElevatedW,
+		::MsiOpenPackageW,
+		::MsiCloseHandle,
+		::MsiGetProductInfoExW,
+		::MsiOpenDatabaseW,
+		::MsiDatabaseOpenViewW,
+		::MsiViewExecute,
+		::MsiViewFetch,
+		::MsiRecordGetStringW,
+		::MsiEnumProductsExW,
+		::CreateFileW,
+		::CloseHandle,
+		::LocalFree,
+		::FreeSid,
+		::InitializeSListHead,
+		::QueryDepthSList,
+		::InterlockedPopEntrySList,
+		::InterlockedPushEntrySList,
+		::InterlockedFlushSList,
+		::GetComputerNameExW,
+		::GetPhysicallyInstalledSystemMemory,
+		::GlobalMemoryStatusEx,
+		::GetTickCount64,
+		::GetSystemTimeAdjustment,
+		::GetSystemInfo,
+		::GetLogicalProcessorInformationEx,
+		::GetProcessTimes,
+		::GetProcessHandleCount,
+		::GetExitCodeProcess,
+		::K32GetModuleFileNameExW,
+		::OpenProcess,
+		::GetProcessId,
+		::WideCharToMultiByte,
+		::MultiByteToWideChar,
+		::CoUninitialize,
+		::GetCurrentThreadId,
+		::CoInitializeSecurity,
+		::CoInitializeEx,
+		::InitializeCriticalSectionEx,
+		::InitializeCriticalSectionAndSpinCount,
+		::DeleteCriticalSection,
+		::LeaveCriticalSection,
+		::EnterCriticalSection,
+		::WaitForSingleObjectEx,
+		::WaitForSingleObject,
+		::WaitForMultipleObjectsEx,
+		::WaitForMultipleObjects,
+		::OpenEventW,
+		::CreateEventW,
+		::SetEvent,
+		::ResetEvent,
+		::CreateWaitableTimerW,
+		::SetWaitableTimer,
+		::CreateToolhelp32Snapshot,
+		::OpenWaitableTimerW,
+		::CancelWaitableTimer,
+		::Process32FirstW,
+		::ProcessIdToSessionId,
+		::Process32NextW,
+		::SetInformationJobObject,
+		::AssignProcessToJobObject,
+		::CreateJobObjectW,
+		::OpenJobObjectW,
+		::InitializeCriticalSection,
+		::ReleaseSRWLockShared,
+		::AcquireSRWLockShared,
+		::AcquireSRWLockExclusive,
+		::ReleaseSRWLockExclusive,
+		::TryAcquireSRWLockShared,
+		::TryAcquireSRWLockExclusive,
+		::InitializeSRWLock,
+		::CreateFileMappingW,
+		::OpenFileMappingW,
+		::ReleaseSemaphore,
+		::CreateSemaphoreW,
+		::OpenSemaphoreW,
+		::QueueUserAPC,
+		::CreateMutexW,
+		::OpenMutexW,
+		::ReleaseMutex,
+		::WaitOnAddress,
+		::WakeByAddressSingle,
+		::WakeByAddressAll,
+		::CreateProcessW,
+		::InitializeSynchronizationBarrier,
+		::EnterSynchronizationBarrier,
+		::DeleteSynchronizationBarrier,
+		::TerminateThread,
+		::SuspendThread,
+		::ResumeThread,
+		::GetExitCodeThread,
+		::SetThreadDescription,
+		::GetThreadDescription,
+		::_beginthreadex,
+		::_get_errno,
+		::ChangeTimerQueueTimer,
+		::DeleteTimerQueueTimer,
+		::CreateTimerQueueTimer,
+		::CreateTimerQueue,
+		::DeleteTimerQueueEx,
+		::SetThreadpoolThreadMaximum,
+		::SetThreadpoolThreadMinimum,
+		::DestroyThreadpoolEnvironment,
+		::CreateThreadpoolWork,
+		::SubmitThreadpoolWork,
+		::InitializeThreadpoolEnvironment,
+		::SetThreadpoolCallbackPool,
+		::SetThreadpoolCallbackRunsLong,
+		::CreateThreadpool,
+		::CloseThreadpool,
+		::RtlSecureZeroMemory,
+		::MapViewOfFile,
+		::CreateFileMappingW,
+		::OpenFileMappingW,
+		::UnmapViewOfFile,
+		::GetFileVersionInfoSizeW,
+		::GetFileVersionInfoW,
+		::VerQueryValueW,
+		::CreateDirectoryW,
+		::ConvertStringSecurityDescriptorToSecurityDescriptorW,
+		::MoveFileExW,
+		::WriteFile,
+		::ReadFile,
+		::CreateIoCompletionPort,
+		::GetQueuedCompletionStatus,
+		::Compress,
+		::ResetCompressor,
+		::CreateCompressor,
+		::CloseCompressor,
+		::CloseDecompressor,
+		::Decompress,
+		::CreateDecompressor,
+		::ResetDecompressor,
+		::CryptProtectMemory,
+		::CryptUnprotectMemory,
+		::BCryptDestroyKey,
+		::CryptProtectData,
+		::CryptUnprotectData,
+		::BCryptEncrypt,
+		::BCryptDecrypt,
+		::CryptBinaryToStringA,
+		::CryptBinaryToStringW,
+		::CertStrToNameW,
+		::CertNameToStrW,
+		::CertFindChainInStore,
+		::CertDuplicateCertificateChain,
+		::CertGetCertificateChain,
+		::CryptUIWizImport,
+		::CertFreeCertificateChain,
+		::CertFindCertificateInStore,
+		::CryptStringToBinaryW,
+		::EncodePointer,
+		::DecodePointer,
+		::GetStdHandle,
+		::CreatePipe,
+		::SetHandleInformation,
+		::XAudio2Create,
+		::SetFilePointer,
+		::SystemTimeToFileTime,
+		::GetSystemTimeAsFileTime,
+		::FileTimeToSystemTime,
+		::GetDateFormatEx,
+		::GetTimeFormatEx,
+		::GetTimeZoneInformation,
+		::GetSystemTime,
+		::CloseServiceHandle,
+		::StartServiceW,
+		::ControlServiceExW,
+		::DeleteService,
+		::QueryServiceStatusEx,
+		::ControlServiceExW,
+		::QueryServiceConfigW,
+		::OpenSCManagerW,
+		::OpenServiceW,
+		::CoCreateInstance,
+		::HeapCreate,
+		::HeapCompact,
+		::HeapValidate,
+		::HeapLock,
+		::HeapUnlock,
+		::HeapAlloc,
+		::HeapDestroy,
+		::HeapFree,
+		::GetProcessHeap,
+		::CreatePipe,
+		::SetNamedPipeHandleState,
+		::PeekNamedPipe,
+		::CreateMailslotW,
+		::ConnectNamedPipe,
+		::GlobalFree,
+		::SHDeleteKeyW,
+		::WaitNamedPipeW,
+		::RevertToSelf,
+		::ImpersonateLoggedOnUser,
+		::GetSecurityDescriptorControl,
+		::ConvertSidToStringSidW,
+		::GetSidSubAuthorityCount,
+		::IsValidSid,
+		::GetSidIdentifierAuthority,
+		::GetSidSubAuthority,
+		::ConvertStringSidToSidW,
+		::AllocateAndInitializeSid,
+		::DeleteBoundaryDescriptor,
+		::ClosePrivateNamespace,
+		::CreateBoundaryDescriptorW,
+		::CreateWellKnownSid,
+		::AddSIDToBoundaryDescriptor,
+		::CreatePrivateNamespaceW,
+		::OpenPrivateNamespaceW,
+		::Sleep,
+		::CERT_SIMPLE_CHAIN,
+		::CERT_CHAIN_POLICY_PARA,
+		::CERT_CHAIN_POLICY_STATUS,
+		::CertVerifyTimeValidity,
+		::CertFreeCertificateContext,
+		::CertGetPublicKeyLength,
+		::CertDuplicateCertificateContext,
+		::CertGetCertificateContextProperty,
+		::CertVerifyCertificateChainPolicy,
+		::CertDuplicateStore,
+		::CertCloseStore,
+		::CertAddCertificateContextToStore,
+		::CertOpenSystemStoreW,
+		::CertOpenStore,
+		::CertEnumCertificatesInStore,
+		::CertDeleteCertificateFromStore,
+		::CertGetStoreProperty,
+		::__fastfail,
+		::BCRYPT_ALG_HANDLE,
+		::BCRYPT_KEY_HANDLE,
+		::BCryptCloseAlgorithmProvider,
+		::BCryptGenerateSymmetricKey,
+		::BCryptGetProperty,
+		::BCryptSetProperty,
+		::BCryptEncrypt,
+		::BCryptDecrypt,
+		::BCryptOpenAlgorithmProvider
+		;
 
 	constexpr auto _CERT_SIGNATURE_HASH_PROP_ID = CERT_SIGNATURE_HASH_PROP_ID;
 	constexpr auto _CERT_SIGN_HASH_CNG_ALG_PROP_ID = CERT_SIGN_HASH_CNG_ALG_PROP_ID;
@@ -141,25 +413,6 @@ export namespace Boring32::Win32
 	constexpr auto _SE_PRIVILEGE_REMOVED= SE_PRIVILEGE_REMOVED;
 	constexpr auto _SE_PRIVILEGE_USED_FOR_ACCESS= SE_PRIVILEGE_USED_FOR_ACCESS;
 	constexpr auto _PRIVILEGE_SET_ALL_NECESSARY = PRIVILEGE_SET_ALL_NECESSARY;
-
-	using ::PrivilegeCheck;
-	using ::LsaClose;
-	using ::LsaOpenPolicy;
-	using ::LsaNtStatusToWinError;
-	using ::LsaAddAccountRights;
-	using ::LsaRemoveAccountRights;
-	using ::DuplicateTokenEx;
-	using ::GetCurrentProcess;
-	using ::OpenProcessToken;
-	using ::LookupPrivilegeValueW;
-	using ::AdjustTokenPrivileges;
-	using ::SetTokenInformation;
-	using ::GetTokenInformation;
-	using ::GetLengthSid;
-	using ::EqualSid;
-	using ::LookupAccountSidW;
-	using ::CheckTokenMembership;
-	using ::LookupPrivilegeNameW;
 
 	using ::IXAudio2;
 	using ::IXAudio2MasteringVoice;
@@ -460,255 +713,7 @@ export namespace Boring32::Win32
 	};
 
 	constexpr auto JobObjectAllAccess = JOB_OBJECT_ALL_ACCESS;
-
 	constexpr auto XAudio2DefaultProcessor = XAUDIO2_DEFAULT_PROCESSOR;
-
-	using ::K32EnumDeviceDrivers;
-	using ::K32EnumProcesses;
-	using ::GetLastError;
-	using ::GetProcAddress;
-	using ::GetModuleHandleW;
-	using ::DuplicateHandle;
-	using ::GetCurrentProcess;
-	using ::GetHandleInformation;
-	using ::SetHandleInformation;
-	using ::GetProcAddress;
-	using ::FormatMessageA;
-	using ::FormatMessageW;
-	using ::LoadLibraryW;
-	using ::LoadLibraryExW;
-	using ::FreeLibrary;
-	using ::MsiIsProductElevatedW;
-	using ::MsiOpenPackageW;
-	using ::MsiCloseHandle;
-	using ::MsiGetProductInfoExW;
-	using ::MsiOpenDatabaseW;
-	using ::MsiDatabaseOpenViewW;
-	using ::MsiViewExecute;
-	using ::MsiViewFetch;
-	using ::MsiRecordGetStringW;
-	using ::MsiEnumProductsExW;
-	using ::CreateFileW;
-	using ::CloseHandle;
-	using ::LocalFree;
-	using ::FreeSid;
-	using ::InitializeSListHead;
-	using ::QueryDepthSList;
-	using ::InterlockedPopEntrySList;
-	using ::InterlockedPushEntrySList;
-	using ::InterlockedFlushSList;
-	using ::GetComputerNameExW;
-	using ::GetPhysicallyInstalledSystemMemory;
-	using ::GlobalMemoryStatusEx;
-	using ::GetTickCount64;
-	using ::GetSystemTimeAdjustment;
-	using ::GetSystemInfo;
-	using ::GetLogicalProcessorInformationEx;
-	using ::GetProcessTimes;
-	using ::GetProcessHandleCount;
-	using ::GetExitCodeProcess;
-	using ::K32GetModuleFileNameExW;
-	using ::OpenProcess;
-	using ::GetProcessId;
-	using ::WideCharToMultiByte;
-	using ::MultiByteToWideChar;
-	using ::CoUninitialize;
-	using ::GetCurrentThreadId;
-	using ::CoInitializeSecurity;
-	using ::CoInitializeEx;
-	using ::InitializeCriticalSectionEx;
-	using ::InitializeCriticalSectionAndSpinCount;
-	using ::DeleteCriticalSection;
-	using ::LeaveCriticalSection;
-	using ::EnterCriticalSection;
-	using ::WaitForSingleObjectEx;
-	using ::WaitForSingleObject;
-	using ::WaitForMultipleObjectsEx;
-	using ::WaitForMultipleObjects;
-	using ::OpenEventW;
-	using ::CreateEventW;
-	using ::SetEvent;
-	using ::ResetEvent;
-	using ::CreateWaitableTimerW;
-	using ::SetWaitableTimer;
-	using ::CreateToolhelp32Snapshot;
-	using ::OpenWaitableTimerW;
-	using ::CancelWaitableTimer;
-	using ::Process32FirstW;
-	using ::ProcessIdToSessionId;
-	using ::Process32NextW;
-	using ::SetInformationJobObject;
-	using ::AssignProcessToJobObject;
-	using ::CreateJobObjectW;
-	using ::OpenJobObjectW;
-	using ::InitializeCriticalSection;
-	using ::ReleaseSRWLockShared;
-	using ::AcquireSRWLockShared;
-	using ::AcquireSRWLockExclusive;
-	using ::ReleaseSRWLockExclusive;
-	using ::TryAcquireSRWLockShared;
-	using ::TryAcquireSRWLockExclusive;
-	using ::InitializeSRWLock;
-	using ::CreateFileMappingW;
-	using ::OpenFileMappingW;
-	using ::ReleaseSemaphore;
-	using ::CreateSemaphoreW;
-	using ::OpenSemaphoreW;
-	using ::QueueUserAPC;
-	using ::CreateMutexW;
-	using ::OpenMutexW;
-	using ::ReleaseMutex;
-	using ::WaitOnAddress;
-	using ::WakeByAddressSingle;
-	using ::WakeByAddressAll;
-	using ::CreateProcessW;
-	using ::InitializeSynchronizationBarrier;
-	using ::EnterSynchronizationBarrier;
-	using ::DeleteSynchronizationBarrier;
-	using ::TerminateThread;
-	using ::SuspendThread;
-	using ::ResumeThread;
-	using ::GetExitCodeThread;
-	using ::SetThreadDescription;
-	using ::GetThreadDescription;
-	using ::_beginthreadex;
-	using ::_get_errno;
-	using ::ChangeTimerQueueTimer;
-	using ::DeleteTimerQueueTimer;
-	using ::CreateTimerQueueTimer;
-	using ::CreateTimerQueue;
-	using ::DeleteTimerQueueEx;
-	using ::SetThreadpoolThreadMaximum;
-	using ::SetThreadpoolThreadMinimum;
-	using ::DestroyThreadpoolEnvironment;
-	using ::CreateThreadpoolWork;
-	using ::SubmitThreadpoolWork;
-	using ::InitializeThreadpoolEnvironment;
-	using ::SetThreadpoolCallbackPool;
-	using ::SetThreadpoolCallbackRunsLong;
-	using ::CreateThreadpool;
-	using ::CloseThreadpool;
-	using ::RtlSecureZeroMemory;
-	using ::MapViewOfFile;
-	using ::CreateFileMappingW;
-	using ::OpenFileMappingW;
-	using ::UnmapViewOfFile;
-	using ::GetFileVersionInfoSizeW;
-	using ::GetFileVersionInfoW;
-	using ::VerQueryValueW;
-	using ::CreateDirectoryW;
-	using ::ConvertStringSecurityDescriptorToSecurityDescriptorW;
-	using ::MoveFileExW;
-	using ::WriteFile;
-	using ::ReadFile;
-	using ::CreateIoCompletionPort;
-	using ::GetQueuedCompletionStatus;
-	using ::Compress;
-	using ::ResetCompressor;
-	using ::CreateCompressor;
-	using ::CloseCompressor;
-	using ::CloseDecompressor;
-	using ::Decompress;
-	using ::CreateDecompressor;
-	using ::ResetDecompressor;
-	using ::CryptProtectMemory;
-	using ::CryptUnprotectMemory;
-	using ::BCryptDestroyKey;
-	using ::CryptProtectData;
-	using ::CryptUnprotectData;
-	using ::BCryptEncrypt;
-	using ::BCryptDecrypt;
-	using ::CryptBinaryToStringA;
-	using ::CryptBinaryToStringW;
-	using ::CertStrToNameW;
-	using ::CertNameToStrW;
-	using ::CertFindChainInStore;
-	using ::CertDuplicateCertificateChain;
-	using ::CertGetCertificateChain;
-	using ::CryptUIWizImport;
-	using ::CertFreeCertificateChain;
-	using ::CertFindCertificateInStore;
-	using ::CryptStringToBinaryW;
-	using ::EncodePointer;
-	using ::DecodePointer;
-	using ::GetStdHandle;
-	using ::CreatePipe;
-	using ::SetHandleInformation;
-	using ::XAudio2Create;
-	using ::SetFilePointer;
-	using ::SystemTimeToFileTime;
-	using ::GetSystemTimeAsFileTime;
-	using ::FileTimeToSystemTime;
-	using ::GetDateFormatEx;
-	using ::GetTimeFormatEx;
-	using ::GetTimeZoneInformation;
-	using ::GetSystemTime;
-	using ::CloseServiceHandle;
-	using ::StartServiceW;
-	using ::ControlServiceExW;
-	using ::DeleteService;
-	using ::QueryServiceStatusEx;
-	using ::ControlServiceExW;
-	using ::QueryServiceConfigW;
-	using ::OpenSCManagerW;
-	using ::OpenServiceW;
-	using ::CoCreateInstance;
-	using ::HeapCreate;
-	using ::HeapCompact;
-	using ::HeapValidate;
-	using ::HeapLock;
-	using ::HeapUnlock;
-	using ::HeapAlloc;
-	using ::HeapDestroy;
-	using ::HeapFree;
-	using ::GetProcessHeap;
-	using ::CreatePipe;
-	using ::SetNamedPipeHandleState;
-	using ::PeekNamedPipe;
-	using ::CreateMailslotW;
-	using ::ConnectNamedPipe;
-	using ::GlobalFree;
-	using ::SHDeleteKeyW;
-	using ::WaitNamedPipeW;
-
-	using ::RevertToSelf;
-	using ::ImpersonateLoggedOnUser;
-	using ::GetSecurityDescriptorControl;
-	using ::ConvertSidToStringSidW;
-	using ::GetSidSubAuthorityCount;
-	using ::IsValidSid;
-	using ::GetSidIdentifierAuthority;
-	using ::GetSidSubAuthority;
-	using ::ConvertStringSidToSidW;
-	using ::AllocateAndInitializeSid;
-	using ::DeleteBoundaryDescriptor;
-	using ::ClosePrivateNamespace;
-	using ::CreateBoundaryDescriptorW;
-	using ::CreateWellKnownSid;
-	using ::AddSIDToBoundaryDescriptor;
-	using ::CreatePrivateNamespaceW;
-	using ::OpenPrivateNamespaceW;
-	using ::Sleep;
-
-	using ::CERT_SIMPLE_CHAIN;
-	using ::CERT_CHAIN_POLICY_PARA;
-	using ::CERT_CHAIN_POLICY_STATUS;
-	using ::CertVerifyTimeValidity;
-	using ::CertFreeCertificateContext;
-	using ::CertGetPublicKeyLength;
-	using ::CertDuplicateCertificateContext;
-	using ::CertGetCertificateContextProperty;
-	using ::CertVerifyCertificateChainPolicy;
-	using ::CertDuplicateStore;
-	using ::CertCloseStore;
-	using ::CertAddCertificateContextToStore;
-	using ::CertOpenSystemStoreW;
-	using ::CertOpenStore;
-	using ::CertEnumCertificatesInStore;
-	using ::CertDeleteCertificateFromStore;
-	using ::CertGetStoreProperty;
-	using ::__fastfail;
-
 
 	namespace WinSafer
 	{
@@ -791,15 +796,7 @@ export namespace Boring32::Win32
 		ForceFreeMemory = CERT_CLOSE_STORE_FORCE_FLAG
 	};
 
-	using ::BCRYPT_ALG_HANDLE;
-	using ::BCRYPT_KEY_HANDLE;
-	using ::BCryptCloseAlgorithmProvider;
-	using ::BCryptGenerateSymmetricKey;
-	using ::BCryptGetProperty;
-	using ::BCryptSetProperty;
-	using ::BCryptEncrypt;
-	using ::BCryptDecrypt;
-	using ::BCryptOpenAlgorithmProvider;
+	
 	constexpr auto _BCRYPT_OBJECT_LENGTH = BCRYPT_OBJECT_LENGTH;
 	constexpr auto _BCRYPT_BLOCK_LENGTH = BCRYPT_BLOCK_LENGTH;
 	constexpr auto _BCRYPT_CHAINING_MODE = BCRYPT_CHAINING_MODE;
@@ -1016,32 +1013,34 @@ export namespace Boring32::Win32
 
 export namespace Boring32::Win32::WinSock
 {
-	using ::ADDRINFOW;
-	using ::ADDRINFOEXW;
-	using ::ADDRINFOEX;
-	using ::WSAData;
-	using ::PADDRINFOW;
-	using ::sockaddr_in;
-	using ::PADDRINFOEXW;
-	using ::sockaddr_in6;
-	using ::SOCKET;
-	using ::IPPROTO;
-	using ::FreeAddrInfoW;
-	using ::FreeAddrInfoExW;
-	using ::WSAStartup;
-	using ::WSACleanup;
-	using ::htonl;
-	using ::inet_ntop;
-	using ::WSAGetLastError;
-	using ::GetAddrInfoW;
-	using ::GetAddrInfoExW;
-	using ::closesocket;
-	using ::socket;
-	using ::send;
-	using ::recv;
-	using ::getsockopt;
-	using ::connect;
-	using ::setsockopt;
+	using
+		::ADDRINFOW,
+		::ADDRINFOEXW,
+		::ADDRINFOEX,
+		::WSAData,
+		::PADDRINFOW,
+		::sockaddr_in,
+		::PADDRINFOEXW,
+		::sockaddr_in6,
+		::SOCKET,
+		::IPPROTO,
+		::FreeAddrInfoW,
+		::FreeAddrInfoExW,
+		::WSAStartup,
+		::WSACleanup,
+		::htonl,
+		::inet_ntop,
+		::WSAGetLastError,
+		::GetAddrInfoW,
+		::GetAddrInfoExW,
+		::closesocket,
+		::socket,
+		::send,
+		::recv,
+		::getsockopt,
+		::connect,
+		::setsockopt
+		;
 	constexpr auto _INET_ADDRSTRLEN = INET_ADDRSTRLEN;
 	constexpr auto _INET6_ADDRSTRLEN = INET6_ADDRSTRLEN;
 
@@ -1068,36 +1067,38 @@ export namespace Boring32::Win32::WinSock
 
 export namespace Boring32::Win32::WinHttp
 {
-	using ::URL_COMPONENTS;
-	using ::WINHTTP_AUTOPROXY_OPTIONS;
-	using ::HINTERNET;
-	using ::WINHTTP_PROXY_INFO;
-	using ::WINHTTP_STATUS_CALLBACK;
-	using ::WINHTTP_WEB_SOCKET_STATUS;
-	using ::WINHTTP_WEB_SOCKET_BUFFER_TYPE;
-	using ::WINHTTP_ASYNC_RESULT;
-	using ::WINHTTP_WEB_SOCKET_CLOSE_STATUS;
-	using ::WinHttpCrackUrl;
-	using ::WinHttpGetProxyForUrl;
-	using ::WinHttpGetProxyForUrl;
-	using ::WinHttpSetOption;
-	using ::WinHttpOpen;
-	using ::WinHttpCloseHandle;
-	using ::WinHttpOpenRequest;
-	using ::WinHttpSendRequest;
-	using ::WinHttpQueryHeaders;
-	using ::WinHttpReceiveResponse;
-	using ::WinHttpQueryDataAvailable;
-	using ::WinHttpReadData;
-	using ::WinHttpConnect;
-	using ::WinHttpSetOption;
-	using ::WinHttpWebSocketCompleteUpgrade;
-	using ::WinHttpWebSocketReceive;
-	using ::WinHttpSendRequest;
-	using ::WinHttpSetStatusCallback;
-	using ::WinHttpWebSocketClose;
-	using ::WinHttpQueryHeaders;
-	using ::WinHttpWebSocketSend;
+	using
+		::URL_COMPONENTS,
+		::WINHTTP_AUTOPROXY_OPTIONS,
+		::HINTERNET,
+		::WINHTTP_PROXY_INFO,
+		::WINHTTP_STATUS_CALLBACK,
+		::WINHTTP_WEB_SOCKET_STATUS,
+		::WINHTTP_WEB_SOCKET_BUFFER_TYPE,
+		::WINHTTP_ASYNC_RESULT,
+		::WINHTTP_WEB_SOCKET_CLOSE_STATUS,
+		::WinHttpCrackUrl,
+		::WinHttpGetProxyForUrl,
+		::WinHttpGetProxyForUrl,
+		::WinHttpSetOption,
+		::WinHttpOpen,
+		::WinHttpCloseHandle,
+		::WinHttpOpenRequest,
+		::WinHttpSendRequest,
+		::WinHttpQueryHeaders,
+		::WinHttpReceiveResponse,
+		::WinHttpQueryDataAvailable,
+		::WinHttpReadData,
+		::WinHttpConnect,
+		::WinHttpSetOption,
+		::WinHttpWebSocketCompleteUpgrade,
+		::WinHttpWebSocketReceive,
+		::WinHttpSendRequest,
+		::WinHttpSetStatusCallback,
+		::WinHttpWebSocketClose,
+		::WinHttpQueryHeaders,
+		::WinHttpWebSocketSend
+		;
 
 	constexpr auto _WINHTTP_ACCESS_TYPE_NAMED_PROXY = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
 	constexpr auto _WINHTTP_AUTOPROXY_CONFIG_URL = WINHTTP_AUTOPROXY_CONFIG_URL;
@@ -1331,16 +1332,18 @@ export namespace Boring32::Win32::Winreg
 		String = REG_SZ,
 	};
 
-	using ::RegGetValueW;
-	using ::RegSetValueExW;
-	using ::RegNotifyChangeKeyValue;
-	using ::RegDeleteTreeW;
-	using ::RegOpenKeyExW;
-	using ::RegQueryInfoKeyW;
-	using ::RegEnumValueW;
-	using ::RegSaveKeyExW;
-	using ::RegDeleteValueW;
-	using ::RegCloseKey;
-	using ::RegCreateKeyExW;
-	using ::RegOpenCurrentUser;
+	using
+		::RegGetValueW,
+		::RegSetValueExW,
+		::RegNotifyChangeKeyValue,
+		::RegDeleteTreeW,
+		::RegOpenKeyExW,
+		::RegQueryInfoKeyW,
+		::RegEnumValueW,
+		::RegSaveKeyExW,
+		::RegDeleteValueW,
+		::RegCloseKey,
+		::RegCreateKeyExW,
+		::RegOpenCurrentUser
+		;
 }

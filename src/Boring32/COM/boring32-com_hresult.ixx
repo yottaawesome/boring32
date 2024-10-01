@@ -6,27 +6,19 @@ import :com_functions;
 export namespace Boring32::COM
 {
 	// See https://learn.microsoft.com/en-us/windows/win32/com/error-handling-in-com
-	class HResult final
+	struct HResult final
 	{
-		public:
-		constexpr HResult(const Win32::HRESULT hr) noexcept
-			: m_hr(hr)
-		{ }
+		constexpr HResult() noexcept = default;
 
-		HResult(
-			const long severity, 
-			const long facility, 
-			const long code
-		) noexcept
+		constexpr HResult(const Win32::HRESULT hr) noexcept
+			: m_hr(hr) { }
+
+		HResult(const long severity, const long facility, const long code) noexcept
 		{
 			m_hr = Win32::MakeHResult(severity, facility, code);
 		}
 
-		public:
-		constexpr operator Win32::HRESULT() const noexcept
-		{
-			return m_hr;
-		}
+		constexpr operator Win32::HRESULT() const noexcept { return m_hr; }
 
 		constexpr HResult& operator=(const Win32::HRESULT hr) noexcept
 		{
@@ -34,52 +26,31 @@ export namespace Boring32::COM
 			return *this;
 		}
 
-		constexpr operator bool() const noexcept
-		{
-			return Succeeded(m_hr);
-		}
+		constexpr operator bool() const noexcept { return Succeeded(); }
 
-		constexpr bool operator==(const Win32::HRESULT hr) const noexcept
-		{
-			return m_hr == hr;
-		}
+		constexpr bool operator==(const Win32::HRESULT hr) const noexcept { return m_hr == hr; }
 
-		constexpr bool operator==(const HResult& hr) const noexcept
-		{
-			return m_hr == hr.m_hr;
-		}
+		constexpr bool operator==(const HResult& hr) const noexcept { return m_hr == hr.m_hr; }
 
 		// See https://learn.microsoft.com/en-us/windows/win32/com/using-macros-for-error-handling
-		public:
-		constexpr HRESULT Get() const noexcept
-		{
-			return m_hr;
-		}
+		constexpr HRESULT Get() const noexcept { return m_hr; }
 
-		constexpr long Facility() const noexcept
-		{
-			return Win32::Facility(m_hr);
-		}
+		constexpr long Facility() const noexcept { return Win32::Facility(m_hr); }
 
-		constexpr long Code() const noexcept
-		{
-			return Win32::Code(m_hr);
-		}
+		constexpr long Code() const noexcept { return Win32::Code(m_hr); }
 
-		constexpr long Severity() const noexcept
-		{
-			return Win32::Severity(m_hr);
-		}
+		constexpr long Severity() const noexcept { return Win32::Severity(m_hr); }
 
-		void ThrowIfFailed(
-			const char* msg,
-			const std::source_location& loc = std::source_location::current()
-		) const
+		constexpr bool Succeeded() const noexcept { return COM::Succeeded(m_hr); }
+
+		constexpr bool Failed() const noexcept { return not Succeeded(); }
+
+		void ThrowIfFailed(std::string_view msg, const std::source_location& loc = std::source_location::current()) const
 		{
-			if (Succeeded(m_hr))
+			if (Succeeded())
 				return;
-			if (msg)
-				throw Error::COMError(msg, m_hr, loc);
+			if (not msg.empty())
+				throw Error::COMError(msg.data(), m_hr, loc);
 			throw Error::COMError("HRESULT check failed", m_hr, loc);
 		}
 
