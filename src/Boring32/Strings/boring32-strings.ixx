@@ -456,13 +456,12 @@ export namespace Boring32::Strings
 
 		// https://learn.microsoft.com/en-us/windows/win32/api/winnls/nf-winnls-lcmapstringex
 		// See also https://devblogs.microsoft.com/oldnewthing/20241007-00/?p=110345
-		std::wstring destination;
 		int result = Win32::i18n::LCMapStringEx(
 			Win32::i18n::Locales::Invariant,
 			flag,
 			source.data(),
 			static_cast<int>(source.size()),
-			destination.data(),
+			nullptr,
 			0,
 			nullptr,
 			nullptr,
@@ -474,7 +473,7 @@ export namespace Boring32::Strings
 			throw Error::Win32Error("LCMapStringEx() failed.", lastError);
 		}
 
-		destination.resize(result);
+		std::wstring destination(result, '\0');
 		result = Win32::i18n::LCMapStringEx(
 			Win32::i18n::Locales::Invariant,
 			flag,
