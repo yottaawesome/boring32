@@ -35,5 +35,19 @@ namespace Strings
 				const std::wstring converted = Boring32::Strings::ConvertString(test);
 				Assert::IsTrue(converted == L"blah");
 			}
+
+			TEST_METHOD(TestToLower)
+			{
+				const std::wstring test = L"BLAH";
+				const std::wstring converted = Boring32::Strings::ToLower(test);
+				Assert::IsTrue(converted == L"blah");
+			}
+
+			TEST_METHOD(TestToUpper)
+			{
+				const std::wstring test = L"blah";
+				const std::wstring converted = Boring32::Strings::ToUpper(test);
+				Assert::IsTrue(converted == L"BLAH");
+			}
 	};
 }

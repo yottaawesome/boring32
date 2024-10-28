@@ -402,6 +402,23 @@ export namespace Boring32::Win32
 		::BCryptOpenAlgorithmProvider
 		;
 
+
+	namespace i18n
+	{
+		using ::LCMapStringEx;
+
+		namespace Locales
+		{
+			constexpr auto Invariant = LOCALE_NAME_INVARIANT;
+		};
+
+		enum LcMap
+		{
+			LowerCase = LCMAP_LOWERCASE,
+			UpperCase = LCMAP_UPPERCASE
+		};
+	}
+
 	constexpr auto _CERT_SIGNATURE_HASH_PROP_ID = CERT_SIGNATURE_HASH_PROP_ID;
 	constexpr auto _CERT_SIGN_HASH_CNG_ALG_PROP_ID = CERT_SIGN_HASH_CNG_ALG_PROP_ID;
 

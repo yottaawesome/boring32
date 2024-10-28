@@ -446,4 +446,57 @@ export namespace Boring32::Strings
 			std::forward<TArgs>(args)...);
 		return buffer;
 	}
+
+	[[nodiscard]]
+	std::wstring ChangeCase(const std::wstring& source, const bool upper)
+	{
+		const int flag = upper 
+			? Win32::i18n::LcMap::UpperCase 
+			: Win32::i18n::LcMap::LowerCase;
+
+		// https://learn.microsoft.com/en-us/windows/win32/api/winnls/nf-winnls-lcmapstringex
+		// See also https://devblogs.microsoft.com/oldnewthing/20241007-00/?p=110345
+		std::wstring destination;
+		int result = Win32::i18n::LCMapStringEx(
+			Win32::i18n::Locales::Invariant,
+			flag,
+			source.data(),
+			static_cast<int>(source.size()),
+			destination.data(),
+			0,
+			nullptr,
+			nullptr,
+			0
+		);
+		if (result == 0)
+		{
+			const auto lastError = Win32::GetLastError();
+			throw Error::Win32Error("LCMapStringEx() failed.", lastError);
+		}
+
+		destination.resize(result);
+		result = Win32::i18n::LCMapStringEx(
+			Win32::i18n::Locales::Invariant,
+			flag,
+			source.data(),
+			static_cast<int>(source.size()),
+			destination.data(),
+			static_cast<int>(destination.size()),
+			nullptr,
+			nullptr,
+			0
+		);
+		if (result == 0)
+		{
+			const auto lastError = Win32::GetLastError();
+			throw Error::Win32Error("LCMapStringEx() failed.", lastError);
+		}
+
+		return destination;
+	}
+
+	[[nodiscard]]
+	std::wstring ToUpper(const std::wstring& string) { return ChangeCase(string, true); }
+	[[nodiscard]]
+	std::wstring ToLower(const std::wstring& string) { return ChangeCase(string, false); }
 }
