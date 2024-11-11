@@ -1,6 +1,5 @@
 export module boring32:logging_functions;
 import boring32.shared;
-import :concepts;
 
 export namespace Boring32::Log
 {
@@ -26,19 +25,42 @@ export namespace Boring32::Log
 	{
 		constexpr Logger(StringTarget& out, std::format_string<Ts...> fmt, Ts&&...args, std::source_location loc = std::source_location::current()) noexcept
 		{
-			out.Result = std::format(fmt, std::forward<Ts>(args)...);
+			out.Result = Format(fmt, std::forward<Ts>(args)...);
 		}
+
 		constexpr Logger(WStringTarget& out, std::wformat_string<Ts...> fmt, Ts&&...args, std::source_location loc = std::source_location::current()) noexcept
 		{
-			out.Result = std::format(fmt, std::forward<Ts>(args)...);
+			out.Result = Format(fmt, std::forward<Ts>(args)...);
 		}
+
 		constexpr Logger(std::format_string<Ts...> fmt, Ts&&...args, std::source_location loc = std::source_location::current()) noexcept
 		{
-			auto fmtString = std::format(fmt, std::forward<Ts>(args)...);
+			auto fmtString = Format(fmt, std::forward<Ts>(args)...);
 		}
+
 		constexpr Logger(std::wformat_string<Ts...> fmt, Ts&&...args, std::source_location loc = std::source_location::current()) noexcept
 		{
-			auto fmtString = std::format(fmt, std::forward<Ts>(args)...);
+			auto fmtString = Format(fmt, std::forward<Ts>(args)...);
+		}
+
+		constexpr std::string Format(std::format_string<Ts...> fmt, Ts&&...args, std::source_location loc = std::source_location::current()) noexcept
+		try
+		{
+			return std::format(fmt, std::forward<Ts>(args)...);
+		}
+		catch (...)
+		{
+			return {};
+		}
+
+		constexpr std::wstring Format(std::wformat_string<Ts...> fmt, Ts&&...args, std::source_location loc = std::source_location::current()) noexcept
+		try
+		{
+			return std::format(fmt, std::forward<Ts>(args)...);
+		}
+		catch (...)
+		{
+			return {};
 		}
 	};
 	template<Level VLevel, typename... Ts>
@@ -56,9 +78,4 @@ export namespace Boring32::Log
 	using Warn = Logger<Level::Warn, Ts...>;
 	template<typename... Ts>
 	using Error = Logger<Level::Error, Ts...>;
-
-	void Test()
-	{
-		Info("{} {}", "a", 1);
-	}
 }
