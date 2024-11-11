@@ -2,137 +2,30 @@ export module boring32:logging_functions;
 import boring32.shared;
 import :concepts;
 
-export namespace Boring32::Logging
+export namespace Boring32::Log
 {
-	// Based on https://www.reddit.com/r/cpp_questions/comments/vl2n68/variadic_template_and_default_arguments/
-	struct MessageAndLocation
+	// https://www.cppstories.com/2021/non-terminal-variadic-args/
+	template<typename...Ts>
+	struct Logger
 	{
-		std::string_view message;
-		std::source_location loc;
-
-		template<typename T>
-		MessageAndLocation(
-			T&& msg,
-			std::source_location loc = std::source_location::current()
-		) requires Concepts::IsConvertibleToStringView<T>
-			: message{ std::forward<T>(msg) },
-			loc{ loc }
-		{}
+		Logger(std::format_string<Ts...> fmt, Ts&&...args, std::source_location loc = std::source_location::current())
+		{
+			auto fmtString = std::format(fmt, std::forward<Ts>(args)...);
+		}
+		Logger(std::wformat_string<Ts...> fmt, Ts&&...args, std::source_location loc = std::source_location::current())
+		{
+			auto fmtString = std::format(fmt, std::forward<Ts>(args)...);
+		}
 	};
+	template<typename... Ts>
+	Logger(std::format_string<Ts...>, Ts&&...) -> Logger<Ts...>;
+	template<typename... Ts>
+	Logger(std::wformat_string<Ts...>, Ts&&...) -> Logger<Ts...>;
 
-	struct MessageAndLocationW
-	{
-		std::wstring_view message;
-		std::source_location loc;
-
-		template<typename T>
-		MessageAndLocationW(
-			T&& msg,
-			std::source_location loc = std::source_location::current()
-		) requires Concepts::IsConvertibleToWStringView<T>
-			: message{ std::forward<T>(msg) },
-			loc{ loc }
-		{}
-	};
-
-	template <class... Types>
-	void Info(const std::string_view fmt, Types&&... Args)
-	{
-		std::vformat(fmt, std::make_format_args(std::forward<Types>(Args)...));
-	}
-
-	template <class... Types>
-	void Info(const std::wstring_view fmt, Types&&... Args)
-	{
-	}
-
-	template <class... Types>
-	void Warn(const MessageAndLocation msgAndLoc, Types&&... Args)
-	{
-	}
-
-	template <class... Types>
-	void Warn(const MessageAndLocationW msgAndLoc, Types&&... Args)
-	{
-	}
-
-	template <class... Types>
-	void Warn(
-		const MessageAndLocation msgAndLoc, 
-		const std::exception& ex, 
-		Types&&... Args
-	)
-	{
-	}
-
-	template <class... Types>
-	void Warn(
-		const MessageAndLocationW msgAndLoc,
-		const std::exception& ex,
-		Types&&... Args
-	)
-	{
-	}
-
-	template <class... Types>
-	void Exception(
-		const MessageAndLocation msgAndLoc,
-		const std::exception& ex,
-		Types&&... Args
-	)
-	{
-	}
-
-	template <class... Types>
-	void Exception(
-		const MessageAndLocationW msgAndLoc,
-		const std::exception& ex,
-		Types&&... Args
-	)
-	{
-	}
-
-	template <class... Types>
-	void Error(
-		const MessageAndLocation msgAndLoc,
-		const std::exception& ex,
-		Types&&... Args
-	)
-	{
-	}
-
-	template <class... Types>
-	void Error(
-		const MessageAndLocationW msgAndLoc,
-		const std::exception& ex,
-		Types&&... Args
-	)
-	{
-	}
-
-	template <class... Types>
-	void Error(
-		const MessageAndLocation msgAndLoc,
-		Types&&... Args
-	)
-	{
-	}
-
-	template <class... Types>
-	void Error(
-		const MessageAndLocationW msgAndLoc,
-		Types&&... Args
-	)
-	{
-	}
-
-	template <class... Types>
-	void Debug(const std::string_view fmt, Types&&... Args)
-	{
-	}
-
-	template <class... Types>
-	void Debug(const std::wstring_view fmt, Types&&... Args)
-	{
-	}
+	template<typename... Ts>
+	using Info = Logger<Ts...>;
+	template<typename... Ts>
+	using Warn = Logger<Ts...>;
+	template<typename... Ts>
+	using Error = Logger<Ts...>;
 }
