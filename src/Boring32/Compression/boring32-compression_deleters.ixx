@@ -5,23 +5,19 @@ export namespace Boring32::Compression
 {
 	struct CompressorDeleter final
 	{
-		void operator()(Win32::COMPRESSOR_HANDLE handle)
+		void operator()(Win32::COMPRESSOR_HANDLE handle) const noexcept
 		{
 			Win32::CloseCompressor(handle);
 		}
 	};
-	using CompressorUniquePtr = std::unique_ptr<
-		std::remove_pointer<Win32::COMPRESSOR_HANDLE>::type,
-		CompressorDeleter>;
+	using CompressorUniquePtr = std::unique_ptr<std::remove_pointer_t<Win32::COMPRESSOR_HANDLE>, CompressorDeleter>;
 	
 	struct DecompressorDeleter final
 	{
-		void operator()(Win32::DECOMPRESSOR_HANDLE handle)
+		void operator()(Win32::DECOMPRESSOR_HANDLE handle) const noexcept
 		{
 			Win32::CloseDecompressor(handle);
 		}
 	};
-	using DecompressorUniquePtr = std::unique_ptr<
-		std::remove_pointer<Win32::DECOMPRESSOR_HANDLE>::type,
-		DecompressorDeleter>;
+	using DecompressorUniquePtr = std::unique_ptr<std::remove_pointer_t<Win32::DECOMPRESSOR_HANDLE>, DecompressorDeleter>;
 }

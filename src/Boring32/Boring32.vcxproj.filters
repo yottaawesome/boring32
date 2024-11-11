@@ -213,7 +213,6 @@
     <ClCompile Include="Native\boring32-native_ntdll.ixx" />
     <ClCompile Include="Native\boring32-native.ixx" />
     <ClCompile Include="Async\boring32-async_waitable.ixx" />
-    <ClCompile Include="Compression\boring32-compression_types.ixx" />
     <ClCompile Include="Security\boring32-security_encodedpointer.ixx" />
     <ClCompile Include="StrongTypes\boring32-strongtypes.ixx" />
     <ClCompile Include="StrongTypes\boring32-strongtypes_crtp.cpp">

@@ -152,7 +152,7 @@ void RandomStuff()
 void Compression()
 {
 	//throw Boring32::Compression::CompressionError(std::source_location::current(), "Blah");
-	Boring32::Compression::Decompressor decompressor(Boring32::Compression::CompressionType::MSZIP);
+	Boring32::Compression::Decompressor decompressor(Boring32::Win32::CompressionType::MSZIP);
 	auto x = decompressor.DecompressBuffer({ std::byte(0x1), std::byte(0x2) });
 }
 

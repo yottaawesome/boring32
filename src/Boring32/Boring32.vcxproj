@@ -222,7 +222,6 @@
     <ClCompile Include="Compression\boring32-compression_cabinet.ixx" />
     <ClCompile Include="Compression\boring32-compression_compressionerror.ixx" />
     <ClCompile Include="Compression\boring32-compression_deleters.ixx" />
-    <ClCompile Include="Compression\boring32-compression_types.ixx" />
     <ClCompile Include="Computer\boring32-computer_functions.ixx" />
     <ClCompile Include="Computer\boring32-computer_processinfo.ixx" />
     <ClCompile Include="Computer\boring32-computer.ixx" />

@@ -3,31 +3,27 @@ import boring32.shared;
 import :error;
 import :strings;
 
+namespace
+{
+	Boring32::Error::ExactMessage Generate(const Boring32::Error::MessageLocationTrace& msg, auto&&...args)
+	{
+		return {
+			Boring32::Error::FormatErrorMessage(
+				"Compression",
+				msg.Trace,
+				msg.Location,
+				Boring32::Strings::SafeVFormat(msg.Message, std::forward<decltype(args)>(args)...)
+			)
+		};
+	}
+}
+
 export namespace Boring32::Compression
 {
-	class CompressionError final : public Error::Boring32Error
+	struct CompressionError final : public Error::Boring32Error
 	{
-		public:
-			CompressionError(
-				const Error::MessageLocationTrace& msg, 
-				auto&&...args
-			) : Error::Boring32Error(CompressionError::GenerateErrorMessage(msg, std::forward<decltype(args)>(args)...))
-			{ }
-
-		private:
-			static Error::ExactMessage GenerateErrorMessage(
-				const Error::MessageLocationTrace& msg,
-				auto&&...args
-			)
-			{
-				return {
-					Error::FormatErrorMessage(
-						"Compression",
-						msg.Trace,
-						msg.Location,
-						Strings::SafeVFormat(msg.Message, std::forward<decltype(args)>(args)...)
-					)
-				};
-			}
+		CompressionError(const Error::MessageLocationTrace& msg, auto&&...args) 
+			: Error::Boring32Error(Generate(msg, std::forward<decltype(args)>(args)...))
+		{ }
 	};
 }
