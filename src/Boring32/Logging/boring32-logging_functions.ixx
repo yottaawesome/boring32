@@ -4,28 +4,61 @@ import :concepts;
 
 export namespace Boring32::Log
 {
+	template<typename TString>
+	struct FormatToString
+	{
+		TString Result;
+	};
+	using StringTarget = FormatToString<std::string>;
+	using WStringTarget = FormatToString<std::wstring>;
+
+	enum class Level
+	{
+		Debug,
+		Info,
+		Warn,
+		Error
+	};
+
 	// https://www.cppstories.com/2021/non-terminal-variadic-args/
-	template<typename...Ts>
+	template<Level, typename...Ts>
 	struct Logger
 	{
-		Logger(std::format_string<Ts...> fmt, Ts&&...args, std::source_location loc = std::source_location::current())
+		constexpr Logger(StringTarget& out, std::format_string<Ts...> fmt, Ts&&...args, std::source_location loc = std::source_location::current()) noexcept
+		{
+			out.Result = std::format(fmt, std::forward<Ts>(args)...);
+		}
+		constexpr Logger(WStringTarget& out, std::wformat_string<Ts...> fmt, Ts&&...args, std::source_location loc = std::source_location::current()) noexcept
+		{
+			out.Result = std::format(fmt, std::forward<Ts>(args)...);
+		}
+		constexpr Logger(std::format_string<Ts...> fmt, Ts&&...args, std::source_location loc = std::source_location::current()) noexcept
 		{
 			auto fmtString = std::format(fmt, std::forward<Ts>(args)...);
 		}
-		Logger(std::wformat_string<Ts...> fmt, Ts&&...args, std::source_location loc = std::source_location::current())
+		constexpr Logger(std::wformat_string<Ts...> fmt, Ts&&...args, std::source_location loc = std::source_location::current()) noexcept
 		{
 			auto fmtString = std::format(fmt, std::forward<Ts>(args)...);
 		}
 	};
-	template<typename... Ts>
-	Logger(std::format_string<Ts...>, Ts&&...) -> Logger<Ts...>;
-	template<typename... Ts>
-	Logger(std::wformat_string<Ts...>, Ts&&...) -> Logger<Ts...>;
+	template<Level VLevel, typename... Ts>
+	Logger(std::format_string<Ts...>, Ts&&...) -> Logger<VLevel, Ts...>;
+	template<Level VLevel, typename... Ts>
+	Logger(std::wformat_string<Ts...>, Ts&&...) -> Logger<VLevel, Ts...>;
+	template<Level VLevel, typename... Ts>
+	Logger(StringTarget&, std::format_string<Ts...>, Ts&&...) -> Logger<VLevel, Ts...>;
+	template<Level VLevel, typename... Ts>
+	Logger(WStringTarget&, std::wformat_string<Ts...>, Ts&&...) -> Logger<VLevel, Ts...>;
 
 	template<typename... Ts>
-	using Info = Logger<Ts...>;
+	using Info = Logger<Level::Info, Ts...>;
 	template<typename... Ts>
-	using Warn = Logger<Ts...>;
+	using Warn = Logger<Level::Warn, Ts...>;
 	template<typename... Ts>
-	using Error = Logger<Ts...>;
+	using Error = Logger<Level::Error, Ts...>;
+
+	void Test()
+	{
+		Info("{} {}", "a", 1);
+	}
 }
