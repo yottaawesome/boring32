@@ -9,7 +9,7 @@ export namespace Boring32::Async
 {
 	// https://stackoverflow.com/questions/37918168/pass-stdchronoduration-by-value-or-by-reference-to-const
 	// https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-signalobjectandwait
-	template<typename T> requires Concepts::IsDuration<T>
+	template<Boring32::Concepts::Duration T>
 	Win32::WaitResult SignalAndWait(
 		Win32::HANDLE const objectToSignal,
 		Win32::HANDLE const objectToWaitOn,

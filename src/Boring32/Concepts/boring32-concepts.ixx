@@ -14,7 +14,7 @@ export namespace Boring32::Concepts
 	constexpr bool IsDurationV = IsDuration<T>::value;
 
 	template<typename T>
-	concept Duration = IsDuration<T>::value;
+	concept Duration = IsDurationV<T>;
 
 	template<typename T>
 	concept NullPtrOrInvocable = std::is_null_pointer_v<T> or std::invocable<T>;
@@ -37,8 +37,8 @@ export namespace Boring32::Concepts
 	template<typename T, size_t N>
 	struct IsArray<std::array<T, N>> : std::true_type {};
 
-	template<typename T, size_t N>
-	constexpr bool IsArrayV = IsArray<T, N>;
+	template<typename T>
+	constexpr bool IsArrayV = IsArrayV<T>;
 
 	template<typename T>
 	concept ArrayLike = IsArray<std::remove_cvref_t<T>>::value;
@@ -100,4 +100,9 @@ export namespace Boring32::Concepts
 
 	template<typename T, typename...R>
 	concept OneOf = (std::same_as<T, R> or ...);
+
+	template<typename TRange, typename TTarget>
+	concept RangeOf = 
+		std::ranges::range<TRange> 
+		and std::same_as<std::ranges::range_value_t<TRange>, TTarget>;
 }
