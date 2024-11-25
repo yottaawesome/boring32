@@ -50,9 +50,8 @@ namespace Boring32::Registry
 			Win32::Winreg::_KEY_SET_VALUE,
 			&key
 		);
-		if constexpr (ThrowOnError)
-			if (status != Win32::ErrorCodes::Success)
-				throw Error::Win32Error("Failed to open registry key", status);
+		if constexpr (ThrowOnError and status != Win32::ErrorCodes::Success)
+			throw Error::Win32Error("Failed to open registry key", status);
 
 		if constexpr (TValueType == ValueTypes::DWord or TValueType == ValueTypes::QWord)
 		{
@@ -84,9 +83,8 @@ namespace Boring32::Registry
 		}
 		Win32::Winreg::RegCloseKey(key);
 
-		if constexpr (ThrowOnError)
-			if (status != Win32::ErrorCodes::Success)
-				throw Error::Win32Error("RegSetValueExW() failed", status);
+		if constexpr (ThrowOnError and status != Win32::ErrorCodes::Success)
+			throw Error::Win32Error("RegSetValueExW() failed", status);
 	}
 
 	template<ValueTypes TValueType>
