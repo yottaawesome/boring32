@@ -9,7 +9,7 @@ namespace Async
 	{
 		TEST_METHOD(TestDefaultConstructor)
 		{
-			Boring32::Async::TimerQueue t;
+			Boring32::Async::TimerQueue<> t;
 			Assert::IsNull(t.GetHandle());
 		}
 	};

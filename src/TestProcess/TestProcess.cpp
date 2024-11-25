@@ -59,9 +59,8 @@ DWORD ConnectToPrivateNamespace()
         L"elevated-boundary",
         L"D:(A;;GA;;;BA)(A;;GR;;;BU)"
     );
-    Boring32::Async::Event agentNamespacePipeAvailable(
+    Boring32::Async::Event<false> agentNamespacePipeAvailable(
         true,
-        false,
         L"elevated\\pipeAvailable",
         SYNCHRONIZE
     );

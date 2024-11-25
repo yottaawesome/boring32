@@ -90,8 +90,8 @@ export namespace Boring32::Async
 			}
 
 		private:
-			Event m_first{ false, true, false };
-			Event m_second{ false, true, false };
+			ManualResetEvent m_first{ false, false };
+			ManualResetEvent m_second{ false, false };
 			Active m_currentActive = Active::None;
 	};
 }

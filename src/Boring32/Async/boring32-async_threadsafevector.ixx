@@ -226,6 +226,6 @@ export namespace Boring32::Async
 		protected:
 			std::vector<T> m_collection;
 			mutable CriticalSection m_criticalSection{ 0 };
-			Event m_hasMessages{ false, true, false };
+			ManualResetEvent m_hasMessages{ false, false };
 	};
 }

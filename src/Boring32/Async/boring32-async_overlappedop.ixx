@@ -145,7 +145,7 @@ export namespace Boring32::Async
 			virtual void OnSuccess() {}
 
 		protected:
-			Event m_ioEvent{ false, true, false };
+			ManualResetEvent m_ioEvent{ false, false };
 			std::shared_ptr<Win32::OVERLAPPED> m_ioOverlapped = std::make_shared<Win32::OVERLAPPED>();
 			Win32::DWORD m_lastError = 0;
 	};

@@ -10,7 +10,7 @@ namespace Async
 		public:
 			TEST_METHOD(WaitForSingle)
 			{
-				Boring32::Async::Event event(false, true, false, L"");
+				Boring32::Async::ManualResetEvent event(false, false, L"");
 				std::thread signalThread([&event]() { event.Signal(); });
 				std::thread guardThread([&event]() {
 					Sleep(200);
@@ -24,7 +24,7 @@ namespace Async
 
 			TEST_METHOD(WaitForSingleChrono)
 			{
-				Boring32::Async::Event event(false, true, false);
+				Boring32::Async::ManualResetEvent event(false, false);
 				event.Signal();
 				Assert::IsTrue(
 					Boring32::Async::WaitFor(
@@ -37,7 +37,7 @@ namespace Async
 
 			TEST_METHOD(WaitForSingleChronoTimeout)
 			{
-				Boring32::Async::Event event(false, true, false);
+				Boring32::Async::ManualResetEvent event(false, false);
 				Assert::IsTrue(
 					Boring32::Async::WaitFor(
 						event.GetHandle(),
@@ -49,14 +49,14 @@ namespace Async
 
 			TEST_METHOD(WaitForSingleTimeout)
 			{
-				Boring32::Async::Event event(false, true, false, L"");
+				Boring32::Async::ManualResetEvent event(false, false, L"");
 				Assert::IsTrue(Boring32::Async::WaitFor(event.GetHandle(), 100) == Boring32::Win32::WaitResult::Timeout);
 			}
 
 			TEST_METHOD(WaitForMultipleOne)
 			{
-				Boring32::Async::Event event1(false, true, false, L"");
-				Boring32::Async::Event event2(false, true, false, L"");
+				Boring32::Async::ManualResetEvent event1(false, false, L"");
+				Boring32::Async::ManualResetEvent event2(false, false, L"");
 				std::vector<HANDLE> handles{ event1.GetHandle(), event2.GetHandle() };
 				std::thread signalThread(
 					[&event1, &event2]()
@@ -70,8 +70,8 @@ namespace Async
 
 			TEST_METHOD(WaitForMultipleAll)
 			{
-				Boring32::Async::Event event1(false, true, false, L"");
-				Boring32::Async::Event event2(false, true, false, L"");
+				Boring32::Async::ManualResetEvent event1(false, false, L"");
+				Boring32::Async::ManualResetEvent event2(false, false, L"");
 				std::vector<HANDLE> handles{ event1.GetHandle(), event2.GetHandle() };
 				std::thread signalThread(
 					[&event1, &event2]()
@@ -86,8 +86,8 @@ namespace Async
 
 			TEST_METHOD(WaitForMultipleTimeout)
 			{
-				Boring32::Async::Event event1(false, true, false, L"");
-				Boring32::Async::Event event2(false, true, false, L"");
+				Boring32::Async::ManualResetEvent event1(false, false, L"");
+				Boring32::Async::ManualResetEvent event2(false, false, L"");
 				std::vector<HANDLE> handles{ event1.GetHandle(), event2.GetHandle() };
 
 				Assert::IsTrue(Boring32::Async::WaitFor(handles, false, 100) == WAIT_TIMEOUT);
@@ -103,8 +103,8 @@ namespace Async
 				if (!status)
 					throw std::runtime_error("Failed to QueueUserAPC");
 
-				Boring32::Async::Event event1(false, true, false, L"");
-				Boring32::Async::Event event2(false, true, false, L"");
+				Boring32::Async::ManualResetEvent event1(false, false, L"");
+				Boring32::Async::ManualResetEvent event2(false, false, L"");
 				std::vector<HANDLE> handles{ event1.GetHandle(), event2.GetHandle() };
 				Assert::IsTrue(
 					Boring32::Async::WaitFor(handles, false, INFINITE, true) == WAIT_IO_COMPLETION

@@ -7,6 +7,7 @@ import :concepts;
 export namespace Boring32::Async
 {
 	/// Encapsulates a Win32 Event synchronization object.
+	template<bool VIsManualReset = false>
 	struct Event final
 	{
 		Event() = default;
@@ -17,34 +18,20 @@ export namespace Boring32::Async
 
 		// Custom constructors
 		//	Constructor for an anonymous Event object.
-		Event(
-			const bool isInheritable,
-			const bool manualReset,
-			const bool isSignaled
-		) : m_isManualReset(manualReset)
+		Event(const bool isInheritable, const bool isSignaled)
 		{
 			InternalCreate(isSignaled, isInheritable);
 		}
 
 		//	Constructor for a named or anonymous Event object.
-		Event(
-			const bool isInheritable,
-			const bool manualReset,
-			const bool isSignaled,
-			std::wstring name
-		) : m_isManualReset(manualReset),
-			m_name(std::move(name))
+		Event(const bool isInheritable, const bool isSignaled, std::wstring name) 
+			: m_name(std::move(name))
 		{
 			InternalCreate(isSignaled, isInheritable);
 		}
 
-		Event(
-			const bool isInheritable,
-			const bool manualReset,
-			std::wstring name,
-			const Win32::DWORD desiredAccess
-		) : m_isManualReset(manualReset),
-			m_name(std::move(name))
+		Event(const bool isInheritable, std::wstring name, const Win32::DWORD desiredAccess) 
+			: m_name(std::move(name))
 		{
 			if (m_name->empty())
 				throw Error::Boring32Error("Name of Event to open cannot be empty");
@@ -82,10 +69,8 @@ export namespace Boring32::Async
 			return std::unexpected(ex.what());
 		}
 
-		void Reset()
+		void Reset() requires VIsManualReset
 		{
-			if (not m_isManualReset)
-				return;
 			if (not m_event)
 				return;
 			if (auto lastError = Win32::GetLastError(); not Win32::ResetEvent(m_event.GetHandle()))
@@ -93,6 +78,7 @@ export namespace Boring32::Async
 		}
 
 		std::expected<void, std::string> Reset(const std::nothrow_t&) noexcept 
+			requires VIsManualReset
 		try
 		{
 			Reset();
@@ -176,9 +162,9 @@ export namespace Boring32::Async
 			return m_name;
 		}
 
-		bool IsManualReset() const noexcept
+		constexpr bool IsManualReset() const noexcept
 		{
-			return m_isManualReset;
+			return VIsManualReset;
 		}
 
 		private:
@@ -186,7 +172,7 @@ export namespace Boring32::Async
 		{
 			m_event = Win32::CreateEventW(
 				nullptr,			// security attributes
-				m_isManualReset,	// manual reset event
+				VIsManualReset,	// manual reset event
 				isSignaled,			// is initially signalled
 				m_name and not m_name->empty() ? m_name->c_str() : nullptr // name
 			);
@@ -199,7 +185,18 @@ export namespace Boring32::Async
 		}
 
 		RAII::Win32Handle m_event;
-		bool m_isManualReset = false;
 		std::optional<std::wstring> m_name;
 	};
+
+	template<typename T> 
+	struct IsAnyEventT : std::false_type {};
+	template<bool VIsManualReset> 
+	struct IsAnyEventT<Event<VIsManualReset>> : std::true_type {};
+	template<typename T>
+	constexpr bool IsAnyEventV = IsAnyEventT<T>::value;
+	template<typename T>
+	concept AnyEvent = IsAnyEventV<T>;
+
+	using ManualResetEvent = Event<true>;
+	using AutoResetEvent = Event<false>;
 }

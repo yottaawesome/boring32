@@ -8,19 +8,21 @@ import :winsock_winsockerror;
 
 namespace Boring32::WinSock
 {
+	template<Async::AnyEvent T>
 	struct OverlappedEx : public Win32::OVERLAPPED
 	{
-		OverlappedEx(Async::Event& a) : Win32::OVERLAPPED{}, e(a) {};
-		Async::Event& e;
+		OverlappedEx(T& a) : Win32::OVERLAPPED{}, e(a) {};
+		T& e;
 	};
 
+	template<typename TAnyEvent>
 	void __stdcall QueryCompleteCallback(
 		Win32::DWORD Error,
 		Win32::DWORD Bytes,
 		Win32::LPOVERLAPPED Overlapped
 	)
 	{
-		OverlappedEx* ex = (OverlappedEx*)Overlapped;
+		auto* ex = reinterpret_cast<OverlappedEx<TAnyEvent>*>(Overlapped);
 		ex->e.Signal();
 	}
 }
@@ -156,7 +158,7 @@ export namespace Boring32::WinSock
 			.tv_usec = 10        /* and microseconds */
 		};
 
-		Async::Event e(false, true, false);
+		Async::ManualResetEvent e(false, false);
 		OverlappedEx ov(e);
 		Win32::WinSock::ADDRINFOEX hints{ .ai_family = Win32::WinSock::AddressFamily::IPv4 };
 		//https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-getaddrinfoexw
@@ -169,7 +171,7 @@ export namespace Boring32::WinSock
 			&queryResults,
 			nullptr,//&t,
 			&ov,
-			QueryCompleteCallback,
+			QueryCompleteCallback<decltype(e)>,
 			&cancelHandle
 		);
 		if (error != Win32::WinSock::_WSA_IO_PENDING) Error::ThrowNested(
@@ -222,7 +224,7 @@ export namespace Boring32::WinSock
 
 	std::vector<NetworkingAddress> Resolve3(const std::wstring& name)
 	{
-		Async::Event opCompleted(false, true, false);
+		Async::ManualResetEvent opCompleted(false, false);
 		Win32::OVERLAPPED ov{ .hEvent = opCompleted.GetHandle() };
 		Win32::WinSock::PADDRINFOEXW queryResults = nullptr;
 		Win32::timeval timeout{

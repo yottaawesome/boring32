@@ -126,7 +126,7 @@ export namespace Boring32::Registry
 
 	// This should probably be integrated into RegistryKey to enable safety checks
 	// against calling it multiple times causing resource leaks
-	void WatchKey(const Win32::Winreg::HKEY key, const Async::Event& eventToSignal)
+	void WatchKey(const Win32::Winreg::HKEY key, const Async::AnyEvent auto& eventToSignal)
 	{
 		if (!key)
 			throw Error::Boring32Error("key cannot be nullptr");

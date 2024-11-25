@@ -10,8 +10,8 @@ namespace Async
 		public:
 			TEST_METHOD(TestEventLoop)
 			{
-				Boring32::Async::Event event1(false, true, false);
-				Boring32::Async::Event event2(false, true, false);
+				Boring32::Async::ManualResetEvent event1(false, false);
+				Boring32::Async::ManualResetEvent event2(false, false);
 
 				Boring32::Async::EventLoop eventLoop;
 				eventLoop.On(
@@ -29,8 +29,8 @@ namespace Async
 			TEST_METHOD(TestEventLoop2)
 			{
 				std::wstring out;
-				Boring32::Async::Event event1(false, true, false);
-				Boring32::Async::Event event2(false, true, false);
+				Boring32::Async::ManualResetEvent event1(false, false);
+				Boring32::Async::ManualResetEvent event2(false, false);
 
 				Boring32::Async::EventLoop eventLoop;
 				eventLoop.On(
@@ -54,19 +54,11 @@ namespace Async
 
 			TEST_METHOD(TestEventErase)
 			{
-				Boring32::Async::Event event1(false, true, false);
-				Boring32::Async::Event event2(false, true, false);
+				Boring32::Async::ManualResetEvent event1(false, false);
+				Boring32::Async::ManualResetEvent event2(false, false);
 				Boring32::Async::EventLoop eventLoop;
-				eventLoop.On(
-					event1.GetHandle(),
-					[]() {
-					}
-				);
-				eventLoop.On(
-					event2.GetHandle(),
-					[]() {
-					}
-				);
+				eventLoop.On(event1.GetHandle(), [] {});
+				eventLoop.On(event2.GetHandle(), [] {});
 				Assert::IsTrue(eventLoop.Size() == 2);
 				eventLoop.Erase(event2.GetHandle());
 				Assert::IsTrue(eventLoop.Size() == 1);

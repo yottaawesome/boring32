@@ -145,6 +145,6 @@ export namespace Boring32::Async
 			}
 
 		protected:
-			Event m_wait{ false, true, false, };
+			ManualResetEvent m_wait{ false, false, };
 	};
 }
