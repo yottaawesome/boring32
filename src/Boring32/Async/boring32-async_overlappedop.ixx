@@ -5,7 +5,8 @@ import :async_event;
 
 export namespace Boring32::Async
 {
-	struct [[nodiscard("This object must remain live while the I/O operation is in progress")]] OverlappedOp
+	struct [[nodiscard("This object must remain live while the I/O operation is in progress")]] 
+	OverlappedOp
 	{
 		virtual ~OverlappedOp() = default;
 		OverlappedOp()
@@ -26,7 +27,6 @@ export namespace Boring32::Async
 		}
 
 		OverlappedOp(OverlappedOp&& other) noexcept
-			: m_ioOverlapped(nullptr)
 		{
 			Move(other);
 		}
