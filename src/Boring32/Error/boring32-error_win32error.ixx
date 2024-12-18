@@ -5,9 +5,8 @@ import :error_functions;
 
 export namespace Boring32::Error
 {
-	class Win32Error final : public Boring32Error
+	struct Win32Error final : public Boring32Error
 	{
-		public:
 		Win32Error(
 			const std::string& msg,
 			const std::source_location location = std::source_location::current(),
@@ -47,7 +46,6 @@ export namespace Boring32::Error
 		) : m_errorCode(errorCode), Boring32Error(Generate(msg, errorCode, moduleName, location, trace))
 		{ }
 
-		public:
 		unsigned long GetErrorCode() const noexcept
 		{
 			return m_errorCode;
