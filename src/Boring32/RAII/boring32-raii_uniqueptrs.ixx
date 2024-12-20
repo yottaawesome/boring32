@@ -3,31 +3,20 @@ import boring32.shared;
 
 export namespace Boring32::RAII
 {
-	struct LocalHeapDeleter final
+	template<auto VDeleter>
+	struct Deleter final
 	{
-		void operator()(void* ptr)
-		{
-			Win32::LocalFree(ptr);
-		}
+		void operator()(auto ptr) const noexcept { VDeleter(ptr); }
 	};
+
+	template<typename T, auto VDeleter>
+	using UniquePtr = std::unique_ptr<T, Deleter<VDeleter>>;
+	template<typename T, auto VDeleter>
+	using IndirectUniquePtr = std::unique_ptr<std::remove_pointer_t<T>, Deleter<VDeleter>>;
+
 	template<typename T>
-	using LocalHeapUniquePtr = std::unique_ptr<T, LocalHeapDeleter>;
+	using LocalHeapUniquePtr = UniquePtr<T, Win32::LocalFree>;
 
-	struct DLLDeleter final
-	{
-		void operator()(Win32::HMODULE ptr)
-		{
-			Win32::FreeLibrary(ptr);
-		}
-	};
-	using DllUniquePtr = std::unique_ptr<std::remove_pointer<Win32::HMODULE>::type, DLLDeleter>;
-
-	struct SIDDeleter final
-	{
-		void operator()(Win32::PSID ptr)
-		{
-			Win32::FreeSid(ptr);
-		}
-	};
-	using SIDUniquePtr = std::unique_ptr<std::remove_pointer<Win32::PSID>::type, SIDDeleter>;
+	using DllUniquePtr = IndirectUniquePtr<Win32::HMODULE, Win32::FreeLibrary>;
+	using SIDUniquePtr = IndirectUniquePtr<Win32::PSID, Win32::FreeSid>;
 }

@@ -130,6 +130,7 @@ export namespace Boring32::Win32
 		::LUID_AND_ATTRIBUTES,
 		::PRIVILEGE_SET,
 		::SID_NAME_USE,
+		::SECURITY_DESCRIPTOR,
 		::PrivilegeCheck,
 		::LsaClose,
 		::LsaOpenPolicy,
