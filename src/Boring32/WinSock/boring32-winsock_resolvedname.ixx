@@ -35,7 +35,7 @@ export namespace Boring32::WinSock
 			Win32::WinSock::ADDRINFOW* addrInfoResult;
 			std::wstring portNumber = port ? std::to_wstring(port) : L"";
 			// https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-getaddrinfow
-			const int status = Win32::WinSock::GetAddrInfoW(
+			int status = Win32::WinSock::GetAddrInfoW(
 				name.data(),
 				portNumber.c_str(),
 				&hints,

@@ -7,7 +7,6 @@ namespace TaskScheduler
 {
 	TEST_CLASS(RegisteredTask)
 	{
-		public:
-			// TODO
+		// TODO
 	};
 }

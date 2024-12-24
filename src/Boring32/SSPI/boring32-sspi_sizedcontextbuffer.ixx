@@ -3,33 +3,31 @@ import boring32.shared;
 
 export namespace Boring32::SSPI
 {
-	class SizedContextBuffer
+	struct SizedContextBuffer final
 	{
-		public:
-			virtual ~SizedContextBuffer()
-			{
-				Destroy();
-			}
-			// Needa a type
-			SizedContextBuffer() {}
+		~SizedContextBuffer()
+		{
+			Destroy();
+		}
+		// Needa a type
+		SizedContextBuffer() {}
 
-		public:
-			virtual void** GetAddress() noexcept
-			{
-				return reinterpret_cast<void**>(&m_buffer[0]);
-			}
+		void** GetAddress() noexcept
+		{
+			return reinterpret_cast<void**>(&m_buffer[0]);
+		}
 
-			virtual void* Get() const noexcept
-			{
-				return reinterpret_cast<void*>(const_cast<std::byte*>(&m_buffer[0]));
-			}
+		void* Get() const noexcept
+		{
+			return reinterpret_cast<void*>(const_cast<std::byte*>(&m_buffer[0]));
+		}
 
-			virtual void Destroy()
-			{
-				m_buffer.clear();
-			}
+		void Destroy()
+		{
+			m_buffer.clear();
+		}
 
-		protected:
-			std::vector<std::byte> m_buffer;
+		private:
+		std::vector<std::byte> m_buffer;
 	};
 }

@@ -6,90 +6,73 @@ import :services_raii;
 
 export namespace Boring32::Services
 {
-	class ServiceControlManager final
+	struct ServiceControlManager final
 	{
-		public:
-			~ServiceControlManager() = default;
-			ServiceControlManager(const ServiceControlManager&) = default;
-			ServiceControlManager& operator=(const ServiceControlManager&) = default;
-			ServiceControlManager(ServiceControlManager&&) noexcept = default;
-			ServiceControlManager& operator=(ServiceControlManager&&) noexcept = default;
+		ServiceControlManager(const ServiceControlManager&) = default;
+		ServiceControlManager& operator=(const ServiceControlManager&) = default;
+		ServiceControlManager(ServiceControlManager&&) noexcept = default;
+		ServiceControlManager& operator=(ServiceControlManager&&) noexcept = default;
 
-		public:
-			ServiceControlManager()
-			{
-				Open(Win32::_SC_MANAGER_ALL_ACCESS);
-			}
+		ServiceControlManager()
+		{
+			Open(Win32::_SC_MANAGER_ALL_ACCESS);
+		}
 
-			ServiceControlManager(const unsigned desiredAccess)
-			{
-				Open(desiredAccess);
-			}
+		ServiceControlManager(const unsigned desiredAccess)
+		{
+			Open(desiredAccess);
+		}
 
-		public:
-			operator bool() const noexcept
-			{
-				return m_scm.get() != nullptr;
-			}
+		operator bool() const noexcept
+		{
+			return m_scm.get() != nullptr;
+		}
 
-		public:
-			void Close()
-			{
-				m_scm = nullptr;
-			}
+		void Close()
+		{
+			m_scm = nullptr;
+		}
 
-			Service AccessService(
-				const std::wstring& name
-			)
-			{
-				return AccessService(name, Win32::_SERVICE_ALL_ACCESS);
-			}
+		Service AccessService(const std::wstring& name)
+		{
+			return AccessService(name, Win32::_SERVICE_ALL_ACCESS);
+		}
 
-			Service AccessService(
-				const std::wstring& name,
-				const unsigned desiredAccess
-			)
-			{
-				if (!m_scm)
-					throw Error::Boring32Error("m_scm is null");
+		Service AccessService(const std::wstring& name, unsigned desiredAccess)
+		{
+			if (not m_scm)
+				throw Error::Boring32Error("m_scm is null");
 
-				// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openservicew
-				Win32::SC_HANDLE serviceHandle = Win32::OpenServiceW(
-					m_scm.get(),
-					name.c_str(),
-					desiredAccess
-				);
-				if (!serviceHandle)
-				{
-					const auto lastError = Win32::GetLastError();
-					throw Error::Win32Error("OpenServiceW() failed", lastError);
-				}
-				return { CreateSharedPtr(serviceHandle) };
-			}
+			// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openservicew
+			Win32::SC_HANDLE serviceHandle = Win32::OpenServiceW(
+				m_scm.get(),
+				name.c_str(),
+				desiredAccess
+			);
+			if (auto lastError = Win32::GetLastError(); not serviceHandle)
+				throw Error::Win32Error("OpenServiceW() failed", lastError);
+			return { CreateSharedPtr(serviceHandle) };
+		}
 
-			Win32::SC_HANDLE GetHandle() const noexcept
-			{
-				return m_scm.get();
-			}
+		Win32::SC_HANDLE GetHandle() const noexcept
+		{
+			return m_scm.get();
+		}
 
 		private:
-			void Open(const unsigned desiredAccess)
-			{
-				// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openscmanagerw
-				Win32::SC_HANDLE schSCManager = Win32::OpenSCManagerW(
-					nullptr,        // local computer
-					nullptr,        // ServicesActive database 
-					desiredAccess   // full access rights
-				);
-				if (!schSCManager)
-				{
-					const auto lastError = Win32::GetLastError();
-					throw Error::Win32Error("OpenSCManagerW() failed", lastError);
-				}
-				m_scm = CreateSharedPtr(schSCManager);
-			}
+		void Open(const unsigned desiredAccess)
+		{
+			// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openscmanagerw
+			Win32::SC_HANDLE schSCManager = Win32::OpenSCManagerW(
+				nullptr,        // local computer
+				nullptr,        // ServicesActive database 
+				desiredAccess   // full access rights
+			);
+			if (auto lastError = Win32::GetLastError(); not schSCManager)
+				throw Error::Win32Error("OpenSCManagerW() failed", lastError);
+			m_scm = CreateSharedPtr(schSCManager);
+		}
 
-		private:
-			ServiceHandleSharedPtr m_scm;
+		ServiceHandleSharedPtr m_scm;
 	};
 }

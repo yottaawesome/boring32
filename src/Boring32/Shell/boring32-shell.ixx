@@ -1,28 +1,20 @@
 export module boring32:shell;
 import boring32.shared;
 import :error;
+import :raii;
 
 namespace Boring32::Shell
 {
-	struct CoTaskMemFreeDelete
-	{
-		void operator()(void* ptr)
-		{
-			Win32::CoTaskMemFree(ptr);
-		}
-	};
-	using CoTaskMemFreeDeleteUniquePtr = std::unique_ptr<void, CoTaskMemFreeDelete>;
+	using CoTaskMemFreeDeleteUniquePtr = RAII::UniquePtr<void, Win32::CoTaskMemFree>;
 }
 
 export namespace Boring32::Shell
 {
-	std::filesystem::path GetKnownFolderPath(
-		const Win32::Shell::WellKnownFolder& folderId
-	)
+	std::filesystem::path GetKnownFolderPath(const Win32::Shell::WellKnownFolder& folderId)
 	{
 		// https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shgetknownfolderpath
 		wchar_t* out = nullptr;
-		const Win32::HRESULT hr = Win32::Shell::SHGetKnownFolderPath(
+		Win32::HRESULT hr = Win32::Shell::SHGetKnownFolderPath(
 			folderId,
 			0,
 			nullptr,

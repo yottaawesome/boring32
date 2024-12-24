@@ -2,15 +2,13 @@ export module boring32:xaudio2_voice;
 
 export namespace Boring32::XAudio2
 {
-	class Voice
+	struct Voice
 	{
-		public:
-			virtual ~Voice()
-			{
-				Close();
-			}
+		virtual ~Voice()
+		{
+			Close();
+		}
 
-		public:
-			virtual void Close() = 0;
+		virtual void Close() = 0;
 	};
 }

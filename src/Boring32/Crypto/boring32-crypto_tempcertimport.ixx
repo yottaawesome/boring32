@@ -5,37 +5,34 @@ import :crypto_certstore;
 
 export namespace Boring32::Crypto
 {
-	class TempCertImport final
+	struct TempCertImport final
 	{
-		public:
-			~TempCertImport()
-			{
-				Close();
-			}
+		~TempCertImport()
+		{
+			Close();
+		}
 				
-			TempCertImport(
-				CertStore& store, 
-				Certificate& toImport, 
-				const CertAddDisposition disposition = CertAddDisposition::AddNewer
-			) : m_store(store), m_cert(toImport)
-			{
-				m_store.AddCertificate(toImport.GetCert(), disposition);
-			}
+		TempCertImport(
+			CertStore& store, 
+			Certificate& toImport, 
+			const CertAddDisposition disposition = CertAddDisposition::AddNewer
+		) : m_store(store), m_cert(toImport)
+		{
+			m_store.AddCertificate(toImport.GetCert(), disposition);
+		}
 
-		public:
-			void Close() noexcept try
-			{
-				m_store.DeleteCert(m_cert.GetCert());
-			}
-			catch (const std::exception& ex)
-			{
-				std::wcerr
-					<< "Failed to delete temp cert: "
-					<< ex.what();
-			}
+		void Close() noexcept 
+		try
+		{
+			m_store.DeleteCert(m_cert.GetCert());
+		}
+		catch (const std::exception& ex)
+		{
+			std::wcerr << "Failed to delete temp cert: " << ex.what();
+		}
 
 		private:
-			CertStore m_store;
-			Certificate m_cert;
+		CertStore m_store;
+		Certificate m_cert;
 	};
 }

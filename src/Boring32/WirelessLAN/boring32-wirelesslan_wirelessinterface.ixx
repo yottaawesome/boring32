@@ -25,7 +25,7 @@ namespace Boring32::WirelessLAN
 		Win32::WLAN_OPCODE_VALUE_TYPE opcodeType;
 		Win32::DWORD dataSize = sizeof(T);
 		// https://docs.microsoft.com/en-us/windows/win32/api/wlanapi/nf-wlanapi-wlanqueryinterface
-		const Win32::DWORD status = Win32::WlanQueryInterface(
+		Win32::DWORD status = Win32::WlanQueryInterface(
 			wlanHandle,
 			&guid,
 			opcode,

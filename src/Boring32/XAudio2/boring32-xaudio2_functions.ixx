@@ -39,37 +39,19 @@ export namespace Boring32::XAudio2
         while (hr == Win32::S_Ok)
         {
             Win32::DWORD dwRead;
-            if (!Win32::ReadFile(hFile, &dwChunkType, sizeof(Win32::DWORD), &dwRead, nullptr))
-            {
-                const auto lastError = Win32::GetLastError();
-                throw Error::Win32Error(
-                    "Win32::ReadFile() failed",
-                    lastError
-                );
-            }
+            if (auto lastError = Win32::GetLastError(); not Win32::ReadFile(hFile, &dwChunkType, sizeof(Win32::DWORD), &dwRead, nullptr))
+                throw Error::Win32Error("Win32::ReadFile() failed", lastError);
 
-            if (!Win32::ReadFile(hFile, &dwChunkDataSize, sizeof(Win32::DWORD), &dwRead, nullptr))
-            {
-                const auto lastError = Win32::GetLastError();
-                throw Error::Win32Error(
-                    "Win32::ReadFile() failed",
-                    lastError
-                );
-            }
+            if (auto lastError = Win32::GetLastError(); not Win32::ReadFile(hFile, &dwChunkDataSize, sizeof(Win32::DWORD), &dwRead, nullptr))
+                throw Error::Win32Error("Win32::ReadFile() failed", lastError);
 
             switch (dwChunkType)
             {
                 case fourccRIFF:
                     dwRIFFDataSize = dwChunkDataSize;
                     dwChunkDataSize = 4;
-                    if (!Win32::ReadFile(hFile, &dwFileType, sizeof(Win32::DWORD), &dwRead, nullptr))
-                    {
-                        const auto lastError = Win32::GetLastError();
-                        throw Error::Win32Error(
-                            "Win32::ReadFile() failed",
-                            lastError
-                        );
-                    }
+                    if (auto lastError = Win32::GetLastError(); not Win32::ReadFile(hFile, &dwFileType, sizeof(Win32::DWORD), &dwRead, nullptr))
+                        throw Error::Win32Error("Win32::ReadFile() failed", lastError);
                     break;
 
                 default:
@@ -79,14 +61,8 @@ export namespace Boring32::XAudio2
                         nullptr,
                         Win32::FileCurrent
                     );
-                    if (result == Win32::InvalidSetFilePointer)
-                    {
-                        const auto lastError = Win32::GetLastError();
-                        throw Error::Win32Error(
-                            "Win32::SetFilePointer() failed",
-                            lastError
-                        );
-                    }
+                    if (auto lastError = Win32::GetLastError(); result == Win32::InvalidSetFilePointer)
+                        throw Error::Win32Error("Win32::SetFilePointer() failed",lastError);
             }
 
             dwOffset += sizeof(Win32::DWORD) * 2;

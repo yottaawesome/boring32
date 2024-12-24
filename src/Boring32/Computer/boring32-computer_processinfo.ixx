@@ -51,7 +51,7 @@ export namespace Boring32::Computer
 			Win32::FILETIME ftKernelTime{ 0 };
 			Win32::FILETIME ftUserTime{ 0 };
 			// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesstimes
-			const bool success = Win32::GetProcessTimes(
+			bool success = Win32::GetProcessTimes(
 				m_processHandle.GetHandle(),
 				&ftCreationTime,
 				&ftExitTime,
@@ -61,13 +61,13 @@ export namespace Boring32::Computer
 			if (auto lastError = GetLastError(); not success)
 				throw Error::Win32Error("GetProcessTimes() failed", lastError);
 
-			const size_t startTime =
+			size_t startTime =
 				Win32::ULARGE_INTEGER{ ftCreationTime.dwLowDateTime, ftCreationTime.dwHighDateTime }.QuadPart;
-			const size_t exitTime =
+			size_t exitTime =
 				Win32::ULARGE_INTEGER{ ftExitTime.dwLowDateTime, ftExitTime.dwHighDateTime }.QuadPart;
-			const size_t kernelTime =
+			size_t kernelTime =
 				Win32::ULARGE_INTEGER{ ftKernelTime.dwLowDateTime, ftKernelTime.dwHighDateTime }.QuadPart;
-			const size_t userTime =
+			size_t userTime =
 				Win32::ULARGE_INTEGER{ ftUserTime.dwLowDateTime, ftUserTime.dwHighDateTime }.QuadPart;
 			return {
 				.CreationTime = startTime,
@@ -87,7 +87,7 @@ export namespace Boring32::Computer
 			// https://docs.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getmodulefilenameexw
 			// See also https://docs.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getprocessimagefilenamew
 			// See also https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-queryfullprocessimagenamew
-			const Win32::DWORD charactersCopied = Win32::K32GetModuleFileNameExW(
+			Win32::DWORD charactersCopied = Win32::K32GetModuleFileNameExW(
 				m_processHandle.GetHandle(),
 				nullptr,
 				&path[0],
@@ -103,7 +103,7 @@ export namespace Boring32::Computer
 			if (not m_processHandle)
 				throw Error::Boring32Error("m_processHandle cannot be null");
 			// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessid
-			const Win32::DWORD id = Win32::GetProcessId(m_processHandle.GetHandle());
+			Win32::DWORD id = Win32::GetProcessId(m_processHandle.GetHandle());
 			if (auto lastError = Win32::GetLastError(); not id)
 				throw Error::Win32Error("GetProcessId() failed", lastError);
 			return id;
@@ -116,10 +116,7 @@ export namespace Boring32::Computer
 
 			Win32::DWORD handleCount;
 			// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesshandlecount
-			const bool succeeded = Win32::GetProcessHandleCount(
-				m_processHandle.GetHandle(),
-				&handleCount
-			);
+			bool succeeded = Win32::GetProcessHandleCount(m_processHandle.GetHandle(), &handleCount);
 			if (auto lastError = Win32::GetLastError(); not succeeded)
 				throw Error::Win32Error("GetProcessHandleCount() failed", lastError);
 			return handleCount;

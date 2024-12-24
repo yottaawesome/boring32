@@ -10,7 +10,7 @@ export namespace Boring32::FileSystem
 	{
 		// Adapted from https://stackoverflow.com/questions/940707/how-do-i-programmatically-get-the-version-of-a-dll-or-exe-file
 		// See also https://docs.microsoft.com/en-us/windows/win32/menurc/version-information
-		if (!std::filesystem::exists(filePath))
+		if (not std::filesystem::exists(filePath))
 			throw Error::Boring32Error(
 				"File {} does not exist",
 				std::source_location::current(),
@@ -20,12 +20,9 @@ export namespace Boring32::FileSystem
 
 		Win32::DWORD verHandle = 0;
 		// https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfosizew
-		const Win32::DWORD verSize = Win32::GetFileVersionInfoSizeW(filePath.c_str(), &verHandle);
-		if (!verSize)
-		{
-			const auto lastError = Win32::GetLastError();
+		Win32::DWORD verSize = Win32::GetFileVersionInfoSizeW(filePath.c_str(), &verHandle);
+		if (auto lastError = Win32::GetLastError(); not verSize)
 			throw Error::Win32Error("GetFileVersionInfoSizeW() failed", lastError);
-		}
 
 		std::vector<std::byte> verData(verSize);
 		// https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfow
@@ -35,11 +32,8 @@ export namespace Boring32::FileSystem
 			verSize, 
 			&verData[0]
 		);
-		if (!success)
-		{
-			const auto lastError = Win32::GetLastError();
+		if (auto lastError = Win32::GetLastError(); not success)
 			throw Error::Win32Error("GetFileVersionInfoW() failed", lastError);
-		}
 
 		unsigned size = 0;
 		std::byte* lpBuffer = nullptr; // Free when pBlock argument is freed
@@ -50,13 +44,13 @@ export namespace Boring32::FileSystem
 			reinterpret_cast<void**>(&lpBuffer), 
 			&size
 		);
-		if (!success)
+		if (not success)
 			throw Error::Boring32Error("Could not determine version info (VerQueryValueW() failed)");
-		if (!size)
+		if (not size)
 			throw Error::Boring32Error("Could not determine version info (size was zero)");
 
 		//https://docs.microsoft.com/en-us/windows/win32/api/verrsrc/ns-verrsrc-vs_fixedfileinfo
-		const Win32::VS_FIXEDFILEINFO* verInfo = reinterpret_cast<Win32::VS_FIXEDFILEINFO*>(lpBuffer);
+		Win32::VS_FIXEDFILEINFO* verInfo = reinterpret_cast<Win32::VS_FIXEDFILEINFO*>(lpBuffer);
 		if (verInfo->dwSignature != 0xfeef04bd)
 			throw Error::Boring32Error("Could not determine version info (invalid signature)");
 
@@ -77,15 +71,9 @@ export namespace Boring32::FileSystem
 	{
 		if (path.empty())
 			throw Error::Boring32Error("path cannot be empty");
-		const bool succeeded = Win32::CreateDirectoryW(
-			path.c_str(),
-			nullptr
-		);
-		if (!succeeded)
-		{
-			const auto lastError = Win32::GetLastError();
+		bool succeeded = Win32::CreateDirectoryW(path.c_str(), nullptr);
+		if (auto lastError = Win32::GetLastError(); not succeeded)
 			throw Error::Win32Error("CreateDirectoryW() failed", lastError);
-		}
 	}
 
 	void CreateFileDirectory(const std::wstring& path, const std::wstring& dacl)
@@ -102,22 +90,16 @@ export namespace Boring32::FileSystem
 			&sd,
 			nullptr
 		);
-		if (!succeeded)
-		{
-			const auto lastError = Win32::GetLastError();
+		if (auto lastError = Win32::GetLastError(); not succeeded)
 			throw Error::Win32Error("ConvertStringSecurityDescriptorToSecurityDescriptorW() failed", lastError);
-		}
 		std::unique_ptr<void, void(*)(void*)> sdDeleter(sd, [](void* ptr) { Win32::LocalFree(ptr); });
 
 		Win32::SECURITY_ATTRIBUTES sa{
 			.nLength = sizeof(Win32::SECURITY_ATTRIBUTES),
 			.lpSecurityDescriptor = sd
 		};
-		if (!Win32::CreateDirectoryW(path.c_str(), &sa))
-		{
-			const auto lastError = GetLastError();
+		if (auto lastError = GetLastError(); not Win32::CreateDirectoryW(path.c_str(), &sa))
 			throw Error::Win32Error("CreateDirectoryW() failed", lastError);
-		}
 	}
 
 	void MoveNamedFile(
@@ -132,11 +114,8 @@ export namespace Boring32::FileSystem
 			throw Error::Boring32Error("newFile cannot be empty");
 
 		// https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-movefileexw
-		if (!Win32::MoveFileExW(oldFile.c_str(), newFile.c_str(), flags))
-		{
-			const auto lastError = Win32::GetLastError();
+		if (auto lastError = Win32::GetLastError(); not Win32::MoveFileExW(oldFile.c_str(), newFile.c_str(), flags))
 			throw Error::Win32Error("MoveFileExW() failed", lastError);
-		}
 	}
 
 	Win32::HANDLE FileCreate(
@@ -153,7 +132,7 @@ export namespace Boring32::FileSystem
 			throw Error::Boring32Error("Filename must be specified");
 
 		// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew
-		const Win32::HANDLE fileHandle = Win32::CreateFileW(
+		Win32::HANDLE fileHandle = Win32::CreateFileW(
 			fileName.c_str(),				// lpFileName
 			desiredAccess,	// dwDesiredAccess
 			// https://learn.microsoft.com/en-us/windows/win32/secauthz/generic-access-rights
@@ -165,120 +144,97 @@ export namespace Boring32::FileSystem
 			flagsAndAttributes,			// dwFlagsAndAttributes
 			templateFile							// hTemplateFile
 		);
-		if (fileHandle == Win32::InvalidHandleValue)
-		{
-			const auto lastError = Win32::GetLastError();
+		if (auto lastError = Win32::GetLastError(); fileHandle == Win32::InvalidHandleValue)
 			throw Error::Win32Error("CreateFileW() failed", lastError);
-		}
 		return fileHandle;
 	}
 
 	void WriteFile(
 		const Win32::HANDLE file,
 		const void* lpBuffer,
-		const Win32::DWORD numberOfBytesToWrite,
+		Win32::DWORD numberOfBytesToWrite,
 		Win32::DWORD* const numberOfBytesWritten
 	)
 	{
-		if (!file)
+		if (not file)
 			throw Error::Boring32Error("File handle cannot be null");
 		if (file == Win32::InvalidHandleValue)
 			throw Error::Boring32Error("File handle cannot be INVALID_HANDLE_VALUE");
-		if (!numberOfBytesWritten)
+		if (not numberOfBytesWritten)
 			throw Error::Boring32Error("numberOfBytesWritten cannot be null");
 		if (numberOfBytesToWrite == 0)
 		{
 			*numberOfBytesWritten = 0;
 			return;
 		}
-		if (!lpBuffer)
+		if (not lpBuffer)
 			throw Error::Boring32Error("Buffer cannot be null");
 
 		// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile
-		const bool success = Win32::WriteFile(
+		bool success = Win32::WriteFile(
 			file,
 			lpBuffer,
 			numberOfBytesToWrite,
 			numberOfBytesWritten,
 			nullptr
 		);
-		if (!success)
-		{
-			const auto lastError = Win32::GetLastError();
-			throw Error::Win32Error(
-				"WriteFile() failed",
-				lastError
-			);
-		}
+		if (auto lastError = Win32::GetLastError(); not success)
+			throw Error::Win32Error("WriteFile() failed", lastError);
 	}
 
 	void WriteFile(
 		const Win32::HANDLE file,
 		const void* lpBuffer,
-		const Win32::DWORD numberOfBytesToWrite,
+		Win32::DWORD numberOfBytesToWrite,
 		const Win32::OVERLAPPED& overlapped
 	)
 	{
-		if (!file)
+		if (not file)
 			throw Error::Boring32Error("File handle cannot be null");
 		if (file == Win32::InvalidHandleValue)
 			throw Error::Boring32Error("File handle cannot be INVALID_HANDLE_VALUE");
 		if (numberOfBytesToWrite == 0)
 			return;
 		
-		if (!lpBuffer)
+		if (not lpBuffer)
 			throw Error::Boring32Error("Buffer cannot be null");
 
 		// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile
-		const bool success = Win32::WriteFile(
+		bool success = Win32::WriteFile(
 			file,
 			lpBuffer,
 			numberOfBytesToWrite,
 			nullptr,
 			const_cast<Win32::OVERLAPPED*>(&overlapped)
 		);
-		if (!success)
-		{
-			const auto lastError = Win32::GetLastError();
-			throw Error::Win32Error(
-				"WriteFile() failed",
-				lastError
-			);
-		}
+		if (auto lastError = Win32::GetLastError(); not success)
+			throw Error::Win32Error("WriteFile() failed", lastError);
 	}
 
 	void ReadFile(
 		const Win32::HANDLE file,
 		void* const lpBuffer,
-		const Win32::DWORD nNumberOfBytesToRead,
+		Win32::DWORD nNumberOfBytesToRead,
 		Win32::DWORD& lpNumberOfBytesRead
 	)
 	{
-		if (!file)
+		if (not file)
 			throw Error::Boring32Error("File handle cannot be null");
 		if (file == Win32::InvalidHandleValue)
 			throw Error::Boring32Error("File handle cannot be INVALID_HANDLE_VALUE");
 		if (nNumberOfBytesToRead == 0)
-		{
 			return;
-		}
-		if (!lpBuffer)
+		if (not lpBuffer)
 			throw Error::Boring32Error("Buffer cannot be null");
 
-		const bool success = Win32::ReadFile(
+		bool success = Win32::ReadFile(
 			file,
 			lpBuffer,
 			nNumberOfBytesToRead,
 			&lpNumberOfBytesRead,
 			nullptr
 		);
-		if (!success)
-		{
-			const auto lastError = Win32::GetLastError();
-			throw Error::Win32Error(
-				"ReadFile() failed",
-				lastError
-			);
-		}
+		if (auto lastError = Win32::GetLastError(); not success)
+			throw Error::Win32Error("ReadFile() failed", lastError);
 	}
 }

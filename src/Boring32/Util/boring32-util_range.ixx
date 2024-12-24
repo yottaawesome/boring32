@@ -43,100 +43,97 @@ export namespace Boring32::Util
 		bool VMoveConstructible = std::is_move_constructible_v<TValue>,
 		bool VMoveAssignable = std::is_move_assignable_v<TValue>
 	>
-	class Range
+	struct Range
 	{
-		public:
-			enum class RangeError
+		enum class RangeError
+		{
+			Exhausted,
+			InsufficientRemainder,
+			IncrementFailure,
+		};
+		constexpr Range(const TValue min, const TValue max)
+			: m_min(min), m_max(max)
+		{
+			if (m_min > m_max)
+				throw Error::Boring32Error("Min greater than max");
+		}
+
+		Range(const Range& other) noexcept(std::is_nothrow_copy_constructible_v<TValue>)
+			requires VCopyConstructible and std::is_copy_constructible_v<TValue> = default;
+
+		Range& operator=(const Range& other) noexcept(std::is_nothrow_copy_assignable_v<TValue>)
+			requires VCopyAssignable and std::is_copy_assignable_v<TValue> = default;
+
+		Range(Range&& other) noexcept(std::is_nothrow_move_constructible_v<TValue>)
+			requires VMoveConstructible and std::is_move_constructible_v<TValue> = default;
+
+		Range& operator=(Range&& other) noexcept(std::is_nothrow_move_assignable_v<TValue>)
+			requires VMoveAssignable and std::is_move_assignable_v<TValue> = default;
+
+		TValue Next()
+		{
+			if (m_current > m_max)
+				throw Error::Boring32Error("Range exceeded");
+			return m_current++;
+		}
+
+		std::expected<TValue, RangeError> Next(const std::nothrow_t&) noexcept
+		{
+			if (m_current > m_max)
+				return std::unexpected(RangeError::Exhausted);
+
+			// Since we support any underlying type that supports ++, 
+			// we have to check this.
+			if constexpr (NothrowIncrementable<TValue>)
 			{
-				Exhausted,
-				InsufficientRemainder,
-				IncrementFailure,
-			};
-		public:
-			constexpr Range(const TValue min, const TValue max)
-				: m_min(min), m_max(max)
-			{
-				if (m_min > m_max)
-					throw Error::Boring32Error("Min greater than max");
-			}
-
-			Range(const Range& other) noexcept(std::is_nothrow_copy_constructible_v<TValue>)
-				requires VCopyConstructible and std::is_copy_constructible_v<TValue> = default;
-
-			Range& operator=(const Range& other) noexcept(std::is_nothrow_copy_assignable_v<TValue>)
-				requires VCopyAssignable and std::is_copy_assignable_v<TValue> = default;
-
-			Range(Range&& other) noexcept(std::is_nothrow_move_constructible_v<TValue>)
-				requires VMoveConstructible and std::is_move_constructible_v<TValue> = default;
-
-			Range& operator=(Range&& other) noexcept(std::is_nothrow_move_assignable_v<TValue>)
-				requires VMoveAssignable and std::is_move_assignable_v<TValue> = default;
-
-		public:
-			TValue Next()
-			{
-				if (m_current > m_max)
-					throw Error::Boring32Error("Range exceeded");
 				return m_current++;
 			}
-
-			std::expected<TValue, RangeError> Next(const std::nothrow_t&) noexcept
+			else try
 			{
-				if (m_current > m_max)
-					return std::unexpected(RangeError::Exhausted);
-
-				// Since we support any underlying type that supports ++, 
-				// we have to check this.
-				if constexpr (NothrowIncrementable<TValue>)
-				{
-					return m_current++;
-				}
-				else try
-				{
-					return m_current++;
-				}
-				catch (...)
-				{
-					return std::unexpected(RangeError::IncrementFailure);
-				}
+				return m_current++;
 			}
-
-			Range Next(const TValue next)
+			catch (...)
 			{
-				// Zero indexed. For example, imagine m_current = 0 and m_max = 1,
-				// which gives us a range of 2 values. Now if we want all 2, we
-				// get 0 + 2 > 1, which is wrong and would raise an exception, so 
-				// we compare it against m_max + 1.
-				if (m_current + next > m_max + 1)
-					throw Error::Boring32Error("Insufficient remainder");
-
-				auto temp = m_current;
-				m_current += next;
-				return { temp, m_current };
+				return std::unexpected(RangeError::IncrementFailure);
 			}
+		}
 
-			std::expected<TValue, RangeError> Next(const TValue next, const std::nothrow_t&) noexcept
+		Range Next(const TValue next)
+		{
+			// Zero indexed. For example, imagine m_current = 0 and m_max = 1,
+			// which gives us a range of 2 values. Now if we want all 2, we
+			// get 0 + 2 > 1, which is wrong and would raise an exception, so 
+			// we compare it against m_max + 1.
+			if (m_current + next > m_max + 1)
+				throw Error::Boring32Error("Insufficient remainder");
+
+			auto temp = m_current;
+			m_current += next;
+			return { temp, m_current };
+		}
+
+		std::expected<TValue, RangeError> Next(const TValue next, const std::nothrow_t&) noexcept
+		{
+			if (m_current + next > m_max + 1)
+				return std::unexpected(RangeError::InsufficientRemainder);
+
+			if constexpr (NothrowAddable<TValue>)
 			{
-				if (m_current + next > m_max + 1)
-					return std::unexpected(RangeError::InsufficientRemainder);
-
-				if constexpr (NothrowAddable<TValue>)
-				{
-					return m_current += next;
-				}
-				else try
-				{
-					return m_current += next;
-				}
-				catch (...)
-				{
-					return std::unexpected(RangeError::IncrementFailure);
-				}
+				return m_current += next;
 			}
+			else try
+			{
+				return m_current += next;
+			}
+			catch (...)
+			{
+				return std::unexpected(RangeError::IncrementFailure);
+			}
+		}
 
 		private:
-			TValue m_current{};
-			TValue m_min{};
-			TValue m_max{};
+		TValue m_current{};
+		TValue m_min{};
+		TValue m_max{};
 	};
 }

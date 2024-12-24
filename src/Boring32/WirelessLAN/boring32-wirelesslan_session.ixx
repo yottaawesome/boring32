@@ -6,67 +6,59 @@ import :wirelesslan_wirelessinterfaces;
 
 export namespace Boring32::WirelessLAN
 {
-	class Session final
+	struct Session final
 	{
-		public:
-			Session()
-				: Interfaces(Open())
-			{}
+		WirelessInterfaces Interfaces;
 
-			Session(const Session& other) = default;
-			Session(Session&& other) noexcept = default;
+		Session()
+			: Interfaces(Open())
+		{}
 
-		public:
-			Session& operator=(const Session& other) = default;
-			Session& operator=(Session&& other) noexcept = default;
+		Session(const Session& other) = default;
+		Session(Session&& other) noexcept = default;
 
-		public:
-			void Close()
-			{
-				m_wlanHandle = nullptr;
-				m_maxClientVersion = 0;
-				m_negotiatedVersion = 0;
-			}
+		Session& operator=(const Session& other) = default;
+		Session& operator=(Session&& other) noexcept = default;
 
-			Win32::DWORD GetMaxClientVersion() const noexcept
-			{
-				return m_maxClientVersion;
-			}
+		void Close()
+		{
+			m_wlanHandle = nullptr;
+			m_maxClientVersion = 0;
+			m_negotiatedVersion = 0;
+		}
 
-			Win32::DWORD GetNegotiatedVersion() const noexcept
-			{
-				return m_negotiatedVersion;
-			}
-			//virtual WirelessInterfaces Interfaces();
+		Win32::DWORD GetMaxClientVersion() const noexcept
+		{
+			return m_maxClientVersion;
+		}
+
+		Win32::DWORD GetNegotiatedVersion() const noexcept
+		{
+			return m_negotiatedVersion;
+		}
 
 		private:
-			SharedWLANHandle Open()
-			{
-				if (m_wlanHandle)
-					return m_wlanHandle;
-
-				// Open a WLAN session
-				Win32::HANDLE wlanHandle;
-				const Win32::DWORD status = Win32::WlanOpenHandle(
-					m_maxClientVersion,
-					nullptr,
-					&m_negotiatedVersion,
-					&wlanHandle
-				);
-				if (status != Win32::ErrorCodes::Success)
-					throw Boring32::Error::Win32Error("WlanOpenHandle() failed", status);
-				m_wlanHandle = CreateSharedWLANHandle(wlanHandle);
+		SharedWLANHandle Open()
+		{
+			if (m_wlanHandle)
 				return m_wlanHandle;
-			}
-			
-		private:
-			SharedWLANHandle m_wlanHandle;
-			Win32::DWORD m_maxClientVersion = 2;
-			Win32::DWORD m_negotiatedVersion = 0;
 
-			// declared here due to initialisation order
-			// may need to reconsider this approach
-		public:
-			WirelessInterfaces Interfaces;
+			// Open a WLAN session
+			Win32::HANDLE wlanHandle;
+			Win32::DWORD status = Win32::WlanOpenHandle(
+				m_maxClientVersion,
+				nullptr,
+				&m_negotiatedVersion,
+				&wlanHandle
+			);
+			if (status != Win32::ErrorCodes::Success)
+				throw Boring32::Error::Win32Error("WlanOpenHandle() failed", status);
+			m_wlanHandle = CreateSharedWLANHandle(wlanHandle);
+			return m_wlanHandle;
+		}
+			
+		SharedWLANHandle m_wlanHandle;
+		Win32::DWORD m_maxClientVersion = 2;
+		Win32::DWORD m_negotiatedVersion = 0;
 	};
 }

@@ -79,14 +79,13 @@
     <ClCompile Include="Crypto\boring32-crypto_chainingmode.ixx" />
     <ClCompile Include="Crypto\boring32-crypto_certificatechain.ixx" />
     <ClCompile Include="WinHttp\boring32-winhttp_winhttphandle.ixx" />
-    <ClCompile Include="WinHttp\boring32-winhttp_proxytype.ixx" />
     <ClCompile Include="WinHttp\boring32-winhttp_httpwebclient.ixx" />
     <ClCompile Include="WinHttp\boring32-winhttp_requestresult.ixx" />
     <ClCompile Include="WindowsImagingComponent\boring32-windowsimagingcomponent.ixx" />
     <ClCompile Include="WindowsImagingComponent\boring32-windowsimagingcomponent_imagingfactory.ixx" />
     <ClCompile Include="WinHttp\boring32-winhttp_websocket.ixx" />
     <ClCompile Include="WinHttp\boring32-winhttp_asyncwebsocket.ixx" />
-    <ClCompile Include="WinHttp\boring32-winhttp_websocketstatus.ixx" />
+    <ClCompile Include="WinHttp\boring32-winhttp_enums.ixx" />
     <ClCompile Include="FileSystem\boring32-filesystem.ixx" />
     <ClCompile Include="WinHttp\boring32-winhttp_asyncwebsocketsettings.ixx" />
     <ClCompile Include="WinHttp\boring32-winhttp_websocketsettings.ixx" />
@@ -95,7 +94,6 @@
     <ClCompile Include="Async\boring32-async_slimreadwritelock.ixx" />
     <ClCompile Include="Async\boring32-async_eventloop.ixx" />
     <ClCompile Include="Error\boring32-error_errorbase.ixx" />
-    <ClCompile Include="Util\boring32-util_switcher.ixx" />
     <ClCompile Include="WinHttp\boring32-winhttp_winhttperror.ixx" />
     <ClCompile Include="Security\boring32-security_securitydescriptor.ixx" />
     <ClCompile Include="Async\boring32-async_processinfo.ixx" />

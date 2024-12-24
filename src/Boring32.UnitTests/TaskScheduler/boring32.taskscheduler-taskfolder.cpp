@@ -7,7 +7,6 @@ namespace TaskScheduler
 {
 	TEST_CLASS(TaskFolder)
 	{
-		public:
 			// TODO
 	};
 }

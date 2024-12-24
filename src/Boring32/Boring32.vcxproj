@@ -343,7 +343,6 @@
     <ClCompile Include="Util\boring32-util_globallyuniqueid.ixx" />
     <ClCompile Include="Util\boring32-util_range.ixx" />
     <ClCompile Include="Util\boring32-util.ixx" />
-    <ClCompile Include="Util\boring32-util_switcher.ixx" />
     <ClCompile Include="Native\boring32-native_defs.ixx" />
     <ClCompile Include="Native\boring32-native_ntdll.ixx" />
     <ClCompile Include="Native\boring32-native.ixx" />
@@ -367,10 +366,9 @@
     <ClCompile Include="WinHttp\boring32-winhttp_asyncwebsocketsettings.ixx" />
     <ClCompile Include="WinHttp\boring32-winhttp_websocket.ixx" />
     <ClCompile Include="WinHttp\boring32-winhttp_websocketsettings.ixx" />
-    <ClCompile Include="WinHttp\boring32-winhttp_websocketstatus.ixx" />
+    <ClCompile Include="WinHttp\boring32-winhttp_enums.ixx" />
     <ClCompile Include="WinHttp\boring32-winhttp_winhttperror.ixx" />
     <ClCompile Include="WinHttp\boring32-winhttp_winhttphandle.ixx" />
-    <ClCompile Include="WinHttp\boring32-winhttp_proxytype.ixx" />
     <ClCompile Include="WinSock\boring32-winsock_functions.ixx" />
     <ClCompile Include="WinSock\boring32-winsock_resolvedname.ixx" />
     <ClCompile Include="WinSock\boring32-winsock_socket.ixx" />

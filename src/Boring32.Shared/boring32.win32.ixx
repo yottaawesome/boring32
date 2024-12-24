@@ -890,7 +890,7 @@ export namespace Boring32::Win32
 	using ::FreeCredentialsHandle;
 	using ::AcquireCredentialsHandleW;
 	using ::InitializeSecurityContextW;
-	constexpr auto _SEC_E_OK = SEC_E_OK;
+	constexpr auto Sec_E_OK = SEC_E_OK;
 	constexpr auto _SP_PROT_TLS1 = SP_PROT_TLS1;
 	constexpr auto _SCH_CRED_NO_DEFAULT_CREDS = SCH_CRED_NO_DEFAULT_CREDS;
 	constexpr auto _SCH_CRED_MANUAL_CRED_VALIDATION = SCH_CRED_MANUAL_CRED_VALIDATION;
@@ -909,7 +909,7 @@ export namespace Boring32::Win32
 	};
 
 
-	constexpr auto _DACL_SECURITY_INFORMATION=  DACL_SECURITY_INFORMATION;
+	constexpr auto DaclSecurityInformation =  DACL_SECURITY_INFORMATION;
 	
 	using ::TASK_CREATION;
 	using ::TASK_LOGON_TYPE;
@@ -932,8 +932,8 @@ export namespace Boring32::Win32
 	using ::VARENUM;
 	using ::TASK_TRIGGER_TYPE2;
 	using ::GetAdaptersAddresses;
-	constexpr auto _VARIANT_TRUE = VARIANT_TRUE;
-	constexpr auto _VARIANT_FALSE = VARIANT_FALSE;
+	constexpr auto VariantTrue = VARIANT_TRUE;
+	constexpr auto VariantFalse = VARIANT_FALSE;
 
 	constexpr auto _SERVICE_STOP_REASON_FLAG_PLANNED = SERVICE_STOP_REASON_FLAG_PLANNED;
 	constexpr auto _SERVICE_STOP_REASON_MAJOR_NONE = SERVICE_STOP_REASON_MAJOR_NONE;

@@ -1,24 +1,15 @@
 export module boring32:winsock_uniqueptrs;
 import boring32.shared;
+import :raii;
 
 export namespace Boring32::WinSock
 {
-	struct AddrInfoWDeleter final
-	{
-		void operator()(Win32::WinSock::ADDRINFOW* obj)
-		{
-			Win32::WinSock::FreeAddrInfoW(obj);
-		}
-	};
-	using AddrInfoWUniquePtr = std::unique_ptr<Win32::WinSock::ADDRINFOW, AddrInfoWDeleter>;
+	using AddrInfoWUniquePtr = RAII::UniquePtr<Win32::WinSock::ADDRINFOW, Win32::WinSock::FreeAddrInfoW>;
 
-	struct SocketDeleter final
+	void CloseSocket(Win32::WinSock::SOCKET sock)
 	{
-		void operator()(Win32::WinSock::SOCKET sock)
-		{
-			if (sock and sock != Win32::WinSock::_INVALID_SOCKET)
-				Win32::WinSock::closesocket(sock);
-		}
-	};
-	using SocketUniquePtr = std::unique_ptr<Win32::WinSock::SOCKET, SocketDeleter>;
+		if (sock and sock != Win32::WinSock::_INVALID_SOCKET)
+			Win32::WinSock::closesocket(sock);
+	}
+	using SocketUniquePtr = RAII::UniquePtr<Win32::WinSock::SOCKET, CloseSocket>;
 }
