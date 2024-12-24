@@ -187,8 +187,8 @@ export namespace Boring32::Crypto
 				static_cast<Win32::DWORD>(m_protectedString.size() * sizeof(wchar_t)),
 				static_cast<Win32::DWORD>(m_encryptionType)
 			);
-			if (auto lastError = Win32::GetLastError(); not succeeded)
-				throw Error::Win32Error("CryptProtectMemory() failed", lastError);
+			if (not succeeded)
+				throw Error::Win32Error(Win32::GetLastError(), "CryptProtectMemory() failed");
 			m_isEncrypted = true;
 		}
 
@@ -204,8 +204,8 @@ export namespace Boring32::Crypto
 				static_cast<Win32::DWORD>(m_protectedString.size() * sizeof(wchar_t)),
 				static_cast<Win32::DWORD>(m_encryptionType)
 			);
-			if (auto lastError = Win32::GetLastError(); not succeeded)
-				throw Error::Win32Error("CryptUnprotectMemory() failed", lastError);
+			if (not succeeded)
+				throw Error::Win32Error(Win32::GetLastError(), "CryptUnprotectMemory() failed");
 			m_isEncrypted = false;
 		}
 

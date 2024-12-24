@@ -23,8 +23,8 @@ export namespace Boring32::IO
 		{
 			if (not device)
 				throw Error::Boring32Error("device cannot be null");
-			if (auto lastError = Win32::GetLastError(); not Win32::CreateIoCompletionPort(device, m_completionPort.GetHandle(), completionKey, 0))
-				throw Error::Win32Error("CreateIoCompletionPort() failed", lastError);
+			if (not Win32::CreateIoCompletionPort(device, m_completionPort.GetHandle(), completionKey, 0))
+				throw Error::Win32Error(Win32::GetLastError(), "CreateIoCompletionPort() failed");
 		}
 
 		Win32::HANDLE GetHandle() const noexcept
@@ -47,10 +47,10 @@ export namespace Boring32::IO
 				Win32::Infinite
 			);
 
-			if (Win32::DWORD lastError = Win32::GetLastError(); not success)
+			if (not success)
 			{
-				if (not overlapped and lastError != Win32::ErrorCodes::AbandonedWait0)
-					throw Error::Win32Error("GetQueuedCompletionStatus() failed", lastError);
+				if (auto lastError = Win32::GetLastError(); not overlapped and lastError != Win32::ErrorCodes::AbandonedWait0)
+					throw Error::Win32Error(lastError, "GetQueuedCompletionStatus() failed");
 				else {}
 				// Dequeued a completion packet for a failed I/O operation.
 				// Not really clear what we should do here.

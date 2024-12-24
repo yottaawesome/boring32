@@ -48,8 +48,8 @@ export namespace Boring32::FileSystem
 				Win32::FileAttributeNormal,			// dwFlagsAndAttributes
 				nullptr							// hTemplateFile
 			);
-			if (auto lastError = Win32::GetLastError(); m_fileHandle == Win32::InvalidHandleValue)
-				throw Error::Win32Error("CreateFileW() failed", lastError);
+			if (m_fileHandle == Win32::InvalidHandleValue)
+				throw Error::Win32Error(Win32::GetLastError(), "CreateFileW() failed");
 		}
 
 		std::wstring m_fileName;

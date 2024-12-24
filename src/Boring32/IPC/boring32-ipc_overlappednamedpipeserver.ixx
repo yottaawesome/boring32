@@ -91,7 +91,7 @@ export namespace Boring32::IPC
 			bool succeeded = Win32::ConnectNamedPipe(m_pipe.GetHandle(), oio.GetOverlapped());
 			oio.LastError(GetLastError());
 			if (not succeeded and oio.LastError() != Win32::ErrorCodes::IoPending)
-				throw Error::Win32Error("ConnectNamedPipe() failed", oio.LastError());
+				throw Error::Win32Error(oio.LastError(), "ConnectNamedPipe() failed");
 
 			/*
 			HANDLE out = nullptr;
@@ -164,7 +164,7 @@ export namespace Boring32::IPC
 			);
 			oio.LastError(Win32::GetLastError());
 			if (not succeeded and oio.LastError() != Win32::ErrorCodes::IoPending)
-				throw Error::Win32Error("WriteFile() failed", oio.LastError());
+				throw Error::Win32Error(oio.LastError(), "WriteFile() failed");
 		}
 
 		void InternalRead(const Win32::DWORD noOfCharacters, Async::OverlappedIo& oio)
@@ -186,7 +186,7 @@ export namespace Boring32::IPC
 
 			oio.LastError(Win32::GetLastError());
 			if (oio.LastError() != Win32::ErrorCodes::IoPending and oio.LastError() != Win32::ErrorCodes::MoreData)
-				throw Error::Win32Error("ReadFile() failed", oio.LastError());
+				throw Error::Win32Error(oio.LastError(), "ReadFile() failed");
 		}
 	};
 }

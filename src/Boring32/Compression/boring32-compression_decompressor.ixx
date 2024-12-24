@@ -77,7 +77,7 @@ export namespace Boring32::Compression
 				return decompressedBufferSize;
 
 			Error::ThrowNested(
-				Error::Win32Error("Decompress() failed", lastError),
+				Error::Win32Error(lastError, "Decompress() failed"),
 				CompressionError("An error occurred while decompressing data")
 			);
 		}
@@ -101,10 +101,10 @@ export namespace Boring32::Compression
 				returnVal.size(),			//  Uncompressed buffer size
 				&decompressedBufferSize		//  Decompressed data size
 			);
-			if (auto lastError = Win32::GetLastError(); not succeeded)
+			if (not succeeded)
 			{
 				Error::ThrowNested(
-					Error::Win32Error("CreateDecompressor() failed", lastError),
+					Error::Win32Error(Win32::GetLastError(), "CreateDecompressor() failed"),
 					CompressionError("An error occurred creating the decompressor"));
 			}
 
@@ -121,10 +121,10 @@ export namespace Boring32::Compression
 			if (not m_decompressor)
 				throw CompressionError("Decompressor handle is null");
 			// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-resetdecompressor
-			if (auto lastError = Win32::GetLastError(); not Win32::ResetDecompressor(m_decompressor.get()))
+			if (not Win32::ResetDecompressor(m_decompressor.get()))
 			{
 				Error::ThrowNested(
-					Error::Win32Error("ResetDecompressor() failed", lastError),
+					Error::Win32Error(Win32::GetLastError(), "ResetDecompressor() failed"),
 					CompressionError("An error occurred resetting the decompressor")
 				);
 			}
@@ -142,10 +142,10 @@ export namespace Boring32::Compression
 				nullptr,
 				&handle
 			);
-			if (auto lastError = Win32::GetLastError(); not succeeded)
+			if (not succeeded)
 			{
 				Error::ThrowNested(
-					Error::Win32Error("CreateDecompressor() failed", lastError),
+					Error::Win32Error(Win32::GetLastError(), "CreateDecompressor() failed"),
 					CompressionError("An error occurred creating the decompressor")
 				);
 			}

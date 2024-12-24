@@ -42,7 +42,7 @@ export namespace Boring32::WinSock
 				&addrInfoResult
 			);
 			if (status)
-				throw Error::Win32Error("GetAddrInfoW() failed", status, L"ws2_32.dll");
+				throw Error::Win32Error(status, "GetAddrInfoW() failed", L"ws2_32.dll");
 			if (not addrInfoResult)
 				throw WinSockError("GetAddrInfoW() did not find any valid results");
 

@@ -67,10 +67,7 @@ export namespace Boring32::Async
 					&processInfo			// Pointer to PROCESS_INFORMATION structure
 				);
 			if (!successfullyCreatedProcess)
-			{
-				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error("Failed to create process", lastError);
-			}
+				throw Error::Win32Error(Win32::GetLastError(), "Failed to create process");
 
 			m_process = processInfo.hProcess;
 			m_thread = processInfo.hThread;
@@ -135,8 +132,8 @@ export namespace Boring32::Async
 				throw Error::Boring32Error("No process handle to query");
 
 			Win32::DWORD exitCode = 0;
-			if (auto lastError = Win32::GetLastError(); not Win32::GetExitCodeProcess(m_process.GetHandle(), &exitCode))
-				throw Error::Win32Error("Failed to determine process exit code", lastError);
+			if (not Win32::GetExitCodeProcess(m_process.GetHandle(), &exitCode))
+				throw Error::Win32Error(Win32::GetLastError(), "Failed to determine process exit code");
 
 			return exitCode;
 		}

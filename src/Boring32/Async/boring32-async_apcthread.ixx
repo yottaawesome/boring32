@@ -57,10 +57,8 @@ export namespace Boring32::Async
 						int(m_status)
 					)
 				);
-
-			Win32::DWORD status = Win32::QueueUserAPC(apc, m_threadHandle, arg);
-			if (auto lastError = Win32::GetLastError(); not status)
-				throw Error::Win32Error("QueueUserAPC() failed", lastError);
+			if (not Win32::QueueUserAPC(apc, m_threadHandle, arg))
+				throw Error::Win32Error(Win32::GetLastError(), "QueueUserAPC() failed");
 		}
 
 		auto SignalToExit() -> void

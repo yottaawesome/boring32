@@ -63,10 +63,7 @@ export namespace Boring32::Async
 			if (not m_threadHandle)
 				throw Error::Boring32Error("No thread handle to terminate");
 			if (not Win32::TerminateThread(m_threadHandle.GetHandle(), exitCode))
-			{
-				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error("TerminateThread() failed", lastError);
-			}
+				throw Error::Win32Error(Win32::GetLastError(), "TerminateThread() failed");
 			m_status = ThreadStatus::Terminated;
 		}
 
@@ -78,10 +75,7 @@ export namespace Boring32::Async
 				throw Error::Boring32Error("Thread was not running when request to suspend occurred.");
 
 			if (not Win32::SuspendThread(m_threadHandle.GetHandle()))
-			{
-				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error("SuspendThread() failed", lastError);
-			}
+				throw Error::Win32Error(Win32::GetLastError(), "SuspendThread() failed");
 			m_status = ThreadStatus::Suspended;
 		}
 
@@ -91,8 +85,8 @@ export namespace Boring32::Async
 				throw Error::Boring32Error("No thread handle to resume");
 			if (m_status != ThreadStatus::Suspended)
 				throw Error::Boring32Error("Thread was not suspended when request to resume occurred.");
-			if (auto lastError = Win32::GetLastError(); not Win32::ResumeThread(m_threadHandle.GetHandle()))
-				throw Error::Win32Error("ResumeThread() failed", lastError);
+			if (not Win32::ResumeThread(m_threadHandle.GetHandle()))
+				throw Error::Win32Error(Win32::GetLastError(), "ResumeThread() failed");
 			m_status = ThreadStatus::Running;
 		}
 
@@ -108,8 +102,7 @@ export namespace Boring32::Async
 				return false;
 			if (waitResult == Win32::WaitAbandoned)
 				throw Error::Boring32Error("Wait was abandoned");
-			auto lastError = Win32::GetLastError();
-			throw Error::Win32Error("WaitForSingleObject() failed", lastError);
+			throw Error::Win32Error(Win32::GetLastError(), "WaitForSingleObject() failed");
 		}
 
 		virtual void Close()
@@ -145,8 +138,8 @@ export namespace Boring32::Async
 				throw Error::Boring32Error("No handle to thread; has the the thread been started or destroyed?");
 
 			Win32::DWORD exitCode;
-			if (auto lastError = Win32::GetLastError(); not Win32::GetExitCodeThread(m_threadHandle.GetHandle(), &exitCode))
-				throw Error::Win32Error("GetExitCodeThread() failed", lastError);
+			if (not Win32::GetExitCodeThread(m_threadHandle.GetHandle(), &exitCode))
+				throw Error::Win32Error(Win32::GetLastError(), "GetExitCodeThread() failed");
 			return exitCode;
 		}
 

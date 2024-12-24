@@ -35,37 +35,24 @@ export namespace Boring32::Async
 			// See https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_basic_limit_information
 			// jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
 
-			const bool succeeded = Win32::SetInformationJobObject(
+			bool succeeded = Win32::SetInformationJobObject(
 				m_job.GetHandle(),
 				Win32::JOBOBJECTINFOCLASS::JobObjectExtendedLimitInformation,
 				&jeli,
 				sizeof(jeli)
 			);
-			if (!succeeded)
-			{
-				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error(
-					"SetInformationJobObject() failed",
-					lastError
-				);
-			}
+			if (not succeeded)
+				throw Error::Win32Error(Win32::GetLastError(), "SetInformationJobObject() failed");
 		}
 
 		void AssignProcessToThisJob(const Win32::HANDLE process)
 		{
-			if (!m_job)
+			if (not m_job)
 				throw Error::Boring32Error("Cannot assign process to job; job is not initialised");
-			if (!process)
+			if (not process)
 				throw Error::Boring32Error("Cannot assign process to job; process is null.");
-
-			if (!Win32::AssignProcessToJobObject(m_job.GetHandle(), process))
-			{
-				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error(
-					"Cannot assign process to job; AssignProcessToJobObject() failed.",
-					lastError
-				);
-			}
+			if (not Win32::AssignProcessToJobObject(m_job.GetHandle(), process))
+				throw Error::Win32Error(Win32::GetLastError(), "Cannot assign process to job; AssignProcessToJobObject() failed.");
 		}
 
 		Win32::HANDLE GetHandle() const noexcept
@@ -91,18 +78,9 @@ export namespace Boring32::Async
 		private:
 		void Create(const bool isInheritable)
 		{
-			m_job = Win32::CreateJobObjectW(
-				nullptr,
-				m_name.empty() ? nullptr : m_name.c_str()
-			);
-			if (!m_job)
-			{
-				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error(
-					"CreateJobObjectW() failed",
-					lastError
-				);
-			}
+			m_job = Win32::CreateJobObjectW(nullptr, m_name.empty() ? nullptr : m_name.c_str());
+			if (not m_job)
+				throw Error::Win32Error(Win32::GetLastError(), "CreateJobObjectW() failed");
 			m_job.SetInheritability(isInheritable);
 		}
 
@@ -113,14 +91,8 @@ export namespace Boring32::Async
 				isInheritable,
 				m_name.c_str()
 			);
-			if (!m_job)
-			{
-				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error(
-					"OpenJobObjectW() failed",
-					lastError
-				);
-			}
+			if (not m_job)
+				throw Error::Win32Error(Win32::GetLastError(), "OpenJobObjectW() failed");
 		}
 
 		RAII::Win32Handle m_job;

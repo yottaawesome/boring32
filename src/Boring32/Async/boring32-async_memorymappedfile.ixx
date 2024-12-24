@@ -64,8 +64,8 @@ export namespace Boring32::Async
 				m_maxSize,					// maximum object size (low-order DWORD)
 				m_name.c_str()				// m_name of mapping object
 			);
-			if (auto lastError = Win32::GetLastError(); not m_mapFile)
-				throw Error::Win32Error("CreateFileMappingW() failed", lastError);
+			if (not m_mapFile)
+				throw Error::Win32Error(Win32::GetLastError(), "CreateFileMappingW() failed");
 
 			m_mapFile.SetInheritability(inheritable);
 			m_view = Win32::MapViewOfFile(
@@ -75,10 +75,11 @@ export namespace Boring32::Async
 				0,
 				maxSize
 			);
-			if (auto lastError = Win32::GetLastError(); not m_view)
+			if (not m_view)
 			{
+				auto lastError = Win32::GetLastError();
 				Close();
-				throw Error::Win32Error("MapViewOfFile() failed", lastError);
+				throw Error::Win32Error(lastError, "MapViewOfFile() failed");
 			}
 
 			Win32::RtlSecureZeroMemory(m_view, m_maxSize);
@@ -99,8 +100,8 @@ export namespace Boring32::Async
 				inheritable,	// Should the handle be inheritable
 				m_name.c_str()	// name of mapping object
 			);
-			if (auto lastError = Win32::GetLastError(); not m_mapFile)
-				throw Error::Win32Error("OpenFileMappingW() failed", lastError);
+			if (not m_mapFile)
+				throw Error::Win32Error(Win32::GetLastError(), "OpenFileMappingW() failed");
 
 			m_view = Win32::MapViewOfFile(
 				m_mapFile.GetHandle(),	// handle to map object
@@ -109,10 +110,11 @@ export namespace Boring32::Async
 				0,
 				maxSize
 			);
-			if (auto lastError = Win32::GetLastError(); not m_view)
+			if (not m_view)
 			{
+				auto lastError = Win32::GetLastError();
 				Close();
-				throw Error::Win32Error("MapViewOfFile() failed", lastError);
+				throw Error::Win32Error(lastError, "MapViewOfFile() failed");
 			}
 		}
 
@@ -138,8 +140,8 @@ export namespace Boring32::Async
 		///	Releases all resources owned by this object.
 		void Close()
 		{
-			if (auto lastError = Win32::GetLastError(); m_view && !Win32::UnmapViewOfFile(m_view))
-				throw Error::Win32Error("UnmapViewOfFile() failed", lastError);
+			if (m_view && !Win32::UnmapViewOfFile(m_view))
+				throw Error::Win32Error(Win32::GetLastError(), "UnmapViewOfFile() failed");
 			m_view = nullptr;
 			m_mapFile = nullptr;
 		}
@@ -183,10 +185,11 @@ export namespace Boring32::Async
 				0,
 				m_maxSize
 			);
-			if (auto lastError = Win32::GetLastError(); not m_view)
+			if (not m_view)
 			{
+				auto lastError = Win32::GetLastError();
 				Close();
-				throw Error::Win32Error("MapViewOfFile() failed", lastError);
+				throw Error::Win32Error(lastError, "MapViewOfFile() failed");
 			}
 		}
 

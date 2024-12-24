@@ -39,9 +39,8 @@ export namespace Boring32::WinSock
 		Win32::PCSTR ipCString = Win32::WinSock::inet_ntop(Win32::WinSock::AddressFamily::IPv6, &converted, &out[0], Win32::WinSock::_INET6_ADDRSTRLEN);
 		if (!ipCString)
 		{
-			const auto lastError = Win32::WinSock::WSAGetLastError();
 			Error::ThrowNested(
-				Error::Win32Error("inet_ntop() failed", lastError, L"Ws2_32.dll"),
+				Error::Win32Error(Win32::WinSock::WSAGetLastError(), "inet_ntop() failed", L"Ws2_32.dll"),
 				WinSockError("Could not convert IPv6 network address string")
 			);
 		}
@@ -59,9 +58,8 @@ export namespace Boring32::WinSock
 		Win32::PCSTR ipCString = Win32::WinSock::inet_ntop(Win32::WinSock::AddressFamily::IPv4, &converted, &out[0], Win32::WinSock::_INET_ADDRSTRLEN);
 		if (!ipCString)
 		{
-			const auto lastError = Win32::WinSock::WSAGetLastError();
 			Error::ThrowNested(
-				Error::Win32Error("inet_ntop() failed", lastError, L"Ws2_32.dll"),
+				Error::Win32Error(Win32::WinSock::WSAGetLastError(), "inet_ntop() failed", L"Ws2_32.dll"),
 				WinSockError("Could not convert IPv4 network address string")
 			);
 		}
@@ -107,7 +105,7 @@ export namespace Boring32::WinSock
 		if (result != 0)
 		{
 			Error::ThrowNested(
-				Error::Win32Error("GetAddrInfoW() failed", result, L"Ws2_32.dll"),
+				Error::Win32Error(result, "GetAddrInfoW() failed", L"Ws2_32.dll"),
 				WinSockError("Could not get domain addr info")
 			);
 		}
@@ -175,13 +173,13 @@ export namespace Boring32::WinSock
 			&cancelHandle
 		);
 		if (error != Win32::WinSock::_WSA_IO_PENDING) Error::ThrowNested(
-			Error::Win32Error("GetAddrInfoExW() failed", error, L"Ws2_32.dll"),
+			Error::Win32Error(error, "GetAddrInfoExW() failed", L"Ws2_32.dll"),
 			WinSockError("Could not get domain addr info")
 		);
 		e.WaitOnEvent();
 
 		if (ov.InternalHigh != Win32::ErrorCodes::NoError) Error::ThrowNested(
-			Error::Win32Error("GetAddrInfoExW() overlapped op failed", (Win32::DWORD)ov.InternalHigh),
+			Error::Win32Error((Win32::DWORD)ov.InternalHigh, "GetAddrInfoExW() overlapped op failed"),
 			WinSockError("Could not get domain addr info")
 		);
 
@@ -245,13 +243,13 @@ export namespace Boring32::WinSock
 			nullptr
 		);
 		if (error != Win32::WinSock::_WSA_IO_PENDING) Error::ThrowNested(
-			Error::Win32Error("GetAddrInfoExW() failed", error, L"Ws2_32.dll"),
+			Error::Win32Error(error, "GetAddrInfoExW() failed", L"Ws2_32.dll"),
 			WinSockError("Could not get domain addr info")
 		);
 
 		opCompleted.WaitOnEvent();
 		if (ov.InternalHigh != Win32::ErrorCodes::NoError) Error::ThrowNested(
-			Error::Win32Error("GetAddrInfoExW() overlapped op failed", (Win32::DWORD)ov.InternalHigh),
+			Error::Win32Error((Win32::DWORD)ov.InternalHigh, "GetAddrInfoExW() overlapped op failed"),
 			WinSockError("Could not get domain addr info")
 		);
 

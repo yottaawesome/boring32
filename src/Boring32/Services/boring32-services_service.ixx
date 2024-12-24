@@ -38,8 +38,8 @@ export namespace Boring32::Services
 				static_cast<Win32::DWORD>(argv.size()),
 				&argv[0]
 			);
-			if (auto lastError = Win32::GetLastError(); not succeeded)
-				throw Error::Win32Error("StartServiceW() failed", lastError);
+			if (not succeeded)
+				throw Error::Win32Error(Win32::GetLastError(), "StartServiceW() failed");
 		}
 
 		void Stop()
@@ -59,16 +59,16 @@ export namespace Boring32::Services
 				Win32::_SERVICE_CONTROL_STATUS_REASON_INFO,
 				&params
 			);
-			if (auto lastError = Win32::GetLastError(); not succeeded)
-				throw Error::Win32Error("ControlServiceExW() failed", lastError);
+			if (not succeeded)
+				throw Error::Win32Error(Win32::GetLastError(),"ControlServiceExW() failed");
 		}
 
 		void Delete()
 		{
 			if (not m_service)
 				throw Error::Boring32Error("m_service is nullptr");
-			if (auto lastError = Win32::GetLastError(); not Win32::DeleteService(m_service.get()))
-				throw Error::Win32Error("service parameter cannot be null", lastError);
+			if (not Win32::DeleteService(m_service.get()))
+				throw Error::Win32Error(Win32::GetLastError(), "service parameter cannot be null");
 			m_service = nullptr;
 		}
 
@@ -96,8 +96,8 @@ export namespace Boring32::Services
 				sizeof(status),
 				&bufSize
 			);
-			if (auto lastError = Win32::GetLastError(); not succeeded)
-				throw Error::Win32Error("QueryServiceStatusEx() failed", lastError);
+			if (not succeeded)
+				throw Error::Win32Error(Win32::GetLastError(), "QueryServiceStatusEx() failed");
 			return status.dwCurrentState == Win32::_SERVICE_RUNNING;
 		}
 			
@@ -122,8 +122,8 @@ export namespace Boring32::Services
 				Win32::_SERVICE_CONTROL_STATUS_REASON_INFO,
 				&params
 			);
-			if (auto lastError = Win32::GetLastError(); not succeeded)
-				throw Error::Win32Error("ControlServiceExW() failed", lastError);
+			if (not succeeded)
+				throw Error::Win32Error(Win32::GetLastError(), "ControlServiceExW() failed");
 		}
 
 		private:
@@ -140,7 +140,7 @@ export namespace Boring32::Services
 				&bytesNeeded
 			);
 			if (auto lastError = Win32::GetLastError(); lastError != Win32::ErrorCodes::InsufficientBuffer)
-				throw Error::Win32Error("QueryServiceConfigW() failed", lastError);
+				throw Error::Win32Error(lastError, "QueryServiceConfigW() failed");
 
 			std::vector<std::byte> buffer(bytesNeeded);
 			succeeded = QueryServiceConfigW(
@@ -149,8 +149,8 @@ export namespace Boring32::Services
 				static_cast<Win32::DWORD>(buffer.size()),
 				&bytesNeeded
 			);
-			if (auto lastError = Win32::GetLastError(); not succeeded)
-				throw Error::Win32Error("QueryServiceConfigW() failed", lastError);
+			if (not succeeded)
+				throw Error::Win32Error(Win32::GetLastError(), "QueryServiceConfigW() failed");
 			return buffer;
 		}
 

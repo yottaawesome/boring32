@@ -67,7 +67,7 @@ export namespace Boring32::Compression
 			if (not succeeded && lastError != Win32::ErrorCodes::InsufficientBuffer)
 			{
 				Error::ThrowNested(
-					Error::Win32Error("Compress() failed", lastError),
+					Error::Win32Error(lastError, "Compress() failed"),
 					CompressionError("An error occurred calculating the compressed size"));
 			}
 
@@ -99,10 +99,10 @@ export namespace Boring32::Compression
 				returnVal.size(),       //  Compressed Buffer size
 				&compressedBufferSize	//  Compressed Data size
 			);
-			if (auto lastError = Win32::GetLastError(); !succeeded)
+			if (not succeeded)
 			{
 				Error::ThrowNested(
-					Error::Win32Error("Compress() failed", lastError),
+					Error::Win32Error(Win32::GetLastError(), "Compress() failed"),
 					CompressionError("An error occurred compressing")
 				);
 			}
@@ -127,10 +127,10 @@ export namespace Boring32::Compression
 			if (not m_compressor)
 				throw CompressionError("Compressor handle is null");
 			// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-resetcompressor
-			if (auto lastError = Win32::GetLastError(); not Win32::ResetCompressor(m_compressor.get()))
+			if (not Win32::ResetCompressor(m_compressor.get()))
 			{
 				Error::ThrowNested(
-					Error::Win32Error("ResetCompressor() failed", lastError),
+					Error::Win32Error(Win32::GetLastError(), "ResetCompressor() failed"),
 					CompressionError("An error occurred resetting the compressor")
 				);
 			}
@@ -148,10 +148,10 @@ export namespace Boring32::Compression
 				nullptr,		// AllocationRoutines
 				&handle			// CompressorHandle
 			);
-			if (auto lastError = Win32::GetLastError(); not succeeded)
+			if (not succeeded)
 			{
 				Error::ThrowNested(
-					Error::Win32Error("CreateCompressor() failed", lastError),
+					Error::Win32Error(Win32::GetLastError(), "CreateCompressor() failed"),
 					CompressionError("An error occurred creating the compressor")
 				);
 			}

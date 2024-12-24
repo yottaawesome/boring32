@@ -77,8 +77,8 @@ export namespace Boring32::IPC
 				&bytesWritten,      // bytes written 
 				nullptr				// not overlapped 
 			);
-			if (auto lastError = Win32::GetLastError(); not successfulWrite)
-				throw Error::Win32Error("Failed to write to client pipe", lastError);
+			if (not successfulWrite)
+				throw Error::Win32Error(Win32::GetLastError(), "Failed to write to client pipe");
 		}
 
 		std::vector<std::byte> InternalRead()
@@ -106,7 +106,7 @@ export namespace Boring32::IPC
 
 				const Win32::DWORD lastError = Win32::GetLastError();
 				if (auto lastError = GetLastError(); not successfulRead and lastError != Win32::ErrorCodes::MoreData)
-					throw Error::Win32Error("Failed to read from pipe", lastError);
+					throw Error::Win32Error(lastError, "Failed to read from pipe");
 				if (lastError == Win32::ErrorCodes::MoreData)
 					dataBuffer.resize(dataBuffer.size() + blockSize);
 				continueReading = !successfulRead;

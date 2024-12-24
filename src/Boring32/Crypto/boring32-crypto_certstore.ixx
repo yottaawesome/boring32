@@ -130,10 +130,9 @@ export namespace Boring32::Crypto
 				return;
 			// See https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certclosestore
 			// for additional resource notes under remarks
-			if (auto lastError = Win32::GetLastError(); not Win32::CertCloseStore(m_certStore, (Win32::DWORD)m_closeOptions))
+			if (not Win32::CertCloseStore(m_certStore, (Win32::DWORD)m_closeOptions))
 			{
-				Error::Win32Error error("CertCloseStore() failed", lastError);
-				// ICEs -- disabled for now
+				Error::Win32Error error(Win32::GetLastError(), "CertCloseStore() failed");
 				std::wcerr << error.what() << std::endl;
 			}
 			m_certStore = nullptr;
@@ -163,17 +162,13 @@ export namespace Boring32::Crypto
 				// I'm not sure if this intermediate error check is necessary.
 				// The MSDN sample doesn't do an error check, but I've added it
 				// just in case.
-				const Win32::DWORD lastError = Win32::GetLastError();
-				if (lastError != Win32::ErrorCodes::FileNotFound)
-					throw Error::Win32Error(
-						"CertEnumCertificatesInStore() failed", 
-						lastError
-					);
+				if (Win32::DWORD lastError = Win32::GetLastError(); lastError != Win32::ErrorCodes::FileNotFound)
+					throw Error::Win32Error(lastError, "CertEnumCertificatesInStore() failed");
 				results.emplace_back(currentCert, false);
 			}
 			const DWORD lastError = Win32::GetLastError();
 			if (lastError != Win32::CryptoErrorCodes::NotFound && lastError != Win32::ErrorCodes::NoMoreFiles)
-				throw Error::Win32Error("CertEnumCertificatesInStore() failed", lastError);
+				throw Error::Win32Error(lastError, "CertEnumCertificatesInStore() failed");
 
 			return results;
 		}
@@ -196,7 +191,7 @@ export namespace Boring32::Crypto
 			}
 			const Win32::DWORD lastError = Win32::GetLastError();
 			if (lastError != Win32::CryptoErrorCodes::NotFound && lastError != Win32::ErrorCodes::NoMoreFiles)
-				throw Error::Win32Error("CertEnumCertificatesInStore() failed", lastError);
+				throw Error::Win32Error(lastError, "CertEnumCertificatesInStore() failed");
 
 			return {};
 		}
@@ -219,7 +214,7 @@ export namespace Boring32::Crypto
 			}
 			const Win32::DWORD lastError = Win32::GetLastError();
 			if (lastError != Win32::CryptoErrorCodes::NotFound && lastError != Win32::ErrorCodes::NoMoreFiles)
-				throw Error::Win32Error("CertEnumCertificatesInStore() failed", lastError);
+				throw Error::Win32Error(lastError, "CertEnumCertificatesInStore() failed");
 
 			return {};
 		}
@@ -295,13 +290,7 @@ export namespace Boring32::Crypto
 
 			// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certdeletecertificatefromstore
 			if (!Win32::CertDeleteCertificateFromStore(cert))
-			{
-				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error(
-					"CertDeleteCertificateFromStore() failed",
-					lastError
-				);
-			}
+				throw Error::Win32Error(Win32::GetLastError(), "CertDeleteCertificateFromStore() failed");
 		}
 
 		void ImportCert(const Win32::CERT_CONTEXT* cert)
@@ -352,8 +341,8 @@ export namespace Boring32::Crypto
 				static_cast<Win32::DWORD>(disposition),
 				nullptr
 			);
-			if (auto lastError = Win32::GetLastError(); not succeeded)
-				throw Error::Win32Error("CertAddCertificateContextToStore() failed", lastError);
+			if (not succeeded)
+				throw Error::Win32Error(Win32::GetLastError(), "CertAddCertificateContextToStore() failed");
 		}
 
 		Win32::PCCERT_CONTEXT GetCertByArg(StoreFindType searchFlag, const void* arg) const
@@ -373,8 +362,8 @@ export namespace Boring32::Crypto
 				nullptr,
 				&bytes
 			);
-			if (auto lastError = Win32::GetLastError(); not succeeded)
-				throw Error::Win32Error("CertGetStoreProperty() failed", lastError);
+			if (not succeeded)
+				throw Error::Win32Error(Win32::GetLastError(), "CertGetStoreProperty() failed");
 
 			std::wstring returnValue(bytes / sizeof(wchar_t), '\0');
 			succeeded = Win32::CertGetStoreProperty(
@@ -383,8 +372,8 @@ export namespace Boring32::Crypto
 				&returnValue[0],
 				&bytes
 			);
-			if (auto lastError = Win32::GetLastError(); !succeeded)
-				throw Error::Win32Error("CertGetStoreProperty() failed", lastError);
+			if (not succeeded)
+				throw Error::Win32Error(Win32::GetLastError(), "CertGetStoreProperty() failed");
 
 			returnValue.resize(bytes / sizeof(wchar_t));
 			if (returnValue.ends_with('\0'))
@@ -470,8 +459,8 @@ export namespace Boring32::Crypto
 					throw Error::Boring32Error("unknown m_storeType");
 			}
 
-			if (auto lastError = Win32::GetLastError(); not m_certStore)
-				throw Error::Win32Error("CertOpenSystemStoreW() failed", lastError);
+			if (not m_certStore)
+				throw Error::Win32Error(Win32::GetLastError(), "CertOpenSystemStoreW() failed");
 		}
 
 		Win32::HCERTSTORE m_certStore = nullptr;

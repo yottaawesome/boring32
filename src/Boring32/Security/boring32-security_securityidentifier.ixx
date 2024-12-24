@@ -60,12 +60,8 @@ export namespace Boring32::Security
 			{
 				Win32::LPWSTR string = nullptr;
 				// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertsidtostringsidw
-				const bool succeeded = Win32::ConvertSidToStringSidW(m_sid, &string);
-				if (!succeeded)
-				{
-					const auto lastError = Win32::GetLastError();
-					throw Error::Win32Error("ConvertSidToStringSidW() failed", lastError);
-				}
+				if (not Win32::ConvertSidToStringSidW(m_sid, &string))
+					throw Error::Win32Error(Win32::GetLastError(), "ConvertSidToStringSidW() failed");
 				RAII::LocalHeapUniquePtr<wchar_t> ptr(string);
 				return string;
 			}
@@ -106,8 +102,7 @@ export namespace Boring32::Security
 				if (Win32::PSID_IDENTIFIER_AUTHORITY identifier = Win32::GetSidIdentifierAuthority(m_sid))
 					return *identifier;
 
-				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error("GetSidIdentifierAuthority() failed", lastError);
+				throw Error::Win32Error(Win32::GetLastError(), "GetSidIdentifierAuthority() failed");
 			}
 
 			Win32::DWORD GetSubAuthority(const Win32::DWORD index) const
@@ -118,8 +113,7 @@ export namespace Boring32::Security
 				if (Win32::PDWORD returnVal = Win32::GetSidSubAuthority(m_sid, index))
 					return *returnVal;
 
-				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error("GetSidSubAuthority() failed", lastError);
+				throw Error::Win32Error(Win32::GetLastError(),"GetSidSubAuthority() failed");
 			}
 
 			std::vector<Win32::DWORD> GetAllSubAuthorities() const
@@ -162,10 +156,7 @@ export namespace Boring32::Security
 					throw Error::Boring32Error("sidString cannot be empty");
 				// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw
 				if (!Win32::ConvertStringSidToSidW(sidString.c_str(), &m_sid))
-				{
-					const auto lastError = Win32::GetLastError();
-					throw Error::Win32Error("ConvertStringSidToSidW() failed", lastError);
-				}
+					throw Error::Win32Error(Win32::GetLastError(), "ConvertStringSidToSidW() failed");
 			}
 
 			void Create(
@@ -192,10 +183,7 @@ export namespace Boring32::Security
 					&m_sid
 				);
 				if (!succeeded)
-				{
-					const auto lastError = Win32::GetLastError();
-					throw Error::Win32Error("Failed to initialise SID", lastError);
-				}
+					throw Error::Win32Error(Win32::GetLastError(), "Failed to initialise SID");
 			}
 			
 		private:

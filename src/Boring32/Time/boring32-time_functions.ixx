@@ -6,18 +6,15 @@ export namespace Boring32::Time
 {
 	Win32::SYSTEMTIME LargeIntegerTimeToSystemTime(const Win32::LARGE_INTEGER& li)
 	{
-		const Win32::FILETIME ft{
+		Win32::FILETIME ft{
 			.dwLowDateTime = li.LowPart,
 			.dwHighDateTime = static_cast<Win32::DWORD>(li.HighPart)
 		};
 
 		Win32::SYSTEMTIME st;
 		// https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-filetimetosystemtime
-		if (!Win32::FileTimeToSystemTime(&ft, &st))
-		{
-			const auto lastError = Win32::GetLastError();
-			throw Error::Win32Error("FileTimeToSystemTime() failed", lastError);
-		}
+		if (not Win32::FileTimeToSystemTime(&ft, &st))
+			throw Error::Win32Error(Win32::GetLastError(), "FileTimeToSystemTime() failed");
 		return st;
 	}
 
@@ -36,11 +33,8 @@ export namespace Boring32::Time
 			dateStringLength,
 			nullptr
 		);
-		if (!status)
-		{
-			const auto lastError = Win32::GetLastError();
-			throw Error::Win32Error("GetDateFormatEx() failed", lastError);
-		}
+		if (not status)
+			throw Error::Win32Error(Win32::GetLastError(), "GetDateFormatEx() failed");
 
 		// Format time buffer
 		constexpr unsigned timeStringLength = 9;
@@ -54,20 +48,14 @@ export namespace Boring32::Time
 			timeString,
 			timeStringLength
 		);
-		if (!status)
-		{
-			const auto lastError = Win32::GetLastError();
-			throw Error::Win32Error("GetTimeFormatEx() failed", lastError);
-		}
+		if (not status)
+			throw Error::Win32Error(Win32::GetLastError(), "GetTimeFormatEx() failed");
 
 		Win32::TIME_ZONE_INFORMATION tzi;
 		// https://docs.microsoft.com/en-us/windows/win32/api/datetimeapi/nf-datetimeapi-gettimeformatex
-		const Win32::DWORD tziStatus = Win32::GetTimeZoneInformation(&tzi);
+		Win32::DWORD tziStatus = Win32::GetTimeZoneInformation(&tzi);
 		if (tziStatus == Win32::TimeZoneIdInvalid)
-		{
-			const auto lastError = Win32::GetLastError();
-			throw Error::Win32Error("GetTimeZoneInformation() failed", lastError);
-		}
+			throw Error::Win32Error(Win32::GetLastError(), "GetTimeZoneInformation() failed");
 
 		const long actualBias = tzi.Bias * -1; // should we do this?
 		return std::vformat(L"{}-{}.{}{:+}", std::make_wformat_args(dateString, timeString, st.wMilliseconds, actualBias));
@@ -130,11 +118,8 @@ export namespace Boring32::Time
 			nullptr,
 			0
 		);
-		if (!charactersNeeded)
-		{
-			const auto lastError = Win32::GetLastError();
-			throw Error::Win32Error("GetTimeFormatEx() failed", lastError);
-		}
+		if (not charactersNeeded)
+			throw Error::Win32Error(Win32::GetLastError(), "GetTimeFormatEx() failed");
 
 		std::wstring returnVal(charactersNeeded, '\0');
 		charactersNeeded = Win32::GetTimeFormatEx(
@@ -145,11 +130,8 @@ export namespace Boring32::Time
 			&returnVal[0],
 			static_cast<int>(returnVal.size())
 		);
-		if (!charactersNeeded)
-		{
-			const auto lastError = Win32::GetLastError();
-			throw Error::Win32Error("GetTimeFormatEx() failed", lastError);
-		}
+		if (not charactersNeeded)
+			throw Error::Win32Error(Win32::GetLastError(), "GetTimeFormatEx() failed");
 
 		return returnVal.c_str(); // remove any trailing null
 	}
@@ -171,11 +153,8 @@ export namespace Boring32::Time
 			0,
 			nullptr
 		);
-		if (!charactersRequired)
-		{
-			const auto lastError = Win32::GetLastError();
-			throw Error::Win32Error("GetDateFormatEx() failed", lastError);
-		}
+		if (not charactersRequired)
+			throw Error::Win32Error(Win32::GetLastError(), "GetDateFormatEx() failed");
 
 		std::wstring formattedString(charactersRequired, '\0');
 		charactersRequired = Win32::GetDateFormatEx(
@@ -187,11 +166,8 @@ export namespace Boring32::Time
 			static_cast<int>(formattedString.size()),
 			nullptr
 		);
-		if (!charactersRequired)
-		{
-			const auto lastError = Win32::GetLastError();
-			throw Error::Win32Error("GetDateFormatEx() failed", lastError);
-		}
+		if (not charactersRequired)
+			throw Error::Win32Error(Win32::GetLastError(), "GetDateFormatEx() failed");
 
 		return formattedString.c_str();
 	}
@@ -212,11 +188,8 @@ export namespace Boring32::Time
 			0,
 			nullptr
 		);
-		if (!charactersRequired)
-		{
-			const auto lastError = Win32::GetLastError();
-			throw Error::Win32Error("GetDateFormatEx() failed", lastError);
-		}
+		if (not charactersRequired)
+			throw Error::Win32Error(Win32::GetLastError(), "GetDateFormatEx() failed");
 
 		std::wstring formattedString(charactersRequired, '\0');
 		charactersRequired = Win32::GetDateFormatEx(
@@ -228,11 +201,8 @@ export namespace Boring32::Time
 			static_cast<int>(formattedString.size()),
 			nullptr
 		);
-		if (!charactersRequired)
-		{
-			const auto lastError = Win32::GetLastError();
-			throw Error::Win32Error("GetDateFormatEx() failed", lastError);
-		}
+		if (not charactersRequired)
+			throw Error::Win32Error(Win32::GetLastError(), "GetDateFormatEx() failed");
 
 		return formattedString.c_str();
 	}

@@ -33,7 +33,7 @@ export namespace Boring32::Registry
 			&sizeInBytes
 		);
 		if (status != Win32::ErrorCodes::Success)
-			throw Error::Win32Error("RegGetValueW() failed", status);
+			throw Error::Win32Error(status, "RegGetValueW() failed");
 		return out;
 	}
 
@@ -59,10 +59,7 @@ export namespace Boring32::Registry
 			&sizeInBytes
 		);
 		if (statusCode != Win32::ErrorCodes::Success)
-			throw Error::Win32Error(
-				"RegGetValueW() failed (1)",
-				statusCode
-			);
+			throw Error::Win32Error(statusCode, "RegGetValueW() failed (1)");
 
 		out.resize(sizeInBytes / sizeof(wchar_t), '\0');
 		statusCode = Win32::Winreg::RegGetValueW(
@@ -75,10 +72,7 @@ export namespace Boring32::Registry
 			&sizeInBytes
 		);
 		if (statusCode != Win32::ErrorCodes::Success)
-			throw Error::Win32Error(
-				"RegGetValueW() failed (2)",
-				statusCode
-			);
+			throw Error::Win32Error(statusCode, "RegGetValueW() failed (2)");
 
 		out.resize(sizeInBytes / sizeof(wchar_t));
 		// Exclude terminating null
@@ -112,7 +106,7 @@ export namespace Boring32::Registry
 		if (!key)
 			throw Error::Boring32Error("key is nullptr");
 
-		const Win32::LSTATUS status = Win32::Winreg::RegSetValueExW(
+		Win32::LSTATUS status = Win32::Winreg::RegSetValueExW(
 			key,
 			valueName.c_str(),
 			0,
@@ -121,7 +115,7 @@ export namespace Boring32::Registry
 			sizeof(value)
 		);
 		if (status != Win32::ErrorCodes::Success)
-			throw Error::Win32Error("RegSetValueExW() failed", status);
+			throw Error::Win32Error(status, "RegSetValueExW() failed");
 	}
 
 	// This should probably be integrated into RegistryKey to enable safety checks
@@ -151,31 +145,19 @@ export namespace Boring32::Registry
 			throw Error::Boring32Error("Parent cannot be nullptr");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-shdeletekeyw
-		const Win32::LSTATUS status = Win32::SHDeleteKeyW(
-			parent,
-			subkey.c_str()
-		);
+		Win32::LSTATUS status = Win32::SHDeleteKeyW(parent, subkey.c_str());
 		if (status != Win32::ErrorCodes::Success)
-		{
-			const auto lastError = Win32::GetLastError();
-			throw Error::Win32Error("SHDeleteKeyW() failed", lastError);
-		}
+			throw Error::Win32Error(Win32::GetLastError(), "SHDeleteKeyW() failed");
 	}
 
 	void DeleteSubkeys(const Win32::Winreg::HKEY parent, const std::wstring& subkey)
 	{
-		if (parent == nullptr)
+		if (not parent)
 			throw Error::Boring32Error("parent cannot be nullptr");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletetreew
-		const LSTATUS status = Win32::Winreg::RegDeleteTreeW(
-			parent,
-			subkey.c_str()
-		);
+		Win32::LSTATUS status = Win32::Winreg::RegDeleteTreeW(parent, subkey.c_str());
 		if (status != Win32::ErrorCodes::Success)
-		{
-			const auto lastError = Win32::GetLastError();
-			throw Error::Win32Error("RegDeleteTreeW() failed", lastError);
-		}
+			throw Error::Win32Error(Win32::GetLastError(), "RegDeleteTreeW() failed");
 	}
 }

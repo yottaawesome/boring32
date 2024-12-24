@@ -95,10 +95,7 @@ export namespace Boring32::IPC
 			if (!m_pipe)
 				throw Error::Boring32Error("No pipe to flush");
 			if (!Win32::FlushFileBuffers(m_pipe.GetHandle()))
-			{
-				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error("Flush() failed", lastError);
-			}
+				throw Error::Win32Error(Win32::GetLastError(), "Flush() failed");
 		}
 
 		virtual RAII::Win32Handle& GetInternalHandle()
@@ -151,10 +148,7 @@ export namespace Boring32::IPC
 			if (!m_pipe)
 				throw Error::Boring32Error("pipe is nullptr");
 			if (!Win32::CancelIo(m_pipe.GetHandle()))
-			{
-				const auto lastError = GetLastError();
-				throw Error::Win32Error("CancelIo() failed", lastError);
-			}
+				throw Error::Win32Error(Win32::GetLastError(), "CancelIo() failed");
 		}
 
 		virtual bool CancelCurrentThreadIo(std::nothrow_t) noexcept 
@@ -173,10 +167,7 @@ export namespace Boring32::IPC
 			if (!m_pipe)
 				throw Error::Boring32Error("pipe is nullptr");
 			if (!Win32::CancelIoEx(m_pipe.GetHandle(), overlapped))
-			{
-				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error("CancelIo() failed", lastError);
-			}
+				throw Error::Win32Error(Win32::GetLastError(), "CancelIo() failed");
 		}
 
 		virtual bool CancelCurrentProcessIo(Win32::OVERLAPPED* overlapped, std::nothrow_t) noexcept 
@@ -202,17 +193,14 @@ export namespace Boring32::IPC
 			};
 			if (!m_sid.empty())
 			{
-				const bool converted = Win32::ConvertStringSecurityDescriptorToSecurityDescriptorW(
+				bool converted = Win32::ConvertStringSecurityDescriptorToSecurityDescriptorW(
 					m_sid.c_str(),
 					Win32::SddlRevision1,
 					&sa.lpSecurityDescriptor,
 					nullptr
 				);
 				if (!converted)
-				{
-					const auto lastError = Win32::GetLastError();
-					throw Error::Win32Error("Failed to convert security descriptor", lastError);
-				}
+					throw Error::Win32Error(Win32::GetLastError(), "Failed to convert security descriptor");
 			}
 
 			// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createnamedpipea
@@ -229,10 +217,7 @@ export namespace Boring32::IPC
 			if (!m_sid.empty())
 				Win32::LocalFree(sa.lpSecurityDescriptor);
 			if (!m_pipe)
-			{
-				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error("Failed to create named pipe", lastError);
-			}
+				throw Error::Win32Error(Win32::GetLastError(), "Failed to create named pipe");
 		}
 
 		virtual void Copy(const NamedPipeServerBase& other)
@@ -276,10 +261,7 @@ export namespace Boring32::IPC
 			if (!succeeded)
 			{
 				if (throwOnError)
-				{
-					const auto lastError = Win32::GetLastError();
-					throw Error::Win32Error("PeekNamedPipe() failed", lastError);
-				}
+					throw Error::Win32Error(Win32::GetLastError(), "PeekNamedPipe() failed");
 				return false;
 			}
 

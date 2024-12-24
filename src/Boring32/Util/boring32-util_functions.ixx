@@ -60,11 +60,8 @@ export namespace Boring32::Util
 		{
 			filePath.resize(filePath.size() + blockSize);
 			status = Win32::GetModuleFileNameW(nullptr, &filePath[0], static_cast<Win32::DWORD>(filePath.size()));
-			if (!status)
-			{
-				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error("GetModuleFileNameW() failed", lastError);
-			}
+			if (not status)
+				throw Error::Win32Error(Win32::GetLastError(), "GetModuleFileNameW() failed");
 		}
 
 		const Win32::HRESULT result = Win32::PathCchRemoveFileSpec(&filePath[0], filePath.size());
@@ -82,11 +79,8 @@ export namespace Boring32::Util
 			.dwLowDateTime = li.LowPart,
 			.dwHighDateTime = static_cast<Win32::DWORD>(li.HighPart)
 		};
-		if (!Win32::FileTimeToSystemTime(&ft, &st))
-		{
-			const auto lastError = Win32::GetLastError();
-			throw Error::Win32Error("FileTimeToSystemTime() failed", lastError);
-		}
+		if (not Win32::FileTimeToSystemTime(&ft, &st))
+			throw Error::Win32Error(Win32::GetLastError(), "FileTimeToSystemTime() failed");
 		return st;
 	}
 

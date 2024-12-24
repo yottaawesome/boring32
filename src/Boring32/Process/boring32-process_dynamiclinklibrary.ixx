@@ -66,8 +66,7 @@ export namespace Boring32::Process
 			if (void* ptr = Win32::GetProcAddress(m_libraryHandle, symbolName.c_str()))
 				return ptr;
 
-			const auto lastError = Win32::GetLastError();
-			throw Error::Win32Error(std::format("Failed to resolve symbol: {}", symbolName), lastError);
+			throw Error::Win32Error(Win32::GetLastError(), std::format("Failed to resolve symbol: {}", symbolName));
 		}
 
 		void* Resolve(const std::string& symbolName, const std::nothrow_t&) noexcept
@@ -129,10 +128,7 @@ export namespace Boring32::Process
 
 			m_libraryHandle = Win32::LoadLibraryW(m_path.c_str());
 			if (not m_libraryHandle)
-			{
-				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error("failed to load library", lastError);
-			}
+				throw Error::Win32Error(Win32::GetLastError(), "failed to load library");
 		}
 
 		bool InternalLoad(const std::nothrow_t&) noexcept 

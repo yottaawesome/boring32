@@ -51,16 +51,8 @@ export namespace Boring32::Async
 		void Initialise(const Win32::DWORD spinCount)
 		{
 			// https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-initializecriticalsectionex
-			const bool success = Win32::InitializeCriticalSectionEx(
-				&m_criticalSection,
-				spinCount,
-				0
-			);
-			if (not success)
-			{
-				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error("InitializeCriticalSectionEx() failed", lastError);
-			}
+			if (not Win32::InitializeCriticalSectionEx(&m_criticalSection, spinCount, 0))
+				throw Error::Win32Error(Win32::GetLastError(), "InitializeCriticalSectionEx() failed");
 		}
 
 		Win32::CRITICAL_SECTION m_criticalSection;

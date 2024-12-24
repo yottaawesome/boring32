@@ -41,7 +41,7 @@ export namespace Boring32::Async
 			{
 				if (lastError == Win32::ErrorCodes::Timeout)
 					return false;
-				throw Error::Win32Error("WaitOnAddress() failed", lastError);
+				throw Error::Win32Error(lastError, "WaitOnAddress() failed");
 			}
 			return true;
 		}
