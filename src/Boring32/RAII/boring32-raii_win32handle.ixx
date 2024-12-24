@@ -6,7 +6,6 @@ export namespace Boring32::RAII
 {
 	struct Win32Handle final
 	{
-		// Constructors
 		~Win32Handle()
 		{
 			Close();
@@ -61,8 +60,8 @@ export namespace Boring32::RAII
 		bool operator==(const Win32Handle& other) const
 		{
 			// https://devblogs.microsoft.com/oldnewthing/20040302-00/?p=40443
-			if (!IsValidValue(other.m_handle))
-				return !IsValidValue(m_handle);
+			if (not IsValidValue(other.m_handle))
+				return not IsValidValue(m_handle);
 			return m_handle == other.m_handle;
 		}
 
@@ -81,19 +80,19 @@ export namespace Boring32::RAII
 		}
 
 		///	Returns the underlying native handle, which may be null.
-		Win32::HANDLE operator*() const noexcept
+		constexpr Win32::HANDLE operator*() const noexcept
 		{
 			return m_handle ? *m_handle : nullptr;
 		}
 
 		///	Cast to HANDLE operator.
-		operator Win32::HANDLE() const noexcept
+		constexpr operator Win32::HANDLE() const noexcept
 		{
 			return m_handle ? *m_handle : nullptr;
 		}
 
 		// API
-		Win32::HANDLE GetHandle() const noexcept
+		constexpr Win32::HANDLE GetHandle() const noexcept
 		{
 			return m_handle ? *m_handle : nullptr;
 		}
@@ -150,7 +149,7 @@ export namespace Boring32::RAII
 			return handle && IsValidValue(*handle);
 		}
 
-		bool IsValidValue(Win32::HANDLE handle) const noexcept
+		constexpr bool IsValidValue(Win32::HANDLE handle) const noexcept
 		{
 			return handle && handle != Win32::InvalidHandleValue;
 		}
@@ -163,7 +162,7 @@ export namespace Boring32::RAII
 				return false;
 
 			Win32::DWORD flags = 0;
-			if (!Win32::GetHandleInformation(handle, &flags))
+			if (not Win32::GetHandleInformation(handle, &flags))
 			{
 				const Win32::DWORD lastError = GetLastError();
 				throw Error::Win32Error("GetHandleInformation() failed", lastError);
@@ -179,7 +178,7 @@ export namespace Boring32::RAII
 				return Win32::InvalidHandleValue;
 
 			Win32::HANDLE duplicateHandle = nullptr;
-			const bool succeeded = Win32::DuplicateHandle(
+			bool succeeded = Win32::DuplicateHandle(
 				Win32::GetCurrentProcess(),
 				handle,
 				Win32::GetCurrentProcess(),
@@ -235,9 +234,8 @@ export namespace Boring32::RAII
 				return;
 
 			Win32::HANDLE wrappedHandle = *pHandle;
-			if (wrappedHandle && wrappedHandle != Win32::InvalidHandleValue)
-				if (not Win32::CloseHandle(wrappedHandle))
-					std::wcerr << L"Failed to close handle\n";
+			if (wrappedHandle and wrappedHandle != Win32::InvalidHandleValue and not Win32::CloseHandle(wrappedHandle))
+				std::wcerr << L"Failed to close handle\n";
 
 			*pHandle = 0;
 			delete pHandle;

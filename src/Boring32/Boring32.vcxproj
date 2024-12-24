@@ -131,7 +131,7 @@
       <EnableModules>false</EnableModules>
       <ErrorReporting>Send</ErrorReporting>
       <DisableSpecificWarnings>4005;5106;4067</DisableSpecificWarnings>
-      <BuildStlModules>false</BuildStlModules>
+      <BuildStlModules>true</BuildStlModules>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -174,7 +174,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnableModules>false</EnableModules>
       <DisableSpecificWarnings>4005;5106;4067</DisableSpecificWarnings>
-      <BuildStlModules>false</BuildStlModules>
+      <BuildStlModules>true</BuildStlModules>
       <ErrorReporting>Send</ErrorReporting>
     </ClCompile>
     <Link>
@@ -217,6 +217,8 @@
     <ClCompile Include="Async\boring32-async_threadsafevector.ixx" />
     <ClCompile Include="Async\boring32-async_timerqueuetimer.ixx" />
     <ClCompile Include="Async\boring32-async_timerqueuetimercallback.ixx" />
+    <ClCompile Include="boring32.shared.ixx" />
+    <ClCompile Include="boring32.win32.ixx" />
     <ClCompile Include="Concepts\boring32-concepts.ixx" />
     <ClCompile Include="boring32.ixx" />
     <ClCompile Include="Compression\boring32-compression_cabinet.ixx" />
@@ -401,9 +403,7 @@
     <ClCompile Include="XAudio2\boring32-xaudio2_xaudio2error.ixx" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\boring32.shared\boring32.shared.vcxproj">
-      <Project>{776fad4b-c69b-4bab-ad31-0022ec8ae66f}</Project>
-    </ProjectReference>
+    <ClInclude Include="framework.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

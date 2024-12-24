@@ -227,5 +227,12 @@
     <ClCompile Include="WinSock\boring32-winsock_resolvedname.ixx" />
     <ClCompile Include="Security\boring32-security_level.ixx" />
     <ClCompile Include="Error\boring32-error_win32errorcodes.ixx" />
+    <ClCompile Include="boring32.shared.ixx" />
+    <ClCompile Include="boring32.win32.ixx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
