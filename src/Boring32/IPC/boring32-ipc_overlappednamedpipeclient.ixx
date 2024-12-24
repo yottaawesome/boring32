@@ -6,25 +6,19 @@ import :ipc_namedpipeclientbase;
 
 export namespace Boring32::IPC
 {
-	struct OverlappedNamedPipeClient : NamedPipeClientBase
+	struct OverlappedNamedPipeClient final : NamedPipeClientBase
 	{
-		virtual ~OverlappedNamedPipeClient() = default;
 		OverlappedNamedPipeClient() = default;
-		OverlappedNamedPipeClient(const OverlappedNamedPipeClient& other) = default;
-		OverlappedNamedPipeClient(OverlappedNamedPipeClient&& other) noexcept = default;
 		OverlappedNamedPipeClient(const std::wstring& name)
 			: NamedPipeClientBase(name, Win32::FileFlagOverlapped)
 		{ }
 
-		virtual OverlappedNamedPipeClient& operator=(const OverlappedNamedPipeClient& other) = default;
-		virtual OverlappedNamedPipeClient& operator=(OverlappedNamedPipeClient&& other) noexcept = default;
-
-		virtual void Write(std::wstring_view msg, Async::OverlappedIo& oio)
+		void Write(std::wstring_view msg, Async::OverlappedIo& oio)
 		{
 			InternalWrite(msg, oio);
 		}
 
-		virtual bool Write(std::wstring_view msg, Async::OverlappedIo& op, std::nothrow_t) noexcept 
+		bool Write(std::wstring_view msg, Async::OverlappedIo& op, std::nothrow_t) noexcept 
 		try
 		{
 			InternalWrite(msg, op);
@@ -35,12 +29,12 @@ export namespace Boring32::IPC
 			return false;
 		}
 
-		virtual void Read(const Win32::DWORD noOfCharacters, Async::OverlappedIo& oio)
+		void Read(const Win32::DWORD noOfCharacters, Async::OverlappedIo& oio)
 		{
 			return InternalRead(noOfCharacters, oio);
 		}
 
-		virtual bool Read(const Win32::DWORD noOfCharacters, Async::OverlappedIo& op, std::nothrow_t) noexcept 
+		bool Read(const Win32::DWORD noOfCharacters, Async::OverlappedIo& op, std::nothrow_t) noexcept 
 		try
 		{
 			InternalRead(noOfCharacters, op);
@@ -51,8 +45,8 @@ export namespace Boring32::IPC
 			return false;
 		}
 
-		protected:
-		virtual void InternalWrite(std::wstring_view msg, Async::OverlappedIo& oio)
+		private :
+		void InternalWrite(std::wstring_view msg, Async::OverlappedIo& oio)
 		{
 			if (not m_handle)
 				throw Error::Boring32Error("No pipe to write to");
@@ -70,7 +64,7 @@ export namespace Boring32::IPC
 				throw Error::Win32Error("WriteFile() failed", oio.LastError());
 		}
 
-		virtual void InternalRead(const Win32::DWORD noOfCharacters, Async::OverlappedIo& oio)
+		void InternalRead(const Win32::DWORD noOfCharacters, Async::OverlappedIo& oio)
 		{
 			if (not m_handle)
 				throw Error::Boring32Error("No pipe to read from");

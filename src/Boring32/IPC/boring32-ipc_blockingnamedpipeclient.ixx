@@ -8,12 +8,7 @@ export namespace Boring32::IPC
 {
 	struct BlockingNamedPipeClient final : NamedPipeClientBase
 	{
-		~BlockingNamedPipeClient() = default;
 		BlockingNamedPipeClient() = default;
-		BlockingNamedPipeClient(const BlockingNamedPipeClient& other) = default;
-		BlockingNamedPipeClient(BlockingNamedPipeClient&& other) noexcept = default;
-		BlockingNamedPipeClient& operator=(const BlockingNamedPipeClient& other) = default;
-		BlockingNamedPipeClient& operator=(BlockingNamedPipeClient&& other) noexcept = default;
 
 		BlockingNamedPipeClient(const std::wstring& name)
 			: NamedPipeClientBase(name, 0)

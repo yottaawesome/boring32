@@ -7,9 +7,9 @@ import :ipc_namedpipeserverbase;
 
 export namespace Boring32::IPC
 {
-	struct BlockingNamedPipeServer : NamedPipeServerBase
+	struct BlockingNamedPipeServer final : NamedPipeServerBase
 	{
-		virtual ~BlockingNamedPipeServer()
+		~BlockingNamedPipeServer()
 		{
 			Close();
 		}
@@ -72,17 +72,17 @@ export namespace Boring32::IPC
 			InternalCreatePipe();
 		}
 
-		virtual void operator=(const BlockingNamedPipeServer& other)
+		void operator=(const BlockingNamedPipeServer& other)
 		{
 			Copy(other);
 		}
 
-		virtual void operator=(BlockingNamedPipeServer&& other) noexcept
+		void operator=(BlockingNamedPipeServer&& other) noexcept
 		{
 			Move(other);
 		}
 
-		virtual void Connect()
+		void Connect()
 		{
 			if (not m_pipe)
 				throw Error::Boring32Error("No valid pipe handle to connect");
@@ -91,12 +91,12 @@ export namespace Boring32::IPC
 				throw Error::Boring32Error("Failed to connect named pipe");
 		}
 
-		virtual void Write(const std::wstring& msg)
+		void Write(const std::wstring& msg)
 		{
 			InternalWrite(Util::StringToByteVector(msg));
 		}
 
-		virtual bool Write(const std::wstring& msg, std::nothrow_t) noexcept 
+		bool Write(const std::wstring& msg, std::nothrow_t) noexcept 
 		try
 		{
 			InternalWrite(Util::StringToByteVector(msg));
@@ -107,12 +107,12 @@ export namespace Boring32::IPC
 			return false;
 		}
 
-		virtual std::wstring ReadAsString()
+		std::wstring ReadAsString()
 		{
 			return Util::ByteVectorToString<std::wstring>(InternalRead());
 		}
 
-		virtual bool ReadAsString(std::wstring& out, std::nothrow_t) noexcept 
+		bool ReadAsString(std::wstring& out, std::nothrow_t) noexcept 
 		try
 		{
 			out = Util::ByteVectorToString<std::wstring>(InternalRead());
@@ -123,8 +123,8 @@ export namespace Boring32::IPC
 			return false;
 		}
 
-		protected:
-		virtual void InternalWrite(const std::vector<std::byte>& msg)
+		private:
+		void InternalWrite(const std::vector<std::byte>& msg)
 		{
 			if (not m_pipe)
 				throw Error::Boring32Error("No pipe to write to");
@@ -141,7 +141,7 @@ export namespace Boring32::IPC
 				throw Error::Boring32Error("Failed to read pipe");
 		}
 
-		virtual std::vector<std::byte> InternalRead()
+		std::vector<std::byte> InternalRead()
 		{
 			if (not m_pipe)
 				throw Error::Boring32Error("No pipe to read from");
