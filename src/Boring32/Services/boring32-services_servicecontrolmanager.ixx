@@ -49,8 +49,8 @@ export namespace Boring32::Services
 				name.c_str(),
 				desiredAccess
 			);
-			if (auto lastError = Win32::GetLastError(); not serviceHandle)
-				throw Error::Win32Error("OpenServiceW() failed", lastError);
+			if (not serviceHandle)
+				throw Error::Win32Error(Win32::GetLastError(), "OpenServiceW() failed");
 			return { CreateSharedPtr(serviceHandle) };
 		}
 
@@ -68,8 +68,8 @@ export namespace Boring32::Services
 				nullptr,        // ServicesActive database 
 				desiredAccess   // full access rights
 			);
-			if (auto lastError = Win32::GetLastError(); not schSCManager)
-				throw Error::Win32Error("OpenSCManagerW() failed", lastError);
+			if (not schSCManager)
+				throw Error::Win32Error(Win32::GetLastError(), "OpenSCManagerW() failed");
 			m_scm = CreateSharedPtr(schSCManager);
 		}
 

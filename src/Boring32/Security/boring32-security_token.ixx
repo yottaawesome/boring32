@@ -69,10 +69,7 @@ export namespace Boring32::Security
 					&m_token
 				);
 				if (!succeeded)
-				{
-					const auto lastError = Win32::GetLastError();
-					throw Error::Win32Error("DuplicateTokenEx() failed", lastError);
-				}
+					throw Error::Win32Error(Win32::GetLastError(), "DuplicateTokenEx() failed");
 			}
 			
 		public:
@@ -117,10 +114,7 @@ export namespace Boring32::Security
 						&m_token
 					);
 					if (!succeeded)
-					{
-						const auto lastError = Win32::GetLastError();
-						throw Error::Win32Error("DuplicateTokenEx() failed", lastError);
-					}
+						throw Error::Win32Error(Win32::GetLastError(), "DuplicateTokenEx() failed");
 				}
 
 				return *this;

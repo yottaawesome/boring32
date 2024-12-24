@@ -24,10 +24,7 @@ export namespace Boring32::Networking
 			// bufferSizeBytes will give the correct buffer size in this case,
 			// and will be used to resize the buffer in the next iteration.
 			if (status != Win32::ErrorCodes::BufferOverflow && status != Win32::ErrorCodes::Success)
-			{
-				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error("GetAdaptersAddresses() failed", lastError);
-			}
+				throw Error::Win32Error(Win32::GetLastError(), "GetAdaptersAddresses() failed");
 		}
 		buffer.resize(bufferSizeBytes);
 		// This is safe to do because the heap pointer is moved to the calling site,

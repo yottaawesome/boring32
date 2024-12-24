@@ -47,7 +47,7 @@ export namespace Boring32::WinSock
 			// https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-wsacleanup
 			const int error = Win32::WinSock::WSACleanup();
 			if (error) Error::ThrowNested(
-				Error::Win32Error("WSACleanup() failed", error, L"Ws2_32.dll"),
+				Error::Win32Error(error, "WSACleanup() failed", L"Ws2_32.dll"),
 				WinSockError("Failed to cleanup WinSock")
 			);
 			m_lowVersion = 0;
@@ -81,7 +81,7 @@ export namespace Boring32::WinSock
 			//https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-wsastartup
 			int error = Win32::WinSock::WSAStartup(Win32::MakeWord(m_highVersion, m_lowVersion), &m_wsaData);
 			if (error) Error::ThrowNested(
-				Error::Win32Error("WSAStartup() failed", error, L"Ws2_32.dll"),
+				Error::Win32Error(error, "WSAStartup() failed", L"Ws2_32.dll"),
 				WinSockError("Failed to initialise WinSock")
 			);
 		}

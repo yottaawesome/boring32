@@ -40,10 +40,7 @@ export namespace Boring32::Security
 					0
 				);
 				if (not successful)
-				{
-					const auto lastError = Win32::GetLastError();
-					throw Error::Win32Error("SaferComputeTokenFromLevel() failed", lastError);
-				}
+					throw Error::Win32Error(Win32::GetLastError(), "SaferComputeTokenFromLevel() failed");
 				return out;
 			}
 
@@ -65,10 +62,7 @@ export namespace Boring32::Security
 						0
 					);
 					if (not successful)
-					{
-						const auto lastError = Win32::GetLastError();
-						throw Error::Win32Error("SaferCreateLevel() failed", lastError);
-					}
+						throw Error::Win32Error(Win32::GetLastError(), "SaferCreateLevel() failed");
 					return handle;
 				}(m_scope, m_level, m_flags);
 	};

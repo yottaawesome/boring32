@@ -37,8 +37,8 @@ export namespace Boring32::Async
 				throw Error::Boring32Error("Name of Event to open cannot be empty");
 
 			m_event = Win32::OpenEventW(desiredAccess, isInheritable, m_name->c_str());
-			if (auto lastError = Win32::GetLastError(); not m_event)
-				throw Error::Win32Error("Failed to create or open event", lastError);
+			if (not m_event)
+				throw Error::Win32Error(Win32::GetLastError(), "Failed to create or open event");
 		}
 
 		operator Win32::HANDLE() const noexcept
@@ -55,11 +55,12 @@ export namespace Boring32::Async
 		{
 			if (not m_event)
 				throw Error::Boring32Error("No Event to signal");
-			if (auto lastError = Win32::GetLastError(); not Win32::SetEvent(m_event.GetHandle()))
-				throw Error::Win32Error("Failed to signal event", lastError);
+			if (not Win32::SetEvent(m_event.GetHandle()))
+				throw Error::Win32Error(Win32::GetLastError(), "Failed to signal event");
 		}
 
-		std::expected<void, std::string> Signal(const std::nothrow_t&) noexcept try
+		std::expected<void, std::string> Signal(const std::nothrow_t&) noexcept 
+		try
 		{
 			Signal();
 			return {};
@@ -73,8 +74,8 @@ export namespace Boring32::Async
 		{
 			if (not m_event)
 				return;
-			if (auto lastError = Win32::GetLastError(); not Win32::ResetEvent(m_event.GetHandle()))
-				throw Error::Win32Error("ResetEvent() failed", lastError);
+			if (not Win32::ResetEvent(m_event.GetHandle()))
+				throw Error::Win32Error(Win32::GetLastError(), "ResetEvent() failed");
 		}
 
 		std::expected<void, std::string> Reset(const std::nothrow_t&) noexcept 
@@ -94,9 +95,9 @@ export namespace Boring32::Async
 			if (not m_event)
 				throw Error::Boring32Error("No Event to wait on");
 
-			const Win32::WaitResult status = static_cast<Win32::WaitResult>(Win32::WaitForSingleObject(m_event.GetHandle(), Win32::Infinite));
-			if (auto lastError = Win32::GetLastError(); status == Win32::WaitResult::Failed)
-				throw Error::Win32Error("WaitForSingleObject failed", lastError);
+			Win32::WaitResult status = static_cast<Win32::WaitResult>(Win32::WaitForSingleObject(m_event.GetHandle(), Win32::Infinite));
+			if (status == Win32::WaitResult::Failed)
+				throw Error::Win32Error(Win32::GetLastError(), "WaitForSingleObject failed");
 			if (status == Win32::WaitResult::Abandoned)
 				throw Error::Boring32Error("The wait was abandoned");
 		}
@@ -114,7 +115,7 @@ export namespace Boring32::Async
 			if (not m_event)
 				throw Error::Boring32Error("No Event to wait on");
 
-			const unsigned long millis = static_cast<unsigned long>(duration_cast<milliseconds>(time).count());
+			unsigned long millis = static_cast<unsigned long>(duration_cast<milliseconds>(time).count());
 			switch (Win32::WaitResult status = static_cast<Win32::WaitResult>(Win32::WaitForSingleObjectEx(m_event.GetHandle(), millis, alertable)))
 			{
 				case Win32::WaitResult::Success: 
@@ -124,8 +125,7 @@ export namespace Boring32::Async
 				case Win32::WaitResult::Abandoned:
 					throw Error::Boring32Error("The wait was abandoned");
 				case Win32::WaitResult::Failed: 
-					const auto lastError = Win32::GetLastError();
-					throw Error::Win32Error("WaitForSingleObject() failed", lastError);
+					throw Error::Win32Error(Win32::GetLastError(), "WaitForSingleObject() failed");
 			}
 			return false;
 		}
@@ -177,10 +177,7 @@ export namespace Boring32::Async
 				m_name and not m_name->empty() ? m_name->c_str() : nullptr // name
 			);
 			if (not m_event)
-			{
-				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error("Failed to create or open event", lastError);
-			}
+				throw Error::Win32Error(Win32::GetLastError(), "Failed to create or open event");
 			m_event.SetInheritability(isInheritable);
 		}
 

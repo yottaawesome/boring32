@@ -10,22 +10,18 @@ export namespace Boring32::Computer
         // TODO: find a way to support both ANSI and unicode versions
         Win32::DWORD bufferCharacterSize = 0; // this will include the trailing null byte
         // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getcomputernameexw
-        if (!Win32::GetComputerNameExW(format, nullptr, &bufferCharacterSize))
+        if (not Win32::GetComputerNameExW(format, nullptr, &bufferCharacterSize))
         {
-            const auto lastError = Win32::GetLastError();
             // ERROR_MORE_DATA initially is the expected error from MSDN link. 
-            if (lastError != Win32::ErrorCodes::MoreData)
-                throw Error::Win32Error("GetComputerNameExW() failed", lastError);
+            if (auto lastError = Win32::GetLastError(); lastError != Win32::ErrorCodes::MoreData)
+                throw Error::Win32Error(lastError, "GetComputerNameExW() failed");
         }
-        if (!bufferCharacterSize)
+        if (not bufferCharacterSize)
             return {};
 
         std::wstring returnVal(bufferCharacterSize, '\0');
-        if (!Win32::GetComputerNameExW(format, &returnVal[0], &bufferCharacterSize))
-        {
-            const auto lastError = Win32::GetLastError();
-            throw Error::Win32Error("GetComputerNameExW() failed", lastError);
-        }
+        if (not Win32::GetComputerNameExW(format, &returnVal[0], &bufferCharacterSize))
+            throw Error::Win32Error(Win32::GetLastError(), "GetComputerNameExW() failed");
         // On output, receives the number of TCHARs copied to the destination buffer, 
         // not including the terminating null character.
         returnVal.resize(bufferCharacterSize);
@@ -37,14 +33,8 @@ export namespace Boring32::Computer
     {
         // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getphysicallyinstalledsystemmemory
         size_t memoryInKB;
-        if (!Win32::GetPhysicallyInstalledSystemMemory(&memoryInKB))
-        {
-            const auto lastError = Win32::GetLastError();
-            throw Error::Win32Error(
-                "GetPhysicallyInstalledSystemMemory() failed",
-                lastError
-            );
-        }
+        if (not Win32::GetPhysicallyInstalledSystemMemory(&memoryInKB))
+            throw Error::Win32Error(Win32::GetLastError(), "GetPhysicallyInstalledSystemMemory() failed");
         return memoryInKB;
     }
 
@@ -54,11 +44,8 @@ export namespace Boring32::Computer
         // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-globalmemorystatusex
         // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-memorystatusex
         Win32::MEMORYSTATUSEX memoryStatus{ .dwLength = sizeof(Win32::MEMORYSTATUSEX) };
-        if (!Win32::GlobalMemoryStatusEx(&memoryStatus))
-        {
-            const auto lastError = Win32::GetLastError();
-            throw Error::Win32Error("GlobalMemoryStatusEx() failed", lastError);
-        }
+        if (not Win32::GlobalMemoryStatusEx(&memoryStatus))
+            throw Error::Win32Error(Win32::GetLastError(), "GlobalMemoryStatusEx() failed");
         return memoryStatus;
     }
 
@@ -71,8 +58,8 @@ export namespace Boring32::Computer
 
     struct TimeAdjustment
     {
-        DWORD Adjustment = 0;
-        DWORD Increment = 0;
+        Win32::DWORD Adjustment = 0;
+        Win32::DWORD Increment = 0;
         bool AdjustmentsAreEnabled = 0;
     };
 
@@ -81,18 +68,14 @@ export namespace Boring32::Computer
     {
         TimeAdjustment ts{};
         // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtimeadjustment
-        const bool succeeded = Win32::GetSystemTimeAdjustment(
+        bool succeeded = Win32::GetSystemTimeAdjustment(
             &ts.Adjustment,
             &ts.Increment,
             reinterpret_cast<Win32::BOOL*>(&ts.AdjustmentsAreEnabled)
         );
-        if (!succeeded)
+        if (not succeeded)
         {
-            const auto lastError = Win32::GetLastError();
-            throw Error::Win32Error(
-                "GetSystemTimeAdjustment() failed",
-                lastError
-            );
+            throw Error::Win32Error(Win32::GetLastError(), "GetSystemTimeAdjustment() failed");
         }
 
         // invert the bool since the semantics are the opposite
@@ -129,31 +112,19 @@ export namespace Boring32::Computer
         if (lastError == Win32::ErrorCodes::Success)
             return {};
         if (lastError != Win32::ErrorCodes::InsufficientBuffer)
-        {
-            lastError = Win32::GetLastError();
-            throw Error::Win32Error(
-                "GetLogicalProcessorInformationEx() failed",
-                lastError
-            );
-        }
+            throw Error::Win32Error(lastError, "GetLogicalProcessorInformationEx() failed");
 
         // https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-system_logical_processor_information_ex
         std::vector<Win32::SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX> returnValue(
             lengthInBytes / sizeof(Win32::LOGICAL_PROCESSOR_RELATIONSHIP)
         );
-        const bool succeeded = Win32::GetLogicalProcessorInformationEx(
+        bool succeeded = Win32::GetLogicalProcessorInformationEx(
             relationship,
             &returnValue[0],
             &lengthInBytes
         );
-        if (!succeeded)
-        {
-            lastError = Win32::GetLastError();
-            throw Error::Win32Error(
-                "GetLogicalProcessorInformationEx() failed",
-                lastError
-            );
-        }
+        if (not succeeded)
+            throw Error::Win32Error(Win32::GetLastError(), "GetLogicalProcessorInformationEx() failed");
         // In case it changes somehow
         returnValue.resize(lengthInBytes / sizeof(Win32::LOGICAL_PROCESSOR_RELATIONSHIP));
 
@@ -161,22 +132,19 @@ export namespace Boring32::Computer
     }
 
     [[nodiscard]]
-    std::vector<DWORD> EnumerateProcessIDs()
+    std::vector<Win32::DWORD> EnumerateProcessIDs()
     {
         // Get the list of process identifiers.
         std::vector<Win32::DWORD> processes(1024);
         Win32::DWORD bytesNeeded;
         // https://docs.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocesses
-        const bool succeeded = Win32::K32EnumProcesses(
+        bool succeeded = Win32::K32EnumProcesses(
             &processes[0],
             static_cast<Win32::DWORD>(processes.size()) * sizeof(Win32::DWORD),
             &bytesNeeded
         );
-        if (!succeeded)
-        {
-            const auto lastError = Win32::GetLastError();
-            throw Error::Win32Error("EnumProcesses() failed", lastError);
-        }
+        if (not succeeded)
+            throw Error::Win32Error(Win32::GetLastError(), "EnumProcesses() failed");
 
         processes.resize(bytesNeeded / sizeof(Win32::DWORD));
         return processes;
@@ -189,16 +157,13 @@ export namespace Boring32::Computer
         std::vector<void*> deviceDriverAddresses(1024);
         Win32::DWORD bytesNeeded;
         // https://docs.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumdevicedrivers
-        const bool succeeded = Win32::K32EnumDeviceDrivers(
+        bool succeeded = Win32::K32EnumDeviceDrivers(
             &deviceDriverAddresses[0],
             static_cast<Win32::DWORD>(deviceDriverAddresses.size()) * sizeof(void*),
             &bytesNeeded
         );
-        if (!succeeded)
-        {
-            const auto lastError = Win32::GetLastError();
-            throw Error::Win32Error("K32EnumDeviceDrivers() failed", lastError);
-        }
+        if (not succeeded)
+            throw Error::Win32Error(Win32::GetLastError(), "K32EnumDeviceDrivers() failed");
 
         deviceDriverAddresses.resize(bytesNeeded / sizeof(void*));
         return deviceDriverAddresses;

@@ -49,7 +49,7 @@ export namespace Boring32::Util
 			// https://docs.microsoft.com/en-us/windows/win32/rpc/rpc-return-values
 			// Not sure if this works, as RPC_STATUS is a long, not an unsigned long
 			if (status != Win32::_RPC_S_OK)
-				throw Error::Win32Error("UuidFromStringW() failed", status);
+				throw Error::Win32Error(status, "UuidFromStringW() failed");
 		}
 
 		GloballyUniqueID(const GUID& guid)

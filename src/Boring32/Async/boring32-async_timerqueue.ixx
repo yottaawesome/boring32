@@ -62,10 +62,7 @@ export namespace Boring32::Async
 
 			//https://docs.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-deletetimerqueueex
 			if (!Win32::DeleteTimerQueueEx(m_timer, argValue))
-			{
-				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error("DeleteTimerQueueEx() failed", lastError);
-			}
+				throw Error::Win32Error(Win32::GetLastError(), "DeleteTimerQueueEx() failed");
 			m_timer = nullptr;
 		}
 

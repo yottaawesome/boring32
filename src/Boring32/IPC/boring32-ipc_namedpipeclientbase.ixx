@@ -26,13 +26,13 @@ export namespace Boring32::IPC
 			// https://docs.microsoft.com/en-us/windows/win32/api/namedpipeapi/nf-namedpipeapi-setnamedpipehandlestate?redirectedfrom=MSDN
 			//PIPE_READMODE_MESSAGE or PIPE_READMODE_BYTE
 			Win32::DWORD passedPipeMode = pipeMode;
-			const bool succeeded = Win32::SetNamedPipeHandleState(
+			bool succeeded = Win32::SetNamedPipeHandleState(
 				m_handle.GetHandle(),    // pipe handle 
 				&passedPipeMode,  // new pipe mode 
 				nullptr,     // don't set maximum bytes 
 				nullptr);    // don't set maximum time 
-			if (auto lastError = Win32::GetLastError(); not succeeded)
-				throw Error::Win32Error("SetNamedPipeHandleState() failed", lastError);
+			if (not succeeded)
+				throw Error::Win32Error(Win32::GetLastError(), "SetNamedPipeHandleState() failed");
 		}
 
 		virtual void Connect(const Win32::DWORD timeout)
@@ -53,34 +53,21 @@ export namespace Boring32::IPC
 			);
 			if (m_handle == Win32::InvalidHandleValue)
 			{
-				if (Win32::GetLastError() != Win32::ErrorCodes::PipeBusy || timeout == 0)
-				{
-					const auto lastError = Win32::GetLastError();
-					throw Error::Win32Error("Failed to connect client pipe", lastError);
-				}
-				if (Win32::WaitNamedPipeW(m_pipeName.c_str(), timeout) == false)
-				{
-					const auto lastError = Win32::GetLastError();
-					throw Error::Win32Error("Timed out trying to connect client pipe", lastError);
-				}
+				if (auto lastError = Win32::GetLastError(); lastError != Win32::ErrorCodes::PipeBusy || timeout == 0)
+					throw Error::Win32Error(lastError, "Failed to connect client pipe");
+				if (not Win32::WaitNamedPipeW(m_pipeName.c_str(), timeout))
+					throw Error::Win32Error(Win32::GetLastError(), "Timed out trying to connect client pipe");
 			}
 		}
 
-			virtual bool Connect(
-				const Win32::DWORD timeout,
-				const std::nothrow_t&
-			) noexcept try
+			virtual bool Connect(Win32::DWORD timeout, std::nothrow_t) noexcept 
+			try
 			{
 				Connect(timeout);
 				return true;
 			}
 			catch (const std::exception&)
 			{
-				// ICE -- seems to only happen in a catch
-				/*std::wcerr
-					<< __FUNCSIG__ << L" failed: "
-					<< ex.what()
-					<< std::endl;*/
 				return false;
 			}
 
@@ -102,11 +89,8 @@ export namespace Boring32::IPC
 					nullptr,
 					&bytesLeft
 				);
-				if (!succeeded)
-				{
-					const auto lastError = Win32::GetLastError();
-					throw Error::Win32Error("PeekNamedPipe() failed", lastError);
-				}
+				if (not succeeded)
+					throw Error::Win32Error(Win32::GetLastError(), "PeekNamedPipe() failed");
 
 				return bytesLeft / sizeof(wchar_t);
 			}
@@ -116,10 +100,7 @@ export namespace Boring32::IPC
 				if (!m_handle)
 					throw Error::Boring32Error("No pipe to flush");
 				if (!Win32::FlushFileBuffers(m_handle.GetHandle()))
-				{
-					const auto lastError = Win32::GetLastError();
-					throw Error::Win32Error("FlushFileBuffers() failed", lastError);
-				}
+					throw Error::Win32Error(Win32::GetLastError(), "FlushFileBuffers() failed");
 			}
 
 			virtual void CancelCurrentThreadIo()
@@ -127,10 +108,7 @@ export namespace Boring32::IPC
 				if (!m_handle)
 					throw Error::Boring32Error("Pipe is nullptr");
 				if (!Win32::CancelIo(m_handle.GetHandle()))
-				{
-					const auto lastError = Win32::GetLastError();
-					throw Error::Win32Error("CancelIo failed", lastError);
-				}
+					throw Error::Win32Error(Win32::GetLastError(), "CancelIo failed");
 			}
 
 			virtual bool CancelCurrentThreadIo(const std::nothrow_t&) noexcept try
@@ -140,8 +118,6 @@ export namespace Boring32::IPC
 			}
 			catch (const std::exception&)
 			{
-				// ICE
-				//std::wcerr << __FUNCSIG__ << L" failed: " << ex.what() << std::endl;
 				return false;
 			}
 
@@ -150,11 +126,7 @@ export namespace Boring32::IPC
 				if (!m_handle)
 					throw Error::Boring32Error("pipe is nullptr");
 				if (!Win32::CancelIoEx(m_handle.GetHandle(), overlapped))
-				{
-					const auto lastError = Win32::GetLastError();
-					throw Error::Win32Error("CancelIo() failed", lastError);
-
-				}
+					throw Error::Win32Error(Win32::GetLastError(), "CancelIo() failed");
 			}
 
 			virtual bool CancelCurrentProcessIo(

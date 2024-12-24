@@ -54,10 +54,7 @@ export namespace Boring32::Async
 			//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-openwaitabletimerw
 			m_handle = Win32::OpenWaitableTimerW(desiredAccess, isInheritable, m_name.c_str());
 			if (!m_handle)
-			{
-				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error("Failed to open waitable timer", lastError);
-			}
+				throw Error::Win32Error(Win32::GetLastError(), "Failed to open waitable timer");
 		}
 
 		WaitableTimer& operator=(const WaitableTimer& other)
@@ -180,8 +177,8 @@ export namespace Boring32::Async
 		{
 			if (not m_handle)
 				throw Error::Boring32Error("Timer handle is null");
-			if (auto lastError = Win32::GetLastError(); not Win32::CancelWaitableTimer(m_handle.GetHandle()))
-				throw Error::Win32Error("CancelWaitableTimer() failed", lastError);
+			if (not Win32::CancelWaitableTimer(m_handle.GetHandle()))
+				throw Error::Win32Error(Win32::GetLastError(), "CancelWaitableTimer() failed");
 		}
 
 		bool CancelTimer(std::nothrow_t) noexcept 
@@ -243,8 +240,8 @@ export namespace Boring32::Async
 				m_isManualReset,
 				m_name.empty() ? nullptr : m_name.c_str()
 			);
-			if (auto lastError = Win32::GetLastError(); not m_handle)
-				throw Error::Win32Error("Failed to create waitable timer", lastError);
+			if (not m_handle)
+				throw Error::Win32Error(Win32::GetLastError(), "Failed to create waitable timer");
 			m_handle.SetInheritability(isInheritable);
 		}
 
@@ -258,7 +255,7 @@ export namespace Boring32::Async
 			Win32::LARGE_INTEGER liDueTime;
 			liDueTime.QuadPart = time;
 			//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-setwaitabletimer
-			const bool succeeded = Win32::SetWaitableTimer(
+			bool succeeded = Win32::SetWaitableTimer(
 				m_handle.GetHandle(),
 				&liDueTime,
 				period,
@@ -266,8 +263,8 @@ export namespace Boring32::Async
 				param,
 				false
 			);
-			if (auto lastError = Win32::GetLastError(); succeeded)
-				throw Error::Win32Error("Failed to set timer", lastError);
+			if (not succeeded)
+				throw Error::Win32Error(Win32::GetLastError(), "Failed to set timer");
 		}
 
 		RAII::Win32Handle m_handle;

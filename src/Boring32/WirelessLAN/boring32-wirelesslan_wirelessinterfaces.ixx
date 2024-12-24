@@ -19,7 +19,7 @@ export namespace Boring32::WirelessLAN
 			// https://docs.microsoft.com/en-us/windows/win32/api/wlanapi/nf-wlanapi-wlanenuminterfaces
 			Win32::DWORD status = Win32::WlanEnumInterfaces(m_session.get(), nullptr, &pIfList);
 			if (status != Win32::ErrorCodes::Success)
-				throw Error::Win32Error("WlanEnumInterfaces() failed", status);
+				throw Error::Win32Error(status, "WlanEnumInterfaces() failed");
 			UniqueWLANMemory interfaceList = UniqueWLANMemory(pIfList);
 
 			std::vector<WirelessInterface> returnVal;

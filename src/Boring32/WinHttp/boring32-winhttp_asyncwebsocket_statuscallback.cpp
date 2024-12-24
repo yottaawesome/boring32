@@ -5,7 +5,7 @@ import :error;
 
 namespace Boring32::WinHttp::WebSockets
 {
-	void Print(const DWORD dwInternetStatus)
+	void Print(const Win32::DWORD dwInternetStatus)
 	{
 		//static const std::map<DWORD, std::wstring> InternetStatus{
 		//{WINHTTP_CALLBACK_STATUS_RESOLVING_NAME, L"WINHTTP_CALLBACK_STATUS_RESOLVING_NAME"},
@@ -74,12 +74,7 @@ namespace Boring32::WinHttp::WebSockets
 
 				if (!Win32::WinHttp::WinHttpReceiveResponse(hInternet, 0))
 				{
-					const auto lastError = Win32::GetLastError();
-					Error::Win32Error ex(
-						"WinHttpReceiveResponse() failed on initial connection",
-						lastError
-					);
-
+					Error::Win32Error ex(Win32::GetLastError(), "WinHttpReceiveResponse() failed on initial connection");
 					std::wcout << ex.what() << std::endl;
 				}
 
@@ -96,7 +91,7 @@ namespace Boring32::WinHttp::WebSockets
 					Win32::DWORD statusCode = 0;
 					Win32::DWORD statusCodeSize = sizeof(statusCode);
 					// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpqueryheaders
-					const bool success = Win32::WinHttp::WinHttpQueryHeaders(
+					bool success = Win32::WinHttp::WinHttpQueryHeaders(
 						hInternet,
 						Win32::WinHttp::_WINHTTP_QUERY_STATUS_CODE | Win32::WinHttp::_WINHTTP_QUERY_FLAG_NUMBER,
 						(Win32::LPCWSTR)Win32::WinHttp::_WINHTTP_HEADER_NAME_BY_INDEX,
@@ -105,10 +100,7 @@ namespace Boring32::WinHttp::WebSockets
 						(Win32::LPDWORD)Win32::WinHttp::_WINHTTP_NO_HEADER_INDEX
 					);
 					if (!success)
-					{
-						const auto lastError = Win32::GetLastError();
-						throw Error::Win32Error("WinHttpQueryHeaders() failed", lastError);
-					}
+						throw Error::Win32Error(Win32::GetLastError(), "WinHttpQueryHeaders() failed");
 
 					switch (statusCode)
 					{
@@ -159,7 +151,7 @@ namespace Boring32::WinHttp::WebSockets
 				try
 				{
 					if (read.Status != ReadResultStatus::Initiated 
-						&& read.Status != ReadResultStatus::PartialRead)
+						and read.Status != ReadResultStatus::PartialRead)
 					{
 						std::wcerr << L"read in an unexpected status" << std::endl;
 						return;
@@ -219,7 +211,7 @@ namespace Boring32::WinHttp::WebSockets
 				
 				AsyncWebSocket* socket = (AsyncWebSocket*)dwContext;
 				socket->m_status = WebSocketStatus::Error;
-				Error::Win32Error err("Error occurred in async socket callback", (DWORD)requestError->dwError);
+				Error::Win32Error err((Win32::DWORD)requestError->dwError, "Error occurred in async socket callback");
 				switch (requestError->dwResult)
 				{
 					case Win32::WinHttp::_API_RECEIVE_RESPONSE:

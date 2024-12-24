@@ -14,16 +14,11 @@ export namespace Boring32::Async
 		SynchronizationBarrier() = default;
 		SynchronizationBarrier(const long totalThreads, const long spinCount)
 			: m_totalThreads(totalThreads),
-			m_spinCount(spinCount),
-			m_isInitialized(false),
-			m_barrier{ 0 }
+			m_spinCount(spinCount)
 		{
 			//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-initializesynchronizationbarrier
-			if (!Win32::InitializeSynchronizationBarrier(&m_barrier, m_totalThreads, m_spinCount))
-			{
-				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error("InitializeSynchronizationBarrier() failed", lastError);
-			}
+			if (not Win32::InitializeSynchronizationBarrier(&m_barrier, m_totalThreads, m_spinCount))
+				throw Error::Win32Error(Win32::GetLastError(), "InitializeSynchronizationBarrier() failed");
 			m_isInitialized = true;
 		}
 
@@ -39,7 +34,7 @@ export namespace Boring32::Async
 
 		bool Enter(const Win32::DWORD flags)
 		{
-			if (!m_isInitialized)
+			if (not m_isInitialized)
 				throw Error::Boring32Error("Barrier is not initialised");
 			//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-entersynchronizationbarrier
 			return Win32::EnterSynchronizationBarrier(&m_barrier, flags);

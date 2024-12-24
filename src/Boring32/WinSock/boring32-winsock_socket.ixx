@@ -37,7 +37,7 @@ export namespace Boring32::WinSock
 			{
 				const auto lastError = Win32::WinSock::WSAGetLastError();
 				Error::ThrowNested(
-					Error::Win32Error("socket() failed", lastError, L"ws2_32.dll"),
+					Error::Win32Error(lastError, "socket() failed", L"ws2_32.dll"),
 					WinSockError("Failed to open socket")
 				);
 			}

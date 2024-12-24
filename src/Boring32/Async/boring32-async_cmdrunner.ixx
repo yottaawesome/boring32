@@ -61,8 +61,8 @@ namespace Boring32::Async
             &siStartInfo,  // STARTUPINFO pointer 
             &piProcInfo     // receives PROCESS_INFORMATION 
         );
-        if (auto lastError = Win32::GetLastError(); not bSuccess)
-            throw Error::Win32Error("CreateProcessW() failed", lastError);
+        if (not bSuccess)
+            throw Error::Win32Error(Win32::GetLastError(), "CreateProcessW() failed");
 
         return piProcInfo;
     }
@@ -114,26 +114,26 @@ export namespace Boring32::Async
         // Create a pipe for the child process's STDOUT. 
         Win32::HANDLE hChildStd_OUT_Rd = nullptr;
         Win32::HANDLE hChildStd_OUT_Wr = nullptr;
-        if (auto lastError = GetLastError(); not Win32::CreatePipe(&hChildStd_OUT_Rd, &hChildStd_OUT_Wr, &saAttr, 0))
-            throw Error::Win32Error("CreatePipe() failed", lastError);
+        if (not Win32::CreatePipe(&hChildStd_OUT_Rd, &hChildStd_OUT_Wr, &saAttr, 0))
+            throw Error::Win32Error(GetLastError(), "CreatePipe() failed");
         HandleUniquePtr ptrChildStdOutWr = HandleUniquePtr(hChildStd_OUT_Wr);
         HandleUniquePtr ptrChildStdOutRd = HandleUniquePtr(hChildStd_OUT_Rd);
 
         // Ensure the read handle to the pipe for STDOUT is not inherited.
-        if (auto lastError = GetLastError(); not Win32::SetHandleInformation(hChildStd_OUT_Rd, Win32::HandleFlagInherit, 0))
-            throw Error::Win32Error("CreatePipe() failed", lastError);
+        if (not Win32::SetHandleInformation(hChildStd_OUT_Rd, Win32::HandleFlagInherit, 0))
+            throw Error::Win32Error(GetLastError(), "CreatePipe() failed");
 
         // Create a pipe for the child process's STDIN. 
         Win32::HANDLE hChildStd_IN_Rd = nullptr;
         Win32::HANDLE hChildStd_IN_Wr = nullptr;
-        if (auto lastError = GetLastError(); not Win32::CreatePipe(&hChildStd_IN_Rd, &hChildStd_IN_Wr, &saAttr, 0))
-            throw Error::Win32Error("CreatePipe() failed", lastError);
+        if (not Win32::CreatePipe(&hChildStd_IN_Rd, &hChildStd_IN_Wr, &saAttr, 0))
+            throw Error::Win32Error(GetLastError(), "CreatePipe() failed");
         HandleUniquePtr ptrChildStdInRd = HandleUniquePtr(hChildStd_IN_Rd);
         HandleUniquePtr ptrChildStdInWr = HandleUniquePtr(hChildStd_IN_Wr);
 
         // Ensure the write handle to the pipe for STDIN is not inherited. 
-        if (auto lastError = GetLastError(); not Win32::SetHandleInformation(hChildStd_IN_Wr, Win32::HandleFlagInherit, 0))
-            throw Error::Win32Error("CreatePipe() failed", lastError);
+        if (not Win32::SetHandleInformation(hChildStd_IN_Wr, Win32::HandleFlagInherit, 0))
+            throw Error::Win32Error(GetLastError(), "CreatePipe() failed");
 
         // Create the child process. 
         Win32::PROCESS_INFORMATION childProc = CreateChildProcess(

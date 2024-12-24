@@ -61,7 +61,7 @@ export namespace Boring32::IPC
 				oio.GetOverlapped());							// overlapped 
 			oio.LastError(Win32::GetLastError());
 			if (not succeeded and oio.LastError() != Win32::ErrorCodes::IoPending)
-				throw Error::Win32Error("WriteFile() failed", oio.LastError());
+				throw Error::Win32Error(oio.LastError(), "WriteFile() failed");
 		}
 
 		void InternalRead(const Win32::DWORD noOfCharacters, Async::OverlappedIo& oio)
@@ -82,7 +82,7 @@ export namespace Boring32::IPC
 
 			if (not succeeded)
 				if (oio.LastError() != Win32::ErrorCodes::IoPending and oio.LastError() != Win32::ErrorCodes::MoreData)
-					throw Error::Win32Error("ReadFile() failed", oio.LastError());
+					throw Error::Win32Error(oio.LastError(), "ReadFile() failed");
 		}
 	};
 }

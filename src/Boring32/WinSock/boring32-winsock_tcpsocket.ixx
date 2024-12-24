@@ -42,7 +42,7 @@ export namespace Boring32::WinSock
 			{
 				const auto lastError = Win32::WinSock::WSAGetLastError();
 				Error::ThrowNested(
-					Error::Win32Error("socket() failed", lastError, L"ws2_32.dll"),
+					Error::Win32Error(lastError, "socket() failed", L"ws2_32.dll"),
 					WinSockError("Failed to open socket")
 				);
 			}
@@ -86,16 +86,15 @@ export namespace Boring32::WinSock
 			// See https://social.msdn.microsoft.com/Forums/en-US/2202d113-212d-420d-9e7b-11268de9ce90/win32-tcp-connect-timeout
 			// and https://docs.microsoft.com/en-us/windows/win32/winsock/windows-sockets-error-codes-2
 			// https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-connect
-			const int connectionResult = Win32::WinSock::connect(
+			int connectionResult = Win32::WinSock::connect(
 				m_socket,
 				m_addrPtr->ai_addr,
 				static_cast<int>(m_addrPtr->ai_addrlen)
 			);
 			if (connectionResult == Win32::WinSock::_SOCKET_ERROR)
 			{
-				const auto lastError = Win32::WinSock::WSAGetLastError();
 				Error::ThrowNested(
-					Error::Win32Error("connect() failed", lastError, L"ws2_32.dll"),
+					Error::Win32Error(Win32::WinSock::WSAGetLastError(), "connect() failed", L"ws2_32.dll"),
 					WinSockError("Failed to connect socket")
 				);
 			}
@@ -135,9 +134,8 @@ export namespace Boring32::WinSock
 				);
 				if (sentBytes == Win32::WinSock::_SOCKET_ERROR)
 				{
-					const auto lastError = Win32::WinSock::WSAGetLastError();
 					Error::ThrowNested(
-						Error::Win32Error("send() failed", lastError, L"ws2_32.dll"),
+						Error::Win32Error(Win32::WinSock::WSAGetLastError(), "send() failed", L"ws2_32.dll"),
 						WinSockError("Failed to send data through socket")
 					);
 				}
@@ -157,9 +155,8 @@ export namespace Boring32::WinSock
 			const int actualBytesRead = Win32::WinSock::recv(m_socket, reinterpret_cast<char*>(&recvbuf[0]), bytesToRead, 0);
 			if (actualBytesRead < 0)
 			{
-				const auto lastError = Win32::WinSock::WSAGetLastError();
 				Error::ThrowNested(
-					Error::Win32Error("recv() failed", lastError, L"ws2_32.dll"),
+					Error::Win32Error(Win32::WinSock::WSAGetLastError(), "recv() failed", L"ws2_32.dll"),
 					WinSockError("Failed to receive data through socket")
 				);
 			}
@@ -203,9 +200,8 @@ export namespace Boring32::WinSock
 			);
 			if (optResult == Win32::WinSock::_SOCKET_ERROR)
 			{
-				const auto lastError = Win32::WinSock::WSAGetLastError();
 				Error::ThrowNested(
-					Error::Win32Error("getsockopt() failed", lastError, L"ws2_32.dll"),
+					Error::Win32Error(Win32::WinSock::WSAGetLastError(), "getsockopt() failed", L"ws2_32.dll"),
 					WinSockError("TTL option is not supported")
 				);
 			}
@@ -221,9 +217,8 @@ export namespace Boring32::WinSock
 			);
 			if (optResult == Win32::WinSock::_SOCKET_ERROR)
 			{
-				const auto lastError = Win32::WinSock::WSAGetLastError();
 				Error::ThrowNested(
-					Error::Win32Error("setsockopt() failed", lastError, L"ws2_32.dll"),
+					Error::Win32Error(Win32::WinSock::WSAGetLastError(), "setsockopt() failed", L"ws2_32.dll"),
 					WinSockError("Failed to set option")
 				);
 			}
@@ -245,13 +240,10 @@ export namespace Boring32::WinSock
 				&optLen
 			);
 			if (optResult == Win32::WinSock::_SOCKET_ERROR)
-			{
-				const auto lastError = Win32::WinSock::WSAGetLastError();
 				Error::ThrowNested(
-					Error::Win32Error("getsockopt() failed", lastError, L"ws2_32.dll"),
+					Error::Win32Error(Win32::WinSock::WSAGetLastError(), "getsockopt() failed", L"ws2_32.dll"),
 					WinSockError("RT option is not supported")
 				);
-			}
 
 			optVal = timeoutSeconds;
 			optResult = Win32::WinSock::setsockopt(
@@ -262,13 +254,10 @@ export namespace Boring32::WinSock
 				optLen
 			);
 			if (optResult == Win32::WinSock::_SOCKET_ERROR)
-			{
-				const auto lastError = Win32::WinSock::WSAGetLastError();
 				Error::ThrowNested(
-					Error::Win32Error("setsockopt() failed", lastError, L"ws2_32.dll"),
+					Error::Win32Error(Win32::WinSock::WSAGetLastError(), "setsockopt() failed", L"ws2_32.dll"),
 					WinSockError("Failed to set RT option")
 				);
-			}
 		}
 
 		const std::wstring& GetHost() const noexcept

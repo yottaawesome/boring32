@@ -34,7 +34,7 @@ export namespace Boring32::Crypto
 		Win32::DATA_BLOB* const entropy = password.empty()
 			? nullptr
 			: &additionalEntropy;
-		const bool succeeded = Win32::CryptProtectData(
+		bool succeeded = Win32::CryptProtectData(
 			&dataIn,					// The data to encrypt.
 			descriptionCStr,			// An optional description string.
 			entropy,					// Optional additional entropy to
@@ -45,11 +45,8 @@ export namespace Boring32::Crypto
 			0,							// Flags.
 			&encryptedBlob				// Receives the encrypted information.
 		);
-		if (!succeeded)
-		{
-			const auto lastError = Win32::GetLastError();
-			throw Error::Win32Error("CryptProtectData() failed", lastError);
-		}
+		if (not succeeded)
+			throw Error::Win32Error(Win32::GetLastError(), "CryptProtectData() failed");
 
 		// Should we really return std::byte instead of Windows' BYTE?
 		// Using std::byte means we'll need to cast at the API call.
@@ -111,11 +108,8 @@ export namespace Boring32::Crypto
 			0,							// Flags
 			&decryptedBlob				// Receives the decrypted data
 		);
-		if (!succeeded)
-		{
-			const auto lastError = Win32::GetLastError();
-			throw Error::Win32Error("CryptUnprotectData() failed", lastError);
-		}
+		if (not succeeded)
+			throw Error::Win32Error(Win32::GetLastError(), "CryptUnprotectData() failed");
 
 		if (descrOut)
 		{
@@ -373,11 +367,8 @@ export namespace Boring32::Crypto
 			&encoded,
 			nullptr
 		);
-		if (!succeeded)
-		{
-			const auto lastError = Win32::GetLastError();
-			throw Error::Win32Error("CertStrToNameW() failed", lastError);
-		}
+		if (not succeeded)
+			throw Error::Win32Error(Win32::GetLastError(), "CertStrToNameW() failed");
 
 		std::vector<std::byte> bytes(encoded);
 		succeeded = Win32::CertStrToNameW(
@@ -389,20 +380,14 @@ export namespace Boring32::Crypto
 			&encoded,
 			nullptr
 		);
-		if (!succeeded)
-		{
-			const auto lastError = Win32::GetLastError();
-			throw Error::Win32Error("CertStrToNameW() failed", lastError);
-		}
+		if (not succeeded)
+			throw Error::Win32Error(Win32::GetLastError(), "CertStrToNameW() failed");
 
 		bytes.resize(encoded);
 		return bytes;
 	}
 
-	std::wstring FormatAsnNameBlob(
-		const Win32::CERT_NAME_BLOB& certName,
-		const Win32::DWORD format
-	)
+	std::wstring FormatAsnNameBlob(const Win32::CERT_NAME_BLOB& certName, Win32::DWORD format)
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certnametostrw
 		Win32::DWORD characterSize = Win32::CertNameToStrW(
@@ -428,10 +413,7 @@ export namespace Boring32::Crypto
 		return name;
 	}
 
-	std::vector<Win32::PCCERT_CHAIN_CONTEXT> FindChainInStore(
-		Win32::HCERTSTORE hCertStore,
-		const std::wstring& issuer
-	)
+	std::vector<Win32::PCCERT_CHAIN_CONTEXT> FindChainInStore(Win32::HCERTSTORE hCertStore, const std::wstring& issuer)
 	{
 		if (!hCertStore)
 			throw Error::Boring32Error("hCertStore cannot be null");
@@ -509,7 +491,7 @@ export namespace Boring32::Crypto
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certgetcertificatechain
 		// https://docs.microsoft.com/en-us/windows/win32/seccrypto/example-c-program-creating-a-certificate-chain
-		const bool succeeded = Win32::CertGetCertificateChain(
+		bool succeeded = Win32::CertGetCertificateChain(
 			nullptr,
 			contextToBuildFrom,
 			nullptr,
@@ -519,18 +501,12 @@ export namespace Boring32::Crypto
 			nullptr,
 			&chainContext
 		);
-		if (!succeeded)
-		{
-			const auto lastError = Win32::GetLastError();
-			throw Error::Win32Error("CertGetCertificateChain() failed", lastError);
-		}
+		if (not succeeded)
+			throw Error::Win32Error(Win32::GetLastError(), "CertGetCertificateChain() failed");
 		return chainContext;
 	}
 
-	void ImportCertToStore(
-		const Win32::HCERTSTORE store,
-		const Win32::CRYPTUI_WIZ_IMPORT_SRC_INFO& info
-	)
+	void ImportCertToStore(const Win32::HCERTSTORE store, const Win32::CRYPTUI_WIZ_IMPORT_SRC_INFO& info)
 	{
 		if (!store)
 			throw Error::Boring32Error("store is nullptr");
@@ -539,30 +515,20 @@ export namespace Boring32::Crypto
 			Win32::CryptUiWizNoUi | Win32::CryptUiWizIgnoreNoUiFlagForCsps | Win32::CryptUiWizImportAllowCert;
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/nf-cryptuiapi-cryptuiwizimport
-		const bool succeeded = Win32::CryptUIWizImport(
+		bool succeeded = Win32::CryptUIWizImport(
 			flags,
 			nullptr,
 			nullptr,
 			&info,
 			store
 		);
-		if (!succeeded)
-		{
-			const auto lastError = Win32::GetLastError();
-			throw Error::Win32Error(
-				"CryptUIWizImport() failed",
-				lastError
-			);
-		}
+		if (not succeeded)
+			throw Error::Win32Error(Win32::GetLastError(), "CryptUIWizImport() failed");
 	}
 
 	using StoreFindType = Win32::StoreFindType;
 
-	Win32::PCCERT_CONTEXT GetCertByArg(
-		Win32::HCERTSTORE certStore,
-		const StoreFindType searchFlag,
-		const void* arg
-	)
+	Win32::PCCERT_CONTEXT GetCertByArg(Win32::HCERTSTORE certStore, StoreFindType searchFlag, const void* arg)
 	{
 		if (!certStore)
 			throw Error::Boring32Error("CertStore cannot be null");
@@ -578,12 +544,9 @@ export namespace Boring32::Crypto
 				nullptr
 			)
 		);
-		if (!certContext)
-		{
-			const Win32::DWORD lastError = Win32::GetLastError();
-			if (lastError != Win32::CryptoErrorCodes::NotFound)
-				throw Error::Win32Error("CertFindCertificateInStore() failed", lastError);
-		}
+		if (not certContext)
+			if (auto lastError = Win32::GetLastError(); lastError != Win32::CryptoErrorCodes::NotFound)
+				throw Error::Win32Error(lastError, "CertFindCertificateInStore() failed");
 
 		return certContext;
 	}

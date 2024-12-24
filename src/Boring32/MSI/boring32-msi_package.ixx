@@ -40,7 +40,7 @@ export namespace Boring32::MSI
 				&m_handle
 			);
 			if (status != Win32::ErrorCodes::Success)
-				throw Error::Win32Error("MsiOpenPackageW() failed", status);
+				throw Error::Win32Error(status, "MsiOpenPackageW() failed");
 		}
 
 		std::wstring m_path;

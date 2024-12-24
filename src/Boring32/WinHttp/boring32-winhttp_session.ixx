@@ -125,21 +125,18 @@ export namespace Boring32::WinHttp
 				? (wchar_t*)Win32::WinHttp::_WINHTTP_NO_PROXY_BYPASS
 				: m_proxyBypass.c_str();
 			// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpopen
-			const Win32::WinHttp::HINTERNET handle = Win32::WinHttp::WinHttpOpen(
+			Win32::WinHttp::HINTERNET handle = Win32::WinHttp::WinHttpOpen(
 				m_userAgent.c_str(),
 				static_cast<Win32::DWORD>(m_proxyType),
 				proxyType,
 				proxyBypass,
 				0
 			);
-			if (!handle)
-			{
-				const auto lastError = Win32::GetLastError();
+			if (not handle)
 				Error::ThrowNested(
-					Error::Win32Error("WinHttpOpen() failed", lastError),
+					Error::Win32Error(Win32::GetLastError(), "WinHttpOpen() failed"),
 					WinHttpError("Failed to open WinHttpSession handle")
 				);
-			}
 
 			m_session = SharedWinHttpSession(handle, Win32::WinHttp::WinHttpCloseHandle);
 		}
