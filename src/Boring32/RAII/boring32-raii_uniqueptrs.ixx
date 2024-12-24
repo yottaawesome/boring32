@@ -4,10 +4,7 @@ import boring32.shared;
 export namespace Boring32::RAII
 {
 	template<auto VDeleter>
-	struct Deleter final
-	{
-		void operator()(auto ptr) const noexcept { VDeleter(ptr); }
-	};
+	struct Deleter final { void operator()(auto ptr) const noexcept { VDeleter(ptr); } };
 
 	template<typename T, auto VDeleter>
 	using UniquePtr = std::unique_ptr<T, Deleter<VDeleter>>;

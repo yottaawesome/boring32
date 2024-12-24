@@ -5,73 +5,66 @@ import :error;
 
 export namespace Boring32::IPC
 {
-	class NamedPipeClientBase
+	struct NamedPipeClientBase
 	{
-		// The six
-		public:
-			virtual ~NamedPipeClientBase() = default;
-			NamedPipeClientBase() = default;
-			NamedPipeClientBase(const NamedPipeClientBase& other) = default;
-			NamedPipeClientBase(NamedPipeClientBase&& other) noexcept = default;
-			virtual NamedPipeClientBase& operator=(const NamedPipeClientBase& other) = default;
-			virtual NamedPipeClientBase& operator=(NamedPipeClientBase&& other) noexcept = default;
+		virtual ~NamedPipeClientBase() = default;
+		NamedPipeClientBase() = default;
+		NamedPipeClientBase(const NamedPipeClientBase& other) = default;
+		NamedPipeClientBase(NamedPipeClientBase&& other) noexcept = default;
+		virtual NamedPipeClientBase& operator=(const NamedPipeClientBase& other) = default;
+		virtual NamedPipeClientBase& operator=(NamedPipeClientBase&& other) noexcept = default;
 
-		public:
-			NamedPipeClientBase(
-				const std::wstring& name,
-				const Win32::DWORD fileAttributes
-			) : m_pipeName(name),
-				m_fileAttributes(fileAttributes)
-			{ }
+		NamedPipeClientBase(
+			const std::wstring& name,
+			const Win32::DWORD fileAttributes
+		) : m_pipeName(name),
+			m_fileAttributes(fileAttributes)
+		{ }
 
-		public:
-			virtual void SetMode(const Win32::DWORD pipeMode)
+		virtual void SetMode(const Win32::DWORD pipeMode)
+		{
+			// https://docs.microsoft.com/en-us/windows/win32/api/namedpipeapi/nf-namedpipeapi-setnamedpipehandlestate?redirectedfrom=MSDN
+			//PIPE_READMODE_MESSAGE or PIPE_READMODE_BYTE
+			Win32::DWORD passedPipeMode = pipeMode;
+			const bool succeeded = Win32::SetNamedPipeHandleState(
+				m_handle.GetHandle(),    // pipe handle 
+				&passedPipeMode,  // new pipe mode 
+				nullptr,     // don't set maximum bytes 
+				nullptr);    // don't set maximum time 
+			if (auto lastError = Win32::GetLastError(); not succeeded)
+				throw Error::Win32Error("SetNamedPipeHandleState() failed", lastError);
+		}
+
+		virtual void Connect(const Win32::DWORD timeout)
+		{
+			constexpr std::wstring_view pipePrefix = LR"(\\.\pipe\)";
+			if (not m_pipeName.starts_with(pipePrefix))
+				m_pipeName = std::format(L"{}{}", pipePrefix, m_pipeName);
+
+			// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew
+			m_handle = Win32::CreateFileW(
+				m_pipeName.c_str(), // pipe name 
+				Win32::GenericRead | Win32::GenericWrite,// read and write access 
+				0,					// no sharing 
+				nullptr,			// default security attributes
+				Win32::_OPEN_EXISTING,		// opens existing pipe 
+				m_fileAttributes,	// attributes 
+				nullptr				// no template file
+			);
+			if (m_handle == Win32::InvalidHandleValue)
 			{
-				// https://docs.microsoft.com/en-us/windows/win32/api/namedpipeapi/nf-namedpipeapi-setnamedpipehandlestate?redirectedfrom=MSDN
-				//PIPE_READMODE_MESSAGE or PIPE_READMODE_BYTE
-				Win32::DWORD passedPipeMode = pipeMode;
-				const bool succeeded = Win32::SetNamedPipeHandleState(
-					m_handle.GetHandle(),    // pipe handle 
-					&passedPipeMode,  // new pipe mode 
-					nullptr,     // don't set maximum bytes 
-					nullptr);    // don't set maximum time 
-				if (!succeeded)
+				if (Win32::GetLastError() != Win32::ErrorCodes::PipeBusy || timeout == 0)
 				{
 					const auto lastError = Win32::GetLastError();
-					throw Error::Win32Error("SetNamedPipeHandleState() failed", lastError);
+					throw Error::Win32Error("Failed to connect client pipe", lastError);
 				}
-			}
-
-			virtual void Connect(const Win32::DWORD timeout)
-			{
-				static std::wstring pipePrefix = LR"(\\.\pipe\)";
-				if (!m_pipeName.starts_with(pipePrefix))
-					m_pipeName = pipePrefix + m_pipeName;
-
-				// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew
-				m_handle = Win32::CreateFileW(
-					m_pipeName.c_str(), // pipe name 
-					Win32::GenericRead | Win32::GenericWrite,// read and write access 
-					0,					// no sharing 
-					nullptr,			// default security attributes
-					Win32::_OPEN_EXISTING,		// opens existing pipe 
-					m_fileAttributes,	// attributes 
-					nullptr				// no template file
-				);
-				if (m_handle == Win32::InvalidHandleValue)
+				if (Win32::WaitNamedPipeW(m_pipeName.c_str(), timeout) == false)
 				{
-					if (Win32::GetLastError() != Win32::ErrorCodes::PipeBusy || timeout == 0)
-					{
-						const auto lastError = Win32::GetLastError();
-						throw Error::Win32Error("Failed to connect client pipe", lastError);
-					}
-					if (Win32::WaitNamedPipeW(m_pipeName.c_str(), timeout) == false)
-					{
-						const auto lastError = Win32::GetLastError();
-						throw Error::Win32Error("Timed out trying to connect client pipe", lastError);
-					}
+					const auto lastError = Win32::GetLastError();
+					throw Error::Win32Error("Timed out trying to connect client pipe", lastError);
 				}
 			}
+		}
 
 			virtual bool Connect(
 				const Win32::DWORD timeout,

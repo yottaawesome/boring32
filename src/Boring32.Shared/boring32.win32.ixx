@@ -982,13 +982,13 @@ export namespace Boring32::Win32
 		NoSerialise = HEAP_NO_SERIALIZE
 	};
 
-	constexpr auto _PIPE_ACCESS_DUPLEX = PIPE_ACCESS_DUPLEX;
-	constexpr auto _FILE_FLAG_OVERLAPPED = FILE_FLAG_OVERLAPPED;
-	constexpr auto _PIPE_TYPE_MESSAGE = PIPE_TYPE_MESSAGE;
-	constexpr auto _PIPE_READMODE_MESSAGE = PIPE_READMODE_MESSAGE;
-	constexpr auto _PIPE_WAIT = PIPE_WAIT;
-	constexpr auto _PIPE_REJECT_REMOTE_CLIENTS = PIPE_REJECT_REMOTE_CLIENTS;
-	constexpr auto _PIPE_ACCEPT_REMOTE_CLIENTS = PIPE_ACCEPT_REMOTE_CLIENTS;
+	constexpr auto PipeAccessDuplex = PIPE_ACCESS_DUPLEX;
+	constexpr auto FileFlagOverlapped = FILE_FLAG_OVERLAPPED;
+	constexpr auto PipeTypeMessage = PIPE_TYPE_MESSAGE;
+	constexpr auto PipeReadModeMessage = PIPE_READMODE_MESSAGE;
+	constexpr auto PipeWait = PIPE_WAIT;
+	constexpr auto PipeRejectRemoteClients = PIPE_REJECT_REMOTE_CLIENTS;
+	constexpr auto PipeAcceptRemoteClients = PIPE_ACCEPT_REMOTE_CLIENTS;
 
 	using ::DisconnectNamedPipe;
 	using ::FlushFileBuffers;

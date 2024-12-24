@@ -100,10 +100,10 @@ export namespace Boring32::Security
 		if (!IsHandleValid(token))
 			throw Error::Boring32Error("token cannot be null");
 
-		const std::wstring& integritySidString = Constants::GetIntegrity(integrity);
+		std::wstring_view integritySidString = Constants::GetIntegrity(integrity);
 		Win32::PSID rawIntegritySid = nullptr;
 		// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw
-		if (!Win32::ConvertStringSidToSidW(integritySidString.c_str(), &rawIntegritySid))
+		if (!Win32::ConvertStringSidToSidW(integritySidString.data(), &rawIntegritySid))
 		{
 			const auto lastError = Win32::GetLastError();
 			throw Error::Win32Error("ConvertStringSidToSidW() failed", lastError);

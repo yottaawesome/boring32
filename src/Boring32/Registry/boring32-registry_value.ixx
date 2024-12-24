@@ -17,40 +17,32 @@ export namespace Boring32::Registry
 	template<>
 	struct KeyValuePair<ValueTypes::String, std::string> { void Blah() {} };
 
-	
-
 	template<typename T>
-	class Value
+	struct Value final
 	{
-		public:
-			virtual ~Value() { }
-			Value(const Value& other) = default;
-			Value(Value&& other) noexcept = default;
-			Value(
-				const std::wstring& path,
-				const std::wstring& valueName,
-				const T value
-			)
-				: m_path(path),
-				m_valueName(valueName),
-				m_value(std::move(value))
-			{
-			}
+		Value(const Value& other) = default;
+		Value(Value&& other) noexcept = default;
+		Value(
+			const std::wstring& path,
+			const std::wstring& valueName,
+			const T value
+		)
+			: m_path(path),
+			m_valueName(valueName),
+			m_value(std::move(value))
+		{
+		}
 			
-		public:
-			virtual Value& operator=(const Value& other) = default;
-			virtual Value& operator=(Value&& other) noexcept = default;
+		Value& operator=(const Value& other) = default;
+		Value& operator=(Value&& other) noexcept = default;
 
-		public:
-			virtual const std::wstring& GetPath() const noexcept { return m_path; }
-			virtual const std::wstring& GetValueName() const noexcept { return m_valueName; }
-			virtual const T& GetValue() const noexcept { return m_value; }
+		const std::wstring& GetPath() const noexcept { return m_path; }
+		const std::wstring& GetValueName() const noexcept { return m_valueName; }
+		const T& GetValue() const noexcept { return m_value; }
 
 		protected:
-			std::wstring m_path;
-			std::wstring m_valueName;
-			T m_value;
+		std::wstring m_path;
+		std::wstring m_valueName;
+		T m_value;
 	};
-
-	
 }

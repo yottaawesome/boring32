@@ -6,9 +6,8 @@ import :error;
 export namespace Boring32::IO
 {
 	// https://docs.microsoft.com/en-us/windows/win32/fileio/i-o-completion-ports
-	struct CompletionPort
+	struct CompletionPort final
 	{
-		virtual ~CompletionPort() = default;
 		CompletionPort(const unsigned maxThreads)
 		{
 			// https://docs.microsoft.com/en-us/windows/win32/fileio/createiocompletionport
@@ -20,7 +19,7 @@ export namespace Boring32::IO
 			);
 		}
 
-		virtual void Associate(Win32::HANDLE device, const Win32::ULONG_PTR completionKey)
+		void Associate(Win32::HANDLE device, const Win32::ULONG_PTR completionKey)
 		{
 			if (not device)
 				throw Error::Boring32Error("device cannot be null");
@@ -28,12 +27,12 @@ export namespace Boring32::IO
 				throw Error::Win32Error("CreateIoCompletionPort() failed", lastError);
 		}
 
-		virtual Win32::HANDLE GetHandle() const noexcept
+		Win32::HANDLE GetHandle() const noexcept
 		{
 			return m_completionPort;
 		}
 
-		virtual bool GetCompletionStatus()
+		bool GetCompletionStatus()
 		{
 			Win32::DWORD bytesTransferred = 0;
 			Win32::ULONG_PTR completionKey = 0;

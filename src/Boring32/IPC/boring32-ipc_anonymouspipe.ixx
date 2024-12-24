@@ -12,6 +12,8 @@ export namespace Boring32::IPC
 		AnonymousPipe() = default;
 		AnonymousPipe(const AnonymousPipe& other) = default;
 		AnonymousPipe(AnonymousPipe&& other) noexcept = default;
+		virtual AnonymousPipe& operator=(const AnonymousPipe& other) = default;
+		virtual AnonymousPipe& operator=(AnonymousPipe&& other) noexcept = default;
 
 		AnonymousPipe(bool inheritable, Win32::DWORD size) 
 			: m_size(size)
@@ -35,9 +37,6 @@ export namespace Boring32::IPC
 			m_readHandle(readHandle),
 			m_writeHandle(writeHandle)
 		{ }
-
-		virtual AnonymousPipe& operator=(const AnonymousPipe& other) = default;
-		virtual AnonymousPipe& operator=(AnonymousPipe&& other) noexcept = default;
 
 		virtual void Write(const std::wstring& msg)
 		{
