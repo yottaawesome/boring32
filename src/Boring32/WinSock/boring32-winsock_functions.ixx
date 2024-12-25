@@ -38,7 +38,7 @@ export namespace Boring32::WinSock
 		out.resize(Win32::WinSock::_INET6_ADDRSTRLEN);
 		// https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-inet_ntop
 		Win32::PCSTR ipCString = Win32::WinSock::inet_ntop(Win32::WinSock::AddressFamily::IPv6, &converted, &out[0], Win32::WinSock::_INET6_ADDRSTRLEN);
-		if (!ipCString)
+		if (not ipCString)
 		{
 			Error::ThrowNested(
 				Error::Win32Error(Win32::WinSock::WSAGetLastError(), "inet_ntop() failed", L"Ws2_32.dll"),
@@ -57,7 +57,7 @@ export namespace Boring32::WinSock
 		out.resize(Win32::WinSock::_INET_ADDRSTRLEN);
 		// https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-inet_ntop
 		Win32::PCSTR ipCString = Win32::WinSock::inet_ntop(Win32::WinSock::AddressFamily::IPv4, &converted, &out[0], Win32::WinSock::_INET_ADDRSTRLEN);
-		if (!ipCString)
+		if (not ipCString)
 		{
 			Error::ThrowNested(
 				Error::Win32Error(Win32::WinSock::WSAGetLastError(), "inet_ntop() failed", L"Ws2_32.dll"),

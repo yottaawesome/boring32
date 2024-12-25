@@ -18,9 +18,9 @@ export namespace Boring32::Async
 		const bool alertable
 	)
 	{
-		if (!objectToSignal)
+		if (not objectToSignal)
 			throw Error::Boring32Error("objectToSignal is nullptr");
-		if (!objectToWaitOn)
+		if (not objectToWaitOn)
 			throw Error::Boring32Error("objectToWaitOn is nullptr");
 
 		using std::chrono::duration_cast;
@@ -41,7 +41,7 @@ export namespace Boring32::Async
 
 	Win32::WaitResult WaitFor(const Win32::HANDLE handle, const Win32::DWORD timeout, const bool alertable)
 	{
-		if (!handle)
+		if (not handle)
 			throw Error::Boring32Error("Handle is nullptr");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobjectex
@@ -214,13 +214,13 @@ export namespace Boring32::Async
 
 		Win32::PROCESSENTRY32W procEntry{ .dwSize = sizeof(Win32::PROCESSENTRY32W) };
 		// https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-process32firstw
-		if (!Win32::Process32FirstW(processesSnapshot.GetHandle(), &procEntry))
+		if (not Win32::Process32FirstW(processesSnapshot.GetHandle(), &procEntry))
 			throw Error::Win32Error(Win32::GetLastError(), "Process32First() failed");
 
 		std::vector<Win32::DWORD> results;
 		do
 		{
-			if (!Strings::DoCaseInsensitiveMatch(procEntry.szExeFile, processName))
+			if (not Strings::DoCaseInsensitiveMatch(procEntry.szExeFile, processName))
 				continue;
 
 			if (sessionIdToMatch < 0)
@@ -231,7 +231,7 @@ export namespace Boring32::Async
 
 			Win32::DWORD processSessionId = 0;
 			// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-processidtosessionid
-			if (!Win32::ProcessIdToSessionId(procEntry.th32ProcessID, &processSessionId))
+			if (not Win32::ProcessIdToSessionId(procEntry.th32ProcessID, &processSessionId))
 				throw Error::Win32Error(Win32::GetLastError(), "ProcessIdToSessionId() failed");
 
 			if (processSessionId == sessionIdToMatch)

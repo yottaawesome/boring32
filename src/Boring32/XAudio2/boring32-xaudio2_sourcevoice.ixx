@@ -19,7 +19,7 @@ export namespace Boring32::XAudio2
 		SourceVoice(Win32::IXAudio2SourceVoice* voice)
 			: m_voice(voice)
 		{
-			if (!voice)
+			if (not voice)
 				throw XAudio2Error("voice cannot be nullptr");
 		}
 

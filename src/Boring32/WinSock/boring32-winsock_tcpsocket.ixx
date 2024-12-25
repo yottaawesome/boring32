@@ -103,7 +103,7 @@ export namespace Boring32::WinSock
 
 		void Close()
 		{
-			if (!m_socket)
+			if (not m_socket)
 				return;
 			if (m_socket == InvalidSocket)
 				return;
@@ -114,7 +114,7 @@ export namespace Boring32::WinSock
 
 		void Send(const std::vector<std::byte>& data)
 		{
-			if (!m_socket || m_socket == InvalidSocket)
+			if (not m_socket || m_socket == InvalidSocket)
 				throw Error::Boring32Error("Socket is not valid");
 			if (data.empty())
 				return;
@@ -146,9 +146,9 @@ export namespace Boring32::WinSock
 
 		std::vector<std::byte> Receive(const unsigned bytesToRead)
 		{
-			if (!m_socket || m_socket == InvalidSocket)
+			if (not m_socket || m_socket == InvalidSocket)
 				throw WinSockError("Socket is not valid");
-			if (!bytesToRead)
+			if (not bytesToRead)
 				return {};
 
 			// https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-recv
@@ -168,7 +168,7 @@ export namespace Boring32::WinSock
 
 		void SetSocketTTL(const Win32::DWORD ttl)
 		{
-			if (!m_socket || m_socket == InvalidSocket)
+			if (not m_socket || m_socket == InvalidSocket)
 				throw WinSockError("Not in a valid state to set TTL support");
 
 			Win32::DWORD layer;
@@ -227,7 +227,7 @@ export namespace Boring32::WinSock
 
 		void SetMaxRetryTimeout(const Win32::DWORD timeoutSeconds)
 		{
-			if (!m_socket || m_socket == InvalidSocket)
+			if (not m_socket || m_socket == InvalidSocket)
 				throw WinSockError("Not in a valid state to set TTL support");
 
 			// Query support for the argument

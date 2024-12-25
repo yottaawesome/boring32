@@ -17,7 +17,7 @@ export namespace Boring32::Services
 		Service(ServiceHandleSharedPtr service)
 			: m_service(std::move(service))
 		{
-			if (!m_service)
+			if (not m_service)
 				throw Error::Boring32Error("service parameter cannot be null");
 		}
 

@@ -93,9 +93,9 @@ export namespace Boring32::IPC
 
 		virtual void Flush()
 		{
-			if (!m_pipe)
+			if (not m_pipe)
 				throw Error::Boring32Error("No pipe to flush");
-			if (!Win32::FlushFileBuffers(m_pipe.GetHandle()))
+			if (not Win32::FlushFileBuffers(m_pipe.GetHandle()))
 				throw Error::Win32Error(Win32::GetLastError(), "Flush() failed");
 		}
 
@@ -146,9 +146,9 @@ export namespace Boring32::IPC
 
 		virtual void CancelCurrentThreadIo()
 		{
-			if (!m_pipe)
+			if (not m_pipe)
 				throw Error::Boring32Error("pipe is nullptr");
-			if (!Win32::CancelIo(m_pipe.GetHandle()))
+			if (not Win32::CancelIo(m_pipe.GetHandle()))
 				throw Error::Win32Error(Win32::GetLastError(), "CancelIo() failed");
 		}
 
@@ -165,9 +165,9 @@ export namespace Boring32::IPC
 
 		virtual void CancelCurrentProcessIo(Win32::OVERLAPPED* overlapped)
 		{
-			if (!m_pipe)
+			if (not m_pipe)
 				throw Error::Boring32Error("pipe is nullptr");
-			if (!Win32::CancelIoEx(m_pipe.GetHandle(), overlapped))
+			if (not Win32::CancelIoEx(m_pipe.GetHandle(), overlapped))
 				throw Error::Win32Error(Win32::GetLastError(), "CancelIo() failed");
 		}
 
@@ -185,14 +185,14 @@ export namespace Boring32::IPC
 		protected:
 		virtual void InternalCreatePipe()
 		{
-			if (!m_pipeName.starts_with(L"\\\\.\\pipe\\"))
+			if (not m_pipeName.starts_with(L"\\\\.\\pipe\\"))
 				m_pipeName = L"\\\\.\\pipe\\" + m_pipeName;
 
 			Win32::SECURITY_ATTRIBUTES sa{
 				.nLength = sizeof(sa),
 				.bInheritHandle = m_isInheritable
 			};
-			if (!m_sid.empty())
+			if (not m_sid.empty())
 			{
 				bool converted = Win32::ConvertStringSecurityDescriptorToSecurityDescriptorW(
 					m_sid.c_str(),
@@ -200,7 +200,7 @@ export namespace Boring32::IPC
 					&sa.lpSecurityDescriptor,
 					nullptr
 				);
-				if (!converted)
+				if (not converted)
 					throw Error::Win32Error(Win32::GetLastError(), "Failed to convert security descriptor");
 			}
 
@@ -215,9 +215,9 @@ export namespace Boring32::IPC
 				0,                              // client time-out 
 				!m_sid.empty() ? &sa : nullptr
 			);
-			if (!m_sid.empty())
+			if (not m_sid.empty())
 				Win32::LocalFree(sa.lpSecurityDescriptor);
-			if (!m_pipe)
+			if (not m_pipe)
 				throw Error::Win32Error(Win32::GetLastError(), "Failed to create named pipe");
 		}
 
@@ -248,7 +248,7 @@ export namespace Boring32::IPC
 
 		virtual bool InternalUnreadCharactersRemaining(Win32::DWORD& charactersRemaining, const bool throwOnError) const
 		{
-			if (!m_pipe)
+			if (not m_pipe)
 				return false;
 			charactersRemaining = 0;
 			bool succeeded = Win32::PeekNamedPipe(
@@ -259,7 +259,7 @@ export namespace Boring32::IPC
 				nullptr,
 				&charactersRemaining
 			);
-			if (!succeeded)
+			if (not succeeded)
 			{
 				if (throwOnError)
 					throw Error::Win32Error(Win32::GetLastError(), "PeekNamedPipe() failed");

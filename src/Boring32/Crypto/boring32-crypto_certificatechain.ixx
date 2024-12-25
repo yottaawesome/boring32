@@ -72,7 +72,7 @@ export namespace Boring32::Crypto
 		bool Verify(const ChainVerificationPolicy policy)
 		{
 			// TODO: need to verify this actually works
-			if (!m_chainContext)
+			if (not m_chainContext)
 				throw Error::Boring32Error("m_chainContext is null");
 
 			Win32::CERT_CHAIN_POLICY_PARA para{

@@ -28,7 +28,7 @@ export namespace Boring32::Crypto
 
 		Certificate(Win32::PCCERT_CONTEXT certContext, const bool ownedExclusively)
 		{
-			if (!certContext)
+			if (not certContext)
 				return;
 			m_certContext = ownedExclusively
 				? certContext
@@ -102,7 +102,7 @@ export namespace Boring32::Crypto
 		{
 			if (not m_certContext)
 				throw Error::Boring32Error("m_certContext is nullptr");
-			if (!m_certContext->pCertInfo)
+			if (not m_certContext->pCertInfo)
 				return {};
 			Win32::CERT_NAME_BLOB* blob = &m_certContext->pCertInfo->Issuer;
 			return {

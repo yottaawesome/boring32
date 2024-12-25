@@ -32,7 +32,7 @@ export namespace Boring32::Async
 			m_completionEvent(Win32::InvalidHandleValue),
 			m_timerQueueTimer(nullptr)
 		{
-			if (!m_timerQueue || m_timerQueue == Win32::InvalidHandleValue)
+			if (not m_timerQueue || m_timerQueue == Win32::InvalidHandleValue)
 				throw Error::Boring32Error("Invalid handle");
 			InternalCreate();
 		}
@@ -54,7 +54,7 @@ export namespace Boring32::Async
 			m_completionEvent(completionEvent),
 			m_timerQueueTimer(nullptr)
 		{
-			if (!m_timerQueue || m_timerQueue == Win32::InvalidHandleValue)
+			if (not m_timerQueue || m_timerQueue == Win32::InvalidHandleValue)
 				throw Error::Boring32Error("Invalid handle");
 			InternalCreate();
 		}

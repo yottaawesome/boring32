@@ -263,7 +263,7 @@ export namespace Boring32::WinHttp::WebSockets
 					m_settings.Port,
 					0
 				);
-				if (!m_winHttpConnection)
+				if (not m_winHttpConnection)
 					throw Error::Win32Error(Win32::GetLastError(), "WinHttpConnect() failed");
 
 				// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpopenrequest
@@ -291,7 +291,7 @@ export namespace Boring32::WinHttp::WebSockets
 						&optionFlags,
 						sizeof(optionFlags)
 					);
-					if (!success)
+					if (not success)
 						throw Error::Win32Error(Win32::GetLastError(), "WinHttpSetOption() failed");
 				}
 
@@ -301,7 +301,7 @@ export namespace Boring32::WinHttp::WebSockets
 					nullptr,
 					0
 				);
-				if (!success)
+				if (not success)
 					throw Error::Win32Error(Win32::GetLastError(), "WinHttpSetOption() failed");
 
 				if (m_settings.ClientCert.GetCert())
@@ -313,7 +313,7 @@ export namespace Boring32::WinHttp::WebSockets
 						(void*)m_settings.ClientCert.GetCert(),
 						sizeof(Win32::CERT_CONTEXT)
 					);
-					if (!setCertOption)
+					if (not setCertOption)
 						throw Error::Win32Error(Win32::GetLastError(), "WinHttpSetOption() failed for client certificate");
 				}
 				const wchar_t* connectionHeaders = m_settings.ConnectionHeaders.empty()
@@ -328,11 +328,11 @@ export namespace Boring32::WinHttp::WebSockets
 					0,
 					0
 				);
-				if (!success)
+				if (not success)
 					throw Error::Win32Error(Win32::GetLastError(), "WinHttpSendRequest() failed on initial request");
 
 				success = Win32::WinHttp::WinHttpReceiveResponse(requestHandle.Get(), 0);
-				if (!success)
+				if (not success)
 					throw Error::Win32Error(Win32::GetLastError(), "WinHttpReceiveResponse() failed on initial connection");
 
 				Win32::DWORD statusCode = 0;
@@ -346,7 +346,7 @@ export namespace Boring32::WinHttp::WebSockets
 					&statusCodeSize,
 					(Win32::LPDWORD)Win32::WinHttp::_WINHTTP_NO_HEADER_INDEX
 				);
-				if (!success)
+				if (not success)
 					throw Error::Win32Error(Win32::GetLastError(), "WinHttpQueryHeaders() failed");
 
 				if (statusCode != 101) // switching protocol

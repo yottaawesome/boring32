@@ -22,7 +22,7 @@ void SearchTokenForAdminGroup()
 {
 	// Open a handle to the access token for the calling process.
 	Boring32::RAII::Win32Handle hToken;
-	if (!Boring32::Win32::OpenProcessToken(Boring32::Win32::GetCurrentProcess(), Boring32::Win32::_TOKEN_QUERY, &hToken))
+	if (not Boring32::Win32::OpenProcessToken(Boring32::Win32::GetCurrentProcess(), Boring32::Win32::_TOKEN_QUERY, &hToken))
 		throw Boring32::Error::Win32Error(Boring32::Win32::GetLastError(), "OpenProcessToken() failed");
 
 	// Create a SID for the BUILTIN\Administrators group.
@@ -36,7 +36,7 @@ void SearchTokenForAdminGroup()
 		0, 0, 0, 0, 0, 0,
 		&rawSID
 	);
-	if (!succeeded) 
+	if (not succeeded) 
 		throw Boring32::Error::Win32Error(Boring32::Win32::GetLastError(), "AllocateAndInitializeSid() failed");
 
 	Boring32::RAII::SIDUniquePtr pSID(rawSID);
@@ -50,7 +50,7 @@ void EnumerateTokenGroups()
 {
 	// Open a handle to the access token for the calling process.
 	Boring32::RAII::Win32Handle hToken;
-	if (!OpenProcessToken(GetCurrentProcess(), Boring32::Win32::_TOKEN_QUERY, &hToken))
+	if (not OpenProcessToken(GetCurrentProcess(), Boring32::Win32::_TOKEN_QUERY, &hToken))
 		throw Boring32::Error::Win32Error(GetLastError(), "OpenProcessToken() failed");
 	Boring32::Security::EnumerateTokenGroups(hToken);
 }
@@ -59,7 +59,7 @@ void EnumerateTokenPrivileges()
 {
 	// Open a handle to the access token for the calling process.
 	Boring32::RAII::Win32Handle hToken;
-	if (!Boring32::Win32::OpenProcessToken(GetCurrentProcess(), Boring32::Win32::_TOKEN_QUERY, &hToken))
+	if (not Boring32::Win32::OpenProcessToken(GetCurrentProcess(), Boring32::Win32::_TOKEN_QUERY, &hToken))
 		throw Boring32::Error::Win32Error(GetLastError(), "OpenProcessToken() failed");
 	Boring32::Security::EnumerateTokenPrivileges(hToken);
 }
@@ -421,7 +421,7 @@ void templateStuff()
 //		condition
 //	);
 //	const auto lastError = GetLastError();
-//	if (!succeeded && lastError != ERROR_OLD_WIN_VERSION)
+//	if (not succeeded && lastError != ERROR_OLD_WIN_VERSION)
 //		throw Boring32::Error::Win32Error("VerifyVersionInfoW() failed", lastError);
 //
 //	return succeeded;
@@ -517,7 +517,7 @@ void templateStuff()
 //		, condition
 //	);
 //	const auto lastError = GetLastError();
-//	if (!succeeded && lastError != ERROR_OLD_WIN_VERSION)
+//	if (not succeeded && lastError != ERROR_OLD_WIN_VERSION)
 //	{
 //		throw Boring32::Error::Win32Error(__FUNCSIG__": VerifyVersionInfoW()", lastError);
 //	}
@@ -607,13 +607,13 @@ void templateStuff()
 //};
 //
 //template<bool THROW>
-//auto TestOptionalThrow() noexcept(!THROW)
+//auto TestOptionalThrow() noexcept(not THROW)
 //{
 //	bool succeeded = true; // result of some native api call
 //
-//	if constexpr (!THROW)
+//	if constexpr (not THROW)
 //		return succeeded;		
-//	else if (!succeeded)
+//	else if (not succeeded)
 //		throw std::runtime_error("Some error");
 //}
 //

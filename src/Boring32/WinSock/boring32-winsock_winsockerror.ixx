@@ -5,9 +5,8 @@ import :error;
 
 export namespace Boring32::WinSock
 {
-	struct WinSockError : Error::Boring32Error
+	struct WinSockError final : Error::Boring32Error
 	{
-		virtual ~WinSockError() = default;
 		WinSockError(
 			const std::string& message,
 			const std::source_location& location = std::source_location::current(),

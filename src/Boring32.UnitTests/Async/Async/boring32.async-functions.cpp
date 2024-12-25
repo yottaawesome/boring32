@@ -100,7 +100,7 @@ namespace Async
 					GetCurrentThread(),
 					0
 				);
-				if (!status)
+				if (not status)
 					throw std::runtime_error("Failed to QueueUserAPC");
 
 				Boring32::Async::ManualResetEvent event1(false, false, L"");
@@ -117,7 +117,7 @@ namespace Async
 					L"explorer.exe", 
 					-1
 				);
-				Assert::IsTrue(!results.empty());
+				Assert::IsTrue(not results.empty());
 			}
 	};
 }

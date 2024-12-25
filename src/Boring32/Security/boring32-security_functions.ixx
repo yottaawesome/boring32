@@ -20,7 +20,7 @@ export namespace Boring32::Security
 		const Win32::DWORD desiredAccess
 	)
 	{
-		if (!IsHandleValid(processHandle))
+		if (not IsHandleValid(processHandle))
 			throw Error::Boring32Error("processHandle cannot be null");
 
 		RAII::Win32Handle handle;
@@ -46,7 +46,7 @@ export namespace Boring32::Security
 			throw Error::Boring32Error("Must specify the privilege name");
 
 		// See also: https://docs.microsoft.com/en-us/windows/win32/secauthz/enabling-and-disabling-privileges-in-c--
-		if (!IsHandleValid(token))
+		if (not IsHandleValid(token))
 			throw Error::Boring32Error(": token cannot be null");
 
 		// https://docs.microsoft.com/en-us/windows/win32/secauthz/privilege-constants
@@ -92,13 +92,13 @@ export namespace Boring32::Security
 		const Constants::GroupIntegrity integrity
 	)
 	{
-		if (!IsHandleValid(token))
+		if (not IsHandleValid(token))
 			throw Error::Boring32Error("token cannot be null");
 
 		std::wstring_view integritySidString = Constants::GetIntegrity(integrity);
 		Win32::PSID rawIntegritySid = nullptr;
 		// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw
-		if (!Win32::ConvertStringSidToSidW(integritySidString.data(), &rawIntegritySid))
+		if (not Win32::ConvertStringSidToSidW(integritySidString.data(), &rawIntegritySid))
 			throw Error::Win32Error(Win32::GetLastError(), "ConvertStringSidToSidW() failed");
 		RAII::SIDUniquePtr integritySid(rawIntegritySid);
 
@@ -123,7 +123,7 @@ export namespace Boring32::Security
 	// See also https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-checktokenmembership
 	bool SearchTokenGroupsForSID(const Win32::HANDLE token, const Win32::PSID pSID)
 	{
-		if (!IsHandleValid(token) || !pSID)
+		if (not IsHandleValid(token) || !pSID)
 			throw Error::Boring32Error("hToken and pSID cannot be nullptr");
 
 		// Call GetTokenInformation to get the buffer size.
@@ -151,14 +151,14 @@ export namespace Boring32::Security
 	
 	void EnumerateTokenGroups(const Win32::HANDLE token)
 	{
-		if (!IsHandleValid(token))
+		if (not IsHandleValid(token))
 			throw Error::Boring32Error("hToken cannot be nullptr");
 
 		// Call GetTokenInformation to get the buffer size.
 		constexpr unsigned MAX_NAME = 256;
 		Win32::DWORD dwSize = 0;
 		Win32::DWORD dwResult = 0;
-		if (!Win32::GetTokenInformation(token, Win32::TOKEN_INFORMATION_CLASS::TokenGroups, nullptr, 0, &dwSize))
+		if (not Win32::GetTokenInformation(token, Win32::TOKEN_INFORMATION_CLASS::TokenGroups, nullptr, 0, &dwSize))
 			if (Win32::DWORD dwResult = Win32::GetLastError(); dwResult != Win32::ErrorCodes::InsufficientBuffer)
 				throw Error::Win32Error(dwResult, "GetTokenInformation() failed");
 
@@ -167,7 +167,7 @@ export namespace Boring32::Security
 		Win32::PTOKEN_GROUPS pGroupInfo = reinterpret_cast<Win32::PTOKEN_GROUPS>(&groupInfoBytes[0]);
 
 		// Call GetTokenInformation again to get the group information.
-		if (!Win32::GetTokenInformation(token, Win32::TOKEN_INFORMATION_CLASS::TokenGroups, pGroupInfo, dwSize, &dwSize))
+		if (not Win32::GetTokenInformation(token, Win32::TOKEN_INFORMATION_CLASS::TokenGroups, pGroupInfo, dwSize, &dwSize))
 			throw Error::Win32Error(Win32::GetLastError(), "GetTokenInformation() failed");
 
 		// Loop through the group SIDs looking for the administrator SID.
@@ -180,7 +180,7 @@ export namespace Boring32::Security
 
 			// Lookup the account m_name and print it.
 			// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupaccountsidw
-			if (!Win32::LookupAccountSidW(
+			if (not Win32::LookupAccountSidW(
 				nullptr,
 				pGroupInfo->Groups[i].Sid,
 				&groupName[0],
@@ -216,7 +216,7 @@ export namespace Boring32::Security
 	// https://docs.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-rights-assignment
 	void EnumerateTokenPrivileges(const Win32::HANDLE token)
 	{
-		if (!IsHandleValid(token))
+		if (not IsHandleValid(token))
 			throw Error::Boring32Error("hToken cannot be nullptr");
 
 		Win32::DWORD bytesNeeded = 0;
@@ -239,7 +239,7 @@ export namespace Boring32::Security
 			bytesNeeded,
 			&bytesNeeded
 		);
-		if (!succeeded)
+		if (not succeeded)
 			throw Error::Win32Error(Win32::GetLastError(), "GetTokenInformation() failed");
 
 		Win32::TOKEN_PRIVILEGES* pPrivs = reinterpret_cast<Win32::TOKEN_PRIVILEGES*>(&buffer[0]);
@@ -248,7 +248,7 @@ export namespace Boring32::Security
 			Win32::DWORD size = 256;
 			std::wstring privName(size, '\0');
 			// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupprivilegenamew
-			if (!Win32::LookupPrivilegeNameW(nullptr, &pPrivs->Privileges[i].Luid, &privName[0], &size))
+			if (not Win32::LookupPrivilegeNameW(nullptr, &pPrivs->Privileges[i].Luid, &privName[0], &size))
 				throw Error::Win32Error(Win32::GetLastError(), "LookupPrivilegeName() failed");
 
 			std::wstring privsString;
@@ -273,14 +273,14 @@ export namespace Boring32::Security
 
 	bool CheckMembership(const Win32::HANDLE token, const Win32::PSID sidToCheck)
 	{
-		if (!IsHandleValid(token))
+		if (not IsHandleValid(token))
 			throw Error::Boring32Error("hToken cannot be nullptr");
-		if (!sidToCheck)
+		if (not sidToCheck)
 			throw Error::Boring32Error("sidToCheck and pSID cannot be nullptr");
 
 		Win32::BOOL result = false;
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-checktokenmembership
-		if (!Win32::CheckTokenMembership(token, sidToCheck, &result))
+		if (not Win32::CheckTokenMembership(token, sidToCheck, &result))
 			throw Error::Win32Error(Win32::GetLastError(), "CheckTokenMembership() failed");
 		return result;
 	}
@@ -297,7 +297,7 @@ export namespace Boring32::Security
 		const AdjustPrivilegeType enablePrivilege   // to enable or disable privilege
 	)
 	{
-		if (!IsHandleValid(token))
+		if (not IsHandleValid(token))
 			throw Error::Boring32Error("hToken cannot be nullptr");
 
 		// See https://docs.microsoft.com/en-us/windows/win32/secauthz/enabling-and-disabling-privileges-in-c--
@@ -308,7 +308,7 @@ export namespace Boring32::Security
 			privilegeName.c_str(),  // privilege to lookup 
 			&luid					// receives LUID of privilege
 		);
-		if (!succeeded)
+		if (not succeeded)
 			throw Error::Win32Error(Win32::GetLastError(), "LookupPrivilegeValue() failed");
 
 		// Enable or disable the privilege.
@@ -330,7 +330,7 @@ export namespace Boring32::Security
 			nullptr,
 			nullptr
 		);
-		if (!succeeded)
+		if (not succeeded)
 			throw Error::Win32Error(Win32::GetLastError(), "AdjustTokenPrivileges() failed");
 
 		return Win32::GetLastError() == Win32::ErrorCodes::NotAllAssigned ? false : true;
@@ -342,7 +342,7 @@ export namespace Boring32::Security
 		const AdjustPrivilegeType enablePrivilege   // to enable or disable privilege
 	) noexcept
 	{
-		if (!IsHandleValid(token))
+		if (not IsHandleValid(token))
 			return false;
 
 		bool allOK = true;
@@ -366,7 +366,7 @@ export namespace Boring32::Security
 		const std::vector<Win32::LUID_AND_ATTRIBUTES>& privileges
 	)
 	{
-		if (!IsHandleValid(token))
+		if (not IsHandleValid(token))
 			throw Error::Boring32Error("token cannot be nullptr");
 
 		// See also https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-privilege_set
@@ -385,7 +385,7 @@ export namespace Boring32::Security
 			privs,
 			&result
 		);
-		if (!succeeded)
+		if (not succeeded)
 			throw Error::Win32Error(Win32::GetLastError(), "PrivilegeCheck() failed");
 
 		return result;
@@ -401,7 +401,7 @@ export namespace Boring32::Security
 			Win32::_TOKEN_QUERY,
 			&hToken
 		);
-		if (!success)
+		if (not success)
 			throw Error::Win32Error(Win32::GetLastError(), "OpenProcessToken() failed");
 
 		// retrieve user SID
@@ -416,7 +416,7 @@ export namespace Boring32::Security
 			sizeof(bTokenUser),
 			&cbTokenUser
 		);
-		if (!success)
+		if (not success)
 			throw Error::Win32Error(Win32::GetLastError(), "GetTokenInformation() failed");
 
 		// allocate LocalSystem well-known SID
@@ -435,7 +435,7 @@ export namespace Boring32::Security
 			0,
 			&pSystemSid
 		);
-		if (!success)
+		if (not success)
 			throw Error::Win32Error(Win32::GetLastError(), "GetTokenInformation() failed");
 
 		// compare the user SID from the token with the LocalSystem SID

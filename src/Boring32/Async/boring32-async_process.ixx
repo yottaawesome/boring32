@@ -67,7 +67,7 @@ export namespace Boring32::Async
 					&m_dataSi,				// Pointer to STARTUPINFO structure
 					&processInfo			// Pointer to PROCESS_INFORMATION structure
 				);
-			if (!successfullyCreatedProcess)
+			if (not successfullyCreatedProcess)
 				throw Error::Win32Error(Win32::GetLastError(), "Failed to create process");
 
 			m_process = processInfo.hProcess;

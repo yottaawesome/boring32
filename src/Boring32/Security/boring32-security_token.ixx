@@ -51,7 +51,7 @@ export namespace Boring32::Security
 
 			Token(const Win32::HANDLE token, const bool ownOrDuplicate)
 			{
-				if (!token)
+				if (not token)
 					throw Error::Boring32Error("Token cannot be null");
 
 				if (ownOrDuplicate)
@@ -69,7 +69,7 @@ export namespace Boring32::Security
 					Win32::TOKEN_TYPE::TokenPrimary,
 					&m_token
 				);
-				if (!succeeded)
+				if (not succeeded)
 					throw Error::Win32Error(Win32::GetLastError(), "DuplicateTokenEx() failed");
 			}
 			
@@ -114,7 +114,7 @@ export namespace Boring32::Security
 						Win32::TOKEN_TYPE::TokenPrimary,
 						&m_token
 					);
-					if (!succeeded)
+					if (not succeeded)
 						throw Error::Win32Error(Win32::GetLastError(), "DuplicateTokenEx() failed");
 				}
 

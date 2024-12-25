@@ -14,7 +14,7 @@ namespace Boring32::Registry
 	{
 		auto operator()()
 		{
-			if constexpr (!std::is_same_v<TInvokeResult, void>)
+			if constexpr (not std::is_same_v<TInvokeResult, void>)
 			{
 				if constexpr (T == ValueTypes::DWord)
 				{
@@ -186,7 +186,7 @@ namespace Boring32::Registry
 
 			out.resize(sizeInBytes / sizeof(wchar_t));
 			// Exclude terminating null
-			if (!out.empty())
+			if (not out.empty())
 				out.pop_back();
 			return out;
 		}
@@ -336,7 +336,7 @@ namespace Boring32::Registry
 
 		out.resize(sizeInBytes / sizeof(wchar_t));
 		// Exclude terminating null
-		if (!out.empty())
+		if (not out.empty())
 			out.pop_back();
 		return out;
 	}

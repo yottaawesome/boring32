@@ -79,7 +79,7 @@ export namespace Boring32::IPC
 
 			virtual Win32::DWORD UnreadCharactersRemaining() const
 			{
-				if (!m_handle)
+				if (not m_handle)
 					throw Error::Boring32Error("No pipe to read from");
 				Win32::DWORD bytesLeft = 0;
 				const bool succeeded = Win32::PeekNamedPipe(
@@ -98,17 +98,17 @@ export namespace Boring32::IPC
 
 			virtual void Flush()
 			{
-				if (!m_handle)
+				if (not m_handle)
 					throw Error::Boring32Error("No pipe to flush");
-				if (!Win32::FlushFileBuffers(m_handle.GetHandle()))
+				if (not Win32::FlushFileBuffers(m_handle.GetHandle()))
 					throw Error::Win32Error(Win32::GetLastError(), "FlushFileBuffers() failed");
 			}
 
 			virtual void CancelCurrentThreadIo()
 			{
-				if (!m_handle)
+				if (not m_handle)
 					throw Error::Boring32Error("Pipe is nullptr");
-				if (!Win32::CancelIo(m_handle.GetHandle()))
+				if (not Win32::CancelIo(m_handle.GetHandle()))
 					throw Error::Win32Error(Win32::GetLastError(), "CancelIo failed");
 			}
 
@@ -124,9 +124,9 @@ export namespace Boring32::IPC
 
 			virtual void CancelCurrentProcessIo(Win32::OVERLAPPED* overlapped)
 			{
-				if (!m_handle)
+				if (not m_handle)
 					throw Error::Boring32Error("pipe is nullptr");
-				if (!Win32::CancelIoEx(m_handle.GetHandle(), overlapped))
+				if (not Win32::CancelIoEx(m_handle.GetHandle(), overlapped))
 					throw Error::Win32Error(Win32::GetLastError(), "CancelIo() failed");
 			}
 

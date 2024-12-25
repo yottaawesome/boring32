@@ -34,7 +34,7 @@ export namespace Boring32::DataStructures
 					Win32::MemoryAllocationAlignment
 				)
 			);
-			if (!m_listHeader)
+			if (not m_listHeader)
 				throw Error::Boring32Error("_aligned_malloc() failed");
 			Win32::InitializeSListHead(m_listHeader);
 		}
@@ -92,11 +92,11 @@ export namespace Boring32::DataStructures
 		std::shared_ptr<T> Pop()
 		{
 			// Using boring32error causes an internal compiler error. No idea why.
-			if (!m_listHeader)
+			if (not m_listHeader)
 				throw Error::Boring32Error("Cannot pop null list header");
 
 			Win32::PSLIST_ENTRY listEntry = Win32::InterlockedPopEntrySList(m_listHeader);
-			if (!listEntry)
+			if (not listEntry)
 				return nullptr;
 
 			auto listItem = reinterpret_cast<ListElement<T>*>(listEntry);
@@ -109,7 +109,7 @@ export namespace Boring32::DataStructures
 
 		void EmptyList()
 		{
-			if (!m_listHeader)
+			if (not m_listHeader)
 				return;
 
 			while (Pop()) {}
@@ -123,7 +123,7 @@ export namespace Boring32::DataStructures
 		/// WARNING: doesn't work. Not sure why, but EntryInfo.Next is always null.
 		std::shared_ptr<T> GetAt(const Win32::UINT index)
 		{
-			if (!m_firstEntry)
+			if (not m_firstEntry)
 				return nullptr;
 				
 			ListElement<T>* desiredEntry = m_firstEntry;
@@ -149,9 +149,9 @@ export namespace Boring32::DataStructures
 		{
 			const auto newEntry = reinterpret_cast<ListElement<T>*>(
 				_aligned_malloc(sizeof(ListElement<T>), Win32::MemoryAllocationAlignment));
-			if (!newEntry)
+			if (not newEntry)
 				throw Error::Boring32Error("_aligned_malloc() failed");
-			if (!m_firstEntry)
+			if (not m_firstEntry)
 				m_firstEntry = newEntry;
 
 			// https://docs.microsoft.com/en-us/windows/win32/api/interlockedapi/nf-interlockedapi-interlockedpushentryslist

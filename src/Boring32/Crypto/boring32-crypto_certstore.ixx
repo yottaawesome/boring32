@@ -127,7 +127,7 @@ export namespace Boring32::Crypto
 
 		void Close() noexcept
 		{
-			if (!m_certStore)
+			if (not m_certStore)
 				return;
 			// See https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certclosestore
 			// for additional resource notes under remarks
@@ -151,7 +151,7 @@ export namespace Boring32::Crypto
 
 		[[nodiscard]] std::vector<Certificate> GetAll() const
 		{
-			if (!m_certStore)
+			if (not m_certStore)
 				throw Error::Boring32Error("m_certStore is null");
 
 			std::vector<Certificate> results;
@@ -284,21 +284,21 @@ export namespace Boring32::Crypto
 		// behaviour.
 		void DeleteCert(const Win32::CERT_CONTEXT* cert)
 		{
-			if (!cert)
+			if (not cert)
 				throw Error::Boring32Error("cert is nullptr");
-			if (!m_certStore)
+			if (not m_certStore)
 				throw Error::Boring32Error("m_certStore is nullptr");
 
 			// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certdeletecertificatefromstore
-			if (!Win32::CertDeleteCertificateFromStore(cert))
+			if (not Win32::CertDeleteCertificateFromStore(cert))
 				throw Error::Win32Error(Win32::GetLastError(), "CertDeleteCertificateFromStore() failed");
 		}
 
 		void ImportCert(const Win32::CERT_CONTEXT* cert)
 		{
-			if (!m_certStore)
+			if (not m_certStore)
 				throw Error::Boring32Error("m_certStore is nullptr");
-			if (!cert)
+			if (not cert)
 				throw Error::Boring32Error("cert is nullptr");
 
 			// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/ns-cryptuiapi-cryptui_wiz_import_src_info

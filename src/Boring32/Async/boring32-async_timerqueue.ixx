@@ -28,7 +28,7 @@ export namespace Boring32::Async
 			: m_completionEvent(completionEvent),
 			m_waitForAllCallbacks(true)
 		{
-			if (!m_completionEvent)
+			if (not m_completionEvent)
 				throw Error::Boring32Error("completionEvent cannot be nullptr");
 			if (m_completionEvent == Win32::InvalidHandleValue)
 				throw Error::Boring32Error("completionEvent cannot be INVALID_HANDLE_VALUE");
@@ -52,17 +52,17 @@ export namespace Boring32::Async
 
 		void Close()
 		{
-			if (!m_timer)
+			if (not m_timer)
 				return;
 
 			Win32::HANDLE argValue = Win32::InvalidHandleValue; // waits for all callbacks on deletion
 			if (m_completionEvent.has_value() and m_completionEvent.value())
 				argValue = m_completionEvent->GetHandle(); // waits for all callbacks on deletion and signals event
-			else if (!m_waitForAllCallbacks)
+			else if (not m_waitForAllCallbacks)
 				argValue = nullptr; // does not wait
 
 			//https://docs.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-deletetimerqueueex
-			if (!Win32::DeleteTimerQueueEx(m_timer, argValue))
+			if (not Win32::DeleteTimerQueueEx(m_timer, argValue))
 				throw Error::Win32Error(Win32::GetLastError(), "DeleteTimerQueueEx() failed");
 			m_timer = nullptr;
 		}

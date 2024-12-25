@@ -28,7 +28,7 @@ export namespace Boring32::XAudio2
 			);
 		}
 
-		private:
+	private:
 		Win32::ComPtr<Win32::IXAudio2> m_engine;
 	};
 }

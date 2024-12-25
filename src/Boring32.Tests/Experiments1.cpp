@@ -667,7 +667,7 @@
 //
 //	auto& connectionStatus = socket.Connect();
 //	socket.GetConnectionStatus().Complete.WaitOnEvent();
-//	if (!connectionStatus.IsConnected)
+//	if (not connectionStatus.IsConnected)
 //	{
 //		std::wcerr << L"Failed to connect\n";
 //		return;

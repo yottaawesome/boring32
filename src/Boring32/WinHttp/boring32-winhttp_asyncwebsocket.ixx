@@ -440,11 +440,11 @@ export namespace Boring32::WinHttp::WebSockets
 
 		void CompleteUpgrade()
 		{
-			if (!m_requestHandle)
+			if (not m_requestHandle)
 				throw Error::Boring32Error("m_requestHandle is nullptr");
 
 			m_winHttpWebSocket = Win32::WinHttp::WinHttpWebSocketCompleteUpgrade(m_requestHandle.Get(), 0);
-			if (!m_winHttpWebSocket)
+			if (not m_winHttpWebSocket)
 				throw Error::Win32Error(Win32::GetLastError(), "WinHttpWebSocketCompleteUpgrade() failed");
 
 			Win32::DWORD_PTR dwThis = reinterpret_cast<Win32::DWORD_PTR>(this);
@@ -454,7 +454,7 @@ export namespace Boring32::WinHttp::WebSockets
 				reinterpret_cast<void*>(&dwThis),
 				sizeof(Win32::DWORD_PTR)
 			);
-			if (!succeeded)
+			if (not succeeded)
 				throw Error::Win32Error(Win32::GetLastError(), "WinHttpSetOption() failed when setting context value");
 
 			m_status = WebSocketStatus::Connected;

@@ -52,7 +52,7 @@ export namespace Boring32::Async::ThreadPools
 
 		void SetMinAndMaxThreads(const Win32::DWORD min, const Win32::DWORD max)
 		{
-			if (!m_pool)
+			if (not m_pool)
 				throw Error::Boring32Error("m_pool is nullptr");
 			ValidateArgs(min, max);
 			SetMinThreads(min);
@@ -61,7 +61,7 @@ export namespace Boring32::Async::ThreadPools
 
 		void SetMaxThreads(const Win32::DWORD value)
 		{
-			if (!m_pool)
+			if (not m_pool)
 				throw Error::Boring32Error("m_pool is nullptr");
 			ValidateArgs(m_minThreads, value);
 
@@ -134,9 +134,9 @@ export namespace Boring32::Async::ThreadPools
 
 		void SubmitWork(Win32::PTP_WORK workItem)
 		{
-			if (!m_pool)
+			if (not m_pool)
 				throw Error::Boring32Error("m_pool is nullptr");
-			if (!workItem)
+			if (not workItem)
 				throw Error::Boring32Error("workItem is nullptr");
 			Win32::SubmitThreadpoolWork(workItem);
 		}

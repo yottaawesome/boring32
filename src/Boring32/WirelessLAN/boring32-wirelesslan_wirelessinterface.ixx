@@ -14,7 +14,7 @@ namespace Boring32::WirelessLAN
 		const Win32::WLAN_INTF_OPCODE opcode
 	)
 	{
-		if (!wlanHandle)
+		if (not wlanHandle)
 			throw Error::Boring32Error("wlanHandle cannot be null");
 		if (opcode == wlan_intf_opcode_supported_infrastructure_auth_cipher_pairs)
 			throw Error::Boring32Error("wlan_intf_opcode_supported_infrastructure_auth_cipher_pairs not supported by this function.");
@@ -48,7 +48,7 @@ namespace Boring32::WirelessLAN
 		const Win32::WLAN_INTF_OPCODE opcode
 	)
 	{
-		if (!wlanHandle)
+		if (not wlanHandle)
 			throw Error::Boring32Error("wlanHandle cannot be null");
 		if (opcode != wlan_intf_opcode_supported_infrastructure_auth_cipher_pairs)
 			if (opcode != wlan_intf_opcode_supported_adhoc_auth_cipher_pairs)

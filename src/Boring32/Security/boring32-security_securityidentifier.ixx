@@ -66,7 +66,7 @@ export namespace Boring32::Security
 
 		void Close()
 		{
-			if (!m_sid)
+			if (not m_sid)
 				return;
 			// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-freesid
 			if (Win32::FreeSid(m_sid))
@@ -81,9 +81,9 @@ export namespace Boring32::Security
 
 		Win32::BYTE GetSubAuthorityCount() const
 		{
-			if (!m_sid)
+			if (not m_sid)
 				return 0;
-			if (!Win32::IsValidSid(m_sid))
+			if (not Win32::IsValidSid(m_sid))
 				throw Error::Boring32Error("Invalid SID");
 
 			// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsidsubauthoritycount
@@ -93,7 +93,7 @@ export namespace Boring32::Security
 
 		Win32::SID_IDENTIFIER_AUTHORITY GetIdentifierAuthority() const
 		{
-			if (!m_sid)
+			if (not m_sid)
 				throw Error::Boring32Error("No valid SID");
 			// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsididentifierauthority
 			if (Win32::PSID_IDENTIFIER_AUTHORITY identifier = Win32::GetSidIdentifierAuthority(m_sid))
@@ -104,7 +104,7 @@ export namespace Boring32::Security
 
 		Win32::DWORD GetSubAuthority(const Win32::DWORD index) const
 		{
-			if (!m_sid)
+			if (not m_sid)
 				throw Error::Boring32Error("No valid SID");
 			// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsidsubauthority
 			if (Win32::PDWORD returnVal = Win32::GetSidSubAuthority(m_sid, index))
@@ -115,7 +115,7 @@ export namespace Boring32::Security
 
 		std::vector<Win32::DWORD> GetAllSubAuthorities() const
 		{
-			if (!m_sid)
+			if (not m_sid)
 				return {};
 
 			std::vector<Win32::DWORD> returnVal;
@@ -131,7 +131,7 @@ export namespace Boring32::Security
 				return;
 
 			Close();
-			if (!other.m_sid)
+			if (not other.m_sid)
 				return;
 
 			Create(other.GetIdentifierAuthority(), other.GetAllSubAuthorities());
@@ -140,7 +140,7 @@ export namespace Boring32::Security
 		void Move(SecurityIdentifier& other) noexcept
 		{
 			Close();
-			if (!other.m_sid)
+			if (not other.m_sid)
 				return;
 
 			m_sid = other.m_sid;
@@ -152,7 +152,7 @@ export namespace Boring32::Security
 			if (sidString.empty())
 				throw Error::Boring32Error("sidString cannot be empty");
 			// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw
-			if (!Win32::ConvertStringSidToSidW(sidString.c_str(), &m_sid))
+			if (not Win32::ConvertStringSidToSidW(sidString.c_str(), &m_sid))
 				throw Error::Win32Error(Win32::GetLastError(), "ConvertStringSidToSidW() failed");
 		}
 
@@ -179,7 +179,7 @@ export namespace Boring32::Security
 				subAuthorities2[7],
 				&m_sid
 			);
-			if (!succeeded)
+			if (not succeeded)
 				throw Error::Win32Error(Win32::GetLastError(), "Failed to initialise SID");
 		}
 			

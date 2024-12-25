@@ -45,7 +45,7 @@ R"(Entry:
                     0,
                     nullptr
                 );
-                if (!messageBuffer)
+                if (not messageBuffer)
                 {
                     const auto lastError = Win32::GetLastError();
                     return std::format(
@@ -66,7 +66,7 @@ R"(Entry:
                     0,
                     nullptr
                 );
-                if (!messageBuffer)
+                if (not messageBuffer)
                 {
                     const auto lastError = Win32::GetLastError();
                     return std::format(

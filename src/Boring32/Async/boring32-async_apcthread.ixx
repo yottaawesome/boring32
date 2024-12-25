@@ -49,7 +49,7 @@ export namespace Boring32::Async
 
 		auto QueueAPC(ApcFunctionSignature apc, const Win32::ULONG_PTR arg) -> void
 		{
-			if (!m_threadHandle)
+			if (not m_threadHandle)
 				throw Error::Boring32Error("No thread handle found. Either the thread hasn't been started or has been Close()d.");
 			if (m_status != ThreadStatus::Running && m_status != ThreadStatus::Suspended)
 				throw Error::Boring32Error(

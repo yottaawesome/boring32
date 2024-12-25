@@ -60,7 +60,7 @@ namespace Boring32::Security
 			const std::wstring& privilege
 		)
 		{
-			if (!accountSid)
+			if (not accountSid)
 				throw Error::Boring32Error("accountSid cannot be null");
 			if (privilege.empty())
 				throw Error::Boring32Error("Invalid empty privilege");

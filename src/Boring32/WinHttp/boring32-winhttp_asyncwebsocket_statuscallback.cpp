@@ -73,7 +73,7 @@ namespace Boring32::WinHttp::WebSockets
 				if(socket)
 					std::wcout << L"WINHTTP_CALLBACK_STATUS_REQUEST_SENT: socket available" << std::endl;
 
-				if (!Win32::WinHttp::WinHttpReceiveResponse(hInternet, 0))
+				if (not Win32::WinHttp::WinHttpReceiveResponse(hInternet, 0))
 				{
 					Error::Win32Error ex(Win32::GetLastError(), "WinHttpReceiveResponse() failed on initial connection");
 					std::wcout << ex.what() << std::endl;
@@ -100,7 +100,7 @@ namespace Boring32::WinHttp::WebSockets
 						&statusCodeSize,
 						(Win32::LPDWORD)Win32::WinHttp::_WINHTTP_NO_HEADER_INDEX
 					);
-					if (!success)
+					if (not success)
 						throw Error::Win32Error(Win32::GetLastError(), "WinHttpQueryHeaders() failed");
 
 					switch (statusCode)
