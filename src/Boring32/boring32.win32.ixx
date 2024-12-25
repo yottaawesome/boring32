@@ -935,11 +935,24 @@ export namespace Boring32::Win32
 	constexpr auto VariantTrue = VARIANT_TRUE;
 	constexpr auto VariantFalse = VARIANT_FALSE;
 
-	constexpr auto _SERVICE_STOP_REASON_FLAG_PLANNED = SERVICE_STOP_REASON_FLAG_PLANNED;
-	constexpr auto _SERVICE_STOP_REASON_MAJOR_NONE = SERVICE_STOP_REASON_MAJOR_NONE;
-	constexpr auto _SERVICE_STOP_REASON_MINOR_NONE = SERVICE_STOP_REASON_MINOR_NONE;
-	constexpr auto _SERVICE_CONTROL_STATUS_REASON_INFO = SERVICE_CONTROL_STATUS_REASON_INFO;
-	constexpr auto _SERVICE_CONTROL_STOP = SERVICE_CONTROL_STOP;
+	namespace Services::StopReason
+	{
+		enum
+		{
+			FlagPlanned = SERVICE_STOP_REASON_FLAG_PLANNED,
+			MajorNone = SERVICE_STOP_REASON_MAJOR_NONE,
+			MinorNone = SERVICE_STOP_REASON_MINOR_NONE
+		};
+	}
+	namespace Services::Control
+	{
+		enum
+		{
+			StatusReasonInfo = SERVICE_CONTROL_STATUS_REASON_INFO,
+			Stop = SERVICE_CONTROL_STOP
+		};
+	}
+	
 	constexpr auto _SERVICE_RUNNING = SERVICE_RUNNING;
 	constexpr auto _SERVICES_ACTIVE_DATABASE = SERVICES_ACTIVE_DATABASE;
 	constexpr auto _SC_MANAGER_ALL_ACCESS = SC_MANAGER_ALL_ACCESS;

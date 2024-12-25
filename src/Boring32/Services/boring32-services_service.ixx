@@ -49,15 +49,17 @@ export namespace Boring32::Services
 				throw Error::Boring32Error("m_service is nullptr");
 
 			// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_control_status_reason_paramsw
-			Win32::SERVICE_CONTROL_STATUS_REASON_PARAMS params
-			{
-				.dwReason = Win32::_SERVICE_STOP_REASON_FLAG_PLANNED & Win32::_SERVICE_STOP_REASON_MAJOR_NONE & Win32::_SERVICE_STOP_REASON_MINOR_NONE,
-			};
+
+			constexpr auto reason =
+				Win32::Services::StopReason::FlagPlanned
+				& Win32::Services::StopReason::MajorNone
+				& Win32::Services::StopReason::MinorNone;
+			Win32::SERVICE_CONTROL_STATUS_REASON_PARAMS params{ .dwReason = reason };
 			// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-controlserviceexw
 			bool succeeded = Win32::ControlServiceExW(
 				m_service.get(),
-				Win32::_SERVICE_CONTROL_STOP,
-				Win32::_SERVICE_CONTROL_STATUS_REASON_INFO,
+				Win32::Services::Control::Stop,
+				Win32::Services::Control::StatusReasonInfo,
 				&params
 			);
 			if (not succeeded)
@@ -120,7 +122,7 @@ export namespace Boring32::Services
 			bool succeeded = Win32::ControlServiceExW(
 				m_service.get(),
 				controlCode,
-				Win32::_SERVICE_CONTROL_STATUS_REASON_INFO,
+				Win32::Services::Control::StatusReasonInfo,
 				&params
 			);
 			if (not succeeded)
@@ -134,17 +136,12 @@ export namespace Boring32::Services
 				throw Error::Boring32Error("m_service is nullptr");
 
 			Win32::DWORD bytesNeeded = 0;
-			bool succeeded = Win32::QueryServiceConfigW(
-				m_service.get(),
-				nullptr,
-				0,
-				&bytesNeeded
-			);
+			bool succeeded = Win32::QueryServiceConfigW(m_service.get(), nullptr, 0, &bytesNeeded);
 			if (auto lastError = Win32::GetLastError(); lastError != Win32::ErrorCodes::InsufficientBuffer)
 				throw Error::Win32Error(lastError, "QueryServiceConfigW() failed");
 
 			std::vector<std::byte> buffer(bytesNeeded);
-			succeeded = QueryServiceConfigW(
+			succeeded = Win32::QueryServiceConfigW(
 				m_service.get(),
 				reinterpret_cast<Win32::QUERY_SERVICE_CONFIGW*>(&buffer[0]),
 				static_cast<Win32::DWORD>(buffer.size()),
