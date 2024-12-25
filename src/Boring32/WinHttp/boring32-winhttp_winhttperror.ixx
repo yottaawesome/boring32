@@ -1,5 +1,5 @@
 export module boring32:winhttp_winhttperror;
-import boring32.shared;
+import std;
 import :error;
 
 export namespace Boring32::WinHttp

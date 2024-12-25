@@ -1,5 +1,5 @@
 export module boring32:ipc_blockingnamedpipeclient;
-import boring32.shared;
+import boring32.win32;
 import :error;
 import :util;
 import :ipc_namedpipeclientbase;

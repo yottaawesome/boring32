@@ -1,5 +1,6 @@
 export module boring32:crypto_functions;
-import boring32.shared;
+import std;
+import boring32.win32;
 import :error;
 import :crypto_cryptokey;
 

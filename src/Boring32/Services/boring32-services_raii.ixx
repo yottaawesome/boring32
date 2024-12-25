@@ -1,5 +1,6 @@
 export module boring32:services_raii;
-import boring32.shared;
+import std;
+import boring32.win32;
 import :raii;
 
 namespace Boring32::Services

@@ -1,5 +1,6 @@
 export module boring32:async_timerqueue;
-import boring32.shared;
+import std;
+import boring32.win32;
 import :error;
 import :async_event;
 
@@ -90,8 +91,7 @@ export namespace Boring32::Async
 			m_timer = Win32::CreateTimerQueue();
 			if (m_timer == nullptr)
 			{
-				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error("CreateTimerQueue() failed", lastError);
+				throw Error::Win32Error(Win32::GetLastError(), "CreateTimerQueue() failed");
 			}
 		}
 

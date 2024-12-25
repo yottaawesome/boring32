@@ -1,5 +1,6 @@
 export module boring32:ipc_blockingnamedpipeserver;
-import boring32.shared;
+import std;
+import boring32.win32;
 import :util;
 import :raii;
 import :error;

@@ -1,5 +1,5 @@
 export module boring32:error_errorbase;
-import boring32.shared;
+import std;
 import :error_functions;
 import :error_boring32error;
 

@@ -1,10 +1,11 @@
 export module boring32:msi_database;
-import boring32.shared;
+import std;
+import boring32.win32;
 import :error;
 
 export namespace Boring32::MSI
 {
-	enum class Mode : uint64_t
+	enum class Mode : std::uint64_t
 	{
 		CreateDirect = Win32::MsiDbOpen_CreateDirect<uint64_t>(),
 		Create = Win32::MsiDbOpen_Create<uint64_t>(),

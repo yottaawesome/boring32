@@ -1,5 +1,6 @@
 export module boring32:async_memorymappedfile;
-import boring32.shared;
+import std;
+import boring32.win32;
 import :raii;
 import :error;
 

@@ -1,5 +1,6 @@
 export module boring32:time_functions;
-import boring32.shared;
+import std;
+import boring32.win32;
 import :error;
 
 export namespace Boring32::Time
@@ -61,7 +62,7 @@ export namespace Boring32::Time
 		return std::vformat(L"{}-{}.{}{:+}", std::make_wformat_args(dateString, timeString, st.wMilliseconds, actualBias));
 	}
 
-	uint64_t FromFileTime(const Win32::FILETIME& ft)
+	std::uint64_t FromFileTime(const Win32::FILETIME& ft)
 	{
 		const Win32::ULARGE_INTEGER uli = {
 			.LowPart = ft.dwLowDateTime,

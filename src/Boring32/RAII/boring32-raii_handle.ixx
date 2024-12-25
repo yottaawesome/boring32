@@ -1,5 +1,6 @@
 export module boring32:raii_handle;
-import boring32.shared;
+import std;
+import boring32.win32;
 //https://docs.microsoft.com/en-us/windows/win32/sysinfo/kernel-objects
 
 export namespace Boring32::RAII

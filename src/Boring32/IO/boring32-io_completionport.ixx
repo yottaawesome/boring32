@@ -1,5 +1,5 @@
 export module boring32:io_completionport;
-import boring32.shared;
+import boring32.win32;
 import :raii;
 import :error;
 
@@ -39,14 +39,13 @@ export namespace Boring32::IO
 			Win32::OVERLAPPED* overlapped = nullptr;
 			// https://learn.microsoft.com/en-us/windows/win32/api/ioapiset/nf-ioapiset-getqueuedcompletionstatus
 			// See also https://learn.microsoft.com/en-us/windows/win32/fileio/getqueuedcompletionstatusex-func
-			const bool success = Win32::GetQueuedCompletionStatus(
+			bool success = Win32::GetQueuedCompletionStatus(
 				m_completionPort,
 				&bytesTransferred,
 				&completionKey,
 				&overlapped,
 				Win32::Infinite
 			);
-
 			if (not success)
 			{
 				if (auto lastError = Win32::GetLastError(); not overlapped and lastError != Win32::ErrorCodes::AbandonedWait0)

@@ -1,5 +1,6 @@
 export module boring32:async_overlappedop;
-import boring32.shared;
+import std;
+import boring32.win32;
 import :error;
 import :async_event;
 
@@ -59,7 +60,7 @@ export namespace Boring32::Async
 			return m_ioOverlapped.get();
 		}
 
-		virtual uint64_t GetStatus() const
+		virtual std::uint64_t GetStatus() const
 		{
 			if (m_ioOverlapped == nullptr)
 				throw Error::Boring32Error("IoOverlapped is null");
@@ -68,7 +69,7 @@ export namespace Boring32::Async
 			return m_lastError == Win32::ErrorCodes::IoPending ? m_ioOverlapped->Internal : m_lastError;
 		}
 
-		virtual uint64_t GetBytesTransferred() const noexcept
+		virtual std::uint64_t GetBytesTransferred() const noexcept
 		{
 			if (m_ioOverlapped == nullptr)
 				return 0;

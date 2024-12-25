@@ -1,6 +1,6 @@
 export module boring32:time_datetime;
 import <cstdint>;
-import boring32.shared;
+import boring32.win32;
 import :error;
 import :time_functions;
 

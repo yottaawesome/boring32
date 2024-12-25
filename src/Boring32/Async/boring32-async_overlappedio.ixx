@@ -1,5 +1,6 @@
 export module boring32:async_overlappedio;
-import boring32.shared;
+import std;
+import boring32.win32;
 import :error;
 import :async_overlappedop;
 
@@ -41,7 +42,7 @@ export namespace Boring32::Async
 		{
 			if (not IsSuccessful())
 				throw Error::Boring32Error("Operation is not successful");
-			const uint64_t bytesTransferred = GetBytesTransferred();
+			const std::uint64_t bytesTransferred = GetBytesTransferred();
 			if (bytesTransferred > 0)
 				IoBuffer.resize(bytesTransferred);
 		}

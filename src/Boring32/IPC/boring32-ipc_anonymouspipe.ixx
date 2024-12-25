@@ -1,5 +1,6 @@
 export module boring32:ipc_anonymouspipe;
-import boring32.shared;
+import std;
+import boring32.win32;
 import :raii;
 import :strings;
 import :error;

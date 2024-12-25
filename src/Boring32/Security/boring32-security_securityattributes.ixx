@@ -1,23 +1,20 @@
 export module boring32:security_securityattributes;
-import boring32.shared;
+import boring32.win32;
 
 export namespace Boring32::Security
 {
-	class SecurityAttributes final
+	struct SecurityAttributes final
 	{
-		public:
-			~SecurityAttributes()
-			{
-				Close();
-			}
+		~SecurityAttributes()
+		{
+			Close();
+		}
 
-		public:
-			void Close() noexcept
-			{
+		void Close() noexcept
+		{
+		}
 
-			}
-
-		protected:
-			Win32::SECURITY_ATTRIBUTES m_sa{0};
+		private:
+		Win32::SECURITY_ATTRIBUTES m_sa{0};
 	};
 }

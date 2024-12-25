@@ -34,4 +34,3 @@ export import :io;
 export import :async;
 export import :taskscheduler;
 export import :concepts;
-export import boring32.shared;

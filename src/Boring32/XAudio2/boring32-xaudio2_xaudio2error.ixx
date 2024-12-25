@@ -1,10 +1,10 @@
 export module boring32:xaudio2_xaudio2error;
-import boring32.shared;
+import std;
 import :error;
 
 export namespace Boring32::XAudio2
 {
-	struct XAudio2Error final : public Error::Boring32Error
+	struct XAudio2Error final : Error::Boring32Error
 	{
 		XAudio2Error() = default;
 		XAudio2Error(const XAudio2Error&) = default;

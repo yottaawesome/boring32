@@ -1,5 +1,6 @@
 export module boring32:registry_key;
-import boring32.shared;
+import std;
+import boring32.win32;
 import :error;
 import :registry_functions;
 import :registry_value;

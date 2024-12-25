@@ -1,5 +1,6 @@
 export module boring32:sspi_securitycontext;
-import boring32.shared;
+import std;
+import boring32.win32;
 import :error;
 import :com;
 import :sspi_buffertype;

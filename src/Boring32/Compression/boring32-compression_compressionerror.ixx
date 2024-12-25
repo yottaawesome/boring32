@@ -1,5 +1,5 @@
 export module boring32:compression_compressionerror;
-import boring32.shared;
+import boring32.win32;
 import :error;
 import :strings;
 
@@ -20,7 +20,7 @@ namespace
 
 export namespace Boring32::Compression
 {
-	struct CompressionError final : public Error::Boring32Error
+	struct CompressionError final : Error::Boring32Error
 	{
 		CompressionError(const Error::MessageLocationTrace& msg, auto&&...args) 
 			: Error::Boring32Error(Generate(msg, std::forward<decltype(args)>(args)...))

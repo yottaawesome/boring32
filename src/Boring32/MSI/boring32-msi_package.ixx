@@ -1,5 +1,6 @@
 export module boring32:msi_package;
-import boring32.shared;
+import std;
+import boring32.win32;
 import :error;
 
 export namespace Boring32::MSI
@@ -35,10 +36,7 @@ export namespace Boring32::MSI
 		{
 			// https://learn.microsoft.com/en-us/windows/win32/api/msi/nf-msi-msiopenpackagew
 			// https://learn.microsoft.com/en-us/windows/win32/api/msi/nf-msi-msiopenpackageexw
-			unsigned status = Win32::MsiOpenPackageW(
-				m_path.c_str(),
-				&m_handle
-			);
+			unsigned status = Win32::MsiOpenPackageW(m_path.c_str(), &m_handle);
 			if (status != Win32::ErrorCodes::Success)
 				throw Error::Win32Error(status, "MsiOpenPackageW() failed");
 		}

@@ -1,5 +1,6 @@
 export module boring32:raii_uniqueptrs;
-import boring32.shared;
+import std;
+import boring32.win32;
 
 export namespace Boring32::RAII
 {

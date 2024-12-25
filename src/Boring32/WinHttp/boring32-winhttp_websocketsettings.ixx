@@ -1,6 +1,6 @@
 export module boring32:winhttp_websocketsettings;
+import std;
 import :crypto;
-import boring32.shared;
 import :winhttp_session;
 
 export namespace Boring32::WinHttp::WebSockets

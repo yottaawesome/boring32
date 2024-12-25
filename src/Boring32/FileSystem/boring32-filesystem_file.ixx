@@ -1,5 +1,5 @@
 export module boring32:filesystem_file;
-import boring32.shared;
+import std;
 import boring32.win32;
 import :raii;
 import :error;

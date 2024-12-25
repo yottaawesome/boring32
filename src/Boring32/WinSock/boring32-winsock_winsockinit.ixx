@@ -1,5 +1,5 @@
 export module boring32:winsock_winsockinit;
-import boring32.shared;
+import boring32.win32;
 import :error;
 import :winsock_winsockerror;
 

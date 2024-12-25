@@ -1,5 +1,6 @@
 export module boring32:wirelesslan_cleanup;
-import boring32.shared;
+import std;
+import boring32.win32;
 import :raii;
 
 namespace Boring32::WirelessLAN
@@ -12,7 +13,7 @@ namespace Boring32::WirelessLAN
 
     using UniqueWLANHandle = RAII::IndirectUniquePtr<Win32::HANDLE, CloseWLANHandle>;
     using SharedWLANHandle = std::shared_ptr<std::remove_pointer_t<Win32::HANDLE>>;
-    SharedWLANHandle CreateSharedWLANHandle(HANDLE handle)
+    SharedWLANHandle CreateSharedWLANHandle(Win32::HANDLE handle)
     {
         return { handle, CloseWLANHandle };
     }

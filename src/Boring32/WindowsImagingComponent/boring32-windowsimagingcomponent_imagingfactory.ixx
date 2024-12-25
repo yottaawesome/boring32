@@ -1,5 +1,5 @@
 export module boring32:windowsimagingcomponent_imagingfactory;
-import boring32.shared;
+import boring32.win32;
 import :error;
 
 export namespace Boring32::WindowsImagingComponent
