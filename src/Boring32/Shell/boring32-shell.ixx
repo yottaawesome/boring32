@@ -22,7 +22,7 @@ export namespace Boring32::Shell
 		);
 		CoTaskMemFreeDeleteUniquePtr ptr(out);
 		if (Win32::HrFailed(hr))
-			throw Error::COMError("SHGetKnownFolderPath() failed", hr);
+			throw Error::COMError(hr, "SHGetKnownFolderPath() failed");
 		
 		return out 
 			? std::filesystem::path{ std::wstring{ out } } 

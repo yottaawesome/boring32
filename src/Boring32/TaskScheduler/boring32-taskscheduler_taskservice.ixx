@@ -32,7 +32,7 @@ export namespace Boring32::TaskScheduler
 				&m_taskService
 			);
 			if (Win32::HrFailed(hr))
-				throw Error::COMError("Failed to create ITaskService", hr);
+				throw Error::COMError(hr, "Failed to create ITaskService");
 
 			hr = m_taskService->Connect(
 				Win32::_variant_t(),
@@ -41,18 +41,17 @@ export namespace Boring32::TaskScheduler
 				Win32::_variant_t()
 			);
 			if (Win32::HrFailed(hr))
-				throw Error::COMError("Failed to connect to Task Service", hr);
+				throw Error::COMError(hr, "Failed to connect to Task Service");
 		}
 
-		bool Connect(const std::nothrow_t&) noexcept try
+		bool Connect(const std::nothrow_t&) noexcept 
+		try
 		{
 			Connect();
 			return true;
 		}
 		catch (const std::exception&)
 		{
-			// ICE
-			//std::wcerr << ex.what() << std::endl;
 			return false;
 		}
 
@@ -72,7 +71,7 @@ export namespace Boring32::TaskScheduler
 			Win32::ComPtr<Win32::ITaskFolder> folder = nullptr;
 			Win32::HRESULT hr = m_taskService->GetFolder(Win32::_bstr_t(path.c_str()), &folder);
 			if (Win32::HrFailed(hr))
-				throw Error::COMError("Failed to connect to Task Service", hr);
+				throw Error::COMError(hr, "Failed to connect to Task Service");
 			return folder;
 		}
 

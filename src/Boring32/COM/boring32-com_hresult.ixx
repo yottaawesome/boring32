@@ -50,8 +50,8 @@ export namespace Boring32::COM
 			if (Succeeded())
 				return;
 			if (not msg.empty())
-				throw Error::COMError(msg.data(), m_hr, loc);
-			throw Error::COMError("HRESULT check failed", m_hr, loc);
+				throw Error::COMError(m_hr, msg.data(), loc);
+			throw Error::COMError(m_hr, "HRESULT check failed", loc);
 		}
 
 		private:

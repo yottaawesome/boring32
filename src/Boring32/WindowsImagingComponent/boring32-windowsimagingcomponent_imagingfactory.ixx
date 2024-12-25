@@ -23,7 +23,7 @@ export namespace Boring32::WindowsImagingComponent
 				&m_imagingFactory
 			);
 			if (Win32::HrFailed(hr))
-				throw Error::COMError("CoCreateInstance() failed", hr);
+				throw Error::COMError(hr, "CoCreateInstance() failed");
 		}
 
 		ImagingFactory(const ImagingFactory& other)
@@ -68,7 +68,7 @@ export namespace Boring32::WindowsImagingComponent
 				&result
 			);
 			if (Win32::HrFailed(hr))
-				throw Error::COMError("CreateDecoderFromFilename() failed", hr);
+				throw Error::COMError(hr, "CreateDecoderFromFilename() failed");
 
 			return result;
 		}
@@ -81,7 +81,7 @@ export namespace Boring32::WindowsImagingComponent
 			Win32::ComPtr<Win32::IWICFormatConverter> pConverter;
 			const Win32::HRESULT hr = m_imagingFactory->CreateFormatConverter(&pConverter);
 			if (Win32::HrFailed(hr))
-				throw Error::COMError("CreateFormatConverter() failed", hr);
+				throw Error::COMError(hr, "CreateFormatConverter() failed");
 
 			return pConverter;
 		}

@@ -66,7 +66,7 @@ export namespace Boring32::Util
 
 		const Win32::HRESULT result = Win32::PathCchRemoveFileSpec(&filePath[0], filePath.size());
 		if (result != Win32::S_Ok && result != Win32::_S_FALSE)
-			throw Error::COMError("PathCchRemoveFileSpec() failed", result);
+			throw Error::COMError(result, "PathCchRemoveFileSpec() failed");
 		filePath = filePath.c_str();
 
 		return filePath;
@@ -127,7 +127,7 @@ export namespace Boring32::Util
 		Win32::GUID guidReference;
 		Win32::HRESULT result = Win32::CoCreateGuid(&guidReference);
 		if (Win32::HrFailed(result))
-			throw Error::COMError("CoCreateGuid() failed", result);
+			throw Error::COMError(result, "CoCreateGuid() failed");
 		return GetGuidAsWString(guidReference);
 	}
 
@@ -136,7 +136,7 @@ export namespace Boring32::Util
 		Win32::GUID guid;
 		HRESULT result = Win32::CoCreateGuid(&guid);
 		if (Win32::HrFailed(result))
-			throw Error::COMError("CoCreateGuid() failed", result);
+			throw Error::COMError(result, "CoCreateGuid() failed");
 		return guid;
 	}
 

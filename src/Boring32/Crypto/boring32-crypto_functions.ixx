@@ -20,7 +20,7 @@ export namespace Boring32::Crypto
 		};
 
 		Win32::DATA_BLOB additionalEntropy{ 0 };
-		if (!password.empty())
+		if (not password.empty())
 		{
 			additionalEntropy.pbData = reinterpret_cast<Win32::BYTE*>(const_cast<wchar_t*>(&password[0]));
 			additionalEntropy.cbData = static_cast<Win32::DWORD>(password.size() * sizeof(wchar_t));
@@ -85,7 +85,7 @@ export namespace Boring32::Crypto
 		encryptedBlob.cbData = (Win32::DWORD)encryptedData.size();
 
 		Win32::DATA_BLOB additionalEntropy{ 0 };
-		if (!password.empty())
+		if (not password.empty())
 		{
 			additionalEntropy.pbData = reinterpret_cast<Win32::BYTE*>(const_cast<wchar_t*>(&password[0]));
 			additionalEntropy.cbData = static_cast<Win32::DWORD>(password.size() * sizeof(wchar_t));
@@ -135,13 +135,13 @@ export namespace Boring32::Crypto
 		const Win32::DWORD flags
 	)
 	{
-		if (!key.GetHandle())
+		if (not key.GetHandle())
 			throw Error::Boring32Error("key is null");
 
 		// IV is optional
 		Win32::PUCHAR pIV = nullptr;
 		Win32::ULONG ivSize = 0;
-		if (!iv.empty())
+		if (not iv.empty())
 		{
 			// Do all cipher algs require this?
 			if (iv.size() != blockByteLength)
@@ -165,8 +165,8 @@ export namespace Boring32::Crypto
 			&cbData,
 			flags
 		);
-		if (!Win32::BCryptSuccess(status))
-			throw Error::NTStatusError("BCryptDecrypt() failed to count bytes", status);
+		if (not Win32::BCryptSuccess(status))
+			throw Error::NTStatusError(status, "BCryptDecrypt() failed to count bytes");
 
 		// Actually do the decryption
 		std::vector<std::byte> plainText(cbData, std::byte{ 0 });
@@ -182,28 +182,28 @@ export namespace Boring32::Crypto
 			&cbData,
 			flags
 		);
-		if (!Win32::BCryptSuccess(status))
-			throw Error::NTStatusError("BCryptDecrypt() failed to decrypt", status);
+		if (not Win32::BCryptSuccess(status))
+			throw Error::NTStatusError(status, "BCryptDecrypt() failed to decrypt");
 
 		plainText.resize(cbData);
 		return plainText;
 	}
 
 	std::vector<std::byte> Encrypt(
-		const Win32::DWORD blockByteLength,
+		Win32::DWORD blockByteLength,
 		const CryptoKey& key,
 		const std::vector<std::byte>& iv,
 		const std::vector<std::byte>& plainText,
-		const Win32::DWORD flags
+		Win32::DWORD flags
 	)
 	{
-		if (!key.GetHandle())
+		if (not key.GetHandle())
 			throw Error::Boring32Error("key is null");
 
 		// IV is optional
 		Win32::PUCHAR pIV = nullptr;
 		Win32::ULONG ivSize = 0;
-		if (!iv.empty())
+		if (not iv.empty())
 		{
 			if (iv.size() != blockByteLength)
 				throw Error::Boring32Error("IV must be the same size as the AES block lenth");
@@ -226,8 +226,8 @@ export namespace Boring32::Crypto
 			&cbData,
 			flags
 		);
-		if (!Win32::BCryptSuccess(status))
-			throw Error::NTStatusError("BCryptEncrypt() failed to count bytes", status);
+		if (not Win32::BCryptSuccess(status))
+			throw Error::NTStatusError(status, "BCryptEncrypt() failed to count bytes");
 
 		// Actually do the encryption
 		std::vector<std::byte> cypherText(cbData, std::byte{ 0 });
@@ -243,8 +243,8 @@ export namespace Boring32::Crypto
 			&cbData,
 			flags
 		);
-		if (!Win32::BCryptSuccess(status))
-			throw Error::NTStatusError("BCryptEncrypt() failed to encrypt", status);
+		if (not Win32::BCryptSuccess(status))
+			throw Error::NTStatusError(status, "BCryptEncrypt() failed to encrypt");
 
 		return cypherText;
 	}
@@ -261,7 +261,7 @@ export namespace Boring32::Crypto
 			nullptr,
 			&size
 		);
-		if (!succeeded)
+		if (not succeeded)
 			throw Error::Win32Error("CryptBinaryToStringA() failed when calculating size");
 		if (size == 0)
 			return {};
@@ -274,10 +274,10 @@ export namespace Boring32::Crypto
 			static_cast<Win32::LPSTR>(&returnVal[0]),
 			&size
 		);
-		if (!succeeded)
+		if (not succeeded)
 			throw Error::Win32Error("CryptBinaryToStringA() failed when encoding");
 		// Remove terminating null character
-		if (!returnVal.empty())
+		if (not returnVal.empty())
 			returnVal.pop_back();
 
 		return returnVal;
@@ -296,7 +296,7 @@ export namespace Boring32::Crypto
 			nullptr,
 			&size
 		);
-		if (!succeeded)
+		if (not succeeded)
 			throw Error::Win32Error("CryptBinaryToStringW() failed when calculating size");
 		if (size == 0)
 			return {};
@@ -309,10 +309,10 @@ export namespace Boring32::Crypto
 			static_cast<Win32::LPWSTR>(&returnVal[0]),
 			&size
 		);
-		if (!succeeded)
+		if (not succeeded)
 			throw Error::Win32Error("CryptBinaryToStringW() failed when encoding");
 		// Remove terminating null character
-		if (!returnVal.empty())
+		if (not returnVal.empty())
 			returnVal.pop_back();
 
 		return returnVal;
@@ -330,7 +330,7 @@ export namespace Boring32::Crypto
 			nullptr,
 			nullptr
 		);
-		if (!succeeded)
+		if (not succeeded)
 			throw Error::Win32Error("CryptStringToBinaryW() failed when calculating size");
 
 		std::vector<std::byte> returnVal(byteSize);
@@ -343,7 +343,7 @@ export namespace Boring32::Crypto
 			nullptr,
 			nullptr
 		);
-		if (!succeeded)
+		if (not succeeded)
 			throw Error::Win32Error("CryptStringToBinaryW() failed when decoding");
 
 		returnVal.resize(byteSize);
@@ -415,7 +415,7 @@ export namespace Boring32::Crypto
 
 	std::vector<Win32::PCCERT_CHAIN_CONTEXT> FindChainInStore(Win32::HCERTSTORE hCertStore, const std::wstring& issuer)
 	{
-		if (!hCertStore)
+		if (not hCertStore)
 			throw Error::Boring32Error("hCertStore cannot be null");
 		if (issuer.empty())
 			throw Error::Boring32Error("issuer cannot be empty string");
@@ -448,13 +448,13 @@ export namespace Boring32::Crypto
 			);
 			// We assume no further matches were found. CertFindChainInStore() 
 			// does not give any specific indication if it failed or not.
-			if (!chain)
+			if (not chain)
 				return returnValue;
 			// CertFindChainInStore frees the chain in each call, so we need
 			// to duplicate it to retain a valid handle.
 			// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certduplicatecertificatechain
 			Win32::PCCERT_CHAIN_CONTEXT duplicate = Win32::CertDuplicateCertificateChain(chain);
-			if (!duplicate)
+			if (not duplicate)
 			{
 				// For some reason, we've failed to duplicate the chain; delete 
 				// the current chain and bail. Like CertFindChainInStore(),
@@ -472,7 +472,7 @@ export namespace Boring32::Crypto
 		Win32::HCERTSTORE store
 	)
 	{
-		if (!contextToBuildFrom)
+		if (not contextToBuildFrom)
 			throw Error::Boring32Error("contextToBuildFrom is null");
 
 		Win32::PCCERT_CHAIN_CONTEXT chainContext = nullptr;
@@ -508,7 +508,7 @@ export namespace Boring32::Crypto
 
 	void ImportCertToStore(const Win32::HCERTSTORE store, const Win32::CRYPTUI_WIZ_IMPORT_SRC_INFO& info)
 	{
-		if (!store)
+		if (not store)
 			throw Error::Boring32Error("store is nullptr");
 
 		constexpr Win32::DWORD flags =
@@ -530,7 +530,7 @@ export namespace Boring32::Crypto
 
 	Win32::PCCERT_CONTEXT GetCertByArg(Win32::HCERTSTORE certStore, StoreFindType searchFlag, const void* arg)
 	{
-		if (!certStore)
+		if (not certStore)
 			throw Error::Boring32Error("CertStore cannot be null");
 
 		// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindcertificateinstore

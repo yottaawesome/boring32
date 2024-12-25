@@ -163,7 +163,7 @@ export namespace Boring32::Async
 				description.c_str()
 			);
 			if (Win32::HrFailed(hr))
-				throw Error::COMError("SetThreadDescription() failed", hr);
+				throw Error::COMError(hr, "SetThreadDescription() failed");
 		}
 
 		virtual std::wstring GetDescription()
@@ -175,7 +175,7 @@ export namespace Boring32::Async
 			// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreaddescription
 			Win32::HRESULT hr = Win32::GetThreadDescription(m_threadHandle, &pThreadDescription);
 			if (Win32::HrFailed(hr))
-				throw Error::COMError("GetThreadDescription() failed", hr);
+				throw Error::COMError(hr, "GetThreadDescription() failed");
 			if (not pThreadDescription)
 				return {};
 			RAII::LocalHeapUniquePtr<wchar_t> deleter(pThreadDescription);

@@ -75,7 +75,7 @@ export namespace Boring32::COM
 				m_apartmentThreadingMode | Win32::COINIT::COINIT_DISABLE_OLE1DDE
 			);
 			if (Failed(hr))
-				throw Error::COMError("CoInitializeEx() failed", hr);
+				throw Error::COMError(hr, "CoInitializeEx() failed");
 
 			m_isInitialised = true;
 			m_comInitialisedThreadId = Win32::GetCurrentThreadId();
@@ -106,7 +106,7 @@ export namespace Boring32::COM
 				nullptr                         // Reserved
 			);
 			if (Failed(hr))
-				throw Error::COMError("CoInitializeSecurity() failed", hr);
+				throw Error::COMError(hr, "CoInitializeSecurity() failed");
 		}
 
 		///	Uninitialises COM. If this object does not currently have

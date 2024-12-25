@@ -46,7 +46,7 @@ export namespace Boring32::Security
 				// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopencurrentuser
 				Win32::LSTATUS status = Win32::Winreg::RegOpenCurrentUser(Win32::_KEY_READ, &m_registryHive);
 				if (status != Win32::ErrorCodes::Success)
-					throw Error::NTStatusError("RegOpenCurrentUser() failed", status);
+					throw Error::NTStatusError(status, "RegOpenCurrentUser() failed");
 			}
 			return m_registryHive;
 		}

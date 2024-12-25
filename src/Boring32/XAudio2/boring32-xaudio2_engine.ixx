@@ -23,7 +23,7 @@ export namespace Boring32::XAudio2
 		{
 			Win32::HRESULT hr = Win32::XAudio2Create(&m_engine, 0, Win32::XAudio2DefaultProcessor);
 			if (Win32::HrFailed(hr)) Error::ThrowNested(
-				Error::COMError("Failed to create XAudio2 engine", hr),
+				Error::COMError(hr, "Failed to create XAudio2 engine"),
 				XAudio2Error("An error occurred when initialising the XAudio2 engine")
 			);
 		}

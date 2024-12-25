@@ -23,12 +23,9 @@ export namespace Boring32::Util
 				throw Error::Boring32Error("GUID cannot be an empty string");
 			// Accepts {} around the GUID
 			// See https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-iidfromstring
-			const Win32::HRESULT hr = Win32::IIDFromString(
-				guidString.GuidString.c_str(), 
-				&m_guid
-			);
+			Win32::HRESULT hr = Win32::IIDFromString(guidString.GuidString.c_str(), &m_guid);
 			if (hr != Win32::S_Ok)
-				throw Error::COMError("IIDFromString() failed", hr);
+				throw Error::COMError(hr, "IIDFromString() failed");
 		}
 
 		explicit GloballyUniqueID(const BasicGuidString& guidString)
@@ -42,10 +39,7 @@ export namespace Boring32::Util
 			// https://docs.microsoft.com/en-us/windows/win32/shell/guidfromstring
 			const Win32::RPC_WSTR cString = Win32::RPC_WSTR(guidString.GuidString.c_str());
 			// Does not accept {} around the GUID
-			const Win32::RPC_STATUS status = Win32::UuidFromStringW(
-				cString,
-				&m_guid
-			);
+			Win32::RPC_STATUS status = Win32::UuidFromStringW(cString, &m_guid);
 			// https://docs.microsoft.com/en-us/windows/win32/rpc/rpc-return-values
 			// Not sure if this works, as RPC_STATUS is a long, not an unsigned long
 			if (status != Win32::_RPC_S_OK)

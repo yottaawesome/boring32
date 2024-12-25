@@ -46,13 +46,13 @@ export namespace Boring32::Networking
 			reinterpret_cast<void**>(networkListManager.GetAddressOf())
 		);
 		if (Win32::HrFailed(result))
-			throw Error::COMError("CoCreateGuid() failed", result);
+			throw Error::COMError(result, "CoCreateGuid() failed");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/netlistmgr/ne-netlistmgr-nlm_connectivity
 		Win32::NLM_CONNECTIVITY connectivity;
 		result = networkListManager->GetConnectivity(&connectivity);
 		if (Win32::HrFailed(result))
-			throw Error::COMError("GetConnectivity() failed", result);
+			throw Error::COMError(result, "GetConnectivity() failed");
 
 		if (connectivity & Win32::NLM_CONNECTIVITY::NLM_CONNECTIVITY_IPV4_INTERNET)
 			return true;
