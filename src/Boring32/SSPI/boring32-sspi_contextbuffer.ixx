@@ -29,9 +29,9 @@ export namespace Boring32::SSPI
 			}
 		}
 
-		private:
-			Win32::SecBuffer m_buffer{ 0 };
-			Win32::SecBufferDesc m_desc{ 0 };
+	private:
+		Win32::SecBuffer m_buffer{ 0 };
+		Win32::SecBufferDesc m_desc{ 0 };
 	};
 
 	

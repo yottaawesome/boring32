@@ -444,44 +444,43 @@ export namespace Boring32::Registry
 		Strings::FixedStringW TValueName,
 		ValueTypes TValueType, 
 		bool DefaultThrowOnError = true>
-	class RegistryValue
+	struct RegistryValue
 	{
 		static constexpr const wchar_t* SubKey = TSubKey;
 		static constexpr const wchar_t* ValueName = TValueName;
 		static constexpr std::wstring_view Name = SuperKeyName<TParentKey>::Name;
 
-		public:
-			static constexpr const wchar_t* GetSubKey() noexcept
-			{
-				return SubKey;
-			}
+		static constexpr const wchar_t* GetSubKey() noexcept
+		{
+			return SubKey;
+		}
 
-			static constexpr const wchar_t* GetValueName() noexcept
-			{
-				return ValueName;
-			}
+		static constexpr const wchar_t* GetValueName() noexcept
+		{
+			return ValueName;
+		}
 
-			static constexpr ValueTypes GetValueType() noexcept
-			{
-				return TValueType;
-			}
+		static constexpr ValueTypes GetValueType() noexcept
+		{
+			return TValueType;
+		}
 
-			template<bool ThrowOnError = DefaultThrowOnError, Concepts::NullPtrOrInvocable auto TDefaultValue = nullptr>
-			static auto Read() noexcept(not ThrowOnError)
-			{
-				return ReadValue<TValueType, ThrowOnError, TDefaultValue>(TParentKey, SubKey, ValueName);
-			}
+		template<bool ThrowOnError = DefaultThrowOnError, Concepts::NullPtrOrInvocable auto TDefaultValue = nullptr>
+		static auto Read() noexcept(not ThrowOnError)
+		{
+			return ReadValue<TValueType, ThrowOnError, TDefaultValue>(TParentKey, SubKey, ValueName);
+		}
 
-			template<bool ThrowOnError = DefaultThrowOnError>
-			static void Set(const auto& value) noexcept(not ThrowOnError)
-			{
-				SetValue<TValueType, ThrowOnError>(TParentKey, SubKey, ValueName, value);
-			}
+		template<bool ThrowOnError = DefaultThrowOnError>
+		static void Set(const auto& value) noexcept(not ThrowOnError)
+		{
+			SetValue<TValueType, ThrowOnError>(TParentKey, SubKey, ValueName, value);
+		}
 
-			template<bool ThrowOnError = DefaultThrowOnError>
-			static void Delete() noexcept(not ThrowOnError)
-			{
-				DeleteValue<ThrowOnError>(TParentKey, SubKey, ValueName);
-			}
+		template<bool ThrowOnError = DefaultThrowOnError>
+		static void Delete() noexcept(not ThrowOnError)
+		{
+			DeleteValue<ThrowOnError>(TParentKey, SubKey, ValueName);
+		}
 	};
 }
