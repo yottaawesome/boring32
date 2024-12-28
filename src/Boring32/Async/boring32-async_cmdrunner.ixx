@@ -3,15 +3,10 @@ import std;
 import boring32.win32;
 import :error;
 import :strings;
+import :raii;
 
 namespace Boring32::Async
 {
-    struct HandlerDeleter
-    {
-        void operator()(Win32::HANDLE h) { Win32::CloseHandle(h); }
-    };
-    using HandleUniquePtr = std::unique_ptr<std::remove_pointer_t<Win32::HANDLE>, HandlerDeleter>;
-
     constexpr int BufferSize = 4096;
 
     std::string ReadFromPipe(Win32::HANDLE hChildStd_OUT_Rd)
@@ -117,8 +112,8 @@ export namespace Boring32::Async
         Win32::HANDLE hChildStd_OUT_Wr = nullptr;
         if (not Win32::CreatePipe(&hChildStd_OUT_Rd, &hChildStd_OUT_Wr, &saAttr, 0))
             throw Error::Win32Error(GetLastError(), "CreatePipe() failed");
-        HandleUniquePtr ptrChildStdOutWr = HandleUniquePtr(hChildStd_OUT_Wr);
-        HandleUniquePtr ptrChildStdOutRd = HandleUniquePtr(hChildStd_OUT_Rd);
+        RAII::HandleUniquePtr ptrChildStdOutWr = RAII::HandleUniquePtr(hChildStd_OUT_Wr);
+        RAII::HandleUniquePtr ptrChildStdOutRd = RAII::HandleUniquePtr(hChildStd_OUT_Rd);
 
         // Ensure the read handle to the pipe for STDOUT is not inherited.
         if (not Win32::SetHandleInformation(hChildStd_OUT_Rd, Win32::HandleFlagInherit, 0))
@@ -129,8 +124,8 @@ export namespace Boring32::Async
         Win32::HANDLE hChildStd_IN_Wr = nullptr;
         if (not Win32::CreatePipe(&hChildStd_IN_Rd, &hChildStd_IN_Wr, &saAttr, 0))
             throw Error::Win32Error(GetLastError(), "CreatePipe() failed");
-        HandleUniquePtr ptrChildStdInRd = HandleUniquePtr(hChildStd_IN_Rd);
-        HandleUniquePtr ptrChildStdInWr = HandleUniquePtr(hChildStd_IN_Wr);
+        RAII::HandleUniquePtr ptrChildStdInRd = RAII::HandleUniquePtr(hChildStd_IN_Rd);
+        RAII::HandleUniquePtr ptrChildStdInWr = RAII::HandleUniquePtr(hChildStd_IN_Wr);
 
         // Ensure the write handle to the pipe for STDIN is not inherited. 
         if (not Win32::SetHandleInformation(hChildStd_IN_Wr, Win32::HandleFlagInherit, 0))
@@ -143,8 +138,8 @@ export namespace Boring32::Async
             hChildStd_OUT_Wr,
             hChildStd_IN_Rd
         );
-        HandleUniquePtr ptrChildProcess = HandleUniquePtr(childProc.hProcess);
-        HandleUniquePtr ptrChildThread = HandleUniquePtr(childProc.hThread);
+        RAII::HandleUniquePtr ptrChildProcess = RAII::HandleUniquePtr(childProc.hProcess);
+        RAII::HandleUniquePtr ptrChildThread = RAII::HandleUniquePtr(childProc.hThread);
 
         // As per the official sample, these need to be closed.
         ptrChildStdOutWr.reset();

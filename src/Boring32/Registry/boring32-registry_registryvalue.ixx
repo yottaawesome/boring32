@@ -4,6 +4,7 @@ import boring32.win32;
 import :error;
 import :strings;
 import :concepts;
+import :raii;
 
 namespace Boring32::Registry
 {
@@ -396,14 +397,7 @@ export namespace Boring32::Registry
 			}();
 	};
 
-	struct HKEYDeleter final
-	{
-		void operator()(Win32::Winreg::HKEY ptr)
-		{
-			Win32::Winreg::RegCloseKey(ptr);
-		}
-	};
-	using HKEYUniquePtr = std::unique_ptr<std::remove_pointer<Win32::Winreg::HKEY>::type, HKEYDeleter>;
+	using HKEYUniquePtr = RAII::IndirectUniquePtr<Win32::Winreg::HKEY, Win32::Winreg::RegCloseKey>;
 
 	template<Win32::Winreg::HKEY TParentKey, Strings::FixedString TSubKey, bool DefaultThrowOnError = true>
 	struct RegistryKey

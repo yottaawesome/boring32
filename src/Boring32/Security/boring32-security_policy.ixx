@@ -10,18 +10,12 @@ import std;
 import boring32.win32;
 import :error;
 import :security_lsaunicodestring;
+import :raii;
 
 namespace Boring32::Security
 {
-	struct LSAHandleDeleter final
-	{
-		void operator()(Win32::LSA_HANDLE handle) const noexcept
-		{
-			Win32::LsaClose(handle);
-		}
-	};
-	using LSAHandleUniquePtr = std::unique_ptr<std::remove_pointer<Win32::LSA_HANDLE>::type, LSAHandleDeleter>;
-	using LSAHandleSharedPtr = std::shared_ptr<std::remove_pointer<Win32::LSA_HANDLE>::type>;
+	using LSAHandleUniquePtr = RAII::IndirectUniquePtr<Win32::LSA_HANDLE, Win32::LsaClose>;
+	using LSAHandleSharedPtr = std::shared_ptr<std::remove_pointer_t<Win32::LSA_HANDLE>>;
 	LSAHandleSharedPtr CreateLSASharedPtr(Win32::LSA_HANDLE handle)
 	{
 		return LSAHandleSharedPtr(handle, Win32::LsaClose);

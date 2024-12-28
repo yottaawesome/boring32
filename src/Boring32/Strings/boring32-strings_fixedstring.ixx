@@ -20,79 +20,107 @@ export namespace Boring32::Strings
 		using ViewType = TView;
 		using StringType = TString;
 
-		TChar buf[N]{};
+		TChar Buffer[N]{};
 
 		constexpr FixedString(const TChar(&arg)[N]) noexcept
 		{
-			std::copy_n(arg, N, buf);
+			std::copy_n(arg, N, Buffer);
 		}
 
 		//constexpr FixedString(const wchar_t* arg) noexcept
 		//{
-		//	std::copy_n(arg, N, buf);
+		//	std::copy_n(arg, N, Buffer);
 		//	//for (unsigned i = 0; i < N; i++)
-		//		//buf[i] = arg[i];
+		//		//Buffer[i] = arg[i];
 		//}
 
 		// There's a consteval bug in the compiler.
 		// See https://developercommunity.visualstudio.com/t/consteval-function-unexpectedly-returns/10501040
+		[[nodiscard]]
 		constexpr operator const TChar* () const noexcept
 		{
-			return buf;
+			return Buffer;
 		}
 
+		[[nodiscard]]
 		constexpr TView ToView() const noexcept
 		{
-			return { buf };
+			return { Buffer };
 		}
 
+		[[nodiscard]]
 		constexpr operator TView() const noexcept
 		{
-			return { buf };
+			return { Buffer };
 		}
 
+		[[nodiscard]]
 		constexpr operator TString() const noexcept
 		{
-			return { buf };
+			return { Buffer };
 		}
 
+		[[nodiscard]]
 		constexpr TString ToString() const noexcept
 		{
-			return { buf };
+			return { Buffer };
 		}
 
 		template<size_t M>
+		[[nodiscard]]
 		constexpr bool operator==(const TChar(&str)[M]) const noexcept
 		{
 			return false;
 		}
 
+		[[nodiscard]]
 		constexpr bool operator==(const TChar(&str)[N]) const noexcept
 		{
-			return std::equal(str, str + N, buf);
+			return std::equal(str, str + N, Buffer);
 		}
 
+		[[nodiscard]]
 		constexpr bool operator==(const FixedString<TChar, TView, TString, N> str) const
 		{
-			return std::equal(str.buf, str.buf + N, buf);
+			return std::equal(str.Buffer, str.Buffer + N, Buffer);
 		}
 
+		[[nodiscard]]
 		constexpr size_t Size() const noexcept { return N-1; }
 
 		template<ValidCharType TChar, ValidViewType TView, ValidStringType TString, std::size_t N2>
+		[[nodiscard]]
 		constexpr bool operator==(const FixedString<TChar, TView, TString, N2> s) const
 		{
 			return false;
 		}
 
 		template<std::size_t N2>
+		[[nodiscard]]
 		constexpr FixedString<TChar, TView, TString, N + N2 - 1> operator+(const FixedString<TChar, TView, TString, N2> str) const
 		{
 			TChar newchar[N + N2 - 1]{};
-			std::copy_n(buf, N - 1, newchar);
-			std::copy_n(str.buf, N2, newchar + N - 1);
+			std::copy_n(Buffer, N - 1, newchar);
+			std::copy_n(str.Buffer, N2, newchar + N - 1);
 			return newchar;
 		}
+
+		struct Iterator
+		{
+			const char* Buffer = nullptr;
+			int Position = 0;
+			constexpr Iterator(int position, const char* buffer) : Position(position), Buffer(buffer) {}
+			[[nodiscard]]
+			constexpr char operator*() const noexcept { return Buffer[Position]; }
+			constexpr Iterator& operator++() noexcept { Position++; return *this; }
+			[[nodiscard]]
+			constexpr bool operator!=(const Iterator& other) const noexcept { return Position != other.Position; }
+		};
+
+		[[nodiscard]]
+		Iterator begin() const noexcept { return Iterator(0, Buffer); }
+		[[nodiscard]]
+		Iterator end() const noexcept { return Iterator(N - 1, Buffer); }
 	};
 	template<size_t N>
 	FixedString(char const (&)[N]) -> FixedString<char, std::string_view, std::string, N>;

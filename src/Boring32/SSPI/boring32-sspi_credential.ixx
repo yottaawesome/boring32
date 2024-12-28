@@ -2,22 +2,15 @@ export module boring32:sspi_credential;
 import std;
 import boring32.win32;
 import :error;
+import :raii;
 
 namespace Boring32::SSPI
 {
-	struct CredentialDeleter final
-	{
-		void operator()(Win32::PCredHandle handle)
-		{
-			// https://learn.microsoft.com/en-us/windows/win32/api/sspi/nf-sspi-freecredentialshandle
-			Win32::FreeCredentialsHandle(handle);
-		}
-	};
-	using CredentialUniquePtr = std::unique_ptr<Win32::CredHandle, CredentialDeleter>;
+	// https://learn.microsoft.com/en-us/windows/win32/api/sspi/nf-sspi-freecredentialshandle
+	using CredentialUniquePtr = RAII::UniquePtr<Win32::CredHandle, Win32::FreeCredentialsHandle>;
 
 	export struct Credential final
 	{
-		~Credential() = default;
 		Credential(const Credential&) = delete;
 		Credential(Credential&&) noexcept = default;
 		Credential()

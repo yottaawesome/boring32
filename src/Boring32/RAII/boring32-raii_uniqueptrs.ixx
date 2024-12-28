@@ -15,4 +15,5 @@ export namespace Boring32::RAII
 	using LocalHeapUniquePtr = UniquePtr<T, Win32::LocalFree>;
 	using DllUniquePtr = IndirectUniquePtr<Win32::HMODULE, Win32::FreeLibrary>;
 	using SIDUniquePtr = IndirectUniquePtr<Win32::PSID, Win32::FreeSid>;
+	using HandleUniquePtr = IndirectUniquePtr<Win32::HANDLE, Win32::CloseHandle>;
 }
