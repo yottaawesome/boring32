@@ -89,15 +89,13 @@ export namespace Boring32::Error
 
 namespace Boring32::Error
 {
-	template<typename...E>
-	[[deprecated("This is just here for possible repurposing.")]]
-	class Error : public virtual E...
+	/*template<typename...E>
+	struct Error [[deprecated("This is just here for possible repurposing.")]] : virtual E...
 	{
-		public:
-			virtual ~Error() {}
-	};
+		virtual ~Error() = default;
+	};*/
 
-	class M [[deprecated("This is just here for possible repurposing.")]]
-		: public Error<std::runtime_error, std::exception>
-	{ };
+	/*struct M [[deprecated("This is just here for possible repurposing.")]]
+		: Error<std::runtime_error, std::exception>
+	{ };*/
 }
