@@ -31,3 +31,4 @@ export import :async_syncedcontainer;
 export import :async_sharedmap;
 export import :async_waitable;
 export import :async_cmdrunner;
+export import :async_overlapped;
