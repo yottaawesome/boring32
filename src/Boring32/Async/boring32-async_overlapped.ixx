@@ -7,13 +7,15 @@ import :concepts;
 export namespace Boring32::Async
 {
 	struct [[nodiscard("This must remain alive while the IO operation is in progress.")]] 
-	Overlapped : Win32::OVERLAPPED
+	Overlapped final : Win32::OVERLAPPED
 	{
 		~Overlapped() { Close(); }
 
 		Overlapped(const Overlapped&) = delete;
 		Overlapped& operator=(const Overlapped&) = delete;
 
+		// TODO: OVERLAPPED is not movable either.
+		// May need to add a Reset() method.
 		Overlapped(Overlapped&& other) { swap(other); };
 		Overlapped& operator=(Overlapped&& other) { swap(other); };
 
@@ -50,6 +52,11 @@ export namespace Boring32::Async
 			return this->Internal == 0x80000005L;// STATUS_BUFFER_OVERFLOW;
 		}
 
+		bool Pending() const noexcept
+		{
+			return Internal == 0x00000103L; // STATUS_IO_PENDING
+		}
+
 		std::uint64_t GetBytesRead() const noexcept
 		{
 			return this->InternalHigh;
@@ -79,4 +86,91 @@ export namespace Boring32::Async
 	static_assert(std::movable<Overlapped>);
 	static_assert(not std::copyable<Overlapped>);
 	static_assert(std::swappable<Overlapped>);
+
+	struct AsyncRead final
+	{
+		~AsyncRead()
+		{
+			if (Operation.Pending())
+				Win32::CancelIo(Pipe);
+		}
+
+		AsyncRead(Win32::HANDLE handle, Win32::DWORD bytesToRead)
+			: Pipe(handle), BytesToRead(bytesToRead)
+		{
+			if (not handle)
+				throw std::runtime_error("Handle cannot be nullptr");
+			Start();
+		}
+
+		auto Ready() -> bool
+		{
+			return Operation.Wait();
+		}
+
+		auto FinishReading() -> void
+		{
+			Operation.Wait();
+			if (not Operation.IsPartial())
+			{
+				Data.resize(Operation.GetBytesRead());
+				return;
+			}
+
+			std::uint64_t totalBytesRead = Operation.GetBytesRead();
+			while (true)
+			{
+				Operation = Async::Overlapped{};
+				Win32::BOOL success = Win32::ReadFile(
+					Pipe,
+					Data.data() + totalBytesRead,
+					BytesToRead,
+					nullptr, // not used for async IO
+					&Operation
+				);
+				Operation.Wait(std::chrono::milliseconds{ 1000 },"Waiting for read to complete.");
+				totalBytesRead += Operation.GetBytesRead();
+				if (success)
+				{
+					Data.resize(totalBytesRead);
+					break;
+				}
+				if (Win32::DWORD lastError = Win32::GetLastError(); lastError != Win32::ErrorCodes::MoreData)
+					throw Error::Win32Error(lastError, "ReadFile() failed.");
+				Data.resize(Data.size() + BytesToRead);
+			}
+		}
+
+		auto GetData() const& noexcept -> std::vector<std::byte>
+		{
+			return Data;
+		}
+
+		auto GetData() && noexcept -> std::vector<std::byte>&&
+		{
+			return std::move(Data);
+		}
+
+	private:
+		auto Start() -> void
+		{
+			Data.resize(BytesToRead);
+			Win32::BOOL success = Win32::ReadFile(
+				Pipe,
+				Data.data(),
+				BytesToRead,
+				nullptr, // not used for async IO
+				&Operation
+			);
+			if (auto lastError = Win32::GetLastError(); not success and lastError != Win32::ErrorCodes::IoPending)
+				throw Error::Win32Error(lastError, "IO operation failed");
+		}
+
+		std::vector<std::byte> Data;
+		Overlapped Operation;
+		Win32::HANDLE Pipe = nullptr;
+		Win32::DWORD BytesToRead = 0;
+	};
+	static_assert(not std::movable<AsyncRead>);
+	static_assert(not std::copyable<AsyncRead>);
 }
