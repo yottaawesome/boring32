@@ -19,6 +19,10 @@ export namespace Boring32::Util
 				and std::ranges::equal(std::span{ Data4, 8 }, std::span{ other.Data4, 8 });
 		}
 	};
+	static_assert(
+		[] { return EnhancedGuid{} == Win32::GUID{ 0 }; },
+		"Default constructed EnhancedGuid is expected to be the empty GUID."
+	);
 
 	struct GloballyUniqueID final
 	{
