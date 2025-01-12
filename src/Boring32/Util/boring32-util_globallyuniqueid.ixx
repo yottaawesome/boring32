@@ -7,6 +7,19 @@ import :util_functions;
 
 export namespace Boring32::Util
 {
+	struct EnhancedGuid : Win32::GUID 
+	{
+		constexpr EnhancedGuid() = default;
+		constexpr EnhancedGuid(const Win32::GUID& other) : Win32::GUID{ other } {}
+		constexpr bool operator==(const EnhancedGuid& other) const noexcept
+		{ 
+			return Data1 == other.Data1
+				and Data2 == other.Data2
+				and Data3 == other.Data3
+				and std::ranges::equal(std::span{ Data4, 8 }, std::span{ other.Data4, 8 });
+		}
+	};
+
 	struct GloballyUniqueID final
 	{
 		// GUID strings which aren't wrapped by {}
@@ -47,25 +60,27 @@ export namespace Boring32::Util
 				throw Error::Win32Error(status, "UuidFromStringW() failed");
 		}
 
-		GloballyUniqueID(const GUID& guid)
+		constexpr GloballyUniqueID(const Win32::GUID& guid)
 			: m_guid(guid)
 		{}
 
-		GloballyUniqueID& operator=(const GUID& other) noexcept
+		constexpr GloballyUniqueID& operator=(const GUID& other) noexcept
 		{
 			m_guid = other;
 			return *this;
 		}
 
-		bool operator==(const GloballyUniqueID& other) const noexcept
+		constexpr bool operator==(const GloballyUniqueID& other) const noexcept
 		{
 			// https://docs.microsoft.com/en-us/windows/win32/api/guiddef/nf-guiddef-isequalguid
-			return Win32::IsEqualGUID(m_guid, other.m_guid);
+			//return Win32::IsEqualGUID(m_guid, other.m_guid);
+			return m_guid == other;
 		}
 
-		bool operator==(const GUID& other) const noexcept
+		constexpr bool operator==(const Win32::GUID& other) const noexcept
 		{
-			return Win32::IsEqualGUID(m_guid, other);
+			return m_guid == EnhancedGuid{ other };
+			//return Win32::IsEqualGUID(m_guid, other);
 		}
 
 		void ToString(std::wstring& out) const
@@ -78,22 +93,27 @@ export namespace Boring32::Util
 			out = Strings::ConvertString(GetGuidAsWString(m_guid));
 		}
 
-		const GUID& Get() const noexcept
+		constexpr const GUID& Get() const noexcept
 		{
 			return m_guid;
 		}
 
-		bool IsNil() const noexcept
+		constexpr bool IsNil() const noexcept
 		{
-			Win32::RPC_STATUS out;
-			const int status = Win32::UuidIsNil(
-				const_cast<Win32::GUID*>(&m_guid),
-				&out
-			);
-			return status;
+			//Win32::RPC_STATUS out;
+			//int status = Win32::UuidIsNil(const_cast<Win32::GUID*>(&m_guid), &out);
+			return m_guid == EnhancedGuid{};
 		}
 
 		private:
-		Win32::GUID m_guid = { 0 };
+		EnhancedGuid m_guid{};
 	};
+	static_assert(
+		[]{
+			Win32::GUID guid{ 1,2,3,{ 0,1,2,3,4,5,6,7 } };
+			GloballyUniqueID nilGuid(guid);
+			return nilGuid == guid;
+		}(),
+		"Equality check failed."
+	);
 }
