@@ -25,20 +25,21 @@ export namespace Boring32::DataStructures
 			if (m_uniqueOnly && value == m_stack.back())
 				return *this;
 			if (m_stack.size() == m_maxSize)
-			{
-				if constexpr (requires (T t) { t.pop_front(); })
-				{
-					m_stack.pop_front();
-				}
-				else if (not m_stack.empty())
-				{
-					m_stack.erase(m_stack.begin());
-				}
-			}
+				PopFront();
 				
 			m_stack.push_back(value);
 				
 			return *this;
+		}
+
+		constexpr void PopFront()
+		{
+			if (m_stack.empty())
+				return;
+			if constexpr (requires (T t) { t.pop_front(); })
+				m_stack.pop_front();
+			else
+				m_stack.erase(m_stack.begin());
 		}
 
 		constexpr T Pop()
