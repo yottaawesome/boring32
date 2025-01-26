@@ -4,10 +4,10 @@ import :error;
 
 export namespace Boring32::DataStructures
 {
-	template<typename T>
+	template<typename T, typename TContainer = std::deque<T>>
 	struct CappedStack final
 	{
-		CappedStack(size_t maxSize, bool uniqueOnly)
+		constexpr CappedStack(size_t maxSize, bool uniqueOnly)
 		:	m_maxSize(maxSize),
 			m_uniqueOnly(uniqueOnly)
 		{
@@ -15,7 +15,7 @@ export namespace Boring32::DataStructures
 				throw Error::Boring32Error("maxSize is 0");
 		}
 
-		CappedStack& Push(const T value)
+		constexpr CappedStack& Push(const T value)
 		{
 			if (m_stack.empty())
 			{
@@ -25,14 +25,23 @@ export namespace Boring32::DataStructures
 			if (m_uniqueOnly && value == m_stack.back())
 				return *this;
 			if (m_stack.size() == m_maxSize)
-				m_stack.pop_front();
+			{
+				if constexpr (requires (T t) { t.pop_front(); })
+				{
+					m_stack.pop_front();
+				}
+				else if (not m_stack.empty())
+				{
+					m_stack.erase(m_stack.begin());
+				}
+			}
 				
 			m_stack.push_back(value);
 				
 			return *this;
 		}
 
-		T Pop()
+		constexpr T Pop()
 		{
 			if (m_stack.empty())
 				throw Error::Boring32Error("Cannot pop empty stack");
@@ -41,7 +50,7 @@ export namespace Boring32::DataStructures
 			return value;
 		}
 
-		bool Pop(T& value) noexcept
+		constexpr bool Pop(T& value) noexcept
 		{
 			if (m_stack.empty())
 				return false;
@@ -49,7 +58,7 @@ export namespace Boring32::DataStructures
 			return true;
 		}
 
-		bool PopLeaveOne() noexcept
+		constexpr bool PopLeaveOne() noexcept
 		{
 			if (m_stack.size() < 2)
 				return false;
@@ -57,28 +66,28 @@ export namespace Boring32::DataStructures
 			return true;
 		}
 
-		bool PopLeaveOne(T& value) noexcept
+		constexpr bool PopLeaveOne(T& value) noexcept
 		{
 			if (m_stack.size() < 2)
 				return false;
 			return Pop(value);
 		}
 
-		T GetFirst()
+		constexpr T GetFirst()
 		{
 			if (m_stack.empty())
 				throw Error::Boring32Error("Cannot get from empty stack");
 			return m_stack.front();
 		}
 
-		T GetCurrent()
+		constexpr T GetCurrent()
 		{
 			if (m_stack.empty())
 				throw Error::Boring32Error("Cannot get from empty stack");
 			return m_stack.back();
 		}
 
-		T GetFromBack(const size_t backIndex)
+		constexpr T GetFromBack(const size_t backIndex)
 		{
 			if (m_stack.empty())
 				throw Error::Boring32Error("Cannot get from empty stack");
@@ -87,53 +96,92 @@ export namespace Boring32::DataStructures
 			return m_stack.at(m_stack.size()-1-backIndex);
 		}
 
-		const std::deque<T>& GetContainer() const noexcept
+		constexpr const TContainer& GetContainer() const noexcept
 		{
 			return m_stack;
 		}
 
-		bool operator==(const T val) const
+		constexpr bool operator==(const T val) const
 		{
 			if (m_stack.empty())
 				return false;
 			return m_stack.back() == val;
 		}
 
-		CappedStack<T>& operator=(const T val)
+		constexpr CappedStack& operator=(const T val)
 		{
 			return Push(val);
 		}
 
-		T operator[](const size_t index) const
+		constexpr T operator[](const size_t index) const
 		{
 			if (m_stack.empty())
 				throw Error::Boring32Error("Stack is empty");
 			return m_stack[index];
 		}
 
-		size_t GetMaxSize() const noexcept
+		constexpr size_t GetMaxSize() const noexcept
 		{
 			return m_maxSize;
 		}
 
-		size_t GetSize() const noexcept
+		constexpr size_t GetSize() const noexcept
 		{
 			return m_stack.size();
 		}
 
-		bool IsEmpty() const noexcept
+		constexpr bool IsEmpty() const noexcept
 		{
 			return m_stack.empty();
 		}
 
-		bool AddsUniqueOnly() const noexcept
+		constexpr bool AddsUniqueOnly() const noexcept
 		{
 			return m_uniqueOnly;
 		}
 
 		private:
 		size_t m_maxSize = 0;
-		std::deque<T> m_stack;
+		TContainer m_stack;
 		bool m_uniqueOnly = false;
 	};
 }
+
+static_assert(
+	[]() consteval 
+	{
+		{
+			// Test constructor
+			Boring32::DataStructures::CappedStack<int, std::vector<int>> stack(5, false);
+			if (stack.GetMaxSize() != 5)
+				throw std::runtime_error("GetMaxSize() expected to be 5");
+			if (stack.AddsUniqueOnly())
+				throw std::runtime_error("AddsUniqueOnly expected to be true.");
+		}
+
+		// Test assign push
+		{
+			Boring32::DataStructures::CappedStack<int, std::vector<int>> stack(5, false);
+			for (int i = 0; i < 5; i++)
+				stack = i;
+			if (stack.GetMaxSize() != 5)
+				throw std::runtime_error("GetMaxSize() expected to be 5");
+			for (int i = 0; i < 5; i++)
+				if (stack[i] != i)
+					throw std::runtime_error("Stack value did not match expected value.");
+		}
+
+		// Test assign unique push
+		{
+			Boring32::DataStructures::CappedStack<int, std::vector<int>> stack(5, true);
+			for (int i = 0; i < 5; i++)
+				stack = 1;
+			if (stack.GetSize() != 1)
+				throw std::runtime_error("Stack size did not match expected value.");
+			if (stack[0] != 1)
+				throw std::runtime_error("Stack value [0] did not match expected value.");
+		}
+
+		return true;
+	}()
+);

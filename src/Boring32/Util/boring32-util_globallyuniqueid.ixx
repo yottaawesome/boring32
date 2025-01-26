@@ -20,7 +20,7 @@ export namespace Boring32::Util
 		}
 	};
 	static_assert(
-		[] { return EnhancedGuid{} == Win32::GUID{ 0 }; },
+		EnhancedGuid{} == Win32::GUID{ 0 },
 		"Default constructed EnhancedGuid is expected to be the empty GUID."
 	);
 
