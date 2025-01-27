@@ -151,9 +151,10 @@ export namespace Boring32::DataStructures
 static_assert(
 	[]() consteval 
 	{
+		using TestStack = Boring32::DataStructures::CappedStack<int, std::vector<int>>;
 		{
 			// Test constructor
-			Boring32::DataStructures::CappedStack<int, std::vector<int>> stack(5, false);
+			TestStack stack(5, false);
 			if (stack.GetMaxSize() != 5)
 				throw std::runtime_error("GetMaxSize() expected to be 5");
 			if (stack.AddsUniqueOnly())
@@ -162,7 +163,7 @@ static_assert(
 
 		// Test assign push
 		{
-			Boring32::DataStructures::CappedStack<int, std::vector<int>> stack(5, false);
+			TestStack stack(5, false);
 			for (int i = 0; i < 5; i++)
 				stack = i;
 			if (stack.GetMaxSize() != 5)
@@ -174,13 +175,54 @@ static_assert(
 
 		// Test assign unique push
 		{
-			Boring32::DataStructures::CappedStack<int, std::vector<int>> stack(5, true);
+			TestStack stack(5, true);
 			for (int i = 0; i < 5; i++)
 				stack = 1;
 			if (stack.GetSize() != 1)
 				throw std::runtime_error("Stack size did not match expected value.");
 			if (stack[0] != 1)
 				throw std::runtime_error("Stack value [0] did not match expected value.");
+		}
+
+		// Test assign pop
+		{
+			TestStack stack(5, true);
+			for (int i = 0; i < 5; i++)
+				stack = i;
+			if (stack.Pop() != 4)
+				throw std::runtime_error("Pop() returned unexpected value");
+			if (stack.GetSize() != 4)
+				throw std::runtime_error("GetSize() returned unexpected value");
+			for (int i = 0; i < 4; i++)
+				if (stack[i] != i)
+					throw std::runtime_error("stack returned unexpected value.");
+		}
+
+		// Test assign pop 2
+		{
+			TestStack stack(5, true);
+			for (int i = 0; i < 5; i++)
+				stack = i;
+			int i = -1;
+			if (not stack.Pop(i))
+				throw std::runtime_error("Pop() expected to return true.");
+			if (i != 4)
+				throw std::runtime_error("i was epxected to be 4.");
+			if (stack.GetSize() != 4)
+				throw std::runtime_error("GetSize() was epxected to be 4.");
+
+			for (int i = 0; i < 4; i++)
+				if(stack[i] != i)
+					throw std::runtime_error("stack returned an expected value.");
+		}
+
+		// Test assign equality
+		{
+			TestStack stack(5, true);
+			for (int i = 0; i < 5; i++)
+				stack = i;
+			if (stack != 4)
+				throw std::runtime_error("Expected sstack to be 4.");
 		}
 
 		return true;
