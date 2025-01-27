@@ -3,29 +3,21 @@ import std;
 import std.compat;
 import boring32.win32;
 import :error;
-import :async_criticalsectionlock;
+import :async_criticalsection;
 
 export namespace Boring32::Async
 {
 	template<typename T>
 	struct SyncedContainer final
 	{
-		~SyncedContainer()
-		{
-			Win32::DeleteCriticalSection(&m_cs);
-		}
 
 		SyncedContainer()
-			requires std::is_trivially_constructible<T>::value
-		{
-			Win32::InitializeCriticalSection(&m_cs);
-		}
+			requires std::is_trivially_constructible<T>::value = default;
 
 		template<typename...Args>
 		SyncedContainer(Args... args)
 			: m_protected(args...)
 		{
-			Win32::InitializeCriticalSection(&m_cs);
 		}
 
 		auto operator()(const auto func)
@@ -171,6 +163,6 @@ export namespace Boring32::Async
 			
 		private:
 		T m_protected;
-		Win32::CRITICAL_SECTION m_cs;
+		CriticalSection m_cs;
 	};
 }

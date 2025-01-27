@@ -1,31 +1,23 @@
 export module boring32:async_synced;
 import std;
-import :async_criticalsectionlock;
+import :async_criticalsection;
 
 export namespace Boring32::Async
 {
 	template<typename T>
 	struct Synced final
 	{
-		~Synced()
-		{
-			Win32::DeleteCriticalSection(&m_cs);
-		}
 
 		Synced(const Synced&) = delete;
 		Synced operator=(const Synced&) = delete;
 
-		Synced() 
-			requires std::is_trivially_constructible<T>::value
-		{ 
-			Win32::InitializeCriticalSection(&m_cs);
-		}
+		Synced()
+			requires std::is_trivially_constructible<T>::value = default;
 
 		template<typename...Args>
 		Synced(Args... args)
 			: m_protected(args...)
 		{
-			Win32::InitializeCriticalSection(&m_cs);
 		}
 
 		T operator()() 
@@ -59,6 +51,6 @@ export namespace Boring32::Async
 
 		private:
 		T m_protected;
-		Win32::CRITICAL_SECTION m_cs;
+		CriticalSection m_cs;
 	};
 }

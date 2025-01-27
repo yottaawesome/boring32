@@ -48,7 +48,6 @@
     <ClCompile Include="Async\boring32-async_job.ixx" />
     <ClCompile Include="Async\boring32-async_mutex.ixx" />
     <ClCompile Include="Async\boring32-async_synchronizationbarrier.ixx" />
-    <ClCompile Include="Async\boring32-async_criticalsectionlock.ixx" />
     <ClCompile Include="Async\boring32-async_waitabletimer.ixx" />
     <ClCompile Include="Async\boring32-async_event.ixx" />
     <ClCompile Include="RAII\boring32-raii_uniqueptrs.ixx" />

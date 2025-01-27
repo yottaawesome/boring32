@@ -1,4 +1,5 @@
 export module boring32:async_criticalsection;
+import std;
 import boring32.win32;
 import :error;
 
@@ -42,9 +43,19 @@ export namespace Boring32::Async
 			return &m_criticalSection;
 		}
 
-		operator CRITICAL_SECTION*() noexcept
+		operator CRITICAL_SECTION* () noexcept
 		{
 			return &m_criticalSection;
+		}
+
+		void lock() noexcept
+		{ 
+			Win32::EnterCriticalSection(&m_criticalSection); 
+		}
+		
+		void unlock() noexcept
+		{ 
+			Win32::LeaveCriticalSection(&m_criticalSection); 
 		}
 
 		private:
@@ -57,4 +68,6 @@ export namespace Boring32::Async
 
 		Win32::CRITICAL_SECTION m_criticalSection;
 	};
+
+	using CriticalSectionLock = std::scoped_lock<CriticalSection>;
 }

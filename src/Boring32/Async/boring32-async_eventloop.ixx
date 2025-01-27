@@ -2,7 +2,7 @@ export module boring32:async_eventloop;
 import std;
 import boring32.win32;
 import :error;
-import :async_criticalsectionlock;
+import :async_criticalsection;
 
 export namespace Boring32::Async
 {
@@ -13,16 +13,12 @@ export namespace Boring32::Async
 			Close();
 		}
 
-		EventLoop()
-		{
-			Win32::InitializeCriticalSection(&m_cs);
-		}
+		EventLoop() = default;
 
 		virtual void Close()
 		{
 			m_handlers.clear();
 			m_events.clear();
-			Win32::DeleteCriticalSection(&m_cs);
 		}
 
 		virtual bool WaitOn(const Win32::DWORD millis, const bool waitAll)
@@ -94,6 +90,6 @@ export namespace Boring32::Async
 		protected:
 		std::vector<std::function<void()>> m_handlers;
 		std::vector<Win32::HANDLE> m_events;
-		Win32::CRITICAL_SECTION m_cs;
+		CriticalSection m_cs;
 	};
 }

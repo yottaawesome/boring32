@@ -206,7 +206,6 @@
     <ClCompile Include="Async\boring32-async_thread.ixx" />
     <ClCompile Include="Async\boring32-async_waitableaddress.ixx" />
     <ClCompile Include="Async\boring32-async_waitabletimer.ixx" />
-    <ClCompile Include="Async\boring32-async_criticalsectionlock.ixx" />
     <ClCompile Include="Async\boring32-async_event.ixx" />
     <ClCompile Include="Async\boring32-async_filemapping.ixx" />
     <ClCompile Include="Async\boring32-async_job.ixx" />
