@@ -242,6 +242,7 @@
     <ClCompile Include="DataStructures\boring32-datastructures_cappedstack.ixx" />
     <ClCompile Include="DataStructures\boring32-datastructures.ixx" />
     <ClCompile Include="DataStructures\boring32-datastructures_singlylinkedlist.ixx" />
+    <ClCompile Include="DirectX\boring32-directx.ixx" />
     <ClCompile Include="Error\boring32-error_boring32error.ixx" />
     <ClCompile Include="Error\boring32-error_comerror.ixx" />
     <ClCompile Include="Error\boring32-error_errorbase.ixx" />
@@ -339,6 +340,7 @@
     <ClCompile Include="Time\boring32-time_datetime.ixx" />
     <ClCompile Include="Time\boring32-time_functions.ixx" />
     <ClCompile Include="Time\boring32-time.ixx" />
+    <ClCompile Include="UI\boring32-ui.ixx" />
     <ClCompile Include="Util\boring32-util_enumeration.ixx" />
     <ClCompile Include="Util\boring32-util_functions.ixx" />
     <ClCompile Include="Util\boring32-util_globallyuniqueid.ixx" />

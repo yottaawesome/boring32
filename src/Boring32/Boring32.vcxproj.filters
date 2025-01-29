@@ -228,6 +228,8 @@
     <ClCompile Include="Error\boring32-error_win32errorcodes.ixx" />
     <ClCompile Include="boring32.win32.ixx" />
     <ClCompile Include="Async\boring32-async_overlapped.ixx" />
+    <ClCompile Include="DirectX\boring32-directx.ixx" />
+    <ClCompile Include="UI\boring32-ui.ixx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
