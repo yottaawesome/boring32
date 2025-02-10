@@ -222,7 +222,7 @@ export namespace Boring32::WinHttp
 
 			Win32::DWORD bytesOfDataAvailable = 0;
 			std::string response = "";
-			// Used to be a do-while loop -- bad MSVC seemed to be creating bad codegen
+			// Used to be a do-while loop -- but MSVC seemed to be creating bad codegen
 			// that would lead to response being cleared at the end of the loop!
 			while(true)
 			{
