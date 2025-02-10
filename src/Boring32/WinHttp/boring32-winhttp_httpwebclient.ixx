@@ -222,13 +222,15 @@ export namespace Boring32::WinHttp
 
 			Win32::DWORD bytesOfDataAvailable = 0;
 			std::string response = "";
-			do
+			// Used to be a do-while loop -- bad MSVC seemed to be creating bad codegen
+			// that would lead to response being cleared at the end of the loop!
+			while(true)
 			{
 				// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpquerydataavailable
 				if (not Win32::WinHttp::WinHttpQueryDataAvailable(hRequest.Get(), &bytesOfDataAvailable))
 					throw Error::Win32Error(Win32::GetLastError(), "WinHttpQueryDataAvailable() failed");
 				if (bytesOfDataAvailable == 0)
-					continue;
+					break;
 
 				// Allocate space for the buffer.
 				std::vector<char> outBuffer(bytesOfDataAvailable);
@@ -245,7 +247,7 @@ export namespace Boring32::WinHttp
 					throw Error::Win32Error(Win32::GetLastError(), "WinHttpQueryDataAvailable() failed");
 
 				response.append(outBuffer.begin(), outBuffer.end());
-			} while (bytesOfDataAvailable > 0);
+			}
 
 			return HttpRequestResult{ statusCode, response };
 		}

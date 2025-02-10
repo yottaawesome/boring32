@@ -171,6 +171,9 @@
     <ClCompile Include="Strings\boring32-strings_fixedstring.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="WinHttp\boring32.winhttp-httpwebclient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
