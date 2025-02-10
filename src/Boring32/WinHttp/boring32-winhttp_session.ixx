@@ -116,14 +116,14 @@ export namespace Boring32::WinHttp
 		{
 			if (m_userAgent.empty())
 				throw WinHttpError("UserAgent cannot be empty");
-			if (static_cast<Win32::DWORD>(m_proxyType) == Win32::WinHttp::_WINHTTP_ACCESS_TYPE_NAMED_PROXY && m_namedProxy.empty())
+			if (static_cast<Win32::DWORD>(m_proxyType) == Win32::WinHttp::AccessTypeNamedProxy && m_namedProxy.empty())
 				throw WinHttpError("ProxyName parameter is required when access type is NamedProxy");
 
-			const wchar_t* proxyType = static_cast<Win32::DWORD>(m_proxyType) == Win32::WinHttp::_WINHTTP_ACCESS_TYPE_NAMED_PROXY
+			const wchar_t* proxyType = static_cast<Win32::DWORD>(m_proxyType) == Win32::WinHttp::AccessTypeNamedProxy
 				? m_namedProxy.c_str()
-				: (wchar_t*)Win32::WinHttp::_WINHTTP_NO_PROXY_NAME;
+				: (wchar_t*)Win32::WinHttp::NoProxyName;
 			const wchar_t* proxyBypass = m_proxyBypass.empty()
-				? (wchar_t*)Win32::WinHttp::_WINHTTP_NO_PROXY_BYPASS
+				? (wchar_t*)Win32::WinHttp::NoProxyBypass
 				: m_proxyBypass.c_str();
 			// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpopen
 			Win32::WinHttp::HINTERNET handle = Win32::WinHttp::WinHttpOpen(

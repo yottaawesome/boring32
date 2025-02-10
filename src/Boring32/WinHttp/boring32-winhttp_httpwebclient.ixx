@@ -112,9 +112,9 @@ export namespace Boring32::WinHttp
 
 			m_hSession = Win32::WinHttp::WinHttpOpen(
 				m_userAgentName.c_str(),
-				useAutomaticProxy ? Win32::WinHttp::_WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY : Win32::WinHttp::_WINHTTP_ACCESS_TYPE_NO_PROXY,
-				useAutomaticProxy ? (Win32::LPCWSTR)Win32::WinHttp::_WINHTTP_NO_PROXY_NAME : m_proxy.c_str(),
-				(Win32::LPCWSTR)Win32::WinHttp::_WINHTTP_NO_PROXY_BYPASS,
+				useAutomaticProxy ? Win32::WinHttp::AccessTypeAutomaticProxy : Win32::WinHttp::AccessTypeNoProxy,
+				useAutomaticProxy ? (Win32::LPCWSTR)Win32::WinHttp::NoProxyName : m_proxy.c_str(),
+				(Win32::LPCWSTR)Win32::WinHttp::NoProxyBypass,
 				0
 			);
 			if (not m_hSession)
@@ -155,7 +155,7 @@ export namespace Boring32::WinHttp
 
 			// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpopenrequest
 			wchar_t* acceptTypes = 
-				m_acceptTypes.empty() ? (wchar_t*)Win32::WinHttp::_WINHTTP_DEFAULT_ACCEPT_TYPES
+				m_acceptTypes.empty() ? (wchar_t*)Win32::WinHttp::DefaultAcceptTypes
 				: (wchar_t*)&acceptHeader[0];
 			//if (not m_acceptTypes.empty())
 			//acceptTypes = (wchar_t*) &acceptHeader[0];
@@ -164,9 +164,9 @@ export namespace Boring32::WinHttp
 				verb.c_str(),
 				path.c_str(),
 				nullptr,
-				(Win32::LPCWSTR)Win32::WinHttp::_WINHTTP_NO_REFERER,
-				(Win32::LPCWSTR*)acceptTypes,
-				Win32::WinHttp::_WINHTTP_FLAG_SECURE
+				reinterpret_cast<Win32::LPCWSTR>(Win32::WinHttp::NoReferer),
+				reinterpret_cast<Win32::LPCWSTR*>(acceptTypes),
+				Win32::WinHttp::FlagSecure
 			);
 			if (not hRequest)
 				throw Error::Win32Error(Win32::GetLastError(), "WinHttpOpenRequest() failed");
@@ -174,13 +174,13 @@ export namespace Boring32::WinHttp
 			if (m_ignoreSslErrors)
 			{
 				DWORD flags =
-					Win32::WinHttp::_SECURITY_FLAG_IGNORE_UNKNOWN_CA |
-					Win32::WinHttp::_SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE |
-					Win32::WinHttp::_SECURITY_FLAG_IGNORE_CERT_CN_INVALID |
-					Win32::WinHttp::_SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
+					Win32::WinHttp::SecurityFlags::IgnoreUnknownCa |
+					Win32::WinHttp::SecurityFlags::IgnoreCertWrongUsage |
+					Win32::WinHttp::SecurityFlags::IgnoreCertCnInvalid |
+					Win32::WinHttp::SecurityFlags::IgnoreCertDateInvalid;
 				bool succeeded = Win32::WinHttp::WinHttpSetOption(
 					hRequest.Get(),
-					Win32::WinHttp::_WINHTTP_OPTION_SECURITY_FLAGS,
+					Win32::WinHttp::Options::SecurityFlags,
 					&flags,
 					sizeof(flags)
 				);
@@ -191,9 +191,9 @@ export namespace Boring32::WinHttp
 			// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpsendrequest
 			bool succeeded = Win32::WinHttp::WinHttpSendRequest(
 				hRequest.Get(),
-				additionalHeaders.size() > 0 ? additionalHeaders.c_str() : (wchar_t*)Win32::WinHttp::_WINHTTP_NO_ADDITIONAL_HEADERS,
+				additionalHeaders.size() > 0 ? additionalHeaders.c_str() : (wchar_t*)Win32::WinHttp::NoAdditionalHeaders,
 				-1L,
-				requestBody.size() > 0 ? const_cast<char*>(&requestBody[0]) : (char*)Win32::WinHttp::_WINHTTP_NO_REQUEST_DATA,
+				requestBody.size() > 0 ? const_cast<char*>(&requestBody[0]) : (char*)Win32::WinHttp::NoRequestData,
 				static_cast<Win32::DWORD>(requestBody.size()),
 				static_cast<Win32::DWORD>(requestBody.size()),
 				reinterpret_cast<Win32::DWORD_PTR>(this)
@@ -210,18 +210,19 @@ export namespace Boring32::WinHttp
 			Win32::DWORD statusCode = 0;
 			Win32::DWORD statusCodeSize = sizeof(statusCode);
 			// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpqueryheaders
-			Win32::DWORD headerIndex = Win32::WinHttp::_WINHTTP_NO_HEADER_INDEX;
+			Win32::DWORD headerIndex = Win32::WinHttp::NoHeaderIndex;
 			Win32::WinHttp::WinHttpQueryHeaders(
 				hRequest.Get(),
-				Win32::WinHttp::_WINHTTP_QUERY_STATUS_CODE | Win32::WinHttp::_WINHTTP_QUERY_FLAG_NUMBER,
-				(Win32::LPCWSTR)Win32::WinHttp::_WINHTTP_HEADER_NAME_BY_INDEX,
+				Win32::WinHttp::QueryStatusCode | Win32::WinHttp::QueryFlagNumber,
+				(Win32::LPCWSTR)Win32::WinHttp::HeaderNameByIndex,
 				&statusCode,
 				&statusCodeSize,
 				&headerIndex
 			);
 
 			Win32::DWORD bytesOfDataAvailable = 0;
-			std::string response = "";
+			std::string responseBuffer(0, '\0');
+			Win32::DWORD totalBytesRead = 0;
 			// Used to be a do-while loop -- but MSVC seemed to be creating bad codegen
 			// that would lead to response being cleared at the end of the loop!
 			while(true)
@@ -233,23 +234,22 @@ export namespace Boring32::WinHttp
 					break;
 
 				// Allocate space for the buffer.
-				std::vector<char> outBuffer(bytesOfDataAvailable);
+				responseBuffer.resize(responseBuffer.size() + bytesOfDataAvailable);
 				Win32::DWORD downloadedBytes = 0;
 				// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpreaddata
 				// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpreaddataex
 				bool succeeded = Win32::WinHttp::WinHttpReadData(
 					hRequest.Get(),
-					&outBuffer[0],
+					responseBuffer.data() + totalBytesRead,
 					bytesOfDataAvailable,
 					&downloadedBytes
 				);
 				if (not succeeded)
 					throw Error::Win32Error(Win32::GetLastError(), "WinHttpQueryDataAvailable() failed");
-
-				response.append(outBuffer.begin(), outBuffer.end());
+				totalBytesRead += downloadedBytes;
 			}
 
-			return HttpRequestResult{ statusCode, response };
+			return HttpRequestResult{ statusCode, std::move(responseBuffer) };
 		}
 
 		void Copy(const HttpWebClient& other)

@@ -65,7 +65,7 @@ namespace Boring32::WinHttp::WebSockets
 		// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nc-winhttp-winhttp_status_callback
 		switch (dwInternetStatus)
 		{
-			case Win32::WinHttp::_WINHTTP_CALLBACK_STATUS_REQUEST_SENT:
+			case Win32::WinHttp::CallbackStatusRequestSent:
 			{
 				std::wcout << L"WINHTTP_CALLBACK_STATUS_REQUEST_SENT" << std::endl;
 				
@@ -82,7 +82,7 @@ namespace Boring32::WinHttp::WebSockets
 				break;
 			}
 
-			case Win32::WinHttp::_WINHTTP_CALLBACK_STATUS_HEADERS_AVAILABLE:
+			case Win32::WinHttp::CallbackStatusHeadersAvailable:
 			{
 				std::wcout << L"WINHTTP_CALLBACK_STATUS_HEADERS_AVAILABLE" << std::endl;
 				
@@ -94,11 +94,11 @@ namespace Boring32::WinHttp::WebSockets
 					// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpqueryheaders
 					bool success = Win32::WinHttp::WinHttpQueryHeaders(
 						hInternet,
-						Win32::WinHttp::_WINHTTP_QUERY_STATUS_CODE | Win32::WinHttp::_WINHTTP_QUERY_FLAG_NUMBER,
-						(Win32::LPCWSTR)Win32::WinHttp::_WINHTTP_HEADER_NAME_BY_INDEX,
+						Win32::WinHttp::QueryStatusCode | Win32::WinHttp::QueryFlagNumber,
+						(Win32::LPCWSTR)Win32::WinHttp::HeaderNameByIndex,
 						&statusCode,
 						&statusCodeSize,
-						(Win32::LPDWORD)Win32::WinHttp::_WINHTTP_NO_HEADER_INDEX
+						(Win32::LPDWORD)Win32::WinHttp::NoHeaderIndex
 					);
 					if (not success)
 						throw Error::Win32Error(Win32::GetLastError(), "WinHttpQueryHeaders() failed");
@@ -138,7 +138,7 @@ namespace Boring32::WinHttp::WebSockets
 				break;
 			}
 
-			case Win32::WinHttp::_WINHTTP_CALLBACK_STATUS_READ_COMPLETE:
+			case Win32::WinHttp::CallbackStatusReadComplete:
 			{
 				std::wcout << L"WINHTTP_CALLBACK_STATUS_READ_COMPLETE" << std::endl;
 				AsyncWebSocket* socket = reinterpret_cast<AsyncWebSocket*>(dwContext);
@@ -195,7 +195,7 @@ namespace Boring32::WinHttp::WebSockets
 				break;
 			}
 
-			case Win32::WinHttp::_WINHTTP_CALLBACK_STATUS_WRITE_COMPLETE:
+			case Win32::WinHttp::CallbackStatusWriteComplete:
 			{
 				std::wcout << L"WINHTTP_CALLBACK_STATUS_WRITE_COMPLETE" << std::endl;
 				AsyncWebSocket* socket = reinterpret_cast<AsyncWebSocket*>(dwContext);
@@ -204,7 +204,7 @@ namespace Boring32::WinHttp::WebSockets
 				break;
 			}
 
-			case Win32::WinHttp::_WINHTTP_CALLBACK_STATUS_REQUEST_ERROR:
+			case Win32::WinHttp::CallbackStatusRequestError:
 			{
 				std::wcout << L"WINHTTP_CALLBACK_STATUS_REQUEST_ERROR" << std::endl;
 				
@@ -215,23 +215,23 @@ namespace Boring32::WinHttp::WebSockets
 				Error::Win32Error err((Win32::DWORD)requestError->dwError, "Error occurred in async socket callback");
 				switch (requestError->dwResult)
 				{
-					case Win32::WinHttp::_API_RECEIVE_RESPONSE:
+					case Win32::WinHttp::ApiReceiveResponse:
 						std::wcerr << "The error occurred during a call to WinHttpReceiveResponse: " << err.what() << std::endl;
 						break;
 
-					case Win32::WinHttp::_API_QUERY_DATA_AVAILABLE:
+					case Win32::WinHttp::ApiQueryDataAvailable:
 						std::wcerr << "The error occurred during a call to WinHttpQueryDataAvailable: " << err.what() << std::endl;
 						break;
 
-					case Win32::WinHttp::_API_READ_DATA:
+					case Win32::WinHttp::ApiReadData:
 						std::wcerr << "The error occurred during a call to WinHttpReadData: " << err.what() << std::endl;
 						break;
 
-					case Win32::WinHttp::_API_WRITE_DATA:
+					case Win32::WinHttp::ApiWriteData:
 						std::wcerr << "The error occurred during a call to WinHttpWriteData: " << err.what() << std::endl;
 						break;
 
-					case Win32::WinHttp::_API_SEND_REQUEST:
+					case Win32::WinHttp::ApiSendRequest:
 						std::wcerr << "The error occurred during a call to WinHttpSendRequest: " << err.what() << std::endl;
 						break;
 
@@ -249,7 +249,7 @@ namespace Boring32::WinHttp::WebSockets
 				break;
 			}
 
-			case Win32::WinHttp::_WINHTTP_CALLBACK_STATUS_CLOSE_COMPLETE:
+			case Win32::WinHttp::CallbackStatusCloseComplete:
 			{
 				std::wcout << L"WINHTTP_CALLBACK_STATUS_CLOSE_COMPLETE" << std::endl;
 				AsyncWebSocket* socket = (AsyncWebSocket*)dwContext;

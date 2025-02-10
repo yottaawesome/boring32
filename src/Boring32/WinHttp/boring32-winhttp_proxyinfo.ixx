@@ -48,7 +48,7 @@ export namespace Boring32::WinHttp
 			m_proxyBypass = proxyBypass;
 			m_info.lpszProxy = m_proxy.empty() ? nullptr : &m_proxy[0];
 			m_info.lpszProxyBypass = m_proxyBypass.empty() ? nullptr : &m_proxyBypass[0];
-			m_info.dwAccessType = Win32::WinHttp::_WINHTTP_ACCESS_TYPE_NAMED_PROXY;
+			m_info.dwAccessType = Win32::WinHttp::AccessTypeNamedProxy;
 		}
 
 		void SetAutoProxy(Win32::WinHttp::HINTERNET session, const std::wstring& pacUrl, const std::wstring& url)
@@ -56,7 +56,7 @@ export namespace Boring32::WinHttp
 			Close();
 			// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/ns-winhttp-winhttp_autoproxy_options
 			Win32::WinHttp::WINHTTP_AUTOPROXY_OPTIONS autoProxyOptions{ 0 };
-			autoProxyOptions.dwFlags = Win32::WinHttp::_WINHTTP_AUTOPROXY_CONFIG_URL;
+			autoProxyOptions.dwFlags = Win32::WinHttp::AutoProxyConfigUrl;
 			autoProxyOptions.lpszAutoConfigUrl = pacUrl.c_str();
 			autoProxyOptions.dwAutoDetectFlags = 0;
 			autoProxyOptions.fAutoLogonIfChallenged = false;
@@ -82,7 +82,7 @@ export namespace Boring32::WinHttp
 			if (not m_info.lpszProxy)
 				throw Boring32::Error::Boring32Error("No proxy set");
 			// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpsetoption
-			if (not Win32::WinHttp::WinHttpSetOption(session, Win32::WinHttp::_WINHTTP_OPTION_PROXY, &m_info, sizeof(m_info)))
+			if (not Win32::WinHttp::WinHttpSetOption(session, Win32::WinHttp::Options::Proxy, &m_info, sizeof(m_info)))
 				throw Error::Win32Error(Win32::GetLastError(), "WinHttpSetOption() failed");
 		}
 

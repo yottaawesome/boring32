@@ -259,10 +259,10 @@ export namespace Boring32::WinHttp::WebSockets
 				// Synchronous function
 				m_winHttpSession = Win32::WinHttp::WinHttpOpen(
 					m_settings.UserAgent.c_str(),
-					Win32::WinHttp::_WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY,
-					(Win32::LPCWSTR)Win32::WinHttp::_WINHTTP_NO_PROXY_NAME,
-					(Win32::LPCWSTR)Win32::WinHttp::_WINHTTP_NO_PROXY_BYPASS,
-					Win32::WinHttp::_WINHTTP_FLAG_ASYNC
+					Win32::WinHttp::AccessTypeAutomaticProxy,
+					(Win32::LPCWSTR)Win32::WinHttp::NoProxyName,
+					(Win32::LPCWSTR)Win32::WinHttp::NoProxyBypass,
+					Win32::WinHttp::FlagAsync
 				);
 				if (not m_winHttpSession)
 					throw Error::Win32Error(Win32::GetLastError(), "WinHttpOpen() failed to open the WinHttp session");
@@ -280,16 +280,16 @@ export namespace Boring32::WinHttp::WebSockets
 				Win32::WinHttp::WINHTTP_STATUS_CALLBACK callbackStatus = Win32::WinHttp::WinHttpSetStatusCallback(
 					m_winHttpConnection.Get(),
 					StatusCallback,
-					Win32::WinHttp::_WINHTTP_CALLBACK_FLAG_ALL_NOTIFICATIONS,
+					Win32::WinHttp::CallbackFlagAllNotifications,
 					0
 				);
-				if (callbackStatus == Win32::WinHttp::_WINHTTP_INVALID_STATUS_CALLBACK)
+				if (callbackStatus == Win32::WinHttp::InvalidStatusCallback)
 					throw Error::Win32Error(Win32::GetLastError(), "WinHttpSetStatusCallback() failed when setting callback");
 
 				Win32::DWORD_PTR _this = reinterpret_cast<Win32::DWORD_PTR>(this);
 				bool succeeded = Win32::WinHttp::WinHttpSetOption(
 					m_winHttpConnection.Get(),
-					Win32::WinHttp::_WINHTTP_OPTION_CONTEXT_VALUE,
+					Win32::WinHttp::Options::ContextValue,
 					reinterpret_cast<void*>(&_this),
 					sizeof(Win32::DWORD_PTR)
 				);
@@ -304,14 +304,14 @@ export namespace Boring32::WinHttp::WebSockets
 					nullptr,
 					nullptr,
 					nullptr,
-					Win32::WinHttp::_WINHTTP_FLAG_SECURE
+					Win32::WinHttp::FlagSecure
 				);
 				if (not m_requestHandle)
 					throw Error::Win32Error(Win32::GetLastError(), "WinHttpOpenRequest() failed");
 
 				succeeded = Win32::WinHttp::WinHttpSetOption(
 					m_requestHandle.Get(),
-					Win32::WinHttp::_WINHTTP_OPTION_CONTEXT_VALUE,
+					Win32::WinHttp::Options::ContextValue,
 					reinterpret_cast<void*>(&_this),
 					sizeof(Win32::DWORD_PTR)
 				);
@@ -320,12 +320,12 @@ export namespace Boring32::WinHttp::WebSockets
 
 				if (m_settings.IgnoreSslErrors)
 				{
-					Win32::DWORD optionFlags = Win32::WinHttp::_SECURITY_FLAG_IGNORE_ALL_CERT_ERRORS;
+					Win32::DWORD optionFlags = Win32::WinHttp::SecurityFlagIgnoreAllCertErrors;
 					// https://docs.microsoft.com/en-us/windows/win32/winhttp/option-flags
 					// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpsetoption
 					succeeded = Win32::WinHttp::WinHttpSetOption(
 						m_requestHandle.Get(),
-						Win32::WinHttp::_WINHTTP_OPTION_SECURITY_FLAGS,
+						Win32::WinHttp::Options::SecurityFlags,
 						&optionFlags,
 						sizeof(optionFlags)
 					);
@@ -335,7 +335,7 @@ export namespace Boring32::WinHttp::WebSockets
 
 				succeeded = Win32::WinHttp::WinHttpSetOption(
 					m_requestHandle.Get(),
-					Win32::WinHttp::_WINHTTP_OPTION_UPGRADE_TO_WEB_SOCKET,
+					Win32::WinHttp::Options::UpgradeToWebSocket,
 					nullptr,
 					0
 				);
@@ -347,7 +347,7 @@ export namespace Boring32::WinHttp::WebSockets
 					// If so, we need to set the certificate option, and retry the request.
 					bool setCertOption = Win32::WinHttp::WinHttpSetOption(
 						m_requestHandle.Get(),
-						Win32::WinHttp::_WINHTTP_OPTION_CLIENT_CERT_CONTEXT,
+						Win32::WinHttp::Options::ClientCertContext,
 						(void*)m_settings.ClientCert.GetCert(),
 						sizeof(Win32::CERT_CONTEXT)
 					);
@@ -356,7 +356,7 @@ export namespace Boring32::WinHttp::WebSockets
 				}
 
 				const wchar_t* connectionHeaders = m_settings.ConnectionHeaders.empty()
-					? (wchar_t*)Win32::WinHttp::_WINHTTP_NO_ADDITIONAL_HEADERS
+					? (wchar_t*)Win32::WinHttp::NoAdditionalHeaders
 					: m_settings.ConnectionHeaders.c_str();
 				succeeded = Win32::WinHttp::WinHttpSendRequest(
 					m_requestHandle.Get(),
@@ -450,7 +450,7 @@ export namespace Boring32::WinHttp::WebSockets
 			Win32::DWORD_PTR dwThis = reinterpret_cast<Win32::DWORD_PTR>(this);
 			const bool succeeded = Win32::WinHttp::WinHttpSetOption(
 				m_winHttpWebSocket.Get(),
-				Win32::WinHttp::_WINHTTP_OPTION_CONTEXT_VALUE,
+				Win32::WinHttp::Options::ContextValue,
 				reinterpret_cast<void*>(&dwThis),
 				sizeof(Win32::DWORD_PTR)
 			);

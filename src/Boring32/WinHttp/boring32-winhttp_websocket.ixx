@@ -274,7 +274,7 @@ export namespace Boring32::WinHttp::WebSockets
 					nullptr,
 					nullptr,
 					nullptr,
-					Win32::WinHttp::_WINHTTP_FLAG_SECURE
+					Win32::WinHttp::FlagSecure
 				);
 				if (requestHandle == nullptr)
 					throw Error::Win32Error(Win32::GetLastError(), "WinHttpOpenRequest() failed");
@@ -282,12 +282,12 @@ export namespace Boring32::WinHttp::WebSockets
 				bool success = false;
 				if (m_settings.IgnoreSslErrors)
 				{
-					Win32::DWORD optionFlags = Win32::WinHttp::_SECURITY_FLAG_IGNORE_ALL_CERT_ERRORS;
+					Win32::DWORD optionFlags = Win32::WinHttp::SecurityFlagIgnoreAllCertErrors;
 					// https://docs.microsoft.com/en-us/windows/win32/winhttp/option-flags
 					// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpsetoption
 					success = Win32::WinHttp::WinHttpSetOption(
 						requestHandle.Get(),
-						Win32::WinHttp::_WINHTTP_OPTION_SECURITY_FLAGS,
+						Win32::WinHttp::Options::SecurityFlags,
 						&optionFlags,
 						sizeof(optionFlags)
 					);
@@ -297,7 +297,7 @@ export namespace Boring32::WinHttp::WebSockets
 
 				success = Win32::WinHttp::WinHttpSetOption(
 					requestHandle.Get(),
-					Win32::WinHttp::_WINHTTP_OPTION_UPGRADE_TO_WEB_SOCKET,
+					Win32::WinHttp::Options::UpgradeToWebSocket,
 					nullptr,
 					0
 				);
@@ -309,7 +309,7 @@ export namespace Boring32::WinHttp::WebSockets
 					// If so, we need to set the certificate option, and retry the request.
 					bool setCertOption = Win32::WinHttp::WinHttpSetOption(
 						requestHandle.Get(),
-						Win32::WinHttp::_WINHTTP_OPTION_CLIENT_CERT_CONTEXT,
+						Win32::WinHttp::Options::ClientCertContext,
 						(void*)m_settings.ClientCert.GetCert(),
 						sizeof(Win32::CERT_CONTEXT)
 					);
@@ -317,7 +317,7 @@ export namespace Boring32::WinHttp::WebSockets
 						throw Error::Win32Error(Win32::GetLastError(), "WinHttpSetOption() failed for client certificate");
 				}
 				const wchar_t* connectionHeaders = m_settings.ConnectionHeaders.empty()
-					? (wchar_t*)Win32::WinHttp::_WINHTTP_NO_ADDITIONAL_HEADERS
+					? (wchar_t*)Win32::WinHttp::NoAdditionalHeaders
 					: m_settings.ConnectionHeaders.c_str();
 				success = Win32::WinHttp::WinHttpSendRequest(
 					requestHandle.Get(),
@@ -340,11 +340,11 @@ export namespace Boring32::WinHttp::WebSockets
 				// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpqueryheaders
 				success = Win32::WinHttp::WinHttpQueryHeaders(
 					requestHandle.Get(),
-					Win32::WinHttp::_WINHTTP_QUERY_STATUS_CODE | Win32::WinHttp::_WINHTTP_QUERY_FLAG_NUMBER,
-					(LPCWSTR)Win32::WinHttp::_WINHTTP_HEADER_NAME_BY_INDEX,
+					Win32::WinHttp::QueryStatusCode | Win32::WinHttp::QueryFlagNumber,
+					(LPCWSTR)Win32::WinHttp::HeaderNameByIndex,
 					&statusCode,
 					&statusCodeSize,
-					(Win32::LPDWORD)Win32::WinHttp::_WINHTTP_NO_HEADER_INDEX
+					(Win32::LPDWORD)Win32::WinHttp::NoHeaderIndex
 				);
 				if (not success)
 					throw Error::Win32Error(Win32::GetLastError(), "WinHttpQueryHeaders() failed");
