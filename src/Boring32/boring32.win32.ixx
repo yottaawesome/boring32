@@ -131,6 +131,12 @@ export namespace Boring32::Win32
 		::PRIVILEGE_SET,
 		::SID_NAME_USE,
 		::SECURITY_DESCRIPTOR,
+		::HWND,
+		::HMENU,
+		::UINT_PTR,
+		::WPARAM,
+		::LPARAM,
+		::LRESULT,
 		::PrivilegeCheck,
 		::LsaClose,
 		::LsaOpenPolicy,
@@ -400,7 +406,9 @@ export namespace Boring32::Win32
 		::BCryptSetProperty,
 		::BCryptEncrypt,
 		::BCryptDecrypt,
-		::BCryptOpenAlgorithmProvider
+		::BCryptOpenAlgorithmProvider,
+		::CreateWindowExW,
+		::SetWindowSubclass
 		;
 
 
