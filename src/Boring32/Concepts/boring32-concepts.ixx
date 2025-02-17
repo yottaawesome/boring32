@@ -105,4 +105,19 @@ export namespace Boring32::Concepts
 	concept RangeOf = 
 		std::ranges::range<TRange> 
 		and std::same_as<std::ranges::range_value_t<TRange>, TTarget>;
+
+	template<typename T>
+	struct ConvertiblePairT : std::false_type {};
+
+	template<std::convertible_to<std::wstring> T>
+	struct ConvertiblePairT<std::pair<T, T>> : std::true_type {};
+
+	template<typename T>
+	constexpr bool IsConvertiblePair = ConvertiblePairT<T>::value;
+
+	template<typename T>
+	concept ConvertiblePair = IsConvertiblePair<std::remove_cvref_t<T>>;
+
+	template<typename TArg, typename TTo>
+	concept ConstructibleTo = std::constructible_from<std::remove_cvref_t<TTo>, std::remove_cvref_t<TArg>>;
 }

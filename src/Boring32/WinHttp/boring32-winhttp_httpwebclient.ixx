@@ -2,12 +2,75 @@ export module boring32:winhttp_httpwebclient;
 import std;
 import boring32.win32;
 import :error;
+import :strings;
+import :concepts;
 import :winhttp_winhttphandle;
 import :winhttp_requestresult;
 import :winhttp_proxyinfo;
 
+export namespace Boring32::WinHttp::Verbs
+{
+	template<Strings::FixedString VVerb>
+	struct HttpVerb
+	{
+		constexpr std::wstring_view View() const noexcept
+		{
+			return VVerb.ToView();
+		}
+	};
+
+	constexpr HttpVerb<L"GET"> Get;
+	constexpr HttpVerb<L"POST"> Post;
+	constexpr HttpVerb<L"PUT"> Put;
+	constexpr HttpVerb<L"DELETE"> Delete;
+
+	template<typename T>
+	struct VerbTypeT : std::false_type {};
+
+	template<Strings::FixedString VVerb>
+	struct VerbTypeT<HttpVerb<VVerb>> : std::true_type {};
+
+	template<typename T>
+	constexpr bool IsVerbType = VerbTypeT<T>::value;
+
+	template<typename T>
+	concept VerbType = IsVerbType<std::remove_cvref_t<T>>;
+}
+
 export namespace Boring32::WinHttp
 {
+	struct RequestHeader
+	{
+		constexpr RequestHeader(Concepts::ConvertiblePair auto header)
+			: HeaderValuePair{ header }
+		{ }
+
+		constexpr RequestHeader(std::convertible_to<std::wstring> auto header, std::convertible_to<std::wstring> auto value)
+			: HeaderValuePair{ std::wstring{header}, std::wstring{value} }
+		{ }
+		std::pair<std::wstring, std::wstring> HeaderValuePair;
+
+		std::wstring ToString() const noexcept 
+		{ 
+			return std::format(L"{}: {}", HeaderValuePair.first, HeaderValuePair.second); 
+		}
+	};
+
+	struct RequestHeaders
+	{
+		constexpr RequestHeaders(Concepts::ConstructibleTo<RequestHeader> auto...headers)
+		{
+			([](std::wstring& compiled, auto&& head)
+			{
+				compiled += compiled.empty() 
+					? head.ToString()
+					: std::format(L"\r\n{}", head.ToString());
+			}(Headers, RequestHeader{headers}), ...);
+		}
+
+		std::wstring Headers;
+	};
+
 	struct HttpWebClient final
 	{
 		~HttpWebClient()
@@ -74,22 +137,22 @@ export namespace Boring32::WinHttp
 
 		HttpRequestResult Get(const std::wstring& path)
 		{
-			return ExecuteRequest(L"GET", path, "", m_additionalHeaders);
+			return ExecuteRequest(Verbs::Get, path, "", m_additionalHeaders);
 		}
 
 		HttpRequestResult Post(const std::wstring& path, const std::string& requestBody)
 		{
-			return ExecuteRequest(L"POST", path, requestBody, m_additionalHeaders);
+			return ExecuteRequest(Verbs::Post, path, requestBody, m_additionalHeaders);
 		}
 
 		HttpRequestResult Put(const std::wstring& path, const std::string& requestBody)
 		{
-			return ExecuteRequest(L"PUT", path, requestBody, m_additionalHeaders);
+			return ExecuteRequest(Verbs::Put, path, requestBody, m_additionalHeaders);
 		}
 
 		HttpRequestResult Delete(const std::wstring& path, const std::string& requestBody)
 		{
-			return ExecuteRequest(L"DELETE", path, requestBody, m_additionalHeaders);
+			return ExecuteRequest(Verbs::Delete, path, requestBody, m_additionalHeaders);
 		}
 
 		void Close()
@@ -136,9 +199,9 @@ export namespace Boring32::WinHttp
 				throw Error::Win32Error(Win32::GetLastError(), "WinHttpConnect() failed");
 		}
 
-		private:
+	private:
 		HttpRequestResult ExecuteRequest(
-			const std::wstring& verb,
+			Verbs::VerbType auto verb,
 			const std::wstring& path,
 			const std::string& requestBody,
 			const std::wstring& additionalHeaders
@@ -161,7 +224,7 @@ export namespace Boring32::WinHttp
 			//acceptTypes = (wchar_t*) &acceptHeader[0];
 			WinHttpHandle hRequest = Win32::WinHttp::WinHttpOpenRequest(
 				m_hConnect.Get(),
-				verb.c_str(),
+				verb.View().data(),
 				path.c_str(),
 				nullptr,
 				reinterpret_cast<Win32::LPCWSTR>(Win32::WinHttp::NoReferer),
