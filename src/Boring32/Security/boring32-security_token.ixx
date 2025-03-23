@@ -10,12 +10,9 @@ export namespace Boring32::Security
 {
 	struct Token final
 	{
-		~Token()
-		{
-			Close();
-		}
-
 		Token() = default;
+		Token(Token&& other) noexcept = default;
+		Token& operator=(Token&& other) noexcept = default;
 
 		Token(const Token& other)
 		{
@@ -25,16 +22,6 @@ export namespace Boring32::Security
 		Token& operator=(const Token& other)
 		{
 			return Copy(other);
-		}
-
-		Token(Token&& other) noexcept
-		{
-			Move(other);
-		}
-
-		Token& operator=(Token&& other) noexcept
-		{
-			return Move(other);
 		}
 
 		Token(const Win32::DWORD desiredAccess)
@@ -63,14 +50,23 @@ export namespace Boring32::Security
 				token,
 				0,
 				nullptr,
-				Win32::SECURITY_IMPERSONATION_LEVEL::SecurityImpersonation,
-				Win32::TOKEN_TYPE::TokenPrimary,
+				GetType(token) == Win32::TOKEN_TYPE::TokenPrimary 
+					? Win32::SECURITY_IMPERSONATION_LEVEL::SecurityIdentification 
+					: Win32::SECURITY_IMPERSONATION_LEVEL::SecurityImpersonation,
+				GetType(token) == Win32::TOKEN_TYPE::TokenPrimary 
+					? Win32::TOKEN_TYPE::TokenPrimary 
+					: Win32::TOKEN_TYPE::TokenImpersonation,
 				&m_token
 			);
 			if (not succeeded)
 				throw Error::Win32Error(Win32::GetLastError(), "DuplicateTokenEx() failed");
 		}
 			
+		operator bool() const noexcept
+		{
+			return m_token != nullptr;
+		}
+
 		void Close()
 		{
 			m_token = nullptr;
@@ -90,6 +86,34 @@ export namespace Boring32::Security
 		void SetIntegrity(const Constants::GroupIntegrity integrity)
 		{
 			Security::SetIntegrity(m_token.GetHandle(), integrity);
+		}
+
+		auto GetType() const -> Win32::TOKEN_TYPE
+		{
+			return GetType(m_token.GetHandle());
+		}
+
+		static auto GetType(Win32::HANDLE token) -> Win32::TOKEN_TYPE
+		{
+			if (not token)
+				throw Error::RuntimeError("No token to query.");
+			Win32::TOKEN_TYPE type;
+			Win32::DWORD returnLength;
+			bool succeeded = Win32::GetTokenInformation(
+				token,
+				Win32::TOKEN_INFORMATION_CLASS::TokenType,
+				&type,
+				sizeof(type),
+				&returnLength
+			);
+			if (not succeeded)
+				throw Error::Win32Error(Win32::GetLastError(), "GetTokenInformation() failed.");
+			return type;
+		}
+
+		bool IsPrimary() const
+		{
+			return GetType() == Win32::TOKEN_TYPE::TokenPrimary;
 		}
 
 	private:
@@ -112,17 +136,6 @@ export namespace Boring32::Security
 				if (not succeeded)
 					throw Error::Win32Error(Win32::GetLastError(), "DuplicateTokenEx() failed");
 			}
-
-			return *this;
-		}
-
-		Token& Move(Token& other) noexcept
-		{
-			if (&other == this)
-				return *this;
-
-			Close();
-			m_token = std::move(other.m_token);
 
 			return *this;
 		}

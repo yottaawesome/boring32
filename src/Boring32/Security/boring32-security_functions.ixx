@@ -9,18 +9,15 @@ namespace Boring32::Security
 {
 	inline constexpr bool IsHandleValid(const Win32::HANDLE handle) noexcept
 	{
-		return handle && handle != Win32::InvalidHandleValue;
+		return handle and handle != Win32::InvalidHandleValue;
 	}
 }
 
 export namespace Boring32::Security
 {
-	RAII::Win32Handle GetProcessToken(
-		const Win32::HANDLE processHandle,
-		const Win32::DWORD desiredAccess
-	)
+	RAII::Win32Handle GetProcessToken(Win32::HANDLE processHandle, Win32::DWORD desiredAccess)
 	{
-		if (not IsHandleValid(processHandle))
+		if (not processHandle)
 			throw Error::Boring32Error("processHandle cannot be null");
 
 		RAII::Win32Handle handle;

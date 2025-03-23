@@ -18,7 +18,6 @@ export namespace Boring32::Win32
 {
 	constexpr auto _SECURITY_BUILTIN_DOMAIN_RID = SECURITY_BUILTIN_DOMAIN_RID;
 	constexpr auto _DOMAIN_ALIAS_RID_ADMINS = DOMAIN_ALIAS_RID_ADMINS;
-
 	using 
 		::HMODULE,
 		::SECURITY_ATTRIBUTES,
@@ -137,6 +136,11 @@ export namespace Boring32::Win32
 		::WPARAM,
 		::LPARAM,
 		::LRESULT,
+		::CERT_SIMPLE_CHAIN,
+		::CERT_CHAIN_POLICY_PARA,
+		::CERT_CHAIN_POLICY_STATUS,
+		::BCRYPT_ALG_HANDLE,
+		::BCRYPT_KEY_HANDLE,
 		::PrivilegeCheck,
 		::LsaClose,
 		::LsaOpenPolicy,
@@ -380,9 +384,6 @@ export namespace Boring32::Win32
 		::CreatePrivateNamespaceW,
 		::OpenPrivateNamespaceW,
 		::Sleep,
-		::CERT_SIMPLE_CHAIN,
-		::CERT_CHAIN_POLICY_PARA,
-		::CERT_CHAIN_POLICY_STATUS,
 		::CertVerifyTimeValidity,
 		::CertFreeCertificateContext,
 		::CertGetPublicKeyLength,
@@ -398,8 +399,6 @@ export namespace Boring32::Win32
 		::CertDeleteCertificateFromStore,
 		::CertGetStoreProperty,
 		::__fastfail,
-		::BCRYPT_ALG_HANDLE,
-		::BCRYPT_KEY_HANDLE,
 		::BCryptCloseAlgorithmProvider,
 		::BCryptGenerateSymmetricKey,
 		::BCryptGetProperty,
@@ -408,9 +407,11 @@ export namespace Boring32::Win32
 		::BCryptDecrypt,
 		::BCryptOpenAlgorithmProvider,
 		::CreateWindowExW,
-		::SetWindowSubclass
+		::SetWindowSubclass,
+		::GetCurrentProcessToken
 		;
 
+	constexpr auto TokenAllAccess = TOKEN_ALL_ACCESS;
 
 	namespace i18n
 	{
