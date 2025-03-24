@@ -432,14 +432,14 @@ export namespace Boring32::Win32
 	constexpr auto _CERT_SIGNATURE_HASH_PROP_ID = CERT_SIGNATURE_HASH_PROP_ID;
 	constexpr auto _CERT_SIGN_HASH_CNG_ALG_PROP_ID = CERT_SIGN_HASH_CNG_ALG_PROP_ID;
 
-	constexpr auto _SE_PRIVILEGE_ENABLED = SE_PRIVILEGE_ENABLED;
-	constexpr auto _SE_GROUP_INTEGRITY = SE_GROUP_INTEGRITY;
-	constexpr auto _SE_GROUP_ENABLED = SE_GROUP_ENABLED;
-	constexpr auto _SE_GROUP_USE_FOR_DENY_ONLY = SE_GROUP_USE_FOR_DENY_ONLY;
-	constexpr auto _SE_PRIVILEGE_ENABLED_BY_DEFAULT = SE_PRIVILEGE_ENABLED_BY_DEFAULT;
-	constexpr auto _SE_PRIVILEGE_REMOVED= SE_PRIVILEGE_REMOVED;
-	constexpr auto _SE_PRIVILEGE_USED_FOR_ACCESS= SE_PRIVILEGE_USED_FOR_ACCESS;
-	constexpr auto _PRIVILEGE_SET_ALL_NECESSARY = PRIVILEGE_SET_ALL_NECESSARY;
+	constexpr auto SePrivilegeEnabled = SE_PRIVILEGE_ENABLED;
+	constexpr auto SeGroupIntegrity = SE_GROUP_INTEGRITY;
+	constexpr auto SeGroupEnabled = SE_GROUP_ENABLED;
+	constexpr auto SeGroupUseForDenyOnly = SE_GROUP_USE_FOR_DENY_ONLY;
+	constexpr auto SePrivilegeEnabledByDefault = SE_PRIVILEGE_ENABLED_BY_DEFAULT;
+	constexpr auto SePrivilegeRemoved= SE_PRIVILEGE_REMOVED;
+	constexpr auto SePrivilegeUsedForAccess= SE_PRIVILEGE_USED_FOR_ACCESS;
+	constexpr auto PrivilegeSetAllNecessary = PRIVILEGE_SET_ALL_NECESSARY;
 
 	using ::IXAudio2;
 	using ::IXAudio2MasteringVoice;
@@ -482,8 +482,6 @@ export namespace Boring32::Win32
 	{
 		return MAKEWORD(a, b);
 	}
-
-	
 
 	constexpr auto TimeZoneIdInvalid = TIME_ZONE_ID_INVALID;
 	constexpr auto CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS = 0x0002; // not defined according to msdn

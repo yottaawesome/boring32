@@ -62,7 +62,7 @@ export namespace Boring32::Security
 			.Privileges = {
 				{
 					.Luid = luidPrivilege,
-					.Attributes = enabled ? static_cast<Win32::DWORD>(Win32::_SE_PRIVILEGE_ENABLED) : 0
+					.Attributes = enabled ? static_cast<Win32::DWORD>(Win32::SePrivilegeEnabled) : 0
 				}
 			}
 		};
@@ -102,7 +102,7 @@ export namespace Boring32::Security
 		Win32::TOKEN_MANDATORY_LABEL tml = {
 			.Label = { 
 				.Sid = integritySid.get(), 
-				.Attributes = Win32::_SE_GROUP_INTEGRITY 
+				.Attributes = Win32::SeGroupIntegrity 
 			}
 		};
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-settokeninformation
@@ -199,9 +199,9 @@ export namespace Boring32::Security
 			std::wcout << L"Current user is a member of the " << groupDomain << "\\" << groupName << std::endl;
 
 			// Find out whether the SID is enabled in the token.
-			if (pGroupInfo->Groups[i].Attributes & Win32::_SE_GROUP_ENABLED)
+			if (pGroupInfo->Groups[i].Attributes & Win32::SeGroupEnabled)
 				std::wcout << "The group SID is enabled.\n";
-			else if (pGroupInfo->Groups[i].Attributes & Win32::_SE_GROUP_USE_FOR_DENY_ONLY)
+			else if (pGroupInfo->Groups[i].Attributes & Win32::SeGroupUseForDenyOnly)
 				std::wcout << "The group SID is a deny-only SID.\n";
 			else
 				std::wcout << "The group SID is not enabled.\n";
@@ -249,13 +249,13 @@ export namespace Boring32::Security
 				throw Error::Win32Error(Win32::GetLastError(), "LookupPrivilegeName() failed");
 
 			std::wstring privsString;
-			if (pPrivs->Privileges[i].Attributes & Win32::_SE_PRIVILEGE_ENABLED)
+			if (pPrivs->Privileges[i].Attributes & Win32::SePrivilegeEnabled)
 				privsString += L"enabled; ";
-			if (pPrivs->Privileges[i].Attributes & Win32::_SE_PRIVILEGE_ENABLED_BY_DEFAULT)
+			if (pPrivs->Privileges[i].Attributes & Win32::SePrivilegeEnabledByDefault)
 				privsString += L"enabled by default; ";
-			if (pPrivs->Privileges[i].Attributes & Win32::_SE_PRIVILEGE_REMOVED)
+			if (pPrivs->Privileges[i].Attributes & Win32::SePrivilegeRemoved)
 				privsString += L"removed; ";
-			if (pPrivs->Privileges[i].Attributes & Win32::_SE_PRIVILEGE_USED_FOR_ACCESS)
+			if (pPrivs->Privileges[i].Attributes & Win32::SePrivilegeUsedForAccess)
 				privsString += L"used for access";
 
 			if (privsString.empty())
@@ -285,8 +285,8 @@ export namespace Boring32::Security
 	enum class AdjustPrivilegeType
 	{
 		Disable = 0,
-		Enable = Win32::_SE_PRIVILEGE_ENABLED,
-		Removed = Win32::_SE_PRIVILEGE_REMOVED
+		Enable = Win32::SePrivilegeEnabled,
+		Removed = Win32::SePrivilegeRemoved
 	};
 	bool SetPrivilege(
 		const Win32::HANDLE token,          // access token handle
@@ -370,7 +370,7 @@ export namespace Boring32::Security
 		std::vector<std::byte> privilegesBytes(sizeof(Win32::PRIVILEGE_SET) + sizeof(Win32::LUID_AND_ATTRIBUTES) * privileges.size());
 		Win32::PRIVILEGE_SET* privs = reinterpret_cast<Win32::PRIVILEGE_SET*>(&privilegesBytes[0]);
 		privs->PrivilegeCount = static_cast<Win32::DWORD>(privileges.size());
-		privs->Control = checkAll ? Win32::_PRIVILEGE_SET_ALL_NECESSARY : 0;
+		privs->Control = checkAll ? Win32::PrivilegeSetAllNecessary : 0;
 		for (size_t index = 0; index < privileges.size(); index++)
 			privs->Privilege[index] = privileges[index];
 
