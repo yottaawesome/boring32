@@ -76,7 +76,7 @@ export namespace Boring32::Security
 				m_token,
 				0,
 				nullptr,
-				Win32::SECURITY_IMPERSONATION_LEVEL::SecurityIdentification,
+				Win32::SECURITY_IMPERSONATION_LEVEL::SecurityImpersonation,
 				Win32::TOKEN_TYPE::TokenImpersonation,
 				&impersonationToken
 			);
