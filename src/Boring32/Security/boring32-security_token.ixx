@@ -50,10 +50,10 @@ export namespace Boring32::Security
 				token,
 				0,
 				nullptr,
-				GetType(token) == Win32::TOKEN_TYPE::TokenPrimary 
+				GetType() == Win32::TOKEN_TYPE::TokenPrimary
 					? Win32::SECURITY_IMPERSONATION_LEVEL::SecurityIdentification 
 					: Win32::SECURITY_IMPERSONATION_LEVEL::SecurityImpersonation,
-				GetType(token) == Win32::TOKEN_TYPE::TokenPrimary 
+				GetType() == Win32::TOKEN_TYPE::TokenPrimary
 					? Win32::TOKEN_TYPE::TokenPrimary 
 					: Win32::TOKEN_TYPE::TokenImpersonation,
 				&m_token
@@ -90,18 +90,30 @@ export namespace Boring32::Security
 
 		auto GetType() const -> Win32::TOKEN_TYPE
 		{
-			return GetType(m_token.GetHandle());
+			return GetTokenInfo<Win32::TOKEN_INFORMATION_CLASS::TokenType, Win32::TOKEN_TYPE>(m_token.GetHandle());
 		}
 
-		static auto GetType(Win32::HANDLE token) -> Win32::TOKEN_TYPE
+		bool IsPrimary() const
+		{
+			return GetType() == Win32::TOKEN_TYPE::TokenPrimary;
+		}
+
+		bool IsImpersonation() const
+		{
+			return GetType() != Win32::TOKEN_TYPE::TokenPrimary;
+		}
+
+	private:
+		template<auto VInfoType, typename TReturn>
+		static auto GetTokenInfo(Win32::HANDLE token)
 		{
 			if (not token)
 				throw Error::RuntimeError("No token to query.");
-			Win32::TOKEN_TYPE type;
+			TReturn type;
 			Win32::DWORD returnLength;
 			bool succeeded = Win32::GetTokenInformation(
 				token,
-				Win32::TOKEN_INFORMATION_CLASS::TokenType,
+				VInfoType,
 				&type,
 				sizeof(type),
 				&returnLength
@@ -111,12 +123,6 @@ export namespace Boring32::Security
 			return type;
 		}
 
-		bool IsPrimary() const
-		{
-			return GetType() == Win32::TOKEN_TYPE::TokenPrimary;
-		}
-
-	private:
 		Token& Copy(const Token& other)
 		{
 			if (&other == this)
