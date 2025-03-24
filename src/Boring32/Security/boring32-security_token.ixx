@@ -67,6 +67,24 @@ export namespace Boring32::Security
 			return m_token != nullptr;
 		}
 
+		Token ToImpersonationToken() const
+		{
+			if (not m_token)
+				throw Error::Boring32Error("Token cannot be null");
+			Win32::HANDLE impersonationToken;
+			bool succeeded = Win32::DuplicateTokenEx(
+				m_token,
+				0,
+				nullptr,
+				Win32::SECURITY_IMPERSONATION_LEVEL::SecurityIdentification,
+				Win32::TOKEN_TYPE::TokenImpersonation,
+				&impersonationToken
+			);
+			if (not succeeded)
+				throw Error::Win32Error(Win32::GetLastError(), "DuplicateTokenEx() failed");
+			return { impersonationToken, true };
+		}
+
 		void Close()
 		{
 			m_token = nullptr;

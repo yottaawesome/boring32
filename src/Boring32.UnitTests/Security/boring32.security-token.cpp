@@ -51,5 +51,12 @@ namespace Security
             Boring32::Security::Token t1(Boring32::Win32::TokenAllAccess);
             Assert::IsTrue(t1.IsPrimary());
         }
+
+        TEST_METHOD(TestToImpersonation)
+        {
+            Boring32::Security::Token t1(Boring32::Win32::TokenAllAccess);
+            Boring32::Security::Token t2 = t1.ToImpersonationToken();
+            Assert::IsTrue(t2.IsImpersonation());
+        }
     };
 }
