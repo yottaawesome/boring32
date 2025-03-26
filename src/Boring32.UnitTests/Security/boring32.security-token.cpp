@@ -14,6 +14,16 @@ namespace Security
             Assert::IsTrue(t);
         }
 
+        TEST_METHOD(TestDuplicateConstructor)
+        {
+            Boring32::Security::Token t1(Boring32::Win32::TokenAllAccess);
+            Boring32::Security::Token t2(t1.GetToken(), false);
+            Assert::IsTrue(t1);
+            Assert::IsTrue(t2);
+            Assert::IsTrue(t1.IsPrimary());
+            Assert::IsTrue(t2.IsPrimary());
+        }
+
         TEST_METHOD(TestMoveConstructor)
         {
             Boring32::Security::Token t1(Boring32::Win32::TokenAllAccess);

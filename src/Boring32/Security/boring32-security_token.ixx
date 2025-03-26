@@ -46,14 +46,15 @@ export namespace Boring32::Security
 			}
 
 			// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-duplicatetokenex
+			bool isPrimary = GetTokenInfo<Win32::TOKEN_INFORMATION_CLASS::TokenType, Win32::TOKEN_TYPE>(token);
 			bool succeeded = Win32::DuplicateTokenEx(
 				token,
 				0,
 				nullptr,
-				GetType() == Win32::TOKEN_TYPE::TokenPrimary
+				isPrimary
 					? Win32::SECURITY_IMPERSONATION_LEVEL::SecurityIdentification 
 					: Win32::SECURITY_IMPERSONATION_LEVEL::SecurityImpersonation,
-				GetType() == Win32::TOKEN_TYPE::TokenPrimary
+				isPrimary
 					? Win32::TOKEN_TYPE::TokenPrimary 
 					: Win32::TOKEN_TYPE::TokenImpersonation,
 				&m_token
