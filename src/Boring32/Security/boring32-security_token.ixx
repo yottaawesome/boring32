@@ -122,12 +122,18 @@ export namespace Boring32::Security
 			return GetType() != Win32::TOKEN_TYPE::TokenPrimary;
 		}
 
+		Win32::TOKEN_STATISTICS GetStatistics() const
+		{
+			return GetTokenInfo<Win32::TOKEN_INFORMATION_CLASS::TokenStatistics, Win32::TOKEN_STATISTICS>(m_token.GetHandle());
+		}
+
 	private:
 		template<auto VInfoType, typename TReturn>
 		static auto GetTokenInfo(Win32::HANDLE token)
 		{
 			if (not token)
 				throw Error::RuntimeError("No token to query.");
+
 			TReturn type;
 			Win32::DWORD returnLength;
 			bool succeeded = Win32::GetTokenInformation(

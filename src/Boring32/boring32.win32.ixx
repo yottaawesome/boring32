@@ -141,6 +141,8 @@ export namespace Boring32::Win32
 		::CERT_CHAIN_POLICY_STATUS,
 		::BCRYPT_ALG_HANDLE,
 		::BCRYPT_KEY_HANDLE,
+		::TOKEN_STATISTICS,
+		::TOKEN_GROUPS,
 		::PrivilegeCheck,
 		::LsaClose,
 		::LsaOpenPolicy,
