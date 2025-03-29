@@ -109,7 +109,7 @@ export namespace Boring32::Security
 				return {};
 
 			std::vector<Win32::DWORD> returnVal;
-			for (Win32::BYTE i = 0, count = GetSubAuthorityCount(sid); i < count; i++)
+			for (std::uint8_t i = 0, count = GetSubAuthorityCount(sid); i < count; i++)
 				returnVal.push_back(GetSubAuthority(sid, i));
 			return returnVal;
 		}
