@@ -30,7 +30,7 @@ export namespace Boring32::Security
 			Create(sidString);
 		}
 
-		operator std::wstring() const
+		std::wstring ToSidString() const
 		{
 			Win32::LPWSTR string = nullptr;
 			// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertsidtostringsidw
@@ -112,6 +112,11 @@ export namespace Boring32::Security
 			for (Win32::BYTE i = 0, count = GetSubAuthorityCount(sid); i < count; i++)
 				returnVal.push_back(GetSubAuthority(sid, i));
 			return returnVal;
+		}
+
+		bool HasValue() const noexcept
+		{
+			return not m_sid.empty();
 		}
 
 	private:
