@@ -74,5 +74,11 @@ namespace Security
             Boring32::Security::Token t1(Boring32::Win32::TokenAllAccess);
             t1.GetStatistics();
         }
+
+        TEST_METHOD(TestGetGroups)
+        {
+            Boring32::Security::Token t1(Boring32::Win32::TokenAllAccess);
+            Assert::IsFalse(t1.GetGroups().empty());
+        }
     };
 }
