@@ -60,7 +60,7 @@ namespace Security
 		TEST_METHOD(TestLookupName)
 		{
 			Boring32::Security::SecurityIdentifier s1(L"S-1-5-18");
-			s1.LookupName();
+			Assert::IsTrue(s1.LookupName()==L"NT AUTHORITY\\SYSTEM");
 		}
 	};
 }

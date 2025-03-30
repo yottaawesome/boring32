@@ -121,7 +121,7 @@ export namespace Boring32::Security
 
 		std::wstring LookupName() const
 		{
-			Win32::DWORD count = 256;
+			Win32::DWORD count = 512;
 			Win32::DWORD domainCount = 256;
 			Win32::SID_NAME_USE nameUse{};
 			std::wstring name(count, '\0');
@@ -142,8 +142,8 @@ export namespace Boring32::Security
 					return {};
 				throw Error::Win32Error(Win32::GetLastError(), "LookupAccountSidW() failed");
 			}
-			name.resize(count - 1);
-			domain.resize(domainCount - 1);
+			name.resize(count);
+			domain.resize(domainCount);
 			return domain.empty() ? name : std::format(L"{}\\{}", domain, name);
 		}
 
