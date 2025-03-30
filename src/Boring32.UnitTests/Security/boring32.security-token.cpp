@@ -88,5 +88,11 @@ namespace Security
             Boring32::Security::Token token(Boring32::Win32::TokenAllAccess);
             Assert::IsTrue(token.Boring32::Win32::TokenAllAccess(sid.GetSid()));
         }
+
+        TEST_METHOD(TestGetUser)
+        {
+            Boring32::Security::Token token(Boring32::Win32::TokenAllAccess);
+            Boring32::Security::SidAndAttributes user = token.GetUser();
+        }
     };
 }

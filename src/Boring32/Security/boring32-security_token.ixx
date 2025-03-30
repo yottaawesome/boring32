@@ -225,6 +225,43 @@ export namespace Boring32::Security
 			return tokenGroups;
 		}
 
+		SidAndAttributes GetUser() const
+		{
+			auto buffer = GetTokenInfo(m_token.GetHandle(), Win32::TOKEN_INFORMATION_CLASS::TokenUser);
+			Win32::TOKEN_USER* user = reinterpret_cast<Win32::TOKEN_USER*>(buffer.data());
+			return {user->User.Sid, user->User.Attributes};
+		}
+
+		static auto GetTokenInfo(Win32::HANDLE token, Win32::TOKEN_INFORMATION_CLASS infoType)
+		{
+			if (not token)
+				throw Error::RuntimeError("No token to query.");
+
+			Win32::DWORD returnLength;
+			bool succeeded = Win32::GetTokenInformation(
+				token,
+				infoType,
+				nullptr,
+				0,
+				&returnLength
+			);
+			if (Win32::GetLastError() != Win32::ErrorCodes::InsufficientBuffer)
+				throw Error::Win32Error(Win32::GetLastError(), "GetTokenInformation() failed.");
+
+			std::vector<std::byte> value{ returnLength };
+			succeeded = Win32::GetTokenInformation(
+				token,
+				infoType,
+				value.data(),
+				returnLength,
+				&returnLength
+			);
+			if (not succeeded)
+				throw Error::Win32Error(Win32::GetLastError(), "GetTokenInformation() failed.");
+
+			return value;
+		}
+
 	private:
 		template<auto VInfoType, typename TReturn>
 		static auto GetTokenInfo(Win32::HANDLE token)
