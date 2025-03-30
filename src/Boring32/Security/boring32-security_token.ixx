@@ -88,7 +88,8 @@ export namespace Boring32::Security
 			}
 
 			// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-duplicatetokenex
-			bool isPrimary = GetTokenInfo<Win32::TOKEN_INFORMATION_CLASS::TokenType, Win32::TOKEN_TYPE>(token);
+			auto type = GetTokenInfo<Win32::TOKEN_TYPE>(token, Win32::TOKEN_INFORMATION_CLASS::TokenType);
+			bool isPrimary = type == Win32::TOKEN_TYPE::TokenPrimary;
 			bool succeeded = Win32::DuplicateTokenEx(
 				token,
 				0,
@@ -151,7 +152,7 @@ export namespace Boring32::Security
 
 		auto GetType() const -> Win32::TOKEN_TYPE
 		{
-			return GetTokenInfo<Win32::TOKEN_INFORMATION_CLASS::TokenType, Win32::TOKEN_TYPE>(m_token.GetHandle());
+			return GetTokenInfo<Win32::TOKEN_TYPE>(m_token.GetHandle(), Win32::TOKEN_INFORMATION_CLASS::TokenType);
 		}
 
 		bool IsPrimary() const
@@ -166,7 +167,7 @@ export namespace Boring32::Security
 
 		Win32::TOKEN_STATISTICS GetStatistics() const
 		{
-			return GetTokenInfo<Win32::TOKEN_INFORMATION_CLASS::TokenStatistics, Win32::TOKEN_STATISTICS>(m_token.GetHandle());
+			return GetTokenInfo<Win32::TOKEN_STATISTICS>(m_token.GetHandle(), Win32::TOKEN_INFORMATION_CLASS::TokenStatistics);
 		}
 
 		bool CheckMembership(std::wstring_view sidString) const
@@ -211,6 +212,13 @@ export namespace Boring32::Security
 			return {user->User.Sid, user->User.Attributes};
 		}
 
+		template<typename TReturn>
+		static TReturn GetTokenInfo(Win32::HANDLE token, Win32::TOKEN_INFORMATION_CLASS infoType)
+		{
+			auto buffer = GetTokenInfo(token, infoType);
+			return TReturn{ *reinterpret_cast<TReturn*>(buffer.data()) };
+		}
+
 		static auto GetTokenInfo(Win32::HANDLE token, Win32::TOKEN_INFORMATION_CLASS infoType)
 		{
 			if (not token)
@@ -242,45 +250,24 @@ export namespace Boring32::Security
 		}
 
 	private:
-		template<auto VInfoType, typename TReturn>
-		static auto GetTokenInfo(Win32::HANDLE token)
-		{
-			if (not token)
-				throw Error::RuntimeError("No token to query.");
-
-			TReturn type;
-			Win32::DWORD returnLength;
-			bool succeeded = Win32::GetTokenInformation(
-				token,
-				VInfoType,
-				&type,
-				sizeof(type),
-				&returnLength
-			);
-			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "GetTokenInformation() failed.");
-			return type;
-		}
-
 		Token& Copy(const Token& other)
 		{
 			if (&other == this)
 				return *this;
-
 			Close();
-			if (other.m_token)
-			{
-				const bool succeeded = Win32::DuplicateTokenEx(
-					other.m_token.GetHandle(),
-					0,
-					nullptr,
-					Win32::SECURITY_IMPERSONATION_LEVEL::SecurityImpersonation,
-					Win32::TOKEN_TYPE::TokenPrimary,
-					&m_token
-				);
-				if (not succeeded)
-					throw Error::Win32Error(Win32::GetLastError(), "DuplicateTokenEx() failed");
-			}
+			if (not other.m_token)
+				return *this;
+
+			bool succeeded = Win32::DuplicateTokenEx(
+				other.m_token.GetHandle(),
+				0,
+				nullptr,
+				Win32::SECURITY_IMPERSONATION_LEVEL::SecurityImpersonation,
+				Win32::TOKEN_TYPE::TokenPrimary,
+				&m_token
+			);
+			if (not succeeded)
+				throw Error::Win32Error(Win32::GetLastError(), "DuplicateTokenEx() failed");
 
 			return *this;
 		}
