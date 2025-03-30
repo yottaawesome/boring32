@@ -192,28 +192,7 @@ export namespace Boring32::Security
 			if (not m_token)
 				throw Error::RuntimeError("No token to query.");
 
-			Win32::DWORD returnLength;
-			bool succeeded = Win32::GetTokenInformation(
-				m_token,
-				Win32::TOKEN_INFORMATION_CLASS::TokenGroups,
-				nullptr,
-				0,
-				&returnLength
-			);
-			if (Win32::GetLastError() != Win32::ErrorCodes::InsufficientBuffer)
-				throw Error::Win32Error(Win32::GetLastError(), "GetTokenInformation() failed.");
-
-			std::vector<std::byte> buffer(returnLength);
-			succeeded = Win32::GetTokenInformation(
-				m_token,
-				Win32::TOKEN_INFORMATION_CLASS::TokenGroups,
-				buffer.data(),
-				returnLength,
-				&returnLength
-			);
-			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "GetTokenInformation() failed.");
-
+			std::vector<std::byte> buffer = GetTokenInfo(m_token.GetHandle(), Win32::TOKEN_INFORMATION_CLASS::TokenGroups);
 			Win32::TOKEN_GROUPS* groups = reinterpret_cast<Win32::TOKEN_GROUPS*>(buffer.data());
 			std::vector<TokenGroups> tokenGroups;
 			for (Win32::DWORD i = 0; i < groups->GroupCount; i++)
