@@ -11,49 +11,47 @@ export namespace Boring32::Security
 {
 	struct TokenGroups
 	{
-		SecurityIdentifier Sid;
+		SidAndAttributes Sid;
+		bool Enabled(this auto& self) noexcept
+		{
+			return self.Sid.Attributes & Win32::SeGroupEnabled;
+		}
+		bool EnabledByDefault(this auto& self) noexcept
+		{
+			return self.Sid.Attributes & Win32::SeGroupEnabledByDefault;
+		}
+		bool Integrity(this auto& self) noexcept
+		{
+			return self.Sid.Attributes & Win32::SeGroupIntegrity;
+		}
+		bool IntegrityEnabled(this auto& self) noexcept
+		{
+			return self.Sid.Attributes & Win32::SeGroupIntegrityEnabled;
+		}
+		bool LogonId(this auto& self) noexcept
+		{
+			return self.Sid.Attributes & Win32::SeGroupLogonId;
+		}
+		bool Mandatory(this auto& self) noexcept
+		{
+			return self.Sid.Attributes & Win32::SeGroupMandatory;
+		}
+		bool Owner(this auto& self) noexcept
+		{
+			return self.Sid.Attributes & Win32::SeGroupOwner;
+		}
+		bool Resource(this auto& self) noexcept
+		{
+			return self.Sid.Attributes & Win32::SeGroupResource;
+		}
+		bool UseForDenyOnly(this auto& self) noexcept
+		{
+			return self.Sid.Attributes & Win32::SeGroupUseForDenyOnly;
+		}
 	};
 
 	struct Token final
 	{
-		std::vector<TokenGroups> GetGroups() const
-		{
-			if (not m_token)
-				throw Error::RuntimeError("No token to query.");
-			
-			Win32::DWORD returnLength;
-			bool succeeded = Win32::GetTokenInformation(
-				m_token,
-				Win32::TOKEN_INFORMATION_CLASS::TokenGroups,
-				nullptr,
-				0,
-				&returnLength
-			);
-			if (Win32::GetLastError() != Win32::ErrorCodes::InsufficientBuffer)
-				throw Error::Win32Error(Win32::GetLastError(), "GetTokenInformation() failed.");
-			
-			std::vector<std::byte> buffer(returnLength);
-			succeeded = Win32::GetTokenInformation(
-				m_token,
-				Win32::TOKEN_INFORMATION_CLASS::TokenGroups,
-				buffer.data(),
-				returnLength,
-				&returnLength
-			);
-			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "GetTokenInformation() failed.");
-
-			Win32::TOKEN_GROUPS* groups = reinterpret_cast<Win32::TOKEN_GROUPS*>(buffer.data());
-			std::vector<TokenGroups> tokenGroups;
-			for (Win32::DWORD i = 0; i < groups->GroupCount; i++)
-			{
-				Win32::SID_AND_ATTRIBUTES sid = groups->Groups[i];
-				tokenGroups.push_back(TokenGroups{ sid.Sid });
-			}
-
-			return tokenGroups;
-		}
-
 		Token() = default;
 		Token(Token&& other) noexcept = default;
 		Token& operator=(Token&& other) noexcept = default;
@@ -169,6 +167,62 @@ export namespace Boring32::Security
 		Win32::TOKEN_STATISTICS GetStatistics() const
 		{
 			return GetTokenInfo<Win32::TOKEN_INFORMATION_CLASS::TokenStatistics, Win32::TOKEN_STATISTICS>(m_token.GetHandle());
+		}
+
+		bool CheckMembership(std::wstring_view sidString) const
+		{
+			SecurityIdentifier sid(std::wstring{ sidString });
+			return false;
+		}
+
+		bool CheckMembership(Win32::PSID sid) const
+		{
+			if (not m_token)
+				throw Error::Boring32Error("No token to check");
+			if (not sid)
+				throw Error::Boring32Error("Invalid sid");
+			Win32::BOOL b = 0;
+			if (not Win32::CheckTokenMembership(m_token.GetHandle(), sid, &b))
+				throw Error::Win32Error(Win32::GetLastError(), "CheckTokenMembership() failed");
+			return b;
+		}
+
+		std::vector<TokenGroups> GetGroups() const
+		{
+			if (not m_token)
+				throw Error::RuntimeError("No token to query.");
+
+			Win32::DWORD returnLength;
+			bool succeeded = Win32::GetTokenInformation(
+				m_token,
+				Win32::TOKEN_INFORMATION_CLASS::TokenGroups,
+				nullptr,
+				0,
+				&returnLength
+			);
+			if (Win32::GetLastError() != Win32::ErrorCodes::InsufficientBuffer)
+				throw Error::Win32Error(Win32::GetLastError(), "GetTokenInformation() failed.");
+
+			std::vector<std::byte> buffer(returnLength);
+			succeeded = Win32::GetTokenInformation(
+				m_token,
+				Win32::TOKEN_INFORMATION_CLASS::TokenGroups,
+				buffer.data(),
+				returnLength,
+				&returnLength
+			);
+			if (not succeeded)
+				throw Error::Win32Error(Win32::GetLastError(), "GetTokenInformation() failed.");
+
+			Win32::TOKEN_GROUPS* groups = reinterpret_cast<Win32::TOKEN_GROUPS*>(buffer.data());
+			std::vector<TokenGroups> tokenGroups;
+			for (Win32::DWORD i = 0; i < groups->GroupCount; i++)
+			{
+				Win32::SID_AND_ATTRIBUTES sid = groups->Groups[i];
+				tokenGroups.push_back(TokenGroups{ SidAndAttributes{ sid.Sid, sid.Attributes } });
+			}
+
+			return tokenGroups;
 		}
 
 	private:

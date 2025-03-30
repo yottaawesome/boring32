@@ -80,5 +80,13 @@ namespace Security
             Boring32::Security::Token t1(Boring32::Win32::TokenAllAccess);
             Assert::IsFalse(t1.GetGroups().empty());
         }
+
+        TEST_METHOD(TestCheckMembership)
+        {
+            // SECURITY_AUTHENTICATED_USER_RID
+            Boring32::Security::SecurityIdentifier sid(L"S-1-5-11");
+            Boring32::Security::Token token(Boring32::Win32::TokenAllAccess);
+            Assert::IsTrue(token.Boring32::Win32::TokenAllAccess(sid.GetSid()));
+        }
     };
 }

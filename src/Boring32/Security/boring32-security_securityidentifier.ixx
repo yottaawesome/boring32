@@ -24,7 +24,7 @@ export namespace Boring32::Security
 			Create(sid);
 		}
 
-		SecurityIdentifier(const std::wstring& sidString)
+		SecurityIdentifier(std::wstring_view sidString)
 			: SecurityIdentifier()
 		{
 			Create(sidString);
@@ -119,14 +119,42 @@ export namespace Boring32::Security
 			return not m_sid.empty();
 		}
 
+		std::wstring LookupName() const
+		{
+			Win32::DWORD count = 256;
+			Win32::DWORD domainCount = 256;
+			Win32::SID_NAME_USE nameUse{};
+			std::wstring name(count, '\0');
+			std::wstring domain(domainCount, '\0');
+			Win32::DWORD domainCCh = 0;
+			Win32::BOOL success = Win32::LookupAccountSidW(
+				nullptr,
+				GetSid(),
+				name.data(),
+				&count,
+				domain.data(),
+				&domainCount,
+				&nameUse
+			);
+			if (not success)
+			{
+				if (Win32::GetLastError() == Win32::ErrorCodes::NoneMapped)
+					return {};
+				throw Error::Win32Error(Win32::GetLastError(), "LookupAccountSidW() failed");
+			}
+			name.resize(count - 1);
+			domain.resize(domainCount - 1);
+			return domain.empty() ? name : std::format(L"{}\\{}", domain, name);
+		}
+
 	private:
-		void Create(const std::wstring& sidString)
+		void Create(std::wstring_view sidString)
 		{
 			if (sidString.empty())
 				throw Error::Boring32Error("sidString cannot be empty");
 			// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw
 			Win32::PSID sid = nullptr;
-			if (not Win32::ConvertStringSidToSidW(sidString.c_str(), &sid))
+			if (not Win32::ConvertStringSidToSidW(sidString.data(), &sid))
 				throw Error::Win32Error(Win32::GetLastError(), "ConvertStringSidToSidW() failed");
 			RAII::LocalHeapUniquePtr<void> ptr(sid);
 			Create(sid);
@@ -163,5 +191,11 @@ export namespace Boring32::Security
 		}
 			
 		std::vector<std::byte> m_sid;
+	};
+
+	struct SidAndAttributes final
+	{
+		SecurityIdentifier Sid;
+		Win32::DWORD Attributes = 0;
 	};
 }

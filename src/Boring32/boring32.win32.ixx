@@ -58,6 +58,8 @@ export namespace Boring32::Win32
 		::COMPUTER_NAME_FORMAT,
 		::FILETIME,
 		::ULARGE_INTEGER,
+		::SID_NAME_USE,
+		::PSID_NAME_USE,
 		::LPCSTR,
 		::PCSTR,
 		::COINIT,
@@ -448,6 +450,13 @@ export namespace Boring32::Win32
 	constexpr auto SePrivilegeRemoved= SE_PRIVILEGE_REMOVED;
 	constexpr auto SePrivilegeUsedForAccess= SE_PRIVILEGE_USED_FOR_ACCESS;
 	constexpr auto PrivilegeSetAllNecessary = PRIVILEGE_SET_ALL_NECESSARY;
+	constexpr auto SeGroupEnabledByDefault = SE_GROUP_ENABLED_BY_DEFAULT;
+	constexpr auto SeGroupIntegrityEnabled = SE_GROUP_INTEGRITY_ENABLED;
+	constexpr auto SeGroupLogonId = SE_GROUP_LOGON_ID;
+	constexpr auto SeGroupMandatory = SE_GROUP_MANDATORY;
+	constexpr auto SeGroupOwner = SE_GROUP_OWNER;
+	constexpr auto SeGroupResource = SE_GROUP_RESOURCE;
+	constexpr auto SeGroupUseForDenyOny = SE_GROUP_USE_FOR_DENY_ONLY;
 
 	using ::IXAudio2;
 	using ::IXAudio2MasteringVoice;

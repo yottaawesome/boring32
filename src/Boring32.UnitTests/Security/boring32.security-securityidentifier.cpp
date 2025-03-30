@@ -56,5 +56,11 @@ namespace Security
 			Assert::IsFalse(s1.HasValue());
 			Assert::IsTrue(s2.ToSidString() == L"S-1-5-18");
 		}
+
+		TEST_METHOD(TestLookupName)
+		{
+			Boring32::Security::SecurityIdentifier s1(L"S-1-5-18");
+			s1.LookupName();
+		}
 	};
 }
