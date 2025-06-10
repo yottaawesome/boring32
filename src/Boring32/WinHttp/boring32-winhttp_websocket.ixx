@@ -203,7 +203,7 @@ export namespace Boring32::WinHttp::WebSockets
 					{
 						std::wcerr << ex.what() << std::endl;
 					}
-					result->Done.Signal(std::nothrow);
+					std::ignore = result->Done.Signal(std::nothrow);
 				});
 
 			/*std::thread(

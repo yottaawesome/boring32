@@ -86,9 +86,9 @@ export namespace Boring32::WinHttp::WebSockets
 			// Release any waiting threads. However, all threads that use
 			// this socket should be shut down prior to the socket going
 			// out of scope
-			m_connectionResult.Complete.Signal(std::nothrow);
-			m_readResult.Complete.Signal(std::nothrow);
-			m_writeResult.Complete.Signal(std::nothrow);
+			std::ignore = m_connectionResult.Complete.Signal(std::nothrow);
+			std::ignore = m_readResult.Complete.Signal(std::nothrow);
+			std::ignore = m_writeResult.Complete.Signal(std::nothrow);
 		}
 
 		AsyncWebSocket(const AsyncWebSocketSettings& settings)

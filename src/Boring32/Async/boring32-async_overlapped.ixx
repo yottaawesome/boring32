@@ -17,7 +17,11 @@ export namespace Boring32::Async
 		// TODO: OVERLAPPED is not movable either.
 		// May need to add a Reset() method.
 		Overlapped(Overlapped&& other) { swap(other); };
-		Overlapped& operator=(Overlapped&& other) { swap(other); };
+		Overlapped& operator=(Overlapped&& other) 
+		{ 
+			swap(other); 
+			return *this; 
+		};
 
 		Overlapped() : Win32::OVERLAPPED{}
 		{

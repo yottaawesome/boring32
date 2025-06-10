@@ -90,7 +90,7 @@ export namespace Boring32::IPC
 				throw Error::Boring32Error("No valid pipe handle to connect");
 			oio = Async::OverlappedOp();
 			bool succeeded = Win32::ConnectNamedPipe(m_pipe.GetHandle(), oio.GetOverlapped());
-			oio.LastError(GetLastError());
+			oio.LastError(Win32::GetLastError());
 			if (not succeeded and oio.LastError() != Win32::ErrorCodes::IoPending)
 				throw Error::Win32Error(oio.LastError(), "ConnectNamedPipe() failed");
 

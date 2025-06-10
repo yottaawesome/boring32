@@ -132,7 +132,7 @@ namespace Boring32::WinHttp::WebSockets
 					{
 						socket->m_status = WebSocketStatus::Error;
 						socket->m_connectionResult.IsConnected = false;
-						socket->m_connectionResult.Complete.Signal(std::nothrow);
+						std::ignore = socket->m_connectionResult.Complete.Signal(std::nothrow);
 					}
 				}
 				break;
@@ -188,7 +188,7 @@ namespace Boring32::WinHttp::WebSockets
 				catch (const std::exception& ex)
 				{
 					socket->m_status = WebSocketStatus::Error;
-					read.Complete.Signal(std::nothrow);
+					std::ignore = read.Complete.Signal(std::nothrow);
 					std::wcerr << ex.what() << std::endl;
 				}
 
