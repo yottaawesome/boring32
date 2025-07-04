@@ -80,7 +80,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)\Build\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <IncludePath>$(SolutionDir)Boring32.HeaderUnit;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
@@ -93,7 +92,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)\Build\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <IncludePath>$(SolutionDir)Boring32.HeaderUnit;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <RunCodeAnalysis>false</RunCodeAnalysis>

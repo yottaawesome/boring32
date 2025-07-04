@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>A:\Code\C++\Boring32\src\x64\Debug\Boring32.UnitTests.dll</FullPath>
+      <FullPath>A:\Code\cpp\boring32\src\Build\x64\Debug\Boring32.UnitTests.dll</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
