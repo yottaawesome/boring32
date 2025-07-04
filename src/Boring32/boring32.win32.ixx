@@ -19,6 +19,7 @@ export namespace Boring32::Win32
 	constexpr auto _SECURITY_BUILTIN_DOMAIN_RID = SECURITY_BUILTIN_DOMAIN_RID;
 	constexpr auto _DOMAIN_ALIAS_RID_ADMINS = DOMAIN_ALIAS_RID_ADMINS;
 	using 
+		::HINSTANCE__,
 		::HMODULE,
 		::SECURITY_ATTRIBUTES,
 		::DWORD,
@@ -183,6 +184,8 @@ export namespace Boring32::Win32
 		::FormatMessageW,
 		::LoadLibraryW,
 		::LoadLibraryExW,
+		::LoadLibraryA,
+		::LoadLibraryExA,
 		::FreeLibrary,
 		::MsiIsProductElevatedW,
 		::MsiOpenPackageW,

@@ -1,6 +1,6 @@
 ﻿import std;
-import std.compat;
 ////import <win32.hpp>;
+import boring32;
 import boring32.win32;
 //#include "versionhelpers.h"
 //#include "Experiments1Main.hpp"
