@@ -39,7 +39,7 @@ export namespace Boring32::Services
 	}
 
 	[[nodiscard]]
-	auto ServiceExists(std::wstring_view serviceName) -> bool
+	auto ServiceExists(const std::wstring& serviceName) -> bool
 	{
 		if (serviceName.empty())
 			return false;
@@ -51,7 +51,7 @@ export namespace Boring32::Services
 
 		Win32::SC_HANDLE serviceHandle = Win32::OpenServiceW(
 			scmHandle,
-			serviceName.data(),
+			serviceName.c_str(),
 			Win32::GenericRead // https://docs.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights
 		);
 		ServiceHandleUniquePtr service(serviceHandle);
