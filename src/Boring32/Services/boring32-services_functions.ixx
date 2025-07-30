@@ -2,10 +2,12 @@ export module boring32:services_functions;
 import std;
 import boring32.win32;
 import :error;
+import :raii;
 
 export namespace Boring32::Services
 {
-	[[nodiscard]] Win32::SC_HANDLE OpenServiceControlManager(const Win32::DWORD desiredAccess)
+	[[nodiscard]]
+	auto OpenServiceControlManager(Win32::DWORD desiredAccess) -> Win32::SC_HANDLE
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openscmanagerw
 		// https://docs.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights
@@ -16,7 +18,8 @@ export namespace Boring32::Services
 		return scmHandle;
 	}
 
-	[[nodiscard]] Win32::SERVICE_STATUS_PROCESS GetServiceStatus(const Win32::SC_HANDLE serviceHandle)
+	[[nodiscard]]
+	auto GetServiceStatus(Win32::SC_HANDLE serviceHandle) -> Win32::SERVICE_STATUS_PROCESS
 	{
 		if (not serviceHandle)
 			throw Boring32::Error::Boring32Error("Service handle cannot be null");
@@ -38,11 +41,33 @@ export namespace Boring32::Services
 		return serviceStatus;
 	}
 
-	[[nodiscard]] Win32::SC_HANDLE OpenServiceHandle(
-		const Win32::SC_HANDLE scmHandle,
+	[[nodiscard]]
+	auto ServiceExists(std::wstring_view serviceName) -> bool
+	{
+		if (serviceName.empty())
+			return false;
+
+		Win32::SC_HANDLE scmHandle = OpenServiceControlManager(Win32::GenericRead);
+		if (not scmHandle)
+			throw Error::Win32Error(Win32::GetLastError(), "OpenServiceControlManager() failed");
+		RAII::ServiceUniquePtr scm(scmHandle);
+
+		Win32::SC_HANDLE serviceHandle = Win32::OpenServiceW(
+			scmHandle,
+			serviceName.data(),
+			Win32::GenericRead // https://docs.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights
+		);
+		RAII::ServiceUniquePtr service(serviceHandle);
+
+		return serviceHandle;
+	}
+
+	[[nodiscard]] 
+	auto OpenServiceHandle(
+		Win32::SC_HANDLE scmHandle,
 		const std::wstring& serviceName, 
-		const Win32::DWORD desiredAccess
-	)
+		Win32::DWORD desiredAccess
+	) -> Win32::SC_HANDLE
 	{
 		if (not scmHandle)
 			throw Boring32::Error::Boring32Error("SCM handle cannot be null");
@@ -57,5 +82,21 @@ export namespace Boring32::Services
 			throw Error::Win32Error(Win32::GetLastError(), "OpenServiceW() failed");
 
 		return serviceHandle;
+	}
+
+	[[nodiscard]]
+	auto OpenServiceHandle(
+		Win32::SC_HANDLE scmHandle,
+		const std::wstring& serviceName,
+		Win32::DWORD desiredAccess,
+		const std::nothrow_t&
+	) noexcept -> std::optional<Win32::SC_HANDLE>
+	try
+	{
+		return OpenServiceHandle(scmHandle, serviceName, desiredAccess);
+	}
+	catch (...)
+	{
+		return std::nullopt;
 	}
 }

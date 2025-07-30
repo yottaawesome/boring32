@@ -129,7 +129,7 @@ export namespace Boring32::Services
 				throw Error::Win32Error(Win32::GetLastError(), "ControlServiceExW() failed");
 		}
 
-		private:
+	private:
 		std::vector<std::byte> GetConfigBuffer() const
 		{
 			if (not m_service)

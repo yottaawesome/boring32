@@ -982,7 +982,7 @@ export namespace Boring32::Win32
 	
 	constexpr auto _SERVICE_RUNNING = SERVICE_RUNNING;
 	constexpr auto _SERVICES_ACTIVE_DATABASE = SERVICES_ACTIVE_DATABASE;
-	constexpr auto _SC_MANAGER_ALL_ACCESS = SC_MANAGER_ALL_ACCESS;
+	constexpr auto ScManagerAllAccess = SC_MANAGER_ALL_ACCESS;
 	constexpr auto _SERVICE_ALL_ACCESS = SERVICE_ALL_ACCESS;
 	using ::SC_STATUS_TYPE;
 

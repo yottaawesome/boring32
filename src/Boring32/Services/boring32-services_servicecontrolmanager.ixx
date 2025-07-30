@@ -16,7 +16,7 @@ export namespace Boring32::Services
 
 		ServiceControlManager()
 		{
-			Open(Win32::_SC_MANAGER_ALL_ACCESS);
+			Open(Win32::ScManagerAllAccess);
 		}
 
 		ServiceControlManager(const unsigned desiredAccess)

@@ -214,6 +214,7 @@
     <ClCompile Include="Security\boring32.security-functions.cpp" />
     <ClCompile Include="Security\boring32.security-securityidentifier.cpp" />
     <ClCompile Include="Security\boring32.security-token.cpp" />
+    <ClCompile Include="Services\boring32.services-functions.cpp" />
     <ClCompile Include="Services\boring32.services-servicecontrolmanager.cpp" />
     <ClCompile Include="Strings\boring32-strings_fixedstring.cpp" />
     <ClCompile Include="Strings\boring32.strings-functions.cpp" />
