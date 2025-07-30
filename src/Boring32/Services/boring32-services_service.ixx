@@ -75,14 +75,14 @@ export namespace Boring32::Services
 			m_service = nullptr;
 		}
 
-		std::wstring GetDisplayName() const
+		auto GetDisplayName() const -> std::wstring
 		{
 			std::vector<std::byte> buffer = GetConfigBuffer();
 			auto config = reinterpret_cast<Win32::QUERY_SERVICE_CONFIGW*>(&buffer[0]);
 			return config->lpDisplayName;
 		}
 
-		bool IsRunning() const
+		auto IsRunning() const -> bool
 		{
 			if (not m_service)
 				throw Error::Boring32Error("m_service is nullptr");
@@ -104,7 +104,7 @@ export namespace Boring32::Services
 			return status.dwCurrentState == Win32::_SERVICE_RUNNING;
 		}
 			
-		Win32::SC_HANDLE GetHandle() const noexcept
+		auto GetHandle() const noexcept -> Win32::SC_HANDLE
 		{
 			return m_service.get();
 		}
@@ -130,7 +130,7 @@ export namespace Boring32::Services
 		}
 
 	private:
-		std::vector<std::byte> GetConfigBuffer() const
+		auto GetConfigBuffer() const -> std::vector<std::byte>
 		{
 			if (not m_service)
 				throw Error::Boring32Error("m_service is nullptr");
