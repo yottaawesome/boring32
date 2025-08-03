@@ -106,7 +106,9 @@ export namespace Boring32::Win32
 		::TIME_ZONE_INFORMATION,
 		::SC_HANDLE,
 		::LPCWSTR,
+		::PCWSTR,
 		::DWORD_PTR,
+		::HFONT,
 		::LSTATUS,
 		::LONG,
 		::LPOVERLAPPED,
@@ -149,6 +151,11 @@ export namespace Boring32::Win32
 		::TOKEN_GROUPS,
 		::SID_AND_ATTRIBUTES,
 		::SID,
+		::SetFocus,
+		::ShowWindow,
+		::SendMessageW,
+		::DestroyWindow,
+		::DeleteObject,
 		::CopySid,
 		::InitializeSid,
 		::GetSidLengthRequired,
@@ -421,8 +428,67 @@ export namespace Boring32::Win32
 		::BCryptOpenAlgorithmProvider,
 		::CreateWindowExW,
 		::SetWindowSubclass,
-		::GetCurrentProcessToken
+		::GetCurrentProcessToken,
+		::DisconnectNamedPipe,
+		::FlushFileBuffers,
+		::CancelIo,
+		::CancelIoEx,
+		::CreateNamedPipeW,
+		::IIDFromString,
+		::UuidFromStringW,
+		::RPC_STATUS,
+		::RPC_WSTR,
+		::UuidIsNil,
+		::GUID,
+		::IsEqualGUID,
+		::PathCchRemoveFileSpec,
+		::StringFromGUID2,
+		::CoCreateGuid,
+		::CLSID_NetworkListManager,
+		::NLM_CONNECTIVITY,
+		::GetModuleFileNameW,
+		::IID_INetworkListManager,
+		::INetworkListManager,
+		::CLSID_WICImagingFactory2,
+		::IWICBitmapDecoder,
+		::WICDecodeOptions,
+		::IWICFormatConverter,
+		::IWICImagingFactory,
+		::timeval
 		;
+
+	namespace Messages
+	{
+		enum
+		{
+			Quit = WM_QUIT,
+			Close = WM_CLOSE,
+			Destroy = WM_DESTROY,
+			Size = WM_SIZE,
+			LeftButtonDown = WM_LBUTTONDOWN,
+			LeftButtonUp = WM_LBUTTONUP,
+			NonClientCreate = WM_NCCREATE,
+			Paint = WM_PAINT,
+			KeyUp = WM_KEYUP,
+			Create = WM_CREATE,
+			Command = WM_COMMAND,
+			CtlColorBtn = WM_CTLCOLORBTN,
+			Notify = WM_NOTIFY,
+			CustomDraw = NM_CUSTOMDRAW,
+			SetFont = WM_SETFONT,
+			ButtonClick = BM_CLICK,
+			ButtonClicked = BN_CLICKED
+		};
+	}
+
+	namespace ShowWindowOptions
+	{
+		enum
+		{
+			Hide = SW_HIDE,
+			ShowNormal = SW_SHOWNORMAL
+		};
+	}
 
 	constexpr auto TokenAllAccess = TOKEN_ALL_ACCESS;
 
@@ -441,6 +507,8 @@ export namespace Boring32::Win32
 			UpperCase = LCMAP_UPPERCASE
 		};
 	}
+
+	constexpr auto CwUseDefault = CW_USEDEFAULT;
 
 	constexpr auto _CERT_SIGNATURE_HASH_PROP_ID = CERT_SIGNATURE_HASH_PROP_ID;
 	constexpr auto _CERT_SIGN_HASH_CNG_ALG_PROP_ID = CERT_SIGN_HASH_CNG_ALG_PROP_ID;
@@ -1029,40 +1097,9 @@ export namespace Boring32::Win32
 	constexpr auto PipeWait = PIPE_WAIT;
 	constexpr auto PipeRejectRemoteClients = PIPE_REJECT_REMOTE_CLIENTS;
 	constexpr auto PipeAcceptRemoteClients = PIPE_ACCEPT_REMOTE_CLIENTS;
-
-	using ::DisconnectNamedPipe;
-	using ::FlushFileBuffers;
-	using ::CancelIo;
-	using ::CancelIoEx;
-	using ::CreateNamedPipeW;
-
-	using ::IIDFromString;
-	using ::UuidFromStringW;
-	using ::RPC_STATUS; 
-	using ::RPC_WSTR;
-	constexpr auto _RPC_S_OK = RPC_S_OK;
-	using ::UuidIsNil;
-	using ::GUID;
-	using ::IsEqualGUID;
-
-	using ::PathCchRemoveFileSpec;
 	constexpr auto _S_FALSE = S_FALSE;
-	using ::StringFromGUID2;
-	using ::CoCreateGuid;
-	using ::CLSID_NetworkListManager;
-	using ::NLM_CONNECTIVITY;
-	using ::GetModuleFileNameW;
-	using ::IID_INetworkListManager;
-	using ::INetworkListManager;
-
-	using ::CLSID_WICImagingFactory2;
-	using ::IWICBitmapDecoder;
-	using ::WICDecodeOptions;
-	using ::IWICFormatConverter;
-	using ::IWICImagingFactory;
-
+	constexpr auto _RPC_S_OK = RPC_S_OK;
 	constexpr auto _OPEN_EXISTING = OPEN_EXISTING;
-	using ::timeval;
 	constexpr auto _NS_ALL = NS_ALL;
 	constexpr auto _NS_DNS = NS_DNS;
 	
@@ -1346,17 +1383,32 @@ export namespace Boring32::Win32::Shell
 		using ::KNOWN_FOLDER_FLAG;
 	}
 
-	using ::IKnownFolder;
-	using ::IKnownFolderManager;
-
-	using ::SHGetKnownFolderPath;
+	using 
+		::IKnownFolder,
+		::IKnownFolderManager,
+		::SHGetKnownFolderPath
+		;
 }
 
 
 export namespace Boring32::Win32::Winreg
 {
-	using ::HKEY;
-	using ::HKEY__;
+	using 
+		::HKEY,
+		::HKEY__,
+		::RegGetValueW,
+		::RegSetValueExW,
+		::RegNotifyChangeKeyValue,
+		::RegDeleteTreeW,
+		::RegOpenKeyExW,
+		::RegQueryInfoKeyW,
+		::RegEnumValueW,
+		::RegSaveKeyExW,
+		::RegDeleteValueW,
+		::RegCloseKey,
+		::RegCreateKeyExW,
+		::RegOpenCurrentUser
+		;
 
 	namespace Keys
 	{
@@ -1397,19 +1449,4 @@ export namespace Boring32::Win32::Winreg
 		QWordLittleEndian = REG_QWORD_LITTLE_ENDIAN,
 		String = REG_SZ,
 	};
-
-	using
-		::RegGetValueW,
-		::RegSetValueExW,
-		::RegNotifyChangeKeyValue,
-		::RegDeleteTreeW,
-		::RegOpenKeyExW,
-		::RegQueryInfoKeyW,
-		::RegEnumValueW,
-		::RegSaveKeyExW,
-		::RegDeleteValueW,
-		::RegCloseKey,
-		::RegCreateKeyExW,
-		::RegOpenCurrentUser
-		;
 }

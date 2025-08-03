@@ -10,29 +10,17 @@ export namespace Boring32::Memory
 
 	struct Heap final
 	{
-		~Heap()
-		{
-			Destroy();
-		}
+		~Heap() { Destroy(); }
 
 		Heap() = delete;
 		Heap(const Heap&) = delete;
 		Heap& operator=(const Heap&) = delete;
-
-		Heap(Heap&& other) noexcept
-		{
-			Move(other);
-		}
-		Heap& operator=(Heap&& other) noexcept
-		{
-			return Move(other);
-		}
+		Heap(Heap&& other) noexcept { Move(other); }
+		Heap& operator=(Heap&& other) noexcept { return Move(other); }
 
 		Heap(Win32::HANDLE heap)
 		{
-			if (not heap)
-				throw Error::Boring32Error("Must pass in a valid heap pointer");
-			m_heap = heap;
+			m_heap = heap ? heap : throw Error::Boring32Error("Must pass in a valid heap pointer");;
 		}
 
 		Heap(Win32::DWORD options, Win32::DWORD initialSize, Win32::DWORD maxSize = 0)
@@ -53,7 +41,7 @@ export namespace Boring32::Memory
 			m_heap = nullptr;
 		}
 
-		size_t Compact()
+		auto Compact() -> size_t
 		{
 			// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapcompact
 			size_t size = Win32::HeapCompact(m_heap, 0);
@@ -62,7 +50,7 @@ export namespace Boring32::Memory
 			return size;
 		}
 
-		bool Validate(void* const ptr = nullptr, bool synchronised = true) noexcept
+		auto Validate(void* const ptr = nullptr, bool synchronised = true) noexcept -> bool
 		{
 			// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapvalidate
 			return Win32::HeapValidate(
@@ -86,7 +74,8 @@ export namespace Boring32::Memory
 				throw Error::Win32Error(Win32::GetLastError(), "HeapUnlock() failed");
 		}
 
-		[[nodiscard]] void* New(size_t bytes, Win32::DWORD options = 0)
+		[[nodiscard]] 
+		auto New(size_t bytes, Win32::DWORD options = 0) -> void*
 		{
 			// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapalloc
 			void* allocation = Win32::HeapAlloc(m_heap, options, bytes);
@@ -96,7 +85,8 @@ export namespace Boring32::Memory
 		}
 
 		template<typename T, typename...TArgs>
-		[[nodiscard]] T* New(Win32::DWORD options = 0, TArgs&&... args)
+		[[nodiscard]]
+		auto New(Win32::DWORD options = 0, TArgs&&... args) -> T*
 		{
 			void* ptr = New(sizeof(T), options);
 			return new(ptr) T(std::forward<TArgs>(args)...);
@@ -105,18 +95,19 @@ export namespace Boring32::Memory
 		template<typename T>
 		struct Deleter
 		{
-			Deleter(Heap& h) : m_h(h) {}
-			void operator()(T* t)
+			Deleter(Heap& h) : m_heap(h) {}
+			void operator()(this auto&& self, T* t) noexcept
 			{
-				m_h.Delete((void*)t);
+				self.m_h.Delete((void*)t);
 			}
 
-			private:
-			Heap& m_h;
+		private:
+			Heap& m_heap;
 		};
 
 		template<typename T, typename...Args>
-		[[nodiscard]] std::unique_ptr<T, Deleter<T>> NewPtr(const Args&... args)
+		[[nodiscard]] 
+		auto NewPtr(const Args&... args) -> std::unique_ptr<T, Deleter<T>>
 		{
 			void* ptr = New(sizeof(T), 0);
 			return std::unique_ptr<T, Deleter<T>> (new(ptr) T(args...), Deleter<T>(*this));
@@ -132,8 +123,8 @@ export namespace Boring32::Memory
 		// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-getprocessheap
 		const static inline Win32::HANDLE ProcessHeap = Win32::GetProcessHeap();
 
-		private:
-		Heap& Move(Heap& other)
+	private:
+		auto Move(Heap& other) -> Heap&
 		{
 			Destroy();
 			m_heap = other.m_heap;
