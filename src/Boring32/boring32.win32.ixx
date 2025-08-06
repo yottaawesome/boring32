@@ -151,6 +151,23 @@ export namespace Boring32::Win32
 		::TOKEN_GROUPS,
 		::SID_AND_ATTRIBUTES,
 		::SID,
+		::RPC_STATUS,
+		::RPC_WSTR,
+		::GUID,
+		::CLSID_NetworkListManager,
+		::NLM_CONNECTIVITY,
+		::IID_INetworkListManager,
+		::INetworkListManager,
+		::CLSID_WICImagingFactory2,
+		::IWICBitmapDecoder,
+		::WICDecodeOptions,
+		::IWICFormatConverter,
+		::IWICImagingFactory,
+		::timeval,
+		::IXAudio2,
+		::IXAudio2MasteringVoice,
+		::IXAudio2SourceVoice,
+		::Microsoft::WRL::ComPtr,
 		::SetFocus,
 		::ShowWindow,
 		::SendMessageW,
@@ -436,25 +453,17 @@ export namespace Boring32::Win32
 		::CreateNamedPipeW,
 		::IIDFromString,
 		::UuidFromStringW,
-		::RPC_STATUS,
-		::RPC_WSTR,
 		::UuidIsNil,
-		::GUID,
 		::IsEqualGUID,
 		::PathCchRemoveFileSpec,
 		::StringFromGUID2,
 		::CoCreateGuid,
-		::CLSID_NetworkListManager,
-		::NLM_CONNECTIVITY,
 		::GetModuleFileNameW,
-		::IID_INetworkListManager,
-		::INetworkListManager,
-		::CLSID_WICImagingFactory2,
-		::IWICBitmapDecoder,
-		::WICDecodeOptions,
-		::IWICFormatConverter,
-		::IWICImagingFactory,
-		::timeval
+		::DefSubclassProc,
+		::DefWindowProcW,
+		::GetWindowTextLengthW,
+		::GetWindowTextW,
+		::SetWindowTextW
 		;
 
 	namespace Messages
@@ -479,6 +488,54 @@ export namespace Boring32::Win32
 			ButtonClick = BM_CLICK,
 			ButtonClicked = BN_CLICKED
 		};
+	}
+
+	namespace Styles
+	{
+		namespace Window
+		{
+			enum : Win32::DWORD
+			{
+				WsOverlappedWindow = WS_OVERLAPPEDWINDOW,
+				WindowEdge = WS_EX_WINDOWEDGE,
+				ThickFrame = WS_THICKFRAME,
+				Child = WS_CHILD,
+				ClipSiblings = WS_CLIPSIBLINGS,
+				OverlappedWindow = WS_OVERLAPPEDWINDOW,
+				Visible = WS_VISIBLE,
+				HScroll = WS_HSCROLL,
+				VScroll = WS_VSCROLL,
+				Border = WS_BORDER,
+			};
+		}
+
+		namespace Button
+		{
+			enum : Win32::DWORD
+			{
+				DefPushButton = BS_DEFPUSHBUTTON,
+				PushButton = BS_PUSHBUTTON,
+				AutoCheckBox = BS_AUTOCHECKBOX,
+				PushLike = BS_PUSHLIKE
+			};
+		}
+
+		namespace Class
+		{
+			enum : Win32::DWORD
+			{
+				VRedraw = CS_VREDRAW,
+				HRedraw = CS_HREDRAW,
+			};
+		};
+
+		namespace Static
+		{
+			enum : Win32::DWORD
+			{
+				Right = SS_RIGHT
+			};
+		}
 	}
 
 	namespace ShowWindowOptions
@@ -510,16 +567,15 @@ export namespace Boring32::Win32
 
 	constexpr auto CwUseDefault = CW_USEDEFAULT;
 
-	constexpr auto _CERT_SIGNATURE_HASH_PROP_ID = CERT_SIGNATURE_HASH_PROP_ID;
-	constexpr auto _CERT_SIGN_HASH_CNG_ALG_PROP_ID = CERT_SIGN_HASH_CNG_ALG_PROP_ID;
-
+	constexpr auto CertSignatureHashPropId = CERT_SIGNATURE_HASH_PROP_ID;
+	constexpr auto CertSignHasCngAlgPropId = CERT_SIGN_HASH_CNG_ALG_PROP_ID;
 	constexpr auto SePrivilegeEnabled = SE_PRIVILEGE_ENABLED;
 	constexpr auto SeGroupIntegrity = SE_GROUP_INTEGRITY;
 	constexpr auto SeGroupEnabled = SE_GROUP_ENABLED;
 	constexpr auto SeGroupUseForDenyOnly = SE_GROUP_USE_FOR_DENY_ONLY;
 	constexpr auto SePrivilegeEnabledByDefault = SE_PRIVILEGE_ENABLED_BY_DEFAULT;
-	constexpr auto SePrivilegeRemoved= SE_PRIVILEGE_REMOVED;
-	constexpr auto SePrivilegeUsedForAccess= SE_PRIVILEGE_USED_FOR_ACCESS;
+	constexpr auto SePrivilegeRemoved = SE_PRIVILEGE_REMOVED;
+	constexpr auto SePrivilegeUsedForAccess = SE_PRIVILEGE_USED_FOR_ACCESS;
 	constexpr auto PrivilegeSetAllNecessary = PRIVILEGE_SET_ALL_NECESSARY;
 	constexpr auto SeGroupEnabledByDefault = SE_GROUP_ENABLED_BY_DEFAULT;
 	constexpr auto SeGroupIntegrityEnabled = SE_GROUP_INTEGRITY_ENABLED;
@@ -528,12 +584,6 @@ export namespace Boring32::Win32
 	constexpr auto SeGroupOwner = SE_GROUP_OWNER;
 	constexpr auto SeGroupResource = SE_GROUP_RESOURCE;
 	constexpr auto SeGroupUseForDenyOny = SE_GROUP_USE_FOR_DENY_ONLY;
-
-	using ::IXAudio2;
-	using ::IXAudio2MasteringVoice;
-	using ::IXAudio2SourceVoice;
-
-	using ::Microsoft::WRL::ComPtr;
 
 	// See https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindcertificateinstore
 	enum class StoreFindType : DWORD
@@ -564,21 +614,18 @@ export namespace Boring32::Win32
 		PubKeyMd5Hash = CERT_FIND_PUBKEY_MD5_HASH
 	};
 
-	using ::SERVICE_CONTROL_STATUS_REASON_PARAMS;
+	using 
+		::SERVICE_CONTROL_STATUS_REASON_PARAMS,
+		::CRYPT_HASH_BLOB;
 
-	constexpr WORD MakeWord(DWORD a, DWORD b)
-	{
-		return MAKEWORD(a, b);
-	}
+	constexpr auto MakeWord(DWORD a, DWORD b) noexcept -> WORD { return MAKEWORD(a, b); }
 
 	constexpr auto TimeZoneIdInvalid = TIME_ZONE_ID_INVALID;
-	constexpr auto CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS = 0x0002; // not defined according to msdn
 	constexpr auto _CRYPTUI_WIZ_IMPORT_SUBJECT_CERT_CONTEXT = CRYPTUI_WIZ_IMPORT_SUBJECT_CERT_CONTEXT;
-	constexpr auto CryptUiWizIgnoreNoUiFlagForCsps = CRYPTUI_WIZ_IGNORE_NO_UI_FLAG_FOR_CSPS;
+	constexpr auto CryptUiWizIgnoreNoUiFlagForCsps = 0x0002;  // not defined according to msdn
 	constexpr auto CryptUiWizNoUi = CRYPTUI_WIZ_NO_UI;
 	constexpr auto CryptUiWizImportAllowCert = CRYPTUI_WIZ_IMPORT_ALLOW_CERT;
 	constexpr auto _CRYPTUI_WIZ_IMPORT_SUBJECT_FILE = CRYPTUI_WIZ_IMPORT_SUBJECT_FILE;
-	using ::CRYPT_HASH_BLOB;
 
 	constexpr auto UsageMatchTypeAnd = USAGE_MATCH_TYPE_AND;
 
@@ -619,37 +666,37 @@ export namespace Boring32::Win32
 		Write = FILE_MAP_WRITE
 	};
 
-	constexpr ::DWORD LowDWord(auto _qw) noexcept
+	constexpr auto LowDWord(auto _qw) noexcept -> DWORD
 	{
 		return LODWORD(_qw);
 	}
 
-	constexpr ::DWORD HighDWord(auto _qw) noexcept
+	constexpr auto HighDWord(auto _qw) noexcept -> DWORD
 	{
 		return HIDWORD(_qw);
 	}
 
-	constexpr HRESULT MakeHResult(const long severity, const long facility, const long code) noexcept
+	constexpr auto MakeHResult(long severity, long facility, long code) noexcept -> HRESULT
 	{
 		return MAKE_HRESULT(severity, facility, code);
 	}
 
-	constexpr long Facility(const HRESULT hr) noexcept
+	constexpr auto Facility(HRESULT hr) noexcept -> long
 	{
 		return HRESULT_FACILITY(hr);
 	}
 
-	constexpr long Code(const HRESULT hr) noexcept
+	constexpr auto Code(HRESULT hr) noexcept -> long
 	{
 		return HRESULT_CODE(hr);
 	}
 
-	constexpr long Severity(const HRESULT hr) noexcept
+	constexpr auto Severity(HRESULT hr) noexcept -> long
 	{
 		return HRESULT_SEVERITY(hr);
 	}
 
-	constexpr bool HrFailed(const HRESULT hr) noexcept
+	constexpr auto HrFailed(HRESULT hr) noexcept -> bool
 	{
 		return FAILED(hr);
 	}
@@ -728,7 +775,7 @@ export namespace Boring32::Win32
 
 	constexpr auto LocaleNameInvariant = LOCALE_NAME_INVARIANT;
 
-	constexpr bool BCryptSuccess(NTSTATUS status) noexcept
+	constexpr auto BCryptSuccess(NTSTATUS status) noexcept -> bool
 	{
 		return BCRYPT_SUCCESS(status);
 	}
@@ -830,8 +877,8 @@ export namespace Boring32::Win32
 
 	namespace WinSafer
 	{
-		using ::SAFER_LEVEL_HANDLE;
 		using 
+			::SAFER_LEVEL_HANDLE,
 			::SaferCreateLevel,
 			::SaferCloseLevel,
 			::SaferComputeTokenFromLevel;
@@ -873,13 +920,12 @@ export namespace Boring32::Win32
 		};
 	}
 
-	const auto _CERT_STORE_PROV_SYSTEM_REGISTRY_W = CERT_STORE_PROV_SYSTEM_REGISTRY_W;
-	constexpr auto _CERT_STORE_OPEN_EXISTING_FLAG = CERT_STORE_OPEN_EXISTING_FLAG;
-	constexpr auto _CERT_SYSTEM_STORE_LOCAL_MACHINE = CERT_SYSTEM_STORE_LOCAL_MACHINE;
-	const auto _CERT_STORE_PROV_MEMORY = CERT_STORE_PROV_MEMORY;
-	constexpr auto _CERT_SYSTEM_STORE_CURRENT_USER = CERT_SYSTEM_STORE_CURRENT_USER;
-
-	constexpr auto _CERT_STORE_LOCALIZED_NAME_PROP_ID = CERT_STORE_LOCALIZED_NAME_PROP_ID;
+	const auto CertStoreProvSystemRegistryW = CERT_STORE_PROV_SYSTEM_REGISTRY_W;
+	constexpr auto CertStoreOpenExistingFlag = CERT_STORE_OPEN_EXISTING_FLAG;
+	constexpr auto CertSystemStoreLocalMachine = CERT_SYSTEM_STORE_LOCAL_MACHINE;
+	const auto CertStoreProvMemory = CERT_STORE_PROV_MEMORY;
+	constexpr auto CertSystemStoreCurrentUser = CERT_SYSTEM_STORE_CURRENT_USER;
+	constexpr auto CertStoreLocalizedNamePropId = CERT_STORE_LOCALIZED_NAME_PROP_ID;
 	enum ChainVerificationPolicy : std::uintptr_t
 	{
 		Base = reinterpret_cast<std::uintptr_t>(CERT_CHAIN_POLICY_BASE),
@@ -908,7 +954,6 @@ export namespace Boring32::Win32
 		CheckNonFreedResources = CERT_CLOSE_STORE_CHECK_FLAG,
 		ForceFreeMemory = CERT_CLOSE_STORE_FORCE_FLAG
 	};
-
 	
 	constexpr auto _BCRYPT_OBJECT_LENGTH = BCRYPT_OBJECT_LENGTH;
 	constexpr auto _BCRYPT_BLOCK_LENGTH = BCRYPT_BLOCK_LENGTH;
@@ -917,12 +962,12 @@ export namespace Boring32::Win32
 	constexpr auto _BCRYPT_BLOCK_PADDING = BCRYPT_BLOCK_PADDING;
 
 	// https://blog.katastros.com/a?ID=00750-8d94e2aa-ea28-4faf-b67d-57642f88b0bb
-	constexpr bool NT_SUCCESS(const NTSTATUS status) noexcept
+	constexpr auto NT_SUCCESS(NTSTATUS status) noexcept -> bool
 	{
 		return status >= 0;
 	}
 
-	constexpr bool NT_ERROR(const NTSTATUS status) noexcept
+	constexpr auto NT_ERROR(NTSTATUS status) noexcept -> bool
 	{
 		return status < 0;
 	}
@@ -932,24 +977,27 @@ export namespace Boring32::Win32
 	constexpr auto _SECURITY_MAX_SID_SIZE = SECURITY_MAX_SID_SIZE;
 
 	// WLAN
-	using ::PWLAN_INTERFACE_INFO_LIST;
-	using ::WLAN_INTERFACE_INFO_LIST;
-	using ::WLAN_OPCODE_VALUE_TYPE;
-	using ::WLAN_INTF_OPCODE;
-	using ::PWLAN_INTERFACE_INFO, ::WLAN_INTERFACE_INFO;
-	using ::DOT11_AUTH_CIPHER_PAIR;
-	using ::WLAN_AUTH_CIPHER_PAIR_LIST;
-	using ::WLAN_INTF_OPCODE;
-	using ::WLAN_CONNECTION_ATTRIBUTES;
-	using ::WLAN_STATISTICS;
-	using ::WLAN_INTERFACE_CAPABILITY;
-	using ::DOT11_BSS_TYPE;
-	using ::WlanOpenHandle;
-	using ::WlanCloseHandle;
-	using ::WlanFreeMemory;
-	using ::WlanEnumInterfaces;
-	using ::WlanQueryInterface;
-	using ::WlanGetInterfaceCapability;
+	using 
+		::PWLAN_INTERFACE_INFO_LIST,
+		::WLAN_INTERFACE_INFO_LIST,
+		::WLAN_OPCODE_VALUE_TYPE,
+		::WLAN_INTF_OPCODE,
+		::PWLAN_INTERFACE_INFO, 
+		::WLAN_INTERFACE_INFO,
+		::DOT11_AUTH_CIPHER_PAIR,
+		::WLAN_AUTH_CIPHER_PAIR_LIST,
+		::WLAN_INTF_OPCODE,
+		::WLAN_CONNECTION_ATTRIBUTES,
+		::WLAN_STATISTICS,
+		::WLAN_INTERFACE_CAPABILITY,
+		::DOT11_BSS_TYPE,
+		::WlanOpenHandle,
+		::WlanCloseHandle,
+		::WlanFreeMemory,
+		::WlanEnumInterfaces,
+		::WlanQueryInterface,
+		::WlanGetInterfaceCapability
+		;
 	// https://docs.microsoft.com/en-us/windows/win32/api/wlanapi/ne-wlanapi-wlan_interface_state-r1
 	enum class InterfaceState : int
 	{
@@ -968,23 +1016,49 @@ export namespace Boring32::Win32
 	constexpr auto _SID_MAX_SUB_AUTHORITIES = SID_MAX_SUB_AUTHORITIES;
 	constexpr auto _TOKEN_QUERY = TOKEN_QUERY;
 
-	using ::PTOKEN_USER;
-	using ::TOKEN_USER;
+	using 
+		::PTOKEN_USER,
+		::TOKEN_USER,
+		::SecBuffer,
+		::SecBufferDesc,
+		::SECURITY_STATUS,
+		::SCHANNEL_CRED,
+		::CredHandle,
+		::PCredHandle,
+		::TimeStamp,
+		::SCH_CREDENTIALS,
+		::CtxtHandle,
+		::SecHandle,
+		::FreeContextBuffer,
+		::FreeCredentialsHandle,
+		::AcquireCredentialsHandleW,
+		::InitializeSecurityContextW,
+		::TASK_CREATION,
+		::TASK_LOGON_TYPE,
+		::CLSCTX,
+		::_bstr_t,
+		::ITaskService,
+		::ITaskFolder,
+		::IRegisteredTask,
+		::ITaskDefinition,
+		::ITriggerCollection,
+		::IRegisteredTaskCollection,
+		::ITrigger,
+		::IDailyTrigger,
+		::IRepetitionPattern,
+		::IRunningTask,
+		::CLSID_TaskScheduler,
+		::IID_ITaskService,
+		::IP_ADAPTER_ADDRESSES,
+		::_variant_t,
+		::VARENUM,
+		::TASK_TRIGGER_TYPE2,
+		::GetAdaptersAddresses,
+		::SC_STATUS_TYPE,
+		::QUERY_SERVICE_CONFIGW,
+		::SERVICE_STATUS_PROCESS
+		;
 
-	using ::SecBuffer;
-	using ::SecBufferDesc;
-	using ::SECURITY_STATUS;
-	using ::SCHANNEL_CRED;
-	using ::CredHandle;
-	using ::PCredHandle;
-	using ::TimeStamp;
-	using ::SCH_CREDENTIALS;
-	using ::CtxtHandle;
-	using ::SecHandle;
-	using ::FreeContextBuffer;
-	using ::FreeCredentialsHandle;
-	using ::AcquireCredentialsHandleW;
-	using ::InitializeSecurityContextW;
 	constexpr auto Sec_E_OK = SEC_E_OK;
 	constexpr auto _SP_PROT_TLS1 = SP_PROT_TLS1;
 	constexpr auto _SCH_CRED_NO_DEFAULT_CREDS = SCH_CRED_NO_DEFAULT_CREDS;
@@ -1003,30 +1077,7 @@ export namespace Boring32::Win32
 		Data = SECBUFFER_DATA
 	};
 
-
 	constexpr auto DaclSecurityInformation =  DACL_SECURITY_INFORMATION;
-	
-	using ::TASK_CREATION;
-	using ::TASK_LOGON_TYPE;
-	using ::CLSCTX;
-	using ::_bstr_t;
-	using ::ITaskService;
-	using ::ITaskFolder;
-	using ::IRegisteredTask;
-	using ::ITaskDefinition;
-	using ::ITriggerCollection;
-	using ::IRegisteredTaskCollection;
-	using ::ITrigger;
-	using ::IDailyTrigger;
-	using ::IRepetitionPattern;
-	using ::IRunningTask;
-	using ::CLSID_TaskScheduler;
-	using ::IID_ITaskService;
-	using ::IP_ADAPTER_ADDRESSES;
-	using ::_variant_t;
-	using ::VARENUM;
-	using ::TASK_TRIGGER_TYPE2;
-	using ::GetAdaptersAddresses;
 	constexpr auto VariantTrue = VARIANT_TRUE;
 	constexpr auto VariantFalse = VARIANT_FALSE;
 
@@ -1052,11 +1103,6 @@ export namespace Boring32::Win32
 	constexpr auto _SERVICES_ACTIVE_DATABASE = SERVICES_ACTIVE_DATABASE;
 	constexpr auto ScManagerAllAccess = SC_MANAGER_ALL_ACCESS;
 	constexpr auto _SERVICE_ALL_ACCESS = SERVICE_ALL_ACCESS;
-	using ::SC_STATUS_TYPE;
-
-	using ::QUERY_SERVICE_CONFIGW;
-	using ::SERVICE_STATUS_PROCESS;
-	using ::SC_STATUS_TYPE;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc
 	enum class AllocationType
@@ -1247,6 +1293,11 @@ export namespace Boring32::Win32::WinHttp
 export namespace Boring32::Win32::Shell
 {
 	using WellKnownFolder = ::GUID;
+	using 
+		::IKnownFolder,
+		::IKnownFolderManager,
+		::SHGetKnownFolderPath
+		;
 	// https://learn.microsoft.com/en-us/windows/win32/shell/knownfolderid
 	namespace WellKnownFolders
 	{
@@ -1382,14 +1433,7 @@ export namespace Boring32::Win32::Shell
 	{
 		using ::KNOWN_FOLDER_FLAG;
 	}
-
-	using 
-		::IKnownFolder,
-		::IKnownFolderManager,
-		::SHGetKnownFolderPath
-		;
 }
-
 
 export namespace Boring32::Win32::Winreg
 {
@@ -1429,7 +1473,6 @@ export namespace Boring32::Win32::Winreg
 	constexpr auto _RRF_RT_REG_DWORD = RRF_RT_REG_DWORD;
 	constexpr auto _RRF_RT_REG_QWORD = RRF_RT_REG_QWORD;
 	constexpr auto _REG_NOTIFY_CHANGE_LAST_SET = REG_NOTIFY_CHANGE_LAST_SET;
-
 	constexpr auto _REG_LATEST_FORMAT = REG_LATEST_FORMAT;
 	constexpr auto _KEY_ALL_ACCESS = KEY_ALL_ACCESS;
 	constexpr auto _KEY_SET_VALUE = KEY_SET_VALUE;

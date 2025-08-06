@@ -359,7 +359,7 @@ export namespace Boring32::Crypto
 			Win32::DWORD bytes = 0;
 			bool succeeded = Win32::CertGetStoreProperty(
 				m_certStore,
-				Win32::_CERT_STORE_LOCALIZED_NAME_PROP_ID,
+				Win32::CertStoreLocalizedNamePropId,
 				nullptr,
 				&bytes
 			);
@@ -369,7 +369,7 @@ export namespace Boring32::Crypto
 			std::wstring returnValue(bytes / sizeof(wchar_t), '\0');
 			succeeded = Win32::CertGetStoreProperty(
 				m_certStore,
-				Win32::_CERT_STORE_LOCALIZED_NAME_PROP_ID,
+				Win32::CertStoreLocalizedNamePropId,
 				&returnValue[0],
 				&bytes
 			);
@@ -435,10 +435,10 @@ export namespace Boring32::Crypto
 				case CertStoreType::System:
 				{
 					m_certStore = Win32::CertOpenStore(
-						Win32::_CERT_STORE_PROV_SYSTEM_REGISTRY_W,
+						Win32::CertStoreProvSystemRegistryW,
 						Win32::Pkcs7AsnEncoding | Win32::X509AsnEncoding,
 						0,
-						Win32::_CERT_STORE_OPEN_EXISTING_FLAG | Win32::_CERT_SYSTEM_STORE_LOCAL_MACHINE,
+						Win32::CertStoreOpenExistingFlag | Win32::CertSystemStoreLocalMachine,
 						m_storeName.c_str()
 					);
 					break;
@@ -447,10 +447,10 @@ export namespace Boring32::Crypto
 				case CertStoreType::InMemory:
 				{
 					m_certStore = Win32::CertOpenStore(
-						Win32::_CERT_STORE_PROV_MEMORY,
+						Win32::CertStoreProvMemory,
 						Win32::Pkcs7AsnEncoding | Win32::X509AsnEncoding,
 						0,
-						Win32::_CERT_SYSTEM_STORE_CURRENT_USER,
+						Win32::CertSystemStoreCurrentUser,
 						nullptr
 					);
 					break;

@@ -126,12 +126,12 @@ export namespace Boring32::Crypto
 
 		[[nodiscard]] std::wstring GetSignature() const
 		{
-			return ToBase64WString(InternalCertGetProperty(Win32::_CERT_SIGNATURE_HASH_PROP_ID));
+			return ToBase64WString(InternalCertGetProperty(Win32::CertSignatureHashPropId));
 		}
 
 		[[nodiscard]] std::wstring GetSignatureHashCngAlgorithm() const
 		{
-			std::vector<std::byte> bytes = InternalCertGetProperty(Win32::_CERT_SIGN_HASH_CNG_ALG_PROP_ID);
+			std::vector<std::byte> bytes = InternalCertGetProperty(Win32::CertSignHasCngAlgPropId);
 			std::wstring result(
 				reinterpret_cast<wchar_t*>(&bytes[0]),
 				bytes.size() / sizeof(wchar_t)
