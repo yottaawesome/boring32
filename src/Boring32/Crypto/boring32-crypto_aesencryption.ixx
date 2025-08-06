@@ -26,7 +26,7 @@ export namespace Boring32::Crypto
 			Copy(other);
 		}
 
-		AesEncryption& operator=(const AesEncryption& other)
+		auto operator=(const AesEncryption& other) -> AesEncryption&
 		{
 			return Copy(other);
 		}
@@ -36,7 +36,7 @@ export namespace Boring32::Crypto
 			Move(other);
 		}
 			
-		AesEncryption& operator=(AesEncryption&& other) noexcept
+		auto operator=(AesEncryption&& other) noexcept -> AesEncryption&
 		{
 			return Move(other);
 		}
@@ -52,12 +52,12 @@ export namespace Boring32::Crypto
 			}
 		}
 
-		Win32::BCRYPT_ALG_HANDLE GetHandle() const noexcept
+		auto GetHandle() const noexcept -> Win32::BCRYPT_ALG_HANDLE
 		{
 			return m_algHandle;
 		}
 
-		Win32::DWORD GetObjectByteSize() const
+		auto GetObjectByteSize() const -> Win32::DWORD
 		{
 			if (not m_algHandle)
 				throw Error::Boring32Error("Cipher algorithm not initialised");
@@ -79,7 +79,7 @@ export namespace Boring32::Crypto
 			return cbKeyObject;
 		}
 
-		Win32::DWORD GetBlockByteLength() const
+		auto GetBlockByteLength() const -> Win32::DWORD
 		{
 			if (not m_algHandle)
 				throw Error::Boring32Error("Cipher algorithm not initialised");
@@ -120,7 +120,7 @@ export namespace Boring32::Crypto
 			m_chainingMode = cm;
 		}
 
-		CryptoKey GenerateSymmetricKey(const std::vector<std::byte>& rgbAES128Key)
+		auto GenerateSymmetricKey(const std::vector<std::byte>& rgbAES128Key) -> CryptoKey
 		{
 			if (not m_algHandle)
 				throw Error::Boring32Error("Cipher algorithm not initialised");
@@ -147,7 +147,8 @@ export namespace Boring32::Crypto
 		}
 
 		// IV will be modified during encryption, so pass a copy if needed
-		std::vector<std::byte> Encrypt(const CryptoKey& key, const std::vector<std::byte>& iv, const std::wstring_view string)
+		auto Encrypt(const CryptoKey& key, const std::vector<std::byte>& iv, const std::wstring_view string) 
+			-> std::vector<std::byte>
 		{
 			const std::byte* buffer = reinterpret_cast<const std::byte*>(&string[0]);
 			return Encrypt(
@@ -157,7 +158,8 @@ export namespace Boring32::Crypto
 			);
 		}
 
-		std::vector<std::byte> Encrypt(const CryptoKey& key, const std::vector<std::byte>& iv, const std::vector<std::byte>& plainText)
+		auto Encrypt(const CryptoKey& key, const std::vector<std::byte>& iv, const std::vector<std::byte>& plainText) 
+			-> std::vector<std::byte>
 		{
 			if (not m_algHandle)
 				throw Error::Boring32Error("Cipher algorithm not initialised");
@@ -214,7 +216,8 @@ export namespace Boring32::Crypto
 			return cypherText;
 		}
 
-		std::vector<std::byte> Decrypt(const CryptoKey& key, const std::vector<std::byte>& iv, const std::vector<std::byte>& cypherText)
+		auto Decrypt(const CryptoKey& key, const std::vector<std::byte>& iv, const std::vector<std::byte>& cypherText) 
+			-> std::vector<std::byte>
 		{
 			if (not m_algHandle)
 				throw Error::Boring32Error("Cipher algorithm not initialised");
@@ -272,8 +275,8 @@ export namespace Boring32::Crypto
 			return plainText;
 		}
 
-		private:
-		AesEncryption& Copy(const AesEncryption& other)
+	private:
+		auto Copy(const AesEncryption& other) -> AesEncryption&
 		{
 			Close();
 			if (other.m_algHandle == nullptr)
@@ -283,7 +286,7 @@ export namespace Boring32::Crypto
 			return *this;
 		}
 
-		AesEncryption& Move(AesEncryption& other) noexcept
+		auto Move(AesEncryption& other) noexcept -> AesEncryption&
 		{
 			Close();
 			m_algHandle = other.m_algHandle;
@@ -309,7 +312,7 @@ export namespace Boring32::Crypto
 			SetChainingMode(m_chainingMode);
 		}
 
-		Win32::DWORD GetEncryptDecryptFlags() const
+		auto GetEncryptDecryptFlags() const -> Win32::DWORD
 		{
 			// BCRYPT_BLOCK_PADDING must not be used with the authenticated encryption modes(AES - CCM and AES - GCM)
 			if (m_chainingMode == ChainingMode::NotSet)
