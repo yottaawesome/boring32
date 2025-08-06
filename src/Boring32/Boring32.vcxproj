@@ -324,13 +324,6 @@
     <ClCompile Include="SSPI\PKU2U\boring32-sspi_provider_pku2u.ixx" />
     <ClCompile Include="SSPI\Schannel\boring32-sspi_provider_schannel.ixx" />
     <ClCompile Include="Strings\boring32-strings_fixedstring.ixx" />
-    <ClCompile Include="StrongTypes\boring32-strongtypes_crtp.cpp">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModuleInternalPartition</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCppModuleInternalPartition</CompileAs>
-    </ClCompile>
-    <ClCompile Include="StrongTypes\boring32-strongtypes_functionalities.ixx" />
-    <ClCompile Include="StrongTypes\boring32-strongtypes_impl.ixx" />
-    <ClCompile Include="StrongTypes\boring32-strongtypes.ixx" />
     <ClCompile Include="TaskScheduler\boring32-taskscheduler_registeredtask.ixx" />
     <ClCompile Include="TaskScheduler\boring32-taskscheduler.ixx" />
     <ClCompile Include="TaskScheduler\boring32-taskscheduler_taskfolder.ixx" />

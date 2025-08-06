@@ -39,7 +39,7 @@ export namespace Boring32::Crypto
 			m_keyObject(std::move(keyObject))
 		{ }
 
-		Win32::BCRYPT_KEY_HANDLE GetHandle() const noexcept
+		auto GetHandle() const noexcept -> Win32::BCRYPT_KEY_HANDLE
 		{
 			return m_keyHandle;
 		}
@@ -54,7 +54,7 @@ export namespace Boring32::Crypto
 		}
 
 		private:
-		CryptoKey& Move(CryptoKey& other) noexcept
+		auto Move(CryptoKey& other) noexcept -> CryptoKey&
 		{
 			Close();
 			m_keyHandle = other.m_keyHandle;
