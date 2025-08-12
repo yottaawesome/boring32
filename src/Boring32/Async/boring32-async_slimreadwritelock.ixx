@@ -4,49 +4,35 @@ import boring32.win32;
 
 export namespace Boring32::Async
 {
-	struct SharedLockScope final
+	template<bool VShared>
+	struct SlimLockScope final
 	{
-		~SharedLockScope()
+		~SlimLockScope()
 		{
-			Win32::ReleaseSRWLockShared(&m_srwLock);
+			if constexpr (VShared)
+				Win32::ReleaseSRWLockShared(&m_srwLock);
+			else
+				Win32::ReleaseSRWLockExclusive(&m_srwLock);
 		}
 
-		SharedLockScope(Win32::SRWLOCK& srwLock) noexcept
+		SlimLockScope(Win32::SRWLOCK& srwLock) noexcept
 			: m_srwLock(srwLock)
 		{
-			Win32::AcquireSRWLockShared(&m_srwLock);
+			if constexpr (VShared)
+				Win32::AcquireSRWLockShared(&m_srwLock);
+			else
+				Win32::AcquireSRWLockExclusive(&m_srwLock);
 		}
 
-		SharedLockScope(const SharedLockScope&) = delete;
-		SharedLockScope(SharedLockScope&&) noexcept = delete;
-		SharedLockScope operator=(const SharedLockScope&) = delete;
-		SharedLockScope operator=(SharedLockScope&&) noexcept = delete;
+		SlimLockScope(const SlimLockScope&) = delete;
+		SlimLockScope& operator=(const SlimLockScope&) = delete;
 
-		private:
+	private:
 		Win32::SRWLOCK& m_srwLock;
 	};
 
-	struct ExclusiveLockScope final
-	{
-		~ExclusiveLockScope()
-		{
-			Win32::ReleaseSRWLockExclusive(&m_srwLock);
-		}
-
-		ExclusiveLockScope(Win32::SRWLOCK& srwLock) noexcept
-			: m_srwLock(srwLock)
-		{
-			Win32::AcquireSRWLockExclusive(&m_srwLock);
-		}
-
-		ExclusiveLockScope(const ExclusiveLockScope&) = delete;
-		ExclusiveLockScope(ExclusiveLockScope&&) noexcept = delete;
-		ExclusiveLockScope operator=(const ExclusiveLockScope&) = delete;
-		ExclusiveLockScope operator=(ExclusiveLockScope&&) noexcept = delete;
-
-		private:
-		Win32::SRWLOCK& m_srwLock;
-	};
+	using SharedLockScope = SlimLockScope<true>;
+	using ExclusiveLockScope = SlimLockScope<false>;
 
 	struct SlimReadWriteLock final
 	{
@@ -58,18 +44,16 @@ export namespace Boring32::Async
 		//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-initializesrwlock
 		// "An SRW lock cannot be moved or copied."
 		SlimReadWriteLock(const SlimReadWriteLock&) = delete;
-		SlimReadWriteLock(SlimReadWriteLock&&) noexcept = delete;
 		SlimReadWriteLock& operator=(const SlimReadWriteLock&) = delete;
-		SlimReadWriteLock& operator=(SlimReadWriteLock&&) noexcept = delete;
 
-		bool TryAcquireSharedLock()
+		auto TryAcquireSharedLock() -> bool
 		{
 			return Win32::TryAcquireSRWLockShared(&m_srwLock);
 		}
 
-		bool TryAcquireExclusiveLock()
+		auto TryAcquireExclusiveLock() -> bool
 		{
-			const Win32::DWORD currentThreadId = Win32::GetCurrentThreadId();
+			Win32::DWORD currentThreadId = Win32::GetCurrentThreadId();
 			if (m_threadOwningExclusiveLock == currentThreadId)
 				return true;
 			if (Win32::TryAcquireSRWLockExclusive(&m_srwLock))
@@ -87,10 +71,10 @@ export namespace Boring32::Async
 
 		void AcquireExclusiveLock()
 		{
-			const Win32::DWORD currentThreadId = Win32::GetCurrentThreadId();
+			Win32::DWORD currentThreadId = Win32::GetCurrentThreadId();
 			if (m_threadOwningExclusiveLock != currentThreadId)
 			{
-				AcquireSRWLockExclusive(&m_srwLock);
+				Win32::AcquireSRWLockExclusive(&m_srwLock);
 				m_threadOwningExclusiveLock = currentThreadId;
 			}
 		}
@@ -104,17 +88,16 @@ export namespace Boring32::Async
 		{
 			if (m_threadOwningExclusiveLock != Win32::GetCurrentThreadId())
 				return;
-
 			Win32::ReleaseSRWLockExclusive(&m_srwLock);
 			m_threadOwningExclusiveLock = 0;
 		}
 
-		Win32::SRWLOCK& GetLock() noexcept
+		auto GetLock() noexcept -> Win32::SRWLOCK&
 		{
 			return m_srwLock;
 		}
 
-		private:
+	private:
 		Win32::SRWLOCK m_srwLock;
 		Win32::DWORD m_threadOwningExclusiveLock = 0;
 	};
@@ -123,14 +106,9 @@ export namespace Boring32::Async
 	struct SlimRWProtectedObject final
 	{
 		SlimRWProtectedObject()
-			requires std::is_default_constructible_v<TProtected> = default;
-		SlimRWProtectedObject(const TProtected& data)
-			requires std::is_copy_constructible_v<TProtected>
-			: m_data(data)
-		{}
-		SlimRWProtectedObject(TProtected&& data)
-			requires std::is_move_constructible_v<TProtected>
-			: m_data(std::move(data))
+			requires std::constructible_from<TProtected> = default;
+		SlimRWProtectedObject(std::convertible_to<TProtected> auto&& data)
+			: m_data(std::forward<decltype(data)>(data))
 		{}
 
 		// NB. I tried experimenting turning this class into a functor with overloaded
@@ -141,21 +119,35 @@ export namespace Boring32::Async
 		// operator() and statically inspect the first argument to see if it's a 
 		// const TProtected& or TProtected& and dispatch via a constexpr if from there, 
 		// but that's something to figure out another day.
-		auto Read(const auto& func, auto&&...args) const
-			requires std::is_invocable_v<decltype(func), const TProtected&, decltype(args)...>
+		auto Read(this auto&& self, auto&& func, auto&&...args)
+			requires std::invocable<decltype(func), const TProtected&, decltype(args)...>
 		{
-			SharedLockScope scope(m_lock.GetLock());
-			return func(m_data, std::forward<decltype(args)>(args)...);
+			SharedLockScope scope(self.m_lock.GetLock());
+			return std::invoke(self.m_data, std::forward<decltype(args)>(args)...);
 		}
 
-		auto Mutate(const auto& func, auto&&...args)
-			requires std::is_invocable_v<decltype(func), TProtected&, decltype(args)...>
+		auto Mutate(this auto&& self, auto&& func, auto&&...args)
+			requires std::invocable<decltype(func), const TProtected&, decltype(args)...>
 		{
-			ExclusiveLockScope scope(m_lock.GetLock());
-			return func(m_data, std::forward<decltype(args)>(args)...);
+			ExclusiveLockScope scope(self.m_lock.GetLock());
+			return func(self.m_data, std::forward<decltype(args)>(args)...);
 		}
 
-		private:
+		auto operator=(this auto&& self, std::convertible_to<TProtected> auto&& other) -> SlimRWProtectedObject
+		{
+			self.Mutate(
+				[](auto& current, auto&& other) static { current = std::forward<decltype(other)>(other); }, 
+				std::forward<decltype(other)>(other));
+			return self;
+		}
+
+		operator TProtected(this auto&& self)
+			requires std::copy_constructible<TProtected>
+		{
+			return self.Read([](const auto& current) { return current; });
+		}
+
+	private:
 		TProtected m_data;
 		mutable SlimReadWriteLock m_lock;
 	};

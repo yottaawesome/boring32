@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 
+import std;
 import boring32;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
