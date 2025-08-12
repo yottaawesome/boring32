@@ -3,7 +3,7 @@ import :computer;
 
 export namespace Boring32::Memory
 {
-	inline unsigned long GetPageSize() noexcept
+	auto GetPageSize() noexcept -> unsigned long
 	{
 		return Computer::GetSystemInfo().dwPageSize;
 	}

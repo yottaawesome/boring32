@@ -6,7 +6,7 @@ import :error;
 export namespace Boring32::Computer
 {
     [[nodiscard]]
-    std::wstring GetFormattedHostName(const Win32::COMPUTER_NAME_FORMAT format)
+    auto GetFormattedHostName(const Win32::COMPUTER_NAME_FORMAT format) -> std::wstring
     {
         // TODO: find a way to support both ANSI and unicode versions
         Win32::DWORD bufferCharacterSize = 0; // this will include the trailing null byte
@@ -30,7 +30,7 @@ export namespace Boring32::Computer
     }
 
     [[nodiscard]]
-    size_t GetTotalMemoryKB()
+    auto GetTotalMemoryKB() -> size_t
     {
         // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getphysicallyinstalledsystemmemory
         size_t memoryInKB;
@@ -40,7 +40,7 @@ export namespace Boring32::Computer
     }
 
     [[nodiscard]]
-    Win32::MEMORYSTATUSEX GetMemoryStatus()
+    auto GetMemoryStatus() -> Win32::MEMORYSTATUSEX
     {
         // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-globalmemorystatusex
         // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-memorystatusex
@@ -51,7 +51,7 @@ export namespace Boring32::Computer
     }
 
     [[nodiscard]]
-    size_t GetMillisecondsSinceSystemBooted()
+    auto GetMillisecondsSinceSystemBooted() -> size_t
     {
         // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-gettickcount64
         return Win32::GetTickCount64();
@@ -65,7 +65,7 @@ export namespace Boring32::Computer
     };
 
     [[nodiscard]]
-    TimeAdjustment GetSystemTimeAdjustmentInfo()
+    auto GetSystemTimeAdjustmentInfo() -> TimeAdjustment
     {
         TimeAdjustment ts{};
         // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtimeadjustment
@@ -86,7 +86,7 @@ export namespace Boring32::Computer
     }
 
     [[nodiscard]]
-    Win32::SYSTEM_INFO GetSystemInfo() noexcept
+    auto GetSystemInfo() noexcept -> Win32::SYSTEM_INFO
     {
         // Can probably break this down to more useful pieces of info
         Win32::SYSTEM_INFO result;
@@ -98,9 +98,8 @@ export namespace Boring32::Computer
 
     // See https://docs.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-logical_processor_relationship
     [[nodiscard]] 
-    std::vector<Win32::SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX> GetLogicalProcessorInfo(
-        const Win32::LOGICAL_PROCESSOR_RELATIONSHIP relationship
-    )
+    auto GetLogicalProcessorInfo(Win32::LOGICAL_PROCESSOR_RELATIONSHIP relationship)
+        -> std::vector<Win32::SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX>
     {
         Win32::DWORD lengthInBytes = 0;
         // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getlogicalprocessorinformationex
@@ -133,7 +132,7 @@ export namespace Boring32::Computer
     }
 
     [[nodiscard]]
-    std::vector<Win32::DWORD> EnumerateProcessIDs()
+    auto EnumerateProcessIDs() -> std::vector<Win32::DWORD>
     {
         // Get the list of process identifiers.
         std::vector<Win32::DWORD> processes(1024);
@@ -152,7 +151,7 @@ export namespace Boring32::Computer
     }
 
     [[nodiscard]]
-    std::vector<void*> EnumerateDeviceDriverLoadAddresses()
+    auto EnumerateDeviceDriverLoadAddresses() -> std::vector<void*>
     {
         // Get the list of process identifiers.
         std::vector<void*> deviceDriverAddresses(1024);

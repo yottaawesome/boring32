@@ -7,7 +7,7 @@ import :strings;
 export namespace Boring32::FileSystem
 {
 	// Requires linking with Version.lib
-	std::wstring GetFileVersion(const std::wstring& filePath)
+	auto GetFileVersion(const std::wstring& filePath) -> std::wstring
 	{
 		// Adapted from https://stackoverflow.com/questions/940707/how-do-i-programmatically-get-the-version-of-a-dll-or-exe-file
 		// See also https://docs.microsoft.com/en-us/windows/win32/menurc/version-information
@@ -119,7 +119,7 @@ export namespace Boring32::FileSystem
 			throw Error::Win32Error(Win32::GetLastError(), "MoveFileExW() failed");
 	}
 
-	Win32::HANDLE FileCreate(
+	auto FileCreate(
 		const std::wstring& fileName,
 		const Win32::DWORD desiredAccess = Win32::GenericRead | Win32::GenericWrite,
 		const Win32::DWORD shareMode = 0,
@@ -127,7 +127,7 @@ export namespace Boring32::FileSystem
 		const Win32::DWORD creationDisposition = Win32::OpenAlways,
 		const Win32::DWORD flagsAndAttributes = Win32::FileAttributeNormal,
 		const Win32::HANDLE templateFile = nullptr
-	)
+	) -> Win32::HANDLE
 	{
 		if (fileName.empty())
 			throw Error::Boring32Error("Filename must be specified");
