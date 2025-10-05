@@ -120,4 +120,11 @@ export namespace Boring32::Concepts
 
 	template<typename TArg, typename TTo>
 	concept ConstructibleTo = std::constructible_from<std::remove_cvref_t<TTo>, std::remove_cvref_t<TArg>>;
+
+	template<typename TFn, typename TReturn, typename...TArgs>
+	concept Signature = 
+		requires(TFn fn, TArgs... args)
+		{
+			{ fn(args...) } -> std::convertible_to<TReturn>;
+		};		
 }

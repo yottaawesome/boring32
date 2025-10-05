@@ -169,19 +169,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Async\Async\boring32.async-apcthread.cpp" />
-    <ClCompile Include="Async\Async\boring32.async-functions.cpp" />
-    <ClCompile Include="Async\Async\boring32.async-event.cpp" />
-    <ClCompile Include="Async\Async\boring32.async-eventloop.cpp" />
-    <ClCompile Include="Async\Async\boring32.async-filemapping.cpp" />
-    <ClCompile Include="Async\Async\boring32.async-mutex.cpp" />
-    <ClCompile Include="Async\Async\boring32.async-semaphore.cpp" />
-    <ClCompile Include="Async\Async\boring32.async-threadpool.cpp" />
-    <ClCompile Include="Async\Async\boring32.async-timerqueue.cpp" />
-    <ClCompile Include="Async\Async\boring32.async-timerqueuetimercallback.cpp" />
-    <ClCompile Include="Async\Async\boring32.async-waitable.cpp" />
-    <ClCompile Include="Async\Async\boring32.async-waitabletimer.cpp" />
-    <ClCompile Include="Async\Async\boring32.async-sharedmap.cpp" />
+    <ClCompile Include="Async\boring32-async_threadsafevector.cpp" />
+    <ClCompile Include="Async\boring32.async-apcthread.cpp" />
+    <ClCompile Include="Async\boring32.async-functions.cpp" />
+    <ClCompile Include="Async\boring32.async-event.cpp" />
+    <ClCompile Include="Async\boring32.async-eventloop.cpp" />
+    <ClCompile Include="Async\boring32.async-filemapping.cpp" />
+    <ClCompile Include="Async\boring32.async-mutex.cpp" />
+    <ClCompile Include="Async\boring32.async-semaphore.cpp" />
+    <ClCompile Include="Async\boring32.async-threadpool.cpp" />
+    <ClCompile Include="Async\boring32.async-timerqueue.cpp" />
+    <ClCompile Include="Async\boring32.async-timerqueuetimercallback.cpp" />
+    <ClCompile Include="Async\boring32.async-waitable.cpp" />
+    <ClCompile Include="Async\boring32.async-waitabletimer.cpp" />
+    <ClCompile Include="Async\boring32.async-sharedmap.cpp" />
     <ClCompile Include="Compression\boring32.compression-compressor.cpp" />
     <ClCompile Include="Compression\boring32.compression-decompressor.cpp" />
     <ClCompile Include="Computer\boring32.computer-functions.cpp" />

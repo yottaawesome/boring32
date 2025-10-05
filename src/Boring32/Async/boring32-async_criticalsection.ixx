@@ -18,32 +18,12 @@ export namespace Boring32::Async
 		CriticalSection(const CriticalSection&&) = delete;
 		CriticalSection& operator=(const CriticalSection&&) = delete;
 
-		CriticalSection(const Win32::DWORD spinCount = 0)
+		CriticalSection(Win32::DWORD spinCount = 0)
 		{
 			Initialise(spinCount);
 		}
 
-		Win32::CRITICAL_SECTION& GetRef() noexcept
-		{
-			return m_criticalSection;
-		}
-
-		const Win32::CRITICAL_SECTION& GetRef() const noexcept
-		{
-			return m_criticalSection;
-		}
-
-		Win32::CRITICAL_SECTION* GetPtr() noexcept
-		{
-			return &m_criticalSection;
-		}
-
-		const Win32::CRITICAL_SECTION* GetPtr() const noexcept
-		{
-			return &m_criticalSection;
-		}
-
-		operator CRITICAL_SECTION* () noexcept
+		operator Win32::CRITICAL_SECTION* () noexcept
 		{
 			return &m_criticalSection;
 		}
@@ -58,8 +38,8 @@ export namespace Boring32::Async
 			Win32::LeaveCriticalSection(&m_criticalSection); 
 		}
 
-		private:
-		void Initialise(const Win32::DWORD spinCount)
+	private:
+		void Initialise(Win32::DWORD spinCount)
 		{
 			// https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-initializecriticalsectionex
 			if (not Win32::InitializeCriticalSectionEx(&m_criticalSection, spinCount, 0))

@@ -3,207 +3,95 @@ import std;
 import boring32.win32;
 import :async_criticalsection;
 import :async_event;
+import :concepts;
 
 export namespace Boring32::Async
 {
-	template<typename T>
+	template<typename TFn, typename TArg>
+	concept FindFn = Concepts::Signature<TFn, bool, TArg>;
+
+	// There's a compiler ICE when refactoring to use concepts and auto&&.
+	// https://developercommunity.visualstudio.com/t/ICE-with-templates-and-explicit-object-p/10950903
+	template<typename T, typename TLockType>
 	struct ThreadSafeVector final
 	{
 		ThreadSafeVector() = default;
-			
 		ThreadSafeVector(const ThreadSafeVector&) = delete;
 		ThreadSafeVector operator=(const ThreadSafeVector&) = delete;
 
-		void Add(T&& msg) noexcept
-			requires std::is_move_constructible_v<T>
+		ThreadSafeVector(std::convertible_to<T> auto&&... args)
 		{
-			CriticalSectionLock cs(m_criticalSection.GetRef());
-			m_collection.push_back(msg);
+			Add(std::forward<decltype(args)>(args)...);
+		}
+
+		void Add(std::convertible_to<T> auto&&...msg) noexcept
+			requires std::copy_constructible<T>
+		{
+			std::scoped_lock<TLockType> cs(m_criticalSection);
+			(m_collection.push_back(std::forward<decltype(msg)>(msg)), ...);
 			m_hasMessages.Signal();
 		}
 
-		void Add(const T& msg)
-			requires std::is_copy_constructible_v<T>
+		auto Size() const -> size_t
 		{
-			CriticalSectionLock cs(m_criticalSection.GetRef());
-			m_collection.push_back(msg);
-			m_hasMessages.Signal();
-		}
-
-		size_t Size() const
-		{
-			CriticalSectionLock cs(m_criticalSection.GetRef());
+			std::scoped_lock<TLockType> cs(m_criticalSection);
 			return m_collection.size();
 		}
 
-		std::vector<T> ToVector() const
-			requires std::is_copy_constructible_v<T>
+		auto ToVector() const -> std::vector<T>
+			requires std::copy_constructible<T>
 		{
-			CriticalSectionLock cs(m_criticalSection.GetRef());
+			std::scoped_lock<TLockType> cs(m_criticalSection);
 			return std::vector<T>(m_collection);
 		}
 
 		void Clear()
 		{
-			CriticalSectionLock cs(m_criticalSection.GetRef());
+			std::scoped_lock<TLockType> cs(m_criticalSection);
 			m_collection.clear();
 			m_hasMessages.Reset();
 		}
 
-		void DoWithLock(std::function<void(std::vector<T>&)>& func)
+		void DoWithLock(std::invocable<T> auto&& func)
 		{
-			CriticalSectionLock cs(m_criticalSection.GetRef());
+			std::scoped_lock<TLockType> cs(m_criticalSection);
 			func(m_collection);
 			SignalOrReset();
 		}
 
-		void DoWithLock(std::function<void(std::vector<T>&)>&& func)
+		auto At(int index) -> T requires std::copy_constructible<T>
 		{
-			CriticalSectionLock cs(m_criticalSection.GetRef());
-			func(m_collection);
-			SignalOrReset();
+			std::scoped_lock<TLockType> cs(m_criticalSection);
+			return index < m_collection.size()
+				? m_collection[index]
+				: throw std::runtime_error(std::format("Index {} is out of bounds for size {}.", index, m_collection.size()));
 		}
 
-		T CopyOfElementAt(const int index)
-			requires std::is_copy_constructible_v<T>
+		void ForEach(FindFn<T> auto&& func)
 		{
-			CriticalSectionLock cs(m_criticalSection.GetRef());
-			return m_collection.at(index);
-		}
-
-		void ForEach(const std::function<bool(T&)>& func)
-		{
-			CriticalSectionLock cs(m_criticalSection.GetRef());
+			std::scoped_lock<TLockType> cs(m_criticalSection);
 			for (T& item : m_collection)
-				if (func(item) == false)
-					break;;
-		}
-
-		void ForEach(std::function<bool(T&)>&& func)
-		{
-			CriticalSectionLock cs(m_criticalSection.GetRef());
-			for (T& item : m_collection)
-				if (func(item) == false)
+				if (not func(item))
 					break;
 		}
 
-		void ForEachAndClear(std::function<void(T&)>& func)
+		void ForEachThenClear(std::invocable<T> auto&& func)
 		{
-			CriticalSectionLock cs(m_criticalSection.GetRef());
+			std::scoped_lock<TLockType> cs(m_criticalSection);
 			for (T& item : m_collection)
 				func(item);
 			Clear();
 		}
 
-		void ForEachAndClear(std::function<void(T&)>&& func)
+		// Delete items where func(item) returns true.
+		auto DeleteWhere(FindFn<T> auto&& func) -> std::tuple<size_t, size_t>
 		{
-			CriticalSectionLock cs(m_criticalSection.GetRef());
-			for (T& item : m_collection)
-				func(item);
-			Clear();
-		}
-
-		void ForEachAndClear(std::function<void(T*)>& func)
-		{
-			CriticalSectionLock cs(m_criticalSection.GetRef());
-			for (T& item : m_collection)
-				func(&item);
-			Clear();
-		}
-
-		void ForEachAndClear(std::function<void(T*)>&& func)
-		{
-			CriticalSectionLock cs(m_criticalSection.GetRef());
-			for (T& item : m_collection)
-				func(&item);
-			Clear();
-		}
-
-		std::tuple<size_t, size_t> ForEachAndSelectiveClear(std::function<bool(T&)>& func)
-		{
-			return InternalForEachAndSelectiveClear(func);
-		}
-
-		std::tuple<size_t, size_t> ForEachAndSelectiveClear(std::function<bool(T&)>&& func)
-		{
-			return InternalForEachAndSelectiveClear(func);
-		}
-
-		bool EraseOne(const std::function<bool(const T&)>& findFunc)
-		{
-			CriticalSectionLock cs(m_criticalSection.GetRef());
-
-			size_t index = IndexOf(findFunc);
-			if (index > -1)
-			{
-				RemoveAt(index);
-				if (m_collection.size() == 0)
-					m_hasMessages.Reset();
-			}
-			return index > -1;
-		}
-
-		void EraseMultiple(const std::function<bool(const T&)>& findFunc)
-		{
-			CriticalSectionLock cs(m_criticalSection.GetRef());
-			size_t index = 0;
-			while ((index = IndexOf(findFunc)) != -1)
-			{
-				RemoveAt(index);
-				if (m_collection.size() == 0)
-					m_hasMessages.Reset();
-			}
-		}
-
-		bool FindAndErase(const std::function<bool(const T&)>& findFunc, T& itemToSet)
-		{
-			CriticalSectionLock cs(m_criticalSection.GetRef());
-			size_t index = IndexOf(findFunc);
-			if (index > -1)
-			{
-				itemToSet = m_collection.at(index);
-				RemoveAt(index);
-				if (m_collection.size() == 0)
-					m_hasMessages.Reset();
-				return true;
-			}
-			return false;
-		}
-
-		void RemoveAt(const size_t index)
-		{
-			if (index >= m_collection.size())
-				return;
-
-			CriticalSectionLock cs(m_criticalSection.GetRef());
-			m_collection.erase(m_collection.begin() + index);
-			if (m_collection.size() == 0)
-				m_hasMessages.Reset();
-		}
-
-		size_t IndexOf(const std::function<bool(const T&)>& func)
-		{
-			CriticalSectionLock cs(m_criticalSection.GetRef());
-			auto iter = std::find_if(m_collection.begin(), m_collection.end(), func);
-			if (iter == m_collection.end())
-				return -1;
-			return std::distance(m_collection.begin(), iter);
-		}
-
-		Win32::HANDLE GetWaitableHandle() noexcept
-		{
-			return m_hasMessages.GetHandle();
-		}
-
-		private:
-		std::tuple<size_t, size_t> InternalForEachAndSelectiveClear(std::function<bool(T&)>& func)
-		{
-			CriticalSectionLock cs(m_criticalSection.GetRef());
+			std::scoped_lock<TLockType> cs(m_criticalSection);
 			size_t originalCount = m_collection.size();
 			std::vector<int> indexesToKeep;
 			for (int i = 0; i < m_collection.size(); i++)
 			{
-				if (func(m_collection[i]))
+				if (not func(m_collection[i]))
 					indexesToKeep.push_back(i);
 			}
 			size_t itemCountRemoved = m_collection.size() - indexesToKeep.size();
@@ -215,6 +103,70 @@ export namespace Boring32::Async
 			return std::tuple(itemCountRemoved, originalCount);
 		}
 
+		auto EraseOne(FindFn<T> auto&& findFunc) -> bool
+		{
+			std::scoped_lock<TLockType> cs(m_criticalSection);
+			if (auto index = IndexOf(findFunc); index)
+			{
+				RemoveAt(*index);
+				if (m_collection.size() == 0)
+					m_hasMessages.Reset();
+				return true;
+			}
+			return false;
+		}
+
+		void EraseMultiple(FindFn<T> auto&& findFunc)
+		{
+			std::scoped_lock<TLockType> cs(m_criticalSection);
+			for (auto index = IndexOf(findFunc); index = IndexOf(findFunc); index)
+			{
+				RemoveAt(*index);
+				if (m_collection.size() == 0)
+					m_hasMessages.Reset();
+			}
+		}
+
+		auto ExtractOne(FindFn<T> auto&& findFunc) -> std::optional<T>
+		{
+			std::scoped_lock<TLockType> cs(m_criticalSection);
+			if (auto index = IndexOf(findFunc); index)
+			{
+				T itemToSet = m_collection[*index];
+				RemoveAt(*index);
+				if (m_collection.size() == 0)
+					m_hasMessages.Reset();
+				return itemToSet;
+			}
+			return std::nullopt;
+		}
+
+		void RemoveAt(size_t index)
+		{
+			if (index >= m_collection.size())
+				return;
+
+			std::scoped_lock<TLockType> cs(m_criticalSection);
+			m_collection.erase(m_collection.begin() + index);
+			if (m_collection.size() == 0)
+				m_hasMessages.Reset();
+		}
+
+		auto IndexOf(Concepts::Signature<bool, T> auto&& func) -> std::optional<size_t>
+		{
+			std::scoped_lock<TLockType> cs(m_criticalSection);
+			auto iter = std::find_if(m_collection.begin(), m_collection.end(), func);
+			if (iter == m_collection.end())
+				return std::nullopt;
+			return std::distance(m_collection.begin(), iter);
+		}
+
+		auto GetWaitableHandle() noexcept -> Win32::HANDLE
+		{
+			return m_hasMessages.GetHandle();
+		}
+
+	private:
 		void SignalOrReset()
 		{
 			if (m_collection.size() == 0)
@@ -224,7 +176,7 @@ export namespace Boring32::Async
 		}
 
 		std::vector<T> m_collection;
-		mutable CriticalSection m_criticalSection{ 0 };
+		mutable TLockType m_criticalSection{ 0 }; // For const functions.
 		ManualResetEvent m_hasMessages{ false, false };
 	};
 }

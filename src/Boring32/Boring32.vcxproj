@@ -188,6 +188,7 @@
     <ClCompile Include="Async\boring32-async_criticalsection.ixx" />
     <ClCompile Include="Async\boring32-async_eventloop.ixx" />
     <ClCompile Include="Async\boring32-async_functions.ixx" />
+    <ClCompile Include="Async\boring32-async_nullmutex.ixx" />
     <ClCompile Include="Async\boring32-async_overlapped.ixx" />
     <ClCompile Include="Async\boring32-async_sharedmap.ixx" />
     <ClCompile Include="Async\boring32-async_synced.ixx" />

@@ -163,7 +163,7 @@ export namespace Boring32::Async
 			return m_name;
 		}
 
-		private:
+	private:
 		void Move(Mutex& other) noexcept
 		{
 			Close();
