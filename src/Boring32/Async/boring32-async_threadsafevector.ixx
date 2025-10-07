@@ -52,7 +52,7 @@ export namespace Boring32::Async
 			m_hasMessages.Reset();
 		}
 
-		void DoWithLock(std::invocable<T> auto&& func)
+		void DoWithLock(std::invocable<std::vector<T>&> auto&& func)
 		{
 			std::scoped_lock<TLockType> cs(m_criticalSection);
 			func(m_collection);
@@ -103,28 +103,17 @@ export namespace Boring32::Async
 			return std::tuple(itemCountRemoved, originalCount);
 		}
 
-		auto EraseOne(FindFn<T> auto&& findFunc) -> bool
+		auto DeleteOne(FindFn<T> auto&& findFunc) -> bool
 		{
 			std::scoped_lock<TLockType> cs(m_criticalSection);
 			if (auto index = IndexOf(findFunc); index)
 			{
-				RemoveAt(*index);
+				DeleteAt(*index);
 				if (m_collection.size() == 0)
 					m_hasMessages.Reset();
 				return true;
 			}
 			return false;
-		}
-
-		void EraseMultiple(FindFn<T> auto&& findFunc)
-		{
-			std::scoped_lock<TLockType> cs(m_criticalSection);
-			for (auto index = IndexOf(findFunc); index = IndexOf(findFunc); index)
-			{
-				RemoveAt(*index);
-				if (m_collection.size() == 0)
-					m_hasMessages.Reset();
-			}
 		}
 
 		auto ExtractOne(FindFn<T> auto&& findFunc) -> std::optional<T>
@@ -133,7 +122,7 @@ export namespace Boring32::Async
 			if (auto index = IndexOf(findFunc); index)
 			{
 				T itemToSet = m_collection[*index];
-				RemoveAt(*index);
+				DeleteAt(*index);
 				if (m_collection.size() == 0)
 					m_hasMessages.Reset();
 				return itemToSet;
@@ -141,7 +130,7 @@ export namespace Boring32::Async
 			return std::nullopt;
 		}
 
-		void RemoveAt(size_t index)
+		void DeleteAt(size_t index)
 		{
 			if (index >= m_collection.size())
 				return;
