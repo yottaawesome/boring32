@@ -98,14 +98,8 @@ export namespace Boring32::Async
 		auto DeleteOne(FindFn<T> auto&& predicate) -> bool
 		{
 			ScopedLock cs(m_mutex);
-			if (auto index = IndexOf(predicate); index)
-			{
-				DeleteAt(*index);
-				if (m_collection.size() == 0)
-					m_hasMessages.Reset();
-				return true;
-			}
-			return false;
+			auto iter = std::remove_if(m_collection.begin(), m_collection.end(), predicate);
+			return iter == m_collection.end() ? false : (m_collection.erase(iter), true);
 		}
 
 		auto ExtractOne(FindFn<T> auto&& predicate) -> std::optional<T>

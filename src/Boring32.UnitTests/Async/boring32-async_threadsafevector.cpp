@@ -39,8 +39,17 @@ namespace Async
 			TestType vec;
 			vec.Add(1);
 			vec.Add(2);
-			vec.DeleteOne([](int v) { return v == 1; });
+			Assert::IsTrue(vec.DeleteOne([](int v) { return v == 1; }));
 			Assert::AreEqual(size_t(1), vec.Size());
+		}
+
+		TEST_METHOD(TestDeleteNoneFound)
+		{
+			TestType vec;
+			vec.Add(1);
+			vec.Add(2);
+			Assert::IsFalse(vec.DeleteOne([](int v) { return v == 8; }));
+			Assert::AreEqual(size_t(2), vec.Size());
 		}
 
 		TEST_METHOD(ExtractOne)
@@ -61,6 +70,7 @@ namespace Async
 			vec.Add(2);
 			auto removed = vec.DeleteWhere([](int v) { return v == 1; });
 			Assert::AreEqual(removed, 2ull);
+			Assert::AreEqual(vec.Size(), 1ull);
 		}
 
 		TEST_METHOD(TestToVector)
