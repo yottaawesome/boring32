@@ -32,6 +32,7 @@ namespace Async
 			vec.Add(1);
 			vec.Add(2);
 			Assert::AreEqual(size_t(2), vec.Size());
+			Assert::IsTrue(vec.IsSignalled());
 		}
 
 		TEST_METHOD(TestDeleteOne)
@@ -78,6 +79,7 @@ namespace Async
 			auto i = vec.ExtractOne([](int v) { return v == 1; });
 			Assert::IsTrue(i.has_value());
 			Assert::AreEqual(*i, 1);
+			Assert::IsTrue(vec.IsSignalled());
 		}
 
 		TEST_METHOD(TestDeleteWhere)
@@ -89,6 +91,7 @@ namespace Async
 			auto removed = vec.DeleteWhere([](int v) { return v == 1; });
 			Assert::AreEqual(removed, 2ull);
 			Assert::AreEqual(vec.Size(), 1ull);
+			Assert::IsTrue(vec.IsSignalled());
 		}
 
 		TEST_METHOD(TestToVector)
@@ -107,6 +110,7 @@ namespace Async
 			Assert::AreEqual(size_t(3), vec.Size());
 			vec.Clear();
 			Assert::AreEqual(size_t(0), vec.Size());
+			Assert::IsFalse(vec.IsSignalled());
 		}
 		
 		TEST_METHOD(TestAt)
@@ -149,6 +153,7 @@ namespace Async
 			vec.DeleteAt(1);
 			Assert::AreEqual(size_t(2), vec.Size());
 			Assert::AreEqual(vec.At(1), 2);
+			Assert::IsTrue(vec.IsSignalled());
 		}
 
 		TEST_METHOD(TestForEach)
