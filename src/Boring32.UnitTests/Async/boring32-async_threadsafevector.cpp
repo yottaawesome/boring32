@@ -41,6 +41,7 @@ namespace Async
 			vec.Add(2);
 			Assert::IsTrue(vec.DeleteOne([](int v) { return v == 1; }));
 			Assert::AreEqual(size_t(1), vec.Size());
+			Assert::IsTrue(vec.IsSignalled());
 		}
 
 		TEST_METHOD(TestDeleteNoneFound)
@@ -50,6 +51,23 @@ namespace Async
 			vec.Add(2);
 			Assert::IsFalse(vec.DeleteOne([](int v) { return v == 8; }));
 			Assert::AreEqual(size_t(2), vec.Size());
+			Assert::IsTrue(vec.IsSignalled());
+		}
+
+		TEST_METHOD(TestIsSignalledHasElements)
+		{
+			TestType vec;
+			vec.Add(1);
+			Assert::IsTrue(vec.IsSignalled());
+		}
+
+		TEST_METHOD(TestIsSignalledHasNoElements)
+		{
+			TestType vec;
+			vec.Add(1);
+			Assert::IsTrue(vec.IsSignalled());
+			vec.DeleteAt(0);
+			Assert::IsFalse(vec.IsSignalled());
 		}
 
 		TEST_METHOD(ExtractOne)

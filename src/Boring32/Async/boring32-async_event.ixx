@@ -168,7 +168,12 @@ export namespace Boring32::Async
 			return VIsManualReset;
 		}
 
-		private:
+		auto IsSignalled() const -> bool
+		{
+			return WaitOnEvent(std::chrono::milliseconds{ 0 }, false);
+		}
+
+	private:
 		void InternalCreate(const bool isSignaled, const bool isInheritable)
 		{
 			m_event = Win32::CreateEventW(

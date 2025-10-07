@@ -99,7 +99,9 @@ export namespace Boring32::Async
 		{
 			ScopedLock cs(m_mutex);
 			auto iter = std::remove_if(m_collection.begin(), m_collection.end(), predicate);
-			return iter == m_collection.end() ? false : (m_collection.erase(iter), true);
+			return iter == m_collection.end() 
+				? false 
+				: (m_collection.erase(iter), SignalOrReset(), true);
 		}
 
 		auto ExtractOne(FindFn<T> auto&& predicate) -> std::optional<T>
@@ -139,6 +141,11 @@ export namespace Boring32::Async
 		auto GetWaitableHandle() noexcept -> Win32::HANDLE
 		{
 			return m_hasMessages.GetHandle();
+		}
+
+		auto IsSignalled() const noexcept -> bool
+		{
+			return m_hasMessages.IsSignalled();
 		}
 
 	private:
