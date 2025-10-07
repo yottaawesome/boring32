@@ -23,8 +23,6 @@ There's a unit test project that can be used as a reference, and you can run the
 
 `Boring32` is now (2023-11-24) fully module-based and has eliminated any direct reliance on the Windows headers. Some unit tests will likely fail on your machine as they are referencing objects (e.g. certificates) in my local environment I use for testing Win32 API calls. You can safely ignore these failures or comment them out. 
 
-As of 2024-08-14, the various submodules are being collapsed into partitions of the `boring32` module. This intended to reduce the amount of small submodules and follows the evolving community best practise around C++20 modules use.
-
 ## Additional resources
 
 * [Programming Windows 5th edition](https://github.com/yottaawesome/programming-windows-5th-edition)
