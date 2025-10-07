@@ -59,9 +59,8 @@ namespace Async
 			vec.Add(1);
 			vec.Add(1);
 			vec.Add(2);
-			auto [removed, original] = vec.DeleteWhere([](int v) { return v == 1; });
+			auto removed = vec.DeleteWhere([](int v) { return v == 1; });
 			Assert::AreEqual(removed, 2ull);
-			Assert::AreEqual(original, 3ull);
 		}
 
 		TEST_METHOD(TestToVector)

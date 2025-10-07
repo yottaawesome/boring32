@@ -68,45 +68,37 @@ export namespace Boring32::Async
 				: throw std::runtime_error(std::format("Index {} is out of bounds for size {}.", index, m_collection.size()));
 		}
 
-		void ForEach(FindFn<T> auto&& func)
+		void ForEach(FindFn<T> auto&& predicate)
 		{
 			ScopedLock cs(m_mutex);
 			for (T& item : m_collection)
-				if (not func(item))
+				if (not predicate(item))
 					break;
 		}
 
-		void ForEachThenClear(std::invocable<T> auto&& func)
+		void ForEachThenClear(std::invocable<T> auto&& predicate)
 		{
 			ScopedLock cs(m_mutex);
 			for (T& item : m_collection)
-				func(item);
+				predicate(item);
 			Clear();
 		}
 
 		// Delete items where func(item) returns true.
-		auto DeleteWhere(FindFn<T> auto&& func) -> std::tuple<size_t, size_t>
+		auto DeleteWhere(FindFn<T> auto&& predicate) -> size_t
 		{
 			ScopedLock cs(m_mutex);
-			std::vector<int> indexesToKeep;
-			for (int i = 0; i < m_collection.size(); i++)
-				if (not func(m_collection[i]))
-					indexesToKeep.push_back(i);
-
-			size_t originalCount = m_collection.size();
-			size_t itemCountRemoved = m_collection.size() - indexesToKeep.size();
-			std::vector<T> newCollection(indexesToKeep.size());
-			for (int index : indexesToKeep)
-				newCollection.push_back(m_collection[index]);
-			m_collection = std::move(newCollection);
+			auto removedCount = std::erase_if(
+				m_collection,
+				[&predicate](auto&& element){ return predicate(element); });
 			SignalOrReset();
-			return { itemCountRemoved, originalCount };
+			return removedCount;
 		}
 
-		auto DeleteOne(FindFn<T> auto&& findFunc) -> bool
+		auto DeleteOne(FindFn<T> auto&& predicate) -> bool
 		{
 			ScopedLock cs(m_mutex);
-			if (auto index = IndexOf(findFunc); index)
+			if (auto index = IndexOf(predicate); index)
 			{
 				DeleteAt(*index);
 				if (m_collection.size() == 0)
@@ -116,10 +108,10 @@ export namespace Boring32::Async
 			return false;
 		}
 
-		auto ExtractOne(FindFn<T> auto&& findFunc) -> std::optional<T>
+		auto ExtractOne(FindFn<T> auto&& predicate) -> std::optional<T>
 		{
 			ScopedLock cs(m_mutex);
-			if (auto index = IndexOf(findFunc); index)
+			if (auto index = IndexOf(predicate); index)
 			{
 				T itemToSet = m_collection[*index];
 				DeleteAt(*index);
