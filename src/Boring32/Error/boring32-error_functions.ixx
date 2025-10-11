@@ -4,7 +4,7 @@ import :concepts;
 
 namespace Boring32::Error
 {
-    std::string FormatStackTrace(const std::stacktrace& trace)
+    auto FormatStackTrace(const std::stacktrace& trace) -> std::string
     {
         constexpr std::string_view fmt = 
 R"(Entry:
@@ -27,54 +27,41 @@ R"(Entry:
     template<typename TString>
     struct ErrorCodeFormat final
     {
-        static TString Format(
-            const Win32::DWORD errorCode,
-            const Win32::DWORD flags,
+        static auto Format(
+            Win32::DWORD errorCode,
+            Win32::DWORD flags,
             Win32::HMODULE moduleToSearch
-        )
+        ) -> TString
         {
             void* messageBuffer = nullptr;
-            if constexpr (std::same_as<std::string, TString>)
-            {
-                Win32::FormatMessageA(
-                    flags,
-                    moduleToSearch,
-                    errorCode,
-                    0,
-                    reinterpret_cast<char*>(&messageBuffer),
-                    0,
-                    nullptr
-                );
-                if (not messageBuffer)
+            auto FormatStringFn =
+                [] static constexpr
                 {
-                    const auto lastError = Win32::GetLastError();
-                    return std::format(
-                        "FormatMessageA() failed on code {} with error {}",
-                        errorCode,
-                        lastError
-                    );
-                }
-            }
-            else if constexpr (std::same_as<std::wstring, TString>)
+                    if constexpr (std::same_as<std::string, TString>)
+                        return Win32::FormatMessageA;
+                    else if constexpr (std::same_as<std::wstring, TString>)
+                        return Win32::FormatMessageW;
+				}();
+            FormatStringFn(
+                flags,
+                moduleToSearch,
+                errorCode,
+                0,
+                reinterpret_cast<TString::pointer>(&messageBuffer),
+                0,
+                nullptr
+            );
+            if (not messageBuffer)
             {
-                Win32::FormatMessageW(
-                    flags,
-                    moduleToSearch,
-                    errorCode,
-                    0,
-                    reinterpret_cast<wchar_t*>(&messageBuffer),
-                    0,
-                    nullptr
-                );
-                if (not messageBuffer)
-                {
-                    const auto lastError = Win32::GetLastError();
-                    return std::format(
-                        L"FormatMessageW() failed on code {} with error {}",
-                        errorCode,
-                        lastError
-                    );
-                }
+                auto lastError = Win32::GetLastError();
+                return
+                    [errorCode, lastError]
+                    {
+                        if constexpr (std::same_as<std::string, TString>)
+                            return std::format("FormatMessage() failed on code {} with error {}", errorCode, lastError);
+                        else if constexpr (std::same_as<std::wstring, TString>)
+                            return std::format(L"FormatMessage() failed on code {} with error {}", errorCode, lastError);
+                    }();
             }
 
             TString msg(static_cast<TString::pointer>(messageBuffer));
@@ -88,7 +75,7 @@ R"(Entry:
         }
     };
 
-    std::string& PrintExceptionToString(const std::exception& ex, std::string& ss)
+    auto PrintExceptionToString(const std::exception& ex, std::string& ss) -> std::string&
     {
         ss += std::format("{}\n", ex.what());
         try
@@ -125,7 +112,7 @@ namespace Boring32::Error::Formats
 
 export namespace Boring32::Error
 {
-    std::string PrintExceptionToString(const std::exception& ex)
+    auto PrintExceptionToString(const std::exception& ex) -> std::string
     {
         std::string ss;
         return PrintExceptionToString(ex, ss);
@@ -138,7 +125,8 @@ export namespace Boring32::Error
     // for system calls where GetLastError() may return useful
     // info.
     template <typename EX1, typename EX2>
-    [[noreturn]] void ThrowNested(EX1&& ex1, EX2&& ex2) try
+    [[noreturn]] 
+    void ThrowNested(EX1&& ex1, EX2&& ex2) try
     {
         throw ex1;
     }
@@ -147,11 +135,11 @@ export namespace Boring32::Error
         throw_with_nested(ex2);
     }
 
-    std::string FormatErrorMessage(
+    auto FormatErrorMessage(
         const std::stacktrace& trace,
         const std::source_location& location,
-        const std::string& message
-    )
+        std::string_view message
+    ) -> std::string
     {
         return std::format(
             Formats::A,
@@ -164,12 +152,12 @@ export namespace Boring32::Error
         );
     }
 
-    std::string FormatErrorMessage(
+    auto FormatErrorMessage(
         const std::string& errorType,
         const std::stacktrace& trace,
         const std::source_location& location,
-        const std::string& message
-    )
+        std::string_view message
+    ) -> std::string
     {
         return std::format(
             Formats::B,
@@ -183,14 +171,14 @@ export namespace Boring32::Error
         );
     }
 
-    std::string FormatErrorMessage(
+    auto FormatErrorMessage(
         const std::string& errorType,
         const std::stacktrace& trace,
         const std::source_location& location,
-        const std::string& message,
+        std::string_view message,
         const Win32::DWORD errorCode,
         const std::string& translatedError
-    )
+    ) -> std::string
     {
         return std::format(
             Formats::C,
@@ -210,7 +198,10 @@ export namespace Boring32::Error
     // Some error codes are defined in specific modules; pass in the module as the 
     // second parameter for the function to translate such error codes.
     template<Concepts::WideOrNarrowString TString>
-    TString TranslateErrorCode(const Win32::DWORD errorCode, const std::wstring_view& moduleName = L"")
+    auto TranslateErrorCode(
+        const Win32::DWORD errorCode, 
+        const std::wstring_view& moduleName = L""
+    ) -> TString
     {
         // Retrieve the system error message for the last-error code
         Win32::HMODULE moduleHandle = moduleName.empty() ? nullptr : Win32::LoadLibraryW(moduleName.data());
@@ -227,7 +218,7 @@ export namespace Boring32::Error
     }
 
     template<Concepts::WideOrNarrowString TString>
-    TString GetNtStatusCode(const Win32::DWORD errorCode)
+    auto GetNtStatusCode(const Win32::DWORD errorCode) -> TString
     {
         return TranslateErrorCode<TString>(errorCode, L"ntdll.dll");
     }
