@@ -6,22 +6,15 @@ import :concepts;
 
 export namespace Boring32::Util
 {
-	//std::vector<std::byte> StringToByteVector(const std::wstring_view str);
-	//std::vector<std::byte> StringToByteVector(const std::string_view str);
-
 	// based on https://stackoverflow.com/questions/45172052/correct-way-to-initialize-a-container-of-stdbyte
 	template<typename... Ts>
-	std::vector<std::byte> ToByteVector(Ts&&... args) noexcept
+	auto ToByteVector(Ts&&... args) noexcept -> std::vector<std::byte>
 	{
 		return{ std::byte(std::forward<Ts>(args))... };
 	}
 
-	template<typename T>
-	concept IsString = 
-		std::is_same_v<std::wstring, T> || std::is_same_v<std::string, T>;
-
-	template<typename T> requires IsString<T>
-	inline T ByteVectorToString(const std::vector<std::byte>& vector)
+	template<typename T> requires Concepts::WideOrNarrowString<T>
+	auto ByteVectorToString(const std::vector<std::byte>& vector) -> T
 	{
 		return { 
 			reinterpret_cast<T::const_pointer>(&vector[0]), 
@@ -29,8 +22,8 @@ export namespace Boring32::Util
 		};
 	}
 
-	template<typename T> requires IsString<T>
-	inline std::vector<std::byte> StringToByteVector(const T& str)
+	template<typename T> requires Concepts::WideOrNarrowString<T>
+	auto StringToByteVector(const T& str) -> std::vector<std::byte>
 	{
 		return {
 			reinterpret_cast<const std::byte*>(&str[0]),
@@ -39,7 +32,7 @@ export namespace Boring32::Util
 	}
 
 	template<typename T, typename S>
-	inline std::vector<T> ReinterpretVector(const std::vector<S>& in)
+	auto ReinterpretVector(const std::vector<S>& in) -> std::vector<T>
 	{
 		return {
 			reinterpret_cast<const T*>(&in[0]),
@@ -47,12 +40,7 @@ export namespace Boring32::Util
 		};
 	}
 
-	typedef std::string(*blah)(const std::vector<std::byte>& vector);// = ByteVectorToString<std::string>;
-	//static blah m = ByteVectorToString<std::string>;
-
-	using x = std::string(*)(const std::vector<std::byte>& vector);
-
-	std::wstring GetCurrentExecutableDirectory()
+	auto GetCurrentExecutableDirectory() -> std::wstring
 	{
 		constexpr size_t blockSize = 2048;
 		std::wstring filePath(L"\0", 0);
@@ -65,7 +53,7 @@ export namespace Boring32::Util
 				throw Error::Win32Error(Win32::GetLastError(), "GetModuleFileNameW() failed");
 		}
 
-		const Win32::HRESULT result = Win32::PathCchRemoveFileSpec(&filePath[0], filePath.size());
+		Win32::HRESULT result = Win32::PathCchRemoveFileSpec(&filePath[0], filePath.size());
 		if (result != Win32::S_Ok && result != Win32::_S_FALSE)
 			throw Error::COMError(result, "PathCchRemoveFileSpec() failed");
 		filePath = filePath.c_str();
@@ -73,7 +61,7 @@ export namespace Boring32::Util
 		return filePath;
 	}
 
-	Win32::SYSTEMTIME LargeIntegerTimeToSystemTime(const Win32::LARGE_INTEGER& li)
+	auto LargeIntegerTimeToSystemTime(const Win32::LARGE_INTEGER& li) -> Win32::SYSTEMTIME
 	{
 		Win32::SYSTEMTIME st{ 0 };
 		Win32::FILETIME ft{
@@ -85,14 +73,17 @@ export namespace Boring32::Util
 		return st;
 	}
 
-	size_t GetUnixTime() noexcept
+	auto GetUnixTime() noexcept -> size_t
 	{
 		namespace ch = std::chrono;
 		const auto rightNow = ch::system_clock::now();
 		return ch::duration_cast<ch::seconds>(rightNow.time_since_epoch()).count();
 	}
 
-	size_t GetMillisToMinuteBoundary(const Win32::SYSTEMTIME& time, const size_t minuteBoundary) noexcept
+	auto GetMillisToMinuteBoundary(
+		const Win32::SYSTEMTIME& time, 
+		size_t minuteBoundary
+	) noexcept -> size_t
 	{
 		size_t minutesToMillis = static_cast<size_t>(time.wMinute) * 60 * 1000;
 		minutesToMillis += static_cast<size_t>(time.wSecond) * 1000;
@@ -101,10 +92,10 @@ export namespace Boring32::Util
 		return boundaryToMillis - (minutesToMillis % boundaryToMillis);
 	}
 
-	size_t GetMillisToSecondBoundary(
+	auto GetMillisToSecondBoundary(
 		const Win32::SYSTEMTIME& time,
-		const size_t secondBoundary
-	) noexcept
+		size_t secondBoundary
+	) noexcept -> size_t
 	{
 		size_t currentSecondMillis = static_cast<size_t>(time.wSecond) * 1000;
 		currentSecondMillis += time.wMilliseconds;
@@ -113,7 +104,7 @@ export namespace Boring32::Util
 	}
 
 	// Adapted from https://stackoverflow.com/a/19941516/7448661
-	std::wstring GetGuidAsWString(const Win32::GUID& guid)
+	auto GetGuidAsWString(const Win32::GUID& guid) -> std::wstring
 	{
 		std::wstring rawGuid(64, '\0');
 		int numberOfChars = Win32::StringFromGUID2(guid, &rawGuid[0], 64);
@@ -123,7 +114,7 @@ export namespace Boring32::Util
 		return rawGuid;
 	}
 
-	std::wstring GetGuidAsWString()
+	auto GetGuidAsWString() -> std::wstring
 	{
 		Win32::GUID guidReference;
 		Win32::HRESULT result = Win32::CoCreateGuid(&guidReference);
@@ -132,7 +123,7 @@ export namespace Boring32::Util
 		return GetGuidAsWString(guidReference);
 	}
 
-	GUID GenerateGUID()
+	auto GenerateGUID() -> GUID
 	{
 		Win32::GUID guid;
 		HRESULT result = Win32::CoCreateGuid(&guid);

@@ -15,7 +15,7 @@ namespace Boring32::Registry
 	{
 		auto operator()()
 		{
-			if constexpr (not std::is_same_v<TInvokeResult, void>)
+			if constexpr (not std::same_as<TInvokeResult, void>)
 			{
 				if constexpr (T == ValueTypes::DWord)
 				{

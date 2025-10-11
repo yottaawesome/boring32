@@ -38,7 +38,7 @@ export namespace Boring32::Concepts
 	struct IsArray<std::array<T, N>> : std::true_type {};
 
 	template<typename T>
-	constexpr bool IsArrayV = IsArrayV<T>;
+	constexpr bool IsArrayV = IsArray<T>::value;
 
 	template<typename T>
 	concept ArrayLike = IsArray<std::remove_cvref_t<T>>::value;
@@ -53,11 +53,11 @@ export namespace Boring32::Concepts
 	constexpr bool IsVectorV = IsVector<std::vector<T>>::value;
 
 	template<typename T>
-	concept VectorLike = IsArray<std::remove_cvref_t<T>>::value;
+	concept VectorLike = IsVectorV<std::remove_cvref_t<T>>;
 
 	template<typename T>
-	concept WideOrNarrowString 
-		= std::same_as<std::string, T> or std::same_as<std::wstring, T>;
+	concept WideOrNarrowString = 
+		std::same_as<std::string, T> or std::same_as<std::wstring, T>;
 
 	template<typename T>
 	concept IsConvertibleToStringView = std::is_convertible_v<T, std::string_view>;
@@ -69,13 +69,13 @@ export namespace Boring32::Concepts
 	// TODO: eliminate duplicate concepts
 	template<typename T>
 	concept IsString =
-		std::is_same_v<std::remove_cvref_t<T>, std::string>
-		or std::is_same_v<std::remove_cvref_t<T>, std::string_view>;
+		std::same_as<std::remove_cvref_t<T>, std::string>
+		or std::same_as<std::remove_cvref_t<T>, std::string_view>;
 
 	template<typename T>
 	concept IsWideString =
-		std::is_same_v<std::remove_cvref_t<T>, std::wstring>
-		or std::is_same_v<std::remove_cvref_t<T>, std::wstring_view>;
+		std::same_as<std::remove_cvref_t<T>, std::wstring>
+		or std::same_as<std::remove_cvref_t<T>, std::wstring_view>;
 
 	template<typename T>
 	concept IsStringType = IsString<T> or IsWideString<T>;

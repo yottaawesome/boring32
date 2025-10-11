@@ -1102,7 +1102,7 @@ export namespace Boring32::Win32
 	constexpr auto _SERVICE_RUNNING = SERVICE_RUNNING;
 	constexpr auto _SERVICES_ACTIVE_DATABASE = SERVICES_ACTIVE_DATABASE;
 	constexpr auto ScManagerAllAccess = SC_MANAGER_ALL_ACCESS;
-	constexpr auto _SERVICE_ALL_ACCESS = SERVICE_ALL_ACCESS;
+	constexpr auto ServiceAllAccess = SERVICE_ALL_ACCESS;
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc
 	enum class AllocationType

@@ -11,7 +11,7 @@ namespace Boring32::Shell
 
 export namespace Boring32::Shell
 {
-	std::filesystem::path GetKnownFolderPath(const Win32::Shell::WellKnownFolder& folderId)
+	auto GetKnownFolderPath(const Win32::Shell::WellKnownFolder& folderId) -> std::filesystem::path
 	{
 		// https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shgetknownfolderpath
 		wchar_t* out = nullptr;

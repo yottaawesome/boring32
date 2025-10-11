@@ -9,12 +9,12 @@ export namespace Boring32::Services
 	struct Service final
 	{
 		Service() = default;
-		Service(const Service&) = default;
-		Service& operator=(const Service&) = default;
+		Service(const Service&) = delete;
+		Service& operator=(const Service&) = delete;
 		Service(Service&&) noexcept = default;
 		Service& operator=(Service&&) noexcept = default;
 
-		Service(ServiceHandleSharedPtr service)
+		Service(ServiceHandleUniquePtr service)
 			: m_service(std::move(service))
 		{
 			if (not m_service)
@@ -52,8 +52,8 @@ export namespace Boring32::Services
 
 			constexpr auto reason =
 				Win32::Services::StopReason::FlagPlanned
-				& Win32::Services::StopReason::MajorNone
-				& Win32::Services::StopReason::MinorNone;
+				| Win32::Services::StopReason::MajorNone
+				| Win32::Services::StopReason::MinorNone;
 			Win32::SERVICE_CONTROL_STATUS_REASON_PARAMS params{ .dwReason = reason };
 			// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-controlserviceexw
 			bool succeeded = Win32::ControlServiceExW(
@@ -71,7 +71,7 @@ export namespace Boring32::Services
 			if (not m_service)
 				throw Error::Boring32Error("m_service is nullptr");
 			if (not Win32::DeleteService(m_service.get()))
-				throw Error::Win32Error(Win32::GetLastError(), "service parameter cannot be null");
+				throw Error::Win32Error(Win32::GetLastError(), "DeleteService() failed.");
 			m_service = nullptr;
 		}
 
@@ -152,6 +152,6 @@ export namespace Boring32::Services
 			return buffer;
 		}
 
-		ServiceHandleSharedPtr m_service;
+		ServiceHandleUniquePtr m_service;
 	};
 }
