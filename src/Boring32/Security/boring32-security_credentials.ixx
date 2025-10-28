@@ -61,11 +61,7 @@ export namespace Boring32::Security::Credentials
         std::wstring Password;
 	};
 
-    auto Read(
-        const std::wstring& account,
-        std::wstring& outUsername,
-        std::wstring& outPassword
-    ) -> Credential
+    auto Read(const std::wstring& account) -> Credential
     {
         Win32::Credentials::CREDENTIALW* pcred = nullptr;
         // https://learn.microsoft.com/en-us/windows/win32/api/wincred/nf-wincred-credreadw
