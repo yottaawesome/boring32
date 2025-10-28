@@ -570,7 +570,9 @@ export namespace Boring32::Win32
 	{
 		using
 			::CREDENTIALW,
-			::CredWriteW
+			::CredWriteW,
+			::CredDeleteW,
+			::CredReadW
 			;
 		namespace Types
 		{
