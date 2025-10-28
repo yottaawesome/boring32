@@ -168,6 +168,7 @@ export namespace Boring32::Win32
 		::IXAudio2MasteringVoice,
 		::IXAudio2SourceVoice,
 		::Microsoft::WRL::ComPtr,
+		::LPBYTE,
 		::SetFocus,
 		::ShowWindow,
 		::SendMessageW,
@@ -563,6 +564,22 @@ export namespace Boring32::Win32
 			LowerCase = LCMAP_LOWERCASE,
 			UpperCase = LCMAP_UPPERCASE
 		};
+	}
+
+	namespace Credentials
+	{
+		using
+			::CREDENTIALW,
+			::CredWriteW
+			;
+		namespace Types
+		{
+			enum
+			{
+				Generic = CRED_TYPE_GENERIC
+			};
+		}
+		constexpr auto CredPersistLocalMachine = CRED_PERSIST_LOCAL_MACHINE;
 	}
 
 	constexpr auto CwUseDefault = CW_USEDEFAULT;

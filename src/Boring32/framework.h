@@ -57,3 +57,4 @@
 #define SECURITY_WIN32
 #include <security.h>
 #include <winsafer.h>
+#include <wincred.h>

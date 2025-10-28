@@ -10,4 +10,6 @@ export import :security_token;
 export import :security_policy;
 export import :security_encodedpointer;
 export import :security_saferlevel;
+export import :security_credentials;
+
 import :security_lsaunicodestring;

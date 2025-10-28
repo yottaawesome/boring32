@@ -369,6 +369,7 @@
     <ClCompile Include="Registry\boring32-registry.ixx" />
     <ClCompile Include="Registry\boring32-registry_key.ixx" />
     <ClCompile Include="Registry\boring32-registry_value.ixx" />
+    <ClCompile Include="Security\boring32-security_credentials.ixx" />
     <ClCompile Include="Security\boring32-security_constants.ixx" />
     <ClCompile Include="Security\boring32-security_encodedpointer.ixx" />
     <ClCompile Include="Security\boring32-security_functions.ixx" />
