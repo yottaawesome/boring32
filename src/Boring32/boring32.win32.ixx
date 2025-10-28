@@ -570,9 +570,11 @@ export namespace Boring32::Win32
 	{
 		using
 			::CREDENTIALW,
+			::PCREDENTIALW,
 			::CredWriteW,
 			::CredDeleteW,
-			::CredReadW
+			::CredReadW,
+			::CredFree
 			;
 		namespace Types
 		{
@@ -832,6 +834,7 @@ export namespace Boring32::Win32
 		constexpr auto NotAllAssigned = ERROR_NOT_ALL_ASSIGNED;
 		constexpr auto FileNotFound = ERROR_FILE_NOT_FOUND;
 		constexpr auto NoMoreFiles = ERROR_NO_MORE_FILES;
+		constexpr auto NotFound = ERROR_NOT_FOUND;
 	}
 
 	namespace NTStatus // winnt.h
