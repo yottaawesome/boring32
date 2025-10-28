@@ -576,14 +576,24 @@ export namespace Boring32::Win32
 			::CredReadW,
 			::CredFree
 			;
-		namespace Types
+		enum Types : DWORD
 		{
-			enum
-			{
-				Generic = CRED_TYPE_GENERIC
-			};
-		}
-		constexpr auto CredPersistLocalMachine = CRED_PERSIST_LOCAL_MACHINE;
+			Generic = CRED_TYPE_GENERIC,
+			DomainPassword = CRED_TYPE_DOMAIN_PASSWORD,
+			DomainCertificare = CRED_TYPE_DOMAIN_CERTIFICATE,
+			DomainVisiblePassword = CRED_TYPE_DOMAIN_VISIBLE_PASSWORD,
+			GenericCertificate = CRED_TYPE_GENERIC_CERTIFICATE,
+			DomainExtended = CRED_TYPE_DOMAIN_EXTENDED,
+			Maximum = CRED_TYPE_MAXIMUM,
+			MaximumEx = CRED_TYPE_MAXIMUM_EX
+		};
+
+		enum Persist : DWORD
+		{
+			Session = CRED_PERSIST_SESSION,
+			LocalMachine = CRED_PERSIST_LOCAL_MACHINE,
+			Enterprise = CRED_PERSIST_ENTERPRISE
+		};
 	}
 
 	constexpr auto CwUseDefault = CW_USEDEFAULT;
