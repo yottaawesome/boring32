@@ -69,7 +69,7 @@ export namespace Boring32::Security::Credentials
     auto Read(
         const std::wstring& account,
         const Win32::Credentials::Types type = Win32::Credentials::Types::Generic
-    ) -> Credential
+    ) -> std::optional<Credential>
     {
         Win32::Credentials::CREDENTIALW* pcred = nullptr;
         // https://learn.microsoft.com/en-us/windows/win32/api/wincred/nf-wincred-credreadw
@@ -82,7 +82,9 @@ export namespace Boring32::Security::Credentials
         if (not success)
         {
             const auto lastError = Win32::GetLastError();
-            throw Error::Win32Error(lastError, "CredReadW() failed to read credential.");
+            return lastError == Win32::ErrorCodes::NotFound
+                ? std::nullopt
+                : throw Error::Win32Error(lastError, "CredReadW() failed to read credential.");
         }
         CredentialUniquePtr cred(pcred);
 

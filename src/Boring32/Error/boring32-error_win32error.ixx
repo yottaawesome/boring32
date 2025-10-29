@@ -52,7 +52,7 @@ export namespace Boring32::Error
 			return m_errorCode;
 		}
 
-		private:
+	private:
 		ExactMessage Generate(
 			const std::string& msg,
 			const unsigned long errorCode,

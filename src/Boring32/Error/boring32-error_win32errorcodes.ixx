@@ -30,9 +30,7 @@ namespace
 
 		std::string message(reinterpret_cast<char*>(buffer));
 		Boring32::Win32::LocalFree(buffer);
-		if (message.ends_with('\n'))
-			message.pop_back();
-		if (message.ends_with('\r'))
+		while (message.ends_with('\n') or message.ends_with('\r'))
 			message.pop_back();
 
 		return message;
@@ -76,7 +74,7 @@ export namespace Boring32::Error
 			return m_value;
 		}
 
-		private:
+	private:
 		DWORD m_value = 0;
 	};
 }

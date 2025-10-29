@@ -22,13 +22,13 @@ namespace Error
 			{
 				throw std::logic_error("first");
 			}
-			catch (const std::exception& ex)
+			catch (const std::exception& ex [[maybe_unused]])
 			{
 				try
 				{
 					std::throw_with_nested(std::logic_error("second"));
 				}
-				catch (const std::exception& ex)
+				catch (const std::exception& ex [[maybe_unused]])
 				{
 					try
 					{
