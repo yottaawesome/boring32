@@ -5,35 +5,42 @@ import :error;
 
 export namespace Boring32::Networking
 {
-	std::vector<std::byte> GetAdapters(const unsigned family, const unsigned flags)
+	auto GetAdapters(unsigned family, unsigned flags) -> std::vector<std::byte>
 	{
-		unsigned long bufferSizeBytes = 15000;
+		unsigned long bufferSizeBytes = 0;
 		std::vector<std::byte> buffer(bufferSizeBytes);
-		unsigned status = Win32::ErrorCodes::BufferOverflow;
-		while (status != Win32::ErrorCodes::Success)
+		while (true)
 		{
+			bufferSizeBytes += 15000;
 			buffer.resize(bufferSizeBytes);
 			// https://docs.microsoft.com/en-us/windows/win32/api/iphlpapi/nf-iphlpapi-getadaptersaddresses
 			// https://docs.microsoft.com/en-us/windows/win32/api/iptypes/ns-iptypes-ip_adapter_addresses_lh
-			status = Win32::GetAdaptersAddresses(
+			auto status = Win32::GetAdaptersAddresses(
 				family,
 				flags,
 				nullptr,
 				reinterpret_cast<Win32::IP_ADAPTER_ADDRESSES*>(buffer.data()),
 				&bufferSizeBytes
 			);
+			if (status == Win32::ErrorCodes::Success)
+			{
+				buffer.resize(bufferSizeBytes);
+				// This is safe to do because the heap pointer is moved to the calling site,
+				// so the linked-list next pointers are not modified and remain valid.
+				return buffer;
+			}
+
 			// bufferSizeBytes will give the correct buffer size in this case,
 			// and will be used to resize the buffer in the next iteration.
-			if (status != Win32::ErrorCodes::BufferOverflow && status != Win32::ErrorCodes::Success)
-				throw Error::Win32Error(Win32::GetLastError(), "GetAdaptersAddresses() failed");
+			if (status != Win32::ErrorCodes::BufferOverflow)
+			{
+				auto lastError = Win32::GetLastError();
+				throw Error::Win32Error(lastError, "GetAdaptersAddresses() failed");
+			}
 		}
-		buffer.resize(bufferSizeBytes);
-		// This is safe to do because the heap pointer is moved to the calling site,
-		// so the linked-list next pointers are not modified and remain valid.
-		return buffer;
 	}
 
-	bool IsConnectedToInternet()
+	auto IsConnectedToInternet() -> bool
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/netlistmgr/nn-netlistmgr-inetworklistmanager
 		Win32::ComPtr<Win32::INetworkListManager> networkListManager;

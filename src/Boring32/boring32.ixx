@@ -1,4 +1,5 @@
 export module boring32;
+export import boring32.win32;
 export import :raii;
 export import :strings;
 export import :error;
