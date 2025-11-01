@@ -2,6 +2,7 @@ export module boring32:networking_api;
 import std;
 import boring32.win32;
 import :error;
+import :concepts;
 
 export namespace Boring32::Networking
 {
@@ -68,19 +69,20 @@ export namespace Boring32::Networking
 			return self.Buffer.size();
 		}
 
-		auto begin(this auto&& self)
+		auto begin(this auto&& self) -> Concepts::OneOf<BasicIterator, ConstIterator> auto
 		{
 			// Also works
 			/*Win32::IP_ADAPTER_ADDRESSES* ptr = nullptr;
 			auto x = std::forward_like<decltype(self)>(ptr);
 			return Iterator{ reinterpret_cast<decltype(x)>(self.Buffer.data()) };*/
+
 			if constexpr (std::is_const_v<std::remove_reference_t<decltype(self)>>)
 				return ConstIterator{ reinterpret_cast<const Win32::IP_ADAPTER_ADDRESSES*>(self.Buffer.data()) };
 			else
 				return BasicIterator{ reinterpret_cast<Win32::IP_ADAPTER_ADDRESSES*>(self.Buffer.data()) };
 		}
 
-		auto end(this auto&& self)
+		auto end(this auto&& self) -> Concepts::OneOf<BasicIterator, ConstIterator> auto
 		{ 
 			if constexpr (std::is_const_v<std::remove_reference_t<decltype(self)>>)
 				return ConstIterator{ nullptr };
