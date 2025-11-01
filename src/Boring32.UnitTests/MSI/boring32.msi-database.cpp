@@ -10,11 +10,15 @@ namespace Networking
 	{
 		TEST_METHOD(TestGetAdapters)
 		{
-			auto vector = Boring32::Networking::GetAdapters(
+			auto adapters = Boring32::Networking::GetAdapters(
 				Boring32::Win32::WinSock::AddressFamily::IPv4,
 				0
 			);
-			Assert::IsFalse(vector.empty());
+
+			for (const auto& adapter : adapters)
+			{
+				Assert::IsFalse(std::string{ adapter.AdapterName }.empty());
+			}
 		}
 	};
 }

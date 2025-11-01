@@ -38,70 +38,87 @@ export namespace Boring32::Networking
 			}
 		};
 
+		using BasicIterator = Iterator<Win32::IP_ADAPTER_ADDRESSES>;
+		using ConstIterator = Iterator<const Win32::IP_ADAPTER_ADDRESSES>;
+
+		static constexpr unsigned ExpansionIncrement = 15000;
+
+		Adapters(size_t initialSize) noexcept
+			: Buffer{ std::vector<std::byte>(initialSize) }
+		{ }
+
+		Adapters() noexcept
+			: Buffer{ std::vector<std::byte>(ExpansionIncrement) }
+		{ }
+
+		auto Expand(this auto&& self) -> size_t
+		{
+			self.Buffer.resize(self.Buffer.size() + ExpansionIncrement);
+			return self.Buffer.size();
+		}
+
+		auto Contract(this auto&& self, size_t size) -> size_t
+		{
+			self.Buffer.resize(size);
+			return size;
+		}
+
+		auto Size(this auto&& self) -> size_t
+		{
+			return self.Buffer.size();
+		}
+
 		auto begin(this auto&& self)
 		{ 
 			if constexpr (std::is_const_v<std::remove_reference_t<decltype(self)>>)
-			{
-				return Iterator<const Win32::IP_ADAPTER_ADDRESSES>{
-					reinterpret_cast<const Win32::IP_ADAPTER_ADDRESSES*>(self.Buffer.data())
-				};
-			}
+				return ConstIterator{ reinterpret_cast<const Win32::IP_ADAPTER_ADDRESSES*>(self.Buffer.data()) };
 			else
-			{
-				return Iterator<Win32::IP_ADAPTER_ADDRESSES>{
-					reinterpret_cast<Win32::IP_ADAPTER_ADDRESSES*>(self.Buffer.data())
-				};
-			}
+				return BasicIterator{ reinterpret_cast<Win32::IP_ADAPTER_ADDRESSES*>(self.Buffer.data()) };
 		}
 
 		auto end(this auto&& self)
 		{ 
 			if constexpr (std::is_const_v<std::remove_reference_t<decltype(self)>>)
-			{
-				return Iterator<const Win32::IP_ADAPTER_ADDRESSES>{ nullptr };
-			}
+				return ConstIterator{ nullptr };
 			else
-			{
-				return Iterator<Win32::IP_ADAPTER_ADDRESSES>{ nullptr };
-			}
+				return BasicIterator{ nullptr };
 		}
 
 		std::vector<std::byte> Buffer;
 	};
 
-	auto GetAdapters(unsigned family, unsigned flags) -> std::vector<std::byte>
+	auto GetAdapters(unsigned family, unsigned flags) -> Adapters
 	{
-		unsigned long bufferSizeBytes = 0;
-		std::vector<std::byte> buffer(bufferSizeBytes);
+		unsigned long bufferSizeBytes = 15000;
+		Adapters result{ 15000 };
 		while (true)
 		{
-			bufferSizeBytes += 15000;
-			buffer.resize(bufferSizeBytes);
 			// https://docs.microsoft.com/en-us/windows/win32/api/iphlpapi/nf-iphlpapi-getadaptersaddresses
 			// https://docs.microsoft.com/en-us/windows/win32/api/iptypes/ns-iptypes-ip_adapter_addresses_lh
 			auto status = Win32::GetAdaptersAddresses(
 				family,
 				flags,
 				nullptr,
-				reinterpret_cast<Win32::IP_ADAPTER_ADDRESSES*>(buffer.data()),
+				reinterpret_cast<Win32::IP_ADAPTER_ADDRESSES*>(result.Buffer.data()),
 				&bufferSizeBytes
-
 			);
 			if (status == Win32::ErrorCodes::Success)
 			{
-				buffer.resize(bufferSizeBytes);
+				result.Contract(bufferSizeBytes);
 				// This is safe to do because the heap pointer is moved to the calling site,
 				// so the linked-list next pointers are not modified and remain valid.
-				return buffer;
+				return result;
 			}
 
-			// bufferSizeBytes will give the correct buffer size in this case,
-			// and will be used to resize the buffer in the next iteration.
+			// bufferSizeBytes will give the correct result size in this case,
+			// and will be used to resize the result in the next iteration.
 			if (status != Win32::ErrorCodes::BufferOverflow)
 			{
 				auto lastError = Win32::GetLastError();
 				throw Error::Win32Error(lastError, "GetAdaptersAddresses() failed");
 			}
+
+			bufferSizeBytes = static_cast<unsigned long>(result.Expand());
 		}
 	}
 
