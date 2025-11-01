@@ -5,6 +5,70 @@ import :error;
 
 export namespace Boring32::Networking
 {
+	struct Adapters
+	{
+		template<typename T>
+		struct Iterator
+		{
+			T* Ptr = nullptr;
+
+			explicit Iterator(T* ptr) 
+				: Ptr{ ptr } 
+			{}
+
+			auto operator*(this auto&& self) -> T&
+			{ 
+				return std::forward_like<decltype(self)>(*self.Ptr); 
+			}
+
+			auto operator->(this auto&& self) -> T&
+			{
+				return std::forward_like<decltype(self)>(*self.Ptr);
+			}
+
+			auto& operator++(this auto&& self)
+			{
+				self.Ptr = self.Ptr->Next;
+				return self;
+			}
+
+			auto operator!=(this auto&& self, const Iterator& other) -> bool
+			{
+				return self.Ptr != other.Ptr;
+			}
+		};
+
+		auto begin(this auto&& self)
+		{ 
+			if constexpr (std::is_const_v<std::remove_reference_t<decltype(self)>>)
+			{
+				return Iterator<const Win32::IP_ADAPTER_ADDRESSES>{
+					reinterpret_cast<const Win32::IP_ADAPTER_ADDRESSES*>(self.Buffer.data())
+				};
+			}
+			else
+			{
+				return Iterator<Win32::IP_ADAPTER_ADDRESSES>{
+					reinterpret_cast<Win32::IP_ADAPTER_ADDRESSES*>(self.Buffer.data())
+				};
+			}
+		}
+
+		auto end(this auto&& self)
+		{ 
+			if constexpr (std::is_const_v<std::remove_reference_t<decltype(self)>>)
+			{
+				return Iterator<const Win32::IP_ADAPTER_ADDRESSES>{ nullptr };
+			}
+			else
+			{
+				return Iterator<Win32::IP_ADAPTER_ADDRESSES>{ nullptr };
+			}
+		}
+
+		std::vector<std::byte> Buffer;
+	};
+
 	auto GetAdapters(unsigned family, unsigned flags) -> std::vector<std::byte>
 	{
 		unsigned long bufferSizeBytes = 0;
@@ -21,6 +85,7 @@ export namespace Boring32::Networking
 				nullptr,
 				reinterpret_cast<Win32::IP_ADAPTER_ADDRESSES*>(buffer.data()),
 				&bufferSizeBytes
+
 			);
 			if (status == Win32::ErrorCodes::Success)
 			{
