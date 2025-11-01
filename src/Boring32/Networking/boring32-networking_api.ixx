@@ -16,20 +16,20 @@ export namespace Boring32::Networking
 				: Ptr{ ptr } 
 			{}
 
-			auto operator*(this auto&& self) -> T&
+			auto operator*(this auto&& self)
 			{ 
-				return std::forward_like<decltype(self)>(*self.Ptr); 
+				return self.Ptr; 
 			}
 
-			auto operator->(this auto&& self) -> T&
+			auto operator->(this auto&& self)
 			{
-				return std::forward_like<decltype(self)>(*self.Ptr);
+				return self.Ptr;
 			}
 
-			auto& operator++(this auto&& self)
+			auto operator++(this auto&& self)
 			{
 				self.Ptr = self.Ptr->Next;
-				return self;
+				return std::forward_like<decltype(self)>(self);
 			}
 
 			auto operator!=(this auto&& self, const Iterator& other) -> bool
@@ -57,7 +57,7 @@ export namespace Boring32::Networking
 			return self.Buffer.size();
 		}
 
-		auto Contract(this auto&& self, size_t size) -> size_t
+		auto Resize(this auto&& self, size_t size) -> size_t
 		{
 			self.Buffer.resize(size);
 			return size;
@@ -69,7 +69,11 @@ export namespace Boring32::Networking
 		}
 
 		auto begin(this auto&& self)
-		{ 
+		{
+			// Also works
+			/*Win32::IP_ADAPTER_ADDRESSES* ptr = nullptr;
+			auto x = std::forward_like<decltype(self)>(ptr);
+			return Iterator{ reinterpret_cast<decltype(x)>(self.Buffer.data()) };*/
 			if constexpr (std::is_const_v<std::remove_reference_t<decltype(self)>>)
 				return ConstIterator{ reinterpret_cast<const Win32::IP_ADAPTER_ADDRESSES*>(self.Buffer.data()) };
 			else
@@ -104,7 +108,7 @@ export namespace Boring32::Networking
 			);
 			if (status == Win32::ErrorCodes::Success)
 			{
-				result.Contract(bufferSizeBytes);
+				result.Resize(bufferSizeBytes);
 				// This is safe to do because the heap pointer is moved to the calling site,
 				// so the linked-list next pointers are not modified and remain valid.
 				return result;

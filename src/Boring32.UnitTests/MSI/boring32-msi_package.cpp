@@ -8,7 +8,5 @@ namespace MSI
 {
 	TEST_CLASS(Package)
 	{
-		public:
-			
 	};
 }

@@ -275,10 +275,10 @@
     <ClCompile Include="Error\boring32.error-functions.cpp" />
     <ClCompile Include="Error\boring32.error-ntstatuserror.cpp" />
     <ClCompile Include="Error\boring32.error-win32error.cpp" />
-    <ClCompile Include="MSI\boring32.msi-database.cpp" />
-    <ClCompile Include="MSI\boring32.msi-functions.cpp" />
-    <ClCompile Include="MSI\boring32.msi-package.cpp" />
     <ClCompile Include="Networking\boring32-networking_api.cpp" />
+    <ClCompile Include="MSI\boring32-msi_functions.cpp" />
+    <ClCompile Include="MSI\boring32-msi_package.cpp" />
+    <ClCompile Include="MSI\boring32-msi_database.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Instrumented|x64'">Create</PrecompiledHeader>
