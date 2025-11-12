@@ -33,42 +33,28 @@ export namespace Boring32::Error
 	* for a better approach. The code should be changed to follow that 
 	* sample's approach.
 	*/
-	struct Boring32Error : public std::exception
+	struct Boring32Error : std::exception
 	{
 		virtual ~Boring32Error() = default;
 		Boring32Error()
 			: std::exception("Boring32 encountered an error")
 		{ }
 		Boring32Error(const Boring32Error& other) = default;
-		virtual Boring32Error& operator=(const Boring32Error& other) = default;
+		Boring32Error& operator=(const Boring32Error& other) = default;
 		Boring32Error(Boring32Error&& other) noexcept = default;
-		virtual Boring32Error& operator=(Boring32Error&& other) noexcept = default;
+		Boring32Error& operator=(Boring32Error&& other) noexcept = default;
 
 		Boring32Error(const ExactMessage& msg)
 			: std::exception(msg.Message.c_str())
 		{ }
 
 		Boring32Error(const MessageLocationTrace& msg, auto&&...args)
-			: std::exception(GenerateErrorMessage(
+			: std::exception(Error::FormatErrorMessage(
+				"Boring32",
+				msg.Trace,
 				msg.Location,
-				std::string(msg.Message),
-				msg.Trace
+				msg.Message
 			).c_str())
 		{ }
-
-	private:
-		auto GenerateErrorMessage(
-			const std::source_location& location,
-			std::string_view message,
-			const std::stacktrace& trace
-		) -> std::string
-		{
-			return Error::FormatErrorMessage(
-				"Boring32",
-				trace,
-				location, 
-				message
-			);
-		}
 	};
 }

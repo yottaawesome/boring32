@@ -153,7 +153,7 @@ export namespace Boring32::Error
     }
 
     auto FormatErrorMessage(
-        const std::string& errorType,
+        std::string_view errorType,
         const std::stacktrace& trace,
         const std::source_location& location,
         std::string_view message
@@ -172,12 +172,12 @@ export namespace Boring32::Error
     }
 
     auto FormatErrorMessage(
-        const std::string& errorType,
+        std::string_view errorType,
         const std::stacktrace& trace,
         const std::source_location& location,
         std::string_view message,
         const Win32::DWORD errorCode,
-        const std::string& translatedError
+        std::string_view translatedError
     ) -> std::string
     {
         return std::format(
@@ -200,7 +200,7 @@ export namespace Boring32::Error
     template<Concepts::WideOrNarrowString TString>
     auto TranslateErrorCode(
         const Win32::DWORD errorCode, 
-        const std::wstring_view& moduleName = L""
+        std::wstring_view moduleName = L""
     ) -> TString
     {
         // Retrieve the system error message for the last-error code
