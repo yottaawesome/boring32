@@ -56,6 +56,10 @@ export namespace Boring32::Async
 	private:
 		std::filesystem::path filePath;
 		RAII::HandleUniquePtr fileHandle;
+		// 0xFFFFFFFF;
+		constexpr static Win32::DWORD 
+			LockSizeLow = std::numeric_limits<Win32::DWORD>::max(),
+			LockSizeHigh = std::numeric_limits<Win32::DWORD>::max();
 
 		void Clear(this FileLock& self)
 		{
@@ -96,8 +100,7 @@ export namespace Boring32::Async
 				throw Error::Win32Error(lastError, "Failed to create or open file handle.");
 			}
 		}
-		constexpr static Win32::DWORD LockSizeLow = 0xFFFFFFFF;
-		constexpr static Win32::DWORD LockSizeHigh = 0xFFFFFFFF;
+		
 		void DoLock(this FileLock& self) 
 		{
 			if (not self.HandleIsValid())
