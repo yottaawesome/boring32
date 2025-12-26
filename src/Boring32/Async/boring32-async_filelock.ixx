@@ -30,8 +30,16 @@ export namespace Boring32::Async
 			acquire ? OpenHandleAndLock() : CreateOrOpenFileHandle(filePath);
 		}
 
-		void lock(this FileLock& self) { self.OpenHandleAndLock(); }
-		void unlock(this FileLock& self) { self.DoUnlock(); }
+		void lock(this FileLock& self) 
+		{ 
+			self.OpenHandleAndLock(); 
+		}
+		
+		void unlock(this FileLock& self) 
+		{ 
+			self.DoUnlock(); 
+		}
+
 		auto try_lock(this FileLock& self) noexcept -> bool
 		try
 		{
