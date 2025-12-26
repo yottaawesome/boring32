@@ -297,6 +297,7 @@
     <ClCompile Include="Async\boring32-async_threadsafevector.ixx" />
     <ClCompile Include="Async\boring32-async_timerqueuetimer.ixx" />
     <ClCompile Include="Async\boring32-async_timerqueuetimercallback.ixx" />
+    <ClCompile Include="Async\boring32-async_filelock.ixx" />
     <ClCompile Include="boring32.win32.ixx" />
     <ClCompile Include="Concepts\boring32-concepts.ixx" />
     <ClCompile Include="boring32.ixx" />

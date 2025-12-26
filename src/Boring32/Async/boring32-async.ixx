@@ -32,3 +32,4 @@ export import :async_waitable;
 export import :async_cmdrunner;
 export import :async_overlapped;
 export import :async_nullmutex;
+export import :async_filelock;

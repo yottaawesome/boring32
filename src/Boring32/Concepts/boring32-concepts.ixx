@@ -126,5 +126,18 @@ export namespace Boring32::Concepts
 		requires(TFn fn, TArgs... args)
 		{
 			{ fn(args...) } -> std::convertible_to<TReturn>;
-		};		
+		};
+
+	template<typename T>
+	concept BasicLockable = requires(T t)
+	{
+		t.lock();
+		t.unlock();
+	};
+
+	template<typename T>
+	concept Lockable = BasicLockable<T> and requires(T t)
+	{
+		t.try_lock();
+	};
 }

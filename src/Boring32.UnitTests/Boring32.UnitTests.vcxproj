@@ -243,6 +243,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Async\boring32-async_filelock.cpp" />
     <ClCompile Include="Async\boring32-async_threadsafevector.cpp" />
     <ClCompile Include="Async\boring32.async-apcthread.cpp" />
     <ClCompile Include="Async\boring32.async-functions.cpp" />

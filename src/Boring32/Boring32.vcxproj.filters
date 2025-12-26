@@ -226,6 +226,7 @@
     <ClCompile Include="UI\boring32-ui.ixx" />
     <ClCompile Include="Async\boring32-async_nullmutex.ixx" />
     <ClCompile Include="Security\boring32-security_credentials.ixx" />
+    <ClCompile Include="Async\boring32-async_filelock.ixx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">

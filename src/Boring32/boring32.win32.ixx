@@ -169,6 +169,10 @@ export namespace Boring32::Win32
 		::IXAudio2SourceVoice,
 		::Microsoft::WRL::ComPtr,
 		::LPBYTE,
+		::LockFile,
+		::LockFileEx,
+		::UnlockFile,
+		::UnlockFileEx,
 		::SetFocus,
 		::ShowWindow,
 		::SendMessageW,
@@ -466,6 +470,33 @@ export namespace Boring32::Win32
 		::GetWindowTextW,
 		::SetWindowTextW
 		;
+
+	enum class FileShareMode
+	{
+		None = 0,
+		Read = FILE_SHARE_READ,
+		Write = FILE_SHARE_WRITE
+	};
+
+	enum class CreateFileDisposition
+	{
+		CreateAlways = CREATE_ALWAYS,
+		CreateNew = CREATE_NEW,
+		OpenAlways = OPEN_ALWAYS,
+		OpenExisting = OPEN_EXISTING,
+		TruncateExisting = TRUNCATE_EXISTING,
+	};
+
+	namespace LockFileFlags
+	{
+		enum
+		{
+			// The function requests an exclusive lock.Otherwise, it requests a shared lock.
+			Exclusive = LOCKFILE_EXCLUSIVE_LOCK,
+			// The function returns immediately if it is unable to acquire the requested lock.Otherwise, it waits.
+			FailImmediately = LOCKFILE_FAIL_IMMEDIATELY
+		};
+	}
 
 	namespace Messages
 	{
@@ -774,6 +805,21 @@ export namespace Boring32::Win32
 	constexpr unsigned long FileAttributeNormal = FILE_ATTRIBUTE_NORMAL;
 	constexpr auto DuplicateSameAccess = DUPLICATE_SAME_ACCESS;
 
+	namespace FileAttributes
+	{
+		enum
+		{
+			Archive = FILE_ATTRIBUTE_ARCHIVE,
+			Encrypted = FILE_ATTRIBUTE_ENCRYPTED,
+			Hidden = FILE_ATTRIBUTE_HIDDEN,
+			Normal = FILE_ATTRIBUTE_NORMAL,
+			Offline = FILE_ATTRIBUTE_OFFLINE,
+			Readonly = FILE_ATTRIBUTE_READONLY,
+			System = FILE_ATTRIBUTE_SYSTEM,
+			Temporary = FILE_ATTRIBUTE_TEMPORARY,
+		};
+	}
+
 	constexpr auto FormatMessageAllocateBuffer = FORMAT_MESSAGE_ALLOCATE_BUFFER;
 	constexpr auto FormatMessageFromSystem = FORMAT_MESSAGE_FROM_SYSTEM;
 	constexpr auto FormatMessageIgnoreInserts = FORMAT_MESSAGE_IGNORE_INSERTS;
@@ -845,6 +891,7 @@ export namespace Boring32::Win32
 		constexpr auto FileNotFound = ERROR_FILE_NOT_FOUND;
 		constexpr auto NoMoreFiles = ERROR_NO_MORE_FILES;
 		constexpr auto NotFound = ERROR_NOT_FOUND;
+		constexpr auto NotLocked = ERROR_NOT_LOCKED;
 	}
 
 	namespace NTStatus // winnt.h
