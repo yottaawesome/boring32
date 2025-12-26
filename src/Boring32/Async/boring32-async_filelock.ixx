@@ -32,6 +32,16 @@ export namespace Boring32::Async
 
 		void lock(this FileLock& self) { self.OpenHandleAndLock(); }
 		void unlock(this FileLock& self) { self.DoUnlock(); }
+		auto try_lock(this FileLock& self) noexcept -> bool
+		try
+		{
+			self.lock();
+			return true;
+		}
+		catch (...)
+		{
+			return false;
+		}
 
 		auto HandleIsValid(this const FileLock& self) -> bool
 		{
@@ -86,7 +96,8 @@ export namespace Boring32::Async
 				throw Error::Win32Error(lastError, "Failed to create or open file handle.");
 			}
 		}
-
+		constexpr static Win32::DWORD LockSizeLow = 0xFFFFFFFF;
+		constexpr static Win32::DWORD LockSizeHigh = 0xFFFFFFFF;
 		void DoLock(this FileLock& self) 
 		{
 			if (not self.HandleIsValid())
@@ -99,8 +110,8 @@ export namespace Boring32::Async
 				self.fileHandle.get(),
 				options,
 				0,
-				0,
-				0,
+				LockSizeLow,
+				LockSizeHigh,
 				&overlapped
 			);
 			if (not succeeded)
@@ -118,8 +129,8 @@ export namespace Boring32::Async
 			auto succeeded = Win32::UnlockFileEx(
 				self.fileHandle.get(),
 				0,
-				0,
-				0,
+				LockSizeLow,
+				LockSizeHigh,
 				&overlapped
 			);
 			if (succeeded)
@@ -135,5 +146,5 @@ export namespace Boring32::Async
 		}
 	};
 
-	static_assert(Concepts::BasicLockable<FileLock>);
+	static_assert(Concepts::Lockable<FileLock>);
 }

@@ -80,5 +80,12 @@ namespace Async
 			}
 			std::filesystem::remove("new.txt");
 		}
+
+		TEST_METHOD(TestTryLock)
+		{
+			Async::FileLock fileLock1("new.txt", true);
+			Async::FileLock fileLock2("new.txt", false);
+			Assert::IsFalse(fileLock2.try_lock());
+		}
 	};
 }
