@@ -35,7 +35,7 @@ export namespace Boring32::Async
 			self.OpenHandleAndLock(); 
 		}
 		
-		void unlock(this FileLock& self) 
+		void unlock(this FileLock& self) noexcept 
 		{ 
 			self.DoUnlock(); 
 		}

@@ -132,7 +132,7 @@ export namespace Boring32::Concepts
 	concept BasicLockable = requires(T t)
 	{
 		t.lock();
-		t.unlock();
+		{ t.unlock() } noexcept;
 	};
 
 	template<typename T>
