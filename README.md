@@ -13,7 +13,7 @@
 
 ## Building
 
-Building requires Visual Studio 2022 with the _Desktop development with C++_ workload installed. Simply clone this repository and open `src\Boring32.sln` and you should be able to build the project immediately and run the test project `Boring32.Tests`. The built static library is `src\Build\x64\Debug`. Boring32 is built with pure C++20 modules, so any dependent projects need to be able to find the module files. At the moment, these modules are not packaged into a release, but I might do this eventually.
+Building requires Visual Studio 2026 with the _Desktop development with C++_ workload installed. Simply clone this repository and open `src\Boring32.sln` and you should be able to build the project immediately and run the test project `Boring32.Tests`. The built static library is `src\Build\x64\Debug`. Boring32 is built with pure C++20 modules, so any dependent projects need to be able to find the module files. At the moment, these modules are not packaged into a release, but I might do this eventually.
 
 ## Documentation
 
