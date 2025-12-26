@@ -75,6 +75,8 @@ namespace Async
 				Async::FileLock fileLock("new.txt", false);
 				fileLock.lock();
 				fileLock.unlock();
+				// unlocking should not generate an error if the file is not locked
+				fileLock.unlock();
 			}
 			std::filesystem::remove("new.txt");
 		}

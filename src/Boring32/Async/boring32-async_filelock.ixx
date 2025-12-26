@@ -106,7 +106,7 @@ export namespace Boring32::Async
 			if (not succeeded)
 			{
 				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error(lastError, "Failed to lock file.");
+				throw Error::Win32Error(lastError, std::format("Failed to lock file {}.", self.filePath.string()));
 			}
 		}
 
@@ -122,12 +122,10 @@ export namespace Boring32::Async
 				0,
 				&overlapped
 			);
-			if (not succeeded)
-			{
-				const auto lastError = Win32::GetLastError();
-				if (lastError != Win32::ErrorCodes::NotLocked)
-					throw Error::Win32Error(lastError, "Failed to unlock file.");
-			}
+			if (succeeded)
+				return;
+			if (const auto lastError = Win32::GetLastError(); lastError != Win32::ErrorCodes::NotLocked)
+				throw Error::Win32Error(lastError, std::format("Failed to unlock file {}.", self.filePath.string()));
 		}
 
 		void OpenHandleAndLock(this FileLock& self)
