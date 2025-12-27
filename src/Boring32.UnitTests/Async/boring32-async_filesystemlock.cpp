@@ -48,6 +48,7 @@ namespace Async
 			{
 				Async::FileSystemLock<L"new.txt"> fileLock;
 				fileLock.lock();
+				Assert::IsTrue(std::filesystem::exists("new.txt"));
 				fileLock.unlock();
 				// unlocking should not generate an error if the file is not locked
 				fileLock.unlock();
