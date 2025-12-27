@@ -1215,6 +1215,18 @@ export namespace Boring32::Win32
 		NoSerialise = HEAP_NO_SERIALIZE
 	};
 
+	namespace FileFlags
+	{
+		enum // subset of https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilea
+		{
+			NoBuffering = FILE_FLAG_NO_BUFFERING,
+			WriteThrough = FILE_FLAG_WRITE_THROUGH,
+			RandomAccess = FILE_FLAG_RANDOM_ACCESS,
+			SequentialScan = FILE_FLAG_SEQUENTIAL_SCAN,
+			DeleteOnClose = FILE_FLAG_DELETE_ON_CLOSE
+		};
+	}
+
 	constexpr auto PipeAccessDuplex = PIPE_ACCESS_DUPLEX;
 	constexpr auto FileFlagOverlapped = FILE_FLAG_OVERLAPPED;
 	constexpr auto PipeTypeMessage = PIPE_TYPE_MESSAGE;

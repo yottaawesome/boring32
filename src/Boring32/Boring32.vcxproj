@@ -268,6 +268,7 @@
     <ClCompile Include="Async\boring32-async_cmdrunner.ixx" />
     <ClCompile Include="Async\boring32-async_criticalsection.ixx" />
     <ClCompile Include="Async\boring32-async_eventloop.ixx" />
+    <ClCompile Include="Async\boring32-async_filesystemlock.ixx" />
     <ClCompile Include="Async\boring32-async_functions.ixx" />
     <ClCompile Include="Async\boring32-async_nullmutex.ixx" />
     <ClCompile Include="Async\boring32-async_overlapped.ixx" />
@@ -297,7 +298,7 @@
     <ClCompile Include="Async\boring32-async_threadsafevector.ixx" />
     <ClCompile Include="Async\boring32-async_timerqueuetimer.ixx" />
     <ClCompile Include="Async\boring32-async_timerqueuetimercallback.ixx" />
-    <ClCompile Include="Async\boring32-async_filelock.ixx" />
+    <ClCompile Include="Async\boring32-async_filerangelock.ixx" />
     <ClCompile Include="boring32.win32.ixx" />
     <ClCompile Include="Concepts\boring32-concepts.ixx" />
     <ClCompile Include="boring32.ixx" />

@@ -1,4 +1,4 @@
-export module boring32:async_filelock;
+export module boring32:async_filerangelock;
 import std;
 import boring32.win32;
 import :concepts;
@@ -7,40 +7,40 @@ import :raii;
 
 export namespace Boring32::Async
 {
-	struct FileLock final
+	struct FileRangeLock final
 	{
-		~FileLock() { Clear(); }
-		FileLock() = default;
-		FileLock(const FileLock&) = delete;
-		FileLock& operator=(const FileLock&) = delete;
+		~FileRangeLock() { Clear(); }
+		FileRangeLock() = default;
+		FileRangeLock(const FileRangeLock&) = delete;
+		FileRangeLock& operator=(const FileRangeLock&) = delete;
 
-		FileLock(FileLock&& other)
+		FileRangeLock(FileRangeLock&& other)
 		{
 			Move(other);
 		}
-		FileLock& operator=(this FileLock& self, FileLock&& other)
+		FileRangeLock& operator=(this FileRangeLock& self, FileRangeLock&& other)
 		{
 			self.Move(other);
 			return self;
 		}
 
-		FileLock(std::filesystem::path path, bool acquire) 
+		FileRangeLock(std::filesystem::path path, bool acquire)
 			: filePath(std::move(path)) 
 		{
 			acquire ? OpenHandleAndLock() : CreateOrOpenFileHandle(filePath);
 		}
 
-		void lock(this FileLock& self) 
+		void lock(this FileRangeLock& self)
 		{ 
 			self.OpenHandleAndLock(); 
 		}
 		
-		void unlock(this FileLock& self) noexcept 
+		void unlock(this FileRangeLock& self) noexcept
 		{ 
 			self.DoUnlock(); 
 		}
 
-		auto try_lock(this FileLock& self) noexcept -> bool
+		auto try_lock(this FileRangeLock& self) noexcept -> bool
 		try
 		{
 			self.lock();
@@ -51,12 +51,12 @@ export namespace Boring32::Async
 			return false;
 		}
 
-		auto HandleIsValid(this const FileLock& self) -> bool
+		auto HandleIsValid(this const FileRangeLock& self) -> bool
 		{
 			return self.fileHandle.get() != Win32::InvalidHandleValue and self.fileHandle;
 		}
 
-		auto GetPath(this const FileLock& self) -> const std::filesystem::path&
+		auto GetPath(this const FileRangeLock& self) -> const std::filesystem::path&
 		{
 			return self.filePath;
 		}
@@ -69,21 +69,21 @@ export namespace Boring32::Async
 			LockSizeLow = std::numeric_limits<Win32::DWORD>::max(),
 			LockSizeHigh = std::numeric_limits<Win32::DWORD>::max();
 
-		void Clear(this FileLock& self)
+		void Clear(this FileRangeLock& self)
 		{
 			self.DoUnlock();
 			self.fileHandle.reset();
 			self.filePath.clear();
 		}
 
-		void Move(this FileLock& self, FileLock& other)
+		void Move(this FileRangeLock& self, FileRangeLock& other)
 		{
 			self.DoUnlock();
 			self.fileHandle = std::move(other.fileHandle);
 			self.filePath = std::move(other.filePath);
 		}
 
-		void CreateOrOpenFileHandle(this FileLock& self, const std::filesystem::path& path)
+		void CreateOrOpenFileHandle(this FileRangeLock& self, const std::filesystem::path& path)
 		{
 			if (self.fileHandle)
 				return;
@@ -109,7 +109,7 @@ export namespace Boring32::Async
 			}
 		}
 		
-		void DoLock(this FileLock& self) 
+		void DoLock(this FileRangeLock& self)
 		{
 			if (not self.HandleIsValid())
 				throw Error::Boring32Error("File handle is null.");
@@ -132,7 +132,7 @@ export namespace Boring32::Async
 			}
 		}
 
-		void DoUnlock(this FileLock& self)
+		void DoUnlock(this FileRangeLock& self)
 		{
 			if (not self.HandleIsValid())
 				return;
@@ -150,12 +150,11 @@ export namespace Boring32::Async
 				throw Error::Win32Error(lastError, std::format("Failed to unlock file {}.", self.filePath.string()));
 		}
 
-		void OpenHandleAndLock(this FileLock& self)
+		void OpenHandleAndLock(this FileRangeLock& self)
 		{
 			self.CreateOrOpenFileHandle(self.filePath);
 			self.DoLock();
 		}
 	};
-
-	static_assert(Concepts::Lockable<FileLock>);
+	static_assert(Concepts::Lockable<FileRangeLock>);
 }

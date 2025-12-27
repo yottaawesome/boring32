@@ -189,7 +189,10 @@
     <ClCompile Include="MSI\boring32-msi_database.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\boring32-async_filelock.cpp">
+    <ClCompile Include="Async\boring32-async_filerangelock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Async\boring32-async_filesystemlock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

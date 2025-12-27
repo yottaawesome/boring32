@@ -8,7 +8,7 @@ namespace Async
 {
 	using namespace Boring32::Async;
 
-	TEST_CLASS(FileLockTests)
+	TEST_CLASS(FileRangeLockTests)
 	{
 		// https://learn.microsoft.com/en-us/visualstudio/test/microsoft-visualstudio-testtools-cppunittestframework-api-reference?view=visualstudio
 		TEST_METHOD_CLEANUP(Cleanup)
@@ -20,27 +20,27 @@ namespace Async
 
 		TEST_METHOD(TestDefaultConstructor)
 		{
-			Async::FileLock fileLock;
+			Async::FileRangeLock fileLock;
 			Assert::IsFalse(fileLock.HandleIsValid());
 			Assert::IsTrue(fileLock.GetPath().empty());
 		}
 
 		TEST_METHOD(TestLockCreate)
 		{
-			Async::FileLock fileLock("new.txt", true);
+			Async::FileRangeLock fileLock("new.txt", true);
 		}
 
 		TEST_METHOD(TestLockExisting)
 		{
 			std::ofstream ofs("existing.txt");
 			ofs.close();
-			Async::FileLock fileLock("existing.txt", true);
+			Async::FileRangeLock fileLock("existing.txt", true);
 		}
 
 		TEST_METHOD(TestMoveAssignment)
 		{
-			Async::FileLock fileLock1("new.txt", true);
-			Async::FileLock fileLock2 = std::move(fileLock1);
+			Async::FileRangeLock fileLock1("new.txt", true);
+			Async::FileRangeLock fileLock2 = std::move(fileLock1);
 			Assert::IsFalse(fileLock1.HandleIsValid());
 			Assert::IsTrue(fileLock2.HandleIsValid());
 			Assert::AreEqual(std::filesystem::path("new.txt").string(), fileLock2.GetPath().string());
@@ -48,8 +48,8 @@ namespace Async
 
 		TEST_METHOD(TestMoveConstructor)
 		{
-			Async::FileLock fileLock1("new.txt", true);
-			Async::FileLock fileLock2{ std::move(fileLock1) };
+			Async::FileRangeLock fileLock1("new.txt", true);
+			Async::FileRangeLock fileLock2{ std::move(fileLock1) };
 			Assert::IsFalse(fileLock1.HandleIsValid());
 			Assert::IsTrue(fileLock2.HandleIsValid());
 			Assert::AreEqual(std::filesystem::path("new.txt").string(), fileLock2.GetPath().string());
@@ -57,7 +57,7 @@ namespace Async
 
 		TEST_METHOD(TestLock)
 		{
-			Async::FileLock fileLock("new.txt", true);
+			Async::FileRangeLock fileLock("new.txt", true);
 			try
 			{
 				std::filesystem::remove("new.txt");
@@ -72,7 +72,7 @@ namespace Async
 		TEST_METHOD(TestLockUnlock)
 		{
 			{
-				Async::FileLock fileLock("new.txt", false);
+				Async::FileRangeLock fileLock("new.txt", false);
 				fileLock.lock();
 				fileLock.unlock();
 				// unlocking should not generate an error if the file is not locked
@@ -83,8 +83,8 @@ namespace Async
 
 		TEST_METHOD(TestTryLock)
 		{
-			Async::FileLock fileLock1("new.txt", true);
-			Async::FileLock fileLock2("new.txt", false);
+			Async::FileRangeLock fileLock1("new.txt", true);
+			Async::FileRangeLock fileLock2("new.txt", false);
 			Assert::IsFalse(fileLock2.try_lock());
 		}
 	};
