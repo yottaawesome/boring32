@@ -40,7 +40,7 @@ export namespace Boring32::Util
 		};
 	}
 
-	auto GetCurrentExecutablePath() -> std::wstring
+	auto GetCurrentExecutablePath() -> std::filesystem::path
 	{
 		constexpr size_t blockSize = 2048;
 		std::wstring filePath(L"\0", 0);
@@ -62,9 +62,11 @@ export namespace Boring32::Util
 		return filePath;
 	}
 
-	auto GetCurrentExecutableDirectory() -> std::wstring
+	auto GetCurrentExecutableDirectory() -> std::filesystem::path
 	{
-		auto filePath = GetCurrentExecutablePath();
+		// Don't actually need to do this, can just use parent_path() on the path object.
+		// This is just done like this to show how to use PathCchRemoveFileSpec.
+		auto filePath = GetCurrentExecutablePath().wstring();
 		Win32::HRESULT result = Win32::PathCchRemoveFileSpec(&filePath[0], filePath.size());
 		if (result != Win32::S_Ok && result != Win32::_S_FALSE)
 			throw Error::COMError(result, "PathCchRemoveFileSpec() failed");
