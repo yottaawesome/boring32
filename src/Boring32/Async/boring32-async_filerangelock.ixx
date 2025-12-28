@@ -4,13 +4,14 @@ import boring32.win32;
 import :concepts;
 import :error;
 import :raii;
+import :util;
 
 export namespace Boring32::Async
 {
 	struct FileRangeLock final
 	{
 		~FileRangeLock() { Clear(); }
-		FileRangeLock() = default;
+		constexpr FileRangeLock() = default;
 		FileRangeLock(const FileRangeLock&) = delete;
 		FileRangeLock& operator=(const FileRangeLock&) = delete;
 
@@ -18,6 +19,7 @@ export namespace Boring32::Async
 		{
 			Move(other);
 		}
+
 		FileRangeLock& operator=(this FileRangeLock& self, FileRangeLock&& other)
 		{
 			self.Move(other);
@@ -26,6 +28,12 @@ export namespace Boring32::Async
 
 		FileRangeLock(std::filesystem::path path, bool acquire)
 			: filePath(std::move(path)) 
+		{
+			acquire ? OpenHandleAndLock() : CreateOrOpenFileHandle(filePath);
+		}
+
+		FileRangeLock(std::filesystem::path path, bool acquire, std::uint64_t byteRange)
+			: filePath(std::move(path)), range(byteRange)
 		{
 			acquire ? OpenHandleAndLock() : CreateOrOpenFileHandle(filePath);
 		}
@@ -51,7 +59,7 @@ export namespace Boring32::Async
 			return false;
 		}
 
-		auto HandleIsValid(this const FileRangeLock& self) -> bool
+		constexpr auto HandleIsValid(this const FileRangeLock& self) -> bool
 		{
 			return self.fileHandle.get() != Win32::InvalidHandleValue and self.fileHandle;
 		}
@@ -65,9 +73,7 @@ export namespace Boring32::Async
 		std::filesystem::path filePath;
 		RAII::HandleUniquePtr fileHandle;
 		// 0xFFFFFFFF;
-		constexpr static Win32::DWORD 
-			LockSizeLow = std::numeric_limits<Win32::DWORD>::max(),
-			LockSizeHigh = std::numeric_limits<Win32::DWORD>::max();
+		std::uint64_t range = std::numeric_limits<std::uint64_t>::max();
 
 		void Clear(this FileRangeLock& self)
 		{
@@ -76,11 +82,12 @@ export namespace Boring32::Async
 			self.filePath.clear();
 		}
 
-		void Move(this FileRangeLock& self, FileRangeLock& other)
+		void Move(this FileRangeLock& self, FileRangeLock& other) noexcept
 		{
 			self.DoUnlock();
 			self.fileHandle = std::move(other.fileHandle);
 			self.filePath = std::move(other.filePath);
+			self.range = other.range;
 		}
 
 		void CreateOrOpenFileHandle(this FileRangeLock& self, const std::filesystem::path& path)
@@ -117,12 +124,13 @@ export namespace Boring32::Async
 			Win32::OVERLAPPED overlapped{};
 			constexpr auto options = Win32::LockFileFlags::Exclusive | Win32::LockFileFlags::FailImmediately;
 			// Requires generic read or generic write
+			const auto [lockSizeLow, lockSizeHigh] = Util::Decompose(self.range);
 			auto succeeded = Win32::LockFileEx(
 				self.fileHandle.get(),
 				options,
 				0,
-				LockSizeLow,
-				LockSizeHigh,
+				lockSizeLow,
+				lockSizeHigh,
 				&overlapped
 			);
 			if (not succeeded)
@@ -137,11 +145,12 @@ export namespace Boring32::Async
 			if (not self.HandleIsValid())
 				return;
 			Win32::OVERLAPPED overlapped{};
+			const auto [lockSizeLow, lockSizeHigh] = Util::Decompose(self.range);
 			auto succeeded = Win32::UnlockFileEx(
 				self.fileHandle.get(),
 				0,
-				LockSizeLow,
-				LockSizeHigh,
+				lockSizeLow,
+				lockSizeHigh,
 				&overlapped
 			);
 			if (succeeded)

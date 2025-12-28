@@ -140,4 +140,12 @@ export namespace Boring32::Util
 		if constexpr (N + 1 < std::variant_size_v<TVariant>)
 			RuntimeSet<TVariant, N + 1>(tup, idx);
 	}
+
+	constexpr auto Decompose(std::uint64_t value) noexcept -> std::pair<Win32::DWORD, Win32::DWORD>
+	{
+		const Win32::DWORD
+			low = static_cast<Win32::DWORD>(value & 0xFFFFFFFF),
+			high = static_cast<Win32::DWORD>((value >> 32) & 0xFFFFFFFF);
+		return { low, high };
+	}
 }
