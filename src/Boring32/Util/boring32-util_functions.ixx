@@ -40,24 +40,35 @@ export namespace Boring32::Util
 		};
 	}
 
-	auto GetCurrentExecutableDirectory() -> std::wstring
+	auto GetCurrentExecutablePath() -> std::wstring
 	{
 		constexpr size_t blockSize = 2048;
 		std::wstring filePath(L"\0", 0);
 		Win32::DWORD status = Win32::ErrorCodes::InsufficientBuffer;
+		Win32::DWORD count = 0;
 		while (status == Win32::ErrorCodes::InsufficientBuffer)
 		{
 			filePath.resize(filePath.size() + blockSize);
-			status = Win32::GetModuleFileNameW(nullptr, &filePath[0], static_cast<Win32::DWORD>(filePath.size()));
-			if (not status)
+			count = Win32::GetModuleFileNameW(
+				nullptr, 
+				filePath.data(), 
+				static_cast<Win32::DWORD>(filePath.size())
+			);
+			if (not count)
 				throw Error::Win32Error(Win32::GetLastError(), "GetModuleFileNameW() failed");
+			status = Win32::GetLastError();
 		}
+		filePath.resize(count);
+		return filePath;
+	}
 
+	auto GetCurrentExecutableDirectory() -> std::wstring
+	{
+		auto filePath = GetCurrentExecutablePath();
 		Win32::HRESULT result = Win32::PathCchRemoveFileSpec(&filePath[0], filePath.size());
 		if (result != Win32::S_Ok && result != Win32::_S_FALSE)
 			throw Error::COMError(result, "PathCchRemoveFileSpec() failed");
 		filePath = filePath.c_str();
-
 		return filePath;
 	}
 
