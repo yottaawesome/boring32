@@ -471,11 +471,15 @@ export namespace Boring32::Win32
 		::SetWindowTextW
 		;
 
-	enum class FileShareMode
+	namespace FileShareMode
 	{
-		None = 0,
-		Read = FILE_SHARE_READ,
-		Write = FILE_SHARE_WRITE
+		enum : ::DWORD
+		{
+			None = 0,
+			Read = FILE_SHARE_READ,
+			Write = FILE_SHARE_WRITE,
+			Delete = FILE_SHARE_DELETE,
+		};
 	};
 
 	enum class CreateFileDisposition

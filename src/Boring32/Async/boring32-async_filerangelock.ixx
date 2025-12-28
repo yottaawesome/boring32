@@ -71,11 +71,6 @@ export namespace Boring32::Async
 			return false;
 		}
 
-		constexpr auto HandleIsValid(this const FileRangeLock& self) -> bool
-		{
-			return self.fileHandle != Win32::InvalidHandleValue and self.fileHandle;
-		}
-
 		void DoLock(this FileRangeLock& self)
 		{
 			if (not self.HandleIsValid())
@@ -125,8 +120,13 @@ export namespace Boring32::Async
 					throw Error::Win32Error(lastError, std::format("Failed to unlock file."));
 		}
 
+		constexpr auto HandleIsValid(this const FileRangeLock& self) -> bool
+		{
+			return self.fileHandle != Win32::InvalidHandleValue and self.fileHandle;
+		}
+
 	private:
-		Win32::HANDLE fileHandle;
+		Win32::HANDLE fileHandle = nullptr;
 		LockParams params;
 
 		void Move(this FileRangeLock& self, FileRangeLock& other)
