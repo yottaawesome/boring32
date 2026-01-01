@@ -300,6 +300,7 @@
     <ClCompile Include="Async\boring32-async_timerqueuetimercallback.ixx" />
     <ClCompile Include="Async\boring32-async_filerangelock.ixx" />
     <ClCompile Include="boring32.win32.ixx" />
+    <ClCompile Include="COM\boring32-com_ptr.ixx" />
     <ClCompile Include="Concepts\boring32-concepts.ixx" />
     <ClCompile Include="boring32.ixx" />
     <ClCompile Include="Compression\boring32-compression_cabinet.ixx" />

@@ -228,6 +228,7 @@
     <ClCompile Include="Security\boring32-security_credentials.ixx" />
     <ClCompile Include="Async\boring32-async_filerangelock.ixx" />
     <ClCompile Include="Async\boring32-async_filesystemlock.ixx" />
+    <ClCompile Include="COM\boring32-com_ptr.ixx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
