@@ -20,9 +20,9 @@ export namespace Boring32::COM
 
 		constexpr Ptr(T* typePtr) noexcept
 			: ptr(typePtr)
-		{
-		}
+		{ }
 
+		// Copyable
 		constexpr Ptr(const Ptr& typePtr) noexcept
 			: ptr(typePtr.ptr)
 		{
@@ -37,6 +37,8 @@ export namespace Boring32::COM
 			return self;
 		}
 
+
+		// Movable
 		constexpr Ptr(Ptr&& other) noexcept
 			: ptr(other.ptr)
 		{
@@ -48,6 +50,26 @@ export namespace Boring32::COM
 			std::swap(self, other);
 			self.swap(other);
 			return self;
+		}
+
+		constexpr operator Win32::GUID(this const Ptr& self) noexcept
+		{
+			return self.Uuid;
+		}
+
+		constexpr operator bool(this const Ptr& self) noexcept
+		{
+			return self.ptr != nullptr;
+		}
+
+		constexpr auto operator==(this const Ptr& self, const Ptr& other) noexcept -> bool
+		{
+			return self.ptr == other.ptr;
+		}
+
+		constexpr auto operator*(this auto&& self) noexcept -> T*
+		{
+			return *self.ptr;
 		}
 
 		constexpr auto operator->(this auto&& self) noexcept -> T*

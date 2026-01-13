@@ -145,8 +145,7 @@ export namespace Boring32::COM
 			return m_apartmentThreadingMode;
 		}
 
-		// Internal
-		private:
+	private:
 		// Not sure if this is something that makes sense.
 		void Copy(const COMThreadScope& other)
 		{

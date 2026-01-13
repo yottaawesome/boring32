@@ -14,6 +14,8 @@ export namespace Boring32::Strings
 
 		TChar Buffer[N]{};
 
+		constexpr FixedString() noexcept = default;
+
 		constexpr FixedString(const TChar(&arg)[N]) noexcept
 		{
 			std::copy_n(arg, N, Buffer);
