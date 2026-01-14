@@ -124,5 +124,3 @@ export namespace Boring32::Com
 		T* ptr = nullptr;
 	};
 }
-
-
