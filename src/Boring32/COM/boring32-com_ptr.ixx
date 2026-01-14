@@ -106,7 +106,7 @@ export namespace Boring32::Com
 
 		constexpr auto AddressOf(this Ptr& self) noexcept -> void**
 		{
-			return (void**)&self.ptr;
+			return reinterpret_cast<void**>(&self.ptr);
 		}
 
 		constexpr auto GetUuid(this const Ptr& self) noexcept -> Win32::GUID
