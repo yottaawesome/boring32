@@ -195,6 +195,9 @@
     <ClCompile Include="Async\boring32-async_filesystemlock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="COM\boring32-com_ptr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">

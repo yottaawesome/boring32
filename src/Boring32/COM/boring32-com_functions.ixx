@@ -2,7 +2,7 @@ export module boring32:com_functions;
 import std;
 import boring32.win32;
 
-export namespace Boring32::COM
+export namespace Boring32::Com
 {
 	constexpr bool Succeeded(const Win32::HRESULT hr) noexcept
 	{

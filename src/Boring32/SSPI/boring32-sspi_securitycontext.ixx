@@ -65,7 +65,7 @@ export namespace Boring32::SSPI
 				&contextAttributes,
 				&lifetime
 			);
-			if (COM::Failed(status))
+			if (Com::Failed(status))
 			{
 				// Need to throw some kind of exception here
 				// https://learn.microsoft.com/en-us/windows/win32/secauthn/schannel-error-codes-for-tls-and-ssl-alerts

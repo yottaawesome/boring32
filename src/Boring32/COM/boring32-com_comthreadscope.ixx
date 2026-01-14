@@ -4,7 +4,7 @@ import boring32.win32;
 import :error;
 import :com_functions;
 
-export namespace Boring32::COM
+export namespace Boring32::Com
 {
 	///	Represents a COM library lifetime scope for a thread.
 	struct COMThreadScope final

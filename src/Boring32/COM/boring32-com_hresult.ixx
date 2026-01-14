@@ -4,7 +4,7 @@ import boring32.win32;
 import :error;
 import :com_functions;
 
-export namespace Boring32::COM
+export namespace Boring32::Com
 {
 	// See https://learn.microsoft.com/en-us/windows/win32/com/error-handling-in-com
 	struct HResult final
@@ -42,7 +42,7 @@ export namespace Boring32::COM
 
 		constexpr long Severity() const noexcept { return Win32::Severity(m_hr); }
 
-		constexpr bool Succeeded() const noexcept { return COM::Succeeded(m_hr); }
+		constexpr bool Succeeded() const noexcept { return Com::Succeeded(m_hr); }
 
 		constexpr bool Failed() const noexcept { return not Succeeded(); }
 

@@ -9,7 +9,7 @@ namespace COM
 
 	TEST_CLASS(HResult)
 	{
-		void TestCopyOrMove(Boring32::COM::HResult& from, Boring32::COM::HResult to)
+		void TestCopyOrMove(Boring32::Com::HResult& from, Boring32::Com::HResult to)
 		{
 			Assert::IsTrue(from.Get() == TestHr);
 			Assert::IsTrue(to.Get() == TestHr);
@@ -18,40 +18,40 @@ namespace COM
 		public:
 			TEST_METHOD(TestDefaultConstructor)
 			{
-				Boring32::COM::HResult hr;
+				Boring32::Com::HResult hr;
 			}
 
 			TEST_METHOD(TestCopyConstructor)
 			{
-				Boring32::COM::HResult hr1(TestHr);
-				Boring32::COM::HResult hr2(hr1);
+				Boring32::Com::HResult hr1(TestHr);
+				Boring32::Com::HResult hr2(hr1);
 				TestCopyOrMove(hr1, hr2);
 			}
 
 			TEST_METHOD(TestCopyAssignment)
 			{
-				Boring32::COM::HResult hr1(TestHr);
-				Boring32::COM::HResult hr2 = hr1;
+				Boring32::Com::HResult hr1(TestHr);
+				Boring32::Com::HResult hr2 = hr1;
 				TestCopyOrMove(hr1, hr2);
 			}
 
 			TEST_METHOD(TestMoveConstructor)
 			{
-				Boring32::COM::HResult hr1(TestHr);
-				Boring32::COM::HResult hr2(std::move(hr1));
+				Boring32::Com::HResult hr1(TestHr);
+				Boring32::Com::HResult hr2(std::move(hr1));
 				TestCopyOrMove(hr1, hr2);
 			}
 
 			TEST_METHOD(TestMoveAssignment)
 			{
-				Boring32::COM::HResult hr1(TestHr);
-				Boring32::COM::HResult hr2 = std::move(hr1);
+				Boring32::Com::HResult hr1(TestHr);
+				Boring32::Com::HResult hr2 = std::move(hr1);
 				TestCopyOrMove(hr1, hr2);
 			}
 
 			TEST_METHOD(TestGet)
 			{
-				Boring32::COM::HResult hr(TestHr);
+				Boring32::Com::HResult hr(TestHr);
 				Assert::IsTrue(hr.Get() == TestHr);
 			}
 	};

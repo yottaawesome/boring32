@@ -10,23 +10,23 @@ namespace COM
 		public:
 			TEST_METHOD(TestDefaultConstructor)
 			{
-				Boring32::COM::COMThreadScope threadScope;
+				Boring32::Com::COMThreadScope threadScope;
 			}
 
 			TEST_METHOD(TestInitConstructor)
 			{
-				Boring32::COM::COMThreadScope threadScope(COINIT::COINIT_APARTMENTTHREADED);
+				Boring32::Com::COMThreadScope threadScope(COINIT::COINIT_APARTMENTTHREADED);
 			}
 
 			TEST_METHOD(TestCopyConstructor)
 			{
-				Boring32::COM::COMThreadScope threadScope1(COINIT::COINIT_APARTMENTTHREADED);
-				Boring32::COM::COMThreadScope threadScope2(threadScope1);
+				Boring32::Com::COMThreadScope threadScope1(COINIT::COINIT_APARTMENTTHREADED);
+				Boring32::Com::COMThreadScope threadScope2(threadScope1);
 			}
 
 			TEST_METHOD(TestGetApartmentThreadingMode)
 			{
-				Boring32::COM::COMThreadScope threadScope(COINIT::COINIT_APARTMENTTHREADED);
+				Boring32::Com::COMThreadScope threadScope(COINIT::COINIT_APARTMENTTHREADED);
 				Assert::IsTrue(threadScope.GetApartmentThreadingMode() == COINIT::COINIT_APARTMENTTHREADED);
 			}
 	};

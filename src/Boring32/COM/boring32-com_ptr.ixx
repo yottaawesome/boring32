@@ -2,13 +2,13 @@ export module boring32:com_ptr;
 import std;
 import boring32.win32;
 
-export namespace Boring32::COM
+export namespace Boring32::Com
 {
+	// An alternative to Microsoft::WRL::ComPtr with better constexpr support
+	// and compatibility with std::out_ptr.
 	template<typename T>
 	struct Ptr
 	{
-		static constexpr Win32::GUID Uuid = __uuidof(T);
-
 		using pointer = T*;
 
 		constexpr ~Ptr() noexcept
@@ -37,7 +37,6 @@ export namespace Boring32::COM
 			return self;
 		}
 
-
 		// Movable
 		constexpr Ptr(Ptr&& other) noexcept
 			: ptr(other.ptr)
@@ -47,14 +46,13 @@ export namespace Boring32::COM
 		constexpr auto operator=(this Ptr& self, Ptr&& other) noexcept -> Ptr&
 		{
 			self.reset();
-			std::swap(self, other);
 			self.swap(other);
 			return self;
 		}
 
 		constexpr operator Win32::GUID(this const Ptr& self) noexcept
 		{
-			return self.Uuid;
+			return self.GetUuid();
 		}
 
 		constexpr operator bool(this const Ptr& self) noexcept
@@ -69,7 +67,7 @@ export namespace Boring32::COM
 
 		constexpr auto operator*(this auto&& self) noexcept -> T*
 		{
-			return *self.ptr;
+			return self.ptr;
 		}
 
 		constexpr auto operator->(this auto&& self) noexcept -> T*
@@ -101,7 +99,9 @@ export namespace Boring32::COM
 
 		constexpr auto swap(this Ptr& self, Ptr& other) noexcept -> void
 		{
-			std::swap(self.ptr, other.ptr);
+			auto temp = self.ptr;
+			self.ptr = other.ptr;
+			other.ptr = temp;
 		}
 
 		constexpr auto AddressOf(this Ptr& self) noexcept -> void**
@@ -109,11 +109,20 @@ export namespace Boring32::COM
 			return (void**)&self.ptr;
 		}
 
+		constexpr auto GetUuid(this const Ptr& self) noexcept -> Win32::GUID
+		{
+			if consteval
+			{
+				return Win32::GUID{};
+			}
+			else
+			{
+				return __uuidof(T);
+			}
+		}
+
 		T* ptr = nullptr;
 	};
-
-	void F()
-	{
-
-	}
 }
+
+

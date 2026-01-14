@@ -262,6 +262,7 @@
     <ClCompile Include="Compression\boring32.compression-compressor.cpp" />
     <ClCompile Include="Compression\boring32.compression-decompressor.cpp" />
     <ClCompile Include="Computer\boring32.computer-functions.cpp" />
+    <ClCompile Include="COM\boring32-com_ptr.cpp" />
     <ClCompile Include="COM\boring32.com-comthreadscope.cpp" />
     <ClCompile Include="COM\boring32.com-hresult.cpp" />
     <ClCompile Include="Crypto\boring32.crypto-aesencryption.cpp" />
