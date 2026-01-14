@@ -111,14 +111,7 @@ export namespace Boring32::Com
 
 		constexpr auto GetUuid(this const Ptr& self) noexcept -> Win32::GUID
 		{
-			if consteval
-			{
-				return Win32::GUID{};
-			}
-			else
-			{
-				return __uuidof(T);
-			}
+			return __uuidof(T);
 		}
 
 		T* ptr = nullptr;
