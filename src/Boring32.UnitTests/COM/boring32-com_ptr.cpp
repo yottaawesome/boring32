@@ -3,7 +3,7 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 import boring32;
 
-namespace COM
+namespace Com
 {
 	// Dummy COM interface for testing
 	struct IDummy
