@@ -11,6 +11,8 @@ export namespace Boring32::Strings
 	struct FixedString
 	{
 		using CharType = TChar;
+		using String = std::basic_string<TChar>;
+		using View = std::basic_string_view<TChar>;
 
 		TChar Buffer[N]{};
 
@@ -37,61 +39,61 @@ export namespace Boring32::Strings
 		}
 
 		[[nodiscard]]
-		constexpr std::basic_string_view<TChar, std::char_traits<TChar>> ToView() const noexcept
+		constexpr auto ToView() const noexcept -> View
 		{
 			return { Buffer };
 		}
 
 		[[nodiscard]]
-		constexpr operator std::basic_string_view<TChar, std::char_traits<TChar>>() const noexcept
+		constexpr operator View() const noexcept
 		{
 			return { Buffer };
 		}
 
 		[[nodiscard]]
-		constexpr operator std::basic_string<TChar, std::char_traits<TChar>>() const noexcept
+		constexpr operator String() const noexcept
 		{
 			return { Buffer };
 		}
 
 		[[nodiscard]]
-		constexpr std::basic_string<TChar, std::char_traits<TChar>> ToString() const noexcept
+		constexpr String ToString() const noexcept
 		{
 			return { Buffer };
 		}
 
 		template<size_t M>
 		[[nodiscard]]
-		constexpr bool operator==(const TChar(&str)[M]) const noexcept
+		constexpr auto operator==(const TChar(&str)[M]) const noexcept -> bool
 		{
 			return false;
 		}
 
 		[[nodiscard]]
-		constexpr bool operator==(const TChar(&str)[N]) const noexcept
+		constexpr auto operator==(const TChar(&str)[N]) const noexcept -> bool
 		{
 			return std::equal(str, str + N, Buffer);
 		}
 
 		[[nodiscard]]
-		constexpr bool operator==(const FixedString<TChar, N> str) const
+		constexpr auto operator==(const FixedString<TChar, N> str) const -> bool
 		{
 			return std::equal(str.Buffer, str.Buffer + N, Buffer);
 		}
 
 		[[nodiscard]]
-		constexpr size_t Size() const noexcept { return N-1; }
+		constexpr auto Size() const noexcept -> size_t { return N-1; }
 
 		template<ValidCharType TChar, std::size_t N2>
 		[[nodiscard]]
-		constexpr bool operator==(const FixedString<TChar, N2> s) const
+		constexpr auto operator==(const FixedString<TChar, N2> s) const -> bool
 		{
 			return false;
 		}
 
 		template<std::size_t N2>
 		[[nodiscard]]
-		constexpr FixedString<TChar, N + N2 - 1> operator+(const FixedString<TChar, N2> str) const
+		constexpr auto operator+(const FixedString<TChar, N2> str) const -> FixedString<TChar, N + N2 - 1>
 		{
 			TChar newchar[N + N2 - 1]{};
 			std::copy_n(Buffer, N - 1, newchar);
@@ -101,20 +103,31 @@ export namespace Boring32::Strings
 
 		struct Iterator
 		{
-			const char* Buffer = nullptr;
+			const CharType* Buffer = nullptr;
 			int Position = 0;
-			constexpr Iterator(int position, const char* buffer) : Position(position), Buffer(buffer) {}
+			constexpr Iterator(int position, const char* buffer) noexcept
+				: Position(position), Buffer(buffer) 
+			{}
+			constexpr auto operator++(this Iterator& self) noexcept -> Iterator& 
+			{ 
+				Position++; return self; 
+			}
 			[[nodiscard]]
-			constexpr char operator*() const noexcept { return Buffer[Position]; }
-			constexpr Iterator& operator++() noexcept { Position++; return *this; }
+			constexpr auto operator*(this const Iterator& self) noexcept -> CharType
+			{ 
+				return self.Buffer[Position]; 
+			}
 			[[nodiscard]]
-			constexpr bool operator!=(const Iterator& other) const noexcept { return Position != other.Position; }
+			constexpr auto operator!=(this const Iterator& self, const Iterator& other) noexcept -> bool 
+			{ 
+				return self.Position != other.Position; 
+			}
 		};
 
 		[[nodiscard]]
-		Iterator begin() const noexcept { return Iterator(0, Buffer); }
+		auto begin() const noexcept -> Iterator { return Iterator(0, Buffer); }
 		[[nodiscard]]
-		Iterator end() const noexcept { return Iterator(N - 1, Buffer); }
+		auto end() const noexcept { return Iterator(N - 1, Buffer); }
 	};
 	template<size_t N>
 	FixedString(char const (&)[N]) -> FixedString<char, N>;
