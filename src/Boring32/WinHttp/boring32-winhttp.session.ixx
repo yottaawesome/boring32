@@ -1,6 +1,6 @@
 export module boring32:winhttp.session;
 import std;
-import boring32.win32;
+import :win32;
 import :error;
 import :winhttp.winhttphandle;
 import :winhttp.enums;

@@ -1,5 +1,5 @@
 export module boring32:xaudio2.sourcevoice;
-import boring32.win32;
+import :win32;
 import :error;
 import :xaudio2.xaudio2error;
 import :xaudio2.voice;

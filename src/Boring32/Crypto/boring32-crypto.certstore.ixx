@@ -8,7 +8,7 @@ module;
 
 export module boring32:crypto.certstore;
 import std;
-import boring32.win32;
+import :win32;
 import :strings;
 import :error;
 import :crypto.functions;

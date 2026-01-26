@@ -1,6 +1,6 @@
 export module boring32:security.securityidentifier;
 import std;
-import boring32.win32;
+import :win32;
 import :error;
 import :raii;
 

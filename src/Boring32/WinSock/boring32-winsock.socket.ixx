@@ -1,6 +1,6 @@
 export module boring32:winsock.socket;
 import std;
-import boring32.win32;
+import :win32;
 import :winsock.winsockerror;
 
 export namespace Boring32::WinSock

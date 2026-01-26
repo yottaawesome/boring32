@@ -1,6 +1,6 @@
 export module boring32:winhttp.websocket;
 import std;
-import boring32.win32;
+import :win32;
 import :error;
 import :util;
 import :winhttp.proxyinfo;

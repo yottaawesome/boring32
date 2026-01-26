@@ -1,6 +1,6 @@
 export module boring32:filesystem.file;
 import std;
-import boring32.win32;
+import :win32;
 import :raii;
 import :error;
 

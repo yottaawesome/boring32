@@ -1,6 +1,6 @@
 export module boring32:async.semaphore;
 import std;
-import boring32.win32;
+import :win32;
 import :error;
 import :raii;
 import :concepts;

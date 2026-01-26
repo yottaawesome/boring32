@@ -1,6 +1,6 @@
 export module boring32:security.constants;
 import std;
-import boring32.win32;
+import :win32;
 
 namespace Boring32::Security::Constants
 {

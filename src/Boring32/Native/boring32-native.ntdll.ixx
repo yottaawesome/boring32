@@ -1,5 +1,5 @@
 export module boring32:native.ntdll;
-import boring32.win32;
+import :win32;
 import :error;
 import :native.defs;
 

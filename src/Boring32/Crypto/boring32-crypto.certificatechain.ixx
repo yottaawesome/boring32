@@ -1,6 +1,6 @@
 export module boring32:crypto.certificatechain;
 import std;
-import boring32.win32;
+import :win32;
 import :error;
 import :crypto.certificate;
 import :crypto.functions;

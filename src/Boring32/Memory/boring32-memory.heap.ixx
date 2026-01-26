@@ -1,6 +1,6 @@
 export module boring32:memory.heap;
 import std;
-import boring32.win32;
+import :win32;
 import :error;
 
 export namespace Boring32::Memory

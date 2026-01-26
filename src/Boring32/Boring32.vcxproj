@@ -300,7 +300,7 @@
     <ClCompile Include="Async\boring32-async.waitableaddress.ixx" />
     <ClCompile Include="Async\boring32-async.waitabletimer.ixx" />
     <ClCompile Include="Async\boring32-async.ixx" />
-    <ClCompile Include="boring32.win32.ixx" />
+    <ClCompile Include="boring32-win32.ixx" />
     <ClCompile Include="COM\boring32-com.ptr.ixx" />
     <ClCompile Include="Concepts\boring32-concepts.ixx" />
     <ClCompile Include="boring32.ixx" />

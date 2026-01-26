@@ -1,6 +1,6 @@
 module boring32:security.lsaunicodestring;
 import std;
-import boring32.win32;
+import :win32;
 
 namespace Boring32::Security
 {

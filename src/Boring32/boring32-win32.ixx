@@ -2,7 +2,7 @@ module;
 
 #include "framework.h"
 
-export module boring32.win32;
+export module boring32:win32;
 
 template<auto VValue, typename TValue = decltype(VValue)>
 struct Constant

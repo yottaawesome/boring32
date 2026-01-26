@@ -1,6 +1,6 @@
 export module boring32:async.filesystemlock;
 import std;
-import boring32.win32;
+import :win32;
 import :concepts;
 import :error;
 import :raii;

@@ -1,5 +1,5 @@
 export module boring32:async.synchronizationbarrier;
-import boring32.win32;
+import :win32;
 import :error;
 
 export namespace Boring32::Async

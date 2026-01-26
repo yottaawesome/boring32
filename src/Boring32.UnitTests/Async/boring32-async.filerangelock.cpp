@@ -3,7 +3,6 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 import std;
 import boring32;
-import boring32.win32;
 
 namespace Async
 {

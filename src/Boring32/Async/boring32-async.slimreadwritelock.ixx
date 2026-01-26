@@ -1,6 +1,6 @@
 export module boring32:async.slimreadwritelock;
 import std;
-import boring32.win32;
+import :win32;
 
 export namespace Boring32::Async
 {

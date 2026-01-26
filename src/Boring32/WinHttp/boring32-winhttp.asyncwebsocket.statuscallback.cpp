@@ -1,6 +1,6 @@
 module boring32:winhttp.asyncwebsocket;
 import std;
-import boring32.win32;
+import :win32;
 import :strings;
 import :error;
 

@@ -1,5 +1,5 @@
 export module boring32:io.completionport;
-import boring32.win32;
+import :win32;
 import :raii;
 import :error;
 

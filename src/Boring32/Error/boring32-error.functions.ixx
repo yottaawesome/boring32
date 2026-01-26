@@ -1,5 +1,5 @@
 export module boring32:error.functions;
-import boring32.win32;
+import :win32;
 import :concepts;
 
 namespace Boring32::Error

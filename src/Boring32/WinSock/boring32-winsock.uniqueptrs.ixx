@@ -1,6 +1,6 @@
 export module boring32:winsock.uniqueptrs;
 import std;
-import boring32.win32;
+import :win32;
 import :raii;
 
 export namespace Boring32::WinSock
