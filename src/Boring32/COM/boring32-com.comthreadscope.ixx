@@ -127,20 +127,20 @@ export namespace Boring32::Com
 		}
 
 		///	Returns whether this COM scope object has been initialised.
-		bool IsInitialised() const noexcept
+		auto IsInitialised() const noexcept -> bool
 		{
 			return m_isInitialised;
 		}
 
 		///	Returns the thread ID that initialised this COM object scope.
-		Win32::DWORD GetComInitialisedThreadId() const noexcept
+		auto GetComInitialisedThreadId() const noexcept -> Win32::DWORD
 		{
 			return m_comInitialisedThreadId;
 		}
 
 		///	Returns the current COM threading apartment mode held by
 		///	this object.
-		Win32::COINIT GetApartmentThreadingMode() const noexcept
+		auto GetApartmentThreadingMode() const noexcept -> Win32::COINIT
 		{
 			return m_apartmentThreadingMode;
 		}

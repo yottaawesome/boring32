@@ -29,22 +29,22 @@ export namespace Boring32::Com
 
 		constexpr operator bool() const noexcept { return Succeeded(); }
 
-		constexpr bool operator==(const Win32::HRESULT hr) const noexcept { return m_hr == hr; }
+		constexpr auto operator==(const Win32::HRESULT hr) const noexcept -> bool { return m_hr == hr; }
 
-		constexpr bool operator==(const HResult& hr) const noexcept { return m_hr == hr.m_hr; }
+		constexpr auto operator==(const HResult& hr) const noexcept -> bool { return m_hr == hr.m_hr; }
 
 		// See https://learn.microsoft.com/en-us/windows/win32/com/using-macros-for-error-handling
-		constexpr HRESULT Get() const noexcept { return m_hr; }
+		constexpr auto Get() const noexcept -> Win32::HRESULT { return m_hr; }
 
-		constexpr long Facility() const noexcept { return Win32::Facility(m_hr); }
+		constexpr auto Facility() const noexcept -> long { return Win32::Facility(m_hr); }
 
-		constexpr long Code() const noexcept { return Win32::Code(m_hr); }
+		constexpr auto Code() const noexcept -> long { return Win32::Code(m_hr); }
 
-		constexpr long Severity() const noexcept { return Win32::Severity(m_hr); }
+		constexpr auto Severity() const noexcept -> long { return Win32::Severity(m_hr); }
 
-		constexpr bool Succeeded() const noexcept { return Com::Succeeded(m_hr); }
+		constexpr auto Succeeded() const noexcept -> bool { return Com::Succeeded(m_hr); }
 
-		constexpr bool Failed() const noexcept { return not Succeeded(); }
+		constexpr auto Failed() const noexcept -> bool { return not Succeeded(); }
 
 		void ThrowIfFailed(std::string_view msg, const std::source_location& loc = std::source_location::current()) const
 		{
@@ -55,7 +55,7 @@ export namespace Boring32::Com
 			throw Error::COMError(m_hr, "HRESULT check failed", loc);
 		}
 
-		private:
+	private:
 		Win32::HRESULT m_hr = 0x0;
 	};
 }

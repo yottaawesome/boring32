@@ -301,7 +301,7 @@
     <ClCompile Include="Async\boring32-async.waitabletimer.ixx" />
     <ClCompile Include="Async\boring32-async.ixx" />
     <ClCompile Include="boring32-win32.ixx" />
-    <ClCompile Include="COM\boring32-com.ptr.ixx" />
+    <ClCompile Include="Com\boring32-com.ptr.ixx" />
     <ClCompile Include="Concepts\boring32-concepts.ixx" />
     <ClCompile Include="boring32.ixx" />
     <ClCompile Include="Compression\boring32-compression.cabinet.ixx" />
@@ -310,9 +310,9 @@
     <ClCompile Include="Computer\boring32-computer.functions.ixx" />
     <ClCompile Include="Computer\boring32-computer.processinfo.ixx" />
     <ClCompile Include="Computer\boring32-computer.ixx" />
-    <ClCompile Include="COM\boring32-com.functions.ixx" />
-    <ClCompile Include="COM\boring32-com.hresult.ixx" />
-    <ClCompile Include="COM\boring32-com.ixx" />
+    <ClCompile Include="Com\boring32-com.functions.ixx" />
+    <ClCompile Include="Com\boring32-com.hresult.ixx" />
+    <ClCompile Include="Com\boring32-com.ixx" />
     <ClCompile Include="Crypto\boring32-crypto.aesencryption.ixx" />
     <ClCompile Include="Crypto\boring32-crypto.certificate.ixx" />
     <ClCompile Include="Crypto\boring32-crypto.certificatechain.ixx" />
@@ -462,7 +462,7 @@
     <ClCompile Include="Compression\boring32-compression.compressor.ixx" />
     <ClCompile Include="Compression\boring32-compression.decompressor.ixx" />
     <ClCompile Include="Compression\boring32-compression.ixx" />
-    <ClCompile Include="COM\boring32-com.comthreadscope.ixx" />
+    <ClCompile Include="Com\boring32-com.comthreadscope.ixx" />
     <ClCompile Include="FileSystem\boring32-filesystem.file.ixx" />
     <ClCompile Include="RAII\boring32-raii.win32handle.ixx" />
     <ClCompile Include="Strings\boring32-strings.ixx" />

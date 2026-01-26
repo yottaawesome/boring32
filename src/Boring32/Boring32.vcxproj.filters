@@ -21,7 +21,7 @@
     <ClCompile Include="Strings\boring32-strings.ixx" />
     <ClCompile Include="FileSystem\boring32-filesystem.file.ixx" />
     <ClCompile Include="RAII\boring32-raii.win32handle.ixx" />
-    <ClCompile Include="COM\boring32-com.comthreadscope.ixx" />
+    <ClCompile Include="Com\boring32-com.comthreadscope.ixx" />
     <ClCompile Include="Compression\boring32-compression.ixx" />
     <ClCompile Include="Compression\boring32-compression.compressor.ixx" />
     <ClCompile Include="Compression\boring32-compression.decompressor.ixx" />
@@ -86,7 +86,7 @@
     <ClCompile Include="RAII\boring32-raii.ixx" />
     <ClCompile Include="Process\boring32-process.ixx" />
     <ClCompile Include="FileSystem\boring32-filesystem.functions.ixx" />
-    <ClCompile Include="COM\boring32-com.ixx" />
+    <ClCompile Include="Com\boring32-com.ixx" />
     <ClCompile Include="Crypto\boring32-crypto.ixx" />
     <ClCompile Include="XAudio2\boring32-xaudio2.ixx" />
     <ClCompile Include="XAudio2\boring32-xaudio2.engine.ixx" />
@@ -153,7 +153,7 @@
     <ClCompile Include="SSPI\boring32-sspi.contextbuffer.ixx" />
     <ClCompile Include="SSPI\boring32-sspi.sizedcontextbuffer.ixx" />
     <ClCompile Include="SSPI\boring32-sspi.buffertype.ixx" />
-    <ClCompile Include="COM\boring32-com.functions.ixx" />
+    <ClCompile Include="Com\boring32-com.functions.ixx" />
     <ClCompile Include="SSPI\Provider\boring32-sspi.provider.credential.ixx" />
     <ClCompile Include="SSPI\Provider\boring32-sspi.provider.digest.ixx" />
     <ClCompile Include="SSPI\Provider\boring32-sspi.provider.kerberos.ixx" />
@@ -161,7 +161,7 @@
     <ClCompile Include="SSPI\Provider\boring32-sspi.provider.ntlm.ixx" />
     <ClCompile Include="SSPI\Provider\boring32-sspi.provider.pku2u.ixx" />
     <ClCompile Include="SSPI\Provider\boring32-sspi.provider.schannel.ixx" />
-    <ClCompile Include="COM\boring32-com.hresult.ixx" />
+    <ClCompile Include="Com\boring32-com.hresult.ixx" />
     <ClCompile Include="WinSock\boring32-winsock.socket.ixx" />
     <ClCompile Include="Memory\boring32-memory.ixx" />
     <ClCompile Include="Memory\boring32-memory.functions.ixx" />
@@ -193,7 +193,7 @@
     <ClCompile Include="DirectX\boring32-directx.ixx" />
     <ClCompile Include="UI\boring32-ui.ixx" />
     <ClCompile Include="Security\boring32-security.credentials.ixx" />
-    <ClCompile Include="COM\boring32-com.ptr.ixx" />
+    <ClCompile Include="Com\boring32-com.ptr.ixx" />
     <ClCompile Include="Async\boring32-async.apcthread.ixx" />
     <ClCompile Include="Async\boring32-async.cmdrunner.ixx" />
     <ClCompile Include="Async\boring32-async.criticalsection.ixx" />
