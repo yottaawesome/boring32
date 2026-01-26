@@ -1,15 +1,15 @@
 export module boring32:security;
-export import :security_constants;
-export import :security_functions;
-export import :security_impersonationcontext;
-export import :security_privatenamespace;
-export import :security_securitydescriptor;
-export import :security_securityattributes;
-export import :security_securityidentifier;
-export import :security_token;
-export import :security_policy;
-export import :security_encodedpointer;
-export import :security_saferlevel;
-export import :security_credentials;
+export import :security.constants;
+export import :security.functions;
+export import :security.impersonationcontext;
+export import :security.privatenamespace;
+export import :security.securitydescriptor;
+export import :security.securityattributes;
+export import :security.securityidentifier;
+export import :security.token;
+export import :security.policy;
+export import :security.encodedpointer;
+export import :security.saferlevel;
+export import :security.credentials;
 
-import :security_lsaunicodestring;
+import :security.lsaunicodestring;

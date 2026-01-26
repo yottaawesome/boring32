@@ -4,7 +4,7 @@ import std.compat;
 import boring32.win32;
 import :error;
 import :concepts;
-export import :strings_fixedstring;
+export import :strings.fixedstring;
 
 export namespace Boring32::Strings
 {

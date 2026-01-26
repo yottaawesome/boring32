@@ -1,3 +1,3 @@
 export module boring32:datastructures;
-export import :datastructures_cappedstack;
-export import :datastructures_singlylinkedlist;
+export import :datastructures.cappedstack;
+export import :datastructures.singlylinkedlist;

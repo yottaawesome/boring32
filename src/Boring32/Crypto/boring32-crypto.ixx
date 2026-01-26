@@ -3,12 +3,12 @@
 #pragma comment(lib, "Crypt32.lib")
 
 export module boring32:crypto;
-export import :crypto_aesencryption;
-export import :crypto_certificate;
-export import :crypto_certificatechain;
-export import :crypto_chainingmode;
-export import :crypto_certstore;
-export import :crypto_cryptokey;
-export import :crypto_functions;
-export import :crypto_securestring;
-export import :crypto_tempcertimport;
+export import :crypto.aesencryption;
+export import :crypto.certificate;
+export import :crypto.certificatechain;
+export import :crypto.chainingmode;
+export import :crypto.certstore;
+export import :crypto.cryptokey;
+export import :crypto.functions;
+export import :crypto.securestring;
+export import :crypto.tempcertimport;

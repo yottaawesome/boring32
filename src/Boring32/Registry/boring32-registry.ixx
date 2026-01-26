@@ -1,7 +1,7 @@
 #pragma comment(lib, "Shlwapi.lib")
 
 export module boring32:registry;
-export import :registry_functions;
-export import :registry_key;
-export import :registry_value;
-export import :registry_registryvalue;
+export import :registry.functions;
+export import :registry.key;
+export import :registry.value;
+export import :registry.registryvalue;
