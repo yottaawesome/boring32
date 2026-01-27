@@ -3,7 +3,6 @@ import std;
 import :win32;
 import :error;
 import :compression.deleters;
-import :compression.compressionerror;
 
 // For reference of the Compression API, see: https://docs.microsoft.com/en-us/windows/win32/cmpapi/using-the-compression-api
 // For reference see: https://docs.microsoft.com/en-us/windows/win32/cmpapi/using-the-compression-api-in-block-mode
@@ -23,7 +22,7 @@ export namespace Boring32::Compression
 			Copy(other);
 		}
 
-		Compressor& operator=(const Compressor& other)
+		auto operator=(const Compressor& other) -> Compressor&
 		{
 			Copy(other);
 			return *this;
@@ -34,7 +33,7 @@ export namespace Boring32::Compression
 		{
 			Move(other);
 		}
-		Compressor& operator=(Compressor&& other) noexcept
+		auto operator=(Compressor&& other) noexcept -> Compressor&
 		{
 			Move(other);
 			return *this;
@@ -47,12 +46,13 @@ export namespace Boring32::Compression
 		}	
 
 		///	Returns the size, in bytes, of the compressed buffer specified in the parameter.
-		[[nodiscard]] size_t GetCompressedSize(const std::vector<std::byte>& buffer) const
+		[[nodiscard]] 
+		auto GetCompressedSize(const std::vector<std::byte>& buffer) const -> size_t
 		{
 			if (not m_compressor)
-				throw CompressionError("Compressor handle is null");
+				throw Error::Boring32Error("Compressor handle is null");
 			if (buffer.empty())
-				throw CompressionError("Buffer is empty");
+				throw Error::Boring32Error("Buffer is empty");
 
 			size_t compressedBufferSize = 0;
 			// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-compress
@@ -67,27 +67,28 @@ export namespace Boring32::Compression
 			Win32::DWORD lastError = Win32::GetLastError();
 			if (not succeeded && lastError != Win32::ErrorCodes::InsufficientBuffer)
 			{
-				Error::ThrowNested(
-					Error::Win32Error(lastError, "Compress() failed"),
-					CompressionError("An error occurred calculating the compressed size"));
+				auto lastError = Win32::GetLastError();
+				throw Error::Win32Error(lastError, "Compress() failed");
 			}
 
 			return compressedBufferSize;
 		}
 
 		///	Returns the type of algorithm of this compressor.
-		[[nodiscard]] Win32::CompressionType GetType() const noexcept
+		[[nodiscard]] 
+		auto GetType() const noexcept -> Win32::CompressionType
 		{
 			return m_type;
 		}
 
 		///	Returns a buffer that is the compressed data of the input argument, buffer.
-		[[nodiscard]] std::vector<std::byte> CompressBuffer(const std::vector<std::byte>& buffer)
+		[[nodiscard]] 
+		auto CompressBuffer(const std::vector<std::byte>& buffer) -> std::vector<std::byte>
 		{
 			if (not m_compressor)
-				throw CompressionError("Compressor handle is null");
+				throw Error::Boring32Error("Compressor handle is null");
 			if (buffer.empty())
-				throw CompressionError("Buffer is empty");
+				throw Error::Boring32Error("Buffer is empty");
 
 			std::vector<std::byte> returnVal(GetCompressedSize(buffer));
 			size_t compressedBufferSize = 0;
@@ -102,10 +103,8 @@ export namespace Boring32::Compression
 			);
 			if (not succeeded)
 			{
-				Error::ThrowNested(
-					Error::Win32Error(Win32::GetLastError(), "Compress() failed"),
-					CompressionError("An error occurred compressing")
-				);
+				auto lastError = Win32::GetLastError();
+				throw Error::Win32Error(lastError, "Compress() failed");
 			}
 
 			return returnVal;
@@ -118,7 +117,8 @@ export namespace Boring32::Compression
 			m_type = Win32::CompressionType::NotSet;
 		}
 
-		[[nodiscard]] Win32::COMPRESSOR_HANDLE GetHandle() const noexcept
+		[[nodiscard]] 
+		auto GetHandle() const noexcept -> Win32::COMPRESSOR_HANDLE
 		{
 			return m_compressor.get();
 		}
@@ -126,14 +126,12 @@ export namespace Boring32::Compression
 		void Reset()
 		{
 			if (not m_compressor)
-				throw CompressionError("Compressor handle is null");
+				throw Error::Boring32Error("Compressor handle is null");
 			// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-resetcompressor
 			if (not Win32::ResetCompressor(m_compressor.get()))
 			{
-				Error::ThrowNested(
-					Error::Win32Error(Win32::GetLastError(), "ResetCompressor() failed"),
-					CompressionError("An error occurred resetting the compressor")
-				);
+				auto lastError = Win32::GetLastError();
+				throw Error::Win32Error(lastError, "ResetCompressor() failed");
 			}
 		}
 
@@ -151,10 +149,8 @@ export namespace Boring32::Compression
 			);
 			if (not succeeded)
 			{
-				Error::ThrowNested(
-					Error::Win32Error(Win32::GetLastError(), "CreateCompressor() failed"),
-					CompressionError("An error occurred creating the compressor")
-				);
+				auto lastError = Win32::GetLastError();
+				throw Error::Win32Error(lastError, "CreateCompressor() failed");
 			}
 			m_compressor = CompressorUniquePtr(handle);
 		}

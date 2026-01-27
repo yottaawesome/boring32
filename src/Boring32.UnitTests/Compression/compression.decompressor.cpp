@@ -65,7 +65,7 @@ namespace Compression
 
 			TEST_METHOD(TestInvalidDecompression)
 			{
-				Assert::ExpectException<Boring32::Compression::CompressionError>(
+				Assert::ExpectException<Boring32::Error::Win32Error>(
 					[]() 
 					{ 
 						Boring32::Compression::Decompressor decompressor(Boring32::Win32::CompressionType::MSZIP);
@@ -81,7 +81,7 @@ namespace Compression
 				const std::byte* buffer = reinterpret_cast<std::byte*>(&m_compressionString[0]);
 				std::vector<std::byte> compressedData = compressor.CompressBuffer({ buffer, buffer + m_compressionString.size() });
 
-				Assert::ExpectException<Boring32::Compression::CompressionError>(
+				Assert::ExpectException<Boring32::Error::Boring32Error>(
 					[&compressedData]()
 					{
 						Boring32::Compression::Decompressor decompressor;
@@ -154,7 +154,7 @@ namespace Compression
 					}
 				);
 
-				Assert::ExpectException<Boring32::Compression::CompressionError>(
+				Assert::ExpectException<Boring32::Error::Boring32Error>(
 					[&compressedData]()
 					{
 						Boring32::Compression::Decompressor decompressor;

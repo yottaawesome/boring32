@@ -77,7 +77,7 @@ namespace Compression
 
 			TEST_METHOD(TestCompressorGetCompressedBytesUnset)
 			{
-				Assert::ExpectException<Boring32::Compression::CompressionError>(
+				Assert::ExpectException<Boring32::Error::Boring32Error>(
 					[&m_compressionString = m_compressionString]()
 					{
 						Boring32::Compression::Compressor compressor;

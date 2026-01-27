@@ -305,7 +305,6 @@
     <ClCompile Include="Concepts\concepts.ixx" />
     <ClCompile Include="boring32.ixx" />
     <ClCompile Include="Compression\compression.cabinet.ixx" />
-    <ClCompile Include="Compression\compression.compressionerror.ixx" />
     <ClCompile Include="Compression\compression.deleters.ixx" />
     <ClCompile Include="Computer\computer.functions.ixx" />
     <ClCompile Include="Computer\computer.processinfo.ixx" />

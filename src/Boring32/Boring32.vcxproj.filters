@@ -97,7 +97,6 @@
     <ClCompile Include="XAudio2\xaudio2.functions.ixx" />
     <ClCompile Include="Error\error.boring32error.ixx" />
     <ClCompile Include="XAudio2\xaudio2.xaudio2error.ixx" />
-    <ClCompile Include="Compression\compression.compressionerror.ixx" />
     <ClCompile Include="Compression\compression.deleters.ixx" />
     <ClCompile Include="Registry\registry.value.ixx" />
     <ClCompile Include="WindowsFilteringPlatform\windowsfilteringplatform.ixx" />

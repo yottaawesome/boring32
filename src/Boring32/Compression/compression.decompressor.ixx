@@ -3,7 +3,6 @@ import std;
 import :win32;
 import :error;
 import :compression.deleters;
-import :compression.compressionerror;
 
 export namespace Boring32::Compression
 {
@@ -21,7 +20,7 @@ export namespace Boring32::Compression
 			Copy(other);
 		}
 
-		Decompressor& operator=(const Decompressor& other)
+		auto operator=(const Decompressor& other) -> Decompressor&
 		{
 			Copy(other);
 			return *this;
@@ -31,7 +30,7 @@ export namespace Boring32::Compression
 		{
 			Move(other);
 		}
-		Decompressor& operator=(Decompressor&& other) noexcept
+		auto operator=(Decompressor&& other) noexcept -> Decompressor&
 		{
 			Move(other);
 			return *this;
@@ -50,18 +49,20 @@ export namespace Boring32::Compression
 		}
 
 		///	Returns the type of algorithm of this decompressor.
-		[[nodiscard]] Win32::CompressionType GetType() const noexcept
+		[[nodiscard]] 
+		auto GetType() const noexcept -> Win32::CompressionType
 		{
 			return m_type;
 		}
 
 		///	Returns the uncompressed size, in bytes, of the compressed buffer specified in the parameter.
-		[[nodiscard]] size_t GetDecompressedSize(const std::vector<std::byte>& compressedBuffer) const
+		[[nodiscard]] 
+		auto GetDecompressedSize(const std::vector<std::byte>& compressedBuffer) const -> size_t
 		{
 			if (not m_decompressor)
-				throw CompressionError("Decompressor handle is null");
+				throw Error::Boring32Error("Decompressor handle is null");
 			if (compressedBuffer.empty())
-				throw CompressionError("Buffer is empty");
+				throw Error::Boring32Error("Buffer is empty");
 
 			size_t decompressedBufferSize = 0;
 			//https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-decompress
@@ -76,20 +77,17 @@ export namespace Boring32::Compression
 			auto lastError = Win32::GetLastError();
 			if (lastError == Win32::ErrorCodes::InsufficientBuffer)
 				return decompressedBufferSize;
-
-			Error::ThrowNested(
-				Error::Win32Error(lastError, "Decompress() failed"),
-				CompressionError("An error occurred while decompressing data")
-			);
+			throw Error::Win32Error(lastError, "Decompress() failed");
 		}
 
 		///	Returns a buffer that is the decompressed data of the input argument, buffer.
-		[[nodiscard]] std::vector<std::byte> DecompressBuffer(const std::vector<std::byte>& compressedBuffer)
+		[[nodiscard]] 
+		auto DecompressBuffer(const std::vector<std::byte>& compressedBuffer) -> std::vector<std::byte>
 		{
 			if (not m_decompressor)
-				throw CompressionError("Decompressor handle is null");
+				throw Error::Boring32Error("Decompressor handle is null");
 			if (compressedBuffer.empty())
-				throw CompressionError("Buffer is empty");
+				throw Error::Boring32Error("Buffer is empty");
 
 			std::vector<std::byte> returnVal(GetDecompressedSize(compressedBuffer));
 			size_t decompressedBufferSize = 0;
@@ -104,15 +102,15 @@ export namespace Boring32::Compression
 			);
 			if (not succeeded)
 			{
-				Error::ThrowNested(
-					Error::Win32Error(Win32::GetLastError(), "CreateDecompressor() failed"),
-					CompressionError("An error occurred creating the decompressor"));
+				auto lastError = Win32::GetLastError();
+				throw Error::Win32Error(lastError, "CreateDecompressor() failed");
 			}
 
 			return returnVal;
 		}
 
-		[[nodiscard]] Win32::DECOMPRESSOR_HANDLE GetHandle() const noexcept
+		[[nodiscard]] 
+		auto GetHandle() const noexcept -> Win32::DECOMPRESSOR_HANDLE
 		{
 			return m_decompressor.get();
 		}
@@ -120,18 +118,16 @@ export namespace Boring32::Compression
 		void Reset()
 		{
 			if (not m_decompressor)
-				throw CompressionError("Decompressor handle is null");
+				throw Error::Boring32Error("Decompressor handle is null");
 			// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-resetdecompressor
 			if (not Win32::ResetDecompressor(m_decompressor.get()))
 			{
-				Error::ThrowNested(
-					Error::Win32Error(Win32::GetLastError(), "ResetDecompressor() failed"),
-					CompressionError("An error occurred resetting the decompressor")
-				);
+				auto lastError = Win32::GetLastError();
+				throw Error::Win32Error(lastError, "ResetDecompressor() failed");
 			}
 		}
 
-		private:
+	private:
 		void Create()
 		{
 			if (m_type == Win32::CompressionType::NotSet)
@@ -145,10 +141,8 @@ export namespace Boring32::Compression
 			);
 			if (not succeeded)
 			{
-				Error::ThrowNested(
-					Error::Win32Error(Win32::GetLastError(), "CreateDecompressor() failed"),
-					CompressionError("An error occurred creating the decompressor")
-				);
+				auto lastError = Win32::GetLastError();
+				throw Error::Win32Error(lastError, "CreateDecompressor() failed");
 			}
 			m_decompressor = DecompressorUniquePtr(handle);
 		}
