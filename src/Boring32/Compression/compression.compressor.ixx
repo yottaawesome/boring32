@@ -137,7 +137,7 @@ export namespace Boring32::Compression
 			}
 		}
 
-		private:
+	private:
 		void Create()
 		{
 			if (m_type == Win32::CompressionType::NotSet)
