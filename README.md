@@ -21,9 +21,13 @@ There's a unit test project that can be used as a reference, and you can run the
 
 ## Other notes
 
+### Unit tests
+
+Some unit tests will likely fail on your machine as they are referencing objects (e.g. certificates) in my local environment I use for testing Win32 API calls. You can safely ignore these failures or comment them out.
+
 ### C++ modules
 
-`Boring32` is now (2023-11-24) fully module-based and has eliminated any direct reliance on the Windows headers, and the primary module interface file is `boring32.ixx`. Some unit tests will likely fail on your machine as they are referencing objects (e.g. certificates) in my local environment I use for testing Win32 API calls. You can safely ignore these failures or comment them out. 
+`Boring32` is now (2023-11-24) fully module-based and has eliminated any direct reliance on the Windows headers. The primary module interface file is `boring32.ixx`. While compilation speeds are often touted as the reason to use modules, they also offer a much cleaner way of structuring your codebase with improved encapsulation by allowing you to selectively export only what you need. Modules also allow you to do all your work within the module interface files, which eliminates the duplication caused by seperate declarations and definitions in traditional header/source file C++ projects.
 
 ### C++ modules naming convention
 
