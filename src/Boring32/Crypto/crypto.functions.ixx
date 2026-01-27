@@ -9,11 +9,11 @@ export namespace Boring32::Crypto
 	// See also a complete example on MSDN at:
 	// https://docs.microsoft.com/en-us/windows/win32/seccrypto/example-c-program-using-cryptprotectdata
 
-	std::vector<std::byte> Encrypt(
+	auto Encrypt(
 		const std::vector<std::byte>& data,
 		const std::wstring& password,
 		const std::wstring& description
-	)
+	) -> std::vector<std::byte>
 	{
 		Win32::DATA_BLOB dataIn{
 			.cbData = static_cast<Win32::DWORD>(data.size()),
@@ -61,11 +61,11 @@ export namespace Boring32::Crypto
 		return returnValue;
 	}
 
-	std::vector<std::byte> Encrypt(
+	auto Encrypt(
 		const std::wstring& str,
 		const std::wstring& password,
 		const std::wstring& description
-	)
+	) -> std::vector<std::byte>
 	{
 		const std::byte* buffer = (std::byte*)&str[0];
 		return Encrypt(
@@ -75,11 +75,11 @@ export namespace Boring32::Crypto
 		);
 	}
 
-	std::wstring DecryptString(
+	auto DecryptString(
 		const std::vector<std::byte>& encryptedData,
 		const std::wstring& password,
 		std::wstring& outDescription
-	)
+	) -> std::wstring
 	{
 		Win32::DATA_BLOB encryptedBlob;
 		encryptedBlob.pbData = (Win32::BYTE*)&encryptedData[0];
@@ -128,13 +128,13 @@ export namespace Boring32::Crypto
 		return returnValue;
 	}
 
-	std::vector<std::byte> Decrypt(
+	auto Decrypt(
 		const Win32::DWORD blockByteLength,
 		const CryptoKey& key,
 		const std::vector<std::byte>& iv,
 		const std::vector<std::byte>& cypherText,
 		const Win32::DWORD flags
-	)
+	) -> std::vector<std::byte>
 	{
 		if (not key.GetHandle())
 			throw Error::Boring32Error("key is null");
@@ -190,13 +190,13 @@ export namespace Boring32::Crypto
 		return plainText;
 	}
 
-	std::vector<std::byte> Encrypt(
+	auto Encrypt(
 		Win32::DWORD blockByteLength,
 		const CryptoKey& key,
 		const std::vector<std::byte>& iv,
 		const std::vector<std::byte>& plainText,
 		Win32::DWORD flags
-	)
+	) -> std::vector<std::byte>
 	{
 		if (not key.GetHandle())
 			throw Error::Boring32Error("key is null");
@@ -250,7 +250,7 @@ export namespace Boring32::Crypto
 		return cypherText;
 	}
 
-	std::string ToBase64String(const std::vector<std::byte>& bytes)
+	auto ToBase64String(const std::vector<std::byte>& bytes) -> std::string
 	{
 		// Determine the required size -- this includes the null terminator
 		Win32::DWORD size = 0;
@@ -284,7 +284,7 @@ export namespace Boring32::Crypto
 		return returnVal;
 	}
 
-	std::wstring ToBase64WString(const std::vector<std::byte>& bytes)
+	auto ToBase64WString(const std::vector<std::byte>& bytes) -> std::wstring
 	{
 		// Determine the required size -- this includes the null terminator
 		Win32::DWORD size = 0;
@@ -319,7 +319,7 @@ export namespace Boring32::Crypto
 		return returnVal;
 	}
 
-	std::vector<std::byte> ToBinary(const std::wstring& base64)
+	auto ToBinary(const std::wstring& base64) -> std::vector<std::byte>
 	{
 		Win32::DWORD byteSize = 0;
 		bool succeeded = Win32::CryptStringToBinaryW(
@@ -351,7 +351,7 @@ export namespace Boring32::Crypto
 		return returnVal;
 	}
 
-	std::vector<std::byte> EncodeAsnString(const std::wstring& name)
+	auto EncodeAsnString(const std::wstring& name) -> std::vector<std::byte>
 	{
 		Win32::DWORD encoded = 0;
 		// CERT_NAME_STR_FORCE_UTF8_DIR_STR_FLAG is required or the encoding
@@ -388,7 +388,7 @@ export namespace Boring32::Crypto
 		return bytes;
 	}
 
-	std::wstring FormatAsnNameBlob(const Win32::CERT_NAME_BLOB& certName, Win32::DWORD format)
+	auto FormatAsnNameBlob(const Win32::CERT_NAME_BLOB& certName, Win32::DWORD format) -> std::wstring
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certnametostrw
 		Win32::DWORD characterSize = Win32::CertNameToStrW(
@@ -414,7 +414,7 @@ export namespace Boring32::Crypto
 		return name;
 	}
 
-	std::vector<Win32::PCCERT_CHAIN_CONTEXT> FindChainInStore(Win32::HCERTSTORE hCertStore, const std::wstring& issuer)
+	auto FindChainInStore(Win32::HCERTSTORE hCertStore, const std::wstring& issuer) -> std::vector<Win32::PCCERT_CHAIN_CONTEXT>
 	{
 		if (not hCertStore)
 			throw Error::Boring32Error("hCertStore cannot be null");
@@ -468,10 +468,10 @@ export namespace Boring32::Crypto
 		}
 	}
 
-	Win32::PCCERT_CHAIN_CONTEXT GenerateChainFrom(
+	auto GenerateChainFrom(
 		Win32::PCCERT_CONTEXT contextToBuildFrom,
 		Win32::HCERTSTORE store
-	)
+	) -> Win32::PCCERT_CHAIN_CONTEXT
 	{
 		if (not contextToBuildFrom)
 			throw Error::Boring32Error("contextToBuildFrom is null");
@@ -529,7 +529,7 @@ export namespace Boring32::Crypto
 
 	using StoreFindType = Win32::StoreFindType;
 
-	Win32::PCCERT_CONTEXT GetCertByArg(Win32::HCERTSTORE certStore, StoreFindType searchFlag, const void* arg)
+	auto GetCertByArg(Win32::HCERTSTORE certStore, StoreFindType searchFlag, const void* arg) -> Win32::PCCERT_CONTEXT
 	{
 		if (not certStore)
 			throw Error::Boring32Error("CertStore cannot be null");

@@ -15,33 +15,33 @@ export namespace Boring32::Error
 			const std::string& msg, 
 			const std::source_location location = std::source_location::current(),
 			const std::stacktrace& trace = std::stacktrace::current()
-		) : m_hresult(hr), Boring32Error(GenerateErrorMessage(location, msg, trace))
+		) : m_hresult(hr), Boring32Error(GenerateErrorMessage(hr, location, msg, trace))
 		{ }
 
-		Win32::HRESULT GetHResult() const noexcept
+		auto GetHResult() const noexcept -> Win32::HRESULT
 		{
 			return m_hresult;
 		}
 
-		private:
-		ExactMessage GenerateErrorMessage(
+	private:
+		auto GenerateErrorMessage(
+			Win32::HRESULT hresult,
 			const std::source_location& location,
 			const std::string& message,
 			const std::stacktrace& trace
-		)
+		) -> ExactMessage
 		{
-			std::string m_errorString = Error::TranslateErrorCode<std::string>(
-				m_hresult
-			);
-			m_errorString = Error::FormatErrorMessage(
+			auto errorString = 
+				Error::TranslateErrorCode<std::string>(hresult);
+			errorString = Error::FormatErrorMessage(
 				"COM", 
 				trace,
 				location,
 				message, 
-				m_hresult, 
-				m_errorString
+				hresult,
+				errorString
 			);
-			return { m_errorString };
+			return { errorString };
 		}
 
 		Win32::HRESULT m_hresult = 0;

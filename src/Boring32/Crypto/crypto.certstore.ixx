@@ -41,7 +41,7 @@ export namespace Boring32::Crypto
 			Copy(other);
 		}
 
-		CertStore& operator=(const CertStore& other)
+		auto operator=(const CertStore& other) -> CertStore&
 		{
 			return Copy(other);
 		}
@@ -52,7 +52,7 @@ export namespace Boring32::Crypto
 			Move(other);
 		}
 
-		CertStore& operator=(CertStore&& other) noexcept
+		auto operator=(CertStore&& other) noexcept -> CertStore&
 		{
 			return Move(other);
 		}
@@ -115,7 +115,7 @@ export namespace Boring32::Crypto
 			InternalOpen();
 		}
 
-		bool operator==(const CertStore& other) const noexcept
+		auto operator==(const CertStore& other) const noexcept -> bool
 		{
 			return m_certStore == other.m_certStore;
 		}
@@ -139,17 +139,20 @@ export namespace Boring32::Crypto
 			m_certStore = nullptr;
 		}
 
-		[[nodiscard]] Win32::HCERTSTORE GetHandle() const noexcept
+		[[nodiscard]]
+		auto GetHandle() const noexcept -> Win32::HCERTSTORE
 		{
 			return m_certStore;
 		}
 
-		[[nodiscard]] const std::wstring& GetName() const noexcept
+		[[nodiscard]] 
+		auto GetName() const noexcept -> const std::wstring&
 		{
 			return m_storeName;
 		}
 
-		[[nodiscard]] std::vector<Certificate> GetAll() const
+		[[nodiscard]] 
+		auto GetAll() const -> std::vector<Certificate>
 		{
 			if (not m_certStore)
 				throw Error::Boring32Error("m_certStore is null");
@@ -174,7 +177,8 @@ export namespace Boring32::Crypto
 			return results;
 		}
 
-		[[nodiscard]] Certificate GetCertByFormattedSubject(const std::wstring& subjectRdn) const
+		[[nodiscard]] 
+		auto GetCertByFormattedSubject(const std::wstring& subjectRdn) const -> Certificate
 		{
 			Win32::PCCERT_CONTEXT currentCert = nullptr;
 			Certificate cert;
@@ -197,7 +201,8 @@ export namespace Boring32::Crypto
 			return {};
 		}
 
-		[[nodiscard]] Certificate GetCertBySubjectCn(const std::wstring& subjectCn) const
+		[[nodiscard]] 
+		auto GetCertBySubjectCn(const std::wstring& subjectCn) const -> Certificate
 		{
 			Win32::PCCERT_CONTEXT currentCert = nullptr;
 			while (currentCert = CertEnumCertificatesInStore(m_certStore, currentCert))
@@ -220,17 +225,20 @@ export namespace Boring32::Crypto
 			return {};
 		}
 
-		[[nodiscard]] Certificate GetCertBySubstringSubject(const std::wstring& subjectName) const
+		[[nodiscard]] 
+		auto GetCertBySubstringSubject(const std::wstring& subjectName) const -> Certificate
 		{
 			return { GetCertByArg(StoreFindType::SubjectStr, subjectName.c_str()), true };
 		}
 
-		[[nodiscard]] Certificate GetExisting(const Win32::PCCERT_CONTEXT cert) const
+		[[nodiscard]] 
+		auto GetExisting(const Win32::PCCERT_CONTEXT cert) const -> Certificate
 		{
 			return { GetCertByArg(StoreFindType::Existing, cert), true };
 		}
 
-		[[nodiscard]] Certificate GetCertByExactSubject(const std::wstring& subjectName) const
+		[[nodiscard]] 
+		auto GetCertByExactSubject(const std::wstring& subjectName) const -> Certificate
 		{
 			std::vector<std::byte> encodedBytes = EncodeAsnString(subjectName);
 			const Win32::CERT_NAME_BLOB blob{
@@ -240,7 +248,8 @@ export namespace Boring32::Crypto
 			return { GetCertByArg(StoreFindType::SubjectName, &blob), true };
 		}
 
-		[[nodiscard]] Certificate GetCertByExactSubject(const std::vector<std::byte>& subjectName) const
+		[[nodiscard]] 
+		auto GetCertByExactSubject(const std::vector<std::byte>& subjectName) const -> Certificate
 		{
 			Win32::CERT_NAME_BLOB blob{
 				.cbData = static_cast<Win32::DWORD>(subjectName.size()),
@@ -249,7 +258,8 @@ export namespace Boring32::Crypto
 			return { GetCertByArg(StoreFindType::SubjectName, &blob), true };
 		}
 
-		[[nodiscard]] Certificate GetCertByExactIssuer(const std::wstring& subjectName) const
+		[[nodiscard]] 
+		auto GetCertByExactIssuer(const std::wstring& subjectName) const -> Certificate
 		{
 			std::vector<std::byte> encodedBytes = EncodeAsnString(subjectName);
 			const Win32::CERT_NAME_BLOB blob{
@@ -259,12 +269,14 @@ export namespace Boring32::Crypto
 			return { GetCertByArg(StoreFindType::IssuerName, &blob), true };
 		}
 
-		[[nodiscard]] Certificate GetCertBySubstringIssuerName(const std::wstring& issuerName) const
+		[[nodiscard]] 
+		auto GetCertBySubstringIssuerName(const std::wstring& issuerName) const -> Certificate
 		{
 			return { GetCertByArg(StoreFindType::IssuerStr, issuerName.c_str()), true };
 		}
 
-		[[nodiscard]] Certificate GetCertByByBase64Signature(const std::wstring& base64Signature) const
+		[[nodiscard]]
+		auto GetCertByByBase64Signature(const std::wstring& base64Signature) const -> Certificate
 		{
 			std::vector<std::byte> bytes = ToBinary(base64Signature);
 			const Win32::CRYPT_HASH_BLOB blob{
@@ -274,7 +286,8 @@ export namespace Boring32::Crypto
 			return { GetCertByArg(StoreFindType::SignatureHash, &blob), true };
 		}
 
-		[[nodiscard]] CertStoreType GetStoreType() const noexcept
+		[[nodiscard]] 
+		auto GetStoreType() const noexcept -> CertStoreType
 		{
 			return m_storeType;
 		}
@@ -346,12 +359,12 @@ export namespace Boring32::Crypto
 				throw Error::Win32Error(Win32::GetLastError(), "CertAddCertificateContextToStore() failed");
 		}
 
-		Win32::PCCERT_CONTEXT GetCertByArg(StoreFindType searchFlag, const void* arg) const
+		auto GetCertByArg(StoreFindType searchFlag, const void* arg) const -> Win32::PCCERT_CONTEXT
 		{
 			return Crypto::GetCertByArg(m_certStore, searchFlag, arg);
 		}
 
-		std::wstring GetLocalisedName() const
+		auto GetLocalisedName() const -> std::wstring
 		{
 			if (not m_certStore)
 				throw Error::Boring32Error("m_certStore is nullptr");
@@ -386,7 +399,7 @@ export namespace Boring32::Crypto
 		//virtual Certificate GetCertByExactSubjectRdn(const std::string& subjectName);
 
 		private:
-		CertStore& Copy(const CertStore& other)
+		auto Copy(const CertStore& other) -> CertStore&
 		{
 			if (this == &other)
 				return *this;
@@ -400,7 +413,7 @@ export namespace Boring32::Crypto
 			return *this;
 		}
 
-		CertStore& Move(CertStore& other) noexcept
+		auto Move(CertStore& other) noexcept -> CertStore&
 		{
 			if (this == &other)
 				return *this;

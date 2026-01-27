@@ -15,7 +15,7 @@ export namespace Boring32::Crypto
 		ScopedString() = default;
 
 		ScopedString(const ScopedString& other) = default;
-		ScopedString& operator=(const ScopedString& other)
+		auto operator=(const ScopedString& other) -> ScopedString&
 		{
 			Clear();
 			Value = other.Value;
@@ -23,7 +23,7 @@ export namespace Boring32::Crypto
 		}
 
 		ScopedString(ScopedString&& other) noexcept = default;
-		ScopedString& operator=(ScopedString&& other) noexcept
+		auto operator=(ScopedString&& other) noexcept -> ScopedString&
 		{
 			Clear();
 			Value = std::move(other.Value);
@@ -58,14 +58,14 @@ export namespace Boring32::Crypto
 
 		SecureString(const SecureString& other) = default;
 
-		SecureString& operator=(const SecureString& other)
+		auto operator=(const SecureString& other) -> SecureString&
 		{
 			return Copy(other);
 		}
 
 		SecureString(SecureString&& other) noexcept = default;
 
-		SecureString& operator=(SecureString&& other) noexcept
+		auto operator=(SecureString&& other) noexcept -> SecureString&
 		{
 			return Move(other);
 		}
@@ -92,13 +92,13 @@ export namespace Boring32::Crypto
 			return out;
 		}
 
-		SecureString& operator=(const std::wstring& newValue)
+		auto operator=(const std::wstring& newValue) -> SecureString&
 		{
 			SetValueAndEncrypt(newValue);
 			return *this;
 		}
 
-		bool operator==(const std::wstring& comparison)
+		auto operator==(const std::wstring& comparison) -> bool
 		{
 			ScopedString s;
 			DecryptCopyAndReencrypt(s.Value);
@@ -151,12 +151,13 @@ export namespace Boring32::Crypto
 			Encrypt();
 		}
 
-		const std::wstring& GetValue() const
+		[[nodiscard]]
+		auto GetValue() const -> const std::wstring&
 		{
 			return m_protectedString;
 		}
 
-		ScopedString ToScopedString()
+		auto ToScopedString() -> ScopedString
 		{
 			ScopedString copy;
 			DecryptCopyAndReencrypt(copy.Value);
@@ -171,7 +172,7 @@ export namespace Boring32::Crypto
 			m_isEncrypted = false;
 		}
 
-		bool HasData() const noexcept
+		auto HasData() const noexcept -> bool
 		{
 			return !m_protectedString.empty();
 		}
@@ -210,13 +211,13 @@ export namespace Boring32::Crypto
 			m_isEncrypted = false;
 		}
 
-		bool IsCurrentlyEncrypted() const noexcept
+		auto IsCurrentlyEncrypted() const noexcept -> bool
 		{
 			return m_isEncrypted;
 		}
 
-		private:
-		SecureString& Copy(const SecureString& other)
+	private:
+		auto Copy(const SecureString& other) -> SecureString&
 		{
 			Clear();
 			m_encryptionType = other.m_encryptionType;
@@ -226,7 +227,7 @@ export namespace Boring32::Crypto
 			return *this;
 		}
 
-		SecureString& Move(SecureString& other) noexcept
+		auto Move(SecureString& other) noexcept -> SecureString&
 		{
 			Clear();
 			m_encryptionType = other.m_encryptionType;

@@ -69,7 +69,7 @@ export namespace Boring32::Error
 			return m_trace;
 		}
 
-		protected:
+	protected:
 		virtual void SetErrorMessage(const std::string_view msg)
 		{
 			m_errorMsg = FormatErrorMessage(

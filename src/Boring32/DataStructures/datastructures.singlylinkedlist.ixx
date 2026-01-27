@@ -48,7 +48,7 @@ export namespace Boring32::DataStructures
 		}
 
 		SinglyLinkedList& operator=(const SinglyLinkedList&) = delete;
-		SinglyLinkedList& operator=(SinglyLinkedList&& other) noexcept
+		auto operator=(SinglyLinkedList&& other) noexcept -> SinglyLinkedList&
 		{
 			return Move(other);
 		}
@@ -74,7 +74,7 @@ export namespace Boring32::DataStructures
 			new(&newEntry->Item) std::shared_ptr<T>(new T(std::forward<Args>(args)...));
 		}
 
-		Win32::USHORT GetDepth()
+		auto GetDepth() -> Win32::USHORT
 		{
 			return m_listHeader ? Win32::QueryDepthSList(m_listHeader) : 0;
 		}
@@ -89,7 +89,7 @@ export namespace Boring32::DataStructures
 			new(&newEntry->Item) std::shared_ptr<T>(std::move(newVal));
 		}
 
-		std::shared_ptr<T> Pop()
+		auto Pop() -> std::shared_ptr<T>
 		{
 			// Using boring32error causes an internal compiler error. No idea why.
 			if (not m_listHeader)
@@ -121,7 +121,7 @@ export namespace Boring32::DataStructures
 		///		added to the front of the list, the last item added is
 		///		index 0.
 		/// WARNING: doesn't work. Not sure why, but EntryInfo.Next is always null.
-		std::shared_ptr<T> GetAt(const Win32::UINT index)
+		auto GetAt(const Win32::UINT index) -> std::shared_ptr<T>
 		{
 			if (not m_firstEntry)
 				return nullptr;
@@ -134,8 +134,8 @@ export namespace Boring32::DataStructures
 			return desiredEntry ? desiredEntry->Item : nullptr;
 		}
 
-		private:
-		SinglyLinkedList& Move(SinglyLinkedList& other)
+	private:
+		auto Move(SinglyLinkedList& other) -> SinglyLinkedList&
 		{
 			Close();
 			m_listHeader = other.m_listHeader;
@@ -145,7 +145,7 @@ export namespace Boring32::DataStructures
 			return *this;
 		}
 
-		ListElement<T>* InternalAdd()
+		auto InternalAdd() -> ListElement<T>*
 		{
 			const auto newEntry = reinterpret_cast<ListElement<T>*>(
 				_aligned_malloc(sizeof(ListElement<T>), Win32::MemoryAllocationAlignment));

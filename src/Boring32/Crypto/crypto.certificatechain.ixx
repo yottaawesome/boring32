@@ -28,13 +28,13 @@ export namespace Boring32::Crypto
 			Move(other);
 		}
 
-		CertificateChain& operator=(const CertificateChain& other)
+		auto operator=(const CertificateChain& other) -> CertificateChain&
 		{
 			Close();
 			return Copy(other);
 		}
 
-		CertificateChain& operator=(CertificateChain&& other) noexcept
+		auto operator=(CertificateChain&& other) noexcept -> CertificateChain&
 		{
 			Close();
 			return Move(other);
@@ -69,7 +69,7 @@ export namespace Boring32::Crypto
 			}
 		}
 
-		bool Verify(const ChainVerificationPolicy policy)
+		auto Verify(const ChainVerificationPolicy policy) const -> bool
 		{
 			// TODO: need to verify this actually works
 			if (not m_chainContext)
@@ -95,12 +95,12 @@ export namespace Boring32::Crypto
 			return status.dwError == 0;
 		}
 
-		Win32::PCCERT_CHAIN_CONTEXT GetChainContext() const noexcept
+		auto GetChainContext() const noexcept -> Win32::PCCERT_CHAIN_CONTEXT
 		{
 			return m_chainContext;
 		}
 
-		std::vector<Certificate> GetCertChainAt(const Win32::DWORD chainIndex) const
+		auto GetCertChainAt(const Win32::DWORD chainIndex) const -> std::vector<Certificate>
 		{
 			if (not m_chainContext)
 				throw Error::Boring32Error("m_chainContext is null");
@@ -130,7 +130,7 @@ export namespace Boring32::Crypto
 			return certsInChain;
 		}
 
-		Certificate GetCertAt(Win32::DWORD chainIndex, Win32::DWORD certIndex) const
+		auto GetCertAt(Win32::DWORD chainIndex, Win32::DWORD certIndex) const -> Certificate
 		{
 			if (not m_chainContext)
 				throw Error::Boring32Error("m_chainContext is null");
@@ -157,7 +157,7 @@ export namespace Boring32::Crypto
 			return { simpleChain->rgpElement[certIndex]->pCertContext, false };
 		}
 
-		Certificate GetFirstCertAt(Win32::DWORD chainIndex) const
+		auto GetFirstCertAt(Win32::DWORD chainIndex) const -> Certificate
 		{
 			if (not m_chainContext)
 				throw Error::Boring32Error("m_chainContext is null");
@@ -178,7 +178,7 @@ export namespace Boring32::Crypto
 			return { simpleChain->rgpElement[0]->pCertContext, false };
 		}
 
-		Certificate GetLastCertAt(Win32::DWORD chainIndex) const
+		auto GetLastCertAt(Win32::DWORD chainIndex) const -> Certificate
 		{
 			if (not m_chainContext)
 				throw Error::Boring32Error("m_chainContext is null");
@@ -209,8 +209,8 @@ export namespace Boring32::Crypto
 			return temporaryStore;
 		}*/
 
-		private:
-		CertificateChain& Copy(const CertificateChain& other)
+	private:
+		auto Copy(const CertificateChain& other) -> CertificateChain&
 		{
 			if (&other == this)
 				return *this;
@@ -222,7 +222,7 @@ export namespace Boring32::Crypto
 			return *this;
 		}
 
-		CertificateChain& Move(CertificateChain& other) noexcept
+		auto Move(CertificateChain& other) noexcept -> CertificateChain&
 		{
 			if (&other == this)
 				return *this;

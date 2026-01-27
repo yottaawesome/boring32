@@ -15,9 +15,9 @@ export namespace Boring32::Crypto
 		GaloisCounterMode
 	};
 
-	const std::wstring& ChainingModeToString(const ChainingMode cm)
+	auto ChainingModeToString(const ChainingMode cm) -> const std::wstring&
 	{
-		static std::map<ChainingMode, std::wstring> modes {
+		static const std::map<ChainingMode, std::wstring> modes {
 			{ ChainingMode::CipherBlockChaining,	Win32::BCryptChainingMode::CipherBlockChaining },
 			{ ChainingMode::CbcMac,					Win32::BCryptChainingMode::CbcMac },
 			{ ChainingMode::CipherFeedback,			Win32::BCryptChainingMode::CipherFeedback },

@@ -29,7 +29,7 @@ export namespace Boring32::Crypto
 			Move(other);
 		}
 
-		CryptoKey& operator=(CryptoKey&& other) noexcept
+		auto operator=(CryptoKey&& other) noexcept -> CryptoKey&
 		{
 			return Move(other);
 		}

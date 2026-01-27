@@ -15,7 +15,7 @@ export namespace Boring32::DataStructures
 				throw Error::Boring32Error("maxSize is 0");
 		}
 
-		constexpr CappedStack& Push(const T value)
+		constexpr auto Push(const T value) -> CappedStack&
 		{
 			if (m_stack.empty())
 			{
@@ -42,7 +42,7 @@ export namespace Boring32::DataStructures
 				m_stack.erase(m_stack.begin());
 		}
 
-		constexpr T Pop()
+		constexpr auto Pop() -> T
 		{
 			if (m_stack.empty())
 				throw Error::Boring32Error("Cannot pop empty stack");
@@ -51,7 +51,7 @@ export namespace Boring32::DataStructures
 			return value;
 		}
 
-		constexpr bool Pop(T& value) noexcept
+		constexpr auto Pop(T& value) noexcept -> bool
 		{
 			if (m_stack.empty())
 				return false;
@@ -59,7 +59,7 @@ export namespace Boring32::DataStructures
 			return true;
 		}
 
-		constexpr bool PopLeaveOne() noexcept
+		constexpr auto PopLeaveOne() noexcept -> bool
 		{
 			if (m_stack.size() < 2)
 				return false;
@@ -67,28 +67,28 @@ export namespace Boring32::DataStructures
 			return true;
 		}
 
-		constexpr bool PopLeaveOne(T& value) noexcept
+		constexpr auto PopLeaveOne(T& value) noexcept -> bool
 		{
 			if (m_stack.size() < 2)
 				return false;
 			return Pop(value);
 		}
 
-		constexpr T GetFirst()
+		constexpr auto GetFirst() -> T
 		{
 			if (m_stack.empty())
 				throw Error::Boring32Error("Cannot get from empty stack");
 			return m_stack.front();
 		}
 
-		constexpr T GetCurrent()
+		constexpr auto GetCurrent() -> T
 		{
 			if (m_stack.empty())
 				throw Error::Boring32Error("Cannot get from empty stack");
 			return m_stack.back();
 		}
 
-		constexpr T GetFromBack(const size_t backIndex)
+		constexpr auto GetFromBack(const size_t backIndex) -> T
 		{
 			if (m_stack.empty())
 				throw Error::Boring32Error("Cannot get from empty stack");
@@ -97,51 +97,51 @@ export namespace Boring32::DataStructures
 			return m_stack.at(m_stack.size()-1-backIndex);
 		}
 
-		constexpr const TContainer& GetContainer() const noexcept
+		constexpr auto GetContainer() const noexcept -> const TContainer&
 		{
 			return m_stack;
 		}
 
-		constexpr bool operator==(const T val) const
+		constexpr auto operator==(const T val) const -> bool
 		{
 			if (m_stack.empty())
 				return false;
 			return m_stack.back() == val;
 		}
 
-		constexpr CappedStack& operator=(const T val)
+		constexpr auto operator=(const T val) -> CappedStack&
 		{
 			return Push(val);
 		}
 
-		constexpr T operator[](const size_t index) const
+		constexpr auto operator[](const size_t index) const -> T
 		{
 			if (m_stack.empty())
 				throw Error::Boring32Error("Stack is empty");
 			return m_stack[index];
 		}
 
-		constexpr size_t GetMaxSize() const noexcept
+		constexpr auto GetMaxSize() const noexcept -> size_t
 		{
 			return m_maxSize;
 		}
 
-		constexpr size_t GetSize() const noexcept
+		constexpr auto GetSize() const noexcept -> size_t
 		{
 			return m_stack.size();
 		}
 
-		constexpr bool IsEmpty() const noexcept
+		constexpr auto IsEmpty() const noexcept -> bool
 		{
 			return m_stack.empty();
 		}
 
-		constexpr bool AddsUniqueOnly() const noexcept
+		constexpr auto AddsUniqueOnly() const noexcept -> bool
 		{
 			return m_uniqueOnly;
 		}
 
-		private:
+	private:
 		size_t m_maxSize = 0;
 		TContainer m_stack;
 		bool m_uniqueOnly = false;

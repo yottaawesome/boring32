@@ -42,7 +42,7 @@ export namespace Boring32::Computer
 				throw Error::Win32Error(Win32::GetLastError(), "OpenProcess() failed");
 		}
 
-		ProcessTimes GetTimes() const
+		auto GetTimes() const -> ProcessTimes
 		{
 			if (not m_processHandle)
 				throw Error::Boring32Error("m_processHandle cannot be null");
@@ -79,7 +79,7 @@ export namespace Boring32::Computer
 			};
 		}
 
-		std::wstring GetPath() const
+		auto GetPath() const -> std::wstring
 		{
 			if (not m_processHandle)
 				throw Error::Boring32Error("m_processHandle cannot be null");
@@ -99,7 +99,7 @@ export namespace Boring32::Computer
 			return path.c_str();
 		}
 
-		Win32::DWORD GetID() const
+		auto GetID() const -> Win32::DWORD
 		{
 			if (not m_processHandle)
 				throw Error::Boring32Error("m_processHandle cannot be null");
@@ -110,7 +110,7 @@ export namespace Boring32::Computer
 			return id;
 		}
 
-		Win32::DWORD GetHandleCount() const
+		auto GetHandleCount() const -> Win32::DWORD
 		{
 			if (not m_processHandle)
 				throw Error::Boring32Error("m_processHandle cannot be null");
@@ -123,7 +123,7 @@ export namespace Boring32::Computer
 			return handleCount;
 		}
 
-		Win32::DWORD GetExitCode() const
+		auto GetExitCode() const -> Win32::DWORD
 		{
 			if (not m_processHandle)
 				throw Error::Boring32Error("m_processHandle cannot be null");
@@ -136,7 +136,7 @@ export namespace Boring32::Computer
 			return exitCode;
 		}
 
-		static std::vector<ProcessInfo> FromCurrentProcesses()
+		static auto FromCurrentProcesses() -> std::vector<ProcessInfo>
 		{
 			const auto processIDs = EnumerateProcessIDs();
 			std::vector<ProcessInfo> processes;
@@ -150,7 +150,7 @@ export namespace Boring32::Computer
 			return processes;
 		}
 
-		private:
+	private:
 		RAII::Win32Handle m_processHandle;
 	};
 }
