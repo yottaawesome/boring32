@@ -27,7 +27,7 @@ There's a unit test project that can be used as a reference, and you can run the
 
 ### C++ module naming convention
 
-The preferred naming of the C++ modules in the codebase has undergone several changes over time as I've tested and reviewed different naming schemes. The final scheme I chose to adopt is to name module filenames in the format `<module-name>-<namespace>.<partitionname>.ixx`. Correspondingly, the modules are declared also following this convention, e.g. `boring32:crypto.certificatechain` This convention organises files by namespace and keeps filenames unique for MSVC which prevents obj file clashes when compiling. However, if you structure your code such that a unique vcxproj corresponds to one and one module only, then you can omit the `<module-name>` for all the partitions while keeping it for the primary module interface file. This is the current convention adopted by the `Boring32` project.
+The preferred naming convention of the C++ modules in the codebase has undergone several changes over time as I've tested and reviewed different naming schemes. The final scheme I chose to adopt is to name module filenames in the format `<module-name>-<namespace>.<partitionname>.ixx`. Correspondingly, the modules are declared also following this convention, e.g. `boring32:crypto.certificatechain` This convention organises files by namespace and keeps filenames unique for MSVC which prevents obj file clashes when compiling. However, if you structure your code such that a unique vcxproj corresponds to one and one module only, then you can omit the `<module-name>` for all the partitions while keeping it for the primary module interface file. This is the current convention adopted by the `Boring32` project.
 
 ## Additional resources
 
