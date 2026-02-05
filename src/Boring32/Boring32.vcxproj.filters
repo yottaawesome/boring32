@@ -229,6 +229,9 @@
     <ClCompile Include="Async\async.waitableaddress.ixx" />
     <ClCompile Include="Async\async.waitabletimer.ixx" />
     <ClCompile Include="SSPI\Provider\sspi.provider.ixx" />
+    <ClCompile Include="UI\ui.window.ixx" />
+    <ClCompile Include="UI\ui.common.ixx" />
+    <ClCompile Include="UI\ui.control.ixx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win32\framework.h">

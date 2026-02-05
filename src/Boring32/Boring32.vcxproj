@@ -300,6 +300,9 @@
     <ClCompile Include="Async\async.waitableaddress.ixx" />
     <ClCompile Include="Async\async.waitabletimer.ixx" />
     <ClCompile Include="Async\async.ixx" />
+    <ClCompile Include="UI\ui.common.ixx" />
+    <ClCompile Include="UI\ui.control.ixx" />
+    <ClCompile Include="UI\ui.window.ixx" />
     <ClCompile Include="Win32\win32.ixx" />
     <ClCompile Include="Com\com.ptr.ixx" />
     <ClCompile Include="Concepts\concepts.ixx" />
