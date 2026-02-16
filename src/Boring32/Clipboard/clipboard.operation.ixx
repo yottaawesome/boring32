@@ -81,15 +81,20 @@ export namespace Boring32::Clipboard
 			if (not ptr)
 				throw Error::Win32Error{ Win32::GetLastError(), "Failed to get clipboard data." };
 
-			auto locked = static_cast<wchar_t*>(Win32::GlobalLock(ptr));
-			if (not locked)
+			try
+			{
+				auto locked = static_cast<wchar_t*>(Win32::GlobalLock(ptr));
+				if (not locked)
+					throw Error::Win32Error{ Win32::GetLastError(), "Failed to lock global memory." };
+
+				auto result = std::wstring{ locked };
+				return (Win32::GlobalUnlock(ptr), result);
+			}
+			catch(...)
 			{
 				Win32::GlobalUnlock(ptr);
-				throw Error::Win32Error{ Win32::GetLastError(), "Failed to lock global memory." };
+				throw;
 			}
-
-			auto result = std::wstring{ locked };
-			return (Win32::GlobalUnlock(ptr), result);
 		}
 
 		auto EmptyClipboard(this auto&& self) -> decltype(auto)
