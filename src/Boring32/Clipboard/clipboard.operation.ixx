@@ -7,12 +7,15 @@ export namespace Boring32::Clipboard
 {
 	struct ClipboardCloser
 	{
-		~ClipboardCloser() noexcept
+		constexpr ~ClipboardCloser() noexcept
 		{
-			Win32::CloseClipboard();
+			if not consteval
+			{
+				Win32::CloseClipboard();
+			}
 		}
 
-		ClipboardCloser() = default;
+		constexpr ClipboardCloser() = default;
 		ClipboardCloser(const ClipboardCloser&) = delete;
 		ClipboardCloser& operator=(const ClipboardCloser&) = delete;
 
