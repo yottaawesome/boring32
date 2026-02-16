@@ -21,15 +21,16 @@ export namespace Boring32::Memory
 				{
 					Win32::GlobalUnlock(handle);
 				}
+			locked = nullptr;
 		}
 
 		constexpr TypedGlobalLock(T* handle)
 			: handle{ handle }
 			, locked{ 
-				[] (auto handle) constexpr -> void*
+				[](auto handle) constexpr -> T*
 				{ 
 					if consteval { return handle; }
-					else { return Win32::GlobalLock(handle); }
+					else { return reinterpret_cast<T*>(Win32::GlobalLock(handle)); }
 				}(handle) 
 			}
 		{
@@ -39,7 +40,7 @@ export namespace Boring32::Memory
 
 		constexpr auto GetLocked(this const TypedGlobalLock& self) noexcept -> T*
 		{
-			return static_cast<T*>(self.locked);
+			return self.locked;
 		}
 
 		constexpr auto operator->(this const TypedGlobalLock& self) noexcept -> T*
@@ -53,8 +54,8 @@ export namespace Boring32::Memory
 		}
 
 	private:
-		Win32::HGLOBAL handle = nullptr;
-		void* locked = nullptr;
+		T* handle = nullptr;
+		T* locked = nullptr;
 	};
 
 	// TODD: expand, add static_asserts to ensure that the class 
@@ -65,7 +66,7 @@ export namespace Boring32::Memory
 		{
 			int x = 2;
 			auto lock = TypedGlobalLock<int>{ &x };
-			return true;
+			return lock.GetLocked()==&x;
 		}()
 	);
 }
