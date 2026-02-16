@@ -233,7 +233,8 @@
     <ClCompile Include="UI\ui.common.ixx" />
     <ClCompile Include="UI\ui.control.ixx" />
     <ClCompile Include="Clipboard\clipboard.ixx" />
-     <ClCompile Include="Clipboard\clipboard.operation.ixx" />
+    <ClCompile Include="Clipboard\clipboard.operation.ixx" />
+    <ClCompile Include="Memory\memory.globallock.ixx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win32\framework.h">
