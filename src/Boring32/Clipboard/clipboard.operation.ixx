@@ -44,7 +44,7 @@ export namespace Boring32::Clipboard
 		auto SetData(this auto&& self, const std::wstring& string) 
 			-> decltype(auto)
 		{
-			// required for null terminator, which is the size of the character type.
+			// Required for null terminator, which is the size of the character type.
 			auto size = std::uint64_t{ sizeof(wchar_t) * string.size() + sizeof(wchar_t) };
 			auto alloc = Win32::HGLOBAL{
 				Win32::GlobalAlloc(
@@ -62,8 +62,8 @@ export namespace Boring32::Clipboard
 
 				std::memcpy(locked, reinterpret_cast<void*>(const_cast<wchar_t*>(string.data())), size);
 				Win32::GlobalUnlock(locked);
-
-				if (not SetClipboardData(static_cast<Win32::UINT>(Win32::ClipboardFormats::UnicodeText), alloc))
+				// After the data is set to the clipboard, the system owns the memory handle. Do not free it.
+				if (not Win32::SetClipboardData(static_cast<Win32::UINT>(Win32::ClipboardFormats::UnicodeText), alloc))
 					throw Error::Win32Error{ Win32::GetLastError(), "Failed to set clipboard data." };
 				return std::forward<decltype(self)>(self);
 			}
