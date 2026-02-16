@@ -300,6 +300,8 @@
     <ClCompile Include="Async\async.waitableaddress.ixx" />
     <ClCompile Include="Async\async.waitabletimer.ixx" />
     <ClCompile Include="Async\async.ixx" />
+    <ClCompile Include="Clipboard\clipboard.ixx" />
+    <ClCompile Include="Clipboard\clipboard.operation.ixx" />
     <ClCompile Include="UI\ui.common.ixx" />
     <ClCompile Include="UI\ui.control.ixx" />
     <ClCompile Include="UI\ui.window.ixx" />

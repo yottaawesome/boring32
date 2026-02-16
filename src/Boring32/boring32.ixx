@@ -36,3 +36,4 @@ export import :taskscheduler;
 export import :concepts;
 export import :ui;
 export import :directx;
+export import :clipboard;

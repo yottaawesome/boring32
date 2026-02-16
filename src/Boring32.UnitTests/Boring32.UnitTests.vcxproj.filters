@@ -198,6 +198,9 @@
     <ClCompile Include="COM\com.ptr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Clipboard\clipboard.operation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">

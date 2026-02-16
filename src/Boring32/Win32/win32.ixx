@@ -116,6 +116,7 @@ export namespace Boring32::Win32
 		::LPDWORD,
 		::LSA_UNICODE_STRING,
 		::SECURITY_DESCRIPTOR_CONTROL,
+		::HGLOBAL,
 		::PSECURITY_DESCRIPTOR,
 		::SID_IDENTIFIER_AUTHORITY,
 		::PSID_IDENTIFIER_AUTHORITY,
@@ -247,6 +248,7 @@ export namespace Boring32::Win32
 		::GetExitCodeProcess,
 		::K32GetModuleFileNameExW,
 		::OpenProcess,
+		::IsClipboardFormatAvailable,
 		::GetProcessId,
 		::WideCharToMultiByte,
 		::MultiByteToWideChar,
@@ -370,6 +372,7 @@ export namespace Boring32::Win32
 		::EncodePointer,
 		::DecodePointer,
 		::GetStdHandle,
+		::GlobalAlloc,
 		::CreatePipe,
 		::SetHandleInformation,
 		::XAudio2Create,
@@ -385,8 +388,10 @@ export namespace Boring32::Win32
 		::StartServiceW,
 		::ControlServiceExW,
 		::DeleteService,
+		::GlobalFree,
 		::QueryServiceStatusEx,
 		::ControlServiceExW,
+		::GlobalUnlock,
 		::QueryServiceConfigW,
 		::OpenSCManagerW,
 		::OpenServiceW,
@@ -440,6 +445,7 @@ export namespace Boring32::Win32
 		::CertEnumCertificatesInStore,
 		::CertDeleteCertificateFromStore,
 		::CertGetStoreProperty,
+		::GlobalLock,
 		::__fastfail,
 		::BCryptCloseAlgorithmProvider,
 		::BCryptGenerateSymmetricKey,
@@ -468,7 +474,12 @@ export namespace Boring32::Win32
 		::DefWindowProcW,
 		::GetWindowTextLengthW,
 		::GetWindowTextW,
-		::SetWindowTextW
+		::SetWindowTextW,
+		::OpenClipboard,
+		::SetClipboardData,
+		::CloseClipboard,
+		::EmptyClipboard,
+		::GetClipboardData
 		;
 
 	namespace FileShareMode
@@ -501,6 +512,47 @@ export namespace Boring32::Win32
 			FailImmediately = LOCKFILE_FAIL_IMMEDIATELY
 		};
 	}
+	
+	// https://learn.microsoft.com/en-us/windows/win32/dataxchg/standard-clipboard-formats
+	enum class ClipboardFormats : std::uint32_t
+	{
+		Text = CF_TEXT,
+		Bitmap = CF_BITMAP,
+		MetafilePict = CF_METAFILEPICT,
+		Sylk = CF_SYLK,
+		Dif = CF_DIF,
+		Tiff = CF_TIFF,
+		OemText = CF_OEMTEXT,
+		Dib = CF_DIB,
+		Palette = CF_PALETTE,
+		Pendata = CF_PENDATA,
+		Riff = CF_RIFF,
+		Wave = CF_WAVE,
+		UnicodeText = CF_UNICODETEXT,
+		EnhMetafile = CF_ENHMETAFILE,
+		HDrop = CF_HDROP,
+		Locale = CF_LOCALE,
+		DibV5 = CF_DIBV5,
+		OwnerDisplay = CF_OWNERDISPLAY,
+		DspText = CF_DSPTEXT,
+		DspBitmap = CF_DSPBITMAP,
+		DspMetafilePict = CF_DSPMETAFILEPICT,
+		DspEnhMetafile = CF_DSPENHMETAFILE,
+		PrivateFirst = CF_PRIVATEFIRST,
+		PrivateLast = CF_PRIVATELAST,
+		GdiObjFirst = CF_GDIOBJFIRST,
+		GdiObjLast = CF_GDIOBJLAST
+	};
+
+	enum class GlobalAllocType
+	{
+		Fixed = GMEM_FIXED,
+		Moveable = GMEM_MOVEABLE,
+		ZeroInit = GMEM_ZEROINIT,
+		Discardable = GMEM_DISCARDABLE,
+		NotBanked = GMEM_NOT_BANKED,
+		Share = GMEM_SHARE,
+	};
 
 	namespace Messages
 	{
