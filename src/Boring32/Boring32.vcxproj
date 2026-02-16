@@ -302,7 +302,7 @@
     <ClCompile Include="Async\async.ixx" />
     <ClCompile Include="Clipboard\clipboard.ixx" />
     <ClCompile Include="Clipboard\clipboard.operation.ixx" />
-    <ClCompile Include="Memory\memory.globallock.ixx" />
+    <ClCompile Include="Memory\memory.typedgloballock.ixx" />
     <ClCompile Include="UI\ui.common.ixx" />
     <ClCompile Include="UI\ui.control.ixx" />
     <ClCompile Include="UI\ui.window.ixx" />

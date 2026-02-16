@@ -1,4 +1,4 @@
-export module boring32:memory.globallock;
+export module boring32:memory.typedgloballock;
 import std;
 import :win32;
 import :error;
@@ -11,8 +11,8 @@ export namespace Boring32::Memory
 	public:
 		TypedGlobalLock(const TypedGlobalLock&) = delete;
 		TypedGlobalLock& operator=(const TypedGlobalLock&) = delete;
-		TypedGlobalLock(TypedGlobalLock&&) noexcept = default;
-		TypedGlobalLock& operator=(TypedGlobalLock&&) noexcept = default;
+		constexpr TypedGlobalLock(TypedGlobalLock&&) noexcept = default;
+		constexpr TypedGlobalLock& operator=(TypedGlobalLock&&) noexcept = default;
 
 		constexpr ~TypedGlobalLock() noexcept
 		{
