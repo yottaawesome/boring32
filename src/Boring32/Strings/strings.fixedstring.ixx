@@ -116,9 +116,16 @@ export namespace Boring32::Strings
 		};
 
 		[[nodiscard]]
-		auto begin(this const FixedString& self) noexcept -> Iterator { return Iterator(0, self.Buffer); }
+		constexpr auto begin(this const FixedString& self) noexcept -> Iterator 
+		{ 
+			return Iterator(0, self.Buffer); 
+		}
+		
 		[[nodiscard]]
-		auto end(this const FixedString& self) noexcept { return Iterator(N - 1, self.Buffer); }
+		constexpr auto end(this const FixedString& self) noexcept -> Iterator 
+		{ 
+			return Iterator(N - 1, self.Buffer); 
+		}
 	};
 	template<size_t N>
 	FixedString(char const (&)[N]) -> FixedString<char, N>;
