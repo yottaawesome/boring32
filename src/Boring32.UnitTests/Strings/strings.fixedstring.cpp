@@ -7,7 +7,6 @@ namespace Strings
 {
 	TEST_CLASS(FixedString)
 	{
-	public:
 		TEST_METHOD(TestSize)
 		{
 			Boring32::Strings::FixedStringA str = "AAA";
