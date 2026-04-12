@@ -57,7 +57,7 @@ export namespace Boring32::Time
 			throw Error::Win32Error{Win32::GetLastError(), "GetTimeZoneInformation() failed"};
 
 		auto actualBias = long{ tzi.Bias * -1 }; // should we do this?
-		return std::vformat(L"{}-{}.{}{:+}", std::make_wformat_args(dateString, timeString, st.wMilliseconds, actualBias));
+		return std::format(L"{}-{}.{}{:+}", dateString, timeString, st.wMilliseconds, actualBias);
 	}
 
 	auto FromFileTime(const Win32::FILETIME& ft) -> std::uint64_t
@@ -129,8 +129,9 @@ export namespace Boring32::Time
 		);
 		if (not charactersNeeded)
 			throw Error::Win32Error{Win32::GetLastError(), "GetTimeFormatEx() failed"};
-
-		return returnVal.c_str(); // remove any trailing null
+		if (returnVal.back() == '\0')
+			returnVal.pop_back(); // remove null terminator if it exists
+		return returnVal;
 	}
 
 	// https://docs.microsoft.com/en-us/windows/win32/intl/day--month--year--and-era-format-pictures
@@ -166,8 +167,9 @@ export namespace Boring32::Time
 		);
 		if (not charactersRequired)
 			throw Error::Win32Error{Win32::GetLastError(), "GetDateFormatEx() failed"};
-
-		return formattedString.c_str();
+		if (formattedString.back() == '\0')
+			formattedString.pop_back(); // remove null terminator if it exists
+		return formattedString;
 	}
 
 	auto FormatDate(
