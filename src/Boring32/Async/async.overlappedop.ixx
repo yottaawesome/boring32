@@ -16,16 +16,8 @@ export namespace Boring32::Async
 		}
 			
 		// Shareable, moveable
-		OverlappedOp(const OverlappedOp& other)
-		{
-			Share(other);
-		}
-
-		virtual OverlappedOp& operator=(const OverlappedOp& other)
-		{
-			Share(other);
-			return *this;
-		}
+		OverlappedOp(const OverlappedOp& other) = delete;
+		OverlappedOp& operator=(const OverlappedOp& other) = delete;
 
 		OverlappedOp(OverlappedOp&& other) noexcept
 		{
@@ -123,18 +115,11 @@ export namespace Boring32::Async
 			m_lastError = lastError;
 		}
 
-		protected:
+	protected:
 		virtual void Move(OverlappedOp& other) noexcept
 		{
 			m_ioEvent = std::move(other.m_ioEvent);
 			m_ioOverlapped = std::move(other.m_ioOverlapped);
-			m_lastError = other.m_lastError;
-		}
-
-		virtual void Share(const OverlappedOp& other)
-		{
-			m_ioEvent = other.m_ioEvent;
-			m_ioOverlapped = other.m_ioOverlapped;
 			m_lastError = other.m_lastError;
 		}
 

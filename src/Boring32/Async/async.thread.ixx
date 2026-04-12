@@ -183,20 +183,10 @@ export namespace Boring32::Async
 			return pThreadDescription;
 		}
 
-		protected:
+	protected:
 		virtual unsigned Run()
 		{
 			return m_func(m_threadParam);
-		}
-
-		virtual void Copy(const Thread& other)
-		{
-			Close();
-			m_func = other.m_func;
-			m_status = other.m_status;
-			m_threadHandle = other.m_threadHandle;
-			m_threadParam = other.m_threadParam;
-			m_started = other.m_started;
 		}
 
 		virtual void Move(Thread& other) noexcept

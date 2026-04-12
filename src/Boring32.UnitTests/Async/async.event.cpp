@@ -62,25 +62,6 @@ namespace Async
 				Assert::IsTrue(testEvent.WaitOnEvent(0, true));
 				Assert::IsFalse(testEvent.WaitOnEvent(0, true));
 			}
-
-			TEST_METHOD(TestCopyConstructor)
-			{
-				Boring32::Async::ManualResetEvent testEvent1(true, true, L"TestEvent");
-				Boring32::Async::ManualResetEvent testEvent2(testEvent1);
-				Assert::IsNotNull(testEvent2.GetHandle());
-				Assert::IsTrue(testEvent1.GetName() == testEvent1.GetName());
-				Assert::IsTrue(testEvent2.WaitOnEvent(0, true));
-			}
-
-			TEST_METHOD(TestCopyAssignment)
-			{
-				Boring32::Async::ManualResetEvent testEvent1(true, true, L"TestEvent");
-				Boring32::Async::ManualResetEvent testEvent2 = testEvent1;
-				Assert::IsNotNull(testEvent2.GetHandle());
-				Assert::IsTrue(testEvent1.GetName() == testEvent1.GetName());
-				Assert::IsTrue(testEvent2.WaitOnEvent(0, true));
-			}
-
 			TEST_METHOD(TestMoveConstructor)
 			{
 				Boring32::Async::ManualResetEvent testEvent(Boring32::Async::ManualResetEvent(true, true, L"TestEvent"));

@@ -9,29 +9,30 @@ export namespace Boring32::Async
 {
 	/// Encapsulates a Win32 Event synchronization object.
 	template<bool VIsManualReset = false>
-	struct Event final
+	class Event final
 	{
+	public:
 		Event() = default;
-		Event(const Event& other) = default;
+		Event(const Event& other) = delete;
+		auto operator=(const Event& other) -> Event& = delete;
 		Event(Event&& other) noexcept = default;
-		Event& operator=(const Event& other) = default;
-		Event& operator=(Event&& other) noexcept = default;
+		auto operator=(Event&& other) noexcept -> Event& = default;
 
 		// Custom constructors
 		//	Constructor for an anonymous Event object.
-		Event(const bool isInheritable, const bool isSignaled)
+		Event(bool isInheritable, bool isSignaled)
 		{
 			InternalCreate(isSignaled, isInheritable);
 		}
 
 		//	Constructor for a named or anonymous Event object.
-		Event(const bool isInheritable, const bool isSignaled, std::wstring name) 
+		Event(bool isInheritable, bool isSignaled, std::wstring name) 
 			: m_name(std::move(name))
 		{
 			InternalCreate(isSignaled, isInheritable);
 		}
 
-		Event(const bool isInheritable, std::wstring name, const Win32::DWORD desiredAccess) 
+		Event(bool isInheritable, std::wstring name, Win32::DWORD desiredAccess) 
 			: m_name(std::move(name))
 		{
 			if (m_name->empty())
@@ -42,12 +43,12 @@ export namespace Boring32::Async
 				throw Error::Win32Error(Win32::GetLastError(), "Failed to create or open event");
 		}
 
-		operator Win32::HANDLE() const noexcept
+		constexpr operator Win32::HANDLE() const noexcept
 		{
 			return *m_event;
 		}
 
-		operator bool() const noexcept
+		constexpr operator bool() const noexcept
 		{
 			return m_event != nullptr;
 		}
@@ -60,7 +61,7 @@ export namespace Boring32::Async
 				throw Error::Win32Error(Win32::GetLastError(), "Failed to signal event");
 		}
 
-		std::expected<void, std::string> Signal(const std::nothrow_t&) noexcept 
+		auto Signal(const std::nothrow_t&) noexcept -> std::expected<void, std::string>
 		try
 		{
 			Signal();
@@ -79,7 +80,7 @@ export namespace Boring32::Async
 				throw Error::Win32Error(Win32::GetLastError(), "ResetEvent() failed");
 		}
 
-		std::expected<void, std::string> Reset(const std::nothrow_t&) noexcept 
+		auto Reset(const std::nothrow_t&) noexcept -> std::expected<void, std::string> 
 			requires VIsManualReset
 		try
 		{
@@ -96,19 +97,19 @@ export namespace Boring32::Async
 			if (not m_event)
 				throw Error::Boring32Error("No Event to wait on");
 
-			Win32::WaitResult status = static_cast<Win32::WaitResult>(Win32::WaitForSingleObject(m_event.GetHandle(), Win32::Infinite));
+			auto status = static_cast<Win32::WaitResult>(Win32::WaitForSingleObject(m_event.GetHandle(), Win32::Infinite));
 			if (status == Win32::WaitResult::Failed)
-				throw Error::Win32Error(Win32::GetLastError(), "WaitForSingleObject failed");
+				throw Error::Win32Error{Win32::GetLastError(), "WaitForSingleObject failed"};
 			if (status == Win32::WaitResult::Abandoned)
-				throw Error::Boring32Error("The wait was abandoned");
+				throw Error::Boring32Error{"The wait was abandoned"};
 		}
 
-		bool WaitOnEvent(const Win32::DWORD millis, const bool interruptible) const
+		auto WaitOnEvent(Win32::DWORD millis, bool interruptible) const -> bool
 		{
 			return WaitOnEvent(std::chrono::milliseconds(millis), interruptible);
 		}
 
-		bool WaitOnEvent(const Concepts::Duration auto& time, const bool alertable) const
+		auto WaitOnEvent(Concepts::Duration auto&& time, bool alertable) const -> bool
 		{
 			using std::chrono::duration_cast;
 			using std::chrono::milliseconds;
@@ -131,7 +132,11 @@ export namespace Boring32::Async
 			return false;
 		}
 
-		bool WaitOnEvent(const Concepts::Duration auto& time, const bool alertable, const std::nothrow_t&) const noexcept 
+		auto WaitOnEvent(
+			Concepts::Duration auto&& time, 
+			bool alertable, 
+			const std::nothrow_t&
+		) const noexcept -> bool
 		try
 		{
 			//https://codeyarns.com/tech/2018-08-22-how-to-get-function-name-in-c.html
@@ -143,24 +148,24 @@ export namespace Boring32::Async
 			return false;
 		}
 
-		Win32::HANDLE Detach() noexcept
+		constexpr auto Detach() noexcept -> Win32::HANDLE
 		{
 			return m_event.Detach();
 		}
 
-		Win32::HANDLE GetHandle() const noexcept
+		constexpr auto GetHandle() const noexcept -> Win32::HANDLE
 		{
 			return m_event.GetHandle();
 		}
 
-		void Close()
+		constexpr void Close()
 		{
 			m_event = nullptr;
 		}
 
-		const std::optional<std::wstring>& GetName() const noexcept
+		constexpr auto GetName() const noexcept -> std::optional<std::wstring>
 		{
-			return m_name;
+			return m_name.has_value() ? m_name : std::nullopt;
 		}
 
 		constexpr bool IsManualReset() const noexcept
@@ -174,7 +179,7 @@ export namespace Boring32::Async
 		}
 
 	private:
-		void InternalCreate(const bool isSignaled, const bool isInheritable)
+		void InternalCreate(bool isSignaled, bool isInheritable)
 		{
 			m_event = Win32::CreateEventW(
 				nullptr,			// security attributes
