@@ -5,124 +5,120 @@ import :error;
 
 export namespace Boring32::Time
 {
-	Win32::SYSTEMTIME LargeIntegerTimeToSystemTime(const Win32::LARGE_INTEGER& li)
+	auto LargeIntegerTimeToSystemTime(const Win32::LARGE_INTEGER& li) -> Win32::SYSTEMTIME
 	{
-		Win32::FILETIME ft{
+		auto ft = Win32::FILETIME{
 			.dwLowDateTime = li.LowPart,
 			.dwHighDateTime = static_cast<Win32::DWORD>(li.HighPart)
 		};
-
-		Win32::SYSTEMTIME st;
+		auto st = Win32::SYSTEMTIME{};
 		// https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-filetimetosystemtime
 		if (not Win32::FileTimeToSystemTime(&ft, &st))
 			throw Error::Win32Error{Win32::GetLastError(), "FileTimeToSystemTime() failed"};
 		return st;
 	}
 
-	std::wstring GetTimeAsUTCString(const SYSTEMTIME& st)
+	auto GetTimeAsUTCString(const SYSTEMTIME& st) -> std::wstring
 	{
 		// Format date buffer
-		constexpr unsigned dateStringLength = 9;
-		wchar_t dateString[dateStringLength];
+		auto dateString = std::array<wchar_t, 9>{};
 		// https://docs.microsoft.com/en-us/windows/win32/api/datetimeapi/nf-datetimeapi-getdateformatex
-		int status = Win32::GetDateFormatEx(
-			Win32::LocaleNameInvariant,
-			0,
-			&st,
-			L"yyyyMMdd",
-			dateString,
-			dateStringLength,
-			nullptr
-		);
+		auto status = int{
+			Win32::GetDateFormatEx(
+				Win32::LocaleNameInvariant,
+				0,
+				&st,
+				L"yyyyMMdd",
+				dateString.data(),
+				static_cast<int>(dateString.size()),
+				nullptr
+			)};
 		if (not status)
 			throw Error::Win32Error{Win32::GetLastError(), "GetDateFormatEx() failed"};
 
 		// Format time buffer
-		constexpr unsigned timeStringLength = 9;
-		wchar_t timeString[timeStringLength];
+		auto timeString = std::array<wchar_t, 9>{};
 		// https://docs.microsoft.com/en-us/windows/win32/api/datetimeapi/nf-datetimeapi-gettimeformatex
 		status = Win32::GetTimeFormatEx(
 			Win32::LocaleNameInvariant,
 			0,
 			&st,
 			L"HH:mm:ss",
-			timeString,
-			timeStringLength
+			timeString.data(),
+			static_cast<int>(timeString.size())
 		);
 		if (not status)
 			throw Error::Win32Error{Win32::GetLastError(), "GetTimeFormatEx() failed"};
 
-		Win32::TIME_ZONE_INFORMATION tzi;
+		auto tzi = Win32::TIME_ZONE_INFORMATION{};
 		// https://docs.microsoft.com/en-us/windows/win32/api/datetimeapi/nf-datetimeapi-gettimeformatex
-		Win32::DWORD tziStatus = Win32::GetTimeZoneInformation(&tzi);
+		auto tziStatus = Win32::DWORD{ Win32::GetTimeZoneInformation(&tzi) };
 		if (tziStatus == Win32::TimeZoneIdInvalid)
 			throw Error::Win32Error{Win32::GetLastError(), "GetTimeZoneInformation() failed"};
 
-		const long actualBias = tzi.Bias * -1; // should we do this?
+		auto actualBias = long{ tzi.Bias * -1 }; // should we do this?
 		return std::vformat(L"{}-{}.{}{:+}", std::make_wformat_args(dateString, timeString, st.wMilliseconds, actualBias));
 	}
 
-	std::uint64_t FromFileTime(const Win32::FILETIME& ft)
+	auto FromFileTime(const Win32::FILETIME& ft) -> std::uint64_t
 	{
-		const Win32::ULARGE_INTEGER uli = {
+		auto uli = Win32::ULARGE_INTEGER{
 			.LowPart = ft.dwLowDateTime,
 			.HighPart = ft.dwHighDateTime
 		};
 		return uli.QuadPart;
 	}
 
-	Win32::DWORD SystemTimeToShortISODate(const Win32::SYSTEMTIME& st)
+	auto SystemTimeToShortISODate(const Win32::SYSTEMTIME& st) -> Win32::DWORD
 	{
 		return std::stoul(std::format(L"{}{}{}", st.wYear, st.wMonth, st.wDay));
 	}
 
-	Win32::DWORD SystemTimeToShortISODate()
+	auto SystemTimeToShortISODate() -> Win32::DWORD
 	{
-		Win32::SYSTEMTIME st;
+		auto st = Win32::SYSTEMTIME{};
 		Win32::GetSystemTime(&st);
 		return SystemTimeToShortISODate(st);
 	}
 
-	size_t GetSystemTimeAsUnixTime()
+	auto GetSystemTimeAsUnixTime() -> size_t
 	{
 		// Adapted from https://stackoverflow.com/a/46024468
-		// January 1, 1970 (start of Unix epoch) in "ticks"
-		static constexpr size_t UnixTimeStart = 0x019DB1DED53E8000;
-		static constexpr size_t TicksPerSecond = 10000000; //a tick is 100ns
-
-		Win32::FILETIME ft;
+		auto ft = Win32::FILETIME{};
 		Win32::GetSystemTimeAsFileTime(&ft); //returns ticks in UTC
-
 		//Copy the low and high parts of FILETIME into a LARGE_INTEGER
 		//This is so we can access the full 64-bits as an Int64 without causing an alignment fault
-		Win32::LARGE_INTEGER li;
+		auto li = Win32::LARGE_INTEGER{};
 		li.LowPart = ft.dwLowDateTime;
 		li.HighPart = ft.dwHighDateTime;
-
 		//Convert ticks since 1/1/1970 into seconds
+		// January 1, 1970 (start of Unix epoch) in "ticks"
+		constexpr auto UnixTimeStart = size_t{ 0x019DB1DED53E8000 };
+		constexpr auto TicksPerSecond = size_t{ 10000000 }; //a tick is 100ns
 		return (li.QuadPart - UnixTimeStart) / TicksPerSecond;
 	}
 
-	std::wstring FormatTime(
+	auto FormatTime(
 		const Win32::SYSTEMTIME& time,
 		const std::wstring& format,
 		const std::wstring& locale = Win32::LocaleNameInvariant,
 		const Win32::DWORD flags = 0
-	)
+	) -> std::wstring
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/datetimeapi/nf-datetimeapi-gettimeformatex
-		int charactersNeeded = Win32::GetTimeFormatEx(
-			locale.c_str(),
-			flags,
-			&time,
-			&format[0],
-			nullptr,
-			0
-		);
+		auto charactersNeeded = int{ 
+			Win32::GetTimeFormatEx(
+				locale.c_str(),
+				flags,
+				&time,
+				&format[0],
+				nullptr,
+				0
+			)};
 		if (not charactersNeeded)
 			throw Error::Win32Error{Win32::GetLastError(), "GetTimeFormatEx() failed"};
 
-		std::wstring returnVal(charactersNeeded, '\0');
+		auto returnVal = std::wstring(charactersNeeded, '\0');
 		charactersNeeded = Win32::GetTimeFormatEx(
 			locale.c_str(),
 			flags,
@@ -138,26 +134,27 @@ export namespace Boring32::Time
 	}
 
 	// https://docs.microsoft.com/en-us/windows/win32/intl/day--month--year--and-era-format-pictures
-	std::wstring FormatDate(
-		const SYSTEMTIME& date,
+	auto FormatDate(
+		const Win32::SYSTEMTIME& date,
 		const std::wstring& format,
 		const std::wstring& locale = Win32::LocaleNameInvariant
-	)
+	) -> std::wstring
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/datetimeapi/nf-datetimeapi-getdateformatex
-		int charactersRequired = Win32::GetDateFormatEx(
-			locale.c_str(),
-			0,
-			&date,
-			format.c_str(),
-			nullptr,
-			0,
-			nullptr
-		);
+		auto charactersRequired = int{ 
+			Win32::GetDateFormatEx(
+				locale.c_str(),
+				0,
+				&date,
+				format.c_str(),
+				nullptr,
+				0,
+				nullptr
+			)};
 		if (not charactersRequired)
 			throw Error::Win32Error{Win32::GetLastError(), "GetDateFormatEx() failed"};
 
-		std::wstring formattedString(charactersRequired, '\0');
+		auto formattedString = std::wstring(charactersRequired, '\0');
 		charactersRequired = Win32::GetDateFormatEx(
 			locale.c_str(),
 			0,
@@ -173,26 +170,27 @@ export namespace Boring32::Time
 		return formattedString.c_str();
 	}
 
-	std::wstring FormatDate(
+	auto FormatDate(
 		const Win32::SYSTEMTIME& date,
 		const Win32::DWORD flags,
 		const std::wstring& locale = Win32::LocaleNameInvariant
-	)
+	) -> std::wstring
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/datetimeapi/nf-datetimeapi-getdateformatex
-		int charactersRequired = Win32::GetDateFormatEx(
-			locale.c_str(),
-			flags,
-			&date,
-			nullptr,
-			nullptr,
-			0,
-			nullptr
-		);
+		auto charactersRequired = int{
+			Win32::GetDateFormatEx(
+				locale.c_str(),
+				flags,
+				&date,
+				nullptr,
+				nullptr,
+				0,
+				nullptr
+			)};
 		if (not charactersRequired)
 			throw Error::Win32Error{Win32::GetLastError(), "GetDateFormatEx() failed"};
 
-		std::wstring formattedString(charactersRequired, '\0');
+		auto formattedString = std::wstring(charactersRequired, '\0');
 		charactersRequired = Win32::GetDateFormatEx(
 			locale.c_str(),
 			flags,
