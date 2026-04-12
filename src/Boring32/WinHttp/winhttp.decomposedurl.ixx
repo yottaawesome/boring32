@@ -38,7 +38,7 @@ export namespace Boring32::WinHttp
 			};
 			// https://learn.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpcrackurl
 			if (not Win32::WinHttp::WinHttpCrackUrl(m_url.c_str(), 0, 0, &components))
-				throw Error::Win32Error(Win32::GetLastError(), "WinHttpCrackUrl() failed");
+				throw Error::Win32Error{ Win32::GetLastError(), "WinHttpCrackUrl() failed" };
 
 			// there's also nScheme
 			m_scheme = { components.lpszScheme, components.dwSchemeLength };

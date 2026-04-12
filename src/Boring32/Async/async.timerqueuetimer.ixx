@@ -89,7 +89,7 @@ export namespace Boring32::Async
 				period
 			);
 			if (not success)
-				throw Error::Win32Error(Win32::GetLastError(), "ChangeTimerQueueTimer() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "ChangeTimerQueueTimer() failed"};
 		}
 
 		virtual void Close()
@@ -103,7 +103,7 @@ export namespace Boring32::Async
 				m_completionEvent
 			);
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "DeleteTimerQueueTimer() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "DeleteTimerQueueTimer() failed"};
 			m_timerQueueTimer = nullptr;
 		}
 
@@ -151,7 +151,7 @@ export namespace Boring32::Async
 				m_flags
 			);
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "CreateTimerQueueTimer() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "CreateTimerQueueTimer() failed"};
 		}
 
 		Win32::HANDLE m_timerQueue = nullptr;

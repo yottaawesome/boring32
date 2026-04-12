@@ -22,7 +22,7 @@ export namespace Boring32::Computer
 
         std::wstring returnVal(bufferCharacterSize, '\0');
         if (not Win32::GetComputerNameExW(format, &returnVal[0], &bufferCharacterSize))
-            throw Error::Win32Error(Win32::GetLastError(), "GetComputerNameExW() failed");
+            throw Error::Win32Error{Win32::GetLastError(), "GetComputerNameExW() failed"};
         // On output, receives the number of TCHARs copied to the destination buffer, 
         // not including the terminating null character.
         returnVal.resize(bufferCharacterSize);
@@ -35,7 +35,7 @@ export namespace Boring32::Computer
         // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getphysicallyinstalledsystemmemory
         size_t memoryInKB;
         if (not Win32::GetPhysicallyInstalledSystemMemory(&memoryInKB))
-            throw Error::Win32Error(Win32::GetLastError(), "GetPhysicallyInstalledSystemMemory() failed");
+            throw Error::Win32Error{Win32::GetLastError(), "GetPhysicallyInstalledSystemMemory() failed"};
         return memoryInKB;
     }
 
@@ -46,7 +46,7 @@ export namespace Boring32::Computer
         // https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-memorystatusex
         Win32::MEMORYSTATUSEX memoryStatus{ .dwLength = sizeof(Win32::MEMORYSTATUSEX) };
         if (not Win32::GlobalMemoryStatusEx(&memoryStatus))
-            throw Error::Win32Error(Win32::GetLastError(), "GlobalMemoryStatusEx() failed");
+            throw Error::Win32Error{Win32::GetLastError(), "GlobalMemoryStatusEx() failed"};
         return memoryStatus;
     }
 
@@ -76,7 +76,7 @@ export namespace Boring32::Computer
         );
         if (not succeeded)
         {
-            throw Error::Win32Error(Win32::GetLastError(), "GetSystemTimeAdjustment() failed");
+            throw Error::Win32Error{Win32::GetLastError(), "GetSystemTimeAdjustment() failed"};
         }
 
         // invert the bool since the semantics are the opposite
@@ -124,7 +124,7 @@ export namespace Boring32::Computer
             &lengthInBytes
         );
         if (not succeeded)
-            throw Error::Win32Error(Win32::GetLastError(), "GetLogicalProcessorInformationEx() failed");
+            throw Error::Win32Error{Win32::GetLastError(), "GetLogicalProcessorInformationEx() failed"};
         // In case it changes somehow
         returnValue.resize(lengthInBytes / sizeof(Win32::LOGICAL_PROCESSOR_RELATIONSHIP));
 
@@ -144,7 +144,7 @@ export namespace Boring32::Computer
             &bytesNeeded
         );
         if (not succeeded)
-            throw Error::Win32Error(Win32::GetLastError(), "EnumProcesses() failed");
+            throw Error::Win32Error{Win32::GetLastError(), "EnumProcesses() failed"};
 
         processes.resize(bytesNeeded / sizeof(Win32::DWORD));
         return processes;
@@ -163,7 +163,7 @@ export namespace Boring32::Computer
             &bytesNeeded
         );
         if (not succeeded)
-            throw Error::Win32Error(Win32::GetLastError(), "K32EnumDeviceDrivers() failed");
+            throw Error::Win32Error{Win32::GetLastError(), "K32EnumDeviceDrivers() failed"};
 
         deviceDriverAddresses.resize(bytesNeeded / sizeof(void*));
         return deviceDriverAddresses;

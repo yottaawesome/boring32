@@ -23,7 +23,7 @@ export namespace Boring32::XAudio2
     {
         Win32::DWORD result = Win32::SetFilePointer(hFile, 0, nullptr, Win32::FileBegin);
         if (result == Win32::InvalidSetFilePointer)
-            throw Error::Win32Error(Win32::GetLastError(), "Win32::SetFilePointer() failed");
+            throw Error::Win32Error{ Win32::GetLastError(), "Win32::SetFilePointer() failed" };
 
         Win32::DWORD dwChunkType;
         Win32::DWORD dwChunkDataSize;
@@ -37,10 +37,10 @@ export namespace Boring32::XAudio2
         {
             Win32::DWORD dwRead;
             if (not Win32::ReadFile(hFile, &dwChunkType, sizeof(Win32::DWORD), &dwRead, nullptr))
-                throw Error::Win32Error(Win32::GetLastError(), "Win32::ReadFile() failed");
+                throw Error::Win32Error{ Win32::GetLastError(), "Win32::ReadFile() failed" };
 
             if (not Win32::ReadFile(hFile, &dwChunkDataSize, sizeof(Win32::DWORD), &dwRead, nullptr))
-                throw Error::Win32Error(Win32::GetLastError(), "Win32::ReadFile() failed");
+                throw Error::Win32Error{ Win32::GetLastError(), "Win32::ReadFile() failed" };
 
             switch (dwChunkType)
             {
@@ -48,7 +48,7 @@ export namespace Boring32::XAudio2
                     dwRIFFDataSize = dwChunkDataSize;
                     dwChunkDataSize = 4;
                     if (not Win32::ReadFile(hFile, &dwFileType, sizeof(Win32::DWORD), &dwRead, nullptr))
-                        throw Error::Win32Error(Win32::GetLastError(), "Win32::ReadFile() failed");
+                        throw Error::Win32Error{ Win32::GetLastError(), "Win32::ReadFile() failed" };
                     break;
 
                 default:
@@ -59,7 +59,7 @@ export namespace Boring32::XAudio2
                         Win32::FileCurrent
                     );
                     if (result == Win32::InvalidSetFilePointer)
-                        throw Error::Win32Error(Win32::GetLastError(), "Win32::SetFilePointer() failed");
+                        throw Error::Win32Error{ Win32::GetLastError(), "Win32::SetFilePointer() failed" };
             }
 
             dwOffset += sizeof(Win32::DWORD) * 2;

@@ -103,7 +103,7 @@ export namespace Boring32::Security
 				&m_token
 			);
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "DuplicateTokenEx() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "DuplicateTokenEx() failed"};
 		}
 			
 		operator bool() const noexcept
@@ -125,7 +125,7 @@ export namespace Boring32::Security
 				&impersonationToken
 			);
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "DuplicateTokenEx() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "DuplicateTokenEx() failed"};
 			return { impersonationToken, true };
 		}
 
@@ -184,7 +184,7 @@ export namespace Boring32::Security
 				throw Error::Boring32Error("Invalid sid");
 			Win32::BOOL b = 0;
 			if (not Win32::CheckTokenMembership(m_token.GetHandle(), sid, &b))
-				throw Error::Win32Error(Win32::GetLastError(), "CheckTokenMembership() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "CheckTokenMembership() failed"};
 			return b;
 		}
 
@@ -233,7 +233,7 @@ export namespace Boring32::Security
 				&returnLength
 			);
 			if (Win32::GetLastError() != Win32::ErrorCodes::InsufficientBuffer)
-				throw Error::Win32Error(Win32::GetLastError(), "GetTokenInformation() failed.");
+				throw Error::Win32Error{Win32::GetLastError(), "GetTokenInformation() failed."};
 
 			std::vector<std::byte> value{ returnLength };
 			succeeded = Win32::GetTokenInformation(
@@ -244,7 +244,7 @@ export namespace Boring32::Security
 				&returnLength
 			);
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "GetTokenInformation() failed.");
+				throw Error::Win32Error{Win32::GetLastError(), "GetTokenInformation() failed."};
 
 			return value;
 		}
@@ -267,7 +267,7 @@ export namespace Boring32::Security
 				&m_token
 			);
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "DuplicateTokenEx() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "DuplicateTokenEx() failed"};
 
 			return *this;
 		}

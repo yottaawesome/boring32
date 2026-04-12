@@ -68,7 +68,7 @@ export namespace Boring32::Security
 			// https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsecuritydescriptorcontrol
 			bool success = Win32::GetSecurityDescriptorControl(m_descriptor.get(), &c.Control, &c.Revision);
 			if (not success)
-				throw Error::Win32Error(Win32::GetLastError(), "GetSecurityDescriptorControl() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "GetSecurityDescriptorControl() failed"};
 			return c;
 		}
 
@@ -85,7 +85,7 @@ export namespace Boring32::Security
 				nullptr
 			);
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "ConvertStringSecurityDescriptorToSecurityDescriptorW() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "ConvertStringSecurityDescriptorToSecurityDescriptorW() failed"};
 			m_descriptor = RAII::LocalHeapUniquePtr<Win32::SECURITY_DESCRIPTOR>(reinterpret_cast<Win32::SECURITY_DESCRIPTOR*>(sd));
 		}
 

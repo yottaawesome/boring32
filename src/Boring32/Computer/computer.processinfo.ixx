@@ -39,7 +39,7 @@ export namespace Boring32::Computer
 			// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess
 			m_processHandle = Win32::OpenProcess(Win32::ProcessQueryInformation, false, processId);
 			if (not m_processHandle)
-				throw Error::Win32Error(Win32::GetLastError(), "OpenProcess() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "OpenProcess() failed"};
 		}
 
 		auto GetTimes() const -> ProcessTimes
@@ -106,7 +106,7 @@ export namespace Boring32::Computer
 			// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessid
 			Win32::DWORD id = Win32::GetProcessId(m_processHandle.GetHandle());
 			if (not id)
-				throw Error::Win32Error(Win32::GetLastError(), "GetProcessId() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "GetProcessId() failed"};
 			return id;
 		}
 
@@ -119,7 +119,7 @@ export namespace Boring32::Computer
 			// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesshandlecount
 			bool succeeded = Win32::GetProcessHandleCount(m_processHandle.GetHandle(), &handleCount);
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "GetProcessHandleCount() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "GetProcessHandleCount() failed"};
 			return handleCount;
 		}
 
@@ -132,7 +132,7 @@ export namespace Boring32::Computer
 			// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodeprocess
 			bool succeeded = Win32::GetExitCodeProcess(m_processHandle.GetHandle(), &exitCode);
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "GetExitCodeProcess() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "GetExitCodeProcess() failed"};
 			return exitCode;
 		}
 

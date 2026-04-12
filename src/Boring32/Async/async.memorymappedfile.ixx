@@ -66,7 +66,7 @@ export namespace Boring32::Async
 				m_name.c_str()				// m_name of mapping object
 			);
 			if (not m_mapFile)
-				throw Error::Win32Error(Win32::GetLastError(), "CreateFileMappingW() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "CreateFileMappingW() failed"};
 
 			m_mapFile.SetInheritability(inheritable);
 			m_view = Win32::MapViewOfFile(
@@ -102,7 +102,7 @@ export namespace Boring32::Async
 				m_name.c_str()	// name of mapping object
 			);
 			if (not m_mapFile)
-				throw Error::Win32Error(Win32::GetLastError(), "OpenFileMappingW() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "OpenFileMappingW() failed"};
 
 			m_view = Win32::MapViewOfFile(
 				m_mapFile.GetHandle(),	// handle to map object
@@ -142,7 +142,7 @@ export namespace Boring32::Async
 		void Close()
 		{
 			if (m_view && !Win32::UnmapViewOfFile(m_view))
-				throw Error::Win32Error(Win32::GetLastError(), "UnmapViewOfFile() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "UnmapViewOfFile() failed"};
 			m_view = nullptr;
 			m_mapFile = nullptr;
 		}

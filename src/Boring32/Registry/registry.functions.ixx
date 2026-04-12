@@ -148,7 +148,7 @@ export namespace Boring32::Registry
 		// https://docs.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-shdeletekeyw
 		Win32::LSTATUS status = Win32::SHDeleteKeyW(parent, subkey.c_str());
 		if (status != Win32::ErrorCodes::Success)
-			throw Error::Win32Error(Win32::GetLastError(), "SHDeleteKeyW() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "SHDeleteKeyW() failed"};
 	}
 
 	void DeleteSubkeys(const Win32::Winreg::HKEY parent, const std::wstring& subkey)
@@ -159,6 +159,6 @@ export namespace Boring32::Registry
 		// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletetreew
 		Win32::LSTATUS status = Win32::Winreg::RegDeleteTreeW(parent, subkey.c_str());
 		if (status != Win32::ErrorCodes::Success)
-			throw Error::Win32Error(Win32::GetLastError(), "RegDeleteTreeW() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "RegDeleteTreeW() failed"};
 	}
 }

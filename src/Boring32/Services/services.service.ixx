@@ -40,7 +40,7 @@ export namespace Boring32::Services
 				&argv[0]
 			);
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "StartServiceW() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "StartServiceW() failed"};
 		}
 
 		void Stop()
@@ -63,7 +63,7 @@ export namespace Boring32::Services
 				&params
 			);
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(),"ControlServiceExW() failed");
+				throw Error::Win32Error{Win32::GetLastError(),"ControlServiceExW() failed"};
 		}
 
 		void Delete()
@@ -71,7 +71,7 @@ export namespace Boring32::Services
 			if (not m_service)
 				throw Error::Boring32Error("m_service is nullptr");
 			if (not Win32::DeleteService(m_service.get()))
-				throw Error::Win32Error(Win32::GetLastError(), "DeleteService() failed.");
+				throw Error::Win32Error{Win32::GetLastError(), "DeleteService() failed."};
 			m_service = nullptr;
 		}
 
@@ -100,7 +100,7 @@ export namespace Boring32::Services
 				&bufSize
 			);
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "QueryServiceStatusEx() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "QueryServiceStatusEx() failed"};
 			return status.dwCurrentState == Win32::_SERVICE_RUNNING;
 		}
 			
@@ -126,7 +126,7 @@ export namespace Boring32::Services
 				&params
 			);
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "ControlServiceExW() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "ControlServiceExW() failed"};
 		}
 
 	private:
@@ -148,7 +148,7 @@ export namespace Boring32::Services
 				&bytesNeeded
 			);
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "QueryServiceConfigW() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "QueryServiceConfigW() failed"};
 			return buffer;
 		}
 

@@ -33,7 +33,7 @@ export namespace Boring32::IPC
 				nullptr,     // don't set maximum bytes 
 				nullptr);    // don't set maximum time 
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "SetNamedPipeHandleState() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "SetNamedPipeHandleState() failed"};
 		}
 
 		virtual void Connect(const Win32::DWORD timeout)
@@ -55,9 +55,9 @@ export namespace Boring32::IPC
 			if (m_handle == Win32::InvalidHandleValue)
 			{
 				if (auto lastError = Win32::GetLastError(); lastError != Win32::ErrorCodes::PipeBusy || timeout == 0)
-					throw Error::Win32Error(lastError, "Failed to connect client pipe");
+					throw Error::Win32Error{lastError, "Failed to connect client pipe"};
 				if (not Win32::WaitNamedPipeW(m_pipeName.c_str(), timeout))
-					throw Error::Win32Error(Win32::GetLastError(), "Timed out trying to connect client pipe");
+					throw Error::Win32Error{Win32::GetLastError(), "Timed out trying to connect client pipe"};
 			}
 		}
 
@@ -91,7 +91,7 @@ export namespace Boring32::IPC
 					&bytesLeft
 				);
 				if (not succeeded)
-					throw Error::Win32Error(Win32::GetLastError(), "PeekNamedPipe() failed");
+					throw Error::Win32Error{Win32::GetLastError(), "PeekNamedPipe() failed"};
 
 				return bytesLeft / sizeof(wchar_t);
 			}
@@ -101,7 +101,7 @@ export namespace Boring32::IPC
 				if (not m_handle)
 					throw Error::Boring32Error("No pipe to flush");
 				if (not Win32::FlushFileBuffers(m_handle.GetHandle()))
-					throw Error::Win32Error(Win32::GetLastError(), "FlushFileBuffers() failed");
+					throw Error::Win32Error{Win32::GetLastError(), "FlushFileBuffers() failed"};
 			}
 
 			virtual void CancelCurrentThreadIo()
@@ -109,7 +109,7 @@ export namespace Boring32::IPC
 				if (not m_handle)
 					throw Error::Boring32Error("Pipe is nullptr");
 				if (not Win32::CancelIo(m_handle.GetHandle()))
-					throw Error::Win32Error(Win32::GetLastError(), "CancelIo failed");
+					throw Error::Win32Error{Win32::GetLastError(), "CancelIo failed"};
 			}
 
 			virtual bool CancelCurrentThreadIo(const std::nothrow_t&) noexcept try
@@ -127,7 +127,7 @@ export namespace Boring32::IPC
 				if (not m_handle)
 					throw Error::Boring32Error("pipe is nullptr");
 				if (not Win32::CancelIoEx(m_handle.GetHandle(), overlapped))
-					throw Error::Win32Error(Win32::GetLastError(), "CancelIo() failed");
+					throw Error::Win32Error{Win32::GetLastError(), "CancelIo() failed"};
 			}
 
 			virtual bool CancelCurrentProcessIo(

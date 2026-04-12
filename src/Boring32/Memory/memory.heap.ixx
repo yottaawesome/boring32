@@ -28,7 +28,7 @@ export namespace Boring32::Memory
 			// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapcreate
 			m_heap = Win32::HeapCreate(options, initialSize, maxSize);
 			if (not m_heap)
-				throw Error::Win32Error(Win32::GetLastError(), "HeapCreate() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "HeapCreate() failed"};
 		}
 
 		void Destroy()
@@ -64,14 +64,14 @@ export namespace Boring32::Memory
 		{
 			// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heaplock
 			if (not Win32::HeapLock(m_heap))
-				throw Error::Win32Error(Win32::GetLastError(), "HeapLock() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "HeapLock() failed"};
 		}
 			
 		void Unlock()
 		{
 			// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapunlock
 			if (not Win32::HeapUnlock(m_heap))
-				throw Error::Win32Error(Win32::GetLastError(), "HeapUnlock() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "HeapUnlock() failed"};
 		}
 
 		[[nodiscard]] 
@@ -80,7 +80,7 @@ export namespace Boring32::Memory
 			// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapalloc
 			void* allocation = Win32::HeapAlloc(m_heap, options, bytes);
 			if (not allocation)
-				throw Error::Win32Error(Win32::GetLastError(), "HeapAlloc() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "HeapAlloc() failed"};
 			return allocation;
 		}
 
@@ -117,7 +117,7 @@ export namespace Boring32::Memory
 		{
 			// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapfree
 			if (ptr and not Win32::HeapFree(m_heap, options, ptr))
-				throw Error::Win32Error(Win32::GetLastError(), "HeapFree() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "HeapFree() failed"};
 		}
 
 		// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-getprocessheap

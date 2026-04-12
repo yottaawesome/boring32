@@ -23,7 +23,7 @@ export namespace Boring32::Security
 				throw Error::Boring32Error("token is invalid");
 			// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-impersonateloggedonuser
 			if (not Win32::ImpersonateLoggedOnUser(token))
-				throw Error::Win32Error(Win32::GetLastError(), "ImpersonateLoggedOnUser() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "ImpersonateLoggedOnUser() failed"};
 		}
 
 		ImpersonationContext& operator=(const ImpersonationContext&) = delete;

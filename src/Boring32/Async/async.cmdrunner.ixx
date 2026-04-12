@@ -58,7 +58,7 @@ namespace Boring32::Async
             &piProcInfo     // receives PROCESS_INFORMATION 
         );
         if (not bSuccess)
-            throw Error::Win32Error(Win32::GetLastError(), "CreateProcessW() failed");
+            throw Error::Win32Error{ Win32::GetLastError(), "CreateProcessW() failed" };
 
         return piProcInfo;
     }

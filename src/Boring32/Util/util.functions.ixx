@@ -55,7 +55,7 @@ export namespace Boring32::Util
 				static_cast<Win32::DWORD>(filePath.size())
 			);
 			if (not count)
-				throw Error::Win32Error(Win32::GetLastError(), "GetModuleFileNameW() failed");
+				throw Error::Win32Error{ Win32::GetLastError(), "GetModuleFileNameW() failed" };
 			status = Win32::GetLastError();
 		}
 		filePath.resize(count);
@@ -82,7 +82,7 @@ export namespace Boring32::Util
 			.dwHighDateTime = static_cast<Win32::DWORD>(li.HighPart)
 		};
 		if (not Win32::FileTimeToSystemTime(&ft, &st))
-			throw Error::Win32Error(Win32::GetLastError(), "FileTimeToSystemTime() failed");
+			throw Error::Win32Error{ Win32::GetLastError(), "FileTimeToSystemTime() failed" };
 		return st;
 	}
 

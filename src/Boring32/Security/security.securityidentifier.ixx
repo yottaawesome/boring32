@@ -35,7 +35,7 @@ export namespace Boring32::Security
 			Win32::LPWSTR string = nullptr;
 			// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertsidtostringsidw
 			if (not Win32::ConvertSidToStringSidW(reinterpret_cast<PSID>(const_cast<std::byte*>(m_sid.data())), &string))
-				throw Error::Win32Error(Win32::GetLastError(), "ConvertSidToStringSidW() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "ConvertSidToStringSidW() failed"};
 			RAII::LocalHeapUniquePtr<wchar_t> ptr(string);
 			return string;
 		}
@@ -73,7 +73,7 @@ export namespace Boring32::Security
 			if (Win32::PSID_IDENTIFIER_AUTHORITY identifier = Win32::GetSidIdentifierAuthority(sid))
 				return *identifier;
 
-			throw Error::Win32Error(Win32::GetLastError(), "GetSidIdentifierAuthority() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "GetSidIdentifierAuthority() failed"};
 		}
 
 		Win32::DWORD GetSubAuthority(const Win32::DWORD index) const
@@ -84,7 +84,7 @@ export namespace Boring32::Security
 			if (Win32::PDWORD returnVal = Win32::GetSidSubAuthority(GetSid(), index))
 				return *returnVal;
 
-			throw Error::Win32Error(Win32::GetLastError(),"GetSidSubAuthority() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "GetSidSubAuthority() failed"};
 		}
 
 		static Win32::DWORD GetSubAuthority(PSID sid, Win32::DWORD index)
@@ -95,7 +95,7 @@ export namespace Boring32::Security
 			if (Win32::PDWORD returnVal = Win32::GetSidSubAuthority(sid, index))
 				return *returnVal;
 
-			throw Error::Win32Error(Win32::GetLastError(), "GetSidSubAuthority() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "GetSidSubAuthority() failed"};
 		}
 
 		std::vector<Win32::DWORD> GetAllSubAuthorities() const
@@ -140,7 +140,7 @@ export namespace Boring32::Security
 			{
 				if (Win32::GetLastError() == Win32::ErrorCodes::NoneMapped)
 					return {};
-				throw Error::Win32Error(Win32::GetLastError(), "LookupAccountSidW() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "LookupAccountSidW() failed"};
 			}
 			name.resize(count);
 			domain.resize(domainCount);
@@ -155,7 +155,7 @@ export namespace Boring32::Security
 			// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw
 			Win32::PSID sid = nullptr;
 			if (not Win32::ConvertStringSidToSidW(sidString.data(), &sid))
-				throw Error::Win32Error(Win32::GetLastError(), "ConvertStringSidToSidW() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "ConvertStringSidToSidW() failed"};
 			RAII::LocalHeapUniquePtr<void> ptr(sid);
 			Create(sid);
 		}
@@ -171,7 +171,7 @@ export namespace Boring32::Security
 				sid
 			);
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "CopySid() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "CopySid() failed"};
 		}
 
 		void Create(
@@ -187,7 +187,7 @@ export namespace Boring32::Security
 				subAuthorities
 			);
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "Failed to initialise SID");
+				throw Error::Win32Error{Win32::GetLastError(), "Failed to initialise SID"};
 		}
 			
 		std::vector<std::byte> m_sid;

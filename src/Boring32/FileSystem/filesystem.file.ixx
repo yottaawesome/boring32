@@ -49,7 +49,7 @@ export namespace Boring32::FileSystem
 				nullptr							// hTemplateFile
 			);
 			if (m_fileHandle == Win32::InvalidHandleValue)
-				throw Error::Win32Error(Win32::GetLastError(), "CreateFileW() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "CreateFileW() failed"};
 		}
 
 		std::wstring m_fileName;

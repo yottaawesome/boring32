@@ -45,9 +45,9 @@ export namespace Boring32::UI
 				nullptr
 			);
 			if (self.m_window = HwndUniquePtr(window); not self.m_window)
-				throw Error::Win32Error(Win32::GetLastError(), "Failed creating button.");
+				throw Error::Win32Error{Win32::GetLastError(), "Failed creating button."};
 			if (not Win32::SetWindowSubclass(self.m_window.get(), SubclassProc<std::remove_cvref_t<decltype(self)>>, self.GetSubclassId(), reinterpret_cast<Win32::DWORD_PTR>(&self)))
-				throw Error::Win32Error(Win32::GetLastError(), "Failed creating button.");
+				throw Error::Win32Error{ Win32::GetLastError(), "Failed creating button." };
 
 			if constexpr (requires { self.Init(); })
 				self.Init();

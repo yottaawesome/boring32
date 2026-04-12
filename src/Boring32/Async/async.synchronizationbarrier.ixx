@@ -18,7 +18,7 @@ export namespace Boring32::Async
 		{
 			//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-initializesynchronizationbarrier
 			if (not Win32::InitializeSynchronizationBarrier(&m_barrier, m_totalThreads, m_spinCount))
-				throw Error::Win32Error(Win32::GetLastError(), "InitializeSynchronizationBarrier() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "InitializeSynchronizationBarrier() failed"};
 			m_isInitialized = true;
 		}
 

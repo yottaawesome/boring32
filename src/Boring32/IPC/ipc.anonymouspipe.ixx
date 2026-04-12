@@ -30,7 +30,7 @@ export namespace Boring32::IPC
 				size
 			);
 			if (not success)
-				throw Error::Win32Error(Win32::GetLastError(), "Failed creating anonymous pipe: CreatePipe() failed.");
+				throw Error::Win32Error{Win32::GetLastError(), "Failed creating anonymous pipe: CreatePipe() failed."};
 		}
 
 		AnonymousPipe(Win32::DWORD size, Win32::HANDLE readHandle, Win32::HANDLE writeHandle) 
@@ -56,7 +56,7 @@ export namespace Boring32::IPC
 				nullptr
 			);
 			if (not success)
-				throw Error::Win32Error(Win32::GetLastError(), "Write operation failed.");
+				throw Error::Win32Error{Win32::GetLastError(), "Write operation failed."};
 		}
 
 		virtual std::wstring Read()
@@ -75,7 +75,7 @@ export namespace Boring32::IPC
 				nullptr
 			);
 			if (not success)
-				throw Error::Win32Error(Win32::GetLastError(), "ReadFile() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "ReadFile() failed"};
 
 			std::erase_if(msg, [](wchar_t c) { return c == '\0'; });
 			return msg;
@@ -114,7 +114,7 @@ export namespace Boring32::IPC
 				nullptr
 			);
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "SetNamedPipeHandleState() failed.");
+				throw Error::Win32Error{Win32::GetLastError(), "SetNamedPipeHandleState() failed."};
 		}
 
 		virtual Win32::HANDLE GetRead() const noexcept
@@ -154,7 +154,7 @@ export namespace Boring32::IPC
 					nullptr
 				);
 				if (not success)
-					throw Error::Win32Error(Win32::GetLastError(), "PeekNamedPipe() failed");
+					throw Error::Win32Error{Win32::GetLastError(), "PeekNamedPipe() failed"};
 				charactersInPipe /= sizeof(wchar_t);
 			}
 

@@ -101,7 +101,7 @@ namespace Boring32::WinHttp::WebSockets
 						(Win32::LPDWORD)Win32::WinHttp::NoHeaderIndex
 					);
 					if (not success)
-						throw Error::Win32Error(Win32::GetLastError(), "WinHttpQueryHeaders() failed");
+						throw Error::Win32Error{ Win32::GetLastError(), "WinHttpQueryHeaders() failed" };
 
 					switch (statusCode)
 					{

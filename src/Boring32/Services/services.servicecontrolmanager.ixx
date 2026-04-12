@@ -48,7 +48,7 @@ export namespace Boring32::Services
 			Win32::SC_HANDLE serviceHandle = 
 				Win32::OpenServiceW(m_scm.get(), name.c_str(), desiredAccess);
 			if (not serviceHandle)
-				throw Error::Win32Error(Win32::GetLastError(), "OpenServiceW() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "OpenServiceW() failed"};
 			return ServiceHandleUniquePtr{ serviceHandle };
 		}
 
@@ -64,7 +64,7 @@ export namespace Boring32::Services
 			Win32::SC_HANDLE schSCManager = 
 				Win32::OpenSCManagerW(nullptr, nullptr, desiredAccess);
 			if (not schSCManager)
-				throw Error::Win32Error(Win32::GetLastError(), "OpenSCManagerW() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "OpenSCManagerW() failed"};
 			m_scm = ServiceHandleUniquePtr(schSCManager);
 		}
 

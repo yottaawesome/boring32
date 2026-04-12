@@ -135,7 +135,7 @@ export namespace Boring32::WinHttp
 			);
 			if (not handle)
 				Error::ThrowNested(
-					Error::Win32Error(Win32::GetLastError(), "WinHttpOpen() failed"),
+					Error::Win32Error{ Win32::GetLastError(), "WinHttpOpen() failed" },
 					WinHttpError("Failed to open WinHttpSession handle")
 				);
 

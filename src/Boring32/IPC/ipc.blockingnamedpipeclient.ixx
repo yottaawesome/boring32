@@ -78,7 +78,7 @@ export namespace Boring32::IPC
 				nullptr				// not overlapped 
 			);
 			if (not successfulWrite)
-				throw Error::Win32Error(Win32::GetLastError(), "Failed to write to client pipe");
+				throw Error::Win32Error{Win32::GetLastError(), "Failed to write to client pipe"};
 		}
 
 		std::vector<std::byte> InternalRead()

@@ -304,7 +304,7 @@ export namespace Boring32::Crypto
 
 			// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certdeletecertificatefromstore
 			if (not Win32::CertDeleteCertificateFromStore(cert))
-				throw Error::Win32Error(Win32::GetLastError(), "CertDeleteCertificateFromStore() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "CertDeleteCertificateFromStore() failed"};
 		}
 
 		void ImportCert(const Win32::CERT_CONTEXT* cert)
@@ -356,7 +356,7 @@ export namespace Boring32::Crypto
 				nullptr
 			);
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "CertAddCertificateContextToStore() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "CertAddCertificateContextToStore() failed"};
 		}
 
 		auto GetCertByArg(StoreFindType searchFlag, const void* arg) const -> Win32::PCCERT_CONTEXT
@@ -377,7 +377,7 @@ export namespace Boring32::Crypto
 				&bytes
 			);
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "CertGetStoreProperty() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "CertGetStoreProperty() failed"};
 
 			std::wstring returnValue(bytes / sizeof(wchar_t), '\0');
 			succeeded = Win32::CertGetStoreProperty(
@@ -387,7 +387,7 @@ export namespace Boring32::Crypto
 				&bytes
 			);
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "CertGetStoreProperty() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "CertGetStoreProperty() failed"};
 
 			returnValue.resize(bytes / sizeof(wchar_t));
 			if (returnValue.ends_with('\0'))
@@ -474,7 +474,7 @@ export namespace Boring32::Crypto
 			}
 
 			if (not m_certStore)
-				throw Error::Win32Error(Win32::GetLastError(), "CertOpenSystemStoreW() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "CertOpenSystemStoreW() failed"};
 		}
 
 		Win32::HCERTSTORE m_certStore = nullptr;

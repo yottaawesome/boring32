@@ -68,7 +68,7 @@ export namespace Boring32::Async
 					&processInfo			// Pointer to PROCESS_INFORMATION structure
 				);
 			if (not successfullyCreatedProcess)
-				throw Error::Win32Error(Win32::GetLastError(), "Failed to create process");
+				throw Error::Win32Error{Win32::GetLastError(), "Failed to create process"};
 
 			m_process = processInfo.hProcess;
 			m_thread = processInfo.hThread;
@@ -134,7 +134,7 @@ export namespace Boring32::Async
 
 			Win32::DWORD exitCode = 0;
 			if (not Win32::GetExitCodeProcess(m_process.GetHandle(), &exitCode))
-				throw Error::Win32Error(Win32::GetLastError(), "Failed to determine process exit code");
+				throw Error::Win32Error{Win32::GetLastError(), "Failed to determine process exit code"};
 
 			return exitCode;
 		}

@@ -43,7 +43,7 @@ export namespace Boring32::Async
 		{
 			// https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-initializecriticalsectionex
 			if (not Win32::InitializeCriticalSectionEx(&m_criticalSection, spinCount, 0))
-				throw Error::Win32Error(Win32::GetLastError(), "InitializeCriticalSectionEx() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "InitializeCriticalSectionEx() failed"};
 		}
 
 		Win32::CRITICAL_SECTION m_criticalSection;

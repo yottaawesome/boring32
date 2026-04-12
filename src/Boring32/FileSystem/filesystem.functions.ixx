@@ -23,7 +23,7 @@ export namespace Boring32::FileSystem
 		// https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfosizew
 		Win32::DWORD verSize = Win32::GetFileVersionInfoSizeW(filePath.c_str(), &verHandle);
 		if (not verSize)
-			throw Error::Win32Error(Win32::GetLastError(), "GetFileVersionInfoSizeW() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "GetFileVersionInfoSizeW() failed"};
 
 		std::vector<std::byte> verData(verSize);
 		// https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfow
@@ -34,7 +34,7 @@ export namespace Boring32::FileSystem
 			&verData[0]
 		);
 		if (not success)
-			throw Error::Win32Error(Win32::GetLastError(), "GetFileVersionInfoW() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "GetFileVersionInfoW() failed"};
 
 		unsigned size = 0;
 		std::byte* lpBuffer = nullptr; // Free when pBlock argument is freed
@@ -74,7 +74,7 @@ export namespace Boring32::FileSystem
 			throw Error::Boring32Error("path cannot be empty");
 		bool succeeded = Win32::CreateDirectoryW(path.c_str(), nullptr);
 		if (not succeeded)
-			throw Error::Win32Error(Win32::GetLastError(), "CreateDirectoryW() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "CreateDirectoryW() failed"};
 	}
 
 	void CreateFileDirectory(const std::wstring& path, const std::wstring& dacl)
@@ -92,7 +92,7 @@ export namespace Boring32::FileSystem
 			nullptr
 		);
 		if (not succeeded)
-			throw Error::Win32Error(Win32::GetLastError(), "ConvertStringSecurityDescriptorToSecurityDescriptorW() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "ConvertStringSecurityDescriptorToSecurityDescriptorW() failed"};
 		std::unique_ptr<void, void(*)(void*)> sdDeleter(sd, [](void* ptr) { Win32::LocalFree(ptr); });
 
 		Win32::SECURITY_ATTRIBUTES sa{
@@ -100,7 +100,7 @@ export namespace Boring32::FileSystem
 			.lpSecurityDescriptor = sd
 		};
 		if (not Win32::CreateDirectoryW(path.c_str(), &sa))
-			throw Error::Win32Error(Win32::GetLastError(), "CreateDirectoryW() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "CreateDirectoryW() failed"};
 	}
 
 	void MoveNamedFile(
@@ -116,7 +116,7 @@ export namespace Boring32::FileSystem
 
 		// https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-movefileexw
 		if (not Win32::MoveFileExW(oldFile.c_str(), newFile.c_str(), flags))
-			throw Error::Win32Error(Win32::GetLastError(), "MoveFileExW() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "MoveFileExW() failed"};
 	}
 
 	auto FileCreate(
@@ -146,7 +146,7 @@ export namespace Boring32::FileSystem
 			templateFile							// hTemplateFile
 		);
 		if (fileHandle == Win32::InvalidHandleValue)
-			throw Error::Win32Error(Win32::GetLastError(), "CreateFileW() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "CreateFileW() failed"};
 		return fileHandle;
 	}
 
@@ -180,7 +180,7 @@ export namespace Boring32::FileSystem
 			nullptr
 		);
 		if (not success)
-			throw Error::Win32Error(Win32::GetLastError(), "WriteFile() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "WriteFile() failed"};
 	}
 
 	void WriteFile(
@@ -209,7 +209,7 @@ export namespace Boring32::FileSystem
 			const_cast<Win32::OVERLAPPED*>(&overlapped)
 		);
 		if (not success)
-			throw Error::Win32Error(Win32::GetLastError(), "WriteFile() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "WriteFile() failed"};
 	}
 
 	void ReadFile(
@@ -236,6 +236,6 @@ export namespace Boring32::FileSystem
 			nullptr
 		);
 		if (not success)
-			throw Error::Win32Error(Win32::GetLastError(), "ReadFile() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "ReadFile() failed"};
 	}
 }

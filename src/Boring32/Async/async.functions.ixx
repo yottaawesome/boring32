@@ -56,7 +56,7 @@ export namespace Boring32::Async
 				throw Error::Boring32Error("The wait was abandoned");
 
 			case Win32::WaitResult::Failed:
-				throw Error::Win32Error(Win32::GetLastError(), "WaitForSingleObjectEx() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "WaitForSingleObjectEx() failed"};
 
 			default:
 				throw Error::Boring32Error(std::format("Unknown wait status: {}", (unsigned long)status));
@@ -142,7 +142,7 @@ export namespace Boring32::Async
 				return status;
 
 			case Win32::WaitFailed:
-				throw Error::Win32Error(Win32::GetLastError(), "WaitForSingleObjectEx() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "WaitForSingleObjectEx() failed"};
 
 			default:
 				return waitForAll ? 0 : status - Win32::WaitObject0;
@@ -210,12 +210,12 @@ export namespace Boring32::Async
 		// https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-createtoolhelp32snapshot
 		RAII::Win32Handle processesSnapshot = Win32::CreateToolhelp32Snapshot(Win32::Th32csSnapProcess, 0);
 		if (processesSnapshot == Win32::InvalidHandleValue)
-			throw Error::Win32Error(Win32::GetLastError(), "CreateToolhelp32Snapshot() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "CreateToolhelp32Snapshot() failed"};
 
 		Win32::PROCESSENTRY32W procEntry{ .dwSize = sizeof(Win32::PROCESSENTRY32W) };
 		// https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-process32firstw
 		if (not Win32::Process32FirstW(processesSnapshot.GetHandle(), &procEntry))
-			throw Error::Win32Error(Win32::GetLastError(), "Process32First() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "Process32First() failed"};
 
 		std::vector<Win32::DWORD> results;
 		do
@@ -232,7 +232,7 @@ export namespace Boring32::Async
 			Win32::DWORD processSessionId = 0;
 			// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-processidtosessionid
 			if (not Win32::ProcessIdToSessionId(procEntry.th32ProcessID, &processSessionId))
-				throw Error::Win32Error(Win32::GetLastError(), "ProcessIdToSessionId() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "ProcessIdToSessionId() failed"};
 
 			if (processSessionId == sessionIdToMatch)
 			{

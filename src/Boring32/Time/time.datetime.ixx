@@ -16,7 +16,7 @@ export namespace Boring32::Time
 		DateTime(const Win32::SYSTEMTIME& st)
 		{
 			if (not Win32::SystemTimeToFileTime(&st, &m_ft))
-				throw Error::Win32Error(Win32::GetLastError(), "SystemTimeToFileTime() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "SystemTimeToFileTime() failed"};
 		}
 
 		DateTime(const Win32::FILETIME& ft)
@@ -56,7 +56,7 @@ export namespace Boring32::Time
 			Win32::SYSTEMTIME st;
 			// https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-filetimetosystemtime
 			if (not Win32::FileTimeToSystemTime(&m_ft, &st))
-				throw Error::Win32Error(Win32::GetLastError(), "FileTimeToSystemTime() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "FileTimeToSystemTime() failed"};
 			return st;
 		}
 

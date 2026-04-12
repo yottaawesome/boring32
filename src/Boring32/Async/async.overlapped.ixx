@@ -27,7 +27,7 @@ export namespace Boring32::Async
 		{
 			hEvent = Win32::CreateEventW(nullptr, true, false, nullptr);
 			if (not hEvent)
-				throw Error::Win32Error(Win32::GetLastError(), "CreateEventW() failed");
+				throw Error::Win32Error{ Win32::GetLastError(), "CreateEventW() failed" };
 		}
 
 		bool Wait(Concepts::Duration auto waitTime, std::string_view msg)

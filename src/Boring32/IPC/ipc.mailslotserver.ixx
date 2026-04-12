@@ -17,7 +17,7 @@ export namespace Boring32::IPC
 			// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createmailslotw
 			m_handle = Win32::CreateMailslotW(m_name.c_str(), m_maxMessageSize, m_readTimeoutMs, nullptr);
 			if (not m_handle)
-				throw Error::Win32Error(Win32::GetLastError(), "CreateMailslotW() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "CreateMailslotW() failed"};
 		}
 
 		void Close() noexcept

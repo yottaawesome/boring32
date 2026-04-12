@@ -40,7 +40,7 @@ export namespace Boring32::Async
 			m_mutex = Win32::CreateMutexW(nullptr, m_locked, nullptr);
 			m_mutex.SetInheritability(inheritable);
 			if (not m_mutex)
-				throw Error::Win32Error(Win32::GetLastError(), "Failed to create mutex");
+				throw Error::Win32Error{Win32::GetLastError(), "Failed to create mutex"};
 		}
 
 		///		Creates a new named or anonymous mutex.
@@ -55,7 +55,7 @@ export namespace Boring32::Async
 			);
 			m_mutex.SetInheritability(inheritable);
 			if (not m_mutex)
-				throw Error::Win32Error(Win32::GetLastError(), "Failed to create mutex");
+				throw Error::Win32Error{Win32::GetLastError(), "Failed to create mutex"};
 
 			m_locked = acquireOnCreation;
 		}
@@ -68,7 +68,7 @@ export namespace Boring32::Async
 				throw Error::Boring32Error("Cannot open mutex with empty name");
 			m_mutex = Win32::OpenMutexW(desiredAccess, isInheritable, m_name.c_str());
 			if (not m_mutex)
-				throw Error::Win32Error(Win32::GetLastError(), "Failed to open mutex");
+				throw Error::Win32Error{Win32::GetLastError(), "Failed to open mutex"};
 			if (acquireOnOpen)
 				Lock(Win32::Infinite, true);
 		}
@@ -122,7 +122,7 @@ export namespace Boring32::Async
 			if (not m_mutex)
 				throw Error::Boring32Error("Cannot wait on null mutex");
 			if (not Win32::ReleaseMutex(m_mutex.GetHandle()))
-				throw Error::Win32Error(Win32::GetLastError(), "Failed to release mutex");
+				throw Error::Win32Error{Win32::GetLastError(), "Failed to release mutex"};
 
 			m_locked = false;
 		}

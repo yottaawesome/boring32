@@ -47,7 +47,7 @@ export namespace Boring32::Crypto
 			&encryptedBlob				// Receives the encrypted information.
 		);
 		if (not succeeded)
-			throw Error::Win32Error(Win32::GetLastError(), "CryptProtectData() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "CryptProtectData() failed"};
 
 		// Should we really return std::byte instead of Windows' BYTE?
 		// Using std::byte means we'll need to cast at the API call.
@@ -110,7 +110,7 @@ export namespace Boring32::Crypto
 			&decryptedBlob				// Receives the decrypted data
 		);
 		if (not succeeded)
-			throw Error::Win32Error(Win32::GetLastError(), "CryptUnprotectData() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "CryptUnprotectData() failed"};
 
 		if (descrOut)
 		{
@@ -369,7 +369,7 @@ export namespace Boring32::Crypto
 			nullptr
 		);
 		if (not succeeded)
-			throw Error::Win32Error(Win32::GetLastError(), "CertStrToNameW() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "CertStrToNameW() failed"};
 
 		std::vector<std::byte> bytes(encoded);
 		succeeded = Win32::CertStrToNameW(
@@ -382,7 +382,7 @@ export namespace Boring32::Crypto
 			nullptr
 		);
 		if (not succeeded)
-			throw Error::Win32Error(Win32::GetLastError(), "CertStrToNameW() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "CertStrToNameW() failed"};
 
 		bytes.resize(encoded);
 		return bytes;
@@ -503,7 +503,7 @@ export namespace Boring32::Crypto
 			&chainContext
 		);
 		if (not succeeded)
-			throw Error::Win32Error(Win32::GetLastError(), "CertGetCertificateChain() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "CertGetCertificateChain() failed"};
 		return chainContext;
 	}
 
@@ -524,7 +524,7 @@ export namespace Boring32::Crypto
 			store
 		);
 		if (not succeeded)
-			throw Error::Win32Error(Win32::GetLastError(), "CryptUIWizImport() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "CryptUIWizImport() failed"};
 	}
 
 	using StoreFindType = Win32::StoreFindType;

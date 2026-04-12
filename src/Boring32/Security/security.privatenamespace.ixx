@@ -93,7 +93,7 @@ export namespace Boring32::Security
 		{
 			m_boundaryDescriptor = Win32::CreateBoundaryDescriptorW(m_boundaryName.c_str(), 0);
 			if (not m_boundaryDescriptor)
-				throw Error::Win32Error(Win32::GetLastError(), "Failed to create boundary descriptor");
+				throw Error::Win32Error{Win32::GetLastError(), "Failed to create boundary descriptor"};
 
 			Win32::BYTE localAdminSID[Win32::_SECURITY_MAX_SID_SIZE];
 			Win32::DWORD cbSID = sizeof(localAdminSID);
@@ -103,10 +103,10 @@ export namespace Boring32::Security
 				localAdminSID,
 				&cbSID);
 			if (not sidCreated)
-				throw Error::Win32Error(Win32::GetLastError(), "Failed to create SID");
+				throw Error::Win32Error{Win32::GetLastError(), "Failed to create SID"};
 			bool sidAdded = Win32::AddSIDToBoundaryDescriptor(&m_boundaryDescriptor, localAdminSID);
 			if (not sidAdded)
-				throw Error::Win32Error(Win32::GetLastError(), "Failed to add SID to boundary");
+				throw Error::Win32Error{Win32::GetLastError(), "Failed to add SID to boundary"};
 
 			if (create)
 			{
@@ -123,7 +123,7 @@ export namespace Boring32::Security
 					nullptr
 				);
 				if (not converted)
-					throw Error::Win32Error(Win32::GetLastError(), "Failed to convert security descriptor");
+					throw Error::Win32Error{Win32::GetLastError(), "Failed to convert security descriptor"};
 				RAII::LocalHeapUniquePtr<void> securityDescriptor(sa.lpSecurityDescriptor);
 
 				m_namespace = Win32::CreatePrivateNamespaceW(
@@ -136,7 +136,7 @@ export namespace Boring32::Security
 				m_namespace = Win32::OpenPrivateNamespaceW(m_boundaryDescriptor, m_namespaceName.c_str());
 
 			if (not m_namespace)
-				throw Error::Win32Error(Win32::GetLastError(), "Failed to create private namespace");
+				throw Error::Win32Error{Win32::GetLastError(), "Failed to create private namespace"};
 		}
 		catch (...)
 		{

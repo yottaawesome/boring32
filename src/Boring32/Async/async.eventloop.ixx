@@ -36,7 +36,7 @@ export namespace Boring32::Async
 				true
 			);
 			if (result == Win32::WaitFailed)
-				throw Error::Win32Error(Win32::GetLastError(), "WaitForMultipleObjectsEx() failed");
+				throw Error::Win32Error{ Win32::GetLastError(), "WaitForMultipleObjectsEx() failed" };
 			if (result == Win32::WaitTimeout)
 				return false;
 			if (result >= Win32::WaitAbandoned && result <= (Win32::WaitAbandoned + m_events.size() - 1))

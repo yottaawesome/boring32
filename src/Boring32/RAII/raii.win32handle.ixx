@@ -122,7 +122,7 @@ export namespace Boring32::RAII
 			if (not IsValidValue())
 				throw Error::Boring32Error("handle is null or invalid.");
 			if (not Win32::SetHandleInformation(*m_handle, Win32::HandleFlagInherit, isInheritable))
-				throw Error::Win32Error(Win32::GetLastError(), "SetHandleInformation() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "SetHandleInformation() failed"};
 		}
 
 		Win32::HANDLE Detach() noexcept
@@ -183,7 +183,7 @@ export namespace Boring32::RAII
 				Win32::DuplicateSameAccess
 			);
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "DuplicateHandle() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "DuplicateHandle() failed"};
 
 			return duplicateHandle;
 		}

@@ -23,23 +23,21 @@ export namespace Boring32::Native
 		{
 			Win32::HMODULE ntdll = Win32::GetModuleHandleW(L"ntdll.dll");
 			if (not ntdll)
-				throw Error::Win32Error(Win32::GetLastError(), "GetModuleHandleW() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "GetModuleHandleW() failed"};
 
 			m_mapViewOfSection = (MapViewOfSection)Win32::GetProcAddress(ntdll, "NtMapViewOfSection");
 			if (not m_mapViewOfSection)
-				throw Error::Win32Error(Win32::GetLastError(), "GetProcAddress() failed");
-
+				throw Error::Win32Error{Win32::GetLastError(), "GetProcAddress() failed"};
 			m_querySystemInformation = (QuerySystemInformation)Win32::GetProcAddress(ntdll, "NtQuerySystemInformation");
 			if (not m_querySystemInformation)
-				throw Error::Win32Error(Win32::GetLastError(), "GetProcAddress() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "GetProcAddress() failed"};
 
 			m_duplicateObject = (DuplicateObject)Win32::GetProcAddress(ntdll, "NtDuplicateObject");
 			if (not m_duplicateObject)
-				throw Error::Win32Error(Win32::GetLastError(), "GetProcAddress() failed");
-
+				throw Error::Win32Error{Win32::GetLastError(), "GetProcAddress() failed"};
 			m_queryObject = (QueryObject)Win32::GetProcAddress(ntdll, "NtQueryObject");
 			if (not m_queryObject)
-				throw Error::Win32Error(Win32::GetLastError(), "GetProcAddress() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "GetProcAddress() failed"};
 		}
 
 		MapViewOfSection m_mapViewOfSection;

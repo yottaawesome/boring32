@@ -26,7 +26,7 @@ export namespace Boring32::Strings
 			nullptr											// lpUsedDefaultChar
 		);
 		if (sizeInBytes == 0)
-			throw Error::Win32Error(Win32::GetLastError(), "WideCharToMultiByte() [1] failed");
+			throw Error::Win32Error{Win32::GetLastError(), "WideCharToMultiByte() [1] failed"};
 
 		std::string strTo(sizeInBytes / sizeof(char), '\0');
 		const int status = WideCharToMultiByte(
@@ -40,7 +40,7 @@ export namespace Boring32::Strings
 			nullptr											// lpUsedDefaultChar
 		);
 		if (status == 0)
-			throw Error::Win32Error(Win32::GetLastError(), "WideCharToMultiByte() [2] failed");
+			throw Error::Win32Error{Win32::GetLastError(), "WideCharToMultiByte() [2] failed"};
 
 		return strTo;
 	}
@@ -61,7 +61,7 @@ export namespace Boring32::Strings
 			0											// cchWideChar
 		);
 		if (sizeInCharacters == 0)
-			throw Error::Win32Error(Win32::GetLastError(), "MultiByteToWideChar() [1] failed");
+			throw Error::Win32Error{Win32::GetLastError(), "MultiByteToWideChar() [1] failed"};
 
 		std::wstring wstrTo(sizeInCharacters, '\0');
 		int status = Win32::MultiByteToWideChar(
@@ -73,7 +73,7 @@ export namespace Boring32::Strings
 			static_cast<int>(wstrTo.size())				// cchWideChar
 		);
 		if (status == 0)
-			throw Error::Win32Error(Win32::GetLastError(), "MultiByteToWideChar() [2] failed");
+			throw Error::Win32Error{Win32::GetLastError(), "MultiByteToWideChar() [2] failed"};
 
 		return wstrTo;
 	}
@@ -450,7 +450,7 @@ export namespace Boring32::Strings
 			0
 		);
 		if (result == 0)
-			throw Error::Win32Error(Win32::GetLastError(), "LCMapStringEx() failed.");
+			throw Error::Win32Error{Win32::GetLastError(), "LCMapStringEx() failed."};
 
 		std::wstring destination(result, '\0');
 		result = Win32::i18n::LCMapStringEx(
@@ -465,7 +465,7 @@ export namespace Boring32::Strings
 			0
 		);
 		if (result == 0)
-			throw Error::Win32Error(Win32::GetLastError(), "LCMapStringEx() failed.");
+			throw Error::Win32Error{Win32::GetLastError(), "LCMapStringEx() failed."};
 
 		return destination;
 	}

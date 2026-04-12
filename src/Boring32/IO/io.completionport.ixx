@@ -24,7 +24,7 @@ export namespace Boring32::IO
 			if (not device)
 				throw Error::Boring32Error("device cannot be null");
 			if (not Win32::CreateIoCompletionPort(device, m_completionPort.GetHandle(), completionKey, 0))
-				throw Error::Win32Error(Win32::GetLastError(), "CreateIoCompletionPort() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "CreateIoCompletionPort() failed"};
 		}
 
 		Win32::HANDLE GetHandle() const noexcept

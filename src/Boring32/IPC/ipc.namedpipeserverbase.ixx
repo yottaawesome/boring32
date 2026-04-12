@@ -96,7 +96,7 @@ export namespace Boring32::IPC
 			if (not m_pipe)
 				throw Error::Boring32Error("No pipe to flush");
 			if (not Win32::FlushFileBuffers(m_pipe.GetHandle()))
-				throw Error::Win32Error(Win32::GetLastError(), "Flush() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "Flush() failed"};
 		}
 
 		virtual RAII::Win32Handle& GetInternalHandle()
@@ -149,7 +149,7 @@ export namespace Boring32::IPC
 			if (not m_pipe)
 				throw Error::Boring32Error("pipe is nullptr");
 			if (not Win32::CancelIo(m_pipe.GetHandle()))
-				throw Error::Win32Error(Win32::GetLastError(), "CancelIo() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "CancelIo() failed"};
 		}
 
 		virtual bool CancelCurrentThreadIo(std::nothrow_t) noexcept 
@@ -168,7 +168,7 @@ export namespace Boring32::IPC
 			if (not m_pipe)
 				throw Error::Boring32Error("pipe is nullptr");
 			if (not Win32::CancelIoEx(m_pipe.GetHandle(), overlapped))
-				throw Error::Win32Error(Win32::GetLastError(), "CancelIo() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "CancelIo() failed"};
 		}
 
 		virtual bool CancelCurrentProcessIo(Win32::OVERLAPPED* overlapped, std::nothrow_t) noexcept 
@@ -201,7 +201,7 @@ export namespace Boring32::IPC
 					nullptr
 				);
 				if (not converted)
-					throw Error::Win32Error(Win32::GetLastError(), "Failed to convert security descriptor");
+					throw Error::Win32Error{Win32::GetLastError(), "Failed to convert security descriptor"};
 			}
 
 			// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createnamedpipea
@@ -218,7 +218,7 @@ export namespace Boring32::IPC
 			if (not m_sid.empty())
 				Win32::LocalFree(sa.lpSecurityDescriptor);
 			if (not m_pipe)
-				throw Error::Win32Error(Win32::GetLastError(), "Failed to create named pipe");
+				throw Error::Win32Error{Win32::GetLastError(), "Failed to create named pipe"};
 		}
 
 		virtual void Copy(const NamedPipeServerBase& other)
@@ -262,7 +262,7 @@ export namespace Boring32::IPC
 			if (not succeeded)
 			{
 				if (throwOnError)
-					throw Error::Win32Error(Win32::GetLastError(), "PeekNamedPipe() failed");
+					throw Error::Win32Error{Win32::GetLastError(), "PeekNamedPipe() failed"};
 				return false;
 			}
 

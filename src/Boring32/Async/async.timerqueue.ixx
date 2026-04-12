@@ -63,7 +63,7 @@ export namespace Boring32::Async
 
 			//https://docs.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-deletetimerqueueex
 			if (not Win32::DeleteTimerQueueEx(m_timer, argValue))
-				throw Error::Win32Error(Win32::GetLastError(), "DeleteTimerQueueEx() failed");
+				throw Error::Win32Error{ Win32::GetLastError(), "DeleteTimerQueueEx() failed" };
 			m_timer = nullptr;
 		}
 
@@ -90,9 +90,7 @@ export namespace Boring32::Async
 			//https://docs.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-createtimerqueue
 			m_timer = Win32::CreateTimerQueue();
 			if (m_timer == nullptr)
-			{
-				throw Error::Win32Error(Win32::GetLastError(), "CreateTimerQueue() failed");
-			}
+				throw Error::Win32Error{Win32::GetLastError(), "CreateTimerQueue() failed"};
 		}
 
 		void Move(TimerQueue& other) noexcept 

@@ -12,7 +12,7 @@ export namespace Boring32::Services
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openscmanagerw
 		// https://docs.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights
 		SC_HANDLE scmHandle = Win32::OpenSCManagerW(nullptr, Win32::_SERVICES_ACTIVE_DATABASE, desiredAccess);
-		return scmHandle ? scmHandle : throw Error::Win32Error(Win32::GetLastError(), "OpenSCManagerW() failed");
+		return scmHandle ? scmHandle : throw Error::Win32Error{Win32::GetLastError(), "OpenSCManagerW() failed"};
 	}
 
 	[[nodiscard]]
@@ -33,7 +33,7 @@ export namespace Boring32::Services
 			&bytesNeeded
 		);
 		if (not succeeded)
-			throw Error::Win32Error(Win32::GetLastError(), "QueryServiceStatusEx() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "QueryServiceStatusEx() failed"};
 
 		return serviceStatus;
 	}
@@ -46,7 +46,7 @@ export namespace Boring32::Services
 
 		Win32::SC_HANDLE scmHandle = OpenServiceControlManager(Win32::GenericRead);
 		if (not scmHandle)
-			throw Error::Win32Error(Win32::GetLastError(), "OpenServiceControlManager() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "OpenServiceControlManager() failed"};
 		ServiceHandleUniquePtr scm(scmHandle);
 
 		Win32::SC_HANDLE serviceHandle = Win32::OpenServiceW(
@@ -76,7 +76,7 @@ export namespace Boring32::Services
 			desiredAccess // https://docs.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights
 		);
 		if (not serviceHandle)
-			throw Error::Win32Error(Win32::GetLastError(), "OpenServiceW() failed");
+			throw Error::Win32Error{Win32::GetLastError(), "OpenServiceW() failed"};
 
 		return serviceHandle;
 	}

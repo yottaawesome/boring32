@@ -200,7 +200,7 @@ export namespace Boring32::Crypto
 				&m_certContext->pCertInfo->SubjectPublicKeyInfo
 			);
 			if (length == 0)
-				throw Error::Win32Error(Win32::GetLastError(), "CertGetPublicKeyLength() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "CertGetPublicKeyLength() failed"};
 			return length;
 		}
 
@@ -252,7 +252,7 @@ export namespace Boring32::Crypto
 				&sizeInBytes
 			);
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "CertGetCertificateContextProperty() failed (1)");
+				throw Error::Win32Error{Win32::GetLastError(), "CertGetCertificateContextProperty() failed (1)"};
 
 			std::vector<std::byte> returnValue(sizeInBytes);
 			succeeded = Win32::CertGetCertificateContextProperty(
@@ -262,7 +262,7 @@ export namespace Boring32::Crypto
 				&sizeInBytes
 			);
 			if (not succeeded)
-				throw Error::Win32Error(Win32::GetLastError(), "CertGetCertificateContextProperty() failed (2)");
+				throw Error::Win32Error{Win32::GetLastError(), "CertGetCertificateContextProperty() failed (2)"};
 			returnValue.resize(sizeInBytes);
 
 			return returnValue;
