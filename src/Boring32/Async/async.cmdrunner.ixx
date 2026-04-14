@@ -7,45 +7,42 @@ import :raii;
 
 namespace Boring32::Async
 {
-    constexpr int BufferSize = 4096;
-
-    std::string ReadFromPipe(Win32::HANDLE hChildStd_OUT_Rd)
+    auto ReadFromPipe(Win32::HANDLE childStdOutRd) -> std::string
     {
-        char chBuf[BufferSize];
-        Win32::HANDLE hParentStdOut = Win32::GetStdHandle(Win32::StdOutputHandle);
-
-        std::string result;
+		if (not childStdOutRd)
+            throw Error::Boring32Error("Invalid handle for reading from child process.");
+        constexpr auto BufferSize = 4096;
+        auto readBuffer = std::array<char, BufferSize>{};
+        auto result = std::string{};
         for (;;)
         {
-            Win32::DWORD dwRead;
-            bool bSuccess = Win32::ReadFile(hChildStd_OUT_Rd, chBuf, BufferSize, &dwRead, nullptr);
-            if (not bSuccess or dwRead == 0)
+            auto bytesRead = Win32::DWORD{};
+            auto success = Win32::ReadFile(childStdOutRd, readBuffer.data(), BufferSize, &bytesRead, nullptr);
+            if (not success or bytesRead == 0)
                 break;
-
-            result += std::string(chBuf, dwRead);
+            result += std::string(readBuffer.data(), bytesRead);
         }
         return result;
     }
 
-    Win32::PROCESS_INFORMATION CreateChildProcess(
+    auto CreateChildProcess(
         const std::wstring& path,
         const std::wstring& cmdline,
-        Win32::HANDLE hChildStd_OUT_Wr,
-        Win32::HANDLE hChildStd_IN_Rd
-    )
+        Win32::HANDLE childStdOutWr,
+        Win32::HANDLE childStdInRd
+    ) -> Win32::PROCESS_INFORMATION
     {
-        Win32::PROCESS_INFORMATION piProcInfo{ 0 };
-        Win32::STARTUPINFO siStartInfo{
+        auto piProcInfo = Win32::PROCESS_INFORMATION{};
+        auto siStartInfo = Win32::STARTUPINFO{
             .cb = sizeof(Win32::STARTUPINFO),
             .dwFlags = Win32::StartFUsesStdHandle,
-            .hStdInput = hChildStd_IN_Rd,
-            .hStdOutput = hChildStd_OUT_Wr,
-            .hStdError = hChildStd_OUT_Wr,
+            .hStdInput = childStdInRd,
+            .hStdOutput = childStdOutWr,
+            .hStdError = childStdOutWr,
         };
-        bool bSuccess = false;
 
         // Create the child process. 
-        bSuccess = Win32::CreateProcessW(
+        auto success = Win32::CreateProcessW(
             path.empty() ? nullptr : const_cast<wchar_t*>(path.c_str()),
             const_cast<wchar_t*>(cmdline.c_str()),     // command line 
             nullptr,          // process security attributes 
@@ -57,18 +54,18 @@ namespace Boring32::Async
             &siStartInfo,  // STARTUPINFO pointer 
             &piProcInfo     // receives PROCESS_INFORMATION 
         );
-        if (not bSuccess)
+        if (not success)
             throw Error::Win32Error{ Win32::GetLastError(), "CreateProcessW() failed" };
 
         return piProcInfo;
     }
 
-    std::string ParseWMICGetBios(const std::string& cmdOutput)
+    auto ParseWMICGetBios(const std::string& cmdOutput) -> std::string
     {
-        std::vector tokens = Strings::TokeniseString(cmdOutput, "\r\r\n");
-        bool nextLine = false;
-        std::string serialNumber;
-        for (const std::string token : tokens)
+        auto tokens = std::vector<std::string>{ Strings::TokeniseString(cmdOutput, "\r\r\n") };
+        auto nextLine = false;
+        auto serialNumber = std::string{};
+        for (const auto& token : tokens)
         {
             if (nextLine)
             {
@@ -79,11 +76,8 @@ namespace Boring32::Async
         }
 
         // Seems to come with two extra spaces at the end
-        if (serialNumber.size() > 2)
-        {
-            serialNumber.pop_back();
-            serialNumber.pop_back();
-        }
+		while (serialNumber.ends_with(' '))
+             serialNumber.pop_back();
 
         Strings::Trim(serialNumber);
         return serialNumber;
@@ -101,45 +95,44 @@ export namespace Boring32::Async
             throw Error::Boring32Error("Please specify a cmd command.");
 
         // Set the bInheritHandle flag so pipe handles are inherited.
-        Win32::SECURITY_ATTRIBUTES saAttr{
+        auto saAttr = Win32::SECURITY_ATTRIBUTES{
             .nLength = sizeof(Win32::SECURITY_ATTRIBUTES),
             .lpSecurityDescriptor = nullptr,
             .bInheritHandle = true
         };
 
         // Create a pipe for the child process's STDOUT. 
-        Win32::HANDLE hChildStd_OUT_Rd = nullptr;
-        Win32::HANDLE hChildStd_OUT_Wr = nullptr;
-        if (not Win32::CreatePipe(&hChildStd_OUT_Rd, &hChildStd_OUT_Wr, &saAttr, 0))
+        auto childStdOutRd = Win32::HANDLE{};
+        auto childStdOutWr = Win32::HANDLE{};
+        if (not Win32::CreatePipe(&childStdOutRd, &childStdOutWr, &saAttr, 0))
             throw Error::Win32Error(GetLastError(), "CreatePipe() failed");
-        RAII::HandleUniquePtr ptrChildStdOutWr = RAII::HandleUniquePtr(hChildStd_OUT_Wr);
-        RAII::HandleUniquePtr ptrChildStdOutRd = RAII::HandleUniquePtr(hChildStd_OUT_Rd);
+        auto ptrChildStdOutWr = RAII::HandleUniquePtr(childStdOutWr);
+        auto ptrChildStdOutRd = RAII::HandleUniquePtr(childStdOutRd);
 
         // Ensure the read handle to the pipe for STDOUT is not inherited.
-        if (not Win32::SetHandleInformation(hChildStd_OUT_Rd, Win32::HandleFlagInherit, 0))
+        if (not Win32::SetHandleInformation(childStdOutRd, Win32::HandleFlagInherit, 0))
             throw Error::Win32Error(GetLastError(), "CreatePipe() failed");
 
         // Create a pipe for the child process's STDIN. 
-        Win32::HANDLE hChildStd_IN_Rd = nullptr;
-        Win32::HANDLE hChildStd_IN_Wr = nullptr;
-        if (not Win32::CreatePipe(&hChildStd_IN_Rd, &hChildStd_IN_Wr, &saAttr, 0))
+        auto childStdInRd = Win32::HANDLE{};
+        auto childStdInWr = Win32::HANDLE{};
+        if (not Win32::CreatePipe(&childStdInRd, &childStdInWr, &saAttr, 0))
             throw Error::Win32Error(GetLastError(), "CreatePipe() failed");
-        RAII::HandleUniquePtr ptrChildStdInRd = RAII::HandleUniquePtr(hChildStd_IN_Rd);
-        RAII::HandleUniquePtr ptrChildStdInWr = RAII::HandleUniquePtr(hChildStd_IN_Wr);
-
+        auto ptrChildStdInRd = RAII::HandleUniquePtr(childStdInRd);
+        auto ptrChildStdInWr = RAII::HandleUniquePtr(childStdInWr);
         // Ensure the write handle to the pipe for STDIN is not inherited. 
-        if (not Win32::SetHandleInformation(hChildStd_IN_Wr, Win32::HandleFlagInherit, 0))
+        if (not Win32::SetHandleInformation(childStdInWr, Win32::HandleFlagInherit, 0))
             throw Error::Win32Error(GetLastError(), "CreatePipe() failed");
 
         // Create the child process. 
-        Win32::PROCESS_INFORMATION childProc = CreateChildProcess(
+        auto childProc = CreateChildProcess(
             LR"(C:\Windows\System32\cmd.exe)",
             cmd,
-            hChildStd_OUT_Wr,
-            hChildStd_IN_Rd
+            childStdOutWr,
+            childStdInRd
         );
-        RAII::HandleUniquePtr ptrChildProcess = RAII::HandleUniquePtr(childProc.hProcess);
-        RAII::HandleUniquePtr ptrChildThread = RAII::HandleUniquePtr(childProc.hThread);
+        auto ptrChildProcess = RAII::HandleUniquePtr(childProc.hProcess);
+        auto ptrChildThread = RAII::HandleUniquePtr(childProc.hThread);
 
         // As per the official sample, these need to be closed.
         ptrChildStdOutWr.reset();
@@ -148,7 +141,7 @@ export namespace Boring32::Async
         if constexpr (not std::is_null_pointer_v<decltype(FParser)>)
         {
             // Read from pipe that is the standard output for child process. 
-            std::string output = ReadFromPipe(hChildStd_OUT_Rd);
+            auto output = ReadFromPipe(childStdOutRd);
             return FParser(output);
         }
     }
@@ -157,11 +150,10 @@ export namespace Boring32::Async
     struct CmdRunner
     {
         // Once MSVC supports C++23's static operator(), this can made static.
-        auto operator()() const
+        static auto operator()()
         {
             return Exec<FParser>(std::wstring{ FCmd });
         }
-
         static auto Exec()
         {
             return ::Exec<FParser>(std::wstring{ FCmd });
@@ -171,9 +163,6 @@ export namespace Boring32::Async
 
 export namespace Boring32::Async::Commands
 {
-    constexpr Strings::FixedString GetWMICBiosCommand = LR"(C:\Windows\System32\cmd.exe /c wmic bios get serialnumber)";
-
-    // Once MSVC supports C++23's static operator(), this can be simplified
-    // into a using statement.
-    constexpr CmdRunner<GetWMICBiosCommand, ParseWMICGetBios> GetBIOS;
+    constexpr auto GetWMICBiosCommand = Strings::FixedString{LR"(C:\Windows\System32\cmd.exe /c wmic bios get serialnumber)"};
+    constexpr auto GetBIOS = CmdRunner<GetWMICBiosCommand, ParseWMICGetBios>{};
 }
