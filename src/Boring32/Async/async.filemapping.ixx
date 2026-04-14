@@ -6,8 +6,9 @@ import :error;
 
 export namespace Boring32::Async
 {
-	struct FileMapping final
+	class FileMapping final
 	{
+	public:
 		~FileMapping()
 		{
 			Close();
@@ -15,25 +16,18 @@ export namespace Boring32::Async
 
 		FileMapping() = default;
 
-		FileMapping(
-			const bool isInheritable, 
-			const size_t maxSize, 
-			const Win32::DWORD pageProtection
-		) : m_maxSize(maxSize),
-			m_pageProtection(pageProtection)
+		FileMapping(bool isInheritable, size_t maxSize, Win32::DWORD pageProtection) 
+			: m_maxSize(maxSize)
+			, m_pageProtection(pageProtection)
 		{
 			Create(Win32::FileMapAccess::All, isInheritable);
 		}
 
 		/// Create a new page-backed file mapping.
-		FileMapping(
-			const bool isInheritable, 
-			const std::wstring name, 
-			const size_t maxSize, 
-			const Win32::DWORD pageProtection
-		) : m_name(std::move(name)),
-			m_maxSize(maxSize),
-			m_pageProtection(pageProtection)
+		FileMapping(bool isInheritable, std::wstring name, size_t maxSize, Win32::DWORD pageProtection) 
+			: m_name(std::move(name))
+			, m_maxSize(maxSize)
+			, m_pageProtection(pageProtection)
 		{
 			if (m_name.empty())
 				throw Error::Boring32Error("Name cannot be an empty string");
@@ -45,14 +39,9 @@ export namespace Boring32::Async
 		}
 
 		/// Open an existing named page file with specific access.
-		FileMapping(
-			const std::wstring name,
-			const Win32::FileMapAccess desiredAccess,
-			const bool isInheritable,
-			const size_t maxSize
-		) : m_name(std::move(name)),
-			m_maxSize(maxSize),
-			m_pageProtection(0)
+		FileMapping(std::wstring name, Win32::FileMapAccess desiredAccess, bool isInheritable, size_t maxSize) 
+			: m_name(std::move(name))
+			, m_maxSize(maxSize)
 		{
 			if (m_name.empty())
 				throw Error::Boring32Error("name cannot be an empty string");
@@ -69,18 +58,18 @@ export namespace Boring32::Async
 			Copy(other);
 		}
 
+		auto operator=(const FileMapping& other) -> FileMapping&
+		{
+			return Copy(other);
+		}
+
 		FileMapping(FileMapping&& other) noexcept
 			: FileMapping() 
 		{
 			Move(other);
 		}
 
-		FileMapping& operator=(const FileMapping& other)
-		{
-			return Copy(other);
-		}
-
-		FileMapping& operator=(FileMapping&& other) noexcept
+		auto operator=(FileMapping&& other) noexcept -> FileMapping&
 		{
 			return Move(other);
 		}
@@ -93,30 +82,30 @@ export namespace Boring32::Async
 			m_pageProtection = 0;
 		}
 
-		const std::wstring& GetName() const noexcept
+		auto GetName() const noexcept -> std::wstring
 		{
 			return m_name;
 		}
 
-		Win32::HANDLE GetNativeHandle() const noexcept
+		auto GetNativeHandle() const noexcept -> Win32::HANDLE
 		{
 			return m_fileMapping.GetHandle();
 		}
 
-		RAII::Win32Handle GetHandle() const noexcept
+		auto GetHandle() const noexcept -> RAII::Win32Handle
 		{
 			return m_fileMapping;
 		}
 
-		size_t GetFileSize() const
+		auto GetFileSize() const -> size_t
 		{
 			return m_maxSize;
 		}
 			
-		private:
-		void Create(const Win32::FileMapAccess desiredAccess, const bool isInheritable)
+	private:
+		void Create(Win32::FileMapAccess desiredAccess, bool isInheritable)
 		{
-			Win32::LARGE_INTEGER li{ .QuadPart = static_cast<long long>(m_maxSize) };
+			auto li = Win32::LARGE_INTEGER{ .QuadPart = static_cast<long long>(m_maxSize) };
 			const wchar_t* name = m_name.empty() ? nullptr : m_name.c_str();
 			// https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw
 			m_fileMapping = Win32::CreateFileMappingW(
@@ -133,7 +122,7 @@ export namespace Boring32::Async
 			m_fileMapping.SetInheritability(isInheritable);
 		}
 
-		void Open(const Win32::FileMapAccess desiredAccess, const bool isInheritable)
+		void Open(Win32::FileMapAccess desiredAccess, bool isInheritable)
 		{
 			if (m_name.empty())
 				throw Error::Boring32Error("m_name cannot be empty when opening a file mapping");
@@ -148,7 +137,7 @@ export namespace Boring32::Async
 				throw Error::Win32Error{Win32::GetLastError(), "OpenFileMappingW() failed"};
 		}
 
-		FileMapping& Copy(const FileMapping& other)
+		auto Copy(const FileMapping& other) -> FileMapping&
 		{
 			Close();
 			m_name = other.m_name;
@@ -165,7 +154,7 @@ export namespace Boring32::Async
 			return *this;
 		}
 
-		FileMapping& Move(FileMapping& other) noexcept
+		auto Move(FileMapping& other) noexcept -> FileMapping&
 		{
 			Close();
 			m_fileMapping = std::move(other.m_fileMapping);
