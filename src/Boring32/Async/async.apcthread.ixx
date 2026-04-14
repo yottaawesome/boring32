@@ -8,8 +8,9 @@ import :async.event;
 export namespace Boring32::Async
 {
 	// See https://learn.microsoft.com/en-us/windows/win32/sync/asynchronous-procedure-calls
-	struct APCThread : Thread
+	class APCThread : public Thread
 	{
+	public:
 		using ApcFunctionSignature = Win32::PAPCFUNC;
 		APCThread() = default;
 
@@ -27,9 +28,8 @@ export namespace Boring32::Async
 			);
 		}
 
-		template<typename T>
+		template<std::invocable T>
 		auto QueueAPC(const T& apc) -> void
-			requires std::is_invocable_v<T>
 		{
 			QueueAPC(
 				InternalAPC<T>,
@@ -37,9 +37,8 @@ export namespace Boring32::Async
 			);
 		}
 
-		template<typename T>
+		template<std::invocable T>
 		auto QueueAPC(T&& apc) -> void
-			requires std::is_invocable_v<T>
 		{
 			QueueAPC(
 				InternalHeapAPC<T>,
@@ -67,7 +66,7 @@ export namespace Boring32::Async
 			m_wait.Signal();
 		}
 
-		protected:
+	protected:
 		auto Run() -> unsigned override
 		{
 			while (true)
@@ -93,21 +92,21 @@ export namespace Boring32::Async
 			return 0;
 		}
 
-		template<typename T>
+		template<std::invocable T>
 		static void InternalAPC(Win32::ULONG_PTR arg)
-			requires std::is_invocable_v<T>
 		{
 			const T& apc = *reinterpret_cast<T*>(arg);
 			apc();
 		}
 
-		template<typename T>
+		template<std::invocable T>
 		static void InternalHeapAPC(Win32::ULONG_PTR arg)
-			requires std::is_invocable_v<T>
 		{
-			T* apc = reinterpret_cast<T*>(arg);
+			if (not arg)
+				return;
+			// ensure we delete the heap allocation after invoking the APC in an exception-safe way
+			auto apc = std::unique_ptr<T>{ reinterpret_cast<T*>(arg) };
 			(*apc)();
-			delete apc;
 		}
 
 		template<typename T, typename M>
@@ -120,10 +119,12 @@ export namespace Boring32::Async
 		template<typename T, typename M>
 		static void InternalAPC(Win32::ULONG_PTR arg)
 		{
-			auto* apc = reinterpret_cast<InstanceMethod<T, M>*>(arg);
+			if (not arg)
+				return;
+			// ensure we delete the heap allocation after invoking the APC in an exception-safe way
+			auto apc = std::unique_ptr<InstanceMethod<T, M>>{ reinterpret_cast<InstanceMethod<T, M>*>(arg) };
 			//(apc->Instance.*apc->Method)();
 			std::invoke(apc->Method, apc->Instance);
-			delete apc;
 		}
 
 		ManualResetEvent m_wait{ false, false, };
