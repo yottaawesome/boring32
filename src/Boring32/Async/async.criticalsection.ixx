@@ -5,8 +5,9 @@ import :error;
 
 export namespace Boring32::Async
 {
-	struct CriticalSection final
+	class CriticalSection final
 	{
+	public:
 		~CriticalSection()
 		{
 			Win32::DeleteCriticalSection(&m_criticalSection);
@@ -20,32 +21,27 @@ export namespace Boring32::Async
 
 		CriticalSection(Win32::DWORD spinCount = 0)
 		{
-			Initialise(spinCount);
+			// https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-initializecriticalsectionex
+			if (not Win32::InitializeCriticalSectionEx(&m_criticalSection, spinCount, 0))
+				throw Error::Win32Error{ Win32::GetLastError(), "InitializeCriticalSectionEx() failed" };
 		}
 
-		operator Win32::CRITICAL_SECTION* () noexcept
+		operator Win32::CRITICAL_SECTION*(this CriticalSection& cs) noexcept
 		{
-			return &m_criticalSection;
+			return &cs.m_criticalSection;
 		}
 
-		void lock() noexcept
+		void lock(this CriticalSection& cs) noexcept
 		{ 
-			Win32::EnterCriticalSection(&m_criticalSection); 
+			Win32::EnterCriticalSection(&cs.m_criticalSection); 
 		}
 		
-		void unlock() noexcept
+		void unlock(this CriticalSection& cs) noexcept
 		{ 
-			Win32::LeaveCriticalSection(&m_criticalSection); 
+			Win32::LeaveCriticalSection(&cs.m_criticalSection); 
 		}
 
 	private:
-		void Initialise(Win32::DWORD spinCount)
-		{
-			// https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-initializecriticalsectionex
-			if (not Win32::InitializeCriticalSectionEx(&m_criticalSection, spinCount, 0))
-				throw Error::Win32Error{Win32::GetLastError(), "InitializeCriticalSectionEx() failed"};
-		}
-
 		Win32::CRITICAL_SECTION m_criticalSection;
 	};
 
