@@ -6,29 +6,30 @@ import :async.criticalsection;
 
 export namespace Boring32::Async
 {
-	struct EventLoop
+	class EventLoop final
 	{
-		virtual ~EventLoop()
+	public:
+		~EventLoop()
 		{
 			Close();
 		}
 
 		EventLoop() = default;
 
-		virtual void Close()
+		void Close()
 		{
 			m_handlers.clear();
 			m_events.clear();
 		}
 
-		virtual bool WaitOn(const Win32::DWORD millis, const bool waitAll)
+		auto WaitOn(Win32::DWORD millis, bool waitAll) -> bool
 		{
 			if (m_events.empty())
 				throw Error::Boring32Error("m_events is empty");
 
 			CriticalSectionLock cs(m_cs);
 
-			const Win32::DWORD result = Win32::WaitForMultipleObjectsEx(
+			auto result = Win32::WaitForMultipleObjectsEx(
 				static_cast<Win32::DWORD>(m_events.size()),
 				&m_events[0],
 				waitAll,
@@ -39,7 +40,7 @@ export namespace Boring32::Async
 				throw Error::Win32Error{ Win32::GetLastError(), "WaitForMultipleObjectsEx() failed" };
 			if (result == Win32::WaitTimeout)
 				return false;
-			if (result >= Win32::WaitAbandoned && result <= (Win32::WaitAbandoned + m_events.size() - 1))
+			if (result >= Win32::WaitAbandoned and result <= (Win32::WaitAbandoned + m_events.size() - 1))
 				throw Error::Boring32Error("A wait object was abandoned");
 
 			if (waitAll)
@@ -58,14 +59,14 @@ export namespace Boring32::Async
 			return true;
 		}
 
-		virtual void On(Win32::HANDLE handle, std::function<void()> handler)
+		void On(Win32::HANDLE handle, std::function<auto()->void> handler)
 		{
 			CriticalSectionLock cs(m_cs);
 			m_events.push_back(handle);
 			m_handlers.push_back(std::move(handler));
 		}
 
-		virtual void Erase(Win32::HANDLE handle)
+		void Erase(Win32::HANDLE handle)
 		{
 			CriticalSectionLock cs(m_cs);
 			std::vector<Win32::HANDLE>::iterator handlePosIterator = std::find_if(
@@ -81,15 +82,15 @@ export namespace Boring32::Async
 			}
 		}
 
-		virtual size_t Size() noexcept
+		auto Size() const noexcept -> size_t
 		{
 			CriticalSectionLock cs(m_cs);
 			return m_events.size();
 		}
 
-		protected:
-		std::vector<std::function<void()>> m_handlers;
+	private:
+		std::vector<std::move_only_function<auto()->void>> m_handlers;
 		std::vector<Win32::HANDLE> m_events;
-		CriticalSection m_cs;
+		mutable CriticalSection m_cs;
 	};
 }
