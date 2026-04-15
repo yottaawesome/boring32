@@ -175,7 +175,7 @@ export namespace Boring32::IPC
 		protected:
 		Win32::DWORD m_size = 0;
 		Win32::DWORD m_mode = 0;
-		RAII::Win32Handle m_readHandle;
-		RAII::Win32Handle m_writeHandle;
+		RAII::SharedHandle m_readHandle;
+		RAII::SharedHandle m_writeHandle;
 	};
 }

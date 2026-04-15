@@ -145,8 +145,8 @@ export namespace Boring32::Async
 		std::wstring m_startingDirectory;
 		bool m_canInheritHandles = false;
 		Win32::DWORD m_creationFlags = 0;
-		Boring32::RAII::Win32Handle m_process;
-		Boring32::RAII::Win32Handle m_thread;
+		Boring32::RAII::SharedHandle m_process;
+		Boring32::RAII::SharedHandle m_thread;
 		Win32::DWORD m_processId = 0;
 		Win32::DWORD m_threadId = 0;
 		Win32::STARTUPINFO m_dataSi = { 0 };

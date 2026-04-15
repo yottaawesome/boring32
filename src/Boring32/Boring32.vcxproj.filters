@@ -21,6 +21,8 @@
     <ClCompile Include="Strings\strings.ixx" />
     <ClCompile Include="FileSystem\filesystem.file.ixx" />
     <ClCompile Include="RAII\raii.win32handle.ixx" />
+    <ClCompile Include="RAII\raii.uniquehandle.ixx" />
+    <ClCompile Include="RAII\raii.sharedhandle.ixx" />
     <ClCompile Include="Com\com.comthreadscope.ixx" />
     <ClCompile Include="Compression\compression.ixx" />
     <ClCompile Include="Compression\compression.compressor.ixx" />

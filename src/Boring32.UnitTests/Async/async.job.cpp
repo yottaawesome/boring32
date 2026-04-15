@@ -49,7 +49,7 @@ namespace Async
 		{
 			auto job = Boring32::Async::Job(true, L"TestJob5");
 			auto jeli = Boring32::Win32::JOBOBJECT_EXTENDED_LIMIT_INFORMATION{};
-			jeli.BasicLimitInformation.LimitFlags = Boring32::Win32::JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+			jeli.BasicLimitInformation.LimitFlags = Boring32::Win32::JobObjectLimits::KillOnJobClose;
 			job.SetInformation(jeli);
 		}
 		TEST_METHOD(TestClose)

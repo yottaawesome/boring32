@@ -53,6 +53,6 @@ export namespace Boring32::FileSystem
 		}
 
 		std::wstring m_fileName;
-		RAII::Win32Handle m_fileHandle;
+		RAII::SharedHandle m_fileHandle;
 	};
 }

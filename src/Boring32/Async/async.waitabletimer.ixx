@@ -268,7 +268,7 @@ export namespace Boring32::Async
 				throw Error::Win32Error{Win32::GetLastError(), "Failed to set timer"};
 		}
 
-		RAII::Win32Handle m_handle;
+		RAII::SharedHandle m_handle;
 		std::wstring m_name;
 		bool m_isManualReset = false;
 	};

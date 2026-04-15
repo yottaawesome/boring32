@@ -83,7 +83,7 @@ export namespace Boring32::Security
 
 			if (ownOrDuplicate)
 			{
-				m_token = RAII::Win32Handle(token);
+				m_token = RAII::UniqueHandle(token);
 				return;
 			}
 
@@ -134,9 +134,9 @@ export namespace Boring32::Security
 			m_token = nullptr;
 		}
 
-		RAII::Win32Handle GetToken() const noexcept
+		Win32::HANDLE GetToken() const noexcept
 		{
-			return m_token;
+			return m_token.GetHandle();
 		}
 
 		/// https://docs.microsoft.com/en-us/windows/win32/secauthz/privilege-constants
@@ -272,6 +272,6 @@ export namespace Boring32::Security
 			return *this;
 		}
 
-		RAII::Win32Handle m_token;
+		RAII::UniqueHandle m_token;
 	};
 }

@@ -146,7 +146,7 @@ export namespace Boring32::IPC
 			}
 
 		protected:
-			RAII::Win32Handle m_handle;
+			RAII::SharedHandle m_handle;
 			std::wstring m_pipeName;
 			Win32::DWORD m_fileAttributes = 0;
 	};

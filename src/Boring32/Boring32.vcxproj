@@ -372,6 +372,8 @@
     <ClCompile Include="Process\process.ixx" />
     <ClCompile Include="RAII\raii.handle.ixx" />
     <ClCompile Include="RAII\raii.ixx" />
+    <ClCompile Include="RAII\raii.uniquehandle.ixx" />
+    <ClCompile Include="RAII\raii.sharedhandle.ixx" />
     <ClCompile Include="RAII\raii.uniqueptrs.ixx" />
     <ClCompile Include="Registry\registry.functions.ixx" />
     <ClCompile Include="Registry\registry.registryvalue.ixx" />

@@ -15,12 +15,12 @@ namespace Boring32::Security
 
 export namespace Boring32::Security
 {
-	RAII::Win32Handle GetProcessToken(Win32::HANDLE processHandle, Win32::DWORD desiredAccess)
+	RAII::UniqueHandle GetProcessToken(Win32::HANDLE processHandle, Win32::DWORD desiredAccess)
 	{
 		if (not processHandle)
 			throw Error::Boring32Error("processHandle cannot be null");
 
-		RAII::Win32Handle handle;
+		RAII::UniqueHandle handle;
 		// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocesstoken
 		bool succeeded = Win32::OpenProcessToken(
 			processHandle,
@@ -391,7 +391,7 @@ export namespace Boring32::Security
 	bool IsLocalSystem()
 	{
 		// Adapted from https://stackoverflow.com/a/4024388/7448661
-		RAII::Win32Handle hToken;
+		RAII::UniqueHandle hToken;
 		// open process token
 		bool success = Win32::OpenProcessToken(
 			Win32::GetCurrentProcess(),

@@ -151,6 +151,6 @@ export namespace Boring32::Computer
 		}
 
 	private:
-		RAII::Win32Handle m_processHandle;
+		RAII::SharedHandle m_processHandle;
 	};
 }

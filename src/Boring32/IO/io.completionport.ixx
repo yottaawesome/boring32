@@ -59,6 +59,6 @@ export namespace Boring32::IO
 		}
 
 		private:
-		RAII::Win32Handle m_completionPort;
+		RAII::SharedHandle m_completionPort;
 	};
 }

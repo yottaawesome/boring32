@@ -92,7 +92,7 @@ export namespace Boring32::Async
 			return m_fileMapping.GetHandle();
 		}
 
-		auto GetHandle() const noexcept -> RAII::Win32Handle
+		auto GetHandle() const noexcept -> RAII::SharedHandle
 		{
 			return m_fileMapping;
 		}
@@ -165,7 +165,7 @@ export namespace Boring32::Async
 			return *this;
 		}
 
-		RAII::Win32Handle m_fileMapping;
+		RAII::SharedHandle m_fileMapping;
 		size_t m_maxSize = 0;
 		std::wstring m_name;
 		Win32::DWORD m_pageProtection = 0;

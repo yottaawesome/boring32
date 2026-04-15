@@ -99,7 +99,7 @@ export namespace Boring32::IPC
 				throw Error::Win32Error{Win32::GetLastError(), "Flush() failed"};
 		}
 
-		virtual RAII::Win32Handle& GetInternalHandle()
+		virtual RAII::SharedHandle& GetInternalHandle()
 		{
 			return m_pipe;
 		}
@@ -271,7 +271,7 @@ export namespace Boring32::IPC
 		}
 
 		protected:
-		RAII::Win32Handle m_pipe;
+		RAII::SharedHandle m_pipe;
 		std::wstring m_pipeName;
 		std::wstring m_sid;
 		Win32::DWORD m_size = 0;

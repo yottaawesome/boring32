@@ -196,7 +196,7 @@ export namespace Boring32::Async
 			m_handle.SetInheritability(isInheritable);
 		}
 
-		RAII::Win32Handle m_handle;
+		RAII::SharedHandle m_handle;
 		std::wstring m_name;
 		long m_maxCount = 0;
 	};

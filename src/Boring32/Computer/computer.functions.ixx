@@ -174,7 +174,7 @@ export namespace Boring32::Computer
             throw Error::Boring32Error("ProcessName cannot be empty.");
 
         // https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-createtoolhelp32snapshot
-        auto processesSnapshot = RAII::Win32Handle{ Win32::CreateToolhelp32Snapshot(Win32::Th32csSnapProcess, 0) };
+        auto processesSnapshot = RAII::UniqueHandle{ Win32::CreateToolhelp32Snapshot(Win32::Th32csSnapProcess, 0) };
         if (processesSnapshot == Win32::InvalidHandleValue)
             throw Error::Win32Error{ Win32::GetLastError(), "CreateToolhelp32Snapshot() failed" };
 

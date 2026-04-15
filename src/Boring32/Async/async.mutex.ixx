@@ -176,6 +176,6 @@ export namespace Boring32::Async
 		std::wstring m_name;
 		bool m_created = false;
 		std::atomic<bool> m_locked = false;
-		RAII::Win32Handle m_mutex;
+		RAII::UniqueHandle m_mutex;
 	};
 }

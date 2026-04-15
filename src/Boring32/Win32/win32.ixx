@@ -482,6 +482,14 @@ export namespace Boring32::Win32
 		::GetClipboardData
 		;
 
+		namespace JobObjectLimits
+		{
+			enum
+			{
+				KillOnJobClose = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
+			};
+		}
+
 	namespace FileShareMode
 	{
 		enum : ::DWORD

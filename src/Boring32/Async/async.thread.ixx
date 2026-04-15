@@ -144,9 +144,9 @@ export namespace Boring32::Async
 			return exitCode;
 		}
 
-		virtual RAII::Win32Handle GetHandle() noexcept
+		virtual Win32::HANDLE GetHandle() const noexcept
 		{
-			return m_threadHandle;
+			return m_threadHandle.GetHandle();
 		}
 
 		virtual bool WaitToStart(const Win32::DWORD millis)
@@ -241,7 +241,7 @@ export namespace Boring32::Async
 		}
 
 		ThreadStatus m_status = ThreadStatus::Ready;
-		RAII::Win32Handle m_threadHandle;
+		RAII::UniqueHandle m_threadHandle;
 		void* m_threadParam = nullptr;
 		std::function<int(void*)> m_func;
 		ManualResetEvent m_started{ false, false };

@@ -105,7 +105,7 @@ export namespace Boring32::Async
 				throw Error::Win32Error{Win32::GetLastError(), "OpenJobObjectW() failed"};
 		}
 
-		RAII::Win32Handle m_job;
+		RAII::UniqueHandle m_job;
 		std::wstring m_name;
 	};
 }

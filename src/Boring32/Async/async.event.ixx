@@ -192,7 +192,7 @@ export namespace Boring32::Async
 			m_event.SetInheritability(isInheritable);
 		}
 
-		RAII::Win32Handle m_event;
+		RAII::UniqueHandle m_event;
 		std::optional<std::wstring> m_name;
 	};
 

@@ -196,7 +196,7 @@ export namespace Boring32::Async
 
 		std::wstring m_name;
 		unsigned m_maxSize = 0;
-		RAII::Win32Handle m_mapFile;
+		RAII::SharedHandle m_mapFile;
 		void* m_view = nullptr;
 	};
 }
