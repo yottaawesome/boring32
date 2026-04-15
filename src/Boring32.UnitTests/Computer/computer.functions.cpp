@@ -47,5 +47,11 @@ namespace Computer
 			const auto result = 
 				Boring32::Computer::GetLogicalProcessorInfo(LOGICAL_PROCESSOR_RELATIONSHIP::RelationAll);
 		}
+
+		TEST_METHOD(TestGetProcessIDByName)
+		{
+			auto results = Boring32::Computer::GetProcessIDsByName(L"explorer.exe", -1);
+			Assert::IsTrue(not results.empty());
+		}
 	};
 }

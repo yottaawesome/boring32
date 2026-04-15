@@ -6,47 +6,47 @@ import :error;
 
 export namespace Boring32::Async
 {
-	struct Job final
+	class Job final
 	{
+	public:
 		Job() = default;
 		Job(const Job& other) = default;
-		Job& operator=(const Job& other) = default;
 		Job(Job&& other) noexcept = default;
-		Job& operator=(Job&& other) noexcept = default;
 
-		Job(const bool isInheritable)
+		Job(bool isInheritable)
 		{
 			Create(isInheritable);
 		}
 
-		Job(const bool isInheritable, std::wstring name)
+		Job(bool isInheritable, std::wstring name)
 			: m_name(std::move(name))
 		{
 			Create(isInheritable);
 		}
 
-		Job(const bool isInheritable, std::wstring name, const Win32::DWORD desiredAccess)
+		Job(bool isInheritable, std::wstring name, Win32::DWORD desiredAccess)
 			: m_name(std::move(name))
 		{
 			Open(isInheritable);
 		}
 
-		void SetInformation(Win32::JOBOBJECT_EXTENDED_LIMIT_INFORMATION& jeli)
+		void SetInformation(const Win32::JOBOBJECT_EXTENDED_LIMIT_INFORMATION& jeli)
 		{
+			if (not m_job)
+				throw Error::Boring32Error("Cannot assign process to job; job is not initialised");
 			// See https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_basic_limit_information
 			// jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
-
 			bool succeeded = Win32::SetInformationJobObject(
 				m_job.GetHandle(),
 				Win32::JOBOBJECTINFOCLASS::JobObjectExtendedLimitInformation,
-				&jeli,
+				const_cast<Win32::JOBOBJECT_EXTENDED_LIMIT_INFORMATION*>(&jeli),
 				sizeof(jeli)
 			);
 			if (not succeeded)
 				throw Error::Win32Error{Win32::GetLastError(), "SetInformationJobObject() failed"};
 		}
 
-		void AssignProcessToThisJob(const Win32::HANDLE process)
+		void AssignProcessToThisJob(Win32::HANDLE process)
 		{
 			if (not m_job)
 				throw Error::Boring32Error("Cannot assign process to job; job is not initialised");
@@ -56,12 +56,12 @@ export namespace Boring32::Async
 				throw Error::Win32Error{Win32::GetLastError(), "Cannot assign process to job; AssignProcessToJobObject() failed."};
 		}
 
-		Win32::HANDLE GetHandle() const noexcept
+		auto GetHandle() const noexcept -> Win32::HANDLE
 		{
 			return m_job.GetHandle();
 		}
 
-		const std::wstring& GetName() const noexcept
+		auto GetName() const noexcept -> std::wstring
 		{
 			return m_name;
 		}
@@ -71,13 +71,18 @@ export namespace Boring32::Async
 			m_job = nullptr;
 		}
 
-		bool IsInheritable() const noexcept
+		auto IsInheritable() const noexcept -> bool
 		{
 			return m_job.IsInheritable();
 		}
 
-		private:
-		void Create(const bool isInheritable)
+		operator bool() const noexcept
+		{
+			return m_job != nullptr;
+		}
+
+	private:
+		void Create(bool isInheritable)
 		{
 			m_job = Win32::CreateJobObjectW(nullptr, m_name.empty() ? nullptr : m_name.c_str());
 			if (not m_job)
@@ -87,11 +92,7 @@ export namespace Boring32::Async
 
 		void Open(const bool isInheritable)
 		{
-			m_job = Win32::OpenJobObjectW(
-				Win32::JobObjectAllAccess,
-				isInheritable,
-				m_name.c_str()
-			);
+			m_job = Win32::OpenJobObjectW(Win32::JobObjectAllAccess, isInheritable, m_name.c_str());
 			if (not m_job)
 				throw Error::Win32Error{Win32::GetLastError(), "OpenJobObjectW() failed"};
 		}

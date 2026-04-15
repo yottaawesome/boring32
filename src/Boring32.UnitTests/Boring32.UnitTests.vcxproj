@@ -245,6 +245,7 @@
   <ItemGroup>
     <ClCompile Include="Async\async.filerangelock.cpp" />
     <ClCompile Include="Async\async.filesystemlock.cpp" />
+    <ClCompile Include="Async\async.job.cpp" />
     <ClCompile Include="Async\async.threadsafevector.cpp" />
     <ClCompile Include="Async\async.apcthread.cpp" />
     <ClCompile Include="Async\async.functions.cpp" />
