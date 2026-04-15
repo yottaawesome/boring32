@@ -9,8 +9,9 @@ import :strings;
 
 export namespace Boring32::Async
 {
-	struct FileRangeLock final
+	class FileRangeLock final
 	{
+	public:
 		~FileRangeLock() { unlock(); }
 		constexpr FileRangeLock() = default;
 		FileRangeLock(const FileRangeLock&) = delete;
@@ -21,7 +22,7 @@ export namespace Boring32::Async
 			Move(other);
 		}
 
-		FileRangeLock& operator=(this FileRangeLock& self, FileRangeLock&& other)
+		auto operator=(this FileRangeLock& self, FileRangeLock&& other) -> FileRangeLock&
 		{
 			self.Move(other);
 			return self;
@@ -76,7 +77,7 @@ export namespace Boring32::Async
 			if (not self.HandleIsValid())
 				throw Error::Boring32Error("File handle is null.");
 
-			Win32::OVERLAPPED overlapped{
+			auto overlapped = Win32::OVERLAPPED{
 				.Offset = self.params.Offset,
 				.OffsetHigh = self.params.OffsetHigh
 			};
@@ -103,7 +104,7 @@ export namespace Boring32::Async
 		{
 			if (not self.HandleIsValid())
 				return;
-			Win32::OVERLAPPED overlapped{
+			auto overlapped = Win32::OVERLAPPED{
 				.Offset = self.params.Offset,
 				.OffsetHigh = self.params.OffsetHigh
 			};

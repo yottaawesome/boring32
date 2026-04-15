@@ -12,13 +12,14 @@ export namespace Boring32::Async
 	// Not effective on the same process, use FileRangeLock or 
 	// other synchronization primitives for that.
 	template<Strings::FixedStringW VPath = L"FileLock.lock">
-	struct FileSystemLock final
+	class FileSystemLock
 	{
+	public:
 		constexpr FileSystemLock() = default;
 
 		FileSystemLock(bool acquire)
 		{
-			acquire ? lock() : void();
+			if (acquire) lock();
 		}
 
 		FileSystemLock(const FileSystemLock&) = delete;
@@ -27,7 +28,7 @@ export namespace Boring32::Async
 		FileSystemLock(FileSystemLock&&) = default;
 		auto operator=(FileSystemLock&&) -> FileSystemLock& = default;
 
-		void lock(this FileSystemLock& self)
+		void lock(this auto&& self)
 		{
 			// Already owned
 			if (self.fileHandle)
@@ -43,21 +44,18 @@ export namespace Boring32::Async
 				nullptr
 			);
 			if (not handle or handle == Win32::InvalidHandleValue)
-			{
-				const auto lastError = Win32::GetLastError();
-				throw Error::Win32Error(lastError, "Failed to create or open file handle.");
-			}
+				throw Error::Win32Error{ Win32::GetLastError(), "Failed to create or open file handle."};
 			self.fileHandle = RAII::HandleUniquePtr(handle);
 		}
 
-		void unlock(this FileSystemLock& self) noexcept
+		void unlock(this auto&& self) noexcept
 		{
 			if (not self.fileHandle)
 				return;
 			self.fileHandle.reset();
 		}
 
-		auto try_lock(this FileSystemLock& self) noexcept -> bool
+		auto try_lock(this auto&& self) noexcept -> bool
 		try
 		{
 			return (self.lock(), true);
@@ -72,7 +70,7 @@ export namespace Boring32::Async
 			return self.fileHandle != nullptr;
 		}
 
-		constexpr operator bool(this const FileSystemLock& self) noexcept
+		explicit constexpr operator bool(this const FileSystemLock& self) noexcept
 		{
 			return self.IsLocked();
 		}
@@ -80,8 +78,7 @@ export namespace Boring32::Async
 	private:
 		auto Move(this FileSystemLock& self, FileSystemLock& other) -> FileSystemLock&
 		{
-			self.fileHandle = std::move(other.fileHandle);
-			return self;
+			return (self.fileHandle = std::move(other.fileHandle), self);
 		}
 		RAII::HandleUniquePtr fileHandle;
 	};
