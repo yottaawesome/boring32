@@ -5,7 +5,6 @@ export import :async.eventloop;
 export import :async.filemapping;
 export import :async.functions;
 export import :async.job;
-export import :async.memorymappedfile;
 export import :async.memorymappedview;
 export import :async.mutev;
 export import :async.mutex;

@@ -252,6 +252,7 @@
     <ClCompile Include="Async\async.event.cpp" />
     <ClCompile Include="Async\async.eventloop.cpp" />
     <ClCompile Include="Async\async.filemapping.cpp" />
+    <ClCompile Include="Async\async.memorymappedview.cpp" />
     <ClCompile Include="Async\async.mutex.cpp" />
     <ClCompile Include="Async\async.semaphore.cpp" />
     <ClCompile Include="Async\async.threadpool.cpp" />

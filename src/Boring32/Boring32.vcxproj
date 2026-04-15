@@ -274,7 +274,6 @@
     <ClCompile Include="Async\async.filesystemlock.ixx" />
     <ClCompile Include="Async\async.functions.ixx" />
     <ClCompile Include="Async\async.job.ixx" />
-    <ClCompile Include="Async\async.memorymappedfile.ixx" />
     <ClCompile Include="Async\async.memorymappedview.ixx" />
     <ClCompile Include="Async\async.mutev.ixx" />
     <ClCompile Include="Async\async.mutex.ixx" />

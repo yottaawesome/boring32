@@ -1,28 +1,114 @@
 export module boring32:async.memorymappedview;
 import std;
 import :win32;
-import :async.memorymappedfile;
+import :error;
+import :async.filemapping;
 
 export namespace Boring32::Async
 {
-	template<typename T>
-	struct MemoryMappedView final
+	/// RAII wrapper for a mapped view of a file mapping object.
+	/// Move-only: each instance owns a unique address range.
+	class MemoryMappedView final
 	{
-		MemoryMappedView(const std::wstring& name, const bool create, const bool inheritable)
-		: m_mappedMemory(name, sizeof(T), create, inheritable)
+	public:
+		~MemoryMappedView()
 		{
-			m_view = (T*) m_mappedMemory.GetViewPointer();
-			if (create)
-				m_view = new (m_view) T();
+			Close(std::nothrow);
 		}
 
-		T* GetView()
+		MemoryMappedView() = default;
+
+		MemoryMappedView(
+			const FileMapping& mapping,
+			Win32::FileMapAccess access,
+			Win32::DWORD offsetHigh = 0,
+			Win32::DWORD offsetLow = 0,
+			size_t bytesToMap = 0
+		)
+		{
+			m_view = Win32::MapViewOfFile(
+				mapping.GetNativeHandle(),
+				static_cast<Win32::DWORD>(access),
+				offsetHigh,
+				offsetLow,
+				bytesToMap
+			);
+			if (not m_view)
+				throw Error::Win32Error{Win32::GetLastError(), "MapViewOfFile() failed"};
+		}
+
+		MemoryMappedView(const MemoryMappedView&) = delete;
+		auto operator=(const MemoryMappedView&) -> MemoryMappedView& = delete;
+
+		MemoryMappedView(MemoryMappedView&& other) noexcept
+			: m_view(other.m_view)
+		{
+			other.m_view = nullptr;
+		}
+
+		auto operator=(MemoryMappedView&& other) noexcept -> MemoryMappedView&
+		{
+			if (this != &other)
+			{
+				Close(std::nothrow);
+				m_view = other.m_view;
+				other.m_view = nullptr;
+			}
+			return *this;
+		}
+
+		auto GetPointer() const noexcept -> void*
 		{
 			return m_view;
 		}
 
-		private:
-		MemoryMappedFile m_mappedMemory;
-		T* m_view = nullptr;
+		void Close()
+		{
+			if (m_view and not Win32::UnmapViewOfFile(m_view))
+				throw Error::Win32Error{Win32::GetLastError(), "UnmapViewOfFile() failed"};
+			m_view = nullptr;
+		}
+
+		void Close(const std::nothrow_t&) noexcept
+		try
+		{
+			Close();
+		}
+		catch (const std::exception& ex)
+		{
+			std::wcerr << std::format("MemoryMappedView::Close() failed: {}\n", ex.what()).c_str();
+		}
+
+	private:
+		void* m_view = nullptr;
+	};
+
+	/// Typed convenience wrapper over FileMapping + MemoryMappedView.
+	template<typename T>
+	class TypedMemoryMappedView final
+	{
+	public:
+		TypedMemoryMappedView(
+			const FileMapping& mapping,
+			Win32::FileMapAccess access,
+			bool placementNew = true
+		) : m_view(mapping, access)
+		{
+			if (placementNew)
+				new (m_view.GetPointer()) T();
+		}
+
+		auto GetView() noexcept -> T*
+		{
+			return static_cast<T*>(m_view.GetPointer());
+		}
+
+		auto GetView() const noexcept -> const T*
+		{
+			return static_cast<const T*>(m_view.GetPointer());
+		}
+
+	private:
+		MemoryMappedView m_view;
 	};
 }

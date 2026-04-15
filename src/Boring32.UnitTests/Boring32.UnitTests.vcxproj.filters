@@ -30,6 +30,9 @@
     <ClCompile Include="Async\async.filemapping.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Async\async.memorymappedview.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Async\async.mutex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
