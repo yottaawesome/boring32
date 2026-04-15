@@ -1,4 +1,4 @@
-export module boring32:raii_sharedhandle;
+export module boring32:raii.sharedhandle;
 import std;
 import :win32;
 import :error;

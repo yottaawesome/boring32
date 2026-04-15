@@ -1,4 +1,4 @@
-export module boring32:raii_uniquehandle;
+export module boring32:raii.uniquehandle;
 import std;
 import :win32;
 import :error;

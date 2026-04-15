@@ -1,4 +1,4 @@
-export module boring32:raii_uniqueptrs;
+export module boring32:raii.uniqueptrs;
 import std;
 import :win32;
 
