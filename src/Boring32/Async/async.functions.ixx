@@ -11,26 +11,16 @@ export namespace Boring32::Async
 	// https://stackoverflow.com/questions/37918168/pass-stdchronoduration-by-value-or-by-reference-to-const
 	// https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-signalobjectandwait
 	template<Boring32::Concepts::Duration T>
-	auto SignalAndWait(
-		Win32::HANDLE toSignal,
-		Win32::HANDLE toWaitOn,
-		T timeout,
-		bool alertable
-	) -> Win32::WaitResult
+	auto SignalAndWait(Win32::HANDLE toSignal, Win32::HANDLE toWaitOn, T timeout, bool alertable) 
+		-> Win32::WaitResult
 	{
 		if (not toSignal)
 			throw Error::Boring32Error("toSignal is nullptr");
 		if (not toWaitOn)
 			throw Error::Boring32Error("toWaitOn is nullptr");
 
-		using std::chrono::duration_cast;
-		using std::chrono::milliseconds;
-		auto result = SignalObjectAndWait(
-			toSignal,
-			toWaitOn,
-			static_cast<Win32::DWORD>(duration_cast<milliseconds>(timeout).count()),
-			alertable
-		);
+		auto wait = static_cast<Win32::DWORD>(std::chrono::duration_cast<std::chrono::milliseconds>(timeout).count());
+		auto result = SignalObjectAndWait(toSignal, toWaitOn, wait, alertable);
 		if (result == Win32::WaitResult::Failed)
 			throw Error::Win32Error{Win32::GetLastError(), "SignalObjectAndWait() failed"};
 		return WaitResult(result);
@@ -56,7 +46,7 @@ export namespace Boring32::Async
 				throw Error::Win32Error{Win32::GetLastError(), "WaitForSingleObjectEx() failed"};
 
 			default:
-				throw Error::Boring32Error(std::format("Unknown wait status: {}", (unsigned long)status));
+				throw Error::Boring32Error(std::format("Unknown wait status: {}", static_cast<unsigned long>(status)));
 		}
 	}
 
@@ -73,13 +63,8 @@ export namespace Boring32::Async
 	auto WaitFor(Win32::HANDLE handle, Concepts::Duration auto&& time, bool isAlertable) 
 		-> Win32::WaitResult
 	{
-		using std::chrono::duration_cast;
-		using std::chrono::milliseconds;
-		return WaitFor(
-			handle, 
-			static_cast<Win32::DWORD>(duration_cast<milliseconds>(time).count()),
-			isAlertable
-		);
+		auto wait = static_cast<Win32::DWORD>(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
+		return WaitFor(handle, wait, isAlertable);
 	}
 
 	///	Waits until one or all of the specified objects are in the signaled state,
@@ -118,19 +103,13 @@ export namespace Boring32::Async
 		}
 	}
 
-	auto  WaitFor(
-		Concepts::RangeOf<Win32::HANDLE> auto&& handles,
-		bool waitForAll
-	) -> Win32::DWORD
+	auto WaitFor(Concepts::RangeOf<Win32::HANDLE> auto&& handles, bool waitForAll) -> Win32::DWORD
 	{
 		return WaitFor(handles, waitForAll, Win32::Infinite, false);
 	}
 
-	auto WaitFor(
-		Concepts::RangeOf<Win32::HANDLE> auto&& handles,
-		bool waitForAll,
-		Win32::DWORD timeout
-	)
+	auto WaitFor(Concepts::RangeOf<Win32::HANDLE> auto&& handles, bool waitForAll, Win32::DWORD timeout) 
+		-> Win32::DWORD
 	{
 		return WaitFor(handles, waitForAll, timeout, false);
 	}
@@ -143,56 +122,7 @@ export namespace Boring32::Async
 		bool alertable
 	) -> Win32::DWORD
 	{
-		using std::chrono::duration_cast;
-		using std::chrono::milliseconds;
-		return WaitFor(
-			handles, 
-			waitForAll, 
-			static_cast<Win32::DWORD>(duration_cast<milliseconds>(time).count()),
-			false
-		);
-	}
-
-	// Why is this here?
-	///	Find a process IDs by process name.
-	auto GetProcessIDsByName(
-		const std::wstring& processName,
-		int sessionIdToMatch
-	) -> std::vector<Win32::DWORD>
-	{
-		if (processName.empty())
-			throw Error::Boring32Error("ProcessName cannot be empty.");
-
-		// https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-createtoolhelp32snapshot
-		auto processesSnapshot = RAII::Win32Handle{ Win32::CreateToolhelp32Snapshot(Win32::Th32csSnapProcess, 0) };
-		if (processesSnapshot == Win32::InvalidHandleValue)
-			throw Error::Win32Error{Win32::GetLastError(), "CreateToolhelp32Snapshot() failed"};
-
-		auto procEntry = Win32::PROCESSENTRY32W{ .dwSize = sizeof(Win32::PROCESSENTRY32W) };
-		// https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-process32firstw
-		if (not Win32::Process32FirstW(processesSnapshot.GetHandle(), &procEntry))
-			throw Error::Win32Error{Win32::GetLastError(), "Process32First() failed"};
-
-		auto results = std::vector<Win32::DWORD>{};
-		do
-		{
-			if (not Strings::DoCaseInsensitiveMatch(procEntry.szExeFile, processName))
-				continue;
-			if (sessionIdToMatch < 0)
-			{
-				results.push_back(procEntry.th32ProcessID);
-				continue;
-			}
-
-			auto processSessionId = Win32::DWORD{};
-			// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-processidtosessionid
-			if (not Win32::ProcessIdToSessionId(procEntry.th32ProcessID, &processSessionId))
-				throw Error::Win32Error{Win32::GetLastError(), "ProcessIdToSessionId() failed"};
-			if (processSessionId == sessionIdToMatch)
-				results.push_back(procEntry.th32ProcessID);
-		} while (Win32::Process32NextW(processesSnapshot.GetHandle(), &procEntry));
-		// https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-process32nextw
-
-		return results;
+		auto wait = static_cast<Win32::DWORD>(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
+		return WaitFor(handles, waitForAll, wait, false);
 	}
 }
