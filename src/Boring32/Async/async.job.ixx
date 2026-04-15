@@ -10,8 +10,11 @@ export namespace Boring32::Async
 	{
 	public:
 		Job() = default;
-		Job(const Job& other) = default;
+		// Non-copyable, but movable
+		Job(const Job& other) = delete;
+		auto operator=(const Job& other) -> Job& = delete;
 		Job(Job&& other) noexcept = default;
+		auto operator=(Job&& other) noexcept -> Job& = default;
 
 		Job(bool isInheritable)
 		{
@@ -76,9 +79,14 @@ export namespace Boring32::Async
 			return m_job.IsInheritable();
 		}
 
-		operator bool() const noexcept
+		explicit operator bool() const noexcept
 		{
 			return m_job != nullptr;
+		}
+
+		auto HasJob() const noexcept -> bool
+		{
+			return static_cast<bool>(*this);
 		}
 
 	private:

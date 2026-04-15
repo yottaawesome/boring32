@@ -5,8 +5,9 @@ import :error;
 
 export namespace Boring32::RAII
 {
-	struct Win32Handle final
+	class Win32Handle final
 	{
+	public:
 		~Win32Handle()
 		{
 			Close();
@@ -188,7 +189,7 @@ export namespace Boring32::RAII
 			return duplicateHandle;
 		}
 
-		private:
+	private:
 		void Copy(const Win32Handle& other)
 		{
 			Close();
