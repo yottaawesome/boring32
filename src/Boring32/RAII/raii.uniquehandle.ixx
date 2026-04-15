@@ -30,7 +30,7 @@ export namespace Boring32::RAII
 			other.m_handle = nullptr;
 		}
 
-		UniqueHandle& operator=(UniqueHandle&& other) noexcept
+		auto operator=(UniqueHandle&& other) noexcept -> UniqueHandle&
 		{
 			if (std::addressof(other) != this)
 			{
@@ -43,7 +43,7 @@ export namespace Boring32::RAII
 
 		/// Closes the current handle, if valid, and assumes
 		/// ownership of the handle in the parameter.
-		UniqueHandle& operator=(const Win32::HANDLE other)
+		auto operator=(Win32::HANDLE other) -> UniqueHandle&
 		{
 			Close();
 			m_handle = other;
@@ -52,14 +52,14 @@ export namespace Boring32::RAII
 
 		/// Compares the current handle to the specified handle.
 		/// A nullptr handle is considered equivalent to INVALID_HANDLE_VALUE.
-		bool operator==(const Win32::HANDLE other) const noexcept
+		auto operator==(Win32::HANDLE other) const noexcept -> bool
 		{
 			if (not IsValidValue(other))
 				return not IsValidValue(m_handle);
 			return m_handle == other;
 		}
 
-		bool operator==(const UniqueHandle& other) const noexcept
+		auto operator==(const UniqueHandle& other) const noexcept -> bool
 		{
 			if (not IsValidValue(other.m_handle))
 				return not IsValidValue(m_handle);
@@ -71,12 +71,12 @@ export namespace Boring32::RAII
 			return IsValidValue(m_handle);
 		}
 
-		Win32::HANDLE* operator&() noexcept
+		auto operator&() noexcept -> Win32::HANDLE*
 		{
 			return &m_handle;
 		}
 
-		constexpr Win32::HANDLE operator*() const noexcept
+		constexpr auto operator*() const noexcept -> Win32::HANDLE
 		{
 			return m_handle;
 		}
@@ -86,20 +86,19 @@ export namespace Boring32::RAII
 			return m_handle;
 		}
 
-		// API
-		constexpr Win32::HANDLE GetHandle() const noexcept
+		constexpr auto GetHandle() const noexcept -> Win32::HANDLE
 		{
 			return m_handle;
 		}
 
-		Win32::HANDLE DuplicateCurrentHandle() const
+		auto DuplicateCurrentHandle() const -> Win32::HANDLE
 		{
 			return IsValidValue(m_handle)
 				? UniqueHandle::DuplicatePassedHandle(m_handle, IsInheritable())
 				: nullptr;
 		}
 
-		bool IsInheritable() const
+		auto IsInheritable() const -> bool
 		{
 			if (not IsValidValue(m_handle))
 				return false;
@@ -109,14 +108,12 @@ export namespace Boring32::RAII
 		void Close() noexcept
 		{
 			if (IsValidValue(m_handle))
-			{
 				if (not Win32::CloseHandle(m_handle))
 					std::wcerr << L"Failed to close handle\n";
-			}
 			m_handle = nullptr;
 		}
 
-		void SetInheritability(const bool isInheritable)
+		void SetInheritability(bool isInheritable)
 		{
 			if (not IsValidValue(m_handle))
 				throw Error::Boring32Error("handle is null or invalid.");
@@ -124,44 +121,44 @@ export namespace Boring32::RAII
 				throw Error::Win32Error{Win32::GetLastError(), "SetHandleInformation() failed"};
 		}
 
-		Win32::HANDLE Detach() noexcept
+		auto Detach() noexcept -> Win32::HANDLE
 		{
-			Win32::HANDLE temp = m_handle;
+			auto temp = Win32::HANDLE{ m_handle };
 			m_handle = nullptr;
 			return temp;
 		}
 
-		bool IsValidValue() const noexcept
+		auto IsValidValue() const noexcept -> bool
 		{
 			return IsValidValue(m_handle);
 		}
 
-		static constexpr bool IsValidValue(Win32::HANDLE handle) noexcept
+		static constexpr auto IsValidValue(Win32::HANDLE handle) noexcept -> bool
 		{
 			return handle && handle != Win32::InvalidHandleValue;
 		}
 
-		static bool HandleIsInheritable(const Win32::HANDLE handle)
+		static auto HandleIsInheritable(Win32::HANDLE handle) -> bool
 		{
 			if (not handle)
 				return false;
 			if (handle == Win32::InvalidHandleValue)
 				return false;
 
-			Win32::DWORD flags = 0;
+			auto flags = Win32::DWORD{};
 			if (not Win32::GetHandleInformation(handle, &flags))
 				throw Error::Win32Error(Win32::GetLastError(), "GetHandleInformation() failed");
 			return flags & Win32::HandleFlagInherit;
 		}
 
-		static Win32::HANDLE DuplicatePassedHandle(const Win32::HANDLE handle, const bool isInheritable)
+		static auto DuplicatePassedHandle(Win32::HANDLE handle, bool isInheritable) -> Win32::HANDLE
 		{
 			if (not handle)
 				return nullptr;
 			if (handle == Win32::InvalidHandleValue)
 				return Win32::InvalidHandleValue;
 
-			Win32::HANDLE duplicateHandle = nullptr;
+			auto duplicateHandle = Win32::HANDLE{};
 			bool succeeded = Win32::DuplicateHandle(
 				Win32::GetCurrentProcess(),
 				handle,
