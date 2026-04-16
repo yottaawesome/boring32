@@ -93,5 +93,34 @@ namespace Async
 				Boring32::Async::Mutex testMutex;
 				Assert::IsFalse(testMutex.Lock(0, true, std::nothrow));
 			}
+
+			TEST_METHOD(TestTryUnlockWhenOwned)
+			{
+				Boring32::Async::Mutex testMutex(false, false, L"Mutex1");
+				Assert::IsTrue(testMutex.Lock(500, false));
+				Assert::IsTrue(testMutex.TryUnlock());
+			}
+
+			TEST_METHOD(TestTryUnlockWhenNotOwned)
+			{
+				Boring32::Async::Mutex testMutex(false, false, L"Mutex1");
+				Assert::IsFalse(testMutex.TryUnlock());
+			}
+
+			TEST_METHOD(TestTryUnlockOnNullMutex)
+			{
+				Boring32::Async::Mutex testMutex;
+				Assert::IsFalse(testMutex.TryUnlock());
+			}
+
+			TEST_METHOD(TestUnlockWhenNotOwnedThrows)
+			{
+				Assert::ExpectException<Boring32::Error::Win32Error>(
+					[]()
+					{
+						Boring32::Async::Mutex testMutex(false, false);
+						testMutex.Unlock();
+					});
+			}
 	};
 }
