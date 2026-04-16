@@ -301,6 +301,7 @@
     <ClCompile Include="Clipboard\clipboard.ixx" />
     <ClCompile Include="Clipboard\clipboard.operation.ixx" />
     <ClCompile Include="Memory\memory.typedgloballock.ixx" />
+    <ClCompile Include="Strings\strings.functions.ixx" />
     <ClCompile Include="UI\ui.common.ixx" />
     <ClCompile Include="UI\ui.control.ixx" />
     <ClCompile Include="UI\ui.window.ixx" />

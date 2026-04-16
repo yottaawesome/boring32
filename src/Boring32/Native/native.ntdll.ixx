@@ -1,12 +1,35 @@
 export module boring32:native.ntdll;
+import std;
 import :win32;
 import :error;
 import :native.defs;
 
 export namespace Boring32::Native
 {
-	struct NTDLL final
+	class NativeModule
 	{
+	public:
+		NativeModule(std::wstring_view moduleName)
+		{
+			hModule = Win32::HMODULE{ Win32::GetModuleHandleW(moduleName.data()) };
+			if (not hModule)
+				throw Error::Win32Error{ Win32::GetLastError(), "GetModuleHandleW() failed to load module" };
+		}
+		template<typename T>
+		auto GetTypedProcAddress(this const NativeModule& self, std::string_view fnName) -> T
+		{
+			if (not self.hModule)
+				throw Boring32::Error::Boring32Error("Module is null");
+			auto fn = reinterpret_cast<T>(Win32::GetProcAddress(self.hModule, fnName.data()));
+			return fn ? fn : throw Error::Win32Error{ Win32::GetLastError(), std::format("GetProcAddress() failed on function {}", fnName) };
+		}
+	private:
+		Win32::HMODULE hModule = nullptr;
+	};
+
+	class NTDLL final
+	{
+	public:
 		NTDLL()
 		{
 			Map();
@@ -15,29 +38,15 @@ export namespace Boring32::Native
 		NTDLL(const NTDLL&) = delete;
 		NTDLL(NTDLL&&) noexcept = delete;
 
-		NTDLL& operator=(const NTDLL&) = delete;
-		NTDLL& operator=(NTDLL&&) noexcept = delete;
-
-		private:
+	private:
 		void Map()
 		{
-			Win32::HMODULE ntdll = Win32::GetModuleHandleW(L"ntdll.dll");
-			if (not ntdll)
-				throw Error::Win32Error{Win32::GetLastError(), "GetModuleHandleW() failed"};
+			auto nativeModule = NativeModule{ L"ntdll.dll" };
 
-			m_mapViewOfSection = (MapViewOfSection)Win32::GetProcAddress(ntdll, "NtMapViewOfSection");
-			if (not m_mapViewOfSection)
-				throw Error::Win32Error{Win32::GetLastError(), "GetProcAddress() failed"};
-			m_querySystemInformation = (QuerySystemInformation)Win32::GetProcAddress(ntdll, "NtQuerySystemInformation");
-			if (not m_querySystemInformation)
-				throw Error::Win32Error{Win32::GetLastError(), "GetProcAddress() failed"};
-
-			m_duplicateObject = (DuplicateObject)Win32::GetProcAddress(ntdll, "NtDuplicateObject");
-			if (not m_duplicateObject)
-				throw Error::Win32Error{Win32::GetLastError(), "GetProcAddress() failed"};
-			m_queryObject = (QueryObject)Win32::GetProcAddress(ntdll, "NtQueryObject");
-			if (not m_queryObject)
-				throw Error::Win32Error{Win32::GetLastError(), "GetProcAddress() failed"};
+			m_mapViewOfSection = nativeModule.GetTypedProcAddress<MapViewOfSection>("NtMapViewOfSection");
+			m_querySystemInformation = nativeModule.GetTypedProcAddress<QuerySystemInformation>("NtQuerySystemInformation");
+			m_duplicateObject = nativeModule.GetTypedProcAddress<DuplicateObject>("NtDuplicateObject");
+			m_queryObject = nativeModule.GetTypedProcAddress<QueryObject>("NtQueryObject");
 		}
 
 		MapViewOfSection m_mapViewOfSection;

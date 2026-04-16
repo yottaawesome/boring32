@@ -209,7 +209,6 @@ export namespace Boring32::Win32
 		::GetCurrentProcess,
 		::GetHandleInformation,
 		::SetHandleInformation,
-		::GetProcAddress,
 		::FormatMessageA,
 		::FormatMessageW,
 		::LoadLibraryW,
@@ -479,16 +478,27 @@ export namespace Boring32::Win32
 		::SetClipboardData,
 		::CloseClipboard,
 		::EmptyClipboard,
-		::GetClipboardData
+		::GetClipboardData,
+		::CompareStringOrdinal
 		;
 
-		namespace JobObjectLimits
+	namespace CStrComparison
+	{
+		enum 
 		{
-			enum
-			{
-				KillOnJobClose = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
-			};
-		}
+			Equal = CSTR_EQUAL,
+			GreaterThan = CSTR_GREATER_THAN,
+			LessThan = CSTR_LESS_THAN
+		};
+	}
+
+	namespace JobObjectLimits
+	{
+		enum
+		{
+			KillOnJobClose = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
+		};
+	}
 
 	namespace FileShareMode
 	{
