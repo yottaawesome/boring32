@@ -32,15 +32,13 @@ export namespace Boring32::Async
 				throw Error::Win32Error{Win32::GetLastError(), "Failed to create mutex"};
 		}
 
-		///	Creates a new named or anonymous mutex.
-		Mutex(bool acquireOnCreation, bool inheritable, std::wstring name) 
+		///	Creates a new named mutex.
+		Mutex(bool acquireOnCreation, bool inheritable, std::wstring name)
 			: m_name(std::move(name))
 		{
-			m_mutex = Win32::CreateMutexW(
-				nullptr,
-				acquireOnCreation,
-				m_name.empty() ? nullptr : m_name.c_str()
-			);
+			if (m_name->empty())
+				throw Error::Boring32Error{ "Cannot create mutex with empty name" };
+			m_mutex = Win32::CreateMutexW(nullptr, acquireOnCreation, m_name->c_str());
 			m_mutex.SetInheritability(inheritable);
 			if (not m_mutex)
 				throw Error::Win32Error{Win32::GetLastError(), "Failed to create mutex"};
@@ -50,9 +48,9 @@ export namespace Boring32::Async
 		Mutex(bool acquireOnOpen, bool isInheritable, std::wstring name, Win32::DWORD desiredAccess) 
 			: m_name(name)
 		{
-			if (m_name.empty())
+			if (m_name->empty())
 				throw Error::Boring32Error("Cannot open mutex with empty name");
-			m_mutex = Win32::OpenMutexW(desiredAccess, isInheritable, m_name.c_str());
+			m_mutex = Win32::OpenMutexW(desiredAccess, isInheritable, m_name->c_str());
 			if (not m_mutex)
 				throw Error::Win32Error{Win32::GetLastError(), "Failed to open mutex"};
 			if (acquireOnOpen)
@@ -155,13 +153,13 @@ export namespace Boring32::Async
 		///	Retrieves this Mutex's name. This value is an empty string
 		///	if this is an anonymous Mutex.
 		[[nodiscard]]
-		auto GetName() const noexcept -> std::wstring
+		auto GetName() const noexcept -> std::optional<std::wstring>
 		{
 			return m_name;
 		}
 
 	private:
-		std::wstring m_name;
+		std::optional<std::wstring> m_name = std::nullopt;
 		RAII::UniqueHandle m_mutex;
 	};
 }
