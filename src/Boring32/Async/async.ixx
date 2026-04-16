@@ -6,7 +6,6 @@ export import :async.filemapping;
 export import :async.functions;
 export import :async.job;
 export import :async.memorymappedview;
-export import :async.mutev;
 export import :async.mutex;
 export import :async.overlappedio;
 export import :async.overlappedop;
