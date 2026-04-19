@@ -6,9 +6,10 @@ import :concepts;
 
 export namespace Boring32::Async
 {
-	struct [[nodiscard("This must remain alive while the IO operation is in progress.")]] 
-	Overlapped final : Win32::OVERLAPPED
+	class [[nodiscard("This must remain alive while the IO operation is in progress.")]] Overlapped final 
+		: public Win32::OVERLAPPED
 	{
+	public:
 		~Overlapped() { Close(); }
 
 		Overlapped(const Overlapped&) = delete;

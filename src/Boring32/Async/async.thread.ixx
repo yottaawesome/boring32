@@ -224,7 +224,7 @@ export namespace Boring32::Async
 			}
 		}
 
-		static auto __stdcall ThreadProc(void* param) -> unsigned
+		static auto ThreadProc(void* param) -> unsigned
 		{
 			Thread* threadObj = static_cast<Thread*>(param);
 			if (not threadObj)

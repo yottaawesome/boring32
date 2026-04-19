@@ -17,7 +17,7 @@ namespace Boring32::WinSock
 	};
 
 	template<typename TAnyEvent>
-	void __stdcall QueryCompleteCallback(
+	void QueryCompleteCallback(
 		Win32::DWORD Error,
 		Win32::DWORD Bytes,
 		Win32::LPOVERLAPPED Overlapped
@@ -30,7 +30,7 @@ namespace Boring32::WinSock
 
 export namespace Boring32::WinSock
 {
-	void IPv4NetworkAddressToString(const unsigned int ip, std::string& out)
+	void IPv4NetworkAddressToString(unsigned int ip, std::string& out)
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-htonl
 		const Win32::ULONG converted = Win32::WinSock::htonl(ip);
@@ -41,7 +41,7 @@ export namespace Boring32::WinSock
 		if (not ipCString)
 		{
 			Error::ThrowNested(
-				Error::Win32Error(Win32::WinSock::WSAGetLastError(), "inet_ntop() failed", L"Ws2_32.dll"),
+				Error::Win32Error{static_cast<Win32::DWORD>(Win32::WinSock::WSAGetLastError()), "inet_ntop() failed", L"Ws2_32.dll"},
 				WinSockError("Could not convert IPv6 network address string")
 			);
 		}
@@ -60,28 +60,28 @@ export namespace Boring32::WinSock
 		if (not ipCString)
 		{
 			Error::ThrowNested(
-				Error::Win32Error(Win32::WinSock::WSAGetLastError(), "inet_ntop() failed", L"Ws2_32.dll"),
+				Error::Win32Error{static_cast<Win32::DWORD>(Win32::WinSock::WSAGetLastError()), "inet_ntop() failed", L"Ws2_32.dll"},
 				WinSockError("Could not convert IPv4 network address string")
 			);
 		}
 		out = out.c_str();
 	}
 
-	void IPv4NetworkAddressToString(const unsigned int ip, std::wstring& out)
+	void IPv4NetworkAddressToString(unsigned int ip, std::wstring& out)
 	{
 		std::string str;
 		IPv6NetworkAddressToString(ip, str);
 		out = Boring32::Strings::ConvertString(str);
 	}
 
-	void IPv6NetworkAddressToString(const unsigned int ip, std::wstring& out)
+	void IPv6NetworkAddressToString(unsigned int ip, std::wstring& out)
 	{
 		std::string str;
 		IPv4NetworkAddressToString(ip, str);
 		out = Boring32::Strings::ConvertString(str);
 	}
 
-	enum class AddressFamily : uint32_t
+	enum class AddressFamily : std::uint32_t
 	{
 		Unknown,
 		IPv4 = 1,
