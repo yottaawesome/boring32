@@ -6,9 +6,10 @@ import :raii;
 
 export namespace Boring32::IPC
 {
-	struct MailslotServer final
+	class MailslotServer final
 	{
-		MailslotServer(std::wstring name, unsigned long maxMessageSize, unsigned long readTimeoutMs, const std::wstring& dacl) 
+	public:
+		MailslotServer(std::wstring name, Win32::DWORD maxMessageSize, Win32::DWORD readTimeoutMs)
 			: m_name(std::move(name))
 		{
 			if (m_name.empty())
@@ -20,6 +21,9 @@ export namespace Boring32::IPC
 				throw Error::Win32Error{Win32::GetLastError(), "CreateMailslotW() failed"};
 		}
 
+		MailslotServer(MailslotServer&&) noexcept = default;
+		auto operator=(MailslotServer&&) noexcept -> MailslotServer& = default;
+
 		void Close() noexcept
 		{
 			m_name.clear();
@@ -28,10 +32,20 @@ export namespace Boring32::IPC
 			m_handle = nullptr;
 		}
 
-		private:
+		constexpr auto GetHandle() const noexcept -> Win32::HANDLE 
+		{ 
+			return m_handle.GetHandle(); 
+		}
+
+		constexpr auto IsValid() const noexcept -> bool
+		{
+			return m_handle.GetHandle() != nullptr;
+		}
+
+	private:
 		std::wstring m_name;
-		unsigned long m_maxMessageSize;
-		unsigned long m_readTimeoutMs;
+		Win32::DWORD m_maxMessageSize;
+		Win32::DWORD m_readTimeoutMs;
 		RAII::UniqueHandle m_handle;
 	};
 }

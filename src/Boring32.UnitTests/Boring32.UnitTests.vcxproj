@@ -281,6 +281,7 @@
     <ClCompile Include="Error\error.functions.cpp" />
     <ClCompile Include="Error\error.ntstatuserror.cpp" />
     <ClCompile Include="Error\error.win32error.cpp" />
+    <ClCompile Include="Ipc\ipc.mailslotserver.cpp" />
     <ClCompile Include="Networking\networking.api.cpp" />
     <ClCompile Include="MSI\msi.functions.cpp" />
     <ClCompile Include="MSI\msi.package.cpp" />

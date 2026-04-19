@@ -96,12 +96,10 @@ export namespace Boring32::Strings
 		{
 			const CharType* Buffer = nullptr;
 			int Position = 0;
-			constexpr Iterator(int position, const char* buffer) noexcept
-				: Position(position), Buffer(buffer) 
-			{}
 			constexpr auto operator++(this Iterator& self) noexcept -> Iterator& 
 			{ 
-				Position++; return self; 
+				Position++;
+				return self; 
 			}
 			[[nodiscard]]
 			constexpr auto operator*(this const Iterator& self) noexcept -> CharType
@@ -118,13 +116,13 @@ export namespace Boring32::Strings
 		[[nodiscard]]
 		constexpr auto begin(this const FixedString& self) noexcept -> Iterator 
 		{ 
-			return Iterator(0, self.Buffer); 
+			return Iterator{self.Buffer, 0}; 
 		}
 		
 		[[nodiscard]]
 		constexpr auto end(this const FixedString& self) noexcept -> Iterator 
 		{ 
-			return Iterator(N - 1, self.Buffer); 
+			return Iterator{self.Buffer, N - 1}; 
 		}
 	};
 	template<size_t N>

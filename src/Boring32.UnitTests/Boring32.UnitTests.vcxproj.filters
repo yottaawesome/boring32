@@ -207,6 +207,9 @@
     <ClCompile Include="Async\async.job.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Ipc\ipc.mailslotserver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
