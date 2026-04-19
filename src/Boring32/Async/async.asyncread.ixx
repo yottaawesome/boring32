@@ -1,4 +1,4 @@
-﻿export module boring32:async.asyncread;
+export module boring32:async.asyncread;
 import std;
 import :win32;
 import :error;
@@ -41,7 +41,7 @@ export namespace Boring32::Async
 			while (true)
 			{
 				Operation = Async::Overlapped{};
-				Win32::BOOL success = Win32::ReadFile(
+				auto success = Win32::ReadFile(
 					Pipe,
 					Data.data() + totalBytesRead,
 					BytesToRead,
@@ -55,8 +55,8 @@ export namespace Boring32::Async
 					Data.resize(totalBytesRead);
 					break;
 				}
-				if (Win32::DWORD lastError = Win32::GetLastError(); lastError != Win32::ErrorCodes::MoreData)
-					throw Error::Win32Error(lastError, "ReadFile() failed.");
+				if (auto lastError = Win32::GetLastError(); lastError != Win32::ErrorCodes::MoreData)
+					throw Error::Win32Error{ lastError, "ReadFile() failed." };
 				Data.resize(Data.size() + BytesToRead);
 			}
 		}
@@ -70,15 +70,16 @@ export namespace Boring32::Async
 		auto Start() -> void
 		{
 			Data.resize(BytesToRead);
-			Win32::BOOL success = Win32::ReadFile(
+			auto success = Win32::ReadFile(
 				Pipe,
 				Data.data(),
 				BytesToRead,
 				nullptr, // not used for async IO
 				&Operation
 			);
-			if (auto lastError = Win32::GetLastError(); not success and lastError != Win32::ErrorCodes::IoPending)
-				throw Error::Win32Error(lastError, "IO operation failed");
+			if (not success)
+				if (auto lastError = Win32::GetLastError(); lastError != Win32::ErrorCodes::IoPending)
+					throw Error::Win32Error{ lastError, "IO operation failed" };
 		}
 
 		std::vector<std::byte> Data;
