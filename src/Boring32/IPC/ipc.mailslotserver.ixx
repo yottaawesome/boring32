@@ -10,7 +10,7 @@ export namespace Boring32::IPC
 	{
 	public:
 		MailslotServer(std::wstring name, Win32::DWORD maxMessageSize, Win32::DWORD readTimeoutMs)
-			: m_name(std::move(name))
+			: m_name(std::move(name)), m_maxMessageSize(maxMessageSize), m_readTimeoutMs(readTimeoutMs)
 		{
 			if (m_name.empty())
 				throw Error::Boring32Error("Name cannot be empty.");
@@ -31,15 +31,25 @@ export namespace Boring32::IPC
 			m_readTimeoutMs = 0;
 			m_handle = nullptr;
 		}
-
 		constexpr auto GetHandle() const noexcept -> Win32::HANDLE 
 		{ 
 			return m_handle.GetHandle(); 
 		}
-
 		constexpr auto IsValid() const noexcept -> bool
 		{
 			return m_handle.GetHandle() != nullptr;
+		}
+		constexpr auto GetName() const noexcept -> std::wstring 
+		{ 
+			return m_name; 
+		}
+		constexpr auto GetMaxMessageSize() const noexcept -> Win32::DWORD 
+		{
+			return m_maxMessageSize;
+		}
+		constexpr auto GetReadTimeoutMs() const noexcept -> Win32::DWORD 
+		{
+			return m_readTimeoutMs;
 		}
 
 	private:
