@@ -25,7 +25,7 @@ export namespace Boring32::Async
 		}
 
 		SlimLockScope(const SlimLockScope&) = delete;
-		SlimLockScope& operator=(const SlimLockScope&) = delete;
+		auto operator=(const SlimLockScope&) -> SlimLockScope& = delete;
 
 	private:
 		Win32::SRWLOCK& m_srwLock;
@@ -44,7 +44,7 @@ export namespace Boring32::Async
 		//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-initializesrwlock
 		// "An SRW lock cannot be moved or copied."
 		SlimReadWriteLock(const SlimReadWriteLock&) = delete;
-		SlimReadWriteLock& operator=(const SlimReadWriteLock&) = delete;
+		auto operator=(const SlimReadWriteLock&) -> SlimReadWriteLock& = delete;
 
 		auto TryAcquireSharedLock() -> bool
 		{
@@ -64,12 +64,12 @@ export namespace Boring32::Async
 			return false;
 		}
 
-		void AcquireSharedLock()
+		auto AcquireSharedLock() -> void
 		{
 			AcquireSRWLockShared(&m_srwLock);
 		}
 
-		void AcquireExclusiveLock()
+		auto AcquireExclusiveLock() -> void
 		{
 			Win32::DWORD currentThreadId = Win32::GetCurrentThreadId();
 			if (m_threadOwningExclusiveLock != currentThreadId)
@@ -79,12 +79,12 @@ export namespace Boring32::Async
 			}
 		}
 
-		void ReleaseSharedLock()
+		auto ReleaseSharedLock() -> void
 		{
 			Win32::ReleaseSRWLockShared(&m_srwLock);
 		}
 
-		void ReleaseExclusiveLock()
+		auto ReleaseExclusiveLock() -> void
 		{
 			if (m_threadOwningExclusiveLock != Win32::GetCurrentThreadId())
 				return;

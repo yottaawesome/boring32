@@ -67,16 +67,16 @@ export namespace Boring32::Async
 			Move(other);
 		}
 
-		virtual TimerQueueTimer& operator=(TimerQueueTimer&& other) noexcept
+		virtual auto operator=(TimerQueueTimer&& other) noexcept -> TimerQueueTimer&
 		{
 			Move(other);
 			return *this;
 		}
 
 		TimerQueueTimer(const TimerQueueTimer& other) = delete;
-		virtual TimerQueueTimer& operator=(const TimerQueueTimer& other) = delete;
+		virtual auto operator=(const TimerQueueTimer& other) -> TimerQueueTimer& = delete;
 
-		virtual void Update(const unsigned long dueTime, const unsigned long period)
+		virtual auto Update(const unsigned long dueTime, const unsigned long period) -> void
 		{
 			if (not m_timerQueueTimer or m_timerQueueTimer == Win32::InvalidHandleValue)
 				throw Error::Boring32Error("m_timerQueueTimer is null");
@@ -92,7 +92,7 @@ export namespace Boring32::Async
 				throw Error::Win32Error{Win32::GetLastError(), "ChangeTimerQueueTimer() failed"};
 		}
 
-		virtual void Close()
+		virtual auto Close() -> void
 		{
 			if (not m_timerQueueTimer or m_timerQueueTimer != Win32::InvalidHandleValue)
 				return;
@@ -107,7 +107,7 @@ export namespace Boring32::Async
 			m_timerQueueTimer = nullptr;
 		}
 
-		virtual bool Close(std::nothrow_t) noexcept 
+		virtual auto Close(std::nothrow_t) noexcept -> bool
 		try
 		{
 			Close();
@@ -119,7 +119,7 @@ export namespace Boring32::Async
 		}
 
 		protected:
-		virtual void Move(TimerQueueTimer& other) noexcept
+		virtual auto Move(TimerQueueTimer& other) noexcept -> void
 		{
 			m_dueTime = other.m_dueTime;
 			m_period = other.m_period;
@@ -135,7 +135,7 @@ export namespace Boring32::Async
 			other.m_completionEvent = nullptr;
 		}
 
-		virtual void InternalCreate()
+		virtual auto InternalCreate() -> void
 		{
 			if (not m_timerQueue or m_timerQueue == Win32::InvalidHandleValue)
 				throw Error::Boring32Error("m_timerQueue is null");

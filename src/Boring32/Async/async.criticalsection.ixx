@@ -15,9 +15,9 @@ export namespace Boring32::Async
 		// Non-movable and non-copyable, because the underlying
 		// primitive is not movable and not copyable.
 		CriticalSection(const CriticalSection&) = delete;
-		CriticalSection& operator=(const CriticalSection&) = delete;
+		auto operator=(const CriticalSection&) -> CriticalSection& = delete;
 		CriticalSection(const CriticalSection&&) = delete;
-		CriticalSection& operator=(const CriticalSection&&) = delete;
+		auto operator=(const CriticalSection&&) -> CriticalSection& = delete;
 
 		CriticalSection(Win32::DWORD spinCount = 0)
 		{
@@ -31,12 +31,12 @@ export namespace Boring32::Async
 			return &cs.m_criticalSection;
 		}
 
-		void lock(this CriticalSection& cs) noexcept
+		auto lock(this CriticalSection& cs) noexcept -> void
 		{ 
 			Win32::EnterCriticalSection(&cs.m_criticalSection); 
 		}
 		
-		void unlock(this CriticalSection& cs) noexcept
+		auto unlock(this CriticalSection& cs) noexcept -> void
 		{ 
 			Win32::LeaveCriticalSection(&cs.m_criticalSection); 
 		}

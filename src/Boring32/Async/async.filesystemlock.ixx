@@ -28,7 +28,7 @@ export namespace Boring32::Async
 		FileSystemLock(FileSystemLock&&) = default;
 		auto operator=(FileSystemLock&&) -> FileSystemLock& = default;
 
-		void lock(this auto&& self)
+		auto lock(this auto&& self) -> void
 		{
 			// Already owned
 			if (self.fileHandle)
@@ -48,7 +48,7 @@ export namespace Boring32::Async
 			self.fileHandle = RAII::HandleUniquePtr(handle);
 		}
 
-		void unlock(this auto&& self) noexcept
+		auto unlock(this auto&& self) noexcept -> void
 		{
 			if (not self.fileHandle)
 				return;

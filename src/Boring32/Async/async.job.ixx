@@ -33,7 +33,7 @@ export namespace Boring32::Async
 			Open(isInheritable);
 		}
 
-		void SetInformation(const Win32::JOBOBJECT_EXTENDED_LIMIT_INFORMATION& jeli)
+		auto SetInformation(const Win32::JOBOBJECT_EXTENDED_LIMIT_INFORMATION& jeli) -> void
 		{
 			if (not m_job)
 				throw Error::Boring32Error("Cannot assign process to job; job is not initialised");
@@ -49,7 +49,7 @@ export namespace Boring32::Async
 				throw Error::Win32Error{Win32::GetLastError(), "SetInformationJobObject() failed"};
 		}
 
-		void AssignProcessToThisJob(Win32::HANDLE process)
+		auto AssignProcessToThisJob(Win32::HANDLE process) -> void
 		{
 			if (not m_job)
 				throw Error::Boring32Error("Cannot assign process to job; job is not initialised");
@@ -69,7 +69,7 @@ export namespace Boring32::Async
 			return m_name;
 		}
 
-		void Close()
+		auto Close() -> void
 		{
 			m_job = nullptr;
 		}
@@ -90,7 +90,7 @@ export namespace Boring32::Async
 		}
 
 	private:
-		void Create(bool isInheritable)
+		auto Create(bool isInheritable) -> void
 		{
 			m_job = Win32::CreateJobObjectW(nullptr, m_name.empty() ? nullptr : m_name.c_str());
 			if (not m_job)
@@ -98,7 +98,7 @@ export namespace Boring32::Async
 			m_job.SetInheritability(isInheritable);
 		}
 
-		void Open(const bool isInheritable)
+		auto Open(const bool isInheritable) -> void
 		{
 			m_job = Win32::OpenJobObjectW(Win32::JobObjectAllAccess, isInheritable, m_name.c_str());
 			if (not m_job)

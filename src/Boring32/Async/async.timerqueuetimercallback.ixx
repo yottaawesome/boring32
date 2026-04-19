@@ -34,17 +34,17 @@ export namespace Boring32::Async
 			: TimerQueueTimer(std::move(other))
 		{ }
 
-		virtual TimerQueueTimerCallback& operator=(TimerQueueTimerCallback&& other) noexcept 
+		virtual auto operator=(TimerQueueTimerCallback&& other) noexcept -> TimerQueueTimerCallback&
 		{
 			Move(other);
 			return *this;
 		}
 
 		TimerQueueTimerCallback(const TimerQueueTimerCallback&) = delete;
-		virtual TimerQueueTimerCallback& operator=(const TimerQueueTimerCallback&) = delete;
+		virtual auto operator=(const TimerQueueTimerCallback&) -> TimerQueueTimerCallback& = delete;
 
 		protected:
-		static void InternalCallback(void* parameter, BOOLEAN timerOrWaitFired)
+		static auto InternalCallback(void* parameter, BOOLEAN timerOrWaitFired) -> void
 		{
 			if (not parameter)
 				throw Error::Boring32Error("Invalid parameter");

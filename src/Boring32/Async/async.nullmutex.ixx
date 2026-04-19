@@ -7,11 +7,11 @@ export namespace Boring32::Async
 	struct NullMutex final
 	{
 		NullMutex(const NullMutex&) = delete;
-		NullMutex& operator=(const NullMutex&) = delete;
+		auto operator=(const NullMutex&) -> NullMutex& = delete;
 		NullMutex(NullMutex&&) = delete;
-		NullMutex& operator=(NullMutex&&) = delete;
-		constexpr void lock() noexcept {}
-		constexpr void unlock() noexcept {}
+		auto operator=(NullMutex&&) -> NullMutex& = delete;
+		constexpr auto lock() noexcept -> void {}
+		constexpr auto unlock() noexcept -> void {}
 		constexpr auto try_lock() noexcept -> bool { return true; }
 	};
 }

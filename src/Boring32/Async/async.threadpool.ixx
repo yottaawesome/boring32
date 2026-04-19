@@ -40,17 +40,17 @@ export namespace Boring32::Async::ThreadPools
 			InternalCreate();
 		}
 
-		Win32::DWORD GetMinThread() const noexcept
+		auto GetMinThread() const noexcept -> Win32::DWORD
 		{
 			return m_minThreads;
 		}
 
-		Win32::DWORD GetMaxThread() const noexcept
+		auto GetMaxThread() const noexcept -> Win32::DWORD
 		{
 			return m_maxThreads;
 		}
 
-		void SetMinAndMaxThreads(const Win32::DWORD min, const Win32::DWORD max)
+		auto SetMinAndMaxThreads(const Win32::DWORD min, const Win32::DWORD max) -> void
 		{
 			if (not m_pool)
 				throw Error::Boring32Error("m_pool is nullptr");
@@ -59,7 +59,7 @@ export namespace Boring32::Async::ThreadPools
 			SetMaxThreads(max);
 		}
 
-		void SetMaxThreads(const Win32::DWORD value)
+		auto SetMaxThreads(const Win32::DWORD value) -> void
 		{
 			if (not m_pool)
 				throw Error::Boring32Error("m_pool is nullptr");
@@ -70,7 +70,7 @@ export namespace Boring32::Async::ThreadPools
 			Win32::SetThreadpoolThreadMaximum(m_pool.get(), m_maxThreads);
 		}
 
-		void SetMinThreads(const Win32::DWORD value)
+		auto SetMinThreads(const Win32::DWORD value) -> void
 		{
 			if (not m_pool)
 				throw Error::Boring32Error("m_pool is nullptr");
@@ -83,7 +83,7 @@ export namespace Boring32::Async::ThreadPools
 			m_minThreads = value;
 		}
 
-		void Close()
+		auto Close() -> void
 		{
 			if (m_pool)
 			{
@@ -97,7 +97,7 @@ export namespace Boring32::Async::ThreadPools
 		}
 
 		[[nodiscard("Return value should remain live until callback is fully completed")]]
-		Win32::PTP_WORK CreateWork(ThreadPoolCallback& callback, void* param)
+		auto CreateWork(ThreadPoolCallback& callback, void* param) -> Win32::PTP_WORK
 		{
 			if (not m_pool)
 				throw Error::Boring32Error("m_pool is nullptr");
@@ -115,7 +115,7 @@ export namespace Boring32::Async::ThreadPools
 		}
 
 		template<typename T>
-		void CreateWork(WorkItem<T>& outWorkItem)
+		auto CreateWork(WorkItem<T>& outWorkItem) -> void
 		{
 			if (not m_pool)
 				throw Error::Boring32Error("m_pool is nullptr");
@@ -130,9 +130,9 @@ export namespace Boring32::Async::ThreadPools
 		}
 
 		template<typename T>
-		void CreateWork(WorkItem<T>&& workItem) = delete;
+		auto CreateWork(WorkItem<T>&& workItem) -> void = delete;
 
-		void SubmitWork(Win32::PTP_WORK workItem)
+		auto SubmitWork(Win32::PTP_WORK workItem) -> void
 		{
 			if (not m_pool)
 				throw Error::Boring32Error("m_pool is nullptr");
@@ -141,23 +141,23 @@ export namespace Boring32::Async::ThreadPools
 			Win32::SubmitThreadpoolWork(workItem);
 		}
 
-		void SetCallbackRunsLong()
+		auto SetCallbackRunsLong() -> void
 		{
 			//https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setthreadpoolcallbackrunslong
 			Win32::SetThreadpoolCallbackRunsLong(&m_environ);
 		}
 
-		std::shared_ptr<Win32::TP_POOL> GetPoolHandle() const noexcept
+		auto GetPoolHandle() const noexcept -> std::shared_ptr<Win32::TP_POOL>
 		{
 			return m_pool;
 		}
 
 		protected:
-		static void InternalCallback(
+		static auto InternalCallback(
 			Win32::PTP_CALLBACK_INSTANCE instance,
 			void* parameter, 
 			Win32::PTP_WORK work
-		)
+		) -> void
 		{
 			// We cast this to a void, but the callback will know the correct type
 			// This works because void* is 64 bits/8 bytes long, so it can encompass
@@ -174,7 +174,7 @@ export namespace Boring32::Async::ThreadPools
 			}
 		}
 
-		static void ValidateArgs(const Win32::DWORD minThreads, const Win32::DWORD maxThreads)
+		static auto ValidateArgs(const Win32::DWORD minThreads, const Win32::DWORD maxThreads) -> void
 		{
 			if (minThreads < 1)
 				throw Error::Boring32Error("minThreads cannot be less than 1");
@@ -184,7 +184,7 @@ export namespace Boring32::Async::ThreadPools
 				throw Error::Boring32Error("maxThreads cannot be less than minThreads");
 		}
 
-		ThreadPool& Copy(const ThreadPool& other)
+		auto Copy(const ThreadPool& other) -> ThreadPool&
 		{
 			Close();
 			m_environ = other.m_environ;
@@ -195,7 +195,7 @@ export namespace Boring32::Async::ThreadPools
 			return *this;
 		}
 
-		ThreadPool& Move(ThreadPool& other) noexcept
+		auto Move(ThreadPool& other) noexcept -> ThreadPool&
 		{
 			Close();
 			m_environ = other.m_environ;
@@ -205,7 +205,7 @@ export namespace Boring32::Async::ThreadPools
 			return *this;
 		}
 
-		void InternalCreate()
+		auto InternalCreate() -> void
 		{
 			ValidateArgs(m_minThreads, m_maxThreads);
 

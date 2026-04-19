@@ -12,8 +12,8 @@ export namespace Boring32::Async
 		Semaphore() = default;
 		Semaphore(const Semaphore& other) = default;
 		Semaphore(Semaphore&& other) noexcept = default;
-		Semaphore& operator=(const Semaphore& other) = default;
-		Semaphore& operator=(Semaphore&& other) noexcept = default;
+		auto operator=(const Semaphore& other) -> Semaphore& = default;
+		auto operator=(Semaphore&& other) noexcept -> Semaphore& = default;
 
 		Semaphore(
 			const bool isInheritable,
@@ -63,18 +63,18 @@ export namespace Boring32::Async
 			return m_handle != nullptr;
 		}
 
-		void Close()
+		auto Close() -> void
 		{
 			m_handle = nullptr;
 			m_name.clear();
 		}
 
-		void Release()
+		auto Release() -> void
 		{
 			Release(1);
 		}
 
-		void Release(const long countToRelease)
+		auto Release(const long countToRelease) -> void
 		{
 			if (countToRelease == 0)
 				return;
@@ -86,17 +86,17 @@ export namespace Boring32::Async
 				throw Error::Win32Error{Win32::GetLastError(), "Failed to release semaphore"};
 		}
 
-		bool Acquire()
+		auto Acquire() -> bool
 		{
 			return Acquire(Win32::Infinite, false);
 		}
 
-		bool Acquire(const unsigned long millisTimeout)
+		auto Acquire(const unsigned long millisTimeout) -> bool
 		{
 			return Acquire(millisTimeout, false);
 		}
 
-		bool AcquireMany(const long countToAcquire, const unsigned long millisTimeout)
+		auto AcquireMany(const long countToAcquire, const unsigned long millisTimeout) -> bool
 		{
 			if (not m_handle)
 				throw Error::Boring32Error("m_handle is nullptr.");
@@ -113,7 +113,7 @@ export namespace Boring32::Async
 			return true;
 		}
 
-		bool Acquire(const Concepts::Duration auto& time, const bool isAlertable)
+		auto Acquire(const Concepts::Duration auto& time, const bool isAlertable) -> bool
 		{
 			using std::chrono::milliseconds;
 			using std::chrono::duration_cast;
@@ -123,7 +123,7 @@ export namespace Boring32::Async
 			);
 		}
 
-		bool Acquire(const unsigned long millisTimeout, const bool isAlertable)
+		auto Acquire(const unsigned long millisTimeout, const bool isAlertable) -> bool
 		{
 			if (not m_handle)
 				throw Error::Boring32Error("m_handle is nullptr.");
@@ -157,28 +157,28 @@ export namespace Boring32::Async
 			}
 		}
 
-		const std::wstring& GetName() const noexcept
+		auto GetName() const noexcept -> const std::wstring&
 		{
 			return m_name;
 		}
 
-		long GetMaxCount() const noexcept
+		auto GetMaxCount() const noexcept -> long
 		{
 			return m_maxCount;
 		}
 
-		Win32::HANDLE GetHandle() const noexcept
+		auto GetHandle() const noexcept -> Win32::HANDLE
 		{
 			return m_handle.GetHandle();
 		}
 
 		private:
-		void InternalCreate(
+		auto InternalCreate(
 			const std::wstring& name,
 			const unsigned long initialCount,
 			const unsigned long maxCount,
 			const bool isInheritable
-		)
+		) -> void
 		{
 			if (initialCount > maxCount)
 				throw Error::Boring32Error("Initial count exceeds maximum count.");

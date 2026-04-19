@@ -93,14 +93,14 @@ export namespace Boring32::Async
 		}
 
 		template<std::invocable T>
-		static void InternalAPC(Win32::ULONG_PTR arg)
+		static auto InternalAPC(Win32::ULONG_PTR arg) -> void
 		{
 			const T& apc = *reinterpret_cast<T*>(arg);
 			apc();
 		}
 
 		template<std::invocable T>
-		static void InternalHeapAPC(Win32::ULONG_PTR arg)
+		static auto InternalHeapAPC(Win32::ULONG_PTR arg) -> void
 		{
 			if (not arg)
 				return;
@@ -117,7 +117,7 @@ export namespace Boring32::Async
 		};
 
 		template<typename T, typename M>
-		static void InternalAPC(Win32::ULONG_PTR arg)
+		static auto InternalAPC(Win32::ULONG_PTR arg) -> void
 		{
 			if (not arg)
 				return;

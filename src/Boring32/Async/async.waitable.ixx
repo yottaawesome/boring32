@@ -37,7 +37,7 @@ export namespace Boring32::Async
 			return DoWaitAndGet(duration, alertable);
 		}
 
-		Win32::WaitResult DoWaitAndGet(Concepts::Duration auto duration, const bool alertable = false)
+		auto DoWaitAndGet(Concepts::Duration auto duration, const bool alertable = false) -> Win32::WaitResult
 		{
 			if constexpr (FWaitOperation != nullptr)
 			{
@@ -77,26 +77,26 @@ export namespace Boring32::Async
 			return m_lastWait;
 		}
 
-		Waitable& DoWait(Concepts::Duration auto duration, const bool alertable = false)
+		auto DoWait(Concepts::Duration auto duration, const bool alertable = false) -> Waitable&
 		{
 			DoWaitAndGet(duration, alertable);
 			return *this;
 		}
 
-		void AssertSuccess()
+		auto AssertSuccess() -> void
 		{
 			if (m_lastWait != Win32::WaitResult::Success)
 				throw Error::Boring32Error("Last wait was not successful");
 		}
 
-		Waitable& OnSuccess(auto&& func, auto&&...args)
+		auto OnSuccess(auto&& func, auto&&...args) -> Waitable&
 		{
 			if (m_lastWait == Win32::WaitResult::Success)
 				func(std::forward<decltype(args)>(args)...);
 			return *this;
 		}
 
-		Waitable& OnTimeout(auto&& func, auto&&...args)
+		auto OnTimeout(auto&& func, auto&&...args) -> Waitable&
 		{
 			if (m_lastWait == Win32::WaitResult::Timeout)
 				func(std::forward<decltype(args)>(args)...);

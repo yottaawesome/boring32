@@ -102,7 +102,7 @@ export namespace Boring32::Async
 
 		///	Frees the mutex, allowing another process to acquire it.
 		///	Throws if the calling thread does not own the mutex.
-		void Unlock()
+		auto Unlock() -> void
 		{
 			if (not m_mutex)
 				throw Error::Boring32Error("Cannot release null mutex");
@@ -134,7 +134,7 @@ export namespace Boring32::Async
 		}
 
 		///	Invalidates and closes the native Mutex handle.
-		void Close()
+		auto Close() -> void
 		{
 			if (not m_mutex)
 				return;

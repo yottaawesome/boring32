@@ -16,7 +16,7 @@ export namespace Boring32::Async
 
 		EventLoop() = default;
 
-		void Close()
+		auto Close() -> void
 		{
 			m_handlers.clear();
 			m_events.clear();
@@ -59,14 +59,14 @@ export namespace Boring32::Async
 			return true;
 		}
 
-		void On(Win32::HANDLE handle, std::function<auto()->void> handler)
+		auto On(Win32::HANDLE handle, std::function<auto()->void> handler) -> void
 		{
 			CriticalSectionLock cs(m_cs);
 			m_events.push_back(handle);
 			m_handlers.push_back(std::move(handler));
 		}
 
-		void Erase(Win32::HANDLE handle)
+		auto Erase(Win32::HANDLE handle) -> void
 		{
 			CriticalSectionLock cs(m_cs);
 			std::vector<Win32::HANDLE>::iterator handlePosIterator = std::find_if(

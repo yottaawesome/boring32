@@ -265,6 +265,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Async\async.apcthread.ixx" />
+    <ClCompile Include="Async\async.asyncread.ixx" />
     <ClCompile Include="Async\async.cmdrunner.ixx" />
     <ClCompile Include="Async\async.criticalsection.ixx" />
     <ClCompile Include="Async\async.event.ixx" />

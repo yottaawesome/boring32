@@ -25,17 +25,17 @@ export namespace Boring32::Async
 			Move(other);
 		}
 
-		ProcessInfo& operator=(const ProcessInfo& other)
+		auto operator=(const ProcessInfo& other) -> ProcessInfo&
 		{
 			return Copy(other);
 		}
 
-		ProcessInfo& operator=(ProcessInfo&& other) noexcept
+		auto operator=(ProcessInfo&& other) noexcept -> ProcessInfo&
 		{
 			return Move(other);
 		}
 		
-		void Close()
+		auto Close() -> void
 		{
 			if (m_processInfo.hProcess)
 			{
@@ -49,33 +49,33 @@ export namespace Boring32::Async
 			}
 		}
 
-		Win32::PROCESS_INFORMATION& GetProcessInfo() noexcept
+		auto GetProcessInfo() noexcept -> Win32::PROCESS_INFORMATION&
 		{
 			return m_processInfo;
 		}
 
-		const Win32::PROCESS_INFORMATION& GetProcessInfo() const noexcept
+		auto GetProcessInfo() const noexcept -> const Win32::PROCESS_INFORMATION&
 		{
 			return m_processInfo;
 		}
 
-		Win32::PROCESS_INFORMATION* operator&() noexcept
+		auto operator&() noexcept -> Win32::PROCESS_INFORMATION*
 		{
 			return &m_processInfo;
 		}
 
-		Win32::HANDLE GetProcessHandle() const noexcept
+		auto GetProcessHandle() const noexcept -> Win32::HANDLE
 		{
 			return m_processInfo.hProcess;
 		}
 
-		 Win32::HANDLE GetThreadHandle() const noexcept
+		 auto GetThreadHandle() const noexcept -> Win32::HANDLE
 		{
 			return m_processInfo.hThread;
 		}
 
 		private:
-		ProcessInfo& Copy(const ProcessInfo& other)
+		auto Copy(const ProcessInfo& other) -> ProcessInfo&
 		{
 			if (this == &other)
 				return *this;
@@ -87,7 +87,7 @@ export namespace Boring32::Async
 			return *this;
 		}
 
-		ProcessInfo& Move(ProcessInfo& other) noexcept
+		auto Move(ProcessInfo& other) noexcept -> ProcessInfo&
 		{
 			Close();
 			m_processInfo.dwProcessId = other.m_processInfo.dwProcessId;

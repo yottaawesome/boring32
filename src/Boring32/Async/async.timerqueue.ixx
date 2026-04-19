@@ -42,15 +42,15 @@ export namespace Boring32::Async
 			InternalCreate();
 		}
 			
-		TimerQueue& operator=(TimerQueue&& other) noexcept
+		auto operator=(TimerQueue&& other) noexcept -> TimerQueue&
 		{
 			Move(other);
 			return *this;
 		}
 
-		TimerQueue& operator=(const TimerQueue& other) = delete;
+		auto operator=(const TimerQueue& other) -> TimerQueue& = delete;
 
-		void Close()
+		auto Close() -> void
 		{
 			if (not m_timer)
 				return;
@@ -67,7 +67,7 @@ export namespace Boring32::Async
 			m_timer = nullptr;
 		}
 
-		bool Close(const std::nothrow_t&) noexcept 
+		auto Close(const std::nothrow_t&) noexcept -> bool
 		try
 		{
 			Close();
@@ -79,13 +79,13 @@ export namespace Boring32::Async
 			return false;
 		}
 
-		Win32::HANDLE GetHandle() const noexcept
+		auto GetHandle() const noexcept -> Win32::HANDLE
 		{
 			return m_timer;
 		}
 
 		private:
-		void InternalCreate()
+		auto InternalCreate() -> void
 		{
 			//https://docs.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-createtimerqueue
 			m_timer = Win32::CreateTimerQueue();
@@ -93,7 +93,7 @@ export namespace Boring32::Async
 				throw Error::Win32Error{Win32::GetLastError(), "CreateTimerQueue() failed"};
 		}
 
-		void Move(TimerQueue& other) noexcept 
+		auto Move(TimerQueue& other) noexcept -> void
 		try
 		{
 			Close(std::nothrow);

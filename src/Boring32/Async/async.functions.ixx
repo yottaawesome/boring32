@@ -50,7 +50,7 @@ export namespace Boring32::Async
 		}
 	}
 
-	void WaitFor(Win32::HANDLE handle)
+	auto WaitFor(Win32::HANDLE handle) -> void
 	{
 		WaitFor(handle, Win32::Infinite, false);
 	}

@@ -67,24 +67,21 @@ export namespace Boring32::Async
 			return func(m_protected[index]);
 		}
 
-		SyncedContainer<T> operator=(const T& other)
-		requires std::is_copy_assignable<T>::value
+		auto operator=(const T& other) -> SyncedContainer<T> requires std::is_copy_assignable<T>::value
 		{
 			CriticalSectionLock cs(m_cs);
 			m_protected = other;
 			return *this;
 		}
 
-		SyncedContainer<T> operator=(T&& other) noexcept
-		requires std::is_move_assignable<T>::value
+		auto operator=(T&& other) noexcept -> SyncedContainer<T> requires std::is_move_assignable<T>::value
 		{
 			CriticalSectionLock cs(m_cs);
 			m_protected = other;
 			return *this;
 		}
 
-		typename T::value_type operator[](const size_t index)
-		requires (std::copyable<typename T::value_type>)
+		auto operator[](const size_t index) -> typename T::value_type requires (std::copyable<typename T::value_type>)
 		{
 			CriticalSectionLock cs(m_cs);
 			if (index >= m_protected.size())
@@ -92,7 +89,7 @@ export namespace Boring32::Async
 			return m_protected[index];
 		}
 
-		SyncedContainer<T> ForEach(const std::function<void(typename T::reference)>& func)
+		auto ForEach(const std::function<void(typename T::reference)>& func) -> SyncedContainer<T>
 		{
 			CriticalSectionLock cs(m_cs);
 			for (auto& x : m_protected)
@@ -100,7 +97,7 @@ export namespace Boring32::Async
 			return *this;
 		}
 
-		SyncedContainer<T> ForEach(const std::function<bool(typename T::reference)>& func)
+		auto ForEach(const std::function<bool(typename T::reference)>& func) -> SyncedContainer<T>
 		{
 			CriticalSectionLock cs(m_cs);
 			for (auto& x : m_protected)
@@ -109,7 +106,7 @@ export namespace Boring32::Async
 			return *this;
 		}
 
-		void PopBack()
+		auto PopBack() -> void
 		{
 			CriticalSectionLock cs(m_cs);
 			if (m_protected.empty())
@@ -117,31 +114,31 @@ export namespace Boring32::Async
 			m_protected.pop_back();
 		}
 
-		void PushBack(typename T::const_reference newValue)
+		auto PushBack(typename T::const_reference newValue) -> void
 		{
 			CriticalSectionLock cs(m_cs);
 			m_protected.push_back(newValue);
 		}
 
-		void Clear()
+		auto Clear() -> void
 		{
 			CriticalSectionLock cs(m_cs);
 			m_protected.clear();
 		}
 
-		size_t Size()
+		auto Size() -> size_t
 		{
 			CriticalSectionLock cs(m_cs);
 			return m_protected.size();
 		}
 
-		bool Empty()
+		auto Empty() -> bool
 		{
 			CriticalSectionLock cs(m_cs);
 			return m_protected.empty();
 		}
 
-		void Delete(const size_t index)
+		auto Delete(const size_t index) -> void
 		{
 			CriticalSectionLock cs(m_cs);
 			if (index >= m_protected.size())
@@ -150,8 +147,7 @@ export namespace Boring32::Async
 		}
 
 		[[nodiscard]]
-		typename T::value_type Remove(const size_t index)
-		requires (std::copyable<typename T::value_type>)
+		auto Remove(const size_t index) -> typename T::value_type requires (std::copyable<typename T::value_type>)
 		{
 			CriticalSectionLock cs(m_cs);
 			if (index >= m_protected.size())

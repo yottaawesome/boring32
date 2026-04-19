@@ -40,10 +40,10 @@ export namespace Boring32::Async
 			m_dataSi(dataSi)
 		{ }
 			
-		Process& operator=(Process&& other) noexcept = default;
-		Process& operator=(const Process& other) = default;
+		auto operator=(Process&& other) noexcept -> Process& = default;
+		auto operator=(const Process& other) -> Process& = default;
 		
-		void Start()
+		auto Start() -> void
 		{
 			if (m_executablePath.empty() && m_commandLine.empty())
 				throw Error::Boring32Error("No executable path or command line set");
@@ -76,58 +76,58 @@ export namespace Boring32::Async
 			m_threadId = processInfo.dwThreadId;
 		}
 
-		void CloseHandles()
+		auto CloseHandles() -> void
 		{
 			CloseProcessHandle();
 			CloseThreadHandle();
 		}
 
-		void CloseProcessHandle()
+		auto CloseProcessHandle() -> void
 		{
 			m_process.Close();
 		}
 
-		void CloseThreadHandle()
+		auto CloseThreadHandle() -> void
 		{
 			m_thread.Close();
 		}
 
-		Win32::HANDLE GetProcessHandle() const noexcept
+		auto GetProcessHandle() const noexcept -> Win32::HANDLE
 		{
 			return m_process.GetHandle();
 		}
 
-		Win32::HANDLE GetThreadHandle() const noexcept
+		auto GetThreadHandle() const noexcept -> Win32::HANDLE
 		{
 			return m_thread.GetHandle();
 		}
 			
-		const std::wstring& GetExecutablePath() const noexcept
+		auto GetExecutablePath() const noexcept -> const std::wstring&
 		{
 			return m_executablePath;
 		}
 
-		const std::wstring& GetCommandLineStr() const noexcept
+		auto GetCommandLineStr() const noexcept -> const std::wstring&
 		{
 			return m_commandLine;
 		}
 
-		const std::wstring& GetStartingDirectory() const noexcept
+		auto GetStartingDirectory() const noexcept -> const std::wstring&
 		{
 			return m_startingDirectory;
 		}
 
-		bool GetHandlesInheritability() const noexcept
+		auto GetHandlesInheritability() const noexcept -> bool
 		{
 			return m_canInheritHandles;
 		}
 
-		Win32::DWORD GetCreationFlags() const noexcept
+		auto GetCreationFlags() const noexcept -> Win32::DWORD
 		{
 			return m_creationFlags;
 		}
 
-		Win32::DWORD GetProcessExitCode() const
+		auto GetProcessExitCode() const -> Win32::DWORD
 		{
 			if (not m_process)
 				throw Error::Boring32Error("No process handle to query");

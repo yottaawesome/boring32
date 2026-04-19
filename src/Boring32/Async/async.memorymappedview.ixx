@@ -62,14 +62,14 @@ export namespace Boring32::Async
 			return m_view;
 		}
 
-		void Close()
+		auto Close() -> void
 		{
 			if (m_view and not Win32::UnmapViewOfFile(m_view))
 				throw Error::Win32Error{Win32::GetLastError(), "UnmapViewOfFile() failed"};
 			m_view = nullptr;
 		}
 
-		void Close(const std::nothrow_t&) noexcept
+		auto Close(const std::nothrow_t&) noexcept -> void
 		try
 		{
 			Close();

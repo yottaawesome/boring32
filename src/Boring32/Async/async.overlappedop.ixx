@@ -17,20 +17,20 @@ export namespace Boring32::Async
 			
 		// Shareable, moveable
 		OverlappedOp(const OverlappedOp& other) = delete;
-		OverlappedOp& operator=(const OverlappedOp& other) = delete;
+		auto operator=(const OverlappedOp& other) -> OverlappedOp& = delete;
 
 		OverlappedOp(OverlappedOp&& other) noexcept
 		{
 			Move(other);
 		}
 
-		virtual OverlappedOp& operator=(OverlappedOp&& other) noexcept
+		virtual auto operator=(OverlappedOp&& other) noexcept -> OverlappedOp&
 		{
 			Move(other);
 			return *this;
 		}
 
-		virtual bool WaitForCompletion(const Win32::DWORD timeout)
+		virtual auto WaitForCompletion(const Win32::DWORD timeout) -> bool
 		{
 			if (m_ioOverlapped == nullptr)
 				throw Error::Boring32Error("IoOverlapped is null");
@@ -40,19 +40,19 @@ export namespace Boring32::Async
 			return successfulWait;
 		}
 
-		virtual Win32::HANDLE GetWaitableHandle() const noexcept
+		virtual auto GetWaitableHandle() const noexcept -> Win32::HANDLE
 		{
 			return m_ioEvent.GetHandle();
 		}
 
-		virtual Win32::OVERLAPPED* GetOverlapped()
+		virtual auto GetOverlapped() -> Win32::OVERLAPPED*
 		{
 			if (m_ioOverlapped == nullptr)
 				throw Error::Boring32Error("IoOverlapped is null");
 			return m_ioOverlapped.get();
 		}
 
-		virtual std::uint64_t GetStatus() const
+		virtual auto GetStatus() const -> std::uint64_t
 		{
 			if (m_ioOverlapped == nullptr)
 				throw Error::Boring32Error("IoOverlapped is null");
@@ -61,26 +61,26 @@ export namespace Boring32::Async
 			return m_lastError == Win32::ErrorCodes::IoPending ? m_ioOverlapped->Internal : m_lastError;
 		}
 
-		virtual std::uint64_t GetBytesTransferred() const noexcept
+		virtual auto GetBytesTransferred() const noexcept -> std::uint64_t
 		{
 			if (m_ioOverlapped == nullptr)
 				return 0;
 			return m_ioOverlapped->InternalHigh;
 		}
 
-		virtual bool IsReady() const
+		virtual auto IsReady() const -> bool
 		{
 			return m_ioOverlapped != nullptr;
 		}
 
-		virtual bool IsComplete() const
+		virtual auto IsComplete() const -> bool
 		{
 			if (m_ioOverlapped == nullptr)
 				return false;
 			return m_ioOverlapped->Internal != Win32::NTStatus::Pending;
 		}
 
-		virtual bool IsSuccessful() const
+		virtual auto IsSuccessful() const -> bool
 		{
 			if (m_ioOverlapped == nullptr)
 				return false;
@@ -90,14 +90,14 @@ export namespace Boring32::Async
 			return m_ioOverlapped->Internal == Win32::ErrorCodes::NoError;
 		}
 
-		virtual bool IsPartial() const
+		virtual auto IsPartial() const -> bool
 		{
 			if (m_ioOverlapped == nullptr)
 				return false;
 			return m_ioOverlapped->Internal == 0x80000005L;// STATUS_BUFFER_OVERFLOW;
 		}
 
-		virtual void SetEvent(const bool signaled)
+		virtual auto SetEvent(const bool signaled) -> void
 		{
 			if (signaled)
 				m_ioEvent.Signal();
@@ -105,25 +105,25 @@ export namespace Boring32::Async
 				m_ioEvent.Reset();
 		}
 
-		virtual Win32::DWORD LastError() const
+		virtual auto LastError() const -> Win32::DWORD
 		{
 			return m_lastError;
 		}
 
-		virtual void LastError(const Win32::DWORD lastError)
+		virtual auto LastError(const Win32::DWORD lastError) -> void
 		{
 			m_lastError = lastError;
 		}
 
 	protected:
-		virtual void Move(OverlappedOp& other) noexcept
+		virtual auto Move(OverlappedOp& other) noexcept -> void
 		{
 			m_ioEvent = std::move(other.m_ioEvent);
 			m_ioOverlapped = std::move(other.m_ioOverlapped);
 			m_lastError = other.m_lastError;
 		}
 
-		virtual void OnSuccess() {}
+		virtual auto OnSuccess() -> void {}
 
 		ManualResetEvent m_ioEvent{ false, false };
 		std::shared_ptr<Win32::OVERLAPPED> m_ioOverlapped = std::make_shared<Win32::OVERLAPPED>();

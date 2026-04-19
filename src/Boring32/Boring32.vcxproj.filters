@@ -236,6 +236,7 @@
     <ClCompile Include="Clipboard\clipboard.operation.ixx" />
     <ClCompile Include="Memory\memory.typedgloballock.ixx" />
     <ClCompile Include="Strings\strings.functions.ixx" />
+    <ClCompile Include="Async\async.asyncread.ixx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win32\framework.h">

@@ -40,15 +40,15 @@ export namespace Boring32::Async
 
 		Thread(const Thread&) = delete;
 
-		virtual Thread& operator=(const Thread&) = delete;
+		virtual auto operator=(const Thread&) -> Thread& = delete;
 
-		virtual Thread& operator=(Thread&& other) noexcept
+		virtual auto operator=(Thread&& other) noexcept -> Thread&
 		{
 			Move(other);
 			return *this;
 		}
 
-		virtual bool operator==(const ThreadStatus status) const noexcept
+		virtual auto operator==(const ThreadStatus status) const noexcept -> bool
 		{
 			return m_status == status;
 		}
@@ -59,7 +59,7 @@ export namespace Boring32::Async
 		///	an inconsistent state. Note also that if a thread
 		///	is waiting on a kernel object, it will not be 
 		///	terminated until the wait is finished.
-		virtual void Terminate(const Win32::DWORD exitCode)
+		virtual auto Terminate(const Win32::DWORD exitCode) -> void
 		{
 			if (not m_threadHandle)
 				throw Error::Boring32Error("No thread handle to terminate");
@@ -68,7 +68,7 @@ export namespace Boring32::Async
 			m_status = ThreadStatus::Terminated;
 		}
 
-		virtual void Suspend()
+		virtual auto Suspend() -> void
 		{
 			if (not m_threadHandle)
 				throw Error::Boring32Error("No thread handle to suspend");
@@ -80,7 +80,7 @@ export namespace Boring32::Async
 			m_status = ThreadStatus::Suspended;
 		}
 
-		virtual void Resume()
+		virtual auto Resume() -> void
 		{
 			if (not m_threadHandle)
 				throw Error::Boring32Error("No thread handle to resume");
@@ -91,7 +91,7 @@ export namespace Boring32::Async
 			m_status = ThreadStatus::Running;
 		}
 
-		virtual bool Join(const Win32::DWORD waitTime)
+		virtual auto Join(const Win32::DWORD waitTime) -> bool
 		{
 			if (m_threadHandle == nullptr)
 				throw Error::Boring32Error("No thread handle to wait on");
@@ -106,34 +106,34 @@ export namespace Boring32::Async
 			throw Error::Win32Error{Win32::GetLastError(), "WaitForSingleObject() failed"};
 		}
 
-		virtual void Close()
+		virtual auto Close() -> void
 		{
 			m_threadHandle = nullptr;
 		}
 			
-		virtual void Start()
+		virtual auto Start() -> void
 		{
 			InternalStart();
 		}
 
-		virtual void Start(int(*simpleFunc)(void*))
+		virtual auto Start(int(*simpleFunc)(void*)) -> void
 		{
 			m_func = simpleFunc;
 			InternalStart();
 		}
 
-		virtual void Start(const std::function<int(void*)>& func)
+		virtual auto Start(const std::function<int(void*)>& func) -> void
 		{
 			m_func = func;
 			InternalStart();
 		}
 
-		virtual ThreadStatus GetStatus() const noexcept
+		virtual auto GetStatus() const noexcept -> ThreadStatus
 		{
 			return m_status;
 		}
 
-		virtual unsigned long GetExitCode() const
+		virtual auto GetExitCode() const -> unsigned long
 		{
 			if (not m_threadHandle)
 				throw Error::Boring32Error("No handle to thread; has the the thread been started or destroyed?");
@@ -144,17 +144,17 @@ export namespace Boring32::Async
 			return exitCode;
 		}
 
-		virtual Win32::HANDLE GetHandle() const noexcept
+		virtual auto GetHandle() const noexcept -> Win32::HANDLE
 		{
 			return m_threadHandle.GetHandle();
 		}
 
-		virtual bool WaitToStart(const Win32::DWORD millis)
+		virtual auto WaitToStart(const Win32::DWORD millis) -> bool
 		{
 			return m_started.WaitOnEvent(millis, true);
 		}
 
-		virtual void SetDescription(const std::wstring& description)
+		virtual auto SetDescription(const std::wstring& description) -> void
 		{
 			if (not m_threadHandle)
 				throw Error::Boring32Error("No thread created.");
@@ -167,7 +167,7 @@ export namespace Boring32::Async
 				throw Error::COMError(hr, "SetThreadDescription() failed");
 		}
 
-		virtual std::wstring GetDescription()
+		virtual auto GetDescription() -> std::wstring
 		{
 			if (not m_threadHandle)
 				throw Error::Boring32Error("No thread created.");
@@ -184,12 +184,12 @@ export namespace Boring32::Async
 		}
 
 	protected:
-		virtual unsigned Run()
+		virtual auto Run() -> unsigned
 		{
 			return m_func(m_threadParam);
 		}
 
-		virtual void Move(Thread& other) noexcept
+		virtual auto Move(Thread& other) noexcept -> void
 		{
 			Close();
 			m_func = std::move(other.m_func);
@@ -199,7 +199,7 @@ export namespace Boring32::Async
 			m_started = std::move(other.m_started);
 		}
 
-		virtual void InternalStart()
+		virtual auto InternalStart() -> void
 		{
 			// https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/beginthread-beginthreadex?view=vs-2019
 			m_threadHandle = reinterpret_cast<Win32::HANDLE>(
@@ -224,7 +224,7 @@ export namespace Boring32::Async
 			}
 		}
 
-		static unsigned __stdcall ThreadProc(void* param)
+		static auto __stdcall ThreadProc(void* param) -> unsigned
 		{
 			Thread* threadObj = static_cast<Thread*>(param);
 			if (not threadObj)

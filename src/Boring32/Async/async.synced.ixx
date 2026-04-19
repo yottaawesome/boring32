@@ -9,7 +9,7 @@ export namespace Boring32::Async
 	{
 
 		Synced(const Synced&) = delete;
-		Synced operator=(const Synced&) = delete;
+		auto operator=(const Synced&) -> Synced = delete;
 
 		Synced()
 			requires std::is_trivially_constructible<T>::value = default;
@@ -20,8 +20,7 @@ export namespace Boring32::Async
 		{
 		}
 
-		T operator()() 
-			requires (std::is_copy_constructible<T>::value or std::is_copy_assignable<T>::value)
+		auto operator()() -> T
 		{
 			CriticalSectionLock cs(m_cs);
 			return m_protected;
@@ -33,16 +32,14 @@ export namespace Boring32::Async
 			return X(m_protected);
 		}
 
-		Synced operator=(const T& other) 
-			requires std::is_copy_assignable<T>::value
+		auto operator=(const T& other) -> Synced requires std::is_copy_assignable<T>::value
 		{
 			CriticalSectionLock cs(m_cs);
 			m_protected = other;
 			return *this;
 		}
 
-		Synced operator=(T&& other) noexcept 
-			requires std::is_move_assignable<T>::value
+		auto operator=(T&& other) noexcept -> Synced requires std::is_move_assignable<T>::value
 		{
 			CriticalSectionLock cs(m_cs);
 			m_protected = other;

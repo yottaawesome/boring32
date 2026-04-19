@@ -10,17 +10,16 @@ export namespace Boring32::Async
 		SharedMap() = default;
 		SharedMap(const SharedMap&) = delete;
 		SharedMap(SharedMap&&) noexcept = delete;
-		SharedMap& operator=(const SharedMap&) = delete;
-		SharedMap& operator=(SharedMap&&) noexcept = delete;
+		auto operator=(const SharedMap&) -> SharedMap& = delete;
+		auto operator=(SharedMap&&) noexcept -> SharedMap& = delete;
 
-		void SetValue(const K& key, const V& value)
+		auto SetValue(const K& key, const V& value) -> void
 		{
 			ExclusiveLockScope(m_lock.GetLock());
 			m_map[key] = value;
 		}
 
-		V GetValueCopy(const K& key) 
-			requires std::is_default_constructible_v<V>
+		auto GetValueCopy(const K& key) -> V requires std::is_default_constructible_v<V>
 		{
 			SharedLockScope(m_lock.GetLock());
 			if(m_map.contains(key))
@@ -28,7 +27,7 @@ export namespace Boring32::Async
 			return {};
 		}
 
-		bool GetValueCopy(const K& key, V& out)
+		auto GetValueCopy(const K& key, V& out) -> bool
 		{
 			SharedLockScope(m_lock.GetLock());
 			if (m_map.contains(key))
@@ -39,11 +38,11 @@ export namespace Boring32::Async
 			return false;
 		}
 
-		bool ExecuteOnValue(
+		auto ExecuteOnValue(
 			const K& key,
 			// auto creates bad codegen that segfaults
 			const std::function<void(const V&)>& function
-		)
+		) -> bool
 		{
 			SharedLockScope(m_lock.GetLock());
 			if (m_map.contains(key))
@@ -54,7 +53,7 @@ export namespace Boring32::Async
 			return false;
 		}
 
-		V operator[](const K& key)
+		auto operator[](const K& key) -> V
 		{
 			SharedLockScope(m_lock.GetLock());
 			if (m_map.contains(key))

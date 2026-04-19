@@ -22,7 +22,7 @@ export namespace Boring32::Async
 			m_isInitialized = true;
 		}
 
-		void Close()
+		auto Close() -> void
 		{
 			if (m_isInitialized)
 			{
@@ -32,7 +32,7 @@ export namespace Boring32::Async
 			}
 		}
 
-		bool Enter(const Win32::DWORD flags)
+		auto Enter(const Win32::DWORD flags) -> bool
 		{
 			if (not m_isInitialized)
 				throw Error::Boring32Error("Barrier is not initialised");

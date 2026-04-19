@@ -58,4 +58,7 @@ export namespace Boring32::IPC
 		Win32::DWORD m_readTimeoutMs;
 		RAII::UniqueHandle m_handle;
 	};
+
+	static_assert(not std::copyable<MailslotServer>);
+	static_assert(std::movable<MailslotServer>);
 }

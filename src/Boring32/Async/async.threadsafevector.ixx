@@ -19,14 +19,14 @@ export namespace Boring32::Async
 
 		ThreadSafeVector() = default;
 		ThreadSafeVector(const ThreadSafeVector&) = delete;
-		ThreadSafeVector operator=(const ThreadSafeVector&) = delete;
+		auto operator=(const ThreadSafeVector&) -> ThreadSafeVector = delete;
 
 		ThreadSafeVector(std::convertible_to<T> auto&&...args)
 		{
 			Add(std::forward<decltype(args)>(args)...);
 		}
 
-		void Add(std::convertible_to<T> auto&&...args) noexcept
+		auto Add(std::convertible_to<T> auto&&...args) noexcept -> void
 		{
 			ScopedLock cs(m_mutex);
 			(m_collection.push_back(std::forward<decltype(args)>(args)), ...);
@@ -46,14 +46,14 @@ export namespace Boring32::Async
 			return std::vector<T>(m_collection);
 		}
 
-		void Clear()
+		auto Clear() -> void
 		{
 			ScopedLock cs(m_mutex);
 			m_collection.clear();
 			m_hasMessages.Reset();
 		}
 
-		void DoWithLock(std::invocable<std::vector<T>&> auto&& func)
+		auto DoWithLock(std::invocable<std::vector<T>&> auto&& func) -> void
 		{
 			ScopedLock cs(m_mutex);
 			func(m_collection);
@@ -68,7 +68,7 @@ export namespace Boring32::Async
 				: throw std::runtime_error(std::format("Index {} is out of bounds for size {}.", index, m_collection.size()));
 		}
 
-		void ForEach(FindFn<T> auto&& predicate)
+		auto ForEach(FindFn<T> auto&& predicate) -> void
 		{
 			ScopedLock cs(m_mutex);
 			for (T& item : m_collection)
@@ -76,7 +76,7 @@ export namespace Boring32::Async
 					break;
 		}
 
-		void ForEachThenClear(std::invocable<T> auto&& predicate)
+		auto ForEachThenClear(std::invocable<T> auto&& predicate) -> void
 		{
 			ScopedLock cs(m_mutex);
 			for (T& item : m_collection)
@@ -118,7 +118,7 @@ export namespace Boring32::Async
 			return std::nullopt;
 		}
 
-		void DeleteAt(size_t index)
+		auto DeleteAt(size_t index) -> void
 		{
 			if (index >= m_collection.size())
 				return;
@@ -149,7 +149,7 @@ export namespace Boring32::Async
 		}
 
 	private:
-		void SignalOrReset()
+		auto SignalOrReset() -> void
 		{
 			m_collection.size() == 0 ? m_hasMessages.Reset() : m_hasMessages.Signal();
 		}
