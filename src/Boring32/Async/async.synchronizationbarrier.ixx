@@ -4,15 +4,16 @@ import :error;
 
 export namespace Boring32::Async
 {
-	struct SynchronizationBarrier final
+	class SynchronizationBarrier final
 	{
+	public:
 		~SynchronizationBarrier()
 		{
 			Close();
 		}
 
 		SynchronizationBarrier() = default;
-		SynchronizationBarrier(const long totalThreads, const long spinCount)
+		SynchronizationBarrier(long totalThreads, long spinCount)
 			: m_totalThreads(totalThreads),
 			m_spinCount(spinCount)
 		{
@@ -22,7 +23,7 @@ export namespace Boring32::Async
 			m_isInitialized = true;
 		}
 
-		auto Close() -> void
+		void Close()
 		{
 			if (m_isInitialized)
 			{
@@ -32,7 +33,7 @@ export namespace Boring32::Async
 			}
 		}
 
-		auto Enter(const Win32::DWORD flags) -> bool
+		auto Enter(Win32::DWORD flags) -> bool
 		{
 			if (not m_isInitialized)
 				throw Error::Boring32Error("Barrier is not initialised");
@@ -40,7 +41,7 @@ export namespace Boring32::Async
 			return Win32::EnterSynchronizationBarrier(&m_barrier, flags);
 		}
 
-		private:
+	private:
 		long m_totalThreads = 0;
 		long m_spinCount = 0;
 		bool m_isInitialized = false;

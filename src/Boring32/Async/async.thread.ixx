@@ -16,9 +16,10 @@ export namespace Boring32::Async
 		Terminated = 4
 	};
 
-	// TODO: selectively devirtualise
-	struct Thread
+	// TODO: devirtualise, convert to deducing this.
+	class Thread
 	{
+	public:
 		// Default constructible, movable, not copyable
 		virtual ~Thread()
 		{
@@ -39,8 +40,7 @@ export namespace Boring32::Async
 		}
 
 		Thread(const Thread&) = delete;
-
-		virtual auto operator=(const Thread&) -> Thread& = delete;
+		auto operator=(const Thread&) -> Thread& = delete;
 
 		virtual auto operator=(Thread&& other) noexcept -> Thread&
 		{
@@ -59,7 +59,7 @@ export namespace Boring32::Async
 		///	an inconsistent state. Note also that if a thread
 		///	is waiting on a kernel object, it will not be 
 		///	terminated until the wait is finished.
-		virtual auto Terminate(const Win32::DWORD exitCode) -> void
+		virtual void Terminate(const Win32::DWORD exitCode)
 		{
 			if (not m_threadHandle)
 				throw Error::Boring32Error("No thread handle to terminate");
@@ -68,7 +68,7 @@ export namespace Boring32::Async
 			m_status = ThreadStatus::Terminated;
 		}
 
-		virtual auto Suspend() -> void
+		virtual void Suspend()
 		{
 			if (not m_threadHandle)
 				throw Error::Boring32Error("No thread handle to suspend");
@@ -80,7 +80,7 @@ export namespace Boring32::Async
 			m_status = ThreadStatus::Suspended;
 		}
 
-		virtual auto Resume() -> void
+		virtual void Resume()
 		{
 			if (not m_threadHandle)
 				throw Error::Boring32Error("No thread handle to resume");
@@ -91,7 +91,7 @@ export namespace Boring32::Async
 			m_status = ThreadStatus::Running;
 		}
 
-		virtual auto Join(const Win32::DWORD waitTime) -> bool
+		virtual auto Join(Win32::DWORD waitTime) -> bool
 		{
 			if (m_threadHandle == nullptr)
 				throw Error::Boring32Error("No thread handle to wait on");
@@ -106,23 +106,23 @@ export namespace Boring32::Async
 			throw Error::Win32Error{Win32::GetLastError(), "WaitForSingleObject() failed"};
 		}
 
-		virtual auto Close() -> void
+		virtual void Close()
 		{
 			m_threadHandle = nullptr;
 		}
 			
-		virtual auto Start() -> void
+		virtual void Start()
 		{
 			InternalStart();
 		}
 
-		virtual auto Start(int(*simpleFunc)(void*)) -> void
+		virtual void Start(auto(*simpleFunc)(void*)->int)
 		{
 			m_func = simpleFunc;
 			InternalStart();
 		}
 
-		virtual auto Start(const std::function<int(void*)>& func) -> void
+		virtual void Start(const std::function<int(void*)>& func)
 		{
 			m_func = func;
 			InternalStart();
@@ -133,7 +133,7 @@ export namespace Boring32::Async
 			return m_status;
 		}
 
-		virtual auto GetExitCode() const -> unsigned long
+		virtual auto GetExitCode() const -> Win32::DWORD
 		{
 			if (not m_threadHandle)
 				throw Error::Boring32Error("No handle to thread; has the the thread been started or destroyed?");
@@ -154,15 +154,12 @@ export namespace Boring32::Async
 			return m_started.WaitOnEvent(millis, true);
 		}
 
-		virtual auto SetDescription(const std::wstring& description) -> void
+		virtual void SetDescription(const std::wstring& description)
 		{
 			if (not m_threadHandle)
 				throw Error::Boring32Error("No thread created.");
 
-			Win32::HRESULT hr = Win32::SetThreadDescription(
-				m_threadHandle.GetHandle(),
-				description.c_str()
-			);
+			auto hr = Win32::HRESULT{Win32::SetThreadDescription(m_threadHandle.GetHandle(), description.c_str())};
 			if (Win32::HrFailed(hr))
 				throw Error::COMError(hr, "SetThreadDescription() failed");
 		}
@@ -172,14 +169,14 @@ export namespace Boring32::Async
 			if (not m_threadHandle)
 				throw Error::Boring32Error("No thread created.");
 
-			wchar_t* pThreadDescription = nullptr;
+			wchar_t* pThreadDescription = {};
 			// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreaddescription
-			Win32::HRESULT hr = Win32::GetThreadDescription(m_threadHandle, &pThreadDescription);
+			auto hr = Win32::HRESULT{Win32::GetThreadDescription(m_threadHandle, &pThreadDescription)};
 			if (Win32::HrFailed(hr))
 				throw Error::COMError(hr, "GetThreadDescription() failed");
 			if (not pThreadDescription)
 				return {};
-			RAII::LocalHeapUniquePtr<wchar_t> deleter(pThreadDescription);
+			auto deleter = RAII::LocalHeapUniquePtr<wchar_t>(pThreadDescription);
 			return pThreadDescription;
 		}
 
@@ -214,7 +211,7 @@ export namespace Boring32::Async
 			);
 			if (not m_threadHandle)
 			{
-				int errorCode = 0;
+				auto errorCode = int{};
 				Win32::_get_errno(&errorCode);
 				std::string errorMessage = std::format(
 					"_beginthreadex() failed with error code {}", 
@@ -226,7 +223,7 @@ export namespace Boring32::Async
 
 		static auto ThreadProc(void* param) -> unsigned
 		{
-			Thread* threadObj = static_cast<Thread*>(param);
+			auto threadObj = static_cast<Thread*>(param);
 			if (not threadObj)
 				throw Error::Boring32Error("threadObj is unexpectedly nullptr");
 
