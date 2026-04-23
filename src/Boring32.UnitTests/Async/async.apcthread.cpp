@@ -11,7 +11,8 @@ namespace Async
 		{
 			Boring32::Async::APCThread apcExecutor;
 			apcExecutor.Start();
-			Assert::IsTrue(apcExecutor.WaitToStart(1000));
+			while(not apcExecutor.IsRunning())
+				std::this_thread::yield();
 			bool test = false;
 			apcExecutor.QueueAPC
 			(
@@ -31,7 +32,8 @@ namespace Async
 		{
 			Boring32::Async::APCThread apcExecutor;
 			apcExecutor.Start();
-			Assert::IsTrue(apcExecutor.WaitToStart(1000));
+			while (not apcExecutor.IsRunning())
+				std::this_thread::yield();
 			bool test = false;
 			// This is safe. See https://en.cppreference.com/w/cpp/language/reference_initialization#Lifetime_of_a_temporary
 			apcExecutor.QueueAPC(
@@ -56,7 +58,8 @@ namespace Async
 		{
 			Boring32::Async::APCThread apcExecutor;
 			apcExecutor.Start();
-			Assert::IsTrue(apcExecutor.WaitToStart(1000));
+			while (not apcExecutor.IsRunning())
+				std::this_thread::yield();
 			bool test = false;
 
 			TestSetter b(test);
@@ -75,7 +78,8 @@ namespace Async
 		{
 			Boring32::Async::APCThread apcExecutor;
 			apcExecutor.Start();
-			Assert::IsTrue(apcExecutor.WaitToStart(1000));
+			while (not apcExecutor.IsRunning())
+				std::this_thread::yield();
 			apcExecutor.SignalToExit();
 			Assert::IsTrue(apcExecutor.Join(5000));
 			Assert::IsTrue(apcExecutor.GetExitCode() == 0);

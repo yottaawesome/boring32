@@ -14,7 +14,7 @@ export import :async.processinfo;
 export import :async.semaphore;
 export import :async.slimreadwritelock;
 export import :async.synchronizationbarrier;
-export import :async.thread;
+export import :async.win32thread;
 export import :async.apcthread;
 export import :async.threadpool;
 export import :async.threadsafevector;

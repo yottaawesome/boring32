@@ -2,13 +2,13 @@ export module boring32:async.apcthread;
 import std;
 import :win32;
 import :error;
-import :async.thread;
+import :async.win32thread;
 import :async.event;
 
 export namespace Boring32::Async
 {
 	// See https://learn.microsoft.com/en-us/windows/win32/sync/asynchronous-procedure-calls
-	class APCThread : public Thread
+	class APCThread : public Win32Thread
 	{
 	public:
 		using ApcFunctionSignature = Win32::PAPCFUNC;
@@ -50,13 +50,6 @@ export namespace Boring32::Async
 		{
 			if (not m_threadHandle)
 				throw Error::Boring32Error("No thread handle found. Either the thread hasn't been started or has been Close()d.");
-			if (m_status != ThreadStatus::Running && m_status != ThreadStatus::Suspended)
-				throw Error::Boring32Error(
-					std::format(
-						"APCThread must either be running or suspended. Currently in {}.",
-						int(m_status)
-					)
-				);
 			if (not Win32::QueueUserAPC(apc, m_threadHandle, arg))
 				throw Error::Win32Error{ Win32::GetLastError(), "QueueUserAPC() failed" };
 		}

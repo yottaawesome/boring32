@@ -289,7 +289,7 @@
     <ClCompile Include="Async\async.synced.ixx" />
     <ClCompile Include="Async\async.syncedcontainer.ixx" />
     <ClCompile Include="Async\async.synchronizationbarrier.ixx" />
-    <ClCompile Include="Async\async.thread.ixx" />
+    <ClCompile Include="Async\async.win32thread.ixx" />
     <ClCompile Include="Async\async.threadpool.ixx" />
     <ClCompile Include="Async\async.threadsafevector.ixx" />
     <ClCompile Include="Async\async.timerqueue.ixx" />
