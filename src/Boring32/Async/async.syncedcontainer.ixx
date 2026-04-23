@@ -18,9 +18,9 @@ export namespace Boring32::Async
 			: m_protected(args...)
 		{ }
 
-		auto operator()(const auto func)
+		auto operator()(std::invocable<T> auto&& func)
 		{
-			CriticalSectionLock cs(m_cs);
+			auto cs = CriticalSectionLock(m_cs);
 
 			// This checks if the passed in lambda corresponds to a signature of
 			// void(T::reference) and calls the func for each element (effectively
