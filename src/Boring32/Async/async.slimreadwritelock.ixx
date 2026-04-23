@@ -104,8 +104,9 @@ export namespace Boring32::Async
 	};
 
 	template<typename TProtected>
-	struct SlimRWProtectedObject final [[nodiscard]]
+	class SlimRWProtectedObject final [[nodiscard]]
 	{
+	public:
 		SlimRWProtectedObject()
 			requires std::constructible_from<TProtected> = default;
 		SlimRWProtectedObject(std::convertible_to<TProtected> auto&& data)
