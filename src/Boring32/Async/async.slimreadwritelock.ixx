@@ -5,7 +5,7 @@ import :win32;
 export namespace Boring32::Async
 {
 	template<bool VShared>
-	struct SlimLockScope final
+	struct SlimLockScope final [[nodiscard]]
 	{
 		~SlimLockScope()
 		{
@@ -34,7 +34,7 @@ export namespace Boring32::Async
 	using SharedLockScope = SlimLockScope<true>;
 	using ExclusiveLockScope = SlimLockScope<false>;
 
-	struct SlimReadWriteLock final
+	struct SlimReadWriteLock final [[nodiscard]]
 	{
 		SlimReadWriteLock()
 		{
@@ -53,7 +53,7 @@ export namespace Boring32::Async
 
 		auto TryAcquireExclusiveLock() -> bool
 		{
-			Win32::DWORD currentThreadId = Win32::GetCurrentThreadId();
+			auto currentThreadId = Win32::GetCurrentThreadId();
 			if (m_threadOwningExclusiveLock == currentThreadId)
 				return true;
 			if (Win32::TryAcquireSRWLockExclusive(&m_srwLock))
@@ -64,12 +64,12 @@ export namespace Boring32::Async
 			return false;
 		}
 
-		auto AcquireSharedLock() -> void
+		void AcquireSharedLock()
 		{
 			AcquireSRWLockShared(&m_srwLock);
 		}
 
-		auto AcquireExclusiveLock() -> void
+		void AcquireExclusiveLock()
 		{
 			Win32::DWORD currentThreadId = Win32::GetCurrentThreadId();
 			if (m_threadOwningExclusiveLock != currentThreadId)
@@ -79,12 +79,12 @@ export namespace Boring32::Async
 			}
 		}
 
-		auto ReleaseSharedLock() -> void
+		void ReleaseSharedLock()
 		{
 			Win32::ReleaseSRWLockShared(&m_srwLock);
 		}
 
-		auto ReleaseExclusiveLock() -> void
+		void ReleaseExclusiveLock()
 		{
 			if (m_threadOwningExclusiveLock != Win32::GetCurrentThreadId())
 				return;
@@ -92,6 +92,7 @@ export namespace Boring32::Async
 			m_threadOwningExclusiveLock = 0;
 		}
 
+		[[nodiscard]]
 		auto GetLock() noexcept -> Win32::SRWLOCK&
 		{
 			return m_srwLock;
@@ -103,7 +104,7 @@ export namespace Boring32::Async
 	};
 
 	template<typename TProtected>
-	struct SlimRWProtectedObject final
+	struct SlimRWProtectedObject final [[nodiscard]]
 	{
 		SlimRWProtectedObject()
 			requires std::constructible_from<TProtected> = default;

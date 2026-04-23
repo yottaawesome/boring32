@@ -5,31 +5,36 @@ import :async.slimreadwritelock;
 export namespace Boring32::Async
 {
 	template<typename K, typename V>
-	struct SharedMap final
+	requires std::copyable<V>
+	class SharedMap final
 	{
+	public:
 		SharedMap() = default;
 		SharedMap(const SharedMap&) = delete;
 		SharedMap(SharedMap&&) noexcept = delete;
 		auto operator=(const SharedMap&) -> SharedMap& = delete;
 		auto operator=(SharedMap&&) noexcept -> SharedMap& = delete;
 
-		auto SetValue(const K& key, const V& value) -> void
+		auto SetValue(const K& key, std::convertible_to<V> auto&& value)
 		{
-			ExclusiveLockScope(m_lock.GetLock());
+			auto scope = ExclusiveLockScope{ m_lock.GetLock() };
 			m_map[key] = value;
 		}
 
-		auto GetValueCopy(const K& key) -> V requires std::is_default_constructible_v<V>
+		[[nodiscard]]
+		auto GetValueCopy(const K& key) -> V
+			requires std::is_default_constructible_v<V>
 		{
-			SharedLockScope(m_lock.GetLock());
-			if(m_map.contains(key))
+			auto scope = SharedLockScope{ m_lock.GetLock() };
+			if (m_map.contains(key))
 				return m_map[key];
 			return {};
 		}
 
+		[[nodiscard]]
 		auto GetValueCopy(const K& key, V& out) -> bool
 		{
-			SharedLockScope(m_lock.GetLock());
+			auto scope = SharedLockScope{ m_lock.GetLock() };
 			if (m_map.contains(key))
 			{
 				out = m_map[key];
@@ -38,13 +43,9 @@ export namespace Boring32::Async
 			return false;
 		}
 
-		auto ExecuteOnValue(
-			const K& key,
-			// auto creates bad codegen that segfaults
-			const std::function<void(const V&)>& function
-		) -> bool
+		auto ExecuteOnValue(const K& key, std::invocable<const V&> auto&& function) -> bool
 		{
-			SharedLockScope(m_lock.GetLock());
+			auto scope = SharedLockScope{ m_lock.GetLock() };
 			if (m_map.contains(key))
 			{
 				function(m_map[key]);
@@ -53,15 +54,16 @@ export namespace Boring32::Async
 			return false;
 		}
 
+		[[nodiscard]]
 		auto operator[](const K& key) -> V
 		{
-			SharedLockScope(m_lock.GetLock());
+			auto scope = SharedLockScope{ m_lock.GetLock() };
 			if (m_map.contains(key))
 				return m_map[key];
 			return {};
 		}
 
-		private:
+	private:
 		std::map<K, V> m_map;
 		SlimReadWriteLock m_lock;
 	};

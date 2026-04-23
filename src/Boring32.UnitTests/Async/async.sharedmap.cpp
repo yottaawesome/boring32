@@ -30,7 +30,7 @@ namespace Async
 			::Boring32::Async::SharedMap<std::wstring, int> map;
 			map.SetValue(L"Blah", 1);
 			int i = 0;
-			map.GetValueCopy(L"Blah", i);
+			auto x = map.GetValueCopy(L"Blah", i);
 			Assert::IsTrue(i == 1);
 		}
 
