@@ -11,14 +11,15 @@ export namespace Boring32::Async
 	{
 		Semaphore() = default;
 		Semaphore(const Semaphore& other) = default;
-		Semaphore(Semaphore&& other) noexcept = default;
 		auto operator=(const Semaphore& other) -> Semaphore& = default;
+
+		Semaphore(Semaphore&& other) noexcept = default;
 		auto operator=(Semaphore&& other) noexcept -> Semaphore& = default;
 
 		Semaphore(
-			const bool isInheritable,
-			const unsigned long initialCount,
-			const unsigned long maxCount
+			bool isInheritable,
+			Win32::DWORD initialCount,
+			Win32::DWORD maxCount
 		) : m_maxCount(maxCount)
 		{
 			InternalCreate(m_name, initialCount, maxCount, isInheritable);
@@ -26,14 +27,14 @@ export namespace Boring32::Async
 
 		Semaphore(
 			std::wstring name,
-			const bool isInheritable,
-			const unsigned long initialCount,
-			const unsigned long maxCount
+			bool isInheritable,
+			Win32::DWORD initialCount,
+			Win32::DWORD maxCount
 		) : m_name(std::move(name)),
 			m_maxCount(maxCount)
 		{
 			if (m_name.empty())
-				throw Error::Boring32Error("Cannot create named semaphore with empty string.");
+				throw Error::Boring32Error{"Cannot create named semaphore with empty string."};
 			InternalCreate(m_name, initialCount, maxCount, isInheritable);
 		}
 
@@ -47,11 +48,11 @@ export namespace Boring32::Async
 				m_maxCount(maxCount)
 			{
 				if (initialCount > maxCount)
-					throw Error::Boring32Error("Initial count exceeds maximum count.");
+					throw Error::Boring32Error{"Initial count exceeds maximum count."};
 				if (m_name.empty())
-					throw Error::Boring32Error("Cannot open semaphore with empty string.");
+					throw Error::Boring32Error{"Cannot open semaphore with empty string."};
 				if (maxCount == 0)
-					throw Error::Boring32Error("MaxCount cannot be 0.");
+					throw Error::Boring32Error{"MaxCount cannot be 0."};
 				//SEMAPHORE_ALL_ACCESS
 				m_handle = Win32::OpenSemaphoreW(desiredAccess, isInheritable, m_name.c_str());
 				if (not m_handle)
@@ -63,27 +64,28 @@ export namespace Boring32::Async
 			return m_handle != nullptr;
 		}
 
-		auto Close() -> void
+		void Close()
 		{
 			m_handle = nullptr;
 			m_name.clear();
 		}
 
-		auto Release() -> void
+		void Release()
 		{
 			Release(1);
 		}
 
-		auto Release(const long countToRelease) -> void
+		auto Release(long countToRelease) -> long
 		{
 			if (countToRelease == 0)
-				return;
+				return 0;
 			if (not m_handle)
-				throw Error::Boring32Error("m_handle is nullptr.");
+				throw Error::Boring32Error{"m_handle is nullptr."};
 
-			long previousCount;
+			auto previousCount = long{};
 			if (not Win32::ReleaseSemaphore(*m_handle, countToRelease, &previousCount))
 				throw Error::Win32Error{Win32::GetLastError(), "Failed to release semaphore"};
+			return previousCount;
 		}
 
 		auto Acquire() -> bool
@@ -91,17 +93,17 @@ export namespace Boring32::Async
 			return Acquire(Win32::Infinite, false);
 		}
 
-		auto Acquire(const unsigned long millisTimeout) -> bool
+		auto Acquire(Win32::DWORD millisTimeout) -> bool
 		{
 			return Acquire(millisTimeout, false);
 		}
 
-		auto AcquireMany(const long countToAcquire, const unsigned long millisTimeout) -> bool
+		auto AcquireMany(long countToAcquire, Win32::DWORD millisTimeout) -> bool
 		{
 			if (not m_handle)
-				throw Error::Boring32Error("m_handle is nullptr.");
+				throw Error::Boring32Error{"m_handle is nullptr."};
 			if (countToAcquire > m_maxCount)
-				throw Error::Boring32Error("Cannot acquire more than the maximum of the semaphore.");
+				throw Error::Boring32Error{"Cannot acquire more than the maximum of the semaphore."};
 
 			for (int actualAcquired = 0; actualAcquired < countToAcquire; actualAcquired++)
 				if (not Acquire(millisTimeout))
@@ -113,26 +115,20 @@ export namespace Boring32::Async
 			return true;
 		}
 
-		auto Acquire(const Concepts::Duration auto& time, const bool isAlertable) -> bool
+		auto Acquire(Concepts::Duration auto&& time, bool isAlertable) -> bool
 		{
-			using std::chrono::milliseconds;
-			using std::chrono::duration_cast;
 			return Acquire(
-				static_cast<unsigned long>(duration_cast<milliseconds>(time).count()), 
+				static_cast<Win32::DWORD>(std::chrono::duration_cast<std::chrono::milliseconds>(time).count()),
 				isAlertable
 			);
 		}
 
-		auto Acquire(const unsigned long millisTimeout, const bool isAlertable) -> bool
+		auto Acquire(Win32::DWORD millisTimeout, bool isAlertable) -> bool
 		{
 			if (not m_handle)
-				throw Error::Boring32Error("m_handle is nullptr.");
+				throw Error::Boring32Error{"m_handle is nullptr."};
 
-			const Win32::DWORD status = Win32::WaitForSingleObjectEx(
-				*m_handle,
-				millisTimeout,
-				isAlertable
-			);
+			auto status = Win32::WaitForSingleObjectEx(*m_handle, millisTimeout, isAlertable);
 			switch (status)
 			{
 				case Win32::WaitObject0:
@@ -142,27 +138,22 @@ export namespace Boring32::Async
 					return false;
 
 				case Win32::WaitAbandoned:
-					throw Error::Boring32Error("The wait was abandoned.");
+					throw Error::Boring32Error{"The wait was abandoned."};
 
 				case Win32::WaitFailed:
 					throw Error::Win32Error{Win32::GetLastError(), "WaitForSingleObject() failed"};
 
 				default:
-					throw Error::Boring32Error(
-						"Unknown WaitForSingleObjectEx() value {}",
-						std::source_location::current(),
-						std::stacktrace::current(),
-						status
-					);
+					throw Error::Boring32Error{std::format("Unknown WaitForSingleObjectEx() value {}", status)};
 			}
 		}
 
-		auto GetName() const noexcept -> const std::wstring&
+		auto GetName(this auto&& self) noexcept -> std::wstring
 		{
-			return m_name;
+			return std::forward_like<decltype(self)>(self.m_name);
 		}
 
-		auto GetMaxCount() const noexcept -> long
+		auto GetMaxCount() const noexcept -> Win32::DWORD
 		{
 			return m_maxCount;
 		}
@@ -172,18 +163,13 @@ export namespace Boring32::Async
 			return m_handle.GetHandle();
 		}
 
-		private:
-		auto InternalCreate(
-			const std::wstring& name,
-			const unsigned long initialCount,
-			const unsigned long maxCount,
-			const bool isInheritable
-		) -> void
+	private:
+		void InternalCreate(const std::wstring& name, Win32::DWORD initialCount, Win32::DWORD maxCount, bool isInheritable)
 		{
 			if (initialCount > maxCount)
-				throw Error::Boring32Error("Initial count exceeds maximum count.");
+				throw Error::Boring32Error{"Initial count exceeds maximum count."};
 			if (maxCount == 0)
-				throw Error::Boring32Error("MaxCount cannot be 0.");
+				throw Error::Boring32Error{"MaxCount cannot be 0."};
 			m_handle = Win32::CreateSemaphoreW(
 				nullptr,
 				initialCount,

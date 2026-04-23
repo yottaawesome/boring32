@@ -6,8 +6,9 @@ import :error;
 
 export namespace Boring32::Async
 {
-	struct Process final
+	class Process final
 	{
+	public:
 		Process() = default;
 
 		Process(Process&& other) noexcept = default;
@@ -29,8 +30,8 @@ export namespace Boring32::Async
 			std::wstring executablePath,
 			std::wstring commandLine,
 			std::wstring startingDirectory,
-			const bool canInheritHandles,
-			const Win32::DWORD creationFlags,
+			bool canInheritHandles,
+			Win32::DWORD creationFlags,
 			const Win32::STARTUPINFO& dataSi
 		) : m_executablePath(std::move(executablePath)),
 			m_commandLine(std::move(commandLine)),
@@ -45,13 +46,13 @@ export namespace Boring32::Async
 		
 		auto Start() -> void
 		{
-			if (m_executablePath.empty() && m_commandLine.empty())
-				throw Error::Boring32Error("No executable path or command line set");
+			if (m_executablePath.empty() and m_commandLine.empty())
+				throw Error::Boring32Error{ "No executable path or command line set" };
 
-			Win32::PROCESS_INFORMATION processInfo{ 0 };
+			auto processInfo = Win32::PROCESS_INFORMATION{ 0 };
 			m_dataSi.cb = sizeof(m_dataSi);
 			// https://docs.microsoft.com/en-us/windows/win32/procthread/creating-processes
-			const bool successfullyCreatedProcess =
+			bool successfullyCreatedProcess =
 				Win32::CreateProcessW(
 					m_executablePath.empty()
 						? nullptr : m_executablePath.c_str(),		// Module name
@@ -76,18 +77,18 @@ export namespace Boring32::Async
 			m_threadId = processInfo.dwThreadId;
 		}
 
-		auto CloseHandles() -> void
+		void CloseHandles()
 		{
 			CloseProcessHandle();
 			CloseThreadHandle();
 		}
 
-		auto CloseProcessHandle() -> void
+		void CloseProcessHandle()
 		{
 			m_process.Close();
 		}
 
-		auto CloseThreadHandle() -> void
+		void CloseThreadHandle()
 		{
 			m_thread.Close();
 		}
@@ -102,19 +103,19 @@ export namespace Boring32::Async
 			return m_thread.GetHandle();
 		}
 			
-		auto GetExecutablePath() const noexcept -> const std::wstring&
+		auto GetExecutablePath(this auto&& self) noexcept -> std::wstring
 		{
-			return m_executablePath;
+			return std::forward_like<decltype(self)>(self.m_executablePath);
 		}
 
-		auto GetCommandLineStr() const noexcept -> const std::wstring&
+		auto GetCommandLineStr(this auto&& self) noexcept -> std::wstring
 		{
-			return m_commandLine;
+			return std::forward_like<decltype(self)>(self.m_commandLine);
 		}
 
-		auto GetStartingDirectory() const noexcept -> const std::wstring&
+		auto GetStartingDirectory(this auto&& self) noexcept -> std::wstring
 		{
-			return m_startingDirectory;
+			return std::forward_like<decltype(self)>(self.m_startingDirectory);
 		}
 
 		auto GetHandlesInheritability() const noexcept -> bool
@@ -130,16 +131,16 @@ export namespace Boring32::Async
 		auto GetProcessExitCode() const -> Win32::DWORD
 		{
 			if (not m_process)
-				throw Error::Boring32Error("No process handle to query");
+				throw Error::Boring32Error{ "No process handle to query" };
 
-			Win32::DWORD exitCode = 0;
+			auto exitCode = Win32::DWORD{};
 			if (not Win32::GetExitCodeProcess(m_process.GetHandle(), &exitCode))
 				throw Error::Win32Error{Win32::GetLastError(), "Failed to determine process exit code"};
 
 			return exitCode;
 		}
 
-		private:
+	private:
 		std::wstring m_executablePath;
 		std::wstring m_commandLine;
 		std::wstring m_startingDirectory;

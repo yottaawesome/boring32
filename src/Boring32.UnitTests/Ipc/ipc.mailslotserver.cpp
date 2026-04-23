@@ -21,7 +21,7 @@ namespace IPC
 				auto server = Boring32::IPC::MailslotServer{L"", 1024, 5000};
 				Assert::Fail(L"Expected exception was not thrown.");
 			}
-			catch (const Boring32::Error::Boring32Error& ex)
+			catch (const Boring32::Error::Boring32Error&)
 			{
 			}
 			catch (...)

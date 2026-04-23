@@ -4,8 +4,9 @@ import :raii;
 
 export namespace Boring32::Async
 {
-	struct ProcessInfo final
+	class ProcessInfo final
 	{
+	public:
 		~ProcessInfo()
 		{
 			Close();
@@ -49,12 +50,12 @@ export namespace Boring32::Async
 			}
 		}
 
-		auto GetProcessInfo() noexcept -> Win32::PROCESS_INFORMATION&
+		auto GetProcessInfo() noexcept -> Win32::PROCESS_INFORMATION
 		{
 			return m_processInfo;
 		}
 
-		auto GetProcessInfo() const noexcept -> const Win32::PROCESS_INFORMATION&
+		auto GetProcessInfo() const noexcept -> Win32::PROCESS_INFORMATION
 		{
 			return m_processInfo;
 		}
@@ -69,12 +70,12 @@ export namespace Boring32::Async
 			return m_processInfo.hProcess;
 		}
 
-		 auto GetThreadHandle() const noexcept -> Win32::HANDLE
+		auto GetThreadHandle() const noexcept -> Win32::HANDLE
 		{
 			return m_processInfo.hThread;
 		}
 
-		private:
+	private:
 		auto Copy(const ProcessInfo& other) -> ProcessInfo&
 		{
 			if (this == &other)
