@@ -6,8 +6,8 @@ import :concepts;
 
 export namespace Boring32::Async
 {
-	class [[nodiscard("This must remain alive while the IO operation is in progress.")]] Overlapped final 
-		: public Win32::OVERLAPPED
+	class [[nodiscard("This must remain alive while the IO operation is in progress.")]] 
+		Overlapped final : public Win32::OVERLAPPED
 	{
 	public:
 		~Overlapped() { Close(); }
