@@ -12,10 +12,10 @@ export namespace Boring32::Async
 	// the time the base class destructor is called, the derived class's members will have been 
 	// destroyed and the thread procedure may be accessing destroyed members if it hasn't finished 
 	// yet.
-	class Win32Thread
+	class Win32Thread final
 	{
 	public:
-		virtual ~Win32Thread()
+		~Win32Thread()
 		try
 		{
 			Close();
@@ -27,6 +27,9 @@ export namespace Boring32::Async
 		}
 
 		Win32Thread() = default;
+		Win32Thread(std::move_only_function<auto()->unsigned> threadFunction) 
+			: m_threadFunction(std::move(threadFunction)) 
+		{}
 
 		Win32Thread(const Win32Thread&) = delete;
 		auto operator=(const Win32Thread&) -> Win32Thread& = delete;
@@ -206,14 +209,12 @@ export namespace Boring32::Async
 		}
 
 	protected:
-		virtual auto Run() -> unsigned = 0;
-
 		static auto ThreadProc(void* param) noexcept -> unsigned
 		try
 		{
 			auto threadObj = static_cast<Win32Thread*>(param);
 			auto returnCode = unsigned{};
-			returnCode = threadObj->Run();
+			returnCode = std::invoke(threadObj->m_threadFunction);
 
 			return returnCode;
 		}
@@ -223,6 +224,7 @@ export namespace Boring32::Async
 			std::terminate();
 		}
 
+		std::move_only_function<auto()->unsigned> m_threadFunction;
 		RAII::UniqueHandle m_threadHandle;
 	};
 }

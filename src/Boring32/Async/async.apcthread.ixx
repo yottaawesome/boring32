@@ -8,11 +8,13 @@ import :async.event;
 export namespace Boring32::Async
 {
 	// See https://learn.microsoft.com/en-us/windows/win32/sync/asynchronous-procedure-calls
-	class APCThread : public Win32Thread
+	class APCThread
 	{
 	public:
 		using ApcFunctionSignature = Win32::PAPCFUNC;
-		APCThread() = default;
+		APCThread()
+			: m_thread(std::move_only_function<auto()->unsigned>([this] { return Run(); }))
+		{ }
 
 		template<typename T, typename M>
 		auto QueueInstanceAPC(const T& instance, M member) -> void
@@ -48,19 +50,39 @@ export namespace Boring32::Async
 
 		auto QueueAPC(ApcFunctionSignature apc, const Win32::ULONG_PTR arg) -> void
 		{
-			if (not m_threadHandle)
+			if (not this->m_thread.GetHandle())
 				throw Error::Boring32Error("No thread handle found. Either the thread hasn't been started or has been Close()d.");
-			if (not Win32::QueueUserAPC(apc, m_threadHandle, arg))
+			if (not Win32::QueueUserAPC(apc, m_thread.GetHandle(), arg))
 				throw Error::Win32Error{ Win32::GetLastError(), "QueueUserAPC() failed" };
 		}
 
-		auto SignalToExit() -> void
+		auto SignalToExit()
 		{
 			m_wait.Signal();
 		}
 
+		void Start()
+		{
+			m_thread.Start();
+		}
+
+		auto Join(Win32::DWORD joinTime = Win32::Infinite) -> bool
+		{
+			return m_thread.Join(joinTime);
+		}
+
+		auto IsRunning() const -> bool
+		{
+			return m_thread.GetHandle() != nullptr;
+		}
+
+		auto GetExitCode() const -> Win32::DWORD
+		{
+			return m_thread.GetExitCode();
+		}
+
 	protected:
-		auto Run() -> unsigned override
+		auto Run() -> unsigned
 		{
 			while (true)
 			{
@@ -120,6 +142,7 @@ export namespace Boring32::Async
 			std::invoke(apc->Method, apc->Instance);
 		}
 
+		Win32Thread m_thread;
 		ManualResetEvent m_wait{ false, false, };
 	};
 }
