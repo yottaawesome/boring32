@@ -140,6 +140,9 @@
       <EnableModules>false</EnableModules>
       <DisableSpecificWarnings>4005;5106</DisableSpecificWarnings>
       <BuildStlModules>true</BuildStlModules>
+      <ModuleOutputFile>$(IntDir)%(RelativeDir)</ModuleOutputFile>
+      <ModuleDependenciesFile>$(IntDir)%(RelativeDir)</ModuleDependenciesFile>
+      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -161,6 +164,9 @@
       <EnableModules>false</EnableModules>
       <DisableSpecificWarnings>4005;5106</DisableSpecificWarnings>
       <BuildStlModules>true</BuildStlModules>
+      <ModuleOutputFile>$(IntDir)%(RelativeDir)</ModuleOutputFile>
+      <ModuleDependenciesFile>$(IntDir)%(RelativeDir)</ModuleDependenciesFile>
+      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -232,6 +238,9 @@
       <EnableModules>true</EnableModules>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <DisableSpecificWarnings>4005;5106</DisableSpecificWarnings>
+      <ModuleOutputFile>$(IntDir)%(RelativeDir)</ModuleOutputFile>
+      <ModuleDependenciesFile>$(IntDir)%(RelativeDir)</ModuleDependenciesFile>
+      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -243,49 +252,49 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Async\async.filerangelock.cpp" />
-    <ClCompile Include="Async\async.filesystemlock.cpp" />
-    <ClCompile Include="Async\async.job.cpp" />
-    <ClCompile Include="Async\async.threadsafevector.cpp" />
-    <ClCompile Include="Async\async.apcthread.cpp" />
-    <ClCompile Include="Async\async.functions.cpp" />
-    <ClCompile Include="Async\async.event.cpp" />
-    <ClCompile Include="Async\async.eventloop.cpp" />
-    <ClCompile Include="Async\async.filemapping.cpp" />
-    <ClCompile Include="Async\async.memorymappedview.cpp" />
-    <ClCompile Include="Async\async.mutex.cpp" />
-    <ClCompile Include="Async\async.semaphore.cpp" />
-    <ClCompile Include="Async\async.threadpool.cpp" />
-    <ClCompile Include="Async\async.timerqueue.cpp" />
-    <ClCompile Include="Async\async.timerqueuetimercallback.cpp" />
-    <ClCompile Include="Async\async.waitable.cpp" />
-    <ClCompile Include="Async\async.waitabletimer.cpp" />
-    <ClCompile Include="Async\async.sharedmap.cpp" />
-    <ClCompile Include="Clipboard\clipboard.operation.cpp" />
-    <ClCompile Include="Compression\compression.compressor.cpp" />
-    <ClCompile Include="Compression\compression.decompressor.cpp" />
-    <ClCompile Include="Computer\computer.functions.cpp" />
-    <ClCompile Include="COM\com.ptr.cpp" />
-    <ClCompile Include="COM\com.comthreadscope.cpp" />
-    <ClCompile Include="COM\com.hresult.cpp" />
-    <ClCompile Include="Crypto\crypto.aesencryption.cpp" />
-    <ClCompile Include="Crypto\crypto.certificate.cpp" />
-    <ClCompile Include="Crypto\crypto.certstore.cpp" />
-    <ClCompile Include="Crypto\crypto.crypto.cpp" />
-    <ClCompile Include="Crypto\crypto.securestring.cpp" />
-    <ClCompile Include="DataStructures\datastructures.cappedstack.cpp" />
-    <ClCompile Include="DataStructures\datastructures.singlylinkedlist.cpp" />
-    <ClCompile Include="Error\error.boring32error.cpp" />
-    <ClCompile Include="Error\error.comerror.cpp" />
-    <ClCompile Include="Error\error.errorbase.cpp" />
-    <ClCompile Include="Error\error.functions.cpp" />
-    <ClCompile Include="Error\error.ntstatuserror.cpp" />
-    <ClCompile Include="Error\error.win32error.cpp" />
-    <ClCompile Include="Ipc\ipc.mailslotserver.cpp" />
-    <ClCompile Include="Networking\networking.api.cpp" />
-    <ClCompile Include="MSI\msi.functions.cpp" />
-    <ClCompile Include="MSI\msi.package.cpp" />
-    <ClCompile Include="MSI\msi.database.cpp" />
+    <ClCompile Include="Async\filerangelock.cpp" />
+    <ClCompile Include="Async\filesystemlock.cpp" />
+    <ClCompile Include="Async\job.cpp" />
+    <ClCompile Include="Async\threadsafevector.cpp" />
+    <ClCompile Include="Async\apcthread.cpp" />
+    <ClCompile Include="Async\functions.cpp" />
+    <ClCompile Include="Async\event.cpp" />
+    <ClCompile Include="Async\eventloop.cpp" />
+    <ClCompile Include="Async\filemapping.cpp" />
+    <ClCompile Include="Async\memorymappedview.cpp" />
+    <ClCompile Include="Async\mutex.cpp" />
+    <ClCompile Include="Async\semaphore.cpp" />
+    <ClCompile Include="Async\threadpool.cpp" />
+    <ClCompile Include="Async\timerqueue.cpp" />
+    <ClCompile Include="Async\timerqueuetimercallback.cpp" />
+    <ClCompile Include="Async\waitable.cpp" />
+    <ClCompile Include="Async\waitabletimer.cpp" />
+    <ClCompile Include="Async\sharedmap.cpp" />
+    <ClCompile Include="Clipboard\operation.cpp" />
+    <ClCompile Include="Compression\compressor.cpp" />
+    <ClCompile Include="Compression\decompressor.cpp" />
+    <ClCompile Include="Computer\functions.cpp" />
+    <ClCompile Include="COM\ptr.cpp" />
+    <ClCompile Include="COM\comthreadscope.cpp" />
+    <ClCompile Include="COM\hresult.cpp" />
+    <ClCompile Include="Crypto\aesencryption.cpp" />
+    <ClCompile Include="Crypto\certificate.cpp" />
+    <ClCompile Include="Crypto\certstore.cpp" />
+    <ClCompile Include="Crypto\crypto.cpp" />
+    <ClCompile Include="Crypto\securestring.cpp" />
+    <ClCompile Include="DataStructures\cappedstack.cpp" />
+    <ClCompile Include="DataStructures\singlylinkedlist.cpp" />
+    <ClCompile Include="Error\boring32error.cpp" />
+    <ClCompile Include="Error\comerror.cpp" />
+    <ClCompile Include="Error\errorbase.cpp" />
+    <ClCompile Include="Error\functions.cpp" />
+    <ClCompile Include="Error\ntstatuserror.cpp" />
+    <ClCompile Include="Error\win32error.cpp" />
+    <ClCompile Include="Ipc\mailslotserver.cpp" />
+    <ClCompile Include="Networking\api.cpp" />
+    <ClCompile Include="MSI\functions.cpp" />
+    <ClCompile Include="MSI\package.cpp" />
+    <ClCompile Include="MSI\database.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Instrumented|x64'">Create</PrecompiledHeader>
@@ -294,27 +303,27 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Registry\registry.key.cpp" />
-    <ClCompile Include="Security\security.securitydescriptor.cpp" />
-    <ClCompile Include="Security\security.functions.cpp" />
-    <ClCompile Include="Security\security.securityidentifier.cpp" />
-    <ClCompile Include="Security\security.token.cpp" />
-    <ClCompile Include="Services\services.functions.cpp" />
-    <ClCompile Include="Services\services.servicecontrolmanager.cpp" />
-    <ClCompile Include="Strings\strings.fixedstring.cpp" />
-    <ClCompile Include="Strings\strings.functions.cpp" />
-    <ClCompile Include="TaskScheduler\taskscheduler.taskservice.cpp" />
-    <ClCompile Include="TaskScheduler\taskscheduler.taskfolder.cpp" />
-    <ClCompile Include="TaskScheduler\taskscheduler.registeredtask.cpp" />
-    <ClCompile Include="Time\time.datetime.cpp" />
-    <ClCompile Include="Util\util-functions.cpp" />
-    <ClCompile Include="Util\util.globallyuniqueid.cpp" />
-    <ClCompile Include="Win32\win32.ntdll.cpp" />
-    <ClCompile Include="WinHttp\winhttp.decomposedurl.cpp" />
-    <ClCompile Include="WinHttp\winhttp.httpwebclient.cpp" />
-    <ClCompile Include="WinHttp\winhttp.session.cpp" />
-    <ClCompile Include="WinSock\winsock.socket.cpp" />
-    <ClCompile Include="WinSock\winsock.winsockinit.cpp" />
+    <ClCompile Include="Registry\key.cpp" />
+    <ClCompile Include="Security\securitydescriptor.cpp" />
+    <ClCompile Include="Security\functions.cpp" />
+    <ClCompile Include="Security\securityidentifier.cpp" />
+    <ClCompile Include="Security\token.cpp" />
+    <ClCompile Include="Services\functions.cpp" />
+    <ClCompile Include="Services\servicecontrolmanager.cpp" />
+    <ClCompile Include="Strings\fixedstring.cpp" />
+    <ClCompile Include="Strings\functions.cpp" />
+    <ClCompile Include="TaskScheduler\taskservice.cpp" />
+    <ClCompile Include="TaskScheduler\taskfolder.cpp" />
+    <ClCompile Include="TaskScheduler\registeredtask.cpp" />
+    <ClCompile Include="Time\datetime.cpp" />
+    <ClCompile Include="Util\functions.cpp" />
+    <ClCompile Include="Util\globallyuniqueid.cpp" />
+    <ClCompile Include="Win32\ntdll.cpp" />
+    <ClCompile Include="WinHttp\decomposedurl.cpp" />
+    <ClCompile Include="WinHttp\httpwebclient.cpp" />
+    <ClCompile Include="WinHttp\session.cpp" />
+    <ClCompile Include="WinSock\socket.cpp" />
+    <ClCompile Include="WinSock\winsockinit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />

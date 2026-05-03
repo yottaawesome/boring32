@@ -29,10 +29,6 @@ Some unit tests will likely fail on your machine as they are referencing objects
 
 `Boring32` is now (2023-11-24) fully module-based and has eliminated any direct reliance on the Windows headers. The primary module interface file is `boring32.ixx`. While compilation speeds are often touted as the reason to use modules, they also offer a much cleaner way of structuring your codebase with improved encapsulation by allowing you to selectively export only what you need. Modules also allow you to do all your work within the module interface files, which eliminates the duplication caused by seperate declarations and definitions in traditional header/source file C++ projects.
 
-### C++ modules naming convention
-
-The preferred naming convention of the C++ modules in the codebase has undergone several changes over time as I've tested and reviewed different naming schemes. The final scheme I chose to adopt is to name module filenames in the format `<module-name>-<namespace>.<partitionname>.ixx`. Correspondingly, the modules are declared also following this convention, e.g. `boring32:crypto.certificatechain` This convention organises files by namespace and keeps filenames unique for MSVC which prevents obj file clashes when compiling. However, if you structure your code such that a unique vcxproj corresponds to one and one module only, then you can omit the `<module-name>` for all the partitions while keeping it for the primary module interface file. This is the current convention adopted by the `Boring32` project.
-
 ## Additional resources
 
 * [Programming Windows 5th edition](https://github.com/yottaawesome/programming-windows-5th-edition)

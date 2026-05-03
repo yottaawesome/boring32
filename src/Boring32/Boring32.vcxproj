@@ -114,14 +114,14 @@
     <LinkIncremental>true</LinkIncremental>
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <RunCodeAnalysis>false</RunCodeAnalysis>
-    <IncludePath>$(SolutionDir)Boring32.HeaderUnit;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <EnableMicrosoftCodeAnalysis>false</EnableMicrosoftCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Instrumented|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <RunCodeAnalysis>false</RunCodeAnalysis>
-    <IncludePath>$(SolutionDir)Boring32.HeaderUnit;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <EnableMicrosoftCodeAnalysis>false</EnableMicrosoftCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -132,7 +132,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(SolutionDir)Boring32.HeaderUnit;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <EnableMicrosoftCodeAnalysis>false</EnableMicrosoftCodeAnalysis>
   </PropertyGroup>
@@ -186,6 +186,9 @@
       <ErrorReporting>Send</ErrorReporting>
       <DisableSpecificWarnings>4005;5106;4067</DisableSpecificWarnings>
       <BuildStlModules>true</BuildStlModules>
+      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
+      <ModuleOutputFile>$(IntDir)%(RelativeDir)</ModuleOutputFile>
+      <ModuleDependenciesFile>$(IntDir)%(RelativeDir)</ModuleDependenciesFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -211,6 +214,9 @@
       <ErrorReporting>Send</ErrorReporting>
       <DisableSpecificWarnings>4005;5106;4067</DisableSpecificWarnings>
       <BuildStlModules>true</BuildStlModules>
+      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
+      <ModuleOutputFile>$(IntDir)%(RelativeDir)</ModuleOutputFile>
+      <ModuleDependenciesFile>$(IntDir)%(RelativeDir)</ModuleDependenciesFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -255,6 +261,9 @@
       <DisableSpecificWarnings>4005;5106;4067</DisableSpecificWarnings>
       <BuildStlModules>true</BuildStlModules>
       <ErrorReporting>Send</ErrorReporting>
+      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
+      <ModuleOutputFile>$(IntDir)%(RelativeDir)</ModuleOutputFile>
+      <ModuleDependenciesFile>$(IntDir)%(RelativeDir)</ModuleDependenciesFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -264,230 +273,230 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Async\async.apcthread.ixx" />
-    <ClCompile Include="Async\async.asyncread.ixx" />
-    <ClCompile Include="Async\async.cmdrunner.ixx" />
-    <ClCompile Include="Async\async.criticalsection.ixx" />
-    <ClCompile Include="Async\async.event.ixx" />
-    <ClCompile Include="Async\async.eventloop.ixx" />
-    <ClCompile Include="Async\async.filemapping.ixx" />
-    <ClCompile Include="Async\async.filerangelock.ixx" />
-    <ClCompile Include="Async\async.filesystemlock.ixx" />
-    <ClCompile Include="Async\async.functions.ixx" />
-    <ClCompile Include="Async\async.job.ixx" />
-    <ClCompile Include="Async\async.memorymappedview.ixx" />
-    <ClCompile Include="Async\async.mutex.ixx" />
-    <ClCompile Include="Async\async.nullmutex.ixx" />
-    <ClCompile Include="Async\async.overlapped.ixx" />
-    <ClCompile Include="Async\async.overlappedio.ixx" />
-    <ClCompile Include="Async\async.overlappedop.ixx" />
-    <ClCompile Include="Async\async.process.ixx" />
-    <ClCompile Include="Async\async.processinfo.ixx" />
-    <ClCompile Include="Async\async.semaphore.ixx" />
-    <ClCompile Include="Async\async.sharedmap.ixx" />
-    <ClCompile Include="Async\async.slimreadwritelock.ixx" />
-    <ClCompile Include="Async\async.synced.ixx" />
-    <ClCompile Include="Async\async.syncedcontainer.ixx" />
-    <ClCompile Include="Async\async.synchronizationbarrier.ixx" />
-    <ClCompile Include="Async\async.win32thread.ixx" />
-    <ClCompile Include="Async\async.threadpool.ixx" />
-    <ClCompile Include="Async\async.threadsafevector.ixx" />
-    <ClCompile Include="Async\async.timerqueue.ixx" />
-    <ClCompile Include="Async\async.timerqueuetimer.ixx" />
-    <ClCompile Include="Async\async.timerqueuetimercallback.ixx" />
-    <ClCompile Include="Async\async.waitable.ixx" />
-    <ClCompile Include="Async\async.waitableaddress.ixx" />
-    <ClCompile Include="Async\async.waitabletimer.ixx" />
+    <ClCompile Include="Async\apcthread.ixx" />
+    <ClCompile Include="Async\asyncread.ixx" />
+    <ClCompile Include="Async\cmdrunner.ixx" />
+    <ClCompile Include="Async\criticalsection.ixx" />
+    <ClCompile Include="Async\event.ixx" />
+    <ClCompile Include="Async\eventloop.ixx" />
+    <ClCompile Include="Async\filemapping.ixx" />
+    <ClCompile Include="Async\filerangelock.ixx" />
+    <ClCompile Include="Async\filesystemlock.ixx" />
+    <ClCompile Include="Async\functions.ixx" />
+    <ClCompile Include="Async\job.ixx" />
+    <ClCompile Include="Async\memorymappedview.ixx" />
+    <ClCompile Include="Async\mutex.ixx" />
+    <ClCompile Include="Async\nullmutex.ixx" />
+    <ClCompile Include="Async\overlapped.ixx" />
+    <ClCompile Include="Async\overlappedio.ixx" />
+    <ClCompile Include="Async\overlappedop.ixx" />
+    <ClCompile Include="Async\process.ixx" />
+    <ClCompile Include="Async\processinfo.ixx" />
+    <ClCompile Include="Async\semaphore.ixx" />
+    <ClCompile Include="Async\sharedmap.ixx" />
+    <ClCompile Include="Async\slimreadwritelock.ixx" />
+    <ClCompile Include="Async\synced.ixx" />
+    <ClCompile Include="Async\syncedcontainer.ixx" />
+    <ClCompile Include="Async\synchronizationbarrier.ixx" />
+    <ClCompile Include="Async\win32thread.ixx" />
+    <ClCompile Include="Async\threadpool.ixx" />
+    <ClCompile Include="Async\threadsafevector.ixx" />
+    <ClCompile Include="Async\timerqueue.ixx" />
+    <ClCompile Include="Async\timerqueuetimer.ixx" />
+    <ClCompile Include="Async\timerqueuetimercallback.ixx" />
+    <ClCompile Include="Async\waitable.ixx" />
+    <ClCompile Include="Async\waitableaddress.ixx" />
+    <ClCompile Include="Async\waitabletimer.ixx" />
     <ClCompile Include="Async\async.ixx" />
     <ClCompile Include="Clipboard\clipboard.ixx" />
-    <ClCompile Include="Clipboard\clipboard.operation.ixx" />
-    <ClCompile Include="Memory\memory.typedgloballock.ixx" />
+    <ClCompile Include="Clipboard\operation.ixx" />
+    <ClCompile Include="Memory\typedgloballock.ixx" />
     <ClCompile Include="Strings\strings.functions.ixx" />
-    <ClCompile Include="UI\ui.common.ixx" />
-    <ClCompile Include="UI\ui.control.ixx" />
-    <ClCompile Include="UI\ui.window.ixx" />
+    <ClCompile Include="UI\common.ixx" />
+    <ClCompile Include="UI\control.ixx" />
+    <ClCompile Include="UI\window.ixx" />
     <ClCompile Include="Win32\win32.ixx" />
-    <ClCompile Include="Com\com.ptr.ixx" />
+    <ClCompile Include="Com\ptr.ixx" />
     <ClCompile Include="Concepts\concepts.ixx" />
     <ClCompile Include="boring32.ixx" />
-    <ClCompile Include="Compression\compression.cabinet.ixx" />
-    <ClCompile Include="Compression\compression.deleters.ixx" />
-    <ClCompile Include="Computer\computer.functions.ixx" />
-    <ClCompile Include="Computer\computer.processinfo.ixx" />
+    <ClCompile Include="Compression\cabinet.ixx" />
+    <ClCompile Include="Compression\deleters.ixx" />
+    <ClCompile Include="Computer\functions.ixx" />
+    <ClCompile Include="Computer\processinfo.ixx" />
     <ClCompile Include="Computer\computer.ixx" />
-    <ClCompile Include="Com\com.functions.ixx" />
-    <ClCompile Include="Com\com.hresult.ixx" />
+    <ClCompile Include="Com\functions.ixx" />
+    <ClCompile Include="Com\hresult.ixx" />
     <ClCompile Include="Com\com.ixx" />
-    <ClCompile Include="Crypto\crypto.aesencryption.ixx" />
-    <ClCompile Include="Crypto\crypto.certificate.ixx" />
-    <ClCompile Include="Crypto\crypto.certificatechain.ixx" />
-    <ClCompile Include="Crypto\crypto.certstore.ixx" />
-    <ClCompile Include="Crypto\crypto.chainingmode.ixx" />
-    <ClCompile Include="Crypto\crypto.cryptokey.ixx" />
-    <ClCompile Include="Crypto\crypto.functions.ixx" />
-    <ClCompile Include="Crypto\crypto.securestring.ixx" />
-    <ClCompile Include="Crypto\crypto.tempcertimport.ixx" />
+    <ClCompile Include="Crypto\aesencryption.ixx" />
+    <ClCompile Include="Crypto\certificate.ixx" />
+    <ClCompile Include="Crypto\certificatechain.ixx" />
+    <ClCompile Include="Crypto\certstore.ixx" />
+    <ClCompile Include="Crypto\chainingmode.ixx" />
+    <ClCompile Include="Crypto\cryptokey.ixx" />
+    <ClCompile Include="Crypto\functions.ixx" />
+    <ClCompile Include="Crypto\securestring.ixx" />
+    <ClCompile Include="Crypto\tempcertimport.ixx" />
     <ClCompile Include="Crypto\crypto.ixx" />
-    <ClCompile Include="DataStructures\datastructures.cappedstack.ixx" />
+    <ClCompile Include="DataStructures\cappedstack.ixx" />
     <ClCompile Include="DataStructures\datastructures.ixx" />
-    <ClCompile Include="DataStructures\datastructures.singlylinkedlist.ixx" />
+    <ClCompile Include="DataStructures\singlylinkedlist.ixx" />
     <ClCompile Include="DirectX\directx.ixx" />
-    <ClCompile Include="Error\error.boring32error.ixx" />
-    <ClCompile Include="Error\error.comerror.ixx" />
-    <ClCompile Include="Error\error.errorbase.ixx" />
-    <ClCompile Include="Error\error.functions.ixx" />
+    <ClCompile Include="Error\boring32error.ixx" />
+    <ClCompile Include="Error\comerror.ixx" />
+    <ClCompile Include="Error\errorbase.ixx" />
+    <ClCompile Include="Error\functions.ixx" />
     <ClCompile Include="Error\error.ixx" />
-    <ClCompile Include="Error\error.ntstatuserror.ixx" />
-    <ClCompile Include="Error\error.win32error.ixx" />
-    <ClCompile Include="Error\error.win32errorcodes.ixx" />
-    <ClCompile Include="FileSystem\filesystem.directory.ixx" />
-    <ClCompile Include="FileSystem\filesystem.functions.ixx" />
+    <ClCompile Include="Error\ntstatuserror.ixx" />
+    <ClCompile Include="Error\win32error.ixx" />
+    <ClCompile Include="Error\win32errorcodes.ixx" />
+    <ClCompile Include="FileSystem\directory.ixx" />
+    <ClCompile Include="FileSystem\functions.ixx" />
     <ClCompile Include="FileSystem\filesystem.ixx" />
-    <ClCompile Include="IO\io.completionport.ixx" />
+    <ClCompile Include="IO\completionport.ixx" />
     <ClCompile Include="IO\io.ixx" />
-    <ClCompile Include="IPC\ipc.blockingnamedpipeclient.ixx" />
-    <ClCompile Include="IPC\ipc.blockingnamedpipeserver.ixx" />
-    <ClCompile Include="IPC\ipc.anonymouspipe.ixx" />
-    <ClCompile Include="IPC\ipc.mailslotserver.ixx" />
+    <ClCompile Include="IPC\blockingnamedpipeclient.ixx" />
+    <ClCompile Include="IPC\blockingnamedpipeserver.ixx" />
+    <ClCompile Include="IPC\anonymouspipe.ixx" />
+    <ClCompile Include="IPC\mailslotserver.ixx" />
     <ClCompile Include="IPC\ipc.ixx" />
-    <ClCompile Include="IPC\ipc.namedpipeclientbase.ixx" />
-    <ClCompile Include="IPC\ipc.namedpipeserverbase.ixx" />
-    <ClCompile Include="IPC\ipc.overlappednamedpipeclient.ixx" />
-    <ClCompile Include="IPC\ipc.overlappednamedpipeserver.ixx" />
-    <ClCompile Include="Logging\logging.functions.ixx" />
+    <ClCompile Include="IPC\namedpipeclientbase.ixx" />
+    <ClCompile Include="IPC\namedpipeserverbase.ixx" />
+    <ClCompile Include="IPC\overlappednamedpipeclient.ixx" />
+    <ClCompile Include="IPC\overlappednamedpipeserver.ixx" />
+    <ClCompile Include="Logging\functions.ixx" />
     <ClCompile Include="Logging\logging.ixx" />
     <ClCompile Include="MediaFoundation\mediafoundation.ixx" />
-    <ClCompile Include="Memory\memory.functions.ixx" />
-    <ClCompile Include="Memory\memory.heap.ixx" />
-    <ClCompile Include="Memory\memory.virtualaddress.ixx" />
+    <ClCompile Include="Memory\functions.ixx" />
+    <ClCompile Include="Memory\heap.ixx" />
+    <ClCompile Include="Memory\virtualaddress.ixx" />
     <ClCompile Include="Memory\memory.ixx" />
-    <ClCompile Include="MSI\msi.database.ixx" />
-    <ClCompile Include="MSI\msi.functions.ixx" />
-    <ClCompile Include="MSI\msi.package.ixx" />
-    <ClCompile Include="MSI\msi.product.ixx" />
+    <ClCompile Include="MSI\database.ixx" />
+    <ClCompile Include="MSI\functions.ixx" />
+    <ClCompile Include="MSI\package.ixx" />
+    <ClCompile Include="MSI\product.ixx" />
     <ClCompile Include="MSI\msi.ixx" />
     <ClCompile Include="Networking\networking.api.ixx" />
     <ClCompile Include="Networking\networking.ixx" />
-    <ClCompile Include="Process\process.dynamiclinklibrary.ixx" />
+    <ClCompile Include="Process\dynamiclinklibrary.ixx" />
     <ClCompile Include="Process\process.ixx" />
-    <ClCompile Include="RAII\raii.handle.ixx" />
+    <ClCompile Include="RAII\handle.ixx" />
     <ClCompile Include="RAII\raii.ixx" />
-    <ClCompile Include="RAII\raii.uniquehandle.ixx" />
-    <ClCompile Include="RAII\raii.sharedhandle.ixx" />
-    <ClCompile Include="RAII\raii.uniqueptrs.ixx" />
-    <ClCompile Include="Registry\registry.functions.ixx" />
-    <ClCompile Include="Registry\registry.registryvalue.ixx" />
+    <ClCompile Include="RAII\uniquehandle.ixx" />
+    <ClCompile Include="RAII\sharedhandle.ixx" />
+    <ClCompile Include="RAII\uniqueptrs.ixx" />
+    <ClCompile Include="Registry\functions.ixx" />
+    <ClCompile Include="Registry\registryvalue.ixx" />
     <ClCompile Include="Registry\registry.ixx" />
-    <ClCompile Include="Registry\registry.key.ixx" />
-    <ClCompile Include="Registry\registry.value.ixx" />
-    <ClCompile Include="Security\security.credentials.ixx" />
-    <ClCompile Include="Security\security.constants.ixx" />
-    <ClCompile Include="Security\security.encodedpointer.ixx" />
-    <ClCompile Include="Security\security.functions.ixx" />
-    <ClCompile Include="Security\security.impersonationcontext.ixx" />
-    <ClCompile Include="Security\security.level.ixx" />
-    <ClCompile Include="Security\security.lsaunicodestring.cpp">
+    <ClCompile Include="Registry\key.ixx" />
+    <ClCompile Include="Registry\value.ixx" />
+    <ClCompile Include="Security\credentials.ixx" />
+    <ClCompile Include="Security\constants.ixx" />
+    <ClCompile Include="Security\encodedpointer.ixx" />
+    <ClCompile Include="Security\functions.ixx" />
+    <ClCompile Include="Security\impersonationcontext.ixx" />
+    <ClCompile Include="Security\level.ixx" />
+    <ClCompile Include="Security\lsaunicodestring.cpp">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModuleInternalPartition</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Instrumented|x64'">CompileAsCppModuleInternalPartition</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCppModuleInternalPartition</CompileAs>
     </ClCompile>
-    <ClCompile Include="Security\security.policy.ixx" />
-    <ClCompile Include="Security\security.securityattributes.ixx" />
+    <ClCompile Include="Security\policy.ixx" />
+    <ClCompile Include="Security\securityattributes.ixx" />
     <ClCompile Include="Security\security.ixx" />
-    <ClCompile Include="Security\security.privatenamespace.ixx" />
-    <ClCompile Include="Security\security.securitydescriptor.ixx" />
-    <ClCompile Include="Security\security.securityidentifier.ixx" />
-    <ClCompile Include="Security\security.token.ixx" />
-    <ClCompile Include="Services\services.functions.ixx" />
-    <ClCompile Include="Services\services.raii.ixx" />
-    <ClCompile Include="Services\services.service.ixx" />
-    <ClCompile Include="Services\services.servicecontrolmanager.ixx" />
+    <ClCompile Include="Security\privatenamespace.ixx" />
+    <ClCompile Include="Security\securitydescriptor.ixx" />
+    <ClCompile Include="Security\securityidentifier.ixx" />
+    <ClCompile Include="Security\token.ixx" />
+    <ClCompile Include="Services\functions.ixx" />
+    <ClCompile Include="Services\raii.ixx" />
+    <ClCompile Include="Services\service.ixx" />
+    <ClCompile Include="Services\servicecontrolmanager.ixx" />
     <ClCompile Include="Services\services.ixx" />
     <ClCompile Include="Shell\shell.ixx" />
-    <ClCompile Include="SSPI\sspi.buffertype.ixx" />
-    <ClCompile Include="SSPI\sspi.contextbuffer.ixx" />
-    <ClCompile Include="SSPI\sspi.credential.ixx" />
-    <ClCompile Include="SSPI\sspi.sizedcontextbuffer.ixx" />
-    <ClCompile Include="SSPI\sspi.types.ixx" />
+    <ClCompile Include="SSPI\buffertype.ixx" />
+    <ClCompile Include="SSPI\contextbuffer.ixx" />
+    <ClCompile Include="SSPI\credential.ixx" />
+    <ClCompile Include="SSPI\sizedcontextbuffer.ixx" />
+    <ClCompile Include="SSPI\types.ixx" />
     <ClCompile Include="SSPI\sspi.ixx" />
-    <ClCompile Include="SSPI\sspi.securitycontext.ixx" />
-    <ClCompile Include="SSPI\Provider\sspi.provider.ixx" />
-    <ClCompile Include="SSPI\Provider\sspi.provider.credential.ixx" />
-    <ClCompile Include="SSPI\Provider\sspi.provider.digest.ixx" />
-    <ClCompile Include="SSPI\Provider\sspi.provider.kerberos.ixx" />
-    <ClCompile Include="SSPI\Provider\sspi.provider.negotiate.ixx" />
-    <ClCompile Include="SSPI\Provider\sspi.provider.ntlm.ixx" />
-    <ClCompile Include="SSPI\Provider\sspi.provider.pku2u.ixx" />
-    <ClCompile Include="SSPI\Provider\sspi.provider.schannel.ixx" />
+    <ClCompile Include="SSPI\securitycontext.ixx" />
+    <ClCompile Include="SSPI\Provider\provider.ixx" />
+    <ClCompile Include="SSPI\Provider\credential.ixx" />
+    <ClCompile Include="SSPI\Provider\digest.ixx" />
+    <ClCompile Include="SSPI\Provider\kerberos.ixx" />
+    <ClCompile Include="SSPI\Provider\negotiate.ixx" />
+    <ClCompile Include="SSPI\Provider\ntlm.ixx" />
+    <ClCompile Include="SSPI\Provider\pku2u.ixx" />
+    <ClCompile Include="SSPI\Provider\schannel.ixx" />
     <ClCompile Include="Strings\strings.fixedstring.ixx" />
-    <ClCompile Include="TaskScheduler\taskscheduler.registeredtask.ixx" />
+    <ClCompile Include="TaskScheduler\registeredtask.ixx" />
     <ClCompile Include="TaskScheduler\taskscheduler.ixx" />
-    <ClCompile Include="TaskScheduler\taskscheduler.taskfolder.ixx" />
-    <ClCompile Include="TaskScheduler\taskscheduler.taskservice.ixx" />
-    <ClCompile Include="Time\time.datetime.ixx" />
-    <ClCompile Include="Time\time.functions.ixx" />
+    <ClCompile Include="TaskScheduler\taskfolder.ixx" />
+    <ClCompile Include="TaskScheduler\taskservice.ixx" />
+    <ClCompile Include="Time\datetime.ixx" />
+    <ClCompile Include="Time\functions.ixx" />
     <ClCompile Include="Time\time.ixx" />
     <ClCompile Include="UI\ui.ixx" />
-    <ClCompile Include="Util\util.enumeration.ixx" />
-    <ClCompile Include="Util\util.functions.ixx" />
-    <ClCompile Include="Util\util.globallyuniqueid.ixx" />
-    <ClCompile Include="Util\util.range.ixx" />
+    <ClCompile Include="Util\enumeration.ixx" />
+    <ClCompile Include="Util\functions.ixx" />
+    <ClCompile Include="Util\globallyuniqueid.ixx" />
+    <ClCompile Include="Util\range.ixx" />
     <ClCompile Include="Util\util.ixx" />
-    <ClCompile Include="Native\native.defs.ixx" />
-    <ClCompile Include="Native\native.ntdll.ixx" />
+    <ClCompile Include="Native\defs.ixx" />
+    <ClCompile Include="Native\ntdll.ixx" />
     <ClCompile Include="Native\native.ixx" />
-    <ClCompile Include="WindowsImagingComponent\windowsimagingcomponent.imagingfactory.ixx" />
+    <ClCompile Include="WindowsImagingComponent\imagingfactory.ixx" />
     <ClCompile Include="WindowsImagingComponent\windowsimagingcomponent.ixx" />
-    <ClCompile Include="WindowsFilteringPlatform\windowsfilteringplatform.callout.ixx" />
-    <ClCompile Include="WindowsFilteringPlatform\windowsfilteringplatform.engine.ixx" />
-    <ClCompile Include="WindowsFilteringPlatform\windowsfilteringplatform.filter.ixx" />
-    <ClCompile Include="WindowsFilteringPlatform\windowsfilteringplatform.functions.ixx" />
+    <ClCompile Include="WindowsFilteringPlatform\callout.ixx" />
+    <ClCompile Include="WindowsFilteringPlatform\engine.ixx" />
+    <ClCompile Include="WindowsFilteringPlatform\filter.ixx" />
+    <ClCompile Include="WindowsFilteringPlatform\functions.ixx" />
     <ClCompile Include="WindowsFilteringPlatform\windowsfilteringplatform.ixx" />
-    <ClCompile Include="WindowsFilteringPlatform\windowsfilteringplatform.provider.ixx" />
-    <ClCompile Include="WindowsFilteringPlatform\windowsfilteringplatform.providercontext.ixx" />
-    <ClCompile Include="WinHttp\winhttp.decomposedurl.ixx" />
-    <ClCompile Include="WinHttp\winhttp.handles.ixx" />
-    <ClCompile Include="WinHttp\winhttp.httpwebclient.ixx" />
+    <ClCompile Include="WindowsFilteringPlatform\provider.ixx" />
+    <ClCompile Include="WindowsFilteringPlatform\providercontext.ixx" />
+    <ClCompile Include="WinHttp\decomposedurl.ixx" />
+    <ClCompile Include="WinHttp\handles.ixx" />
+    <ClCompile Include="WinHttp\httpwebclient.ixx" />
     <ClCompile Include="WinHttp\winhttp.ixx" />
-    <ClCompile Include="WinHttp\winhttp.proxyinfo.ixx" />
-    <ClCompile Include="WinHttp\winhttp.requestresult.ixx" />
-    <ClCompile Include="WinHttp\winhttp.session.ixx" />
-    <ClCompile Include="WinHttp\winhttp.asyncwebsocket.ixx" />
-    <ClCompile Include="WinHttp\winhttp.asyncwebsocketsettings.ixx" />
-    <ClCompile Include="WinHttp\winhttp.websocket.ixx" />
-    <ClCompile Include="WinHttp\winhttp.websocketsettings.ixx" />
-    <ClCompile Include="WinHttp\winhttp.enums.ixx" />
-    <ClCompile Include="WinHttp\winhttp.winhttperror.ixx" />
-    <ClCompile Include="WinHttp\winhttp.winhttphandle.ixx" />
-    <ClCompile Include="WinSock\winsock.functions.ixx" />
-    <ClCompile Include="WinSock\winsock.resolvedname.ixx" />
-    <ClCompile Include="WinSock\winsock.socket.ixx" />
-    <ClCompile Include="WinSock\winsock.tcpsocket.ixx" />
-    <ClCompile Include="WinSock\winsock.uniqueptrs.ixx" />
-    <ClCompile Include="WinSock\winsock.winsockerror.ixx" />
-    <ClCompile Include="WinSock\winsock.winsockinit.ixx" />
-    <ClCompile Include="Compression\compression.compressor.ixx" />
-    <ClCompile Include="Compression\compression.decompressor.ixx" />
+    <ClCompile Include="WinHttp\proxyinfo.ixx" />
+    <ClCompile Include="WinHttp\requestresult.ixx" />
+    <ClCompile Include="WinHttp\session.ixx" />
+    <ClCompile Include="WinHttp\asyncwebsocket.ixx" />
+    <ClCompile Include="WinHttp\asyncwebsocketsettings.ixx" />
+    <ClCompile Include="WinHttp\websocket.ixx" />
+    <ClCompile Include="WinHttp\websocketsettings.ixx" />
+    <ClCompile Include="WinHttp\enums.ixx" />
+    <ClCompile Include="WinHttp\winhttperror.ixx" />
+    <ClCompile Include="WinHttp\winhttphandle.ixx" />
+    <ClCompile Include="WinSock\functions.ixx" />
+    <ClCompile Include="WinSock\resolvedname.ixx" />
+    <ClCompile Include="WinSock\socket.ixx" />
+    <ClCompile Include="WinSock\tcpsocket.ixx" />
+    <ClCompile Include="WinSock\uniqueptrs.ixx" />
+    <ClCompile Include="WinSock\winsockerror.ixx" />
+    <ClCompile Include="WinSock\winsockinit.ixx" />
+    <ClCompile Include="Compression\compressor.ixx" />
+    <ClCompile Include="Compression\decompressor.ixx" />
     <ClCompile Include="Compression\compression.ixx" />
-    <ClCompile Include="Com\com.comthreadscope.ixx" />
-    <ClCompile Include="FileSystem\filesystem.file.ixx" />
-    <ClCompile Include="RAII\raii.win32handle.ixx" />
+    <ClCompile Include="Com\comthreadscope.ixx" />
+    <ClCompile Include="FileSystem\file.ixx" />
+    <ClCompile Include="RAII\win32handle.ixx" />
     <ClCompile Include="Strings\strings.ixx" />
-    <ClCompile Include="WinHttp\winhttp.asyncwebsocket.statuscallback.cpp" />
+    <ClCompile Include="WinHttp\asyncwebsocket.cpp" />
     <ClCompile Include="WinSock\winsock.ixx" />
-    <ClCompile Include="WirelessLAN\wirelesslan.wirelessinterface.ixx" />
-    <ClCompile Include="WirelessLAN\wirelesslan.wirelessinterfaces.ixx" />
-    <ClCompile Include="WirelessLAN\wirelesslan.session.ixx" />
-    <ClCompile Include="WirelessLAN\wirelesslan.cleanup.ixx" />
+    <ClCompile Include="WirelessLAN\wirelessinterface.ixx" />
+    <ClCompile Include="WirelessLAN\wirelessinterfaces.ixx" />
+    <ClCompile Include="WirelessLAN\session.ixx" />
+    <ClCompile Include="WirelessLAN\cleanup.ixx" />
     <ClCompile Include="WirelessLAN\wirelesslan.ixx" />
-    <ClCompile Include="XAudio2\xaudio2.audiograph.ixx" />
-    <ClCompile Include="XAudio2\xaudio2.functions.ixx" />
+    <ClCompile Include="XAudio2\audiograph.ixx" />
+    <ClCompile Include="XAudio2\functions.ixx" />
     <ClCompile Include="XAudio2\xaudio2.ixx" />
-    <ClCompile Include="XAudio2\xaudio2.engine.ixx" />
-    <ClCompile Include="XAudio2\xaudio2.masteringvoice.ixx" />
-    <ClCompile Include="XAudio2\xaudio2.sourcevoice.ixx" />
-    <ClCompile Include="XAudio2\xaudio2.voice.ixx" />
-    <ClCompile Include="XAudio2\xaudio2.xaudio2error.ixx" />
+    <ClCompile Include="XAudio2\engine.ixx" />
+    <ClCompile Include="XAudio2\masteringvoice.ixx" />
+    <ClCompile Include="XAudio2\sourcevoice.ixx" />
+    <ClCompile Include="XAudio2\voice.ixx" />
+    <ClCompile Include="XAudio2\xaudio2error.ixx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win32\framework.h" />
