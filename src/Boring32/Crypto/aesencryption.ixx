@@ -8,8 +8,9 @@ import :crypto.chainingmode;
 // See: https://docs.microsoft.com/en-us/windows/win32/seccng/encrypting-data-with-cng
 export namespace Boring32::Crypto
 {
-	struct AesEncryption final
+	class AesEncryption final
 	{
+	public:
 		~AesEncryption()
 		{
 			Close();
@@ -60,21 +61,22 @@ export namespace Boring32::Crypto
 		auto GetObjectByteSize() const -> Win32::DWORD
 		{
 			if (not m_algHandle)
-				throw Error::Boring32Error("Cipher algorithm not initialised");
+				throw Error::Boring32Error{"Cipher algorithm not initialised"};
 
-			Win32::DWORD cbKeyObject = 0;
-			Win32::DWORD cbData = 0;
+			auto cbKeyObject = Win32::DWORD{};
+			auto cbData = Win32::DWORD{};
 			// https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptgetproperty
-			Win32::NTSTATUS status = Win32::BCryptGetProperty(
-				m_algHandle,
-				Win32::_BCRYPT_OBJECT_LENGTH,
-				reinterpret_cast<Win32::PBYTE>(&cbKeyObject),
-				sizeof(Win32::DWORD),
-				&cbData,
-				0
-			);
+			auto status = Win32::NTSTATUS{ 
+				Win32::BCryptGetProperty(
+					m_algHandle,
+					Win32::_BCRYPT_OBJECT_LENGTH,
+					reinterpret_cast<Win32::PBYTE>(&cbKeyObject),
+					sizeof(Win32::DWORD),
+					&cbData,
+					0
+				) };
 			if (not Win32::BCryptSuccess(status))
-				throw Error::NTStatusError(status, "Failed to set AES key length");
+				throw Error::NTStatusError{ status, "Failed to set AES key length" };
 
 			return cbKeyObject;
 		}
@@ -82,21 +84,22 @@ export namespace Boring32::Crypto
 		auto GetBlockByteLength() const -> Win32::DWORD
 		{
 			if (not m_algHandle)
-				throw Error::Boring32Error("Cipher algorithm not initialised");
+				throw Error::Boring32Error{"Cipher algorithm not initialised"};
 
-			Win32::DWORD cbKeyObject = 0;
-			Win32::DWORD cbData = 0;
+			auto cbKeyObject = Win32::DWORD{};
+			auto cbData = Win32::DWORD{};
 			// https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptgetproperty
-			Win32::NTSTATUS status = Win32::BCryptGetProperty(
-				m_algHandle,
-				Win32::_BCRYPT_BLOCK_LENGTH,
-				reinterpret_cast<Win32::PBYTE>(&cbKeyObject),
-				sizeof(Win32::DWORD),
-				&cbData,
-				0
-			);
+			auto status = Win32::NTSTATUS{ 
+				Win32::BCryptGetProperty(
+					m_algHandle,
+					Win32::_BCRYPT_BLOCK_LENGTH,
+					reinterpret_cast<Win32::PBYTE>(&cbKeyObject),
+					sizeof(Win32::DWORD),
+					&cbData,
+					0
+				) };
 			if (not Win32::BCryptSuccess(status))
-				throw Error::NTStatusError(status, "Failed to set AES key length");
+				throw Error::NTStatusError{ status, "Failed to set AES key length" };
 
 			return cbKeyObject;
 		}
@@ -104,44 +107,46 @@ export namespace Boring32::Crypto
 		void SetChainingMode(const ChainingMode cm)
 		{
 			if (not m_algHandle)
-				throw Error::Boring32Error("Cipher algorithm not initialised");
+				throw Error::Boring32Error{"Cipher algorithm not initialised"};
 
-			const std::wstring& mode = ChainingModeToString(cm);
+			auto mode = std::wstring_view{ChainingModeToString(cm)};
 			// https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptsetproperty
-			Win32::NTSTATUS status = Win32::BCryptSetProperty(
-				m_algHandle,
-				Win32::_BCRYPT_CHAINING_MODE,
-				reinterpret_cast<Win32::PUCHAR>(const_cast<wchar_t*>(&mode[0])),
-				static_cast<Win32::ULONG>(mode.size() * sizeof(wchar_t)),
-				0
-			);
+			auto status = Win32::NTSTATUS{
+				Win32::BCryptSetProperty(
+					m_algHandle,
+					Win32::_BCRYPT_CHAINING_MODE,
+					reinterpret_cast<Win32::PUCHAR>(const_cast<wchar_t*>(&mode[0])),
+					static_cast<Win32::ULONG>(mode.size() * sizeof(wchar_t)),
+					0
+				) };
 			if (not Win32::BCryptSuccess(status))
-				throw Error::NTStatusError(status, "Failed to set chaining mode");
+				throw Error::NTStatusError{status, "Failed to set chaining mode"};
 			m_chainingMode = cm;
 		}
 
 		auto GenerateSymmetricKey(const std::vector<std::byte>& rgbAES128Key) -> CryptoKey
 		{
 			if (not m_algHandle)
-				throw Error::Boring32Error("Cipher algorithm not initialised");
+				throw Error::Boring32Error{"Cipher algorithm not initialised"};
 			if (rgbAES128Key.empty())
-				throw Error::Boring32Error("rgbAES128Key is empty");
+				throw Error::Boring32Error{"rgbAES128Key is empty"};
 
-			Win32::BCRYPT_KEY_HANDLE hKey = nullptr;
-			Win32::DWORD cbKeyObject = GetObjectByteSize();
-			std::vector<std::byte> keyObject(cbKeyObject, static_cast<std::byte>(0));
+			auto hKey = Win32::BCRYPT_KEY_HANDLE{};
+			auto cbKeyObject = GetObjectByteSize();
+			auto keyObject = std::vector<std::byte>(cbKeyObject, static_cast<std::byte>(0));
 			// https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptgeneratesymmetrickey
-			Win32::NTSTATUS status = Win32::BCryptGenerateSymmetricKey(
-				m_algHandle,
-				&hKey,
-				reinterpret_cast<Win32::PUCHAR>(&keyObject[0]),
-				cbKeyObject,
-				reinterpret_cast<Win32::PBYTE>(const_cast<std::byte*>(&rgbAES128Key[0])),
-				(Win32::ULONG)rgbAES128Key.size(),
-				0
-			);
+			auto status = Win32::NTSTATUS{ 
+				Win32::BCryptGenerateSymmetricKey(
+					m_algHandle,
+					&hKey,
+					reinterpret_cast<Win32::PUCHAR>(&keyObject[0]),
+					cbKeyObject,
+					reinterpret_cast<Win32::PBYTE>(const_cast<std::byte*>(&rgbAES128Key[0])),
+					(Win32::ULONG)rgbAES128Key.size(),
+					0
+				) };
 			if (not Win32::BCryptSuccess(status))
-				throw Error::NTStatusError(status, "Failed to set chaining mode");
+				throw Error::NTStatusError{status, "Failed to set chaining mode"};
 
 			return CryptoKey(hKey, std::move(keyObject));
 		}
@@ -150,7 +155,7 @@ export namespace Boring32::Crypto
 		auto Encrypt(const CryptoKey& key, const std::vector<std::byte>& iv, const std::wstring_view string) 
 			-> std::vector<std::byte>
 		{
-			const std::byte* buffer = reinterpret_cast<const std::byte*>(&string[0]);
+			auto buffer = reinterpret_cast<const std::byte*>(&string[0]);
 			return Encrypt(
 				key,
 				iv,
@@ -162,56 +167,58 @@ export namespace Boring32::Crypto
 			-> std::vector<std::byte>
 		{
 			if (not m_algHandle)
-				throw Error::Boring32Error("Cipher algorithm not initialised");
+				throw Error::Boring32Error{"Cipher algorithm not initialised"};
 			if (not key.GetHandle())
-				throw Error::Boring32Error("Key is null");
+				throw Error::Boring32Error{"Key is null"};
 
 			// IV is optional
-			Win32::PUCHAR pIV = nullptr;
-			Win32::ULONG ivSize = 0;
+			auto pIV = Win32::PUCHAR{};
+			auto ivSize = Win32::ULONG{0};
 			if (not iv.empty())
 			{
 				if (iv.size() != GetBlockByteLength())
-					throw Error::Boring32Error("IV must be the same size as the AES block lenth");
+					throw Error::Boring32Error{"IV must be the same size as the AES block lenth"};
 				pIV = reinterpret_cast<Win32::PUCHAR>(const_cast<std::byte*>(&iv[0]));
 				ivSize = static_cast<Win32::ULONG>(iv.size());
 			}
 
 			// Determine the byte size of the encrypted data
-			Win32::DWORD cbData = 0;
-			Win32::DWORD flags = GetEncryptDecryptFlags();
+			auto cbData = Win32::DWORD{0};
+			auto flags = Win32::DWORD{GetEncryptDecryptFlags()};
 			// https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptencrypt
-			Win32::NTSTATUS status = Win32::BCryptEncrypt(
-				key.GetHandle(),
-				reinterpret_cast<Win32::PUCHAR>(const_cast<std::byte*>(&plainText[0])),
-				static_cast<Win32::ULONG>(plainText.size()),
-				nullptr,
-				pIV,
-				ivSize,
-				nullptr,
-				0,
-				&cbData,
-				flags
-			);
+			auto status = Win32::NTSTATUS{ 
+				Win32::BCryptEncrypt(
+					key.GetHandle(),
+					reinterpret_cast<Win32::PUCHAR>(const_cast<std::byte*>(&plainText[0])),
+					static_cast<Win32::ULONG>(plainText.size()),
+					nullptr,
+					pIV,
+					ivSize,
+					nullptr,
+					0,
+					&cbData,
+					flags
+				) };
 			if (not Win32::BCryptSuccess(status))
-				throw Error::NTStatusError(status, "BCryptEncrypt() failed to count bytes");
+				throw Error::NTStatusError{status, "BCryptEncrypt() failed to count bytes"};
 
 			// Actually do the encryption
-			std::vector<std::byte> cypherText(cbData, std::byte{ 0 });
-			status = Win32::BCryptEncrypt(
-				key.GetHandle(),
-				reinterpret_cast<Win32::PUCHAR>(const_cast<std::byte*>(&plainText[0])),
-				static_cast<Win32::ULONG>(plainText.size()),
-				nullptr,
-				pIV,
+			auto cypherText = std::vector<std::byte>(cbData, std::byte{ 0 });
+			status = Win32::NTSTATUS{ 
+				Win32::BCryptEncrypt(
+					key.GetHandle(),
+					reinterpret_cast<Win32::PUCHAR>(const_cast<std::byte*>(&plainText[0])),
+					static_cast<Win32::ULONG>(plainText.size()),
+					nullptr,
+					pIV,
 				ivSize,
 				reinterpret_cast<Win32::PUCHAR>(&cypherText[0]),
 				static_cast<Win32::ULONG>(cypherText.size()),
 				&cbData,
 				flags
-			);
+			) };
 			if (not Win32::BCryptSuccess(status))
-				throw Error::NTStatusError(status, "BCryptEncrypt() failed to encrypt");
+				throw Error::NTStatusError{status, "BCryptEncrypt() failed to encrypt"};
 
 			return cypherText;
 		}
@@ -220,42 +227,43 @@ export namespace Boring32::Crypto
 			-> std::vector<std::byte>
 		{
 			if (not m_algHandle)
-				throw Error::Boring32Error("Cipher algorithm not initialised");
+				throw Error::Boring32Error{"Cipher algorithm not initialised"};
 			if (not key.GetHandle())
-				throw Error::Boring32Error("Key is null");
+				throw Error::Boring32Error{"Key is null"};
 
 			// IV is optional
-			Win32::PUCHAR pIV = nullptr;
-			Win32::ULONG ivSize = 0;
+			auto pIV = Win32::PUCHAR{};
+			auto ivSize = Win32::ULONG{0};
 			if (not iv.empty())
 			{
 				if (iv.size() != GetBlockByteLength())
-					throw Error::Boring32Error("IV must be the same size as the AES block lenth");
+					throw Error::Boring32Error{"IV must be the same size as the AES block lenth"};
 				pIV = reinterpret_cast<Win32::PUCHAR>(const_cast<std::byte*>(&iv[0]));
 				ivSize = static_cast<Win32::ULONG>(iv.size());
 			}
 
 			// Determine the byte size of the decrypted data
-			Win32::DWORD cbData = 0;
-			const Win32::DWORD flags = GetEncryptDecryptFlags();
+			auto cbData = Win32::DWORD{0};
+			auto flags = Win32::DWORD{GetEncryptDecryptFlags()};
 			// https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptdecrypt
-			Win32::NTSTATUS status = Win32::BCryptDecrypt(
-				key.GetHandle(),
-				reinterpret_cast<Win32::PUCHAR>(const_cast<std::byte*>(&cypherText[0])),
-				static_cast<Win32::ULONG>(cypherText.size()),
-				nullptr,
-				pIV,
-				ivSize,
-				nullptr,
-				0,
-				&cbData,
-				flags
-			);
+			auto status = Win32::NTSTATUS{ 
+				Win32::BCryptDecrypt(
+					key.GetHandle(),
+					reinterpret_cast<Win32::PUCHAR>(const_cast<std::byte*>(&cypherText[0])),
+					static_cast<Win32::ULONG>(cypherText.size()),
+					nullptr,
+					pIV,
+					ivSize,
+					nullptr,
+					0,
+					&cbData,
+					flags
+				) };
 			if (not Win32::BCryptSuccess(status))
-				throw Error::NTStatusError(status, "BCryptDecrypt() failed to count bytes");
+				throw Error::NTStatusError{status, "BCryptDecrypt() failed to count bytes"};
 
 			// Actually do the decryption
-			std::vector<std::byte> plainText(cbData, std::byte{ 0 });
+			auto plainText = std::vector<std::byte>(cbData, std::byte{ 0 });
 			status = Win32::BCryptDecrypt(
 				key.GetHandle(),
 				reinterpret_cast<Win32::PUCHAR>(const_cast<std::byte*>(&cypherText[0])),
@@ -269,7 +277,7 @@ export namespace Boring32::Crypto
 				flags
 			);
 			if (not Win32::BCryptSuccess(status))
-				throw Error::NTStatusError(status, "BCryptDecrypt() failed to decrypt");
+				throw Error::NTStatusError{status, "BCryptDecrypt() failed to decrypt"};
 
 			plainText.resize(cbData);
 			return plainText;
@@ -298,17 +306,18 @@ export namespace Boring32::Crypto
 		void Create()
 		{
 			if (m_chainingMode == ChainingMode::NotSet)
-				throw Error::Boring32Error("m_chainingMode is not set");
+				throw Error::Boring32Error{"m_chainingMode is not set"};
 
 			//https://docs.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptopenalgorithmprovider
-			Win32::NTSTATUS status = Win32::BCryptOpenAlgorithmProvider(
-				&m_algHandle,
-				Win32::_BCRYPT_AES_ALGORITHM, // https://docs.microsoft.com/en-us/windows/win32/seccng/cng-algorithm-identifiers
-				nullptr,
-				0
-			);
+			auto status = Win32::NTSTATUS{ 
+				Win32::BCryptOpenAlgorithmProvider(
+					&m_algHandle,
+					Win32::_BCRYPT_AES_ALGORITHM, // https://docs.microsoft.com/en-us/windows/win32/seccng/cng-algorithm-identifiers
+					nullptr,
+					0
+				) };
 			if (not Win32::BCryptSuccess(status))
-				throw Error::NTStatusError(status, "Failed to create AES algorithm");
+				throw Error::NTStatusError{status, "Failed to create AES algorithm"};
 			SetChainingMode(m_chainingMode);
 		}
 

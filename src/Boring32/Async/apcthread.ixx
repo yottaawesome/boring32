@@ -87,7 +87,7 @@ export namespace Boring32::Async
 			while (true)
 			{
 				// Do an alertable wait
-				Win32::DWORD waitResult = Win32::WaitForSingleObjectEx(
+				auto waitResult = Win32::WaitForSingleObjectEx(
 					m_wait.GetHandle(),
 					Win32::Infinite,
 					true

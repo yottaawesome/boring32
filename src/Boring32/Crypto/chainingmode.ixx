@@ -17,7 +17,7 @@ export namespace Boring32::Crypto
 
 	auto ChainingModeToString(const ChainingMode cm) -> const std::wstring&
 	{
-		static const std::map<ChainingMode, std::wstring> modes {
+		static const auto modes = std::map<ChainingMode, std::wstring>{
 			{ ChainingMode::CipherBlockChaining,	Win32::BCryptChainingMode::CipherBlockChaining },
 			{ ChainingMode::CbcMac,					Win32::BCryptChainingMode::CbcMac },
 			{ ChainingMode::CipherFeedback,			Win32::BCryptChainingMode::CipherFeedback },
