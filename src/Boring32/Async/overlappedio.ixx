@@ -6,39 +6,26 @@ import :async.overlappedop;
 
 export namespace Boring32::Async
 {
-	struct OverlappedIo final : OverlappedOp
+	class OverlappedIo final : public OverlappedOp
 	{
+	public:
 		OverlappedIo() = default;
 		// Non-copyable
 		OverlappedIo(const OverlappedIo& other) = delete;
 		auto operator=(const OverlappedIo& other) -> OverlappedIo& = delete;
 		
-		OverlappedIo(OverlappedIo&& other) noexcept
-		{
-			Move(other);
-		}
-
-		auto operator=(OverlappedIo&& other) noexcept -> OverlappedIo&
-		{
-			Move(other);
-			return *this;
-		}
+		OverlappedIo(OverlappedIo&& other) noexcept = default;
+		auto operator=(OverlappedIo&& other) noexcept -> OverlappedIo& = default;
 
 		std::vector<std::byte> IoBuffer;
 
-		private:
-		auto Move(OverlappedIo& other) noexcept -> void
+	private:
+		void OnSuccess(this auto&& self)
 		{
-			OverlappedOp::Move(other);
-			IoBuffer = std::move(other.IoBuffer);
+			self.ResizeBuffer();
 		}
 
-		auto OnSuccess() -> void override
-		{
-			ResizeBuffer();
-		}
-
-		auto ResizeBuffer() -> void
+		void ResizeBuffer()
 		{
 			if (not IsSuccessful())
 				throw Error::Boring32Error("Operation is not successful");
