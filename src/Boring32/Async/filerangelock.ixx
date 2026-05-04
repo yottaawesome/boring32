@@ -106,13 +106,14 @@ export namespace Boring32::Async
 				.OffsetHigh = self.params.OffsetHigh
 			};
 			const auto [lockSizeLow, lockSizeHigh] = Util::Decompose(self.params.Range);
-			auto succeeded = Win32::UnlockFileEx(
-				self.fileHandle,
-				0,
-				lockSizeLow,
-				lockSizeHigh,
-				&overlapped
-			);
+			auto succeeded = 
+				Win32::UnlockFileEx(
+					self.fileHandle,
+					0,
+					lockSizeLow,
+					lockSizeHigh,
+					&overlapped
+				);
 			if (not succeeded)
 				if (const auto lastError = Win32::GetLastError(); lastError != Win32::ErrorCodes::NotLocked)
 					throw Error::Win32Error{lastError, std::format("Failed to unlock file.")};

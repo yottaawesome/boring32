@@ -5,8 +5,9 @@ import :error;
 export namespace Boring32::Async
 {
 	// TODO: need to support values that can be 1, 2, 4, or 8 bytes long
-	struct WaitableAddress final
+	class WaitableAddress final
 	{
+	public:
 		enum class WakeType
 		{
 			One,
@@ -31,23 +32,22 @@ export namespace Boring32::Async
 		auto Wait(const Win32::DWORD millis) const -> bool
 		{
 			// https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitonaddress
-			bool waitSucceeded = Win32::WaitOnAddress(
-				const_cast<unsigned long*>(&m_waitValue),
-				const_cast<unsigned long*>(&m_defaultValue),
-				sizeof(Win32::DWORD), // The size of the value, in bytes.This parameter can be 1, 2, 4, or 8.
-				millis
-			);
-			if (not waitSucceeded)
-			{
-				auto lastError = Win32::GetLastError();
-				if (lastError == Win32::ErrorCodes::Timeout)
-					return false;
-				throw Error::Win32Error{lastError, "WaitOnAddress() failed"};
-			}
-			return true;
+			auto waitSucceeded = 
+				Win32::WaitOnAddress(
+					const_cast<unsigned long*>(&m_waitValue),
+					const_cast<unsigned long*>(&m_defaultValue),
+					sizeof(Win32::DWORD), // The size of the value, in bytes.This parameter can be 1, 2, 4, or 8.
+					millis
+				);
+			if (waitSucceeded)
+				return true;
+			auto lastError = Win32::GetLastError();
+			if (lastError == Win32::ErrorCodes::Timeout)
+				return false;
+			throw Error::Win32Error{lastError, "WaitOnAddress() failed"};
 		}
 
-		auto SetValue(const Win32::DWORD newValue, const WakeType wakeType) -> void
+		void SetValue(const Win32::DWORD newValue, const WakeType wakeType)
 		{
 			m_waitValue = newValue;
 			switch (wakeType)
@@ -76,7 +76,7 @@ export namespace Boring32::Async
 			return m_defaultValue;
 		}
 
-		private:
+	private:
 		// These might probably be best extracted into their own template class
 		Win32::DWORD m_defaultValue = 0;
 		Win32::DWORD m_waitValue = 0;
