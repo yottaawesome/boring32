@@ -36,7 +36,7 @@ namespace Boring32::WirelessLAN
 			&opcodeType
 		);
 		if (status != Win32::ErrorCodes::Success)
-			throw Error::Win32Error(status, "WlanQueryInterface() failed");
+			throw Error::Win32Error{status, "WlanQueryInterface() failed"};
 		UniqueWLANMemory cleanup(pWlanAllocatedMemory);
 		return T(*reinterpret_cast<T*>(pWlanAllocatedMemory));
 	}
@@ -69,7 +69,7 @@ namespace Boring32::WirelessLAN
 			&opcodeType
 		);
 		if (status != Win32::ErrorCodes::Success)
-			throw Error::Win32Error(status, "WlanQueryInterface() failed");
+			throw Error::Win32Error{status, "WlanQueryInterface() failed"};
 		UniqueWLANMemory cleanup(pWlanAllocatedMemory);
 		auto results = reinterpret_cast<Win32::WLAN_AUTH_CIPHER_PAIR_LIST*>(pWlanAllocatedMemory);
 		std::vector<Win32::DOT11_AUTH_CIPHER_PAIR> returnVal;
@@ -242,7 +242,7 @@ export namespace Boring32::WirelessLAN
 				&capability
 			);
 			if (status != Win32::ErrorCodes::Success)
-				throw Error::Win32Error(status, "WlanGetInterfaceCapability() failed");
+				throw Error::Win32Error{status, "WlanGetInterfaceCapability() failed"};
 			UniqueWLANMemory cleanup(capability);
 			return *capability;
 		}

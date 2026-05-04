@@ -7,8 +7,9 @@ import :com.functions;
 export namespace Boring32::Com
 {
 	// See https://learn.microsoft.com/en-us/windows/win32/com/error-handling-in-com
-	struct HResult final
+	class HResult final
 	{
+	public:
 		constexpr HResult() noexcept = default;
 
 		constexpr HResult(const Win32::HRESULT hr) noexcept

@@ -33,7 +33,7 @@ export namespace Boring32::MSI
 			if (status == Win32::ErrorCodes::NoMoreItems)
 				return returnValue;
 			if (status != Win32::ErrorCodes::Success)
-				throw Error::Win32Error(status, "MsiEnumProductsExW() failed");
+				throw Error::Win32Error{status, "MsiEnumProductsExW() failed"};
 
 			returnValue.emplace_back(std::move(productCode));
 			index++;
@@ -67,7 +67,7 @@ export namespace Boring32::MSI
 		if (status == Win32::ErrorCodes::UnknownProperty)
 			return {};
 		if (status != Win32::ErrorCodes::Success)
-			throw Error::Win32Error(status, "MsiGetProductInfoExW() failed [1]");
+			throw Error::Win32Error{status, "MsiGetProductInfoExW() failed [1]"};
 
 		// The returned character count excludes the null terminator,
 		// but this is required, so we bump the value.
@@ -84,7 +84,7 @@ export namespace Boring32::MSI
 		if (status == Win32::ErrorCodes::UnknownProperty)
 			return {};
 		if (status != Win32::ErrorCodes::Success)
-			throw Error::Win32Error(status, "MsiGetProductInfoExW() failed [2]");
+			throw Error::Win32Error{status, "MsiGetProductInfoExW() failed [2]"};
 
 		returnValue.resize(characters);
 		if (propertyFound)

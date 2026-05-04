@@ -167,12 +167,12 @@ export namespace Boring32::Crypto
 				// The MSDN sample doesn't do an error check, but I've added it
 				// just in case.
 				if (Win32::DWORD lastError = Win32::GetLastError(); lastError != Win32::ErrorCodes::FileNotFound)
-					throw Error::Win32Error(lastError, "CertEnumCertificatesInStore() failed");
+					throw Error::Win32Error{lastError, "CertEnumCertificatesInStore() failed"};
 				results.emplace_back(currentCert, false);
 			}
-			const DWORD lastError = Win32::GetLastError();
+			auto lastError = Win32::GetLastError();
 			if (lastError != Win32::CryptoErrorCodes::NotFound && lastError != Win32::ErrorCodes::NoMoreFiles)
-				throw Error::Win32Error(lastError, "CertEnumCertificatesInStore() failed");
+				throw Error::Win32Error{lastError, "CertEnumCertificatesInStore() failed"};
 
 			return results;
 		}
@@ -194,9 +194,9 @@ export namespace Boring32::Crypto
 				// GetFormattedSubjectName()
 				auto dummy = cert.Detach();
 			}
-			const Win32::DWORD lastError = Win32::GetLastError();
+			auto lastError = Win32::GetLastError();
 			if (lastError != Win32::CryptoErrorCodes::NotFound && lastError != Win32::ErrorCodes::NoMoreFiles)
-				throw Error::Win32Error(lastError, "CertEnumCertificatesInStore() failed");
+				throw Error::Win32Error{lastError, "CertEnumCertificatesInStore() failed"};
 
 			return {};
 		}
@@ -218,9 +218,9 @@ export namespace Boring32::Crypto
 						if (subjectCn == Strings::Replace(token, L"CN=", L""))
 							return cert;
 			}
-			const Win32::DWORD lastError = Win32::GetLastError();
+			auto lastError = Win32::GetLastError();
 			if (lastError != Win32::CryptoErrorCodes::NotFound && lastError != Win32::ErrorCodes::NoMoreFiles)
-				throw Error::Win32Error(lastError, "CertEnumCertificatesInStore() failed");
+				throw Error::Win32Error{lastError, "CertEnumCertificatesInStore() failed"};
 
 			return {};
 		}

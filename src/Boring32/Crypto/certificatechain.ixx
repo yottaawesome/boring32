@@ -91,7 +91,7 @@ export namespace Boring32::Crypto
 				&status
 			);
 			if (not succeeded)
-				throw Error::Win32Error("CertVerifyCertificateChainPolicy() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "CertVerifyCertificateChainPolicy() failed"};
 			return status.dwError == 0;
 		}
 

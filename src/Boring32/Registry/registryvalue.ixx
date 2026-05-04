@@ -53,7 +53,7 @@ namespace Boring32::Registry
 			&key
 		);
 		if constexpr (ThrowOnError and status != Win32::ErrorCodes::Success)
-			throw Error::Win32Error("Failed to open registry key", status);
+			throw Error::Win32Error{status, "Failed to open registry key"};
 
 		if constexpr (TValueType == ValueTypes::DWord or TValueType == ValueTypes::QWord)
 		{
@@ -86,7 +86,7 @@ namespace Boring32::Registry
 		Win32::Winreg::RegCloseKey(key);
 
 		if constexpr (ThrowOnError and status != Win32::ErrorCodes::Success)
-			throw Error::Win32Error("RegSetValueExW() failed", status);
+			throw Error::Win32Error{status, "RegSetValueExW() failed"};
 	}
 
 	template<ValueTypes TValueType>
@@ -134,7 +134,7 @@ namespace Boring32::Registry
 			if (status != Win32::ErrorCodes::Success)
 			{
 				if constexpr (ThrowOnError)
-					throw Error::Win32Error("RegGetValueW() failed", status);
+					throw Error::Win32Error{status, "RegGetValueW() failed"};
 				else if (std::invocable<decltype(DefaultValue)>)
 					return static_cast<ReturnType>(DefaultValue());
 				else
@@ -158,7 +158,7 @@ namespace Boring32::Registry
 			if (status != Win32::ErrorCodes::Success)
 			{
 				if constexpr (ThrowOnError)
-					throw Error::Win32Error("RegGetValueW() failed", status);
+					throw Error::Win32Error{status, "RegGetValueW() failed"};
 				else if (std::invocable<decltype(DefaultValue)>)
 					return { DefaultValue() };
 				else
@@ -178,7 +178,7 @@ namespace Boring32::Registry
 			if (status != Win32::ErrorCodes::Success)
 			{
 				if constexpr (ThrowOnError)
-					throw Error::Win32Error("RegGetValueW() failed", status);
+					throw Error::Win32Error{status, "RegGetValueW() failed"};
 				else if (std::invocable<decltype(DefaultValue)>)
 					return { DefaultValue() };
 				else
@@ -228,7 +228,7 @@ namespace Boring32::Registry
 		if (status != Win32::ErrorCodes::Success)
 		{
 			if constexpr (ThrowOnError)
-				throw Error::Win32Error("RegGetValueW() failed", status);
+				throw Error::Win32Error{status, "RegGetValueW() failed"};
 			else if (std::invocable<decltype(DefaultValue)>)
 				return Win32::DWORD{ DefaultValue() };
 			else
@@ -268,7 +268,7 @@ namespace Boring32::Registry
 		if (status != Win32::ErrorCodes::Success)
 		{
 			if constexpr (ThrowOnError)
-				throw Error::Win32Error("RegGetValueW() failed", status);
+				throw Error::Win32Error{status, "RegGetValueW() failed"};
 			else if constexpr (std::is_invocable_v<decltype(DefaultValue)>)
 				return { DefaultValue() };
 			else
@@ -308,7 +308,7 @@ namespace Boring32::Registry
 		if (status != Win32::ErrorCodes::Success)
 		{
 			if constexpr (ThrowOnError)
-				throw Error::Win32Error("RegGetValueW() failed", status);
+				throw Error::Win32Error{status, "RegGetValueW() failed"};
 			else if constexpr (std::is_invocable_v<decltype(DefaultValue)>)
 				return { DefaultValue() };
 			else
@@ -328,7 +328,7 @@ namespace Boring32::Registry
 		if (status != Win32::ErrorCodes::Success)
 		{
 			if constexpr (ThrowOnError)
-				throw Error::Win32Error("RegGetValueW() failed", status);
+				throw Error::Win32Error{status, "RegGetValueW() failed"};
 			else if constexpr (std::is_invocable_v<decltype(DefaultValue)>)
 				return { DefaultValue() };
 			else
@@ -359,7 +359,7 @@ namespace Boring32::Registry
 		);
 		if constexpr (ThrowOnError)
 			if (status != Win32::ErrorCodes::Success)
-				throw Error::Win32Error("Failed to open registry key", status);
+				throw Error::Win32Error{status, "Failed to open registry key"};
 			else
 				return;
 
@@ -370,7 +370,7 @@ namespace Boring32::Registry
 		Win32::Winreg::RegCloseKey(key);
 		if constexpr (ThrowOnError)
 			if (status != Win32::ErrorCodes::Success)
-				throw Error::Win32Error("Failed to delete registry value", status);
+				throw Error::Win32Error{status, "Failed to delete registry value"};
 	}
 }
 
@@ -423,10 +423,7 @@ export namespace Boring32::Registry
 			if constexpr (ThrowOnError)
 			{
 				if (status != Win32::ErrorCodes::Success)
-				{
-					const auto lastError = Win32::GetLastError();
-					throw Error::Win32Error("RegCreateKeyExW() failed", lastError);
-				}
+					throw Error::Win32Error{ Win32::GetLastError(), "RegCreateKeyExW() failed"};
 			}
 			return HKEYUniquePtr(result);
 		}

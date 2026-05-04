@@ -120,7 +120,7 @@ export namespace Boring32::Registry
 				(Win32::DWORD)((value.size() + 1) * sizeof(wchar_t))
 			);
 			if (status != Win32::ErrorCodes::Success)
-				throw Error::Win32Error(status, "RegSetValueExW() failed");
+				throw Error::Win32Error{static_cast<Win32::DWORD>(status), "RegSetValueExW() failed"};
 		}
 
 		void WriteValue(
@@ -151,7 +151,7 @@ export namespace Boring32::Registry
 				Win32::Winreg::_REG_LATEST_FORMAT
 			);
 			if (status != Win32::ErrorCodes::Success)
-				throw Error::Win32Error(status, "RegSaveKeyExW() failed");
+				throw Error::Win32Error{static_cast<Win32::DWORD>(status), "RegSaveKeyExW() failed"};
 		}
 
 		std::vector<KeyValues> GetValues()
@@ -190,7 +190,7 @@ export namespace Boring32::Registry
 					break;
 				}
 				if (status != Win32::ErrorCodes::Success)
-					throw Error::Win32Error(status, "RegEnumValueW() failed.");
+					throw Error::Win32Error{status, "RegEnumValueW() failed."};
 				valueToAdd.Name = std::wstring(
 					valueNameBuffer.begin(),
 					valueNameBuffer.begin() + valueNameCharacterLength
@@ -220,7 +220,7 @@ export namespace Boring32::Registry
 				nullptr
 			);
 			if (status)
-				throw Error::Win32Error(status, "Failed to open registry key");
+				throw Error::Win32Error{static_cast<Win32::DWORD>(status), "Failed to open registry key"};
 			return subkeys;
 		}
 
@@ -256,7 +256,7 @@ export namespace Boring32::Registry
 				&key
 			);
 			if (status != Win32::ErrorCodes::Success)
-				throw Error::Win32Error(status, "Failed to open registry key");
+				throw Error::Win32Error{static_cast<Win32::DWORD>(status), "Failed to open registry key"};
 			m_key = CreateRegKeyPtr(key);
 		}
 

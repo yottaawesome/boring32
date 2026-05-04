@@ -39,7 +39,7 @@ namespace Boring32::Security
 			);
 			if (Win32::NT_ERROR(status))
 				// https://learn.microsoft.com/en-us/windows/win32/api/ntsecapi/nf-ntsecapi-lsantstatustowinerror
-				throw Error::Win32Error(Win32::LsaNtStatusToWinError(status), "LsaOpenPolicy() failed");
+				throw Error::Win32Error{Win32::LsaNtStatusToWinError(status), "LsaOpenPolicy() failed"};
 			m_handle = LSAHandleUniquePtr(handle);
 		}
 
@@ -71,7 +71,7 @@ namespace Boring32::Security
 			);
 			if (Win32::NT_ERROR(status))
 				// https://learn.microsoft.com/en-us/windows/win32/api/ntsecapi/nf-ntsecapi-lsantstatustowinerror
-				throw Error::Win32Error(Win32::LsaNtStatusToWinError(status), "LsaAddAccountRights() failed");
+				throw Error::Win32Error{Win32::LsaNtStatusToWinError(status), "LsaAddAccountRights() failed"};
 		}
 
 		// Policy handle requires POLICY_LOOKUP_NAMES.
@@ -94,7 +94,7 @@ namespace Boring32::Security
 			);
 			if (Win32::NT_ERROR(status))
 				// https://learn.microsoft.com/en-us/windows/win32/api/ntsecapi/nf-ntsecapi-lsantstatustowinerror
-				throw Error::Win32Error(Win32::LsaNtStatusToWinError(status), "LsaRemoveAccountRights() failed");
+				throw Error::Win32Error{Win32::LsaNtStatusToWinError(status), "LsaRemoveAccountRights() failed"};
 		}
 
 		private:

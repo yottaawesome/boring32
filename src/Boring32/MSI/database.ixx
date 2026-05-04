@@ -118,7 +118,7 @@ export namespace Boring32::MSI
 			// https://learn.microsoft.com/en-us/windows/win32/api/msiquery/nf-msiquery-msiopendatabasew
 			unsigned status = Win32::MsiOpenDatabaseW(m_path.c_str(), Win32::LPCWSTR(m_mode), &m_handle);
 			if (status != Win32::ErrorCodes::Success)
-				throw Error::Win32Error(status, "MsiOpenDatabaseW() failed");
+				throw Error::Win32Error{status, "MsiOpenDatabaseW() failed"};
 		}
 
 		std::wstring GetProperty(std::wstring_view propertyName) const
@@ -140,18 +140,18 @@ export namespace Boring32::MSI
 				&hView
 			);
 			if (status != Win32::ErrorCodes::Success)
-				throw Error::Win32Error(status, "MsiDatabaseOpenView() failed");
+				throw Error::Win32Error{status, "MsiDatabaseOpenView() failed"};
 				
 			// https://learn.microsoft.com/en-us/windows/win32/api/msiquery/nf-msiquery-msiviewexecute
 			status = Win32::MsiViewExecute(hView, 0);
 			if (status != Win32::ErrorCodes::Success)
-				throw Error::Win32Error(status, "MsiViewExecute() failed");
+				throw Error::Win32Error{status, "MsiViewExecute() failed"};
 				
 			Win32::PMSIHANDLE hViewFetch;
 			// https://learn.microsoft.com/en-us/windows/win32/api/msiquery/nf-msiquery-msiviewfetch
 			status = Win32::MsiViewFetch(hView, &hViewFetch);
 			if (status != Win32::ErrorCodes::Success)
-				throw Error::Win32Error(status, "MsiViewFetch() failed");
+				throw Error::Win32Error{status, "MsiViewFetch() failed"};
 
 			Win32::DWORD charCount = 0;
 			// https://learn.microsoft.com/en-us/windows/win32/api/msiquery/nf-msiquery-msirecordgetstringw
@@ -163,7 +163,7 @@ export namespace Boring32::MSI
 				&charCount
 			);
 			if (status != Win32::ErrorCodes::MoreData)
-				throw Error::Win32Error(status, "MsiRecordGetString() failed");
+				throw Error::Win32Error{status, "MsiRecordGetString() failed"};
 
 			charCount++; // must increment to include null-terminator
 			returnValue.resize(charCount);
@@ -174,7 +174,7 @@ export namespace Boring32::MSI
 				&charCount
 			);
 			if (status != Win32::ErrorCodes::Success)
-				throw Error::Win32Error(status, "MsiRecordGetString() failed");
+				throw Error::Win32Error{status, "MsiRecordGetString() failed"};
 
 			returnValue.resize(charCount);
 			return returnValue;

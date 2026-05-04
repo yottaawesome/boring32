@@ -37,11 +37,12 @@ export namespace Boring32::Async
 				sizeof(Win32::DWORD), // The size of the value, in bytes.This parameter can be 1, 2, 4, or 8.
 				millis
 			);
-			if (auto lastError = Win32::GetLastError(); not waitSucceeded)
+			if (not waitSucceeded)
 			{
+				auto lastError = Win32::GetLastError();
 				if (lastError == Win32::ErrorCodes::Timeout)
 					return false;
-				throw Error::Win32Error(lastError, "WaitOnAddress() failed");
+				throw Error::Win32Error{lastError, "WaitOnAddress() failed"};
 			}
 			return true;
 		}

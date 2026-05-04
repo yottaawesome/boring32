@@ -147,7 +147,7 @@ export namespace Boring32::RAII
 
 			auto flags = Win32::DWORD{};
 			if (not Win32::GetHandleInformation(handle, &flags))
-				throw Error::Win32Error(Win32::GetLastError(), "GetHandleInformation() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "GetHandleInformation() failed"};
 			return flags & Win32::HandleFlagInherit;
 		}
 

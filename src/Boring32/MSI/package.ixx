@@ -38,7 +38,7 @@ export namespace Boring32::MSI
 			// https://learn.microsoft.com/en-us/windows/win32/api/msi/nf-msi-msiopenpackageexw
 			unsigned status = Win32::MsiOpenPackageW(m_path.c_str(), &m_handle);
 			if (status != Win32::ErrorCodes::Success)
-				throw Error::Win32Error(status, "MsiOpenPackageW() failed");
+				throw Error::Win32Error{status, "MsiOpenPackageW() failed"};
 		}
 
 		std::wstring m_path;

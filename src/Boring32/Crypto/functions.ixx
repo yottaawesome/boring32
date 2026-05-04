@@ -263,7 +263,7 @@ export namespace Boring32::Crypto
 			&size
 		);
 		if (not succeeded)
-			throw Error::Win32Error("CryptBinaryToStringA() failed when calculating size");
+			throw Error::Win32Error{Win32::GetLastError(), "CryptBinaryToStringA() failed when calculating size"};
 		if (size == 0)
 			return {};
 
@@ -276,7 +276,7 @@ export namespace Boring32::Crypto
 			&size
 		);
 		if (not succeeded)
-			throw Error::Win32Error("CryptBinaryToStringA() failed when encoding");
+			throw Error::Win32Error{Win32::GetLastError(), "CryptBinaryToStringA() failed when encoding"};
 		// Remove terminating null character
 		if (not returnVal.empty())
 			returnVal.pop_back();
@@ -298,7 +298,7 @@ export namespace Boring32::Crypto
 			&size
 		);
 		if (not succeeded)
-			throw Error::Win32Error("CryptBinaryToStringW() failed when calculating size");
+			throw Error::Win32Error{Win32::GetLastError(), "CryptBinaryToStringW() failed when calculating size"};
 		if (size == 0)
 			return {};
 
@@ -311,7 +311,7 @@ export namespace Boring32::Crypto
 			&size
 		);
 		if (not succeeded)
-			throw Error::Win32Error("CryptBinaryToStringW() failed when encoding");
+			throw Error::Win32Error{Win32::GetLastError(), "CryptBinaryToStringW() failed when encoding"};
 		// Remove terminating null character
 		if (not returnVal.empty())
 			returnVal.pop_back();
@@ -332,7 +332,7 @@ export namespace Boring32::Crypto
 			nullptr
 		);
 		if (not succeeded)
-			throw Error::Win32Error("CryptStringToBinaryW() failed when calculating size");
+			throw Error::Win32Error{Win32::GetLastError(), "CryptStringToBinaryW() failed when calculating size"};
 
 		std::vector<std::byte> returnVal(byteSize);
 		succeeded = Win32::CryptStringToBinaryW(
@@ -345,7 +345,7 @@ export namespace Boring32::Crypto
 			nullptr
 		);
 		if (not succeeded)
-			throw Error::Win32Error("CryptStringToBinaryW() failed when decoding");
+			throw Error::Win32Error{Win32::GetLastError(), "CryptStringToBinaryW() failed when decoding"};
 
 		returnVal.resize(byteSize);
 		return returnVal;
@@ -462,7 +462,7 @@ export namespace Boring32::Crypto
 				// CertDuplicateCertificateChain() does not appear to provide any 
 				// mechanism to determine why it failed.
 				Win32::CertFreeCertificateChain(chain);
-				throw Error::Win32Error("CertDuplicateCertificateChain() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "CertDuplicateCertificateChain() failed"};
 			}
 			returnValue.push_back(duplicate);
 		}
@@ -510,7 +510,7 @@ export namespace Boring32::Crypto
 	void ImportCertToStore(const Win32::HCERTSTORE store, const Win32::CRYPTUI_WIZ_IMPORT_SRC_INFO& info)
 	{
 		if (not store)
-			throw Error::Boring32Error("store is nullptr");
+			throw Error::Boring32Error{"store is nullptr"};
 
 		constexpr Win32::DWORD flags =
 			Win32::CryptUiWizNoUi | Win32::CryptUiWizIgnoreNoUiFlagForCsps | Win32::CryptUiWizImportAllowCert;
@@ -547,7 +547,7 @@ export namespace Boring32::Crypto
 		);
 		if (not certContext)
 			if (auto lastError = Win32::GetLastError(); lastError != Win32::CryptoErrorCodes::NotFound)
-				throw Error::Win32Error(lastError, "CertFindCertificateInStore() failed");
+				throw Error::Win32Error{lastError, "CertFindCertificateInStore() failed"};
 
 		return certContext;
 	}

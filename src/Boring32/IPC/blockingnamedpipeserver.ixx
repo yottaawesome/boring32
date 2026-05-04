@@ -165,7 +165,7 @@ export namespace Boring32::IPC
 				);
 				totalBytesRead += currentBytesRead;
 
-				const DWORD lastError = Win32::GetLastError();
+				auto lastError = Win32::GetLastError();
 				if (not successfulRead and lastError != Win32::ErrorCodes::MoreData)
 					throw Error::Boring32Error("Failed to read from pipe");
 				if (lastError == Win32::ErrorCodes::MoreData)

@@ -138,7 +138,7 @@ export namespace Boring32::Services
 			Win32::DWORD bytesNeeded = 0;
 			bool succeeded = Win32::QueryServiceConfigW(m_service.get(), nullptr, 0, &bytesNeeded);
 			if (auto lastError = Win32::GetLastError(); lastError != Win32::ErrorCodes::InsufficientBuffer)
-				throw Error::Win32Error(lastError, "QueryServiceConfigW() failed");
+				throw Error::Win32Error{lastError, "QueryServiceConfigW() failed"};
 
 			std::vector<std::byte> buffer(bytesNeeded);
 			succeeded = Win32::QueryServiceConfigW(

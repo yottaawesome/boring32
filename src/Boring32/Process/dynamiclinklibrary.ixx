@@ -52,7 +52,7 @@ export namespace Boring32::Process
 				return;
 			if (not Win32::FreeLibrary(m_libraryHandle))
 			{
-				const auto lastError = Win32::GetLastError();
+				auto lastError = Win32::GetLastError();
 				std::wcerr << std::format(L"FreeLibrary() failed: {}", lastError);
 			}
 			m_libraryHandle = nullptr;

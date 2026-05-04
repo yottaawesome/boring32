@@ -17,11 +17,11 @@ namespace Async
 	{
 		if (not std::filesystem::exists(FileNameW))
 		{
-			std::ofstream ofs(FileNameA.data());
+			auto ofs = std::ofstream(FileNameA.data());
 			if (not ofs.good())
 				throw Boring32::Error::Boring32Error("Failed to create lock file.");
 		}
-		Win32::HANDLE file = Win32::CreateFileW(
+		auto fileHandle = Win32::CreateFileW(
 			FileNameW.data(),
 			Win32::GenericRead | Win32::GenericWrite,
 			Win32::FileShareMode::Read | Win32::FileShareMode::Write,
@@ -30,12 +30,9 @@ namespace Async
 			Win32::FileAttributes::Normal | Win32::FileFlags::DeleteOnClose,
 			nullptr
 		);
-		if (not file or file == Win32::InvalidHandleValue)
-		{
-			const auto lastError = Win32::GetLastError();
-			throw Boring32::Error::Win32Error(lastError, "Failed to create lock file handle.");
-		}
-		return Boring32::RAII::HandleUniquePtr(file);
+		if (not fileHandle or fileHandle == Win32::InvalidHandleValue)
+			throw Boring32::Error::Win32Error{ Win32::GetLastError(), "Failed to create lock file handle."};
+		return Boring32::RAII::HandleUniquePtr(fileHandle);
 	}
 
 	TEST_CLASS(FileRangeLockTests)

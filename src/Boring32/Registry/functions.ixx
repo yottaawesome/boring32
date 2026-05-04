@@ -34,7 +34,7 @@ export namespace Boring32::Registry
 			&sizeInBytes
 		);
 		if (status != Win32::ErrorCodes::Success)
-			throw Error::Win32Error(status, "RegGetValueW() failed");
+			throw Error::Win32Error{static_cast<Win32::DWORD>(status), "RegGetValueW() failed"};
 		return out;
 	}
 
@@ -60,7 +60,7 @@ export namespace Boring32::Registry
 			&sizeInBytes
 		);
 		if (statusCode != Win32::ErrorCodes::Success)
-			throw Error::Win32Error(statusCode, "RegGetValueW() failed (1)");
+			throw Error::Win32Error{static_cast<Win32::DWORD>(statusCode), "RegGetValueW() failed (1)"};
 
 		out.resize(sizeInBytes / sizeof(wchar_t), '\0');
 		statusCode = Win32::Winreg::RegGetValueW(
@@ -73,7 +73,7 @@ export namespace Boring32::Registry
 			&sizeInBytes
 		);
 		if (statusCode != Win32::ErrorCodes::Success)
-			throw Error::Win32Error(statusCode, "RegGetValueW() failed (2)");
+			throw Error::Win32Error{static_cast<Win32::DWORD>(statusCode), "RegGetValueW() failed (2)"};
 
 		out.resize(sizeInBytes / sizeof(wchar_t));
 		// Exclude terminating null
@@ -107,16 +107,17 @@ export namespace Boring32::Registry
 		if (not key)
 			throw Error::Boring32Error("key is nullptr");
 
-		Win32::LSTATUS status = Win32::Winreg::RegSetValueExW(
-			key,
-			valueName.c_str(),
-			0,
-			RegistryValueMap<T>::Type,
-			reinterpret_cast<Win32::BYTE*>(const_cast<T*>(&value)),
-			sizeof(value)
-		);
+		auto status = Win32::LSTATUS{
+			Win32::Winreg::RegSetValueExW(
+				key,
+				valueName.c_str(),
+				0,
+				RegistryValueMap<T>::Type,
+				reinterpret_cast<Win32::BYTE*>(const_cast<T*>(&value)),
+				sizeof(value)
+			) };
 		if (status != Win32::ErrorCodes::Success)
-			throw Error::Win32Error(status, "RegSetValueExW() failed");
+			throw Error::Win32Error{static_cast<Win32::DWORD>(status), "RegSetValueExW() failed"};
 	}
 
 	// This should probably be integrated into RegistryKey to enable safety checks
@@ -129,15 +130,16 @@ export namespace Boring32::Registry
 			throw Error::Boring32Error("eventToSignal is not an initialised Event");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regnotifychangekeyvalue
-		Win32::LSTATUS status = Win32::Winreg::RegNotifyChangeKeyValue(
-			key,
-			false,
-			Win32::Winreg::_REG_NOTIFY_CHANGE_LAST_SET,
-			eventToSignal.GetHandle(),
-			true
-		);
+		auto status = Win32::LSTATUS{ 
+			Win32::Winreg::RegNotifyChangeKeyValue(
+				key,
+				false,
+				Win32::Winreg::_REG_NOTIFY_CHANGE_LAST_SET,
+				eventToSignal.GetHandle(),
+				true
+			) };
 		if (status != Win32::ErrorCodes::Success)
-			throw Error::Win32Error("failed to watch registry key for changes", status);
+			throw Error::Win32Error{status, "failed to watch registry key for changes"};
 	}
 
 	void DeleteKeyAndSubkey(const Win32::Winreg::HKEY parent, const std::wstring& subkey)
@@ -146,7 +148,7 @@ export namespace Boring32::Registry
 			throw Error::Boring32Error("Parent cannot be nullptr");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-shdeletekeyw
-		Win32::LSTATUS status = Win32::SHDeleteKeyW(parent, subkey.c_str());
+		auto status = Win32::LSTATUS{Win32::SHDeleteKeyW(parent, subkey.c_str())};
 		if (status != Win32::ErrorCodes::Success)
 			throw Error::Win32Error{Win32::GetLastError(), "SHDeleteKeyW() failed"};
 	}
@@ -157,7 +159,7 @@ export namespace Boring32::Registry
 			throw Error::Boring32Error("parent cannot be nullptr");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletetreew
-		Win32::LSTATUS status = Win32::Winreg::RegDeleteTreeW(parent, subkey.c_str());
+		auto status = Win32::LSTATUS{Win32::Winreg::RegDeleteTreeW(parent, subkey.c_str())};
 		if (status != Win32::ErrorCodes::Success)
 			throw Error::Win32Error{Win32::GetLastError(), "RegDeleteTreeW() failed"};
 	}

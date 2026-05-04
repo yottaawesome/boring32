@@ -3,7 +3,7 @@ import std;
 import :win32;
 import :error;
 
-export namespace Boring32::Clipboard
+namespace Boring32::Clipboard
 {
 	struct ClipboardCloser
 	{
@@ -18,11 +18,11 @@ export namespace Boring32::Clipboard
 		constexpr ClipboardCloser() = default;
 		ClipboardCloser(const ClipboardCloser&) = delete;
 		ClipboardCloser& operator=(const ClipboardCloser&) = delete;
-
-		ClipboardCloser(ClipboardCloser&&) noexcept = default;
-		ClipboardCloser& operator=(ClipboardCloser&&) noexcept = default;
 	};
+}
 
+export namespace Boring32::Clipboard
+{
 	struct Operation
 	{
 		std::optional<ClipboardCloser> clipboardClose;

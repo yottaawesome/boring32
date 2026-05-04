@@ -49,7 +49,7 @@ export namespace Boring32::IO
 			if (not success)
 			{
 				if (auto lastError = Win32::GetLastError(); not overlapped and lastError != Win32::ErrorCodes::AbandonedWait0)
-					throw Error::Win32Error(lastError, "GetQueuedCompletionStatus() failed");
+					throw Error::Win32Error{lastError, "GetQueuedCompletionStatus() failed"};
 				else {}
 				// Dequeued a completion packet for a failed I/O operation.
 				// Not really clear what we should do here.

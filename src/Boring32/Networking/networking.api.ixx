@@ -119,10 +119,7 @@ export namespace Boring32::Networking
 			// bufferSizeBytes will give the correct result size in this case,
 			// and will be used to resize the result in the next iteration.
 			if (status != Win32::ErrorCodes::BufferOverflow)
-			{
-				auto lastError = Win32::GetLastError();
-				throw Error::Win32Error(lastError, "GetAdaptersAddresses() failed");
-			}
+				throw Error::Win32Error{ Win32::GetLastError(), "GetAdaptersAddresses() failed"};
 
 			bufferSizeBytes = static_cast<unsigned long>(result.Expand());
 		}
@@ -131,7 +128,7 @@ export namespace Boring32::Networking
 	auto IsConnectedToInternet() -> bool
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/netlistmgr/nn-netlistmgr-inetworklistmanager
-		Win32::ComPtr<Win32::INetworkListManager> networkListManager;
+		auto networkListManager = Win32::ComPtr<Win32::INetworkListManager>{};
 		// https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance
 		// https://docs.microsoft.com/en-us/windows/win32/learnwin32/creating-an-object-in-com
 		Win32::HRESULT result = Win32::CoCreateInstance(

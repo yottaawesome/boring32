@@ -53,7 +53,7 @@ export namespace Boring32::WirelessLAN
 				&wlanHandle
 			);
 			if (status != Win32::ErrorCodes::Success)
-				throw Boring32::Error::Win32Error(status, "WlanOpenHandle() failed");
+				throw Boring32::Error::Win32Error{status, "WlanOpenHandle() failed"};
 			m_wlanHandle = CreateSharedWLANHandle(wlanHandle);
 			return m_wlanHandle;
 		}

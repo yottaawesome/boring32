@@ -95,7 +95,7 @@ export namespace Boring32::WinSock
 			if (connectionResult == Win32::WinSock::_SOCKET_ERROR)
 			{
 				Error::ThrowNested(
-					Error::Win32Error(Win32::WinSock::WSAGetLastError(), "connect() failed", L"ws2_32.dll"),
+					Error::Win32Error{static_cast<Win32::DWORD>(Win32::WinSock::WSAGetLastError()), "connect() failed", L"ws2_32.dll"},
 					WinSockError("Failed to connect socket")
 				);
 			}
@@ -136,7 +136,7 @@ export namespace Boring32::WinSock
 				if (sentBytes == Win32::WinSock::_SOCKET_ERROR)
 				{
 					Error::ThrowNested(
-						Error::Win32Error(Win32::WinSock::WSAGetLastError(), "send() failed", L"ws2_32.dll"),
+						Error::Win32Error{static_cast<Win32::DWORD>(Win32::WinSock::WSAGetLastError()), "send() failed", L"ws2_32.dll"},
 						WinSockError("Failed to send data through socket")
 					);
 				}
@@ -157,7 +157,7 @@ export namespace Boring32::WinSock
 			if (actualBytesRead < 0)
 			{
 				Error::ThrowNested(
-					Error::Win32Error(Win32::WinSock::WSAGetLastError(), "recv() failed", L"ws2_32.dll"),
+					Error::Win32Error{static_cast<Win32::DWORD>(Win32::WinSock::WSAGetLastError()), "recv() failed", L"ws2_32.dll"},
 					WinSockError("Failed to receive data through socket")
 				);
 			}
@@ -202,7 +202,7 @@ export namespace Boring32::WinSock
 			if (optResult == Win32::WinSock::_SOCKET_ERROR)
 			{
 				Error::ThrowNested(
-					Error::Win32Error(Win32::WinSock::WSAGetLastError(), "getsockopt() failed", L"ws2_32.dll"),
+					Error::Win32Error{static_cast<Win32::DWORD>(Win32::WinSock::WSAGetLastError()), "getsockopt() failed", L"ws2_32.dll"},
 					WinSockError("TTL option is not supported")
 				);
 			}
@@ -219,7 +219,7 @@ export namespace Boring32::WinSock
 			if (optResult == Win32::WinSock::_SOCKET_ERROR)
 			{
 				Error::ThrowNested(
-					Error::Win32Error(Win32::WinSock::WSAGetLastError(), "setsockopt() failed", L"ws2_32.dll"),
+					Error::Win32Error{static_cast<Win32::DWORD>(Win32::WinSock::WSAGetLastError()), "setsockopt() failed", L"ws2_32.dll"},
 					WinSockError("Failed to set option")
 				);
 			}
@@ -242,7 +242,7 @@ export namespace Boring32::WinSock
 			);
 			if (optResult == Win32::WinSock::_SOCKET_ERROR)
 				Error::ThrowNested(
-					Error::Win32Error(Win32::WinSock::WSAGetLastError(), "getsockopt() failed", L"ws2_32.dll"),
+					Error::Win32Error{static_cast<Win32::DWORD>(Win32::WinSock::WSAGetLastError()), "getsockopt() failed", L"ws2_32.dll"},
 					WinSockError("RT option is not supported")
 				);
 
@@ -256,7 +256,7 @@ export namespace Boring32::WinSock
 			);
 			if (optResult == Win32::WinSock::_SOCKET_ERROR)
 				Error::ThrowNested(
-					Error::Win32Error(Win32::WinSock::WSAGetLastError(), "setsockopt() failed", L"ws2_32.dll"),
+					Error::Win32Error{static_cast<Win32::DWORD>(Win32::WinSock::WSAGetLastError()), "setsockopt() failed", L"ws2_32.dll"},
 					WinSockError("Failed to set RT option")
 				);
 		}

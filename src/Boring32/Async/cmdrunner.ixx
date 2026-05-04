@@ -10,7 +10,7 @@ namespace Boring32::Async
     auto ReadFromPipe(Win32::HANDLE childStdOutRd) -> std::string
     {
 		if (not childStdOutRd)
-            throw Error::Boring32Error("Invalid handle for reading from child process.");
+            throw Error::Boring32Error{"Invalid handle for reading from child process."};
         constexpr auto BufferSize = 4096;
         auto readBuffer = std::array<char, BufferSize>{};
         auto result = std::string{};
@@ -105,24 +105,24 @@ export namespace Boring32::Async
         auto childStdOutRd = Win32::HANDLE{};
         auto childStdOutWr = Win32::HANDLE{};
         if (not Win32::CreatePipe(&childStdOutRd, &childStdOutWr, &saAttr, 0))
-            throw Error::Win32Error(GetLastError(), "CreatePipe() failed");
+            throw Error::Win32Error{ Win32::GetLastError(), "CreatePipe() failed" };
         auto ptrChildStdOutWr = RAII::HandleUniquePtr(childStdOutWr);
         auto ptrChildStdOutRd = RAII::HandleUniquePtr(childStdOutRd);
 
         // Ensure the read handle to the pipe for STDOUT is not inherited.
         if (not Win32::SetHandleInformation(childStdOutRd, Win32::HandleFlagInherit, 0))
-            throw Error::Win32Error(GetLastError(), "CreatePipe() failed");
+            throw Error::Win32Error{ Win32::GetLastError(), "SetHandleInformation() failed" };
 
         // Create a pipe for the child process's STDIN. 
         auto childStdInRd = Win32::HANDLE{};
         auto childStdInWr = Win32::HANDLE{};
         if (not Win32::CreatePipe(&childStdInRd, &childStdInWr, &saAttr, 0))
-            throw Error::Win32Error(GetLastError(), "CreatePipe() failed");
+            throw Error::Win32Error{ Win32::GetLastError(), "CreatePipe() failed" };
         auto ptrChildStdInRd = RAII::HandleUniquePtr(childStdInRd);
         auto ptrChildStdInWr = RAII::HandleUniquePtr(childStdInWr);
         // Ensure the write handle to the pipe for STDIN is not inherited. 
         if (not Win32::SetHandleInformation(childStdInWr, Win32::HandleFlagInherit, 0))
-            throw Error::Win32Error(GetLastError(), "CreatePipe() failed");
+            throw Error::Win32Error{ Win32::GetLastError(), "SetHandleInformation() failed" };
 
         // Create the child process. 
         auto childProc = CreateChildProcess(

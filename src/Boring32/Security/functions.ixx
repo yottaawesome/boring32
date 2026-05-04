@@ -76,11 +76,11 @@ export namespace Boring32::Security
 			nullptr,
 			nullptr
 		);
-		const auto lastError = Win32::GetLastError();
+		auto lastError = Win32::GetLastError();
 		if (lastError != Win32::ErrorCodes::Success)
 		{
 			// We check lastError, because the function can succeed but GetLastError() can return ERROR_NOT_ALL_ASSIGNED
-			throw Error::Win32Error(lastError, "AdjustTokenPrivileges() failed");
+			throw Error::Win32Error{lastError, "AdjustTokenPrivileges() failed"};
 		}
 	}
 
@@ -128,7 +128,7 @@ export namespace Boring32::Security
 		Win32::DWORD dwSize = 0;
 		if (not Win32::GetTokenInformation(token, Win32::TOKEN_INFORMATION_CLASS::TokenGroups, nullptr, 0, &dwSize))
 			if (Win32::DWORD dwResult = Win32::GetLastError(); dwResult != Win32::ErrorCodes::InsufficientBuffer)
-				throw Error::Win32Error(dwResult, "GetTokenInformation() failed");
+				throw Error::Win32Error{dwResult, "GetTokenInformation() failed"};
 
 		// Allocate the buffer.
 		std::vector<std::byte> groupInfoBytes(dwSize);
@@ -157,7 +157,7 @@ export namespace Boring32::Security
 		Win32::DWORD dwResult = 0;
 		if (not Win32::GetTokenInformation(token, Win32::TOKEN_INFORMATION_CLASS::TokenGroups, nullptr, 0, &dwSize))
 			if (Win32::DWORD dwResult = Win32::GetLastError(); dwResult != Win32::ErrorCodes::InsufficientBuffer)
-				throw Error::Win32Error(dwResult, "GetTokenInformation() failed");
+				throw Error::Win32Error{dwResult, "GetTokenInformation() failed"};
 
 		// Allocate the buffer.
 		std::vector<std::byte> groupInfoBytes(dwSize);
@@ -191,7 +191,7 @@ export namespace Boring32::Security
 					std::wcout << "NONE_MAPPED\n";
 					continue;
 				}
-				throw Error::Win32Error(dwResult, "LookupAccountSidW() failed");
+				throw Error::Win32Error{dwResult, "LookupAccountSidW() failed"};
 			}
 
 			groupName = groupName.c_str();
@@ -226,7 +226,7 @@ export namespace Boring32::Security
 			&bytesNeeded
 		);
 		if (const Win32::DWORD lastError = Win32::GetLastError(); !succeeded && lastError != Win32::ErrorCodes::InsufficientBuffer)
-			throw Error::Win32Error(lastError, "GetTokenInformation() [1] failed");
+			throw Error::Win32Error{lastError, "GetTokenInformation() [1] failed"};
 
 		std::vector<std::byte> buffer(bytesNeeded);
 		succeeded = Win32::GetTokenInformation(
@@ -471,10 +471,10 @@ export namespace Boring32::Security
 			return true;
 		}
 
-		const auto lastError = Win32::GetLastError();
+		auto lastError = Win32::GetLastError();
 		if (lastError == Win32::ErrorCodes::NoneMapped)
 			return false;
 
-		throw Error::Win32Error(lastError, "LookupAccountSidW() failed");
+		throw Error::Win32Error{lastError, "LookupAccountSidW() failed"};
 	}
 }

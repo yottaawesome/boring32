@@ -110,7 +110,7 @@ export namespace Boring32::Computer
         if (lastError == Win32::ErrorCodes::Success)
             return {};
         if (lastError != Win32::ErrorCodes::InsufficientBuffer)
-            throw Error::Win32Error(lastError, "GetLogicalProcessorInformationEx() failed");
+            throw Error::Win32Error{lastError, "GetLogicalProcessorInformationEx() failed"};
 
         // https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-system_logical_processor_information_ex
         auto returnValue = std::vector<Win32::SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX>(
@@ -153,7 +153,7 @@ export namespace Boring32::Computer
     {
         // Get the list of process identifiers.
         auto deviceDriverAddresses = std::vector<void*>(1024);
-        Win32::DWORD bytesNeeded;
+        auto bytesNeeded = Win32::DWORD{};
         // https://docs.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumdevicedrivers
         auto succeeded = Win32::K32EnumDeviceDrivers(
             &deviceDriverAddresses[0],
@@ -171,7 +171,7 @@ export namespace Boring32::Computer
     auto GetProcessIDsByName(const std::wstring& processName, int sessionIdToMatch) -> std::vector<Win32::DWORD>
     {
         if (processName.empty())
-            throw Error::Boring32Error("ProcessName cannot be empty.");
+            throw Error::Boring32Error{"ProcessName cannot be empty."};
 
         // https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-createtoolhelp32snapshot
         auto processesSnapshot = RAII::UniqueHandle{ Win32::CreateToolhelp32Snapshot(Win32::Th32csSnapProcess, 0) };

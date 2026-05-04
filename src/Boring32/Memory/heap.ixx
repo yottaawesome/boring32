@@ -46,7 +46,7 @@ export namespace Boring32::Memory
 			// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapcompact
 			size_t size = Win32::HeapCompact(m_heap, 0);
 			if (auto lastError = Win32::GetLastError(); lastError != Win32::ErrorCodes::NoError)
-				throw Error::Win32Error(lastError, "HeapCompact() failed");
+				throw Error::Win32Error{lastError, "HeapCompact() failed"};
 			return size;
 		}
 

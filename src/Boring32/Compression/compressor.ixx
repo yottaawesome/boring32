@@ -8,8 +8,9 @@ import :compression.deleters;
 // For reference see: https://docs.microsoft.com/en-us/windows/win32/cmpapi/using-the-compression-api-in-block-mode
 export namespace Boring32::Compression
 {
-	struct Compressor final
+	class Compressor final
 	{
+	public:
 		~Compressor()
 		{
 			Close();
@@ -54,7 +55,7 @@ export namespace Boring32::Compression
 			if (buffer.empty())
 				throw Error::Boring32Error("Buffer is empty");
 
-			size_t compressedBufferSize = 0;
+			auto compressedBufferSize = size_t{};
 			// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-compress
 			bool succeeded = Win32::Compress(
 				m_compressor.get(),     //  Compressor Handle
@@ -64,12 +65,9 @@ export namespace Boring32::Compression
 				0,                      //  Compressed Buffer size
 				&compressedBufferSize	//  Compressed Data size
 			);
-			Win32::DWORD lastError = Win32::GetLastError();
-			if (not succeeded && lastError != Win32::ErrorCodes::InsufficientBuffer)
-			{
-				auto lastError = Win32::GetLastError();
-				throw Error::Win32Error(lastError, "Compress() failed");
-			}
+			auto lastError = Win32::GetLastError();
+			if (not succeeded and lastError != Win32::ErrorCodes::InsufficientBuffer)
+				throw Error::Win32Error{ lastError, "Compress() failed" };
 
 			return compressedBufferSize;
 		}
@@ -86,12 +84,12 @@ export namespace Boring32::Compression
 		auto CompressBuffer(const std::vector<std::byte>& buffer) -> std::vector<std::byte>
 		{
 			if (not m_compressor)
-				throw Error::Boring32Error("Compressor handle is null");
+				throw Error::Boring32Error{ "Compressor handle is null" };
 			if (buffer.empty())
-				throw Error::Boring32Error("Buffer is empty");
+				throw Error::Boring32Error{ "Buffer is empty" };
 
-			std::vector<std::byte> returnVal(GetCompressedSize(buffer));
-			size_t compressedBufferSize = 0;
+			auto returnVal = std::vector<std::byte>(GetCompressedSize(buffer));
+			auto compressedBufferSize = size_t{};
 			// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-compress
 			bool succeeded = Win32::Compress(
 				m_compressor.get(),     //  Compressor Handle
@@ -102,10 +100,7 @@ export namespace Boring32::Compression
 				&compressedBufferSize	//  Compressed Data size
 			);
 			if (not succeeded)
-			{
-				auto lastError = Win32::GetLastError();
-				throw Error::Win32Error(lastError, "Compress() failed");
-			}
+				throw Error::Win32Error{ Win32::GetLastError(), "Compress() failed" };
 
 			return returnVal;
 		}
@@ -129,10 +124,7 @@ export namespace Boring32::Compression
 				throw Error::Boring32Error("Compressor handle is null");
 			// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-resetcompressor
 			if (not Win32::ResetCompressor(m_compressor.get()))
-			{
-				auto lastError = Win32::GetLastError();
-				throw Error::Win32Error(lastError, "ResetCompressor() failed");
-			}
+				throw Error::Win32Error{ Win32::GetLastError(), "ResetCompressor() failed" };
 		}
 
 	private:
@@ -140,7 +132,7 @@ export namespace Boring32::Compression
 		{
 			if (m_type == Win32::CompressionType::NotSet)
 				return;
-			Win32::COMPRESSOR_HANDLE handle;
+			auto handle = Win32::COMPRESSOR_HANDLE{};
 			// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-createcompressor
 			bool succeeded = Win32::CreateCompressor(
 				static_cast<DWORD>(m_type),	// Algorithm
@@ -148,10 +140,7 @@ export namespace Boring32::Compression
 				&handle			// CompressorHandle
 			);
 			if (not succeeded)
-			{
-				auto lastError = Win32::GetLastError();
-				throw Error::Win32Error(lastError, "CreateCompressor() failed");
-			}
+				throw Error::Win32Error{ Win32::GetLastError(), "CreateCompressor() failed" };
 			m_compressor = CompressorUniquePtr(handle);
 		}
 

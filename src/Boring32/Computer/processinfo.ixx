@@ -60,7 +60,7 @@ export namespace Boring32::Computer
 				&ftUserTime
 			);
 			if (not success)
-				throw Error::Win32Error(GetLastError(), "GetProcessTimes() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "GetProcessTimes() failed"};
 
 			size_t startTime =
 				Win32::ULARGE_INTEGER{ ftCreationTime.dwLowDateTime, ftCreationTime.dwHighDateTime }.QuadPart;
@@ -95,7 +95,7 @@ export namespace Boring32::Computer
 				static_cast<Win32::DWORD>(path.size())
 			);
 			if (not charactersCopied)
-				throw Error::Win32Error(GetLastError(), "K32GetModuleFileNameExW() failed");
+				throw Error::Win32Error{Win32::GetLastError(), "K32GetModuleFileNameExW() failed"};
 			return path.c_str();
 		}
 

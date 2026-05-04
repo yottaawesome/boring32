@@ -34,10 +34,7 @@ export namespace Boring32::Security::Credentials
 
         // https://learn.microsoft.com/en-us/windows/win32/api/wincred/nf-wincred-credwritew
         if (not Win32::Credentials::CredWriteW(&cred, 0))
-        {
-			const auto lastError = Win32::GetLastError();
-            throw Error::Win32Error(lastError, "CredWriteW() failed to add credential.");
-        }
+            throw Error::Win32Error{ Win32::GetLastError(), "CredWriteW() failed to add credential."};
 	}
 
     auto Delete(
@@ -57,7 +54,7 @@ export namespace Boring32::Security::Credentials
         const auto lastError = Win32::GetLastError();
         return lastError == Win32::ErrorCodes::NotFound
 			? false
-			: throw Error::Win32Error(lastError, "CredDeleteW() failed to delete credential.");
+			: throw Error::Win32Error{lastError, "CredDeleteW() failed to delete credential."};
 	}
 
     struct Credential
@@ -81,10 +78,10 @@ export namespace Boring32::Security::Credentials
         );
         if (not success)
         {
-            const auto lastError = Win32::GetLastError();
+            auto lastError = Win32::GetLastError();
             return lastError == Win32::ErrorCodes::NotFound
                 ? std::nullopt
-                : throw Error::Win32Error(lastError, "CredReadW() failed to read credential.");
+                : throw Error::Win32Error{lastError, "CredReadW() failed to read credential."};
         }
         CredentialUniquePtr cred(pcred);
 

@@ -137,7 +137,7 @@ export namespace Boring32::WinHttp::WebSockets
 			if (statusCode != Win32::ErrorCodes::Success)
 			{
 				m_status = WebSocketStatus::Error;
-				throw Error::Win32Error(statusCode, "WinHttpWebSocketSend() failed");
+				throw Error::Win32Error{statusCode, "WinHttpWebSocketSend() failed"};
 			}
 			return m_writeResult;
 		}
@@ -160,7 +160,7 @@ export namespace Boring32::WinHttp::WebSockets
 			{
 				m_status = WebSocketStatus::Error;
 				m_writeResult.Status = WriteResultStatus::Error;
-				throw Error::Win32Error(statusCode, "WinHttpWebSocketSend() failed");
+				throw Error::Win32Error{statusCode, "WinHttpWebSocketSend() failed"};
 			}
 			return m_writeResult;
 		}
@@ -194,7 +194,7 @@ export namespace Boring32::WinHttp::WebSockets
 				if (success != Win32::ErrorCodes::Success)
 				{
 					m_status = WebSocketStatus::Error;
-					throw Error::Win32Error(success, "WinHttpWebSocketClose() failed");
+					throw Error::Win32Error{success, "WinHttpWebSocketClose() failed"};
 				}
 				m_status = WebSocketStatus::Closing;
 			}
@@ -417,7 +417,7 @@ export namespace Boring32::WinHttp::WebSockets
 				m_status = WebSocketStatus::Error;
 				m_readResult.Complete.Signal();
 				m_readResult.Status = ReadResultStatus::Error;
-				throw Error::Win32Error(statusCode, "Connection error when receiving websocket data");
+				throw Error::Win32Error{statusCode, "Connection error when receiving websocket data"};
 			}
 
 			return receiveBuffer;

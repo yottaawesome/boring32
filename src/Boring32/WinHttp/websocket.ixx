@@ -107,7 +107,7 @@ export namespace Boring32::WinHttp::WebSockets
 			if (statusCode != Win32::ErrorCodes::Success)
 			{
 				m_status = WebSocketStatus::Error;
-				throw Error::Win32Error(statusCode, "WinHttpWebSocketSend() failed");
+				throw Error::Win32Error{statusCode, "WinHttpWebSocketSend() failed"};
 			}
 		}
 
@@ -125,7 +125,7 @@ export namespace Boring32::WinHttp::WebSockets
 			if (statusCode != Win32::ErrorCodes::Success)
 			{
 				m_status = WebSocketStatus::Error;
-				throw Error::Win32Error(statusCode, "WinHttpWebSocketSend() failed");
+				throw Error::Win32Error{statusCode, "WinHttpWebSocketSend() failed"};
 			}
 		}
 
@@ -154,7 +154,7 @@ export namespace Boring32::WinHttp::WebSockets
 					&bufferType);
 				// If the server terminates the connection, 12030 will returned.
 				if (statusCode != Win32::ErrorCodes::Success)
-					throw Error::Win32Error(statusCode, "Connection error when receiving websocket data");
+					throw Error::Win32Error{statusCode, "Connection error when receiving websocket data"};
 
 				// The server closed the connection.
 				if (bufferType == Win32::WinHttp::WINHTTP_WEB_SOCKET_BUFFER_TYPE::WINHTTP_WEB_SOCKET_CLOSE_BUFFER_TYPE)

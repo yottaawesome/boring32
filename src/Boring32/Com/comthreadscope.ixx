@@ -7,9 +7,9 @@ import :com.functions;
 export namespace Boring32::Com
 {
 	///	Represents a COM library lifetime scope for a thread.
-	struct COMThreadScope final
+	class COMThreadScope final
 	{
-		///	Internally calls Uninitialise().
+	public:
 		~COMThreadScope()
 		{
 			Uninitialise();
@@ -48,7 +48,7 @@ export namespace Boring32::Com
 
 		///	Initialises COM for the creating thread with the specified
 		///	apartment threading mode.
-		COMThreadScope(const Win32::COINIT apartmentThreadingMode)
+		COMThreadScope(Win32::COINIT apartmentThreadingMode)
 			: m_apartmentThreadingMode(apartmentThreadingMode)
 		{
 			Initialise();
@@ -66,7 +66,7 @@ export namespace Boring32::Com
 				return;
 
 			// Initialise COM for this thread.
-			Win32::HRESULT hr = Win32::CoInitializeEx(
+			auto hr = Win32::CoInitializeEx(
 				nullptr,
 				// "In addition to the flags already mentioned, it is a good idea 
 				// to set the COINIT_DISABLE_OLE1DDE flag in the dwCoInit parameter. 
@@ -76,7 +76,7 @@ export namespace Boring32::Com
 				m_apartmentThreadingMode | Win32::COINIT::COINIT_DISABLE_OLE1DDE
 			);
 			if (Failed(hr))
-				throw Error::COMError(hr, "CoInitializeEx() failed");
+				throw Error::COMError{ hr, "CoInitializeEx() failed" };
 
 			m_isInitialised = true;
 			m_comInitialisedThreadId = Win32::GetCurrentThreadId();
@@ -95,19 +95,19 @@ export namespace Boring32::Com
 
 			// Set general COM security levels. This can only be set once per process.
 			// https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-coinitializesecurity
-			HRESULT hr = Win32::CoInitializeSecurity(
+			auto hr = Win32::CoInitializeSecurity(
 				nullptr,
 				-1,								// COM authentication
 				nullptr,                        // Authentication services
 				nullptr,                        // Reserved
-				(Win32::DWORD)Win32::RPCCAuthLevel::Default,		// Default authentication 
-				(Win32::DWORD)Win32::RPCCImpLevel::Impersonate,	// Default Impersonation  
+				static_cast<Win32::DWORD>(Win32::RPCCAuthLevel::Default),		// Default authentication 
+				static_cast<Win32::DWORD>(Win32::RPCCImpLevel::Impersonate),	// Default Impersonation  
 				nullptr,                        // Authentication info
 				Win32::EOLE_AUTHENTICATION_CAPABILITIES::EOAC_NONE,						// Additional capabilities 
 				nullptr                         // Reserved
 			);
 			if (Failed(hr))
-				throw Error::COMError(hr, "CoInitializeSecurity() failed");
+				throw Error::COMError{ hr, "CoInitializeSecurity() failed" };
 		}
 
 		///	Uninitialises COM. If this object does not currently have
@@ -116,12 +116,10 @@ export namespace Boring32::Com
 		///	to the thread that initialised this object.
 		void Uninitialise()
 		{
-			if (m_isInitialised == false)
+			if (not m_isInitialised)
 				return;
-
 			if (m_comInitialisedThreadId != Win32::GetCurrentThreadId())
 				throw Error::Boring32Error("Attempt to uninitialise COM by a thread different to initialising one.");
-
 			Win32::CoUninitialize();
 			m_isInitialised = false;
 		}
@@ -174,6 +172,9 @@ export namespace Boring32::Com
 		// https://learn.microsoft.com/en-us/windows/win32/api/objbase/ne-objbase-coinit
 		Win32::COINIT m_apartmentThreadingMode = COINIT_MULTITHREADED;
 	};
+}
 
-	std::atomic<unsigned> COMThreadScope::m_isSecurityInitialised(0);
+namespace Boring32::Com
+{
+	std::atomic<unsigned> COMThreadScope::m_isSecurityInitialised = 0;
 }
