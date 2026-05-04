@@ -17,7 +17,7 @@ export namespace Boring32::Async
 		{ }
 
 		template<typename T, typename M>
-		auto QueueInstanceAPC(const T& instance, M member) -> void
+		void QueueInstanceAPC(const T& instance, M member)
 		{
 			auto* arg = new InstanceMethod{
 				.Instance = const_cast<T*>(&instance),
@@ -31,7 +31,7 @@ export namespace Boring32::Async
 		}
 
 		template<std::invocable T>
-		auto QueueAPC(const T& apc) -> void
+		void QueueAPC(const T& apc)
 		{
 			QueueAPC(
 				InternalAPC<T>,
@@ -40,7 +40,7 @@ export namespace Boring32::Async
 		}
 
 		template<std::invocable T>
-		auto QueueAPC(T&& apc) -> void
+		void QueueAPC(T&& apc)
 		{
 			QueueAPC(
 				InternalHeapAPC<T>,
@@ -48,7 +48,7 @@ export namespace Boring32::Async
 			);
 		}
 
-		auto QueueAPC(ApcFunctionSignature apc, const Win32::ULONG_PTR arg) -> void
+		void QueueAPC(ApcFunctionSignature apc, Win32::ULONG_PTR arg)
 		{
 			if (not this->m_thread.GetHandle())
 				throw Error::Boring32Error("No thread handle found. Either the thread hasn't been started or has been Close()d.");
@@ -108,14 +108,14 @@ export namespace Boring32::Async
 		}
 
 		template<std::invocable T>
-		static auto InternalAPC(Win32::ULONG_PTR arg) -> void
+		static void InternalAPC(Win32::ULONG_PTR arg)
 		{
 			const T& apc = *reinterpret_cast<T*>(arg);
 			apc();
 		}
 
 		template<std::invocable T>
-		static auto InternalHeapAPC(Win32::ULONG_PTR arg) -> void
+		static void InternalHeapAPC(Win32::ULONG_PTR arg)
 		{
 			if (not arg)
 				return;
@@ -132,7 +132,7 @@ export namespace Boring32::Async
 		};
 
 		template<typename T, typename M>
-		static auto InternalAPC(Win32::ULONG_PTR arg) -> void
+		static void InternalAPC(Win32::ULONG_PTR arg)
 		{
 			if (not arg)
 				return;

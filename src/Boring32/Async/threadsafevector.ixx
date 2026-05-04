@@ -13,8 +13,9 @@ export namespace Boring32::Async
 	// There's a compiler ICE when refactoring to use concepts and auto&&.
 	// https://developercommunity.visualstudio.com/t/ICE-with-templates-and-explicit-object-p/10950903
 	template<typename T, typename TLockType>
-	struct ThreadSafeVector final
+	class ThreadSafeVector final
 	{
+	public:
 		using ScopedLock = std::scoped_lock<TLockType>;
 
 		ThreadSafeVector() = default;

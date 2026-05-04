@@ -7,47 +7,46 @@ import :async.timerqueuetimer;
 export namespace Boring32::Async
 {
 	template<typename T>
-	struct TimerQueueTimerCallback : public TimerQueueTimer
+	class TimerQueueTimerCallback : public TimerQueueTimer
 	{
-		virtual ~TimerQueueTimerCallback() = default;
-
+	public:
 		TimerQueueTimerCallback() = default;
-			
-		TimerQueueTimerCallback(
-			Win32::HANDLE timerQueue,
-			const Win32::DWORD dueTime,
-			const Win32::DWORD period,
-			const Win32::DWORD flags
-		) : TimerQueueTimer(timerQueue, dueTime, period, flags, InternalCallback, this)
-		{ }
-			
-		TimerQueueTimerCallback(
-			Win32::HANDLE timerQueue,
-			const Win32::DWORD dueTime,
-			const Win32::DWORD period,
-			const Win32::DWORD flags,
-			Win32::HANDLE completionEvent
-		) : TimerQueueTimer(timerQueue, dueTime, period, flags, InternalCallback, this)
-		{ }
 
-		TimerQueueTimerCallback(TimerQueueTimerCallback&& other) noexcept
-			: TimerQueueTimer(std::move(other))
-		{ }
-
-		virtual auto operator=(TimerQueueTimerCallback&& other) noexcept -> TimerQueueTimerCallback&
+		auto operator=(TimerQueueTimerCallback&& other) noexcept -> TimerQueueTimerCallback&
 		{
 			Move(other);
 			return *this;
 		}
 
 		TimerQueueTimerCallback(const TimerQueueTimerCallback&) = delete;
-		virtual auto operator=(const TimerQueueTimerCallback&) -> TimerQueueTimerCallback& = delete;
+		auto operator=(const TimerQueueTimerCallback&) -> TimerQueueTimerCallback & = delete;
+			
+		TimerQueueTimerCallback(
+			Win32::HANDLE timerQueue,
+			Win32::DWORD dueTime,
+			Win32::DWORD period,
+			Win32::DWORD flags
+		) : TimerQueueTimer(timerQueue, dueTime, period, flags, InternalCallback, this)
+		{ }
+			
+		TimerQueueTimerCallback(
+			Win32::HANDLE timerQueue,
+			Win32::DWORD dueTime,
+			Win32::DWORD period,
+			Win32::DWORD flags,
+			Win32::HANDLE completionEvent
+		) : TimerQueueTimer(timerQueue, dueTime, period, flags, InternalCallback, this, completionEvent)
+		{ }
 
-		protected:
-		static auto InternalCallback(void* parameter, BOOLEAN timerOrWaitFired) -> void
+		TimerQueueTimerCallback(TimerQueueTimerCallback&& other) noexcept
+			: TimerQueueTimer(std::move(other))
+		{ }
+
+	protected:
+		static void InternalCallback(void* parameter, BOOLEAN timerOrWaitFired)
 		{
 			if (not parameter)
-				throw Error::Boring32Error("Invalid parameter");
+				throw Error::Boring32Error{ "Invalid parameter" };
 			auto* obj = reinterpret_cast<TimerQueueTimerCallback*>(parameter);
 			T::Run(timerOrWaitFired);
 		}

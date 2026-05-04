@@ -7,8 +7,9 @@ export namespace Boring32::Async::ThreadPools
 {
 	typedef void (*ThreadPoolCallback)(Win32::PTP_CALLBACK_INSTANCE, void*, Win32::PTP_WORK);
 
-	struct ThreadPool final
+	class ThreadPool final
 	{
+	public:
 		using LambdaCallback = std::function<void(Win32::PTP_CALLBACK_INSTANCE Instance, void*, Win32::PTP_WORK)>;
 		using WorkParamTuple = std::tuple<LambdaCallback&, void*>;
 
@@ -152,7 +153,7 @@ export namespace Boring32::Async::ThreadPools
 			return m_pool;
 		}
 
-		protected:
+	protected:
 		static auto InternalCallback(
 			Win32::PTP_CALLBACK_INSTANCE instance,
 			void* parameter, 

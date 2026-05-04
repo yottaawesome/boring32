@@ -8,8 +8,9 @@ export namespace Boring32::Async
 {
 	//https://docs.microsoft.com/en-us/windows/win32/sync/timer-queues
 	template<Async::AnyEvent TEvent = Async::AutoResetEvent>
-	struct TimerQueue final
+	class TimerQueue final
 	{
+	public:
 		~TimerQueue()
 		{
 			Close(std::nothrow);
@@ -84,7 +85,7 @@ export namespace Boring32::Async
 			return m_timer;
 		}
 
-		private:
+	private:
 		auto InternalCreate() -> void
 		{
 			//https://docs.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-createtimerqueue

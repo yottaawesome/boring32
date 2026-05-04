@@ -28,7 +28,7 @@ export namespace Boring32::Async
 			return Operation.Wait();
 		}
 
-		auto FinishReading() -> void
+		void FinishReading()
 		{
 			Operation.Wait();
 			if (not Operation.IsPartial())
@@ -67,7 +67,7 @@ export namespace Boring32::Async
 		}
 
 	private:
-		auto Start() -> void
+		void Start()
 		{
 			Data.resize(BytesToRead);
 			auto success = Win32::ReadFile(

@@ -65,7 +65,8 @@ export namespace Boring32::Async
 			return func(m_protected[index]);
 		}
 
-		auto operator=(const T& other) -> SyncedContainer<T> requires std::is_copy_assignable<T>::value
+		auto operator=(const T& other) -> SyncedContainer<T> 
+			requires std::is_copy_assignable<T>::value
 		{
 			auto cs = CriticalSectionLock(m_cs);
 			m_protected = other;
@@ -150,7 +151,8 @@ export namespace Boring32::Async
 		}
 
 		[[nodiscard]]
-		auto Remove(const size_t index) -> typename T::value_type requires (std::copyable<typename T::value_type>)
+		auto Remove(const size_t index) -> typename T::value_type 
+			requires (std::copyable<typename T::value_type>)
 		{
 			auto cs = CriticalSectionLock(m_cs);
 			if (index >= m_protected.size())

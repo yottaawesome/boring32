@@ -7,11 +7,11 @@ export namespace Boring32::MSI
 {
 	struct Product
 	{
-		static bool IsProductElevated(const std::wstring& path)
+		static auto IsProductElevated(const std::wstring& path) -> bool
 		{
-			Win32::BOOL isElevated;
+			auto isElevated = Win32::BOOL{};
 			// https://learn.microsoft.com/en-us/windows/win32/api/msi/nf-msi-msiisproductelevatedw
-			unsigned status = Win32::MsiIsProductElevatedW(path.c_str(), &isElevated);
+			auto status = Win32::MsiIsProductElevatedW(path.c_str(), &isElevated);
 			if (status != Win32::ErrorCodes::Success)
 				throw Error::Win32Error{status, "MsiIsProductElevatedW() failed"};
 			return isElevated;

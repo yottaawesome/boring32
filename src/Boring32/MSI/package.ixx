@@ -5,8 +5,9 @@ import :error;
 
 export namespace Boring32::MSI
 {
-	struct Package final
+	class Package final
 	{
+	public:
 		~Package() { Close(); };
 		Package() = delete;
 		Package(const Package&) = delete;
@@ -22,7 +23,7 @@ export namespace Boring32::MSI
 
 		operator bool() const noexcept { return m_handle; }
 
-		private:
+	private:
 		void Close()
 		{
 			if (m_handle)
@@ -36,7 +37,7 @@ export namespace Boring32::MSI
 		{
 			// https://learn.microsoft.com/en-us/windows/win32/api/msi/nf-msi-msiopenpackagew
 			// https://learn.microsoft.com/en-us/windows/win32/api/msi/nf-msi-msiopenpackageexw
-			unsigned status = Win32::MsiOpenPackageW(m_path.c_str(), &m_handle);
+			auto status = Win32::MsiOpenPackageW(m_path.c_str(), &m_handle);
 			if (status != Win32::ErrorCodes::Success)
 				throw Error::Win32Error{status, "MsiOpenPackageW() failed"};
 		}

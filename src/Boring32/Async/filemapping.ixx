@@ -74,7 +74,7 @@ export namespace Boring32::Async
 			return Move(other);
 		}
 
-		auto Close() -> void
+		void Close()
 		{
 			m_fileMapping = nullptr;
 			m_maxSize = 0;
@@ -103,7 +103,7 @@ export namespace Boring32::Async
 		}
 			
 	private:
-		auto Create(Win32::FileMapAccess desiredAccess, bool isInheritable) -> void
+		void Create(Win32::FileMapAccess desiredAccess, bool isInheritable)
 		{
 			auto li = Win32::LARGE_INTEGER{ .QuadPart = static_cast<long long>(m_maxSize) };
 			const wchar_t* name = m_name.empty() ? nullptr : m_name.c_str();
@@ -122,7 +122,7 @@ export namespace Boring32::Async
 			m_fileMapping.SetInheritability(isInheritable);
 		}
 
-		auto Open(Win32::FileMapAccess desiredAccess, bool isInheritable) -> void
+		void Open(Win32::FileMapAccess desiredAccess, bool isInheritable)
 		{
 			if (m_name.empty())
 				throw Error::Boring32Error("m_name cannot be empty when opening a file mapping");

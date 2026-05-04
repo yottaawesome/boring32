@@ -31,12 +31,12 @@ export namespace Boring32::Async
 			return &cs.m_criticalSection;
 		}
 
-		auto lock(this CriticalSection& cs) noexcept -> void
+		void lock(this CriticalSection& cs) noexcept
 		{ 
 			Win32::EnterCriticalSection(&cs.m_criticalSection); 
 		}
 		
-		auto unlock(this CriticalSection& cs) noexcept -> void
+		void unlock(this CriticalSection& cs) noexcept
 		{ 
 			Win32::LeaveCriticalSection(&cs.m_criticalSection); 
 		}

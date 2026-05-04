@@ -53,7 +53,7 @@ export namespace Boring32::Async
 			return m_event != nullptr;
 		}
 
-		auto Signal() -> void
+		void Signal()
 		{
 			if (not m_event)
 				throw Error::Boring32Error("No Event to signal");
@@ -72,7 +72,7 @@ export namespace Boring32::Async
 			return std::unexpected(ex.what());
 		}
 
-		auto Reset() -> void requires VIsManualReset
+		void Reset() requires VIsManualReset
 		{
 			if (not m_event)
 				return;
@@ -92,7 +92,7 @@ export namespace Boring32::Async
 			return std::unexpected(ex.what());
 		}
 
-		auto WaitOnEvent() const -> void
+		void WaitOnEvent() const
 		{
 			if (not m_event)
 				throw Error::Boring32Error("No Event to wait on");
@@ -158,7 +158,7 @@ export namespace Boring32::Async
 			return m_event.GetHandle();
 		}
 
-		constexpr auto Close() -> void
+		constexpr void Close()
 		{
 			m_event = nullptr;
 		}
@@ -179,7 +179,7 @@ export namespace Boring32::Async
 		}
 
 	private:
-		auto InternalCreate(bool isSignaled, bool isInheritable) -> void
+		void InternalCreate(bool isSignaled, bool isInheritable)
 		{
 			m_event = Win32::CreateEventW(
 				nullptr,			// security attributes

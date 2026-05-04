@@ -7,20 +7,21 @@ import :async.functions;
 export namespace Boring32::Async
 {
 	// See https://learn.microsoft.com/en-us/windows/win32/sync/using-timer-queues
-	struct TimerQueueTimer
+	class TimerQueueTimer
 	{
-		virtual ~TimerQueueTimer()
+	public:
+		~TimerQueueTimer()
 		{
-			Close(std::nothrow);
+			[[maybe_unused]] auto result = TryClose();
 		}
 
 		TimerQueueTimer() = default;
 			
 		TimerQueueTimer(
 			Win32::HANDLE timerQueue,
-			const Win32::DWORD dueTime,
-			const Win32::DWORD period,
-			const Win32::DWORD flags,
+			Win32::DWORD dueTime,
+			Win32::DWORD period,
+			Win32::DWORD flags,
 			Win32::WAITORTIMERCALLBACK callback,
 			void* parameter
 		) : m_dueTime(dueTime),
@@ -29,19 +30,18 @@ export namespace Boring32::Async
 			m_callback(callback),
 			m_parameter(parameter),
 			m_timerQueue(timerQueue),
-			m_completionEvent(Win32::InvalidHandleValue),
-			m_timerQueueTimer(nullptr)
+			m_completionEvent(Win32::InvalidHandleValue)
 		{
-			if (not m_timerQueue || m_timerQueue == Win32::InvalidHandleValue)
-				throw Error::Boring32Error("Invalid handle");
+			if (not m_timerQueue or m_timerQueue == Win32::InvalidHandleValue)
+				throw Error::Boring32Error{ "Invalid handle" };
 			InternalCreate();
 		}
 			
 		TimerQueueTimer(
 			Win32::HANDLE timerQueue,
-			const Win32::DWORD dueTime,
-			const Win32::DWORD period,
-			const Win32::DWORD flags,
+			Win32::DWORD dueTime,
+			Win32::DWORD period,
+			Win32::DWORD flags,
 			Win32::WAITORTIMERCALLBACK callback,
 			void* parameter,
 			Win32::HANDLE completionEvent
@@ -54,72 +54,69 @@ export namespace Boring32::Async
 			m_completionEvent(completionEvent),
 			m_timerQueueTimer(nullptr)
 		{
-			if (not m_timerQueue || m_timerQueue == Win32::InvalidHandleValue)
-				throw Error::Boring32Error("Invalid handle");
+			if (not m_timerQueue or m_timerQueue == Win32::InvalidHandleValue)
+				throw Error::Boring32Error{ "Invalid handle" };
 			InternalCreate();
 		}
 
 		TimerQueueTimer(TimerQueueTimer&& other) noexcept
-			: m_timerQueueTimer(nullptr),
-			m_timerQueue(nullptr),
-			m_completionEvent(nullptr)
 		{
 			Move(other);
 		}
 
-		virtual auto operator=(TimerQueueTimer&& other) noexcept -> TimerQueueTimer&
+		auto operator=(this auto&& self, TimerQueueTimer&& other) noexcept -> TimerQueueTimer&
 		{
 			Move(other);
 			return *this;
 		}
 
 		TimerQueueTimer(const TimerQueueTimer& other) = delete;
-		virtual auto operator=(const TimerQueueTimer& other) -> TimerQueueTimer& = delete;
+		auto operator=(const TimerQueueTimer& other) -> TimerQueueTimer& = delete;
 
-		virtual auto Update(const unsigned long dueTime, const unsigned long period) -> void
+		void Update(this auto&& self, Win32::DWORD dueTime, Win32::DWORD period)
 		{
 			if (not m_timerQueueTimer or m_timerQueueTimer == Win32::InvalidHandleValue)
 				throw Error::Boring32Error("m_timerQueueTimer is null");
 
 			// https://learn.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-changetimerqueuetimer
-			bool success = Win32::ChangeTimerQueueTimer(
-				m_timerQueue,
-				m_timerQueueTimer,
-				dueTime,
-				period
-			);
+			auto success = 
+				Win32::ChangeTimerQueueTimer(
+					m_timerQueue,
+					m_timerQueueTimer,
+					dueTime,
+					period
+				);
 			if (not success)
 				throw Error::Win32Error{Win32::GetLastError(), "ChangeTimerQueueTimer() failed"};
 		}
 
-		virtual auto Close() -> void
+		auto TryClose() -> std::expected<void, Win32::DWORD>
 		{
-			if (not m_timerQueueTimer or m_timerQueueTimer != Win32::InvalidHandleValue)
-				return;
-			// https://learn.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-deletetimerqueuetimer
-			bool succeeded = Win32::DeleteTimerQueueTimer(
-				m_timerQueue,
-				m_timerQueueTimer,
-				m_completionEvent
-			);
+			if (not m_timerQueueTimer or m_timerQueueTimer == Win32::InvalidHandleValue)
+				return {};
+			auto succeeded =
+				Win32::DeleteTimerQueueTimer(
+					m_timerQueue,
+					m_timerQueueTimer,
+					m_completionEvent
+				);
 			if (not succeeded)
-				throw Error::Win32Error{Win32::GetLastError(), "DeleteTimerQueueTimer() failed"};
+				return std::unexpected{ Win32::GetLastError() };
 			m_timerQueueTimer = nullptr;
+			return {};
 		}
 
-		virtual auto Close(std::nothrow_t) noexcept -> bool
-		try
+		void Close(this auto&& self)
 		{
-			Close();
-			return true;
-		}
-		catch (const std::exception&)
-		{
-			return false;
+			auto result = self.TryClose().or_else(
+				[](Win32::DWORD errorCode) -> std::expected<void, Win32::DWORD>
+				{
+					throw Error::Win32Error{ errorCode, "DeleteTimerQueueTimer() failed" };
+				});
 		}
 
-		protected:
-		virtual auto Move(TimerQueueTimer& other) noexcept -> void
+	protected:
+		void Move(TimerQueueTimer& other) noexcept
 		{
 			m_dueTime = other.m_dueTime;
 			m_period = other.m_period;
@@ -127,29 +124,27 @@ export namespace Boring32::Async
 			m_callback = other.m_callback;
 			m_parameter = other.m_parameter;
 
-			m_timerQueue = other.m_timerQueue;
-			m_timerQueueTimer = other.m_timerQueueTimer;
-			m_completionEvent = other.m_completionEvent;
-			other.m_timerQueue = nullptr;
-			other.m_timerQueueTimer = nullptr;
-			other.m_completionEvent = nullptr;
+			m_timerQueue = std::exchange(other.m_timerQueue, nullptr);
+			m_timerQueueTimer = std::exchange(other.m_timerQueueTimer, nullptr);
+			m_completionEvent = std::exchange(other.m_completionEvent, nullptr);
 		}
 
-		virtual auto InternalCreate() -> void
+		void InternalCreate(this auto&& self)
 		{
-			if (not m_timerQueue or m_timerQueue == Win32::InvalidHandleValue)
-				throw Error::Boring32Error("m_timerQueue is null");
+			if (not self.m_timerQueue or self.m_timerQueue == Win32::InvalidHandleValue)
+				throw Error::Boring32Error{ "m_timerQueue is null" };
 
 			//https://docs.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-createtimerqueuetimer
-			bool succeeded = Win32::CreateTimerQueueTimer(
-				&m_timerQueueTimer,
-				m_timerQueue,
-				m_callback,
-				m_parameter,
-				m_dueTime,
-				m_period,
-				m_flags
-			);
+			auto succeeded = 
+				Win32::CreateTimerQueueTimer(
+					&self.m_timerQueueTimer,
+					self.m_timerQueue,
+					self.m_callback,
+					self.m_parameter,
+					self.m_dueTime,
+					self.m_period,
+					self.m_flags
+				);
 			if (not succeeded)
 				throw Error::Win32Error{Win32::GetLastError(), "CreateTimerQueueTimer() failed"};
 		}

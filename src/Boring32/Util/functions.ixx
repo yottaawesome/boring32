@@ -156,7 +156,7 @@ export namespace Boring32::Util
 
 	constexpr auto Decompose(std::uint64_t value) noexcept -> std::pair<Win32::DWORD, Win32::DWORD>
 	{
-		const Win32::DWORD
+		auto
 			low = static_cast<Win32::DWORD>(value & 0xFFFFFFFF),
 			high = static_cast<Win32::DWORD>((value >> 32) & 0xFFFFFFFF);
 		return { low, high };

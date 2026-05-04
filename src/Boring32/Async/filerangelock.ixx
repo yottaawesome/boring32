@@ -45,12 +45,12 @@ export namespace Boring32::Async
 			params.Acquire ? DoLock() : void();
 		}
 
-		auto lock(this FileRangeLock& self) -> void
+		void lock(this FileRangeLock& self)
 		{ 
 			self.DoLock(); 
 		}
 		
-		auto unlock(this FileRangeLock& self) noexcept -> void
+		void unlock(this FileRangeLock& self) noexcept
 		try
 		{
 			self.DoUnlock(); 
@@ -72,7 +72,7 @@ export namespace Boring32::Async
 			return false;
 		}
 
-		auto DoLock(this FileRangeLock& self) -> void
+		void DoLock(this FileRangeLock& self)
 		{
 			if (not self.HandleIsValid())
 				throw Error::Boring32Error("File handle is null.");
@@ -97,7 +97,7 @@ export namespace Boring32::Async
 				throw Error::Win32Error{ Win32::GetLastError(), std::format("Failed to lock file.")};
 		}
 
-		auto DoUnlock(this FileRangeLock& self) -> void
+		void DoUnlock(this FileRangeLock& self)
 		{
 			if (not self.HandleIsValid())
 				return;
@@ -127,12 +127,11 @@ export namespace Boring32::Async
 		Win32::HANDLE fileHandle = nullptr;
 		LockParams params;
 
-		auto Move(this FileRangeLock& self, FileRangeLock& other) -> void
+		void Move(this FileRangeLock& self, FileRangeLock& other)
 		{
 			self.DoUnlock();
-			self.fileHandle = std::move(other.fileHandle);
+			self.fileHandle = std::exchange(other.fileHandle, nullptr);
 			self.params = other.params;
-			other.fileHandle = nullptr;
 		}
 	};
 	static_assert(Concepts::Lockable<FileRangeLock>);

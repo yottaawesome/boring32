@@ -16,7 +16,7 @@ export namespace Boring32::Async
 
 		EventLoop() = default;
 
-		auto Close() -> void
+		void Close()
 		{
 			m_handlers.clear();
 			m_events.clear();
@@ -27,21 +27,22 @@ export namespace Boring32::Async
 			if (m_events.empty())
 				throw Error::Boring32Error("m_events is empty");
 
-			CriticalSectionLock cs(m_cs);
+			auto cs = CriticalSectionLock{ m_cs };
 
-			auto result = Win32::WaitForMultipleObjectsEx(
-				static_cast<Win32::DWORD>(m_events.size()),
-				&m_events[0],
-				waitAll,
-				millis,
-				true
-			);
+			auto result = 
+				Win32::WaitForMultipleObjectsEx(
+					static_cast<Win32::DWORD>(m_events.size()),
+					&m_events[0],
+					waitAll,
+					millis,
+					true
+				);
 			if (result == Win32::WaitFailed)
 				throw Error::Win32Error{ Win32::GetLastError(), "WaitForMultipleObjectsEx() failed" };
 			if (result == Win32::WaitTimeout)
 				return false;
 			if (result >= Win32::WaitAbandoned and result <= (Win32::WaitAbandoned + m_events.size() - 1))
-				throw Error::Boring32Error("A wait object was abandoned");
+				throw Error::Boring32Error{ "A wait object was abandoned" };
 
 			if (waitAll)
 			{
@@ -59,24 +60,25 @@ export namespace Boring32::Async
 			return true;
 		}
 
-		auto On(Win32::HANDLE handle, std::function<auto()->void> handler) -> void
+		void On(Win32::HANDLE handle, std::function<auto()->void> handler)
 		{
-			CriticalSectionLock cs(m_cs);
+			auto cs = CriticalSectionLock{ m_cs };
 			m_events.push_back(handle);
 			m_handlers.push_back(std::move(handler));
 		}
 
-		auto Erase(Win32::HANDLE handle) -> void
+		void Erase(Win32::HANDLE handle)
 		{
-			CriticalSectionLock cs(m_cs);
-			std::vector<Win32::HANDLE>::iterator handlePosIterator = std::find_if(
-				m_events.begin(),
-				m_events.end(),
-				[handle](const auto& elem) { return elem == handle; }
-			);
+			auto cs = CriticalSectionLock{ m_cs };
+			auto handlePosIterator = std::vector<Win32::HANDLE>::iterator{
+				std::find_if(
+					m_events.begin(),
+					m_events.end(),
+					[handle](const auto& elem) { return elem == handle; }
+				) };
 			if (handlePosIterator != m_events.end())
 			{
-				std::ptrdiff_t iteratorDist = std::distance(m_events.begin(), handlePosIterator);
+				auto iteratorDist = std::ptrdiff_t{ std::distance(m_events.begin(), handlePosIterator) };
 				m_events.erase(handlePosIterator);
 				m_handlers.erase(m_handlers.begin() + iteratorDist);
 			}
@@ -84,7 +86,7 @@ export namespace Boring32::Async
 
 		auto Size() const noexcept -> size_t
 		{
-			CriticalSectionLock cs(m_cs);
+			auto cs = CriticalSectionLock{ m_cs };
 			return m_events.size();
 		}
 
