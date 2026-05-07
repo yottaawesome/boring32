@@ -4,17 +4,21 @@ import :win32;
 
 export namespace Boring32::WinHttp
 {
-	std::shared_ptr<void> CreateCloseableWinHttpHandle(Win32::WinHttp::HINTERNET handle)
+	auto CreateCloseableWinHttpHandle(Win32::WinHttp::HINTERNET handle) -> std::shared_ptr<void>
 	{
 		constexpr auto closeFunc = Win32::WinHttp::WinHttpCloseHandle;
 		return { handle, closeFunc };
 	}
 
-	struct WinHttpHandle final
+	class WinHttpHandle final
 	{
+	public:
 		WinHttpHandle() = default;
-		WinHttpHandle(WinHttpHandle&& other) noexcept = default;
 		WinHttpHandle(const WinHttpHandle& other) = default;
+		auto operator=(const WinHttpHandle&) -> WinHttpHandle& = default;
+		WinHttpHandle(WinHttpHandle&& other) noexcept = default;
+		auto operator=(WinHttpHandle&& other) noexcept -> WinHttpHandle& = default;
+
 		WinHttpHandle(Win32::WinHttp::HINTERNET handle)
 			: m_handle(CreateCloseableWinHttpHandle(handle))
 		{ }
@@ -24,21 +28,18 @@ export namespace Boring32::WinHttp
 			return m_handle.get() != nullptr;
 		}
 
-		bool operator==(const Win32::WinHttp::HINTERNET other) const noexcept
+		auto operator==(Win32::WinHttp::HINTERNET other) const noexcept -> bool
 		{
 			return m_handle.get() == other;
 		}
 
-		WinHttpHandle& operator=(const Win32::WinHttp::HINTERNET handle)
+		auto operator=(const Win32::WinHttp::HINTERNET handle) -> WinHttpHandle&
 		{
 			m_handle = CreateCloseableWinHttpHandle(handle);
 			return *this;
 		}
-
-		WinHttpHandle& operator=(WinHttpHandle&& other) noexcept = default;
-		WinHttpHandle& operator=(const WinHttpHandle&) = default;
 			
-		Win32::WinHttp::HINTERNET Get() const noexcept
+		auto Get() const noexcept -> Win32::WinHttp::HINTERNET
 		{
 			return m_handle.get();
 		}
@@ -48,7 +49,7 @@ export namespace Boring32::WinHttp
 			m_handle = nullptr;
 		}
 
-		private:
+	private:
 		std::shared_ptr<void> m_handle;
 	};
 }

@@ -314,7 +314,7 @@
     <ClCompile Include="Clipboard\clipboard.ixx" />
     <ClCompile Include="Clipboard\operation.ixx" />
     <ClCompile Include="Memory\typedgloballock.ixx" />
-    <ClCompile Include="Strings\strings.functions.ixx" />
+    <ClCompile Include="Strings\functions.ixx" />
     <ClCompile Include="UI\common.ixx" />
     <ClCompile Include="UI\control.ixx" />
     <ClCompile Include="UI\window.ixx" />
@@ -431,7 +431,7 @@
     <ClCompile Include="SSPI\Provider\ntlm.ixx" />
     <ClCompile Include="SSPI\Provider\pku2u.ixx" />
     <ClCompile Include="SSPI\Provider\schannel.ixx" />
-    <ClCompile Include="Strings\strings.fixedstring.ixx" />
+    <ClCompile Include="Strings\fixedstring.ixx" />
     <ClCompile Include="TaskScheduler\registeredtask.ixx" />
     <ClCompile Include="TaskScheduler\taskscheduler.ixx" />
     <ClCompile Include="TaskScheduler\taskfolder.ixx" />

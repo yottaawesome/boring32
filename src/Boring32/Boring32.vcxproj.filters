@@ -182,7 +182,7 @@
     <ClCompile Include="Native\ntdll.ixx" />
     <ClCompile Include="Native\native.ixx" />
     <ClCompile Include="Security\encodedpointer.ixx" />
-    <ClCompile Include="Strings\strings.fixedstring.ixx" />
+    <ClCompile Include="Strings\fixedstring.ixx" />
     <ClCompile Include="Util\range.ixx" />
     <ClCompile Include="Shell\shell.ixx" />
     <ClCompile Include="Concepts\concepts.ixx" />
@@ -235,7 +235,7 @@
     <ClCompile Include="Clipboard\clipboard.ixx" />
     <ClCompile Include="Clipboard\operation.ixx" />
     <ClCompile Include="Memory\typedgloballock.ixx" />
-    <ClCompile Include="Strings\strings.functions.ixx" />
+    <ClCompile Include="Strings\functions.ixx" />
     <ClCompile Include="Async\asyncread.ixx" />
   </ItemGroup>
   <ItemGroup>
