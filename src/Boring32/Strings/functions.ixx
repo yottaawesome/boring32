@@ -7,6 +7,7 @@ import :concepts;
 
 export namespace Boring32::Strings
 {
+	[[nodiscard]]
 	auto ConvertString(std::wstring_view wstr) -> std::string
 	{
 		if (wstr.empty())
@@ -14,36 +15,39 @@ export namespace Boring32::Strings
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-widechartomultibyte
 		// Returns the size in bytes, this differs from MultiByteToWideChar, which returns the size in characters
-		auto sizeInBytes = Win32::WideCharToMultiByte(
-			Win32::CpUtf8,										// CodePage
-			Win32::WcNoBestFitChars,							// dwFlags 
-			&wstr[0],										// lpWideCharStr
-			static_cast<int>(wstr.size()),					// cchWideChar 
-			nullptr,										// lpMultiByteStr
-			0,												// cbMultiByte
-			nullptr,										// lpDefaultChar
-			nullptr											// lpUsedDefaultChar
-		);
+		auto sizeInBytes = 
+			Win32::WideCharToMultiByte(
+				Win32::CpUtf8,									// CodePage
+				Win32::WcNoBestFitChars,						// dwFlags 
+				wstr.data(),									// lpWideCharStr
+				static_cast<int>(wstr.size()),					// cchWideChar 
+				nullptr,										// lpMultiByteStr
+				0,												// cbMultiByte
+				nullptr,										// lpDefaultChar
+				nullptr											// lpUsedDefaultChar
+			);
 		if (sizeInBytes == 0)
 			throw Error::Win32Error{ Win32::GetLastError(), "WideCharToMultiByte() [1] failed" };
 
 		auto strTo = std::string(sizeInBytes / sizeof(char), '\0');
-		auto status = WideCharToMultiByte(
-			Win32::CpUtf8,										// CodePage
-			Win32::WcNoBestFitChars,							// dwFlags 
-			&wstr[0],										// lpWideCharStr
-			static_cast<int>(wstr.size()),					// cchWideChar 
-			&strTo[0],										// lpMultiByteStr
-			static_cast<int>(strTo.size() * sizeof(char)),	// cbMultiByte
-			nullptr,										// lpDefaultChar
-			nullptr											// lpUsedDefaultChar
-		);
+		auto status = 
+			WideCharToMultiByte(
+				Win32::CpUtf8,									// CodePage
+				Win32::WcNoBestFitChars,						// dwFlags 
+				wstr.data(),									// lpWideCharStr
+				static_cast<int>(wstr.size()),					// cchWideChar 
+				strTo.data(),									// lpMultiByteStr
+				static_cast<int>(strTo.size() * sizeof(char)),	// cbMultiByte
+				nullptr,										// lpDefaultChar
+				nullptr											// lpUsedDefaultChar
+			);
 		if (status == 0)
 			throw Error::Win32Error{ Win32::GetLastError(), "WideCharToMultiByte() [2] failed" };
 
 		return strTo;
 	}
 
+	[[nodiscard]]
 	auto ConvertString(std::string_view str) -> std::wstring
 	{
 		if (str.empty())
@@ -51,26 +55,28 @@ export namespace Boring32::Strings
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar
 		// Returns the size in characters, this differs from WideCharToMultiByte, which returns the size in bytes
-		auto sizeInCharacters = Win32::MultiByteToWideChar(
-			Win32::CpUtf8,									// CodePage
-			0,											// dwFlags
-			&str[0],									// lpMultiByteStr
-			static_cast<int>(str.size() * sizeof(char)),// cbMultiByte
-			nullptr,									// lpWideCharStr
-			0											// cchWideChar
-		);
+		auto sizeInCharacters = 
+			Win32::MultiByteToWideChar(
+				Win32::CpUtf8,									// CodePage
+				0,											// dwFlags
+				str.data(),									// lpMultiByteStr
+				static_cast<int>(str.size() * sizeof(char)),// cbMultiByte
+				nullptr,									// lpWideCharStr
+				0											// cchWideChar
+			);
 		if (sizeInCharacters == 0)
 			throw Error::Win32Error{ Win32::GetLastError(), "MultiByteToWideChar() [1] failed" };
 
 		auto wstrTo = std::wstring(sizeInCharacters, '\0');
-		auto status = Win32::MultiByteToWideChar(
-			Win32::CpUtf8,									// CodePage
-			0,											// dwFlags
-			&str[0],									// lpMultiByteStr
-			static_cast<int>(str.size() * sizeof(char)),	// cbMultiByte
-			&wstrTo[0],									// lpWideCharStr
-			static_cast<int>(wstrTo.size())				// cchWideChar
-		);
+		auto status = 
+			Win32::MultiByteToWideChar(
+				Win32::CpUtf8,									// CodePage
+				0,											// dwFlags
+				str.data(),									// lpMultiByteStr
+				static_cast<int>(str.size() * sizeof(char)),	// cbMultiByte
+				wstrTo.data(),									// lpWideCharStr
+				static_cast<int>(wstrTo.size())				// cchWideChar
+			);
 		if (status == 0)
 			throw Error::Win32Error{ Win32::GetLastError(), "MultiByteToWideChar() [2] failed" };
 
@@ -78,6 +84,7 @@ export namespace Boring32::Strings
 	}
 
 	template<Concepts::WideOrNarrowString TString>
+	[[nodiscard]]
 	decltype(auto) To(Concepts::AnyString auto&& from)
 	{
 		if constexpr (Concepts::OneOf<decltype(from), TString&, const TString&>)
@@ -148,7 +155,7 @@ export namespace Boring32::Strings
 		explicit operator const TString& () const { return Value; }
 		explicit operator TString()	const { return Value; }
 		explicit operator ViewType() const { return { Value }; }
-		bool operator==(Concepts::AnyString auto&& other) const
+		auto operator==(Concepts::AnyString auto&& other) const -> bool
 		{
 			if constexpr (std::same_as<StringType, std::remove_cvref_t<decltype(other)>>)
 				return Value == other;
@@ -160,7 +167,7 @@ export namespace Boring32::Strings
 			Value += To<std::string>(std::forward<decltype(other)>(other));
 		}
 		template<typename T>
-		bool operator==(const AutoString<T>& other) const
+		auto operator==(const AutoString<T>& other) const -> bool
 		{
 			if constexpr (std::same_as<StringType, T>)
 				return Value == other.Value;
@@ -221,6 +228,7 @@ export namespace Boring32::Strings
 		RightTrim(s);
 	}
 
+	[[nodiscard]]
 	auto TokeniseString(const std::string& stringToTokenise, const std::string& delimiter) -> std::vector<std::string>
 	{
 		auto position = size_t{};
@@ -248,6 +256,7 @@ export namespace Boring32::Strings
 		return results;
 	}
 
+	[[nodiscard]]
 	auto TokeniseString(const std::wstring& stringToTokenise, const std::wstring& delimiter) -> std::vector<std::wstring>
 	{
 		auto position = size_t{};
@@ -276,6 +285,7 @@ export namespace Boring32::Strings
 	}
 
 	// Adapted from https://stackoverflow.com/a/29752943/7448661
+	[[nodiscard]]
 	auto Replace(std::wstring source, const std::wstring& from, const std::wstring& to) -> std::wstring
 	{
 		auto newString = std::wstring{};
@@ -293,6 +303,7 @@ export namespace Boring32::Strings
 		return newString;
 	}
 
+	[[nodiscard]]
 	auto Erase(std::wstring source, const wchar_t what) -> std::wstring
 	{
 		source.erase(std::remove(source.begin(), source.end(), what), source.end());
@@ -300,6 +311,7 @@ export namespace Boring32::Strings
 	}
 
 	// Adapted from https://www.tutorialspoint.com/case-insensitive-string-comparison-in-cplusplus
+	[[nodiscard]]
 	auto DoCaseInsensitiveMatch(std::string_view str1, std::string_view str2) -> bool
 	{
 		auto w1 = ConvertString(str1);
@@ -313,6 +325,7 @@ export namespace Boring32::Strings
 		) == Win32::CStrComparison::Equal;
 	}
 
+	[[nodiscard]]
 	auto DoCaseInsensitiveMatch(std::wstring_view str1, std::wstring_view str2) -> bool
 	{
 		return Win32::CompareStringOrdinal(
@@ -330,6 +343,7 @@ export namespace Boring32::Strings
 		unsigned Argc = 0;;
 	};
 
+	[[nodiscard]]
 	auto StringsToArgVector(const std::vector<std::wstring>& args) -> ArgInfo
 	{
 		auto info = ArgInfo{};
@@ -358,10 +372,12 @@ export namespace Boring32::Strings
 		);
 
 	template<IsExpectedInvocable auto TDefault = nullptr>
+	[[nodiscard]]
 	auto SafeVFormat(
 		Concepts::IsStringType auto&& param,
 		auto&&...args
-	) noexcept try
+	) noexcept -> decltype(std::vformat(param, std::make_format_args(args...)))
+	try
 	{
 		if constexpr (TDefault)
 		{
@@ -369,7 +385,7 @@ export namespace Boring32::Strings
 				Concepts::IsString<decltype(param)> and Concepts::IsString<std::invoke_result_t<decltype(TDefault), std::exception>>
 				or Concepts::IsWideString<decltype(param)> and Concepts::IsWideString<std::invoke_result_t<decltype(TDefault), const std::exception&>>,
 				"Default function return type must match the type of string"
-				);
+			);
 		}
 		return std::vformat(param, std::make_format_args(args...));
 	}
@@ -384,6 +400,7 @@ export namespace Boring32::Strings
 	}
 
 	template<typename...TArgs>
+	[[nodiscard]]
 	auto Format(std::format_string<TArgs...> fmt, TArgs&&...args) -> std::string
 	{
 		auto buffer = std::string{};
@@ -397,38 +414,40 @@ export namespace Boring32::Strings
 	[[nodiscard]]
 	auto ChangeCase(const std::wstring& source, bool upper) -> std::wstring
 	{
-		int flag = upper
+		auto flag = upper
 			? Win32::i18n::LcMap::UpperCase
 			: Win32::i18n::LcMap::LowerCase;
 
 		// https://learn.microsoft.com/en-us/windows/win32/api/winnls/nf-winnls-lcmapstringex
 		// See also https://devblogs.microsoft.com/oldnewthing/20241007-00/?p=110345
-		int result = Win32::i18n::LCMapStringEx(
-			Win32::i18n::Locales::Invariant,
-			flag,
-			source.data(),
-			static_cast<int>(source.size()),
-			nullptr,
-			0,
-			nullptr,
-			nullptr,
-			0
-		);
+		auto result = 
+			Win32::i18n::LCMapStringEx(
+				Win32::i18n::Locales::Invariant,
+				flag,
+				source.data(),
+				static_cast<int>(source.size()),
+				nullptr,
+				0,
+				nullptr,
+				nullptr,
+				0
+			);
 		if (result == 0)
 			throw Error::Win32Error{ Win32::GetLastError(), "LCMapStringEx() failed." };
 
 		auto destination = std::wstring(result, '\0');
-		result = Win32::i18n::LCMapStringEx(
-			Win32::i18n::Locales::Invariant,
-			flag,
-			source.data(),
-			static_cast<int>(source.size()),
-			destination.data(),
-			static_cast<int>(destination.size()),
-			nullptr,
-			nullptr,
-			0
-		);
+		result = 
+			Win32::i18n::LCMapStringEx(
+				Win32::i18n::Locales::Invariant,
+				flag,
+				source.data(),
+				static_cast<int>(source.size()),
+				destination.data(),
+				static_cast<int>(destination.size()),
+				nullptr,
+				nullptr,
+				0
+			);
 		if (result == 0)
 			throw Error::Win32Error{ Win32::GetLastError(), "LCMapStringEx() failed." };
 
