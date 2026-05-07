@@ -16,27 +16,30 @@ export namespace Boring32::WinSock
 		int SocketType = Win32::WinSock::_SOCK_STREAM;
 		AddrInfoWUniquePtr AddrInfo = ResolvedName::Resolve(Name, Port, AddressType, Protocol, SocketType);
 
-		static AddrInfoWUniquePtr Resolve(
+		//ResolvedName(const ResolvedName& other) = default;
+		//auto operator=(const ResolvedName& other) -> ResolvedName & = default;
+
+		static auto Resolve(
 			std::wstring_view name,
 			unsigned port,
 			Win32::WinSock::AddressFamily::Family addressType,
 			Win32::WinSock::IPPROTO protocol,
 			int socketType
-		)
+		) -> AddrInfoWUniquePtr
 		{
 			if (name.empty())
 				return AddrInfoWUniquePtr{};
 
-			Win32::WinSock::ADDRINFOW hints{
+			auto hints = Win32::WinSock::ADDRINFOW{
 				.ai_family = addressType,
 				.ai_socktype = socketType,
 				.ai_protocol = protocol
 			};
 
-			Win32::WinSock::ADDRINFOW* addrInfoResult;
-			std::wstring portNumber = port ? std::to_wstring(port) : L"";
+			auto addrInfoResult = static_cast<Win32::WinSock::ADDRINFOW*>(nullptr);
+			auto portNumber = port ? std::to_wstring(port) : std::wstring{};
 			// https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-getaddrinfow
-			int status = Win32::WinSock::GetAddrInfoW(
+			auto status = Win32::WinSock::GetAddrInfoW(
 				name.data(),
 				portNumber.c_str(),
 				&hints,

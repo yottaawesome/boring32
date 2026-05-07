@@ -1,5 +1,7 @@
 #pragma comment(lib, "Ws2_32.lib")
 
+// TODO: rework nested exceptions, promote WinSockError to a full error type.
+
 export module boring32:winsock;
 export import :winsock.functions;
 export import :winsock.winsockerror;

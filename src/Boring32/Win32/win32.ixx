@@ -1361,7 +1361,7 @@ export namespace Boring32::Win32::WinSock
 	}
 	
 	constexpr auto _WSA_IO_PENDING = WSA_IO_PENDING;
-	constexpr auto _INVALID_SOCKET = INVALID_SOCKET;
+	constexpr auto InvalidSocket = INVALID_SOCKET;
 	constexpr auto _IPPROTO_IP = IPPROTO_IP;
 	constexpr auto _SOCK_STREAM = SOCK_STREAM;
 	constexpr auto _SOCKET_ERROR = SOCKET_ERROR;

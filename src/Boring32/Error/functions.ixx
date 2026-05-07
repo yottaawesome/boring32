@@ -6,14 +6,13 @@ namespace Boring32::Error
 {
     auto FormatStackTrace(const std::stacktrace& trace) -> std::string
     {
-        constexpr std::string_view fmt = 
+        constexpr auto fmt = 
 R"(Entry:
     Description: {}
     Source file: {}
     Source line: {}
 )";
-
-        std::string bt;
+        auto bt = std::string{};
         for (const std::stacktrace_entry& ste : trace)
         {
             // Break on this to avoid logging VC runtime functions
@@ -33,7 +32,7 @@ R"(Entry:
             Win32::HMODULE moduleToSearch
         ) -> TString
         {
-            void* messageBuffer = nullptr;
+            auto messageBuffer = (void*)nullptr;
             auto FormatStringFn =
                 [] static constexpr
                 {
@@ -64,7 +63,7 @@ R"(Entry:
                     }();
             }
 
-            TString msg(static_cast<TString::pointer>(messageBuffer));
+            auto msg = TString(static_cast<TString::pointer>(messageBuffer));
             // This should never happen
             // See also https://learn.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-raisefailfastexception
             if (Win32::LocalFree(messageBuffer))
@@ -114,7 +113,7 @@ export namespace Boring32::Error
 {
     auto PrintExceptionToString(const std::exception& ex) -> std::string
     {
-        std::string ss;
+        auto ss = std::string{};
         return PrintExceptionToString(ex, ss);
     }
 
@@ -126,13 +125,14 @@ export namespace Boring32::Error
     // info.
     template <typename EX1, typename EX2>
     [[noreturn]] 
-    void ThrowNested(EX1&& ex1, EX2&& ex2) try
+    void ThrowNested(EX1&& ex1, EX2&& ex2) 
+    try
     {
         throw ex1;
     }
     catch (...)
     {
-        throw_with_nested(ex2);
+        std::throw_with_nested(ex2);
     }
 
     auto FormatErrorMessage(
@@ -176,7 +176,7 @@ export namespace Boring32::Error
         const std::stacktrace& trace,
         const std::source_location& location,
         std::string_view message,
-        const Win32::DWORD errorCode,
+        Win32::DWORD errorCode,
         std::string_view translatedError
     ) -> std::string
     {
@@ -199,18 +199,19 @@ export namespace Boring32::Error
     // second parameter for the function to translate such error codes.
     template<Concepts::WideOrNarrowString TString>
     auto TranslateErrorCode(
-        const Win32::DWORD errorCode, 
+        Win32::DWORD errorCode, 
         std::wstring_view moduleName = L""
     ) -> TString
     {
         // Retrieve the system error message for the last-error code
-        Win32::HMODULE moduleHandle = moduleName.empty() ? nullptr : Win32::LoadLibraryW(moduleName.data());
-        const Win32::DWORD flags =
-            Win32::FormatMessageAllocateBuffer |
-            Win32::FormatMessageFromSystem |
-            Win32::FormatMessageIgnoreInserts |
-            (moduleHandle ? Win32::FormatMessageFromHModule : 0);
-        TString errorString = ErrorCodeFormat<TString>::Format(errorCode, flags, moduleHandle);
+        auto moduleHandle = moduleName.empty() ? Win32::HMODULE{} : Win32::LoadLibraryW(moduleName.data());
+		auto flags = static_cast<Win32::DWORD>(
+            Win32::FormatMessageAllocateBuffer 
+            | Win32::FormatMessageFromSystem 
+            | Win32::FormatMessageIgnoreInserts 
+            | (moduleHandle ? Win32::FormatMessageFromHModule : 0)
+        );
+        auto errorString = ErrorCodeFormat<TString>::Format(errorCode, flags, moduleHandle);
         if (moduleHandle)
             Win32::FreeLibrary(moduleHandle);
 

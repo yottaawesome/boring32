@@ -9,7 +9,7 @@ export namespace Boring32::WinSock
 
 	void CloseSocket(Win32::WinSock::SOCKET sock)
 	{
-		if (sock and sock != Win32::WinSock::_INVALID_SOCKET)
+		if (sock and sock != Win32::WinSock::InvalidSocket)
 			Win32::WinSock::closesocket(sock);
 	}
 	using SocketUniquePtr = RAII::UniquePtr<Win32::WinSock::SOCKET, CloseSocket>;

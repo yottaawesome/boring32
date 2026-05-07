@@ -5,8 +5,9 @@ import :winsock.winsockerror;
 
 export namespace Boring32::WinSock
 {
-	struct Socket final
+	class Socket final
 	{
+	public:
 		~Socket()
 		{
 			Close();
@@ -15,13 +16,18 @@ export namespace Boring32::WinSock
 		Socket() = default;
 
 		Socket(const Socket&) = delete;
+		Socket& operator=(const Socket&) = delete;
 
 		Socket(Socket&& other) noexcept
 		{
 			Move(other);
 		}
+		auto operator=(Socket&& other) noexcept -> Socket&
+		{
+			return Move(other);
+		}
 
-		Socket(const Win32::WinSock::SOCKET socket)
+		Socket(Win32::WinSock::SOCKET socket)
 		{
 			m_socket = socket;
 		}
@@ -34,9 +40,9 @@ export namespace Boring32::WinSock
 				type,
 				protocol
 			);
-			if (m_socket == Win32::WinSock::_INVALID_SOCKET)
+			if (m_socket == Win32::WinSock::InvalidSocket)
 			{
-				const auto lastError = Win32::WinSock::WSAGetLastError();
+				auto lastError = Win32::WinSock::WSAGetLastError();
 				Error::ThrowNested(
 					Error::Win32Error{static_cast<Win32::DWORD>(lastError), "socket() failed", L"ws2_32.dll"},
 					WinSockError("Failed to open socket")
@@ -44,50 +50,43 @@ export namespace Boring32::WinSock
 			}
 		}
 
-		Socket& operator=(Socket&& other) noexcept
-		{
-			return Move(other);
-		}
-
-		Socket& operator=(const Socket&) = delete;
 		operator Win32::WinSock::SOCKET() const noexcept
 		{
 			return m_socket;
 		}
 
-		Win32::WinSock::SOCKET* operator&() noexcept
+		auto operator&() noexcept -> Win32::WinSock::SOCKET*
 		{
 			return &m_socket;
 		}
 
-		Win32::WinSock::SOCKET operator*() noexcept
+		auto operator*() noexcept -> Win32::WinSock::SOCKET
 		{
 			return m_socket;
 		}
 
 		void Close()
 		{
-			if (m_socket && m_socket != Win32::WinSock::_INVALID_SOCKET)
+			if (m_socket and m_socket != Win32::WinSock::InvalidSocket)
 			{
 				Win32::WinSock::closesocket(m_socket);
-				m_socket = Win32::WinSock::_INVALID_SOCKET;
+				m_socket = Win32::WinSock::InvalidSocket;
 			}
 		}
 
-		Win32::WinSock::SOCKET GetHandle() const noexcept
+		auto GetHandle() const noexcept -> Win32::WinSock::SOCKET
 		{
 			return m_socket;
 		}
 
-		private:
-		Socket& Move(Socket& other)
+	private:
+		auto Move(Socket& other) noexcept -> Socket&
 		{
 			Close();
-			m_socket = other.m_socket;
-			other.m_socket = Win32::WinSock::_INVALID_SOCKET;
+			m_socket = std::exchange(other.m_socket, Win32::WinSock::InvalidSocket);
 			return *this;
 		}
 
-		Win32::WinSock::SOCKET m_socket = Win32::WinSock::_INVALID_SOCKET;
+		Win32::WinSock::SOCKET m_socket = Win32::WinSock::InvalidSocket;
 	};
 }

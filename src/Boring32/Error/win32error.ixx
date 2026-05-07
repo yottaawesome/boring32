@@ -6,8 +6,9 @@ import :error.functions;
 
 export namespace Boring32::Error
 {
-	struct Win32Error final : Boring32Error
+	class Win32Error final : public Boring32Error
 	{
+	public:
 		Win32Error(
 			const std::string& msg,
 			const std::source_location location = std::source_location::current(),
@@ -21,7 +22,7 @@ export namespace Boring32::Error
 		{ }
 
 		Win32Error(
-			const unsigned long errorCode,
+			Win32::DWORD errorCode,
 			const std::string& msg,
 			const std::source_location location = std::source_location::current(),
 			const std::stacktrace & trace = std::stacktrace::current()
@@ -30,7 +31,7 @@ export namespace Boring32::Error
 
 		template<typename...Args>
 		Win32Error(
-			const unsigned long errorCode,
+			Win32::DWORD errorCode,
 			const std::string& msg,
 			const std::source_location location = std::source_location::current(),
 			const std::stacktrace& trace = std::stacktrace::current(),
@@ -39,7 +40,7 @@ export namespace Boring32::Error
 		{ }
 
 		Win32Error(
-			const unsigned long errorCode,
+			Win32::DWORD errorCode,
 			const std::string& msg, 
 			const std::wstring& moduleName,
 			const std::source_location location = std::source_location::current(),
@@ -47,44 +48,40 @@ export namespace Boring32::Error
 		) : m_errorCode(errorCode), Boring32Error(Generate(msg, errorCode, moduleName, location, trace))
 		{ }
 
-		unsigned long GetErrorCode() const noexcept
+		auto GetErrorCode() const noexcept -> Win32::DWORD
 		{
 			return m_errorCode;
 		}
 
 	private:
-		ExactMessage Generate(
+		auto Generate(
 			const std::string& msg,
-			const unsigned long errorCode,
+			Win32::DWORD errorCode,
 			const std::wstring& moduleName,
 			const std::source_location location,
 			const std::stacktrace& trace
-		)
+		) -> ExactMessage
 		{
-			std::string m_message = Error::TranslateErrorCode<std::string>(
-				errorCode,
-				moduleName
-			);
-			m_message = Error::FormatErrorMessage(
+			auto message = Error::TranslateErrorCode<std::string>(errorCode, moduleName);
+			message = Error::FormatErrorMessage(
 				"Win32",
 				trace,
 				location,
 				msg,
 				errorCode,
-				m_message
+				message
 			);
-
-			return { m_message };
+			return { message };
 		}
 
-		ExactMessage Generate(
+		auto Generate(
 			const std::string& msg,
-			const unsigned long errorCode,
+			Win32::DWORD errorCode,
 			const std::source_location location = std::source_location::current(),
 			const std::stacktrace& trace = std::stacktrace::current()
-		)
+		) -> ExactMessage
 		{
-			std::string m_message = Boring32::Error::TranslateErrorCode<std::string>(errorCode);
+			auto message = Boring32::Error::TranslateErrorCode<std::string>(errorCode);
 			return {
 				Error::FormatErrorMessage(
 					"Win32",
@@ -92,26 +89,22 @@ export namespace Boring32::Error
 					location,
 					msg,
 					errorCode,
-					m_message
+					message
 				) 
 			};
 		}
 
 		template<typename...Args>
-		ExactMessage Generate(
+		auto Generate(
 			const std::string& msg,
-			const unsigned long errorCode,
+			Win32::DWORD errorCode,
 			const std::source_location location = std::source_location::current(),
 			const std::stacktrace& trace = std::stacktrace::current(),
 			const Args&...args
-		)
+		) -> ExactMessage
 		{
-			std::string format = std::vformat(
-				msg,
-				std::make_format_args(args...)
-			);
-			std::string m_message =
-				Boring32::Error::TranslateErrorCode<std::string>(errorCode);
+			auto format = std::vformat(msg, std::make_format_args(args...));
+			auto message = Boring32::Error::TranslateErrorCode<std::string>(errorCode);
 			return { 
 				Error::FormatErrorMessage(
 					"Win32",
@@ -119,11 +112,13 @@ export namespace Boring32::Error
 					location,
 					msg,
 					errorCode,
-					m_message
+					message
 				) 
 			};
 		}
 
-		unsigned long m_errorCode = 0;
+		Win32::DWORD m_errorCode = 0;
 	};
+
+	using Win32Expected = std::expected<void, Error::Win32Error>;
 }
