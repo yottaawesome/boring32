@@ -11,7 +11,7 @@ export namespace Boring32::Services
 	{
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openscmanagerw
 		// https://docs.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights
-		SC_HANDLE scmHandle = Win32::OpenSCManagerW(nullptr, Win32::_SERVICES_ACTIVE_DATABASE, desiredAccess);
+		auto scmHandle = Win32::OpenSCManagerW(nullptr, Win32::ServicesActiveDatabase, desiredAccess);
 		return scmHandle ? scmHandle : throw Error::Win32Error{Win32::GetLastError(), "OpenSCManagerW() failed"};
 	}
 
@@ -21,17 +21,18 @@ export namespace Boring32::Services
 		if (not serviceHandle)
 			throw Boring32::Error::Boring32Error("Service handle cannot be null");
 
-		Win32::DWORD bytesNeeded = 0;
+		auto bytesNeeded = Win32::DWORD{};
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_status_process
-		Win32::SERVICE_STATUS_PROCESS serviceStatus{ 0 };
+		auto serviceStatus = Win32::SERVICE_STATUS_PROCESS{};
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-queryservicestatusex
-		bool succeeded = Win32::QueryServiceStatusEx(
-			serviceHandle,
-			Win32::SC_STATUS_TYPE::SC_STATUS_PROCESS_INFO, // this is the only one defined
-			reinterpret_cast<BYTE*>(&serviceStatus),
-			sizeof(serviceStatus),
-			&bytesNeeded
-		);
+		auto succeeded = 
+			Win32::QueryServiceStatusEx(
+				serviceHandle,
+				Win32::SC_STATUS_TYPE::SC_STATUS_PROCESS_INFO, // this is the only one defined
+				reinterpret_cast<BYTE*>(&serviceStatus),
+				sizeof(serviceStatus),
+				&bytesNeeded
+			);
 		if (not succeeded)
 			throw Error::Win32Error{Win32::GetLastError(), "QueryServiceStatusEx() failed"};
 
@@ -44,19 +45,19 @@ export namespace Boring32::Services
 		if (serviceName.empty())
 			return false;
 
-		Win32::SC_HANDLE scmHandle = OpenServiceControlManager(Win32::GenericRead);
+		auto scmHandle = OpenServiceControlManager(Win32::GenericRead);
 		if (not scmHandle)
 			throw Error::Win32Error{Win32::GetLastError(), "OpenServiceControlManager() failed"};
-		ServiceHandleUniquePtr scm(scmHandle);
+		auto scm = ServiceHandleUniquePtr{ scmHandle };
 
-		Win32::SC_HANDLE serviceHandle = Win32::OpenServiceW(
+		auto serviceHandle = Win32::OpenServiceW(
 			scmHandle,
 			serviceName.c_str(),
 			Win32::GenericRead // https://docs.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights
 		);
-		ServiceHandleUniquePtr service(serviceHandle);
+		auto service = ServiceHandleUniquePtr{ serviceHandle };
 
-		return serviceHandle;
+		return serviceHandle != nullptr;
 	}
 
 	[[nodiscard]] 
@@ -70,7 +71,7 @@ export namespace Boring32::Services
 			throw Boring32::Error::Boring32Error("SCM handle cannot be null");
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openservicew
-		Win32::SC_HANDLE serviceHandle = Win32::OpenServiceW(
+		auto serviceHandle = Win32::OpenServiceW(
 			scmHandle,
 			serviceName.c_str(),
 			desiredAccess // https://docs.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights

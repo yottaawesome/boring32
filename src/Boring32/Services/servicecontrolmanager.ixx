@@ -7,8 +7,9 @@ import :services.raii;
 
 export namespace Boring32::Services
 {
-	struct ServiceControlManager final
+	class ServiceControlManager final
 	{
+	public:
 		ServiceControlManager(const ServiceControlManager&) = delete;
 		ServiceControlManager& operator=(const ServiceControlManager&) = delete;
 		ServiceControlManager(ServiceControlManager&&) noexcept = default;
@@ -34,24 +35,25 @@ export namespace Boring32::Services
 			m_scm = nullptr;
 		}
 
+		[[nodiscard]]
 		auto AccessService(const std::wstring& name) -> Service
 		{
 			return AccessService(name, Win32::ServiceAllAccess);
 		}
 
+		[[nodiscard]]
 		auto AccessService(const std::wstring& name, unsigned desiredAccess) -> Service
 		{
 			if (not m_scm)
-				throw Error::Boring32Error("m_scm is null");
-
+				throw Error::Boring32Error{"m_scm is null"};
 			// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openservicew
-			Win32::SC_HANDLE serviceHandle = 
-				Win32::OpenServiceW(m_scm.get(), name.c_str(), desiredAccess);
+			auto serviceHandle = Win32::OpenServiceW(m_scm.get(), name.c_str(), desiredAccess);
 			if (not serviceHandle)
 				throw Error::Win32Error{Win32::GetLastError(), "OpenServiceW() failed"};
 			return ServiceHandleUniquePtr{ serviceHandle };
 		}
 
+		[[nodiscard]]
 		auto GetHandle() const noexcept -> Win32::SC_HANDLE
 		{
 			return m_scm.get();
@@ -61,8 +63,7 @@ export namespace Boring32::Services
 		void Open(unsigned desiredAccess)
 		{
 			// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openscmanagerw
-			Win32::SC_HANDLE schSCManager = 
-				Win32::OpenSCManagerW(nullptr, nullptr, desiredAccess);
+			auto schSCManager = Win32::OpenSCManagerW(nullptr, nullptr, desiredAccess);
 			if (not schSCManager)
 				throw Error::Win32Error{Win32::GetLastError(), "OpenSCManagerW() failed"};
 			m_scm = ServiceHandleUniquePtr(schSCManager);
