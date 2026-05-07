@@ -13,7 +13,7 @@ namespace Boring32::WirelessLAN
 
     using UniqueWLANHandle = RAII::IndirectUniquePtr<Win32::HANDLE, CloseWLANHandle>;
     using SharedWLANHandle = std::shared_ptr<std::remove_pointer_t<Win32::HANDLE>>;
-    SharedWLANHandle CreateSharedWLANHandle(Win32::HANDLE handle)
+	auto CreateSharedWLANHandle(Win32::HANDLE handle) -> SharedWLANHandle
     {
         return { handle, CloseWLANHandle };
     }
@@ -21,7 +21,7 @@ namespace Boring32::WirelessLAN
     // https://docs.microsoft.com/en-us/windows/win32/api/wlanapi/nf-wlanapi-wlanfreememory
     using UniqueWLANMemory = RAII::UniquePtr<void, Win32::WlanFreeMemory>;
     using SharedWLANMemory = std::shared_ptr<void>;
-    SharedWLANMemory CreateSharedWLANMemory(void* memory)
+	auto CreateSharedWLANMemory(void* memory) -> SharedWLANMemory
     {
         return { memory, Win32::WlanFreeMemory };
     }

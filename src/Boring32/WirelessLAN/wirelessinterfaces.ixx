@@ -7,27 +7,28 @@ import :wirelesslan.wirelessinterface;
 
 export namespace Boring32::WirelessLAN
 {
-	struct WirelessInterfaces final
+	class WirelessInterfaces final
 	{
+	public:
 		WirelessInterfaces(SharedWLANHandle session)
 			: m_session(session)
 		{}
 
-		std::vector<WirelessInterface> GetAll() const
+		auto GetAll() const -> std::vector<WirelessInterface>
 		{
 			// Enumerate the interface list
-			Win32::PWLAN_INTERFACE_INFO_LIST pIfList = nullptr;
+			auto pIfList = Win32::PWLAN_INTERFACE_INFO_LIST{};
 			// https://docs.microsoft.com/en-us/windows/win32/api/wlanapi/nf-wlanapi-wlanenuminterfaces
-			Win32::DWORD status = Win32::WlanEnumInterfaces(m_session.get(), nullptr, &pIfList);
+			auto status = Win32::DWORD{ Win32::WlanEnumInterfaces(m_session.get(), nullptr, &pIfList) };
 			if (status != Win32::ErrorCodes::Success)
 				throw Error::Win32Error{status, "WlanEnumInterfaces() failed"};
-			UniqueWLANMemory interfaceList = UniqueWLANMemory(pIfList);
+			auto interfaceList = UniqueWLANMemory{ pIfList };
 
-			std::vector<WirelessInterface> returnVal;
-			for (Win32::DWORD index = 0; index < pIfList->dwNumberOfItems; index++)
+			auto returnVal = std::vector<WirelessInterface>{};
+			for (auto index = Win32::DWORD{}; index < pIfList->dwNumberOfItems; index++)
 			{
 				// https://docs.microsoft.com/en-us/windows/win32/api/wlanapi/ns-wlanapi-wlan_interface_info
-				Win32::PWLAN_INTERFACE_INFO interfaceInfo = &pIfList->InterfaceInfo[index];
+				auto interfaceInfo = Win32::PWLAN_INTERFACE_INFO{ &pIfList->InterfaceInfo[index] };
 				returnVal.emplace_back(
 					m_session,
 					interfaceInfo->InterfaceGuid,
@@ -37,7 +38,7 @@ export namespace Boring32::WirelessLAN
 			return returnVal;
 		}
 
-		private:
+	private:
 		SharedWLANHandle m_session;
 	};
 }
