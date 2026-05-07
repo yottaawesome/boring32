@@ -101,7 +101,7 @@ export namespace Boring32::Services
 				);
 			if (not succeeded)
 				throw Error::Win32Error{Win32::GetLastError(), "QueryServiceStatusEx() failed"};
-			return status.dwCurrentState == Win32::_SERVICE_RUNNING;
+			return status.dwCurrentState == Win32::ServiceRunning;
 		}
 			
 		[[nodiscard]]

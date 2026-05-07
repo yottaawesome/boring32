@@ -1252,7 +1252,7 @@ export namespace Boring32::Win32
 		};
 	}
 	
-	constexpr auto _SERVICE_RUNNING = SERVICE_RUNNING;
+	constexpr auto ServiceRunning = SERVICE_RUNNING;
 	constexpr auto ServicesActiveDatabase = SERVICES_ACTIVE_DATABASE;
 	constexpr auto ServicesFailedDatabase = SERVICES_FAILED_DATABASE;
 	constexpr auto ScManagerAllAccess = SC_MANAGER_ALL_ACCESS;

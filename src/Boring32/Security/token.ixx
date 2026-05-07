@@ -12,59 +12,59 @@ export namespace Boring32::Security
 	struct TokenGroups
 	{
 		SidAndAttributes Sid;
-		bool Enabled(this auto& self) noexcept
+		auto Enabled(this auto& self) noexcept -> bool
 		{
 			return self.Sid.Attributes & Win32::SeGroupEnabled;
 		}
-		bool EnabledByDefault(this auto& self) noexcept
+		auto EnabledByDefault(this auto& self) noexcept -> bool
 		{
 			return self.Sid.Attributes & Win32::SeGroupEnabledByDefault;
 		}
-		bool Integrity(this auto& self) noexcept
+		auto Integrity(this auto& self) noexcept -> bool
 		{
 			return self.Sid.Attributes & Win32::SeGroupIntegrity;
 		}
-		bool IntegrityEnabled(this auto& self) noexcept
+		auto IntegrityEnabled(this auto& self) noexcept -> bool
 		{
 			return self.Sid.Attributes & Win32::SeGroupIntegrityEnabled;
 		}
-		bool LogonId(this auto& self) noexcept
+		auto LogonId(this auto& self) noexcept -> bool
 		{
 			return self.Sid.Attributes & Win32::SeGroupLogonId;
 		}
-		bool Mandatory(this auto& self) noexcept
+		auto Mandatory(this auto& self) noexcept -> bool
 		{
 			return self.Sid.Attributes & Win32::SeGroupMandatory;
 		}
-		bool Owner(this auto& self) noexcept
+		auto Owner(this auto& self) noexcept -> bool
 		{
 			return self.Sid.Attributes & Win32::SeGroupOwner;
 		}
-		bool Resource(this auto& self) noexcept
+		auto Resource(this auto& self) noexcept -> bool
 		{
 			return self.Sid.Attributes & Win32::SeGroupResource;
 		}
-		bool UseForDenyOnly(this auto& self) noexcept
+		auto UseForDenyOnly(this auto& self) noexcept -> bool
 		{
 			return self.Sid.Attributes & Win32::SeGroupUseForDenyOnly;
 		}
 	};
 
-	struct Token final
+	class Token final
 	{
+	public:
 		Token() = default;
-		Token(Token&& other) noexcept = default;
-		Token& operator=(Token&& other) noexcept = default;
-
+		
 		Token(const Token& other)
 		{
 			Copy(other);
 		}
-
-		Token& operator=(const Token& other)
+		auto operator=(const Token& other) -> Token&
 		{
 			return Copy(other);
 		}
+		Token(Token&& other) noexcept = default;
+		Token& operator=(Token&& other) noexcept = default;
 
 		Token(const Win32::DWORD desiredAccess)
 		{
