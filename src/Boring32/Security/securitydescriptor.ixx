@@ -7,22 +7,25 @@ import :raii;
 export namespace Boring32::Security
 {
 	// See https://docs.microsoft.com/en-us/windows/win32/secauthz/access-control-components
-	struct SecurityDescriptor final
+	class SecurityDescriptor final
 	{
+	public:
 		struct Control
 		{
 			Win32::SECURITY_DESCRIPTOR_CONTROL Control;
 			Win32::DWORD Revision;
 		};
 
-		~SecurityDescriptor() { Close(); }
-
-		SecurityDescriptor(SecurityDescriptor&& other) noexcept
-		{
-			Move(other);
+		~SecurityDescriptor() 
+		{ 
+			Close(); 
 		}
 
+		SecurityDescriptor(SecurityDescriptor&& other) noexcept = default;
+		auto operator=(SecurityDescriptor&& other) noexcept -> SecurityDescriptor& = default;
+
 		SecurityDescriptor(const SecurityDescriptor&) = delete;
+		auto operator=(const SecurityDescriptor&) -> SecurityDescriptor& = delete;
 
 		SecurityDescriptor(std::wstring descriptorString)
 			: m_descriptorString(std::move(descriptorString))
@@ -30,19 +33,14 @@ export namespace Boring32::Security
 			Create();
 		}
 
-		SecurityDescriptor& operator=(const SecurityDescriptor&) = delete;
-
-		SecurityDescriptor& operator=(SecurityDescriptor&& other) noexcept
-		{
-			return Move(other);
-		}
-
-		[[nodiscard]] operator std::wstring() const noexcept
+		[[nodiscard]] 
+		operator std::wstring() const noexcept
 		{
 			return m_descriptorString;
 		}
 
-		[[nodiscard]] operator Win32::PSECURITY_DESCRIPTOR() const noexcept
+		[[nodiscard]] 
+		operator Win32::PSECURITY_DESCRIPTOR() const noexcept
 		{
 			return m_descriptor.get();
 		}
@@ -52,33 +50,36 @@ export namespace Boring32::Security
 			m_descriptor.reset();
 		}
 
-		[[nodiscard]] Win32::PSECURITY_DESCRIPTOR GetDescriptor() const noexcept
+		[[nodiscard]] 
+		auto GetDescriptor() const noexcept -> Win32::PSECURITY_DESCRIPTOR
 		{
 			return m_descriptor.get();
 		}
 			
-		[[nodiscard]] const std::wstring& GetDescriptorString() const noexcept
+		[[nodiscard]] 
+		auto GetDescriptorString() const noexcept -> std::wstring
 		{
 			return m_descriptorString;
 		}
 
-		[[nodiscard]] Control GetControl() const
+		[[nodiscard]] 
+		auto GetControl() const -> Control
 		{
-			SecurityDescriptor::Control c{ 0 };
+			auto c = SecurityDescriptor::Control{ 0 };
 			// https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsecuritydescriptorcontrol
-			bool success = Win32::GetSecurityDescriptorControl(m_descriptor.get(), &c.Control, &c.Revision);
+			auto success = Win32::GetSecurityDescriptorControl(m_descriptor.get(), &c.Control, &c.Revision);
 			if (not success)
 				throw Error::Win32Error{Win32::GetLastError(), "GetSecurityDescriptorControl() failed"};
 			return c;
 		}
 
-		private:
+	private:
 		void Create()
 		{
-			void* sd;
+			auto sd = (void*)nullptr;
 			// https://docs.microsoft.com/en-us/windows/win32/secbp/creating-a-dacl
 			// https://docs.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsecuritydescriptortosecuritydescriptora
-			const bool succeeded = Win32::ConvertStringSecurityDescriptorToSecurityDescriptorW(
+			auto succeeded = Win32::ConvertStringSecurityDescriptorToSecurityDescriptorW(
 				m_descriptorString.c_str(),
 				Win32::SddlRevision1, // Must be SDDL_REVISION_1
 				&sd,
@@ -87,15 +88,6 @@ export namespace Boring32::Security
 			if (not succeeded)
 				throw Error::Win32Error{Win32::GetLastError(), "ConvertStringSecurityDescriptorToSecurityDescriptorW() failed"};
 			m_descriptor = RAII::LocalHeapUniquePtr<Win32::SECURITY_DESCRIPTOR>(reinterpret_cast<Win32::SECURITY_DESCRIPTOR*>(sd));
-		}
-
-		SecurityDescriptor& Move(SecurityDescriptor& other) noexcept
-		{
-			if (&other == this)
-				return *this;
-			m_descriptorString = std::move(other.m_descriptorString);
-			m_descriptor = std::move(other.m_descriptor);
-			return *this;
 		}
 
 		std::wstring m_descriptorString;

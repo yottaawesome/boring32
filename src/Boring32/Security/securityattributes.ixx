@@ -3,8 +3,10 @@ import :win32;
 
 export namespace Boring32::Security
 {
-	struct SecurityAttributes final
+	// TODO: not really clear if this is needed.
+	class SecurityAttributes final
 	{
+	public:
 		~SecurityAttributes()
 		{
 			Close();
@@ -14,7 +16,7 @@ export namespace Boring32::Security
 		{
 		}
 
-		private:
+	private:
 		Win32::SECURITY_ATTRIBUTES m_sa{0};
 	};
 }
