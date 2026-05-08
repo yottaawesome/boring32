@@ -4,18 +4,19 @@ import :win32;
 export namespace Boring32::Security
 {
 	template<typename T>
-	struct EncodedPointer final
+	class EncodedPointer final
 	{
+	public:
 		EncodedPointer(const T* ptr) noexcept
 			: m_encoded(Win32::EncodePointer(ptr))
 		{ }
 
-		T* operator->() noexcept
+		auto operator->() noexcept -> T*
 		{
 			return Win32::DecodePointer(m_encoded);
 		}
 
-		const T* operator->() const noexcept
+		auto operator->() const noexcept -> const T*
 		{
 			return Win32::DecodePointer(m_encoded);
 		}
@@ -30,13 +31,13 @@ export namespace Boring32::Security
 			return Win32::DecodePointer(m_encoded);
 		}
 
-		EncodedPointer& operator=(const T* other) noexcept
+		auto operator=(const T* other) noexcept -> EncodedPointer&
 		{
 			m_encoded = other;
 			return *this;
 		}
 
-		private:
+	private:
 		void* m_encoded = nullptr;
 	};
 }

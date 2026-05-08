@@ -7,7 +7,7 @@ import :error;
 namespace Boring32::Security::Credentials
 {
     using CredentialUniquePtr = 
-        RAII::UniquePtr <Win32::Credentials::CREDENTIALW, Win32::Credentials::CredFree>;
+        RAII::UniquePtr<Win32::Credentials::CREDENTIALW, Win32::Credentials::CredFree>;
 }
 
 // https://learn.microsoft.com/en-us/windows/win32/secauthn/credentials-management
@@ -17,12 +17,12 @@ export namespace Boring32::Security::Credentials
         const std::wstring& account,
         const std::wstring& username,
         const std::wstring& password,
-		const Win32::Credentials::Types type = Win32::Credentials::Types::Generic,
-		const Win32::Credentials::Persist persist = Win32::Credentials::Persist::LocalMachine
+		Win32::Credentials::Types type = Win32::Credentials::Types::Generic,
+		Win32::Credentials::Persist persist = Win32::Credentials::Persist::LocalMachine
     )
 	{
         // https://learn.microsoft.com/en-us/windows/win32/api/wincred/ns-wincred-credentialw
-        Win32::Credentials::CREDENTIALW cred { 
+        auto cred = Win32::Credentials::CREDENTIALW{
             .Type = type,
             .TargetName = const_cast<wchar_t*>(account.data()),
             .CredentialBlobSize = static_cast<Win32::DWORD>(1 + password.size()),
@@ -39,19 +39,20 @@ export namespace Boring32::Security::Credentials
 
     auto Delete(
         const std::wstring& account,
-        const Win32::Credentials::Types type = Win32::Credentials::Types::Generic
+        Win32::Credentials::Types type = Win32::Credentials::Types::Generic
     ) -> bool
     {
         // https://learn.microsoft.com/en-us/windows/win32/api/wincred/nf-wincred-creddeletew
-        bool success = Win32::Credentials::CredDeleteW(
-            account.data(),
-            type,
-            0
-        );
+        auto success = 
+            Win32::Credentials::CredDeleteW(
+                account.data(),
+                type,
+                0
+            );
         if (success)
 			return true;
 
-        const auto lastError = Win32::GetLastError();
+        auto lastError = Win32::GetLastError();
         return lastError == Win32::ErrorCodes::NotFound
 			? false
 			: throw Error::Win32Error{lastError, "CredDeleteW() failed to delete credential."};
@@ -65,17 +66,18 @@ export namespace Boring32::Security::Credentials
 
     auto Read(
         const std::wstring& account,
-        const Win32::Credentials::Types type = Win32::Credentials::Types::Generic
+        Win32::Credentials::Types type = Win32::Credentials::Types::Generic
     ) -> std::optional<Credential>
     {
-        Win32::Credentials::CREDENTIALW* pcred = nullptr;
+        auto pcred = (Win32::Credentials::CREDENTIALW*)nullptr;
         // https://learn.microsoft.com/en-us/windows/win32/api/wincred/nf-wincred-credreadw
-        bool success = Win32::Credentials::CredReadW(
-            account.data(),
-            type,
-            0,
-            &pcred
-        );
+        auto success = 
+            Win32::Credentials::CredReadW(
+                account.data(),
+                type,
+                0,
+                &pcred
+            );
         if (not success)
         {
             auto lastError = Win32::GetLastError();
@@ -83,7 +85,7 @@ export namespace Boring32::Security::Credentials
                 ? std::nullopt
                 : throw Error::Win32Error{lastError, "CredReadW() failed to read credential."};
         }
-        CredentialUniquePtr cred(pcred);
+        auto cred = CredentialUniquePtr{pcred};
 
         return Credential{
             .Username = cred->UserName ? cred->UserName : L"",

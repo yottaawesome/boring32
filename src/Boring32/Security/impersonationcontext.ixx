@@ -6,30 +6,35 @@ import :error;
 export namespace Boring32::Security
 {
 	// https://docs.microsoft.com/en-us/windows/win32/secauthz/client-impersonation
-	struct ImpersonationContext final
+	class ImpersonationContext final
 	{
+	public:
 		~ImpersonationContext()
 		{
 			Close();
 		}
 		ImpersonationContext(const ImpersonationContext&) = delete;
+		auto operator=(const ImpersonationContext&) -> ImpersonationContext& = delete;
 		ImpersonationContext(ImpersonationContext&& other) noexcept
 		{
 			Move(other);
 		}
+		auto operator=(ImpersonationContext&& other) noexcept -> ImpersonationContext&
+		{
+			return Move(other);
+		}
+
 		ImpersonationContext(Win32::HANDLE const token)
 		{
 			if (not token or token == Win32::InvalidHandleValue)
-				throw Error::Boring32Error("token is invalid");
+				throw Error::Boring32Error{"token is invalid"};
 			// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-impersonateloggedonuser
 			if (not Win32::ImpersonateLoggedOnUser(token))
 				throw Error::Win32Error{Win32::GetLastError(), "ImpersonateLoggedOnUser() failed"};
 		}
 
-		ImpersonationContext& operator=(const ImpersonationContext&) = delete;
-		ImpersonationContext& operator=(ImpersonationContext&&) noexcept = delete;
 
-		bool Close()
+		auto Close() -> bool
 		{
 			if (m_registryHive)
 			{
@@ -40,23 +45,25 @@ export namespace Boring32::Security
 			return Win32::RevertToSelf();
 		}
 
-		Win32::Winreg::HKEY GetUserRegistry()
+		auto GetUserRegistry() -> Win32::Winreg::HKEY
 		{
-			if (not m_registryHive)
-			{
-				// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopencurrentuser
-				Win32::LSTATUS status = Win32::Winreg::RegOpenCurrentUser(Win32::_KEY_READ, &m_registryHive);
-				if (status != Win32::ErrorCodes::Success)
-					throw Error::NTStatusError(status, "RegOpenCurrentUser() failed");
-			}
+			if (m_registryHive)
+				return m_registryHive;
+
+			// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopencurrentuser
+			auto status = Win32::Winreg::RegOpenCurrentUser(Win32::_KEY_READ, &m_registryHive);
+			if (status != Win32::ErrorCodes::Success)
+				throw Error::NTStatusError{status, "RegOpenCurrentUser() failed"};
 			return m_registryHive;
 		}
 
-		private:
-		ImpersonationContext& Move(ImpersonationContext& other) noexcept
+	private:
+		auto Move(ImpersonationContext& other) noexcept -> ImpersonationContext&
 		{
-			m_registryHive = other.m_registryHive;
-			other.m_registryHive = nullptr;
+			if (this == &other)
+				return *this;
+			Close();
+			m_registryHive = std::exchange(other.m_registryHive, nullptr);
 			return *this;
 		}
 

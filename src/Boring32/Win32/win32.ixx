@@ -1167,7 +1167,7 @@ export namespace Boring32::Win32
 	//
 
 	constexpr auto _SID_MAX_SUB_AUTHORITIES = SID_MAX_SUB_AUTHORITIES;
-	constexpr auto _TOKEN_QUERY = TOKEN_QUERY;
+	constexpr auto TokenQuery = TOKEN_QUERY;
 
 	using 
 		::PTOKEN_USER,

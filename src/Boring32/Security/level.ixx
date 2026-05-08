@@ -4,8 +4,9 @@ import :error;
 
 export namespace Boring32::Security
 {
-	export struct SaferLevel final
+	class SaferLevel final
 	{
+	public:
 		~SaferLevel()
 		{
 			if (not m_handle)
@@ -26,40 +27,45 @@ export namespace Boring32::Security
 			m_flags(flags)
 		{ }
 
-		Win32::HANDLE ComputeToken(HANDLE token, Win32::WinSafer::TokenFlags flags)
+		auto ComputeToken(HANDLE token, Win32::WinSafer::TokenFlags flags) -> Win32::HANDLE
 		{
 			// https://learn.microsoft.com/en-us/windows/win32/api/winsafer/nf-winsafer-safercomputetokenfromlevel
-			HANDLE out = nullptr;
-			bool successful = Win32::WinSafer::SaferComputeTokenFromLevel(
-				m_handle,
-				token,
-				&out,
-				flags,
-				0
-			);
-			if (not successful)
+			auto out = HANDLE{};
+			auto success = 
+				Win32::WinSafer::SaferComputeTokenFromLevel(
+					m_handle,
+					token,
+					&out,
+					flags,
+					0
+				);
+			if (not success)
 				throw Error::Win32Error{Win32::GetLastError(), "SaferComputeTokenFromLevel() failed"};
 			return out;
 		}
 
-		private:
+	private:
 		Win32::WinSafer::Scope m_scope = Win32::WinSafer::Scope::Machine;
 		Win32::WinSafer::Level m_level = Win32::WinSafer::Level::Constrained;
 		Win32::WinSafer::Flags m_flags = Win32::WinSafer::Flags::Open;
 
 		Win32::WinSafer::SAFER_LEVEL_HANDLE m_handle = 
-			[](Win32::WinSafer::Scope scope, Win32::WinSafer::Level level, Win32::WinSafer::Flags flags)
+			[](
+				Win32::WinSafer::Scope scope, 
+				Win32::WinSafer::Level level, 
+				Win32::WinSafer::Flags flags
+			) -> Win32::WinSafer::SAFER_LEVEL_HANDLE
 			{
-				Win32::WinSafer::SAFER_LEVEL_HANDLE handle = nullptr;
+				auto handle = Win32::WinSafer::SAFER_LEVEL_HANDLE{};
 				// https://learn.microsoft.com/en-us/windows/win32/api/winsafer/nf-winsafer-safercreatelevel
-				bool successful = Win32::WinSafer::SaferCreateLevel(
-					(Win32::DWORD)scope,
-					(Win32::DWORD)level,
-					(Win32::DWORD)flags,
+				auto success = Win32::WinSafer::SaferCreateLevel(
+					static_cast<Win32::DWORD>(scope),
+					static_cast<Win32::DWORD>(level),
+					static_cast<Win32::DWORD>(flags),
 					&handle,
 					0
 				);
-				if (not successful)
+				if (not success)
 					throw Error::Win32Error{Win32::GetLastError(), "SaferCreateLevel() failed"};
 				return handle;
 			}(m_scope, m_level, m_flags);

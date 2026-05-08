@@ -4,8 +4,9 @@ import :win32;
 
 namespace Boring32::Security
 {
-	struct LSAUnicodeString final
+	class LSAUnicodeString final
 	{
+	public:
 		LSAUnicodeString(std::wstring str)
 			: m_string(std::move(str))
 		{
@@ -17,6 +18,12 @@ namespace Boring32::Security
 		{
 			Init();
 		}
+		auto operator=(const LSAUnicodeString& other) -> LSAUnicodeString&
+		{
+			m_string = other.m_string;
+			Init();
+			return *this;
+		}
 
 		LSAUnicodeString(LSAUnicodeString&& other)
 			: m_string(std::move(other.m_string))
@@ -24,21 +31,14 @@ namespace Boring32::Security
 			Init();
 		}
 
-		LSAUnicodeString& operator=(const LSAUnicodeString& other)
-		{
-			m_string = other.m_string;
-			Init();
-			return *this;
-		}
-
-		LSAUnicodeString& operator=(LSAUnicodeString&& other)
+		auto operator=(LSAUnicodeString&& other) -> LSAUnicodeString&
 		{
 			m_string = std::move(other.m_string);
 			Init();
 			return *this;
 		}
 
-		Win32::LSA_UNICODE_STRING* Get() noexcept
+		auto Get() noexcept -> Win32::LSA_UNICODE_STRING*
 		{
 			return &m_lsaStr;
 		}
@@ -47,7 +47,7 @@ namespace Boring32::Security
 		// No error if only LSA_UNICODE_STRING is returned (no pointer) 
 		//operator LSA_UNICODE_STRING* ();
 
-		private:
+	private:
 		void Init()
 		{
 			// https://learn.microsoft.com/en-us/windows/win32/api/lsalookup/ns-lsalookup-lsa_unicode_string
