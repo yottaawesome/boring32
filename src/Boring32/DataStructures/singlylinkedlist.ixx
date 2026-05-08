@@ -13,14 +13,12 @@ export namespace Boring32::DataStructures
 		std::shared_ptr<T> Item;
 	};
 
-	/// <summary>
 	/// See https://docs.microsoft.com/en-us/windows/win32/sync/interlocked-singly-linked-lists
 	/// and https://docs.microsoft.com/en-us/windows/win32/sync/using-singly-linked-lists
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
 	template<typename T>
-	struct SinglyLinkedList final
+	class SinglyLinkedList final
 	{
+	public:
 		~SinglyLinkedList()
 		{
 			Close();
@@ -35,7 +33,7 @@ export namespace Boring32::DataStructures
 				)
 			);
 			if (not m_listHeader)
-				throw Error::Boring32Error("_aligned_malloc() failed");
+				throw Error::Boring32Error{ "_aligned_malloc() failed" };
 			Win32::InitializeSListHead(m_listHeader);
 		}
 
@@ -63,10 +61,12 @@ export namespace Boring32::DataStructures
 			}
 		}
 
+		using ListElementPtr = ListElement<T>*;
+
 		template<typename...Args>
 		void Add(Args&&...args)
 		{
-			ListElement<T>* newEntry = InternalAdd();
+			auto newEntry = ListElementPtr{InternalAdd()};
 
 			// As the structure was malloced(), we need to initialise the shared_ptr
 			// with an in-place new() and use perfect forwarding to construct the 
@@ -81,7 +81,7 @@ export namespace Boring32::DataStructures
 
 		void Add(std::shared_ptr<T> newVal)
 		{
-			ListElement<T>* newEntry = InternalAdd();
+			auto newEntry = ListElementPtr{InternalAdd()};
 
 			// As the structure was malloced(), we need to initialise the shared_ptr
 			// with an in-place new() and use perfect forwarding to construct the 
@@ -93,14 +93,14 @@ export namespace Boring32::DataStructures
 		{
 			// Using boring32error causes an internal compiler error. No idea why.
 			if (not m_listHeader)
-				throw Error::Boring32Error("Cannot pop null list header");
+				throw Error::Boring32Error{ "Cannot pop null list header" };
 
-			Win32::PSLIST_ENTRY listEntry = Win32::InterlockedPopEntrySList(m_listHeader);
+			auto listEntry = Win32::PSLIST_ENTRY{Win32::InterlockedPopEntrySList(m_listHeader)};
 			if (not listEntry)
 				return nullptr;
 
-			auto listItem = reinterpret_cast<ListElement<T>*>(listEntry);
-			std::shared_ptr<T> item = listItem->Item;
+			auto listItem = reinterpret_cast<ListElementPtr>(listEntry);
+			auto item = std::shared_ptr<T>{ listItem->Item };
 			//listItem->Item.~T();
 			listItem->Item.~shared_ptr();
 			_aligned_free(listEntry);
@@ -114,22 +114,22 @@ export namespace Boring32::DataStructures
 
 			while (Pop()) {}
 			// https://docs.microsoft.com/en-us/windows/win32/api/interlockedapi/nf-interlockedapi-interlockedflushslist
-			Win32::PSLIST_ENTRY entry = Win32::InterlockedFlushSList(m_listHeader);
+			auto entry = Win32::PSLIST_ENTRY{Win32::InterlockedFlushSList(m_listHeader)};
 		}
 
 		///		Gets and item from the list. Note that because items are 
 		///		added to the front of the list, the last item added is
 		///		index 0.
 		/// WARNING: doesn't work. Not sure why, but EntryInfo.Next is always null.
-		auto GetAt(const Win32::UINT index) -> std::shared_ptr<T>
+		auto GetAt(Win32::UINT index) -> std::shared_ptr<T>
 		{
 			if (not m_firstEntry)
 				return nullptr;
 				
-			ListElement<T>* desiredEntry = m_firstEntry;
+			auto desiredEntry = ListElementPtr{m_firstEntry};
 			for (Win32::UINT i = 0; i < index; i++)
 				if (desiredEntry)
-					desiredEntry = reinterpret_cast<ListElement<T>*>(desiredEntry->EntryInfo.Next);
+					desiredEntry = reinterpret_cast<ListElementPtr>(desiredEntry->EntryInfo.Next);
 				
 			return desiredEntry ? desiredEntry->Item : nullptr;
 		}
@@ -138,16 +138,14 @@ export namespace Boring32::DataStructures
 		auto Move(SinglyLinkedList& other) -> SinglyLinkedList&
 		{
 			Close();
-			m_listHeader = other.m_listHeader;
-			m_firstEntry = other.m_firstEntry;
-			other.m_listHeader = nullptr;
-			other.m_firstEntry = nullptr;
+			m_listHeader = std::exchange(other.m_listHeader, nullptr);
+			m_firstEntry = std::exchange(other.m_firstEntry, nullptr);
 			return *this;
 		}
 
-		auto InternalAdd() -> ListElement<T>*
+		auto InternalAdd() -> ListElementPtr
 		{
-			const auto newEntry = reinterpret_cast<ListElement<T>*>(
+			auto newEntry = reinterpret_cast<ListElementPtr>(
 				_aligned_malloc(sizeof(ListElement<T>), Win32::MemoryAllocationAlignment));
 			if (not newEntry)
 				throw Error::Boring32Error("_aligned_malloc() failed");
@@ -157,10 +155,11 @@ export namespace Boring32::DataStructures
 			// https://docs.microsoft.com/en-us/windows/win32/api/interlockedapi/nf-interlockedapi-interlockedpushentryslist
 			// Note that it adds to the front of the list, not the back, which is why
 			// we update the firstEntry variable
-			Win32::PSLIST_ENTRY addedEntry = Win32::InterlockedPushEntrySList(
-				m_listHeader,
-				&newEntry->EntryInfo
-			);
+			auto addedEntry = Win32::PSLIST_ENTRY{
+				Win32::InterlockedPushEntrySList(
+					m_listHeader,
+					&newEntry->EntryInfo
+				)};
 			if (addedEntry)
 				m_firstEntry = newEntry;
 
@@ -168,6 +167,6 @@ export namespace Boring32::DataStructures
 		}
 
 		Win32::PSLIST_HEADER m_listHeader = nullptr;
-		ListElement<T>* m_firstEntry = nullptr;
+		ListElementPtr m_firstEntry = nullptr;
 	};
 }

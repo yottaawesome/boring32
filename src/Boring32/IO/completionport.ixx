@@ -6,40 +6,42 @@ import :error;
 export namespace Boring32::IO
 {
 	// https://docs.microsoft.com/en-us/windows/win32/fileio/i-o-completion-ports
-	struct CompletionPort final
+	class CompletionPort final
 	{
+	public:
 		CompletionPort(const unsigned maxThreads)
 		{
 			// https://docs.microsoft.com/en-us/windows/win32/fileio/createiocompletionport
-			m_completionPort = Win32::CreateIoCompletionPort(
-				Win32::InvalidHandleValue,
-				nullptr,
-				0,
-				maxThreads
-			);
+			m_completionPort = 
+				Win32::CreateIoCompletionPort(
+					Win32::InvalidHandleValue,
+					nullptr,
+					0,
+					maxThreads
+				);
 		}
 
 		void Associate(Win32::HANDLE device, const Win32::ULONG_PTR completionKey)
 		{
 			if (not device)
-				throw Error::Boring32Error("device cannot be null");
+				throw Error::Boring32Error{ "device cannot be null" };
 			if (not Win32::CreateIoCompletionPort(device, m_completionPort.GetHandle(), completionKey, 0))
 				throw Error::Win32Error{Win32::GetLastError(), "CreateIoCompletionPort() failed"};
 		}
 
-		Win32::HANDLE GetHandle() const noexcept
+		auto GetHandle() const noexcept -> Win32::HANDLE
 		{
 			return m_completionPort;
 		}
 
-		bool GetCompletionStatus()
+		auto GetCompletionStatus() -> bool
 		{
-			Win32::DWORD bytesTransferred = 0;
-			Win32::ULONG_PTR completionKey = 0;
-			Win32::OVERLAPPED* overlapped = nullptr;
+			auto bytesTransferred = Win32::DWORD{};
+			auto completionKey = Win32::ULONG_PTR{};
+			auto overlapped = (Win32::OVERLAPPED*)nullptr;
 			// https://learn.microsoft.com/en-us/windows/win32/api/ioapiset/nf-ioapiset-getqueuedcompletionstatus
 			// See also https://learn.microsoft.com/en-us/windows/win32/fileio/getqueuedcompletionstatusex-func
-			bool success = Win32::GetQueuedCompletionStatus(
+			auto success = Win32::GetQueuedCompletionStatus(
 				m_completionPort,
 				&bytesTransferred,
 				&completionKey,
@@ -58,7 +60,7 @@ export namespace Boring32::IO
 			return success;
 		}
 
-		private:
+	private:
 		RAII::SharedHandle m_completionPort;
 	};
 }
