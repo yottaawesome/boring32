@@ -7,23 +7,23 @@ import :error;
 
 export namespace Boring32::IPC
 {
-	struct AnonymousPipe
+	class AnonymousPipe
 	{
-		virtual ~AnonymousPipe() = default;
+	public:
 		AnonymousPipe() = default;
 		AnonymousPipe(const AnonymousPipe& other) = default;
 		AnonymousPipe(AnonymousPipe&& other) noexcept = default;
-		virtual AnonymousPipe& operator=(const AnonymousPipe& other) = default;
-		virtual AnonymousPipe& operator=(AnonymousPipe&& other) noexcept = default;
+		auto operator=(const AnonymousPipe& other) -> AnonymousPipe& = default;
+		auto operator=(AnonymousPipe&& other) noexcept -> AnonymousPipe& = default;
 
 		AnonymousPipe(bool inheritable, Win32::DWORD size) 
 			: m_size(size)
 		{
-			Win32::SECURITY_ATTRIBUTES secAttrs{
+			auto secAttrs = Win32::SECURITY_ATTRIBUTES{
 				.nLength = sizeof(Win32::SECURITY_ATTRIBUTES),
 				.bInheritHandle = inheritable
 			};
-			bool success = Win32::CreatePipe(
+			auto success = Win32::CreatePipe(
 				&m_readHandle,
 				&m_writeHandle,
 				&secAttrs,
@@ -39,36 +39,37 @@ export namespace Boring32::IPC
 			m_writeHandle(writeHandle)
 		{ }
 
-		virtual void Write(const std::wstring& msg)
+		void Write(this auto&& self, const std::wstring& msg)
 		{
 			if (not m_writeHandle)
-				throw Error::Boring32Error("No active write handle.");
+				throw Error::Boring32Error{"No active write handle."};
 
-			if ((GetUsedSize() + msg.size()) >= m_size)
-				throw Error::Boring32Error("Pipe cannot fit message");
+			if ((self.GetUsedSize() + msg.size()) >= self.m_size)
+				throw Error::Boring32Error{"Pipe cannot fit message"};
 
-			Win32::DWORD bytesWritten = 0;
-			bool success = Win32::WriteFile(
-				m_writeHandle.GetHandle(),
-				msg.data(),
-				static_cast<Win32::DWORD>(msg.size() * sizeof(wchar_t)),
-				&bytesWritten,
-				nullptr
-			);
+			auto bytesWritten = Win32::DWORD{};
+			auto success = 
+				Win32::WriteFile(
+					self.m_writeHandle.GetHandle(),
+					msg.data(),
+					static_cast<Win32::DWORD>(msg.size() * sizeof(wchar_t)),
+					&bytesWritten,
+					nullptr
+				);
 			if (not success)
 				throw Error::Win32Error{Win32::GetLastError(), "Write operation failed."};
 		}
 
-		virtual std::wstring Read()
+		auto Read(this auto&& self) -> std::wstring
 		{
-			if (not m_readHandle)
-				throw Error::Boring32Error("No active read handle.");
+			if (not self.m_readHandle)
+				throw Error::Boring32Error{"No active read handle."};
 
-			std::wstring msg;
-			Win32::DWORD bytesRead = 0;
-			msg.resize(m_size);
-			bool success = Win32::ReadFile(
-				m_readHandle.GetHandle(),
+			auto msg = std::wstring{};
+			auto bytesRead = Win32::DWORD{};
+			msg.resize(self.m_size);
+			auto success = Win32::ReadFile(
+				self.m_readHandle.GetHandle(),
 				&msg[0],
 				static_cast<Win32::DWORD>(msg.size() * sizeof(wchar_t)),
 				&bytesRead,
@@ -76,83 +77,84 @@ export namespace Boring32::IPC
 			);
 			if (not success)
 				throw Error::Win32Error{Win32::GetLastError(), "ReadFile() failed"};
-
 			std::erase_if(msg, [](wchar_t c) { return c == '\0'; });
 			return msg;
 		}
 
-		virtual void CloseRead()
+		void CloseRead(this auto&& self)
 		{
-			m_readHandle.Close();
+			self.m_readHandle.Close();
 		}
 
-		virtual void CloseWrite()
+		void CloseWrite(this auto&& self)
 		{
-			m_writeHandle.Close();
+			self.m_writeHandle.Close();
 		}
 
-		virtual void SetMode(const Win32::DWORD mode)
+		void SetMode(this auto&& self, Win32::DWORD mode)
 		{
-			if (not m_readHandle && not m_writeHandle)
-				throw Error::Boring32Error("Cannot set pipe mode on null pipes");
+			if (not self.m_readHandle && not self.m_writeHandle)
+				throw Error::Boring32Error{"Cannot set pipe mode on null pipes"};
 
-			Win32::HANDLE handleToSet = nullptr;
-			if (m_readHandle)
-				handleToSet = m_readHandle.GetHandle();
-			else if (m_writeHandle)
-				handleToSet = m_writeHandle.GetHandle();
+			auto handleToSet = Win32::HANDLE{};
+			if (self.m_readHandle)
+				handleToSet = self.m_readHandle.GetHandle();
+			else if (self.m_writeHandle)
+				handleToSet = self.m_writeHandle.GetHandle();
 			if (not handleToSet)
-				throw Error::Boring32Error("No handleToSet");
+				throw Error::Boring32Error{ "No handleToSet" };
 
 			// Do not pass PIPE_READMODE_MESSAGE, as anonymous pipes are created in
 			// byte mode, and cannot be changed.
 			// https://learn.microsoft.com/en-us/windows/win32/api/namedpipeapi/nf-namedpipeapi-setnamedpipehandlestate
-			bool succeeded = Win32::SetNamedPipeHandleState(
-				handleToSet,
-				&m_mode,
-				nullptr,
-				nullptr
-			);
+			auto succeeded = 
+				Win32::SetNamedPipeHandleState(
+					handleToSet,
+					&self.m_mode,
+					nullptr,
+					nullptr
+				);
 			if (not succeeded)
 				throw Error::Win32Error{Win32::GetLastError(), "SetNamedPipeHandleState() failed."};
 		}
 
-		virtual Win32::HANDLE GetRead() const noexcept
+		auto GetRead(this auto&& self) noexcept -> Win32::HANDLE
 		{
-			return m_readHandle.GetHandle();
+			return self.m_readHandle.GetHandle();
 		}
 
-		virtual Win32::HANDLE GetWrite() const noexcept
+		auto GetWrite(this auto&& self) noexcept -> Win32::HANDLE
 		{
-			return m_writeHandle.GetHandle();
+			return self.m_writeHandle.GetHandle();
 		}
 
-		virtual Win32::DWORD GetSize() const noexcept
+		auto GetSize(this auto&& self) noexcept -> Win32::DWORD
 		{
-			return m_size;
+			return self.m_size;
 		}
 
-		virtual Win32::DWORD GetUsedSize() const
+		auto GetUsedSize(this auto&& self) -> Win32::DWORD
 		{
-			Win32::DWORD charactersInPipe = 0;
+			auto charactersInPipe = Win32::DWORD{};
 			// We do this sequence of actions to determine how much space
 			// is used in the passed pipe handles, if any.
-			Win32::HANDLE handleToDetermineBytesAvailable = nullptr;
-			if (m_readHandle)
-				handleToDetermineBytesAvailable = m_readHandle.GetHandle();
-			else if (m_writeHandle)
-				handleToDetermineBytesAvailable = m_writeHandle.GetHandle();
+			auto handleToDetermineBytesAvailable = Win32::HANDLE{};
+			if (self.m_readHandle)
+				handleToDetermineBytesAvailable = self.m_readHandle.GetHandle();
+			else if (self.m_writeHandle)
+				handleToDetermineBytesAvailable = self.m_writeHandle.GetHandle();
 
 			if (handleToDetermineBytesAvailable)
 			{
-				bool success = Win32::PeekNamedPipe(
-					m_readHandle.GetHandle(),
-					nullptr,
-					0,
-					nullptr,
-					&charactersInPipe,
-					nullptr
-				);
+				auto success = 
+					Win32::PeekNamedPipe(
+						self.m_readHandle.GetHandle(),
+						nullptr,
+						0,
+						nullptr,
+						&charactersInPipe,
+						nullptr
+					);
 				if (not success)
 					throw Error::Win32Error{Win32::GetLastError(), "PeekNamedPipe() failed"};
 				charactersInPipe /= sizeof(wchar_t);
@@ -161,18 +163,18 @@ export namespace Boring32::IPC
 			return charactersInPipe;
 		}
 
-		virtual Win32::DWORD GetRemainingSize() const
+		auto GetRemainingSize(this auto&& self) noexcept -> Win32::DWORD
 		{
-			return m_size - GetUsedSize();
+			return self.m_size - self.GetUsedSize();
 		}
 
-		virtual void Close()
+		void Close(this auto&& self)
 		{
-			m_readHandle.Close();
-			m_writeHandle.Close();
+			self.m_readHandle.Close();
+			self.m_writeHandle.Close();
 		}
 
-		protected:
+	protected:
 		Win32::DWORD m_size = 0;
 		Win32::DWORD m_mode = 0;
 		RAII::SharedHandle m_readHandle;

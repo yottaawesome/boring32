@@ -6,10 +6,11 @@ import :raii;
 
 export namespace Boring32::IPC
 {
-	struct NamedPipeServerBase
+	class NamedPipeServerBase
 	{
+	public:
 		// example of DACL/SID strings: "D:(A;;GA;;;BA)(A;;GR;;;BU)" and "D:(A;;GRGW;;;BU)"
-		virtual ~NamedPipeServerBase()
+		~NamedPipeServerBase()
 		{
 			Close();
 		}
@@ -21,10 +22,10 @@ export namespace Boring32::IPC
 		{
 			Copy(other);
 		}
-
-		virtual void operator=(const NamedPipeServerBase& other)
+		auto operator=(const NamedPipeServerBase& other) -> NamedPipeServerBase&
 		{
 			Copy(other);
+			return *this;
 		}
 
 		NamedPipeServerBase(NamedPipeServerBase&& other) noexcept
@@ -32,10 +33,10 @@ export namespace Boring32::IPC
 		{
 			Move(other);
 		}
-
-		virtual void operator=(NamedPipeServerBase&& other) noexcept
+		auto operator=(NamedPipeServerBase&& other) noexcept -> NamedPipeServerBase&
 		{
 			Move(other);
+			return *this;
 		}
 
 		NamedPipeServerBase(
@@ -79,83 +80,82 @@ export namespace Boring32::IPC
 			m_pipeMode(pipeMode)
 		{ }
 
-		virtual void Close()
+		void Close(this auto&& self)
 		{
-			Disconnect();
-			m_pipe.Close();
+			self.Disconnect();
+			self.m_pipe.Close();
 		}
 
-		virtual void Disconnect()
+		void Disconnect(this auto&& self)
 		{
-			if (m_pipe)
-				Win32::DisconnectNamedPipe(m_pipe.GetHandle());
+			if (self.m_pipe)
+				Win32::DisconnectNamedPipe(self.m_pipe.GetHandle());
 		}
 
-		virtual void Flush()
+		void Flush(this auto&& self)
 		{
-			if (not m_pipe)
+			if (not self.m_pipe)
 				throw Error::Boring32Error("No pipe to flush");
-			if (not Win32::FlushFileBuffers(m_pipe.GetHandle()))
+			if (not Win32::FlushFileBuffers(self.m_pipe.GetHandle()))
 				throw Error::Win32Error{Win32::GetLastError(), "Flush() failed"};
 		}
 
-		virtual RAII::SharedHandle& GetInternalHandle()
+		auto GetInternalHandle() -> RAII::SharedHandle&
 		{
 			return m_pipe;
 		}
 
-		virtual std::wstring GetName() const
+		auto GetName() const -> std::wstring
 		{
 			return m_pipeName;
 		}
 
-		virtual Win32::DWORD GetSize() const
+		auto GetSize() const -> Win32::DWORD
 		{
 			return m_size;
 		}
 
-		virtual Win32::DWORD GetMaxInstances() const
+		auto GetMaxInstances() const -> Win32::DWORD
 		{
 			return m_maxInstances;
 		}
 
-		virtual Win32::DWORD GetPipeMode() const
+		auto GetPipeMode() const -> Win32::DWORD
 		{
 			return m_pipeMode;
 		}
 
-		virtual Win32::DWORD GetOpenMode() const
+		auto GetOpenMode() const -> Win32::DWORD
 		{
 			return m_openMode;
 		}
 
-		virtual Win32::DWORD UnreadCharactersRemaining() const
+		auto UnreadCharactersRemaining(this auto&& self) -> Win32::DWORD
 		{
-			Win32::DWORD charactersRemaining = 0;
-			InternalUnreadCharactersRemaining(charactersRemaining, true);
+			auto charactersRemaining = Win32::DWORD{};
+			self.InternalUnreadCharactersRemaining(charactersRemaining, true);
 			return charactersRemaining;
 		}
 
-		virtual bool UnreadCharactersRemaining(
-			Win32::DWORD& charactersRemaining,
-			std::nothrow_t
-		) const noexcept 
+		auto TryUnreadCharactersRemaining(
+			Win32::DWORD& charactersRemaining
+		) noexcept -> bool
 		{
 			return InternalUnreadCharactersRemaining(charactersRemaining, false);
 		}
 
-		virtual void CancelCurrentThreadIo()
+		void CancelCurrentThreadIo(this auto&& self)
 		{
-			if (not m_pipe)
+			if (not self.m_pipe)
 				throw Error::Boring32Error("pipe is nullptr");
-			if (not Win32::CancelIo(m_pipe.GetHandle()))
+			if (not Win32::CancelIo(self.m_pipe.GetHandle()))
 				throw Error::Win32Error{Win32::GetLastError(), "CancelIo() failed"};
 		}
 
-		virtual bool CancelCurrentThreadIo(std::nothrow_t) noexcept 
+		auto TryCancelCurrentThreadIo(this auto&& self) noexcept -> bool
 		try
 		{
-			CancelCurrentThreadIo();
+			self.CancelCurrentThreadIo();
 			return true;
 		}
 		catch (const std::exception&)
@@ -163,18 +163,18 @@ export namespace Boring32::IPC
 			return false;
 		}
 
-		virtual void CancelCurrentProcessIo(Win32::OVERLAPPED* overlapped)
+		auto CancelCurrentProcessIo(this auto&& self, Win32::OVERLAPPED* overlapped)
 		{
-			if (not m_pipe)
+			if (not self.m_pipe)
 				throw Error::Boring32Error("pipe is nullptr");
-			if (not Win32::CancelIoEx(m_pipe.GetHandle(), overlapped))
+			if (not Win32::CancelIoEx(self.m_pipe.GetHandle(), overlapped))
 				throw Error::Win32Error{Win32::GetLastError(), "CancelIo() failed"};
 		}
 
-		virtual bool CancelCurrentProcessIo(Win32::OVERLAPPED* overlapped, std::nothrow_t) noexcept 
+		auto TryCancelCurrentProcessIo(this auto&& self, Win32::OVERLAPPED* overlapped) noexcept -> bool
 		try
 		{
-			CancelCurrentProcessIo(overlapped);
+			self.CancelCurrentProcessIo(overlapped);
 			return true;
 		}
 		catch (const std::exception&)
@@ -182,46 +182,47 @@ export namespace Boring32::IPC
 			return false;
 		}
 
-		protected:
-		virtual void InternalCreatePipe()
+	protected:
+		void InternalCreatePipe(this auto&& self)
 		{
-			if (not m_pipeName.starts_with(L"\\\\.\\pipe\\"))
-				m_pipeName = L"\\\\.\\pipe\\" + m_pipeName;
+			if (not self.m_pipeName.starts_with(L"\\\\.\\pipe\\"))
+				self.m_pipeName = L"\\\\.\\pipe\\" + self.m_pipeName;
 
-			Win32::SECURITY_ATTRIBUTES sa{
-				.nLength = sizeof(sa),
-				.bInheritHandle = m_isInheritable
+			auto sa = Win32::SECURITY_ATTRIBUTES{
+				.nLength = sizeof(Win32::SECURITY_ATTRIBUTES),
+				.bInheritHandle = self.m_isInheritable
 			};
-			if (not m_sid.empty())
+			if (not self.m_sid.empty())
 			{
-				bool converted = Win32::ConvertStringSecurityDescriptorToSecurityDescriptorW(
-					m_sid.c_str(),
-					Win32::SddlRevision1,
-					&sa.lpSecurityDescriptor,
-					nullptr
-				);
+				auto converted = 
+					Win32::ConvertStringSecurityDescriptorToSecurityDescriptorW(
+						self.m_sid.c_str(),
+						Win32::SddlRevision1,
+						&sa.lpSecurityDescriptor,
+						nullptr
+					);
 				if (not converted)
 					throw Error::Win32Error{Win32::GetLastError(), "Failed to convert security descriptor"};
 			}
 
 			// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createnamedpipea
-			m_pipe = Win32::CreateNamedPipeW(
-				m_pipeName.c_str(),             // pipe name
-				m_openMode,
-				m_pipeMode,
-				m_maxInstances,                 // max. instances  
-				m_size,                         // output buffer size 
-				m_size,                         // input buffer size 
+			self.m_pipe = Win32::CreateNamedPipeW(
+				self.m_pipeName.c_str(),             // pipe name
+				self.m_openMode,
+				self.m_pipeMode,
+				self.m_maxInstances,                 // max. instances  
+				self.m_size,                         // output buffer size 
+				self. m_size,                         // input buffer size 
 				0,                              // client time-out 
-				!m_sid.empty() ? &sa : nullptr
+				!self.m_sid.empty() ? &sa : nullptr
 			);
-			if (not m_sid.empty())
+			if (not self.m_sid.empty())
 				Win32::LocalFree(sa.lpSecurityDescriptor);
-			if (not m_pipe)
+			if (not self.m_pipe)
 				throw Error::Win32Error{Win32::GetLastError(), "Failed to create named pipe"};
 		}
 
-		virtual void Copy(const NamedPipeServerBase& other)
+		void Copy(const NamedPipeServerBase& other)
 		{
 			Close();
 			m_pipe = other.m_pipe;
@@ -233,7 +234,7 @@ export namespace Boring32::IPC
 			m_pipeMode = other.m_pipeMode;
 		}
 
-		virtual void Move(NamedPipeServerBase& other) noexcept
+		void Move(NamedPipeServerBase& other) noexcept
 		{
 			Close();
 			m_pipeName = std::move(other.m_pipeName);
@@ -246,13 +247,17 @@ export namespace Boring32::IPC
 				m_pipe = std::move(other.m_pipe);
 		}
 
-		virtual bool InternalUnreadCharactersRemaining(Win32::DWORD& charactersRemaining, const bool throwOnError) const
+		auto InternalUnreadCharactersRemaining(
+			this auto&& self,
+			Win32::DWORD& charactersRemaining, 
+			const bool throwOnError
+		) -> bool
 		{
-			if (not m_pipe)
+			if (not self.m_pipe)
 				return false;
 			charactersRemaining = 0;
-			bool succeeded = Win32::PeekNamedPipe(
-				m_pipe.GetHandle(),
+			auto succeeded = Win32::PeekNamedPipe(
+				self.m_pipe.GetHandle(),
 				nullptr,
 				0,
 				nullptr,
@@ -270,7 +275,7 @@ export namespace Boring32::IPC
 			return true;
 		}
 
-		protected:
+	protected:
 		RAII::SharedHandle m_pipe;
 		std::wstring m_pipeName;
 		std::wstring m_sid;

@@ -7,8 +7,9 @@ import :ipc.namedpipeclientbase;
 
 export namespace Boring32::IPC
 {
-	struct OverlappedNamedPipeClient final : NamedPipeClientBase
+	class OverlappedNamedPipeClient final : public NamedPipeClientBase
 	{
+	public:
 		OverlappedNamedPipeClient() = default;
 		OverlappedNamedPipeClient(const std::wstring& name)
 			: NamedPipeClientBase(name, Win32::FileFlagOverlapped)
@@ -19,7 +20,10 @@ export namespace Boring32::IPC
 			InternalWrite(msg, oio);
 		}
 
-		bool Write(std::wstring_view msg, Async::OverlappedIo& op, std::nothrow_t) noexcept 
+		auto TryWrite(
+			std::wstring_view msg, 
+			Async::OverlappedIo& op
+		) noexcept -> bool
 		try
 		{
 			InternalWrite(msg, op);
@@ -35,7 +39,10 @@ export namespace Boring32::IPC
 			return InternalRead(noOfCharacters, oio);
 		}
 
-		bool Read(const Win32::DWORD noOfCharacters, Async::OverlappedIo& op, std::nothrow_t) noexcept 
+		auto TryRead(
+			Win32::DWORD noOfCharacters, 
+			Async::OverlappedIo& op
+		) noexcept -> bool
 		try
 		{
 			InternalRead(noOfCharacters, op);
@@ -46,7 +53,7 @@ export namespace Boring32::IPC
 			return false;
 		}
 
-		private :
+	private :
 		void InternalWrite(std::wstring_view msg, Async::OverlappedIo& oio)
 		{
 			if (not m_handle)
@@ -54,18 +61,20 @@ export namespace Boring32::IPC
 
 			oio = Async::OverlappedIo();
 			// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile
-			const bool succeeded = Win32::WriteFile(
-				m_handle.GetHandle(),							// pipe handle 
-				&msg[0],										// message 
-				static_cast<Win32::DWORD>(msg.size() * sizeof(wchar_t)),	// message length, in bytes
-				nullptr,										// out bytes written 
-				oio.GetOverlapped());							// overlapped 
+			auto succeeded = 
+				Win32::WriteFile(
+					m_handle.GetHandle(),
+					&msg[0],
+					static_cast<Win32::DWORD>(msg.size() * sizeof(wchar_t)),
+					nullptr,
+					oio.GetOverlapped()
+				);
 			oio.LastError(Win32::GetLastError());
 			if (not succeeded and oio.LastError() != Win32::ErrorCodes::IoPending)
 				throw Error::Win32Error{oio.LastError(), "WriteFile() failed"};
 		}
 
-		void InternalRead(const Win32::DWORD noOfCharacters, Async::OverlappedIo& oio)
+		void InternalRead(Win32::DWORD noOfCharacters, Async::OverlappedIo& oio)
 		{
 			if (not m_handle)
 				throw Error::Boring32Error("No pipe to read from");
@@ -73,12 +82,14 @@ export namespace Boring32::IPC
 			oio = Async::OverlappedIo();
 			oio.IoBuffer.resize(noOfCharacters);
 			// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile
-			const bool succeeded = Win32::ReadFile(
-				m_handle.GetHandle(),							// pipe handle 
-				&oio.IoBuffer[0],								// buffer to receive reply 
-				static_cast<Win32::DWORD>(oio.IoBuffer.size() * sizeof(wchar_t)),	// size of buffer, in bytes 
-				nullptr,										// number of bytes read 
-				oio.GetOverlapped());							// overlapped
+			auto succeeded = 
+				Win32::ReadFile(
+					m_handle.GetHandle(),
+					&oio.IoBuffer[0],
+					static_cast<Win32::DWORD>(oio.IoBuffer.size() * sizeof(wchar_t)),
+					nullptr,
+					oio.GetOverlapped()
+				);
 			oio.LastError(Win32::GetLastError());
 
 			if (not succeeded)
