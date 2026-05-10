@@ -14,14 +14,14 @@ export namespace Boring32::Shell
 	auto GetKnownFolderPath(const Win32::Shell::WellKnownFolder& folderId) -> std::filesystem::path
 	{
 		// https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shgetknownfolderpath
-		wchar_t* out = nullptr;
-		Win32::HRESULT hr = Win32::Shell::SHGetKnownFolderPath(
+		auto out = (wchar_t*)nullptr;
+		auto hr = Win32::Shell::SHGetKnownFolderPath(
 			folderId,
 			0,
 			nullptr,
 			&out
 		);
-		CoTaskMemFreeDeleteUniquePtr ptr(out);
+		auto ptr = CoTaskMemFreeDeleteUniquePtr{ out };
 		if (Win32::HrFailed(hr))
 			throw Error::COMError(hr, "SHGetKnownFolderPath() failed");
 		

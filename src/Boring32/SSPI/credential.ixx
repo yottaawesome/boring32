@@ -9,33 +9,38 @@ namespace Boring32::SSPI
 	// https://learn.microsoft.com/en-us/windows/win32/api/sspi/nf-sspi-freecredentialshandle
 	using CredentialUniquePtr = RAII::UniquePtr<Win32::CredHandle, Win32::FreeCredentialsHandle>;
 
-	export struct Credential final
+	export class Credential final
 	{
+	public:
 		Credential(const Credential&) = delete;
+		Credential& operator=(const Credential&) = delete;
 		Credential(Credential&&) noexcept = default;
+		Credential& operator=(Credential&&) noexcept = default;
 		Credential()
 		{
 			Create2();
 		}
 
-		Credential& operator=(const Credential&) = delete;
-		Credential& operator=(Credential&&) noexcept = default;
+		auto GetHandle() const noexcept -> Win32::CredHandle
+		{
+			return *m_credHandle;
+		}
 
-		private:
+	private:
 		void Create()
 		{
 			// https://learn.microsoft.com/en-us/windows/win32/api/schannel/ns-schannel-schannel_cred
 			// Original version, deprecated structure
-			Win32::SCHANNEL_CRED channelCred{
+			auto channelCred = Win32::SCHANNEL_CRED{
 				.dwVersion = Win32::_SCHANNEL_CRED_VERSION,
 				.grbitEnabledProtocols = Win32::_SP_PROT_TLS1,
 				.dwFlags = Win32::_SCH_CRED_NO_DEFAULT_CREDS | Win32::_SCH_CRED_MANUAL_CRED_VALIDATION
 			};
-			Win32::TimeStamp tsExpiry;
+			auto tsExpiry = Win32::TimeStamp{};
 
 			// https://learn.microsoft.com/en-us/windows/win32/secauthn/acquirecredentialshandle--general
-			CredentialUniquePtr creds(new Win32::CredHandle{ 0 });
-			Win32::SECURITY_STATUS status = Win32::AcquireCredentialsHandleW(
+			auto creds = CredentialUniquePtr{ new Win32::CredHandle{ 0 } };
+			auto status = Win32::AcquireCredentialsHandleW(
 				nullptr,
 				const_cast<wchar_t*>(Win32::_UNISP_NAME_W),
 				Win32::_SECPKG_CRED_OUTBOUND,

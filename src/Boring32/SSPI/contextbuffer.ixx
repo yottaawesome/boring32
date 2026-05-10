@@ -3,19 +3,20 @@ import :win32;
 
 export namespace Boring32::SSPI
 {
-	struct AllocatedContextBuffer final
+	class AllocatedContextBuffer final
 	{
+	public:
 		~AllocatedContextBuffer()
 		{
 			Destroy();
 		}
 
-		void** GetAddress() noexcept
+		auto GetAddress() noexcept -> void**
 		{
 			return reinterpret_cast<void**>(&m_buffer);
 		}
 
-		void* Get() const noexcept
+		auto Get() const noexcept -> void*
 		{
 			return m_buffer.pvBuffer;
 		}

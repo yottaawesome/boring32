@@ -1,14 +1,16 @@
 export module boring32:com.ptr;
 import std;
 import :win32;
+import :error;
 
 export namespace Boring32::Com
 {
 	// An alternative to Microsoft::WRL::ComPtr with better constexpr support
 	// and compatibility with std::out_ptr.
 	template<typename T>
-	struct Ptr
+	class Ptr
 	{
+	public:
 		using pointer = T*;
 
 		constexpr ~Ptr() noexcept
@@ -29,25 +31,28 @@ export namespace Boring32::Com
 			if (ptr)
 				ptr->AddRef();
 		}
-		constexpr auto operator=(this Ptr& self, const Ptr& other) noexcept -> Ptr&
+		constexpr auto operator=(const Ptr& other) noexcept -> Ptr&
 		{
-			self.reset();
-			self.ptr = other.ptr;
-			self.ptr->AddRef();
-			return self;
+			if (this == &other)
+				return *this;
+			reset();
+			ptr = other.ptr;
+			if (ptr)
+				ptr->AddRef();
+			return *this;
 		}
 
 		// Movable
 		constexpr Ptr(Ptr&& other) noexcept
-			: ptr(other.ptr)
+			: ptr(std::exchange(other.ptr, nullptr))
+		{ }
+		constexpr auto operator=(Ptr&& other) noexcept -> Ptr&
 		{
-			other.ptr = nullptr;
-		}
-		constexpr auto operator=(this Ptr& self, Ptr&& other) noexcept -> Ptr&
-		{
-			self.reset();
-			self.swap(other);
-			return self;
+			if (this == &other)
+				return *this;
+			reset();
+			ptr = std::exchange(other.ptr, nullptr);
+			return *this;
 		}
 
 		constexpr operator Win32::GUID(this const Ptr& self) noexcept
@@ -87,9 +92,7 @@ export namespace Boring32::Com
 
 		constexpr auto detach(this Ptr& self) noexcept -> T*
 		{
-			T* temp = self.ptr;
-			self.ptr = nullptr;
-			return temp;
+			return std::exchange(self.ptr, nullptr);
 		}
 
 		constexpr auto get(this const Ptr& self) noexcept -> T*
@@ -97,11 +100,9 @@ export namespace Boring32::Com
 			return self.ptr;
 		}
 
-		constexpr auto swap(this Ptr& self, Ptr& other) noexcept -> void
+		constexpr void swap(this Ptr& self, Ptr& other) noexcept
 		{
-			auto temp = self.ptr;
-			self.ptr = other.ptr;
-			other.ptr = temp;
+			self.ptr = std::exchange(other.ptr, self.ptr);
 		}
 
 		constexpr auto AddressOf(this Ptr& self) noexcept -> void**
@@ -109,11 +110,36 @@ export namespace Boring32::Com
 			return reinterpret_cast<void**>(&self.ptr);
 		}
 
+		constexpr auto ReleaseAndGetAddressOf(this Ptr& self) noexcept -> void**
+		{
+			self.reset();
+			return reinterpret_cast<void**>(&self.ptr);
+		}
+
+		constexpr auto ReleaseAndGetAddressOfTyped(this Ptr& self) noexcept -> T**
+		{
+			self.reset();
+			return &self.ptr;
+		}
+
 		constexpr auto GetUuid(this const Ptr& self) noexcept -> Win32::GUID
 		{
 			return __uuidof(T);
 		}
 
+		template<typename T>
+		constexpr auto As(this const Ptr& self) -> Ptr<T>
+		{
+			if (not self.ptr)
+				return Ptr<T>{};
+			auto result = Ptr<T>{};
+			auto hr = self.ptr->QueryInterface(__uuidof(T), reinterpret_cast<void**>(&result.ptr));
+			if (Win32::HrFailed(hr))
+				throw Error::COMError{hr, "QueryInterface() failed in Ptr::As()"};
+			return result;
+		}	
+
+	private:
 		T* ptr = nullptr;
 	};
 }

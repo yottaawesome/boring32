@@ -26,11 +26,10 @@ export namespace Boring32::MSI
 	private:
 		void Close()
 		{
-			if (m_handle)
-			{
-				Win32::MsiCloseHandle(m_handle);
-				m_handle = 0;
-			}
+			if (not m_handle)
+				return;
+			Win32::MsiCloseHandle(m_handle);
+			m_handle = 0;
 		}
 
 		void Open()

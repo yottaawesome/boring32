@@ -8,8 +8,9 @@ export namespace Boring32::Memory
 	using HeapCreateOptions = Win32::HeapCreateOptions;
 	using HeapAllocOptions = Win32::HeapAllocOptions;
 
-	struct Heap final
+	class Heap final
 	{
+	public:
 		~Heap() { Destroy(); }
 
 		Heap() = delete;
@@ -44,7 +45,7 @@ export namespace Boring32::Memory
 		auto Compact() -> size_t
 		{
 			// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapcompact
-			size_t size = Win32::HeapCompact(m_heap, 0);
+			auto size = size_t{Win32::HeapCompact(m_heap, 0)};
 			if (auto lastError = Win32::GetLastError(); lastError != Win32::ErrorCodes::NoError)
 				throw Error::Win32Error{lastError, "HeapCompact() failed"};
 			return size;
@@ -53,11 +54,7 @@ export namespace Boring32::Memory
 		auto Validate(void* const ptr = nullptr, bool synchronised = true) noexcept -> bool
 		{
 			// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapvalidate
-			return Win32::HeapValidate(
-				m_heap,
-				synchronised ? 0 : 1, //HEAP_NO_SERIALISE,
-				ptr
-			);
+			return Win32::HeapValidate(m_heap, synchronised ? 0 : 1, ptr);
 		}
 
 		void Lock()
@@ -78,7 +75,7 @@ export namespace Boring32::Memory
 		auto New(size_t bytes, Win32::DWORD options = 0) -> void*
 		{
 			// https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapalloc
-			void* allocation = Win32::HeapAlloc(m_heap, options, bytes);
+			auto allocation = Win32::HeapAlloc(m_heap, options, bytes);
 			if (not allocation)
 				throw Error::Win32Error{Win32::GetLastError(), "HeapAlloc() failed"};
 			return allocation;
@@ -88,7 +85,7 @@ export namespace Boring32::Memory
 		[[nodiscard]]
 		auto New(Win32::DWORD options = 0, TArgs&&... args) -> T*
 		{
-			void* ptr = New(sizeof(T), options);
+			auto ptr = static_cast<void*>(New(sizeof(T), options));
 			return new(ptr) T(std::forward<TArgs>(args)...);
 		}
 
@@ -126,9 +123,10 @@ export namespace Boring32::Memory
 	private:
 		auto Move(Heap& other) -> Heap&
 		{
+			if (this == &other)
+				return *this;
 			Destroy();
-			m_heap = other.m_heap;
-			other.m_heap = nullptr;
+			m_heap = std::exchange(other.m_heap, nullptr);
 			return *this;
 		}
 		Win32::HANDLE m_heap = nullptr;

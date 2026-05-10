@@ -15,65 +15,72 @@ export namespace Boring32::MSI
 		PatchFile = Win32::MsiDbOpen_PatchFile
 	};
 
-	struct Database final
+	class Database final
 	{
+	public:
 		~Database() 
 		{
 			Close();
 		};
 
-		// Copyable
-		Database(const Database& other) { Copy(other); }
-		Database& operator=(const Database& other) { return Copy(other); }
+		// Not copyable
+		Database(const Database& other) = delete;
+		auto operator=(const Database& other) -> Database& = delete;
 		// Movable
-		Database(Database&& other) { Move(other); }
-		Database& operator=(Database&& other) noexcept { return Move(other); }
+		Database(Database&& other) 
+		{ 
+			Move(other); 
+		}
+		auto operator=(Database&& other) noexcept -> Database&
+		{ 
+			return Move(other); 
+		}
 
-		Database(std::wstring path, const Mode mode = Mode::ReadOnly)
-			: m_path(std::move(path)),
-			m_mode(mode)
+		Database(std::wstring path, Mode mode = Mode::ReadOnly)
+			: m_path(std::move(path))
+			, m_mode(mode)
 		{
 			Open();
 		}
 
-		operator bool() const noexcept { return m_handle; }
+		constexpr operator bool() const noexcept { return m_handle; }
 
-		std::wstring GetProductVersion() const
+		auto GetProductVersion() const -> std::wstring
 		{
 			return GetProperty(L"ProductVersion");
 		}
 
-		std::wstring GetUpgradeCode() const
+		auto GetUpgradeCode() const -> std::wstring
 		{
 			return GetProperty(L"UpgradeCode");
 		}
 
-		std::wstring GetProductCode() const
+		auto GetProductCode() const -> std::wstring
 		{
 			return GetProperty(L"ProductCode");
 		}
 
-		std::wstring GetProductName() const
+		auto GetProductName() const -> std::wstring
 		{
 			return GetProperty(L"ProductName");
 		}
 
-		std::wstring GetProductLanguage() const
+		auto GetProductLanguage() const -> std::wstring
 		{
 			return GetProperty(L"ProductLanguage");
 		}
 
-		const std::wstring& GetPath() const noexcept
+		auto GetPath() const noexcept -> std::wstring
 		{
 			return m_path;
 		}
 
-		const Mode GetMode() const noexcept
+		auto GetMode() const noexcept -> Mode
 		{
 			return m_mode;
 		}
 
-		private:
+	private:
 		void Close() noexcept
 		{
 			if (m_handle)
@@ -83,31 +90,15 @@ export namespace Boring32::MSI
 			}
 		}
 
-		Database& Move(Database& other) noexcept
+		auto Move(Database& other) noexcept -> Database&
 		{
 			if (&other == this)
 				return *this;
 
 			Close();
-			m_handle = other.m_handle;
-			other.m_handle = 0;
+			m_handle = std::exchange(other.m_handle, 0);
 			m_path = std::move(other.m_path);
 			m_mode = other.m_mode;
-			return *this;
-		}
-
-		Database& Copy(const Database& other)
-		{
-			if (&other == this)
-				return *this;
-
-			Close();
-			m_mode = other.m_mode;
-			if (other.m_path.empty())
-				return *this;
-			m_path = other.m_path;
-			Open();
-
 			return *this;
 		}
 
@@ -116,29 +107,22 @@ export namespace Boring32::MSI
 			Close();
 
 			// https://learn.microsoft.com/en-us/windows/win32/api/msiquery/nf-msiquery-msiopendatabasew
-			unsigned status = Win32::MsiOpenDatabaseW(m_path.c_str(), Win32::LPCWSTR(m_mode), &m_handle);
+			auto status = Win32::UINT{ Win32::MsiOpenDatabaseW(m_path.c_str(), Win32::LPCWSTR(m_mode), &m_handle) };
 			if (status != Win32::ErrorCodes::Success)
 				throw Error::Win32Error{status, "MsiOpenDatabaseW() failed"};
 		}
 
-		std::wstring GetProperty(std::wstring_view propertyName) const
+		auto GetProperty(std::wstring_view propertyName) const -> std::wstring
 		{
 			// PMSIHANDLE is actually a RAII-type class, not a pointer.
 			// See: https://learn.microsoft.com/en-us/windows/win32/msi/windows-installer-best-practices#use-pmsihandle-instead-of-handle
-			Win32::PMSIHANDLE hView;
+			auto hView = Win32::PMSIHANDLE{};
 			// See https://stackoverflow.com/questions/27634407/how-to-get-the-product-version-from-an-msi-file-without-installing-the-msi
 			// MSI SQL: https://learn.microsoft.com/en-us/windows/win32/msi/sql-syntax
 			// MSI SQL examples: https://learn.microsoft.com/en-us/windows/win32/msi/examples-of-database-queries-using-sql-and-script
-			std::wstring query = std::format(
-				L"Select `Value` from `Property` where `Property`='{}'",
-				propertyName
-			);
+			auto query = std::format(L"Select `Value` from `Property` where `Property`='{}'", propertyName);
 			// https://learn.microsoft.com/en-us/windows/win32/api/msiquery/nf-msiquery-msidatabaseopenvieww
-			unsigned int status = Win32::MsiDatabaseOpenViewW(
-				m_handle, 
-				query.data(), 
-				&hView
-			);
+			auto status = Win32::MsiDatabaseOpenViewW(m_handle, query.data(), &hView);
 			if (status != Win32::ErrorCodes::Success)
 				throw Error::Win32Error{status, "MsiDatabaseOpenView() failed"};
 				
@@ -147,15 +131,15 @@ export namespace Boring32::MSI
 			if (status != Win32::ErrorCodes::Success)
 				throw Error::Win32Error{status, "MsiViewExecute() failed"};
 				
-			Win32::PMSIHANDLE hViewFetch;
+			auto hViewFetch = Win32::PMSIHANDLE{};
 			// https://learn.microsoft.com/en-us/windows/win32/api/msiquery/nf-msiquery-msiviewfetch
 			status = Win32::MsiViewFetch(hView, &hViewFetch);
 			if (status != Win32::ErrorCodes::Success)
 				throw Error::Win32Error{status, "MsiViewFetch() failed"};
 
-			Win32::DWORD charCount = 0;
+			auto charCount = Win32::DWORD{0};
 			// https://learn.microsoft.com/en-us/windows/win32/api/msiquery/nf-msiquery-msirecordgetstringw
-			std::wstring returnValue;
+			auto returnValue = std::wstring{};
 			status = Win32::MsiRecordGetStringW(
 				hViewFetch, 
 				1, 
@@ -180,7 +164,7 @@ export namespace Boring32::MSI
 			return returnValue;
 		}
 
-		private:
+	private:
 		std::wstring m_path;
 		// Given this is just an int, unique_ptr doesn't play
 		// nicely with it.
