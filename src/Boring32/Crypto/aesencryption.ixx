@@ -69,7 +69,7 @@ export namespace Boring32::Crypto
 			auto status = Win32::NTSTATUS{ 
 				Win32::BCryptGetProperty(
 					m_algHandle,
-					Win32::_BCRYPT_OBJECT_LENGTH,
+					Win32::BCrypt::ObjectLength,
 					reinterpret_cast<Win32::PBYTE>(&cbKeyObject),
 					sizeof(Win32::DWORD),
 					&cbData,
@@ -92,7 +92,7 @@ export namespace Boring32::Crypto
 			auto status = Win32::NTSTATUS{ 
 				Win32::BCryptGetProperty(
 					m_algHandle,
-					Win32::_BCRYPT_BLOCK_LENGTH,
+					Win32::BCrypt::BlockLength,
 					reinterpret_cast<Win32::PBYTE>(&cbKeyObject),
 					sizeof(Win32::DWORD),
 					&cbData,
@@ -114,7 +114,7 @@ export namespace Boring32::Crypto
 			auto status = Win32::NTSTATUS{
 				Win32::BCryptSetProperty(
 					m_algHandle,
-					Win32::_BCRYPT_CHAINING_MODE,
+					Win32::BCrypt::ChainingMode,
 					reinterpret_cast<Win32::PUCHAR>(const_cast<wchar_t*>(&mode[0])),
 					static_cast<Win32::ULONG>(mode.size() * sizeof(wchar_t)),
 					0
@@ -312,7 +312,7 @@ export namespace Boring32::Crypto
 			auto status = Win32::NTSTATUS{ 
 				Win32::BCryptOpenAlgorithmProvider(
 					&m_algHandle,
-					Win32::_BCRYPT_AES_ALGORITHM, // https://docs.microsoft.com/en-us/windows/win32/seccng/cng-algorithm-identifiers
+					Win32::BCrypt::AESAlgorithm, // https://docs.microsoft.com/en-us/windows/win32/seccng/cng-algorithm-identifiers
 					nullptr,
 					0
 				) };
@@ -330,7 +330,7 @@ export namespace Boring32::Crypto
 				return 0;
 			if (m_chainingMode == ChainingMode::CbcMac)
 				return 0;
-			return Win32::_BCRYPT_BLOCK_PADDING;
+			return Win32::BCrypt::BlockPadding;
 		}
 
 		Win32::BCRYPT_ALG_HANDLE m_algHandle = nullptr;

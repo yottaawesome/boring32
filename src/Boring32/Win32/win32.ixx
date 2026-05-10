@@ -1108,11 +1108,14 @@ export namespace Boring32::Win32
 		ForceFreeMemory = CERT_CLOSE_STORE_FORCE_FLAG
 	};
 	
-	constexpr auto _BCRYPT_OBJECT_LENGTH = BCRYPT_OBJECT_LENGTH;
-	constexpr auto _BCRYPT_BLOCK_LENGTH = BCRYPT_BLOCK_LENGTH;
-	constexpr auto _BCRYPT_CHAINING_MODE = BCRYPT_CHAINING_MODE;
-	constexpr auto _BCRYPT_AES_ALGORITHM = BCRYPT_AES_ALGORITHM;
-	constexpr auto _BCRYPT_BLOCK_PADDING = BCRYPT_BLOCK_PADDING;
+	namespace BCrypt
+	{
+		constexpr auto ObjectLength = BCRYPT_OBJECT_LENGTH;
+		constexpr auto BlockLength = BCRYPT_BLOCK_LENGTH;
+		constexpr auto ChainingMode = BCRYPT_CHAINING_MODE;
+		constexpr auto AESAlgorithm = BCRYPT_AES_ALGORITHM;
+		constexpr auto BlockPadding = BCRYPT_BLOCK_PADDING;
+	}
 
 	// https://blog.katastros.com/a?ID=00750-8d94e2aa-ea28-4faf-b67d-57642f88b0bb
 	constexpr auto NT_SUCCESS(NTSTATUS status) noexcept -> bool
