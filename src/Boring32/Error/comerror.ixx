@@ -6,8 +6,9 @@ import :error.functions;
 
 export namespace Boring32::Error
 {
-	struct COMError final : Boring32Error
+	class COMError final : public Boring32Error
 	{
+	public:
 		COMError() = delete;
 
 		COMError(

@@ -7,8 +7,9 @@ import :error.functions;
 export namespace Boring32::Error
 {
 	// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/596a1078-e883-4972-9bbc-49e60bebca55
-	struct NTStatusError final : Boring32Error
+	class NTStatusError final : public Boring32Error
 	{
+	public:
 		// Related: https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/596a1078-e883-4972-9bbc-49e60bebca55
 		NTStatusError(
 			const std::string& msg,
@@ -26,27 +27,27 @@ export namespace Boring32::Error
 		{ }
 
 		[[nodiscard]]
-		long GetErrorCode() const noexcept
+		auto GetErrorCode() const noexcept -> long
 		{
 			return m_errorCode;
 		}
 
-		private:
-		ExactMessage GenerateErrorMessage(
+	private:
+		auto GenerateErrorMessage(
 			const std::source_location& location,
 			const std::string& message,
 			const std::stacktrace& trace
-		)
+		) -> ExactMessage
 		{
 			if (m_errorCode)
 			{
-				std::string m_message = Boring32::Error::GetNtStatusCode<std::string>(m_errorCode);
-				m_message = Error::FormatErrorMessage(
+				auto message = Boring32::Error::GetNtStatusCode<std::string>(m_errorCode);
+				message = Error::FormatErrorMessage(
 					"NTSTATUS", trace,
 					location, 
 					message, 
 					m_errorCode, 
-					m_message
+					message
 				);
 			}
 

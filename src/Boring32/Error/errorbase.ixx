@@ -12,14 +12,15 @@ export namespace Boring32::Error
 	};
 
 	template<typename T> requires std::is_base_of_v<std::exception, T>
-	struct ErrorBase : public T
+	class ErrorBase : public T
 	{
+	public:
 		virtual ~ErrorBase() = default;
 		ErrorBase() requires std::is_default_constructible_v<T> = default;
 		ErrorBase(const ErrorBase&) = default;
+		virtual auto operator=(const ErrorBase&) -> ErrorBase & = default;
 		ErrorBase(ErrorBase&&) noexcept = default;
-		virtual ErrorBase& operator=(const ErrorBase&) = default;
-		virtual ErrorBase& operator=(ErrorBase&&) noexcept = default;
+		virtual auto operator=(ErrorBase&&) noexcept -> ErrorBase& = default;
 
 		//template <std::enable_if<std::is_default_constructible<T>::value, bool> = true>
 		ErrorBase(
@@ -32,10 +33,8 @@ export namespace Boring32::Error
 		}
 
 		template<typename...Args>
-		ErrorBase(
-			MessageLocationTrace msg,
-			const Args&... args
-		) requires !CheckStringConstructor<T>
+		ErrorBase(MessageLocationTrace msg, const Args&... args) 
+			requires (not CheckStringConstructor<T>)
 			: T(args...),
 			m_location(std::move(msg.Location)),
 			m_trace(std::move(msg.Trace))
@@ -44,9 +43,8 @@ export namespace Boring32::Error
 		}
 
 		template<typename...Args> 
-		ErrorBase(
-			MessageLocationTrace msg
-		) requires CheckStringConstructor<T>
+		ErrorBase(MessageLocationTrace msg) 
+			requires CheckStringConstructor<T>
 			: T(msg.Message.data()),
 			m_location(std::move(msg.Location)),
 			m_trace(std::move(msg.Trace))
@@ -54,17 +52,17 @@ export namespace Boring32::Error
 			SetErrorMessage(msg.Message);
 		}
 
-		virtual const char* what() const noexcept override
+		virtual auto what() const noexcept -> const char* override
 		{ 
 			return m_errorMsg.c_str();
 		}
 
-		virtual const std::source_location& GetLocation() const noexcept
+		virtual auto GetLocation() const noexcept -> const std::source_location&
 		{
 			return m_location;
 		}
 
-		virtual const std::stacktrace& GetStacktrace() const noexcept
+		virtual auto GetStacktrace() const noexcept -> const std::stacktrace&
 		{
 			return m_trace;
 		}
@@ -72,11 +70,7 @@ export namespace Boring32::Error
 	protected:
 		virtual void SetErrorMessage(const std::string_view msg)
 		{
-			m_errorMsg = FormatErrorMessage(
-				m_trace,
-				m_location,
-				std::string(msg)
-			);
+			m_errorMsg = FormatErrorMessage(m_trace, m_location, std::string(msg));
 		}
 
 		std::source_location m_location;
@@ -85,17 +79,4 @@ export namespace Boring32::Error
 	};
 
 	using RuntimeError = ErrorBase<std::runtime_error>;
-}
-
-namespace Boring32::Error
-{
-	/*template<typename...E>
-	struct Error [[deprecated("This is just here for possible repurposing.")]] : virtual E...
-	{
-		virtual ~Error() = default;
-	};*/
-
-	/*struct M [[deprecated("This is just here for possible repurposing.")]]
-		: Error<std::runtime_error, std::exception>
-	{ };*/
 }

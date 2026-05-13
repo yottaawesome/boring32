@@ -4,7 +4,10 @@ import :win32;
 
 namespace
 {
-	std::string TranslateError(Boring32::Win32::DWORD code, Boring32::Win32::HMODULE hModule = nullptr) noexcept
+	auto TranslateError(
+		Boring32::Win32::DWORD code, 
+		Boring32::Win32::HMODULE hModule = nullptr
+	) noexcept -> std::string
 	{
 		constexpr auto flags =
 			Boring32::Win32::FormatMessageAllocateBuffer
@@ -15,20 +18,21 @@ namespace
 			| Boring32::Win32::FormatMessageFromHModule
 			| Boring32::Win32::FormatMessageIgnoreInserts;
 
-		void* buffer = nullptr;
-		Boring32::Win32::DWORD count = Boring32::Win32::FormatMessageA(
-			hModule ? flagsWithModule : flags,
-			nullptr,
-			code,
-			0,
-			reinterpret_cast<Boring32::Win32::LPSTR>(&buffer),
-			0,
-			nullptr
-		);
+		auto buffer = (void*)nullptr;
+		auto count = Boring32::Win32::DWORD{ 
+			Boring32::Win32::FormatMessageA(
+				hModule ? flagsWithModule : flags,
+				nullptr,
+				code,
+				0,
+				reinterpret_cast<Boring32::Win32::LPSTR>(&buffer),
+				0,
+				nullptr
+			) };
 		if (not buffer)
 			return std::format("Failed interpreting {}.", code);
 
-		std::string message(reinterpret_cast<char*>(buffer));
+		auto message = std::string(reinterpret_cast<char*>(buffer));
 		Boring32::Win32::LocalFree(buffer);
 		while (message.ends_with('\n') or message.ends_with('\r'))
 			message.pop_back();
@@ -39,8 +43,9 @@ namespace
 
 export namespace Boring32::Error
 {
-	struct Win32ErrorCode
+	class Win32ErrorCode
 	{
+	public:
 		constexpr Win32ErrorCode() noexcept = default;
 
 		constexpr Win32ErrorCode(Win32::DWORD value) noexcept
@@ -64,12 +69,12 @@ export namespace Boring32::Error
 
 		constexpr bool operator==(const Win32ErrorCode&) const = default;
 
-		std::string ToString() const noexcept
+		auto ToString() const noexcept -> std::string
 		{
 			return TranslateError(m_value);
 		}
 
-		constexpr DWORD Code() const noexcept
+		constexpr auto Code() const noexcept -> DWORD
 		{
 			return m_value;
 		}
