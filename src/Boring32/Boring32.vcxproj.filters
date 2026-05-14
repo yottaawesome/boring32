@@ -79,7 +79,6 @@
     <ClCompile Include="WinHttp\websocketsettings.ixx" />
     <ClCompile Include="WinHttp\proxyinfo.ixx" />
     <ClCompile Include="WinHttp\session.ixx" />
-    <ClCompile Include="Error\errorbase.ixx" />
     <ClCompile Include="WinHttp\winhttperror.ixx" />
     <ClCompile Include="Security\securitydescriptor.ixx" />
     <ClCompile Include="IPC\blockingnamedpipeclient.ixx" />

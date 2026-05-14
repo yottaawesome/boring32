@@ -289,7 +289,6 @@
     <ClCompile Include="DataStructures\singlylinkedlist.cpp" />
     <ClCompile Include="Error\boring32error.cpp" />
     <ClCompile Include="Error\comerror.cpp" />
-    <ClCompile Include="Error\errorbase.cpp" />
     <ClCompile Include="Error\functions.cpp" />
     <ClCompile Include="Error\ntstatuserror.cpp" />
     <ClCompile Include="Error\win32error.cpp" />

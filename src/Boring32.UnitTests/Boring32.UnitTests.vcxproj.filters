@@ -141,9 +141,6 @@
     <ClCompile Include="Error\boring32error.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Error\errorbase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Async\sharedmap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

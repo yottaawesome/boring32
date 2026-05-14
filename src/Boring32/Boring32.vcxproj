@@ -346,7 +346,6 @@
     <ClCompile Include="DirectX\directx.ixx" />
     <ClCompile Include="Error\boring32error.ixx" />
     <ClCompile Include="Error\comerror.ixx" />
-    <ClCompile Include="Error\errorbase.ixx" />
     <ClCompile Include="Error\functions.ixx" />
     <ClCompile Include="Error\error.ixx" />
     <ClCompile Include="Error\ntstatuserror.ixx" />

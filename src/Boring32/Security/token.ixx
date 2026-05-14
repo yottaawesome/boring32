@@ -219,10 +219,13 @@ export namespace Boring32::Security
 			return TReturn{ *reinterpret_cast<TReturn*>(buffer.data()) };
 		}
 
-		static auto GetTokenInfo(Win32::HANDLE token, Win32::TOKEN_INFORMATION_CLASS infoType)
+		static auto GetTokenInfo(
+			Win32::HANDLE token, 
+			Win32::TOKEN_INFORMATION_CLASS infoType
+		) -> std::vector<std::byte>
 		{
 			if (not token)
-				throw Error::RuntimeError{"No token to query."};
+				throw Error::Boring32Error{"No token to query."};
 
 			auto returnLength = Win32::DWORD{};
 			auto succeeded = 
