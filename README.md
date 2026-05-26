@@ -27,7 +27,7 @@ Some unit tests will likely fail on your machine as they are referencing objects
 
 ### C++ modules
 
-`Boring32` is now (2023-11-24) fully module-based and has eliminated any direct reliance on the Windows headers. The primary module interface file is `boring32.ixx`. While compilation speeds are often touted as the reason to use modules, they also offer a much cleaner way of structuring your codebase with improved encapsulation by allowing you to selectively export only what you need. Modules also allow you to do all your work within the module interface files, which eliminates the duplication caused by seperate declarations and definitions in traditional header/source file C++ projects.
+`Boring32` is now (2023-11-24) fully module-based and has eliminated any direct reliance on the Windows headers. The primary module interface file is `boring32.ixx`. While compilation speeds are often touted as the reason to use modules, they also offer a much cleaner way of structuring your codebase with improved encapsulation by allowing you to selectively export only what you need. Modules also allow you to do all your work within the module interface files, which eliminates the duplication caused by seperate declarations and definitions in traditional header/source file C++ projects. This improvement is substantial: in my codebases, I've seen total LoC being reduced by 30-40% thanks to the removal of separate declarations/implementations, include statements, and include guards.
 
 ## Additional resources
 
