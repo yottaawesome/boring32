@@ -19,29 +19,28 @@ export namespace Boring32::Registry
 	struct KeyValuePair<ValueTypes::String, std::string> { void Blah() {} };
 
 	template<typename T>
-	struct Value final
+	class Value final
 	{
+	public:
 		Value(const Value& other) = default;
 		Value(Value&& other) noexcept = default;
 		Value(
 			const std::wstring& path,
 			const std::wstring& valueName,
 			const T value
-		)
-			: m_path(path),
+		) : m_path(path),
 			m_valueName(valueName),
 			m_value(std::move(value))
-		{
-		}
+		{ }
 			
-		Value& operator=(const Value& other) = default;
-		Value& operator=(Value&& other) noexcept = default;
+		auto operator=(const Value& other) -> Value& = default;
+		auto operator=(Value&& other) noexcept -> Value& = default;
 
-		const std::wstring& GetPath() const noexcept { return m_path; }
-		const std::wstring& GetValueName() const noexcept { return m_valueName; }
-		const T& GetValue() const noexcept { return m_value; }
+		auto GetPath() const noexcept -> std::wstring { return m_path; }
+		auto GetValueName() const noexcept -> std::wstring { return m_valueName; }
+		auto GetValue() const noexcept -> const T& { return m_value; }
 
-		protected:
+	protected:
 		std::wstring m_path;
 		std::wstring m_valueName;
 		T m_value;
