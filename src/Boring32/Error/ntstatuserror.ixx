@@ -15,7 +15,7 @@ export namespace Boring32::Error
 			const std::string& msg,
 			const std::source_location location = std::source_location::current(),
 			const std::stacktrace& trace = std::stacktrace::current()
-		) : m_errorCode(0), Boring32Error(GenerateErrorMessage(location, msg, trace))
+		) : Boring32Error(GenerateErrorMessage(location, msg, trace))
 		{ }
 
 		NTStatusError(
