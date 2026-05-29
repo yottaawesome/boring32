@@ -188,20 +188,20 @@ export namespace Boring32::Async
 
 			auto hr = Win32::HRESULT{Win32::SetThreadDescription(m_threadHandle.GetHandle(), description.c_str())};
 			if (Win32::HrFailed(hr))
-				throw Error::COMError(hr, "SetThreadDescription() failed");
+				throw Error::COMError{hr, "SetThreadDescription() failed"};
 		}
 
 		[[nodiscard]]
 		auto GetDescription() const -> std::wstring
 		{
 			if (not m_threadHandle)
-				throw Error::Boring32Error("No thread created.");
+				throw Error::Boring32Error{ "No thread created." };
 
 			wchar_t* pThreadDescription = {};
 			// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreaddescription
 			auto hr = Win32::HRESULT{Win32::GetThreadDescription(m_threadHandle.GetHandle(), &pThreadDescription)};
 			if (Win32::HrFailed(hr))
-				throw Error::COMError(hr, "GetThreadDescription() failed");
+				throw Error::COMError{hr, "GetThreadDescription() failed"};
 			if (not pThreadDescription)
 				return {};
 			auto deleter = RAII::LocalHeapUniquePtr<wchar_t>(pThreadDescription);

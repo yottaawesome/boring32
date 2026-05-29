@@ -35,11 +35,11 @@ namespace Boring32::TaskScheduler
 
 			Win32::ComPtr<Win32::IRegisteredTaskCollection> collection;
 			if (Win32::HRESULT hr = m_taskFolder->GetTasks(0, &collection); Win32::HrFailed(hr))
-				throw Error::COMError(hr, "Failed to acquire tasks");
+				throw Error::COMError{hr, "Failed to acquire tasks"};
 
 			Win32::LONG count = 0;
 			if (Win32::HRESULT hr = collection->get_Count(&count); Win32::HrFailed(hr))
-				throw Error::COMError(hr, "Failed to acquire task count");
+				throw Error::COMError{hr, "Failed to acquire task count"};
 
 			if (count == 0)
 				return {};
@@ -50,7 +50,7 @@ namespace Boring32::TaskScheduler
 			{
 				Win32::ComPtr<Win32::IRegisteredTask> task;
 				if (Win32::HRESULT hr = collection->get_Item(Win32::_variant_t(i), &task); Win32::HrFailed(hr))
-					throw Error::COMError(hr, "Failed to get task item");
+					throw Error::COMError{hr, "Failed to get task item"};
 
 				results.push_back(task);
 			}
@@ -84,7 +84,7 @@ namespace Boring32::TaskScheduler
 				&registeredTask
 			);
 			if (Win32::HrFailed(hr))
-				throw Error::COMError(hr, "Failed to save or update task");
+				throw Error::COMError{hr, "Failed to save or update task"};
 		}
 
 		std::wstring GetName() const
@@ -93,9 +93,9 @@ namespace Boring32::TaskScheduler
 				throw Error::Boring32Error{ "m_taskFolder is null" };
 
 			Win32::_bstr_t name;
-			HRESULT hr = m_taskFolder->get_Name(name.GetAddress());
+			Win32::HRESULT hr = m_taskFolder->get_Name(name.GetAddress());
 			if (Win32::HrFailed(hr))
-				throw Error::COMError(hr, "Failed to get TaskFolder name");
+				throw Error::COMError{hr, "Failed to get TaskFolder name"};
 
 			return { name, name.length() };
 		}
@@ -108,7 +108,7 @@ namespace Boring32::TaskScheduler
 			Win32::_bstr_t path;
 			Win32::HRESULT hr = m_taskFolder->get_Path(path.GetAddress());
 			if (Win32::HrFailed(hr))
-				throw Error::COMError(hr, "Failed to get TaskFolder path");
+				throw Error::COMError{hr, "Failed to get TaskFolder path"};
 
 			return { path, path.length() };
 		}
@@ -122,7 +122,7 @@ namespace Boring32::TaskScheduler
 
 			Win32::HRESULT hr = m_taskFolder->DeleteFolder(Win32::_bstr_t(folderPath.c_str()), 0);
 			if (Win32::HrFailed(hr))
-				throw Error::COMError(hr, "Failed to delete task folder");
+				throw Error::COMError{hr, "Failed to delete task folder"};
 		}
 
 		std::wstring GetDACL() const
@@ -132,9 +132,9 @@ namespace Boring32::TaskScheduler
 
 			Win32::_bstr_t sddl;
 			// https://learn.microsoft.com/en-us/windows/win32/secauthz/security-information
-			HRESULT hr = m_taskFolder->GetSecurityDescriptor(Win32::DaclSecurityInformation, sddl.GetAddress());
+			Win32::HRESULT hr = m_taskFolder->GetSecurityDescriptor(Win32::DaclSecurityInformation, sddl.GetAddress());
 			if (Win32::HrFailed(hr))
-				throw Error::COMError(hr, "Failed to get task folder DACL");
+				throw Error::COMError{hr, "Failed to get task folder DACL"};
 
 			return { sddl, sddl.length() };
 		}

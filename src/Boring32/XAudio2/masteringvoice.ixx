@@ -16,7 +16,7 @@ export namespace Boring32::XAudio2
 			: m_voice(voice)
 		{
 			if (not voice)
-				throw XAudio2Error("voice cannot be nullptr");
+				throw XAudio2Error{"voice cannot be nullptr"};
 		}
 
 		MasteringVoice& operator=(const MasteringVoice&) = delete;
