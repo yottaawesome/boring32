@@ -6,8 +6,9 @@ import :taskscheduler.taskfolder;
 
 export namespace Boring32::TaskScheduler
 {
-	struct TaskService final
+	class TaskService final
 	{
+	public:
 		TaskService() = default;
 
 		operator bool() const noexcept
@@ -15,7 +16,7 @@ export namespace Boring32::TaskScheduler
 			return m_taskService != nullptr;
 		}
 
-		bool operator==(const TaskService& other) const noexcept
+		auto operator==(const TaskService& other) const noexcept -> bool
 		{
 			return m_taskService == other.m_taskService;
 		}
@@ -25,7 +26,7 @@ export namespace Boring32::TaskScheduler
 			if (m_taskService)
 				return;
 
-			Win32::HRESULT hr = Win32::CoCreateInstance(
+			auto hr = Win32::CoCreateInstance(
 				Win32::CLSID_TaskScheduler,
 				nullptr,
 				Win32::CLSCTX::CLSCTX_INPROC_SERVER,
@@ -36,16 +37,16 @@ export namespace Boring32::TaskScheduler
 				throw Error::COMError{hr, "Failed to create ITaskService"};
 
 			hr = m_taskService->Connect(
-				Win32::_variant_t(),
-				Win32::_variant_t(),
-				Win32::_variant_t(),
-				Win32::_variant_t()
+				Win32::_variant_t{},
+				Win32::_variant_t{},
+				Win32::_variant_t{},
+				Win32::_variant_t{}
 			);
 			if (Win32::HrFailed(hr))
 				throw Error::COMError{hr, "Failed to connect to Task Service"};
 		}
 
-		bool Connect(const std::nothrow_t&) noexcept 
+		auto TryConnect() noexcept -> bool
 		try
 		{
 			Connect();
@@ -62,26 +63,26 @@ export namespace Boring32::TaskScheduler
 				m_taskService = nullptr;
 		}
 
-		TaskFolder GetRootFolder()
+		auto GetRootFolder() -> TaskFolder
 		{
 			return GetFolder(L"\\");
 		}
 
-		TaskFolder GetFolder(const std::wstring& path)
+		auto GetFolder(const std::wstring& path) -> TaskFolder
 		{
-			Win32::ComPtr<Win32::ITaskFolder> folder = nullptr;
-			Win32::HRESULT hr = m_taskService->GetFolder(Win32::_bstr_t(path.c_str()), &folder);
+			auto folder = Win32::ComPtr<Win32::ITaskFolder>{};
+			auto hr = m_taskService->GetFolder(Win32::_bstr_t(path.c_str()), &folder);
 			if (Win32::HrFailed(hr))
 				throw Error::COMError{hr, "Failed to connect to Task Service"};
 			return folder;
 		}
 
-		Win32::ComPtr<Win32::ITaskService> Get() const noexcept
+		auto Get() const noexcept -> Win32::ComPtr<Win32::ITaskService>
 		{
 			return m_taskService;
 		}
 
-		private:
+	private:
 		// https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-itaskservice
 		Win32::ComPtr<Win32::ITaskService> m_taskService;
 	};
