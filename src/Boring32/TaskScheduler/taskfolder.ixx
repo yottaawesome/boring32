@@ -4,10 +4,11 @@ import :win32;
 import :error;
 import :taskscheduler.registeredtask;
 
-namespace Boring32::TaskScheduler
+export namespace Boring32::TaskScheduler
 {
-	export struct TaskFolder final
+	class TaskFolder final
 	{
+	public:
 		TaskFolder() = default;
 		TaskFolder(Win32::ComPtr<Win32::ITaskFolder> taskFolder)
 			: m_taskFolder(std::move(taskFolder))
@@ -139,7 +140,7 @@ namespace Boring32::TaskScheduler
 			return { sddl, sddl.length() };
 		}
 
-		private:
+	private:
 			// https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-itaskfolder
 		Win32::ComPtr<Win32::ITaskFolder> m_taskFolder;
 	};
