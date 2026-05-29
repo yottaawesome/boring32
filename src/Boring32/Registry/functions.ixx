@@ -17,40 +17,41 @@ export namespace Boring32::Registry
 	struct RegistryValueMap<size_t> { static constexpr int Type = Win32::Winreg::_RRF_RT_REG_QWORD; };
 
 	template<Concepts::OneOf<std::wstring, Win32::DWORD, size_t> T>
-	T GetValue(const Win32::Winreg::HKEY key, const std::wstring& valueName)
+	auto GetValue(const Win32::Winreg::HKEY key, const std::wstring& valueName) -> T
 	{
 		if (not key)
 			throw Error::Boring32Error{ "key is nullptr" };
 
-		T out;
-		Win32::DWORD sizeInBytes = sizeof(out);
-		const Win32::LSTATUS status = Win32::Winreg::RegGetValueW(
-			key,
-			nullptr,
-			valueName.c_str(),
-			RegistryValueMap<T>::Type,
-			nullptr,
-			&out,
-			&sizeInBytes
-		);
+		auto out = T{};
+		auto sizeInBytes = Win32::DWORD{ sizeof(out) };
+		auto status = Win32::LSTATUS{ 
+			Win32::Winreg::RegGetValueW(
+				key,
+				nullptr,
+				valueName.c_str(),
+				RegistryValueMap<T>::Type,
+				nullptr,
+				&out,
+				&sizeInBytes
+			) };
 		if (status != Win32::ErrorCodes::Success)
 			throw Error::Win32Error{static_cast<Win32::DWORD>(status), "RegGetValueW() failed"};
 		return out;
 	}
 
 	template<>
-	std::wstring GetValue<std::wstring>(
+	auto GetValue<std::wstring>(
 		const Win32::Winreg::HKEY key,
 		const std::wstring& valueName
-	)
+	) -> std::wstring
 	{
 		if (not key)
 			throw Error::Boring32Error{ "m_key is null" };
 
-		std::wstring out;
-		Win32::DWORD sizeInBytes = 0;
+		auto out = std::wstring{};
+		auto sizeInBytes = Win32::DWORD{};
 		// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew
-		Win32::LONG statusCode = Win32::Winreg::RegGetValueW(
+		auto statusCode = Win32::Winreg::RegGetValueW(
 			key,
 			nullptr,
 			valueName.c_str(),
