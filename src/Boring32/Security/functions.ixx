@@ -39,7 +39,7 @@ export namespace Boring32::Security
 			throw Error::Boring32Error{"Must specify the privilege name"};
 		// See also: https://docs.microsoft.com/en-us/windows/win32/secauthz/enabling-and-disabling-privileges-in-c--
 		if (not IsHandleValid(token))
-			throw Error::Boring32Error(": token cannot be null");
+			throw Error::Boring32Error{ "token cannot be null" };
 
 		// https://docs.microsoft.com/en-us/windows/win32/secauthz/privilege-constants
 		auto luidPrivilege = Win32::LUID{};
@@ -138,7 +138,7 @@ export namespace Boring32::Security
 	void EnumerateTokenGroups(const Win32::HANDLE token)
 	{
 		if (not IsHandleValid(token))
-			throw Error::Boring32Error("hToken cannot be nullptr");
+			throw Error::Boring32Error{ "hToken cannot be nullptr" };
 
 		// Call GetTokenInformation to get the buffer size.
 		constexpr auto MAX_NAME = 256u;
@@ -203,7 +203,7 @@ export namespace Boring32::Security
 	void EnumerateTokenPrivileges(const Win32::HANDLE token)
 	{
 		if (not IsHandleValid(token))
-			throw Error::Boring32Error("hToken cannot be nullptr");
+			throw Error::Boring32Error{ "hToken cannot be nullptr" };
 
 		auto bytesNeeded = Win32::DWORD{};
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-gettokeninformation
@@ -261,9 +261,9 @@ export namespace Boring32::Security
 	bool CheckMembership(const Win32::HANDLE token, const Win32::PSID sidToCheck)
 	{
 		if (not IsHandleValid(token))
-			throw Error::Boring32Error("hToken cannot be nullptr");
+			throw Error::Boring32Error{ "hToken cannot be nullptr" };
 		if (not sidToCheck)
-			throw Error::Boring32Error("sidToCheck and pSID cannot be nullptr");
+			throw Error::Boring32Error{ "sidToCheck and pSID cannot be nullptr" };
 
 		auto result = Win32::BOOL{ false };
 		// https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-checktokenmembership
@@ -342,7 +342,7 @@ export namespace Boring32::Security
 			}
 			catch (const std::exception& ex)
 			{
-				std::wcerr << "SetPrivilege()" << ": failed on " << privilege << " : " << ex.what();
+				std::wcerr << "SetPrivilege()" << ": failed on " << privilege << " : " << ex.what() << std::endl;
 				allOK = false;
 			}
 		}

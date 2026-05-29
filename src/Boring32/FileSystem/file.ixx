@@ -35,7 +35,7 @@ export namespace Boring32::FileSystem
 		void InternalOpen()
 		{
 			if (m_fileName.empty())
-				throw Error::Boring32Error("Filename must be specified");
+				throw Error::Boring32Error{ "Filename must be specified" };
 
 			// https://learn.microsoft.com/en-us/windows/win32/secauthz/generic-access-rights
 			// https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights

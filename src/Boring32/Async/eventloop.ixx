@@ -25,7 +25,7 @@ export namespace Boring32::Async
 		auto WaitOn(Win32::DWORD millis, bool waitAll) -> bool
 		{
 			if (m_events.empty())
-				throw Error::Boring32Error("m_events is empty");
+				throw Error::Boring32Error{ "m_events is empty" };
 
 			auto cs = CriticalSectionLock{ m_cs };
 

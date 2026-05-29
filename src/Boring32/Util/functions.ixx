@@ -122,7 +122,7 @@ export namespace Boring32::Util
 		std::wstring rawGuid(64, '\0');
 		int numberOfChars = Win32::StringFromGUID2(guid, &rawGuid[0], 64);
 		if (numberOfChars == 0)
-			throw Error::Boring32Error("StringFromGUID2() failed");
+			throw Error::Boring32Error{ "StringFromGUID2() failed" };
 		rawGuid.resize(numberOfChars - 1); // remove null terminator
 		return rawGuid;
 	}

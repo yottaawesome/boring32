@@ -31,7 +31,7 @@ namespace Boring32::TaskScheduler
 		std::vector<RegisteredTask> GetTasks()
 		{
 			if (not m_taskFolder)
-				throw Error::Boring32Error("m_taskFolder is nullptr");
+				throw Error::Boring32Error{ "m_taskFolder is nullptr" };
 
 			Win32::ComPtr<Win32::IRegisteredTaskCollection> collection;
 			if (Win32::HRESULT hr = m_taskFolder->GetTasks(0, &collection); Win32::HrFailed(hr))
@@ -70,7 +70,7 @@ namespace Boring32::TaskScheduler
 		void SaveOrUpdate(const RegisteredTask& task, Win32::TASK_LOGON_TYPE logonType)
 		{
 			if (not m_taskFolder)
-				throw Error::Boring32Error("m_taskFolder is null");
+				throw Error::Boring32Error{ "m_taskFolder is null" };
 
 			Win32::ComPtr<Win32::IRegisteredTask> registeredTask;
 			HRESULT hr = m_taskFolder->RegisterTaskDefinition(
@@ -90,7 +90,7 @@ namespace Boring32::TaskScheduler
 		std::wstring GetName() const
 		{
 			if (not m_taskFolder)
-				throw Error::Boring32Error("m_taskFolder is null");
+				throw Error::Boring32Error{ "m_taskFolder is null" };
 
 			Win32::_bstr_t name;
 			HRESULT hr = m_taskFolder->get_Name(name.GetAddress());
@@ -103,7 +103,7 @@ namespace Boring32::TaskScheduler
 		std::wstring GetPath() const
 		{
 			if (not m_taskFolder)
-				throw Error::Boring32Error("m_taskFolder is null");
+				throw Error::Boring32Error{ "m_taskFolder is null" };
 
 			Win32::_bstr_t path;
 			Win32::HRESULT hr = m_taskFolder->get_Path(path.GetAddress());
@@ -116,9 +116,9 @@ namespace Boring32::TaskScheduler
 		void DeleteFolder(const std::wstring& folderPath)
 		{
 			if (not m_taskFolder)
-				throw Error::Boring32Error("m_taskFolder is null");
+				throw Error::Boring32Error{ "m_taskFolder is null" };
 			if (folderPath.empty())
-				throw Error::Boring32Error("folderPath is empty");
+				throw Error::Boring32Error{ "folderPath is empty" };
 
 			Win32::HRESULT hr = m_taskFolder->DeleteFolder(Win32::_bstr_t(folderPath.c_str()), 0);
 			if (Win32::HrFailed(hr))
@@ -128,7 +128,7 @@ namespace Boring32::TaskScheduler
 		std::wstring GetDACL() const
 		{
 			if (not m_taskFolder)
-				throw Error::Boring32Error("m_taskFolder is null");
+				throw Error::Boring32Error{ "m_taskFolder is null" };
 
 			Win32::_bstr_t sddl;
 			// https://learn.microsoft.com/en-us/windows/win32/secauthz/security-information

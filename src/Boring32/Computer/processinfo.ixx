@@ -28,13 +28,13 @@ export namespace Boring32::Computer
 			: m_processHandle(hProcess)
 		{
 			if (not m_processHandle)
-				throw Error::Boring32Error("hProcess cannot be null");
+				throw Error::Boring32Error{ "hProcess cannot be null" };
 		}
 
 		ProcessInfo(const Win32::DWORD processId)
 		{
 			if (not processId)
-				throw Error::Boring32Error("processId must be a non-zero value");
+				throw Error::Boring32Error{ "processId must be a non-zero value" };
 
 			// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess
 			m_processHandle = Win32::OpenProcess(Win32::ProcessQueryInformation, false, processId);
@@ -45,7 +45,7 @@ export namespace Boring32::Computer
 		auto GetTimes() const -> ProcessTimes
 		{
 			if (not m_processHandle)
-				throw Error::Boring32Error("m_processHandle cannot be null");
+				throw Error::Boring32Error{ "m_processHandle cannot be null" };
 
 			Win32::FILETIME ftCreationTime{ 0 };
 			Win32::FILETIME ftExitTime{ 0 };
@@ -82,7 +82,7 @@ export namespace Boring32::Computer
 		auto GetPath() const -> std::wstring
 		{
 			if (not m_processHandle)
-				throw Error::Boring32Error("m_processHandle cannot be null");
+				throw Error::Boring32Error{ "m_processHandle cannot be null" };
 
 			std::wstring path(2048, '\0');
 			// https://docs.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getmodulefilenameexw
@@ -102,7 +102,7 @@ export namespace Boring32::Computer
 		auto GetID() const -> Win32::DWORD
 		{
 			if (not m_processHandle)
-				throw Error::Boring32Error("m_processHandle cannot be null");
+				throw Error::Boring32Error{ "m_processHandle cannot be null" };
 			// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessid
 			Win32::DWORD id = Win32::GetProcessId(m_processHandle.GetHandle());
 			if (not id)
@@ -113,7 +113,7 @@ export namespace Boring32::Computer
 		auto GetHandleCount() const -> Win32::DWORD
 		{
 			if (not m_processHandle)
-				throw Error::Boring32Error("m_processHandle cannot be null");
+				throw Error::Boring32Error{ "m_processHandle cannot be null" };
 
 			Win32::DWORD handleCount;
 			// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesshandlecount
@@ -126,7 +126,7 @@ export namespace Boring32::Computer
 		auto GetExitCode() const -> Win32::DWORD
 		{
 			if (not m_processHandle)
-				throw Error::Boring32Error("m_processHandle cannot be null");
+				throw Error::Boring32Error{ "m_processHandle cannot be null" };
 
 			Win32::DWORD exitCode;
 			// https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodeprocess

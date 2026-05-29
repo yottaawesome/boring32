@@ -49,7 +49,7 @@ export namespace Boring32::Async
 			: m_name(name)
 		{
 			if (m_name->empty())
-				throw Error::Boring32Error("Cannot open mutex with empty name");
+				throw Error::Boring32Error{ "Cannot open mutex with empty name" };
 			m_mutex = Win32::OpenMutexW(desiredAccess, isInheritable, m_name->c_str());
 			if (not m_mutex)
 				throw Error::Win32Error{Win32::GetLastError(), "Failed to open mutex"};
@@ -83,7 +83,7 @@ export namespace Boring32::Async
 		auto Lock(Win32::DWORD waitTime, bool isAlertable) -> bool
 		{
 			if (not m_mutex)
-				throw Error::Boring32Error("Cannot wait on null mutex");
+				throw Error::Boring32Error{ "Cannot wait on null mutex" };
 			return WaitFor(m_mutex.GetHandle(), waitTime, isAlertable) == Win32::WaitResult::Success;
 		}
 
@@ -105,7 +105,7 @@ export namespace Boring32::Async
 		auto Unlock() -> void
 		{
 			if (not m_mutex)
-				throw Error::Boring32Error("Cannot release null mutex");
+				throw Error::Boring32Error{ "Cannot release null mutex" };
 			if (not Win32::ReleaseMutex(m_mutex.GetHandle()))
 				throw Error::Win32Error{Win32::GetLastError(), "Failed to release mutex"};
 		}

@@ -148,7 +148,7 @@ export namespace Boring32::DataStructures
 			auto newEntry = reinterpret_cast<ListElementPtr>(
 				_aligned_malloc(sizeof(ListElement<T>), Win32::MemoryAllocationAlignment));
 			if (not newEntry)
-				throw Error::Boring32Error("_aligned_malloc() failed");
+				throw Error::Boring32Error{ "_aligned_malloc() failed" };
 			if (not m_firstEntry)
 				m_firstEntry = newEntry;
 

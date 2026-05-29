@@ -13,7 +13,7 @@ export namespace Boring32::IPC
 			: m_name(std::move(name)), m_maxMessageSize(maxMessageSize), m_readTimeoutMs(readTimeoutMs)
 		{
 			if (m_name.empty())
-				throw Error::Boring32Error("Name cannot be empty.");
+				throw Error::Boring32Error{ "Name cannot be empty." };
 
 			// https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createmailslotw
 			m_handle = Win32::CreateMailslotW(m_name.c_str(), m_maxMessageSize, m_readTimeoutMs, nullptr);

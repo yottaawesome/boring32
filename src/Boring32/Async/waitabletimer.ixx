@@ -39,7 +39,7 @@ export namespace Boring32::Async
 			m_isManualReset(isManualReset)
 		{
 			if (m_name.empty())
-				throw Error::Boring32Error("Name cannot be empty on WaitableTimer");
+				throw Error::Boring32Error{ "Name cannot be empty on WaitableTimer" };
 
 			InternalCreate(isInheritable);
 		}
@@ -49,7 +49,7 @@ export namespace Boring32::Async
 			m_isManualReset(isManualReset)
 		{
 			if (m_name.empty())
-				throw Error::Boring32Error("Name cannot be empty on WaitableTimer");
+				throw Error::Boring32Error{ "Name cannot be empty on WaitableTimer" };
 
 			//TIMER_ALL_ACCESS
 			//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-openwaitabletimerw
@@ -89,7 +89,7 @@ export namespace Boring32::Async
 		) -> void
 		{
 			if (not m_handle)
-				throw Error::Boring32Error("Timer handle is null");
+				throw Error::Boring32Error{ "Timer handle is null" };
 			InternalSetTimer(hundredNanosecondIntervals, period, callback, param);
 		}
 
@@ -118,7 +118,7 @@ export namespace Boring32::Async
 		) -> void
 		{
 			if (not m_handle)
-				throw Error::Boring32Error("Timer handle is null");
+				throw Error::Boring32Error{ "Timer handle is null" };
 			InternalSetTimer(ms * 10000, period, callback, param);
 		}
 
@@ -142,7 +142,7 @@ export namespace Boring32::Async
 		auto WaitOnTimer(Concepts::Duration auto time, bool alertable) -> bool
 		{
 			if (not m_handle)
-				throw Error::Boring32Error("Timer handle is null");
+				throw Error::Boring32Error{ "Timer handle is null" };
 			return WaitFor(m_handle, time, alertable);
 		}
 
@@ -151,7 +151,7 @@ export namespace Boring32::Async
 		try
 		{
 			if (not m_handle)
-				throw Error::Boring32Error("Timer handle is null");
+				throw Error::Boring32Error{ "Timer handle is null" };
 			return WaitFor(m_handle, time, alertable);
 		}
 		catch (const std::exception& ex)
@@ -162,7 +162,7 @@ export namespace Boring32::Async
 		auto WaitOnTimer(const Win32::DWORD millis, const bool alertable) -> bool
 		{
 			if (not m_handle)
-				throw Error::Boring32Error("Timer handle is null");
+				throw Error::Boring32Error{ "Timer handle is null" };
 			return WaitFor(m_handle, millis, alertable) == Win32::WaitResult::Success;
 		}
 
@@ -179,7 +179,7 @@ export namespace Boring32::Async
 		auto CancelTimer() -> void
 		{
 			if (not m_handle)
-				throw Error::Boring32Error("Timer handle is null");
+				throw Error::Boring32Error{ "Timer handle is null" };
 			if (not Win32::CancelWaitableTimer(m_handle.GetHandle()))
 				throw Error::Win32Error{Win32::GetLastError(), "CancelWaitableTimer() failed"};
 		}

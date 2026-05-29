@@ -87,7 +87,7 @@ export namespace Boring32::Registry
 		void GetValue(const std::wstring& valueName, std::wstring& out)
 		{
 			if (not m_key)
-				throw Error::Boring32Error("m_key is null");
+				throw Error::Boring32Error{ "m_key is null" };
 
 			Registry::GetValue(m_key.get(), valueName, out);
 		}
@@ -108,7 +108,7 @@ export namespace Boring32::Registry
 		)
 		{
 			if (not m_key)
-				throw Error::Boring32Error("m_key is null");
+				throw Error::Boring32Error{ "m_key is null" };
 
 			// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw
 			const Win32::LSTATUS status = Win32::Winreg::RegSetValueExW(
@@ -142,7 +142,7 @@ export namespace Boring32::Registry
 		void Export(const std::wstring& path, const Win32::DWORD flags)
 		{
 			if (not m_key)
-				throw Error::Boring32Error("m_key is null");
+				throw Error::Boring32Error{ "m_key is null" };
 
 			const Win32::LSTATUS status = Win32::Winreg::RegSaveKeyExW(
 				m_key.get(),
@@ -158,7 +158,7 @@ export namespace Boring32::Registry
 		{
 			if (not m_key)
 			{
-				throw Error::Boring32Error("Key not initialised.");
+				throw Error::Boring32Error{ "Key not initialised." };
 			}
 
 			// See: https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-element-size-limits

@@ -19,7 +19,7 @@ export namespace Boring32::Services
 	auto GetServiceStatus(Win32::SC_HANDLE serviceHandle) -> Win32::SERVICE_STATUS_PROCESS
 	{
 		if (not serviceHandle)
-			throw Boring32::Error::Boring32Error("Service handle cannot be null");
+			throw Boring32::Error::Boring32Error{ "Service handle cannot be null" };
 
 		auto bytesNeeded = Win32::DWORD{};
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_status_process
@@ -68,7 +68,7 @@ export namespace Boring32::Services
 	) -> Win32::SC_HANDLE
 	{
 		if (not scmHandle)
-			throw Boring32::Error::Boring32Error("SCM handle cannot be null");
+			throw Boring32::Error::Boring32Error{ "SCM handle cannot be null" };
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openservicew
 		auto serviceHandle = Win32::OpenServiceW(

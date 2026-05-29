@@ -19,7 +19,7 @@ export namespace Boring32::Async
 			: m_handle(handle)
 		{
 			if (not m_handle)
-				throw Error::Boring32Error("Waitable handle required");
+				throw Error::Boring32Error{ "Waitable handle required" };
 		}
 
 		operator bool() const noexcept 
@@ -86,7 +86,7 @@ export namespace Boring32::Async
 		auto AssertSuccess() -> void
 		{
 			if (m_lastWait != Win32::WaitResult::Success)
-				throw Error::Boring32Error("Last wait was not successful");
+				throw Error::Boring32Error{ "Last wait was not successful" };
 		}
 
 		auto OnSuccess(auto&& func, auto&&...args) -> Waitable&

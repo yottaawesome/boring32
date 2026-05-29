@@ -36,7 +36,7 @@ export namespace Boring32::Async
 		void SetInformation(const Win32::JOBOBJECT_EXTENDED_LIMIT_INFORMATION& jeli)
 		{
 			if (not m_job)
-				throw Error::Boring32Error("Cannot assign process to job; job is not initialised");
+				throw Error::Boring32Error{ "Cannot assign process to job; job is not initialised" };
 			// See https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_basic_limit_information
 			// jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
 			auto succeeded = 

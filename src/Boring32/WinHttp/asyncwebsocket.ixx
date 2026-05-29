@@ -122,9 +122,9 @@ export namespace Boring32::WinHttp::WebSockets
 		const WriteResult& SendString(const std::string& msg)
 		{
 			if (m_status != WebSocketStatus::Connected)
-				throw Error::Boring32Error("WebSocket is not connected to send data");
+				throw Error::Boring32Error{ "WebSocket is not connected to send data" };
 			if (m_writeResult.Status != WriteResultStatus::NotInitiated && m_writeResult.Status != WriteResultStatus::Finished)
-				throw Error::Boring32Error("A write result is either pending or in error");
+				throw Error::Boring32Error{ "A write result is either pending or in error" };
 
 			m_writeResult.Status = WriteResultStatus::Initiated;
 			m_writeResult.Complete.Reset();
@@ -145,7 +145,7 @@ export namespace Boring32::WinHttp::WebSockets
 		const WriteResult& SendBuffer(const std::vector<std::byte>& buffer)
 		{
 			if (m_status != WebSocketStatus::Connected)
-				throw Error::Boring32Error("WebSocket is not connected to send data");
+				throw Error::Boring32Error{ "WebSocket is not connected to send data" };
 
 			m_writeResult.Status = WriteResultStatus::Initiated;
 			m_writeResult.Complete.Reset();
@@ -169,9 +169,9 @@ export namespace Boring32::WinHttp::WebSockets
 		{
 			//Async::CriticalSectionLock cs(m_cs);
 			if (m_status != WebSocketStatus::Connected)
-				throw Error::Boring32Error("WebSocket is not connected to receive data");
+				throw Error::Boring32Error{ "WebSocket is not connected to receive data" };
 			if (m_readResult.Status == ReadResultStatus::Initiated)
-				throw Error::Boring32Error("A read operation is already in progress");
+				throw Error::Boring32Error{ "A read operation is already in progress" };
 
 			m_readResult.Status = ReadResultStatus::Initiated;
 			m_readResult.Data.clear();
@@ -248,11 +248,11 @@ export namespace Boring32::WinHttp::WebSockets
 	//	return std::async(std::launch::async, AsyncReceive, this);
 	//}
 
-		protected:
+	protected:
 		const ConnectionResult& InternalConnect(const std::wstring& path)
 		{
 			if (m_status != WebSocketStatus::NotInitialised)
-				throw Error::Boring32Error("WebSocket needs to be in NotInitialised state to connect");
+				throw Error::Boring32Error{ "WebSocket needs to be in NotInitialised state to connect" };
 
 			try
 			{
@@ -384,7 +384,7 @@ export namespace Boring32::WinHttp::WebSockets
 		{
 			//Async::CriticalSectionLock cs(m_cs);
 			if (m_status != WebSocketStatus::Connected)
-				throw Error::Boring32Error("WebSocket is not connected to receive data");
+				throw Error::Boring32Error{ "WebSocket is not connected to receive data" };
 
 			char* currentBufferPointer = nullptr;
 			if (receiveBuffer.Status == ReadResultStatus::PartialRead)
@@ -400,17 +400,18 @@ export namespace Boring32::WinHttp::WebSockets
 			}
 			else
 			{
-				throw Error::Boring32Error("unknown status " + std::to_string((DWORD)receiveBuffer.Status));
+				throw Error::Boring32Error{ std::format("unknown status {}", std::to_string((DWORD)receiveBuffer.Status)) };
 			}
 
 			// This can potentially block
-			Win32::DWORD statusCode = Win32::WinHttp::WinHttpWebSocketReceive(
-				m_winHttpWebSocket.Get(),
-				currentBufferPointer,
-				BufferBlockSize,
-				nullptr,
-				nullptr
-			);
+			auto statusCode = 
+				Win32::WinHttp::WinHttpWebSocketReceive(
+					m_winHttpWebSocket.Get(),
+					currentBufferPointer,
+					BufferBlockSize,
+					nullptr,
+					nullptr
+				);
 			// If the server terminates the connection, 12030 will returned.
 			if (statusCode != Win32::ErrorCodes::Success)
 			{
@@ -441,7 +442,7 @@ export namespace Boring32::WinHttp::WebSockets
 		void CompleteUpgrade()
 		{
 			if (not m_requestHandle)
-				throw Error::Boring32Error("m_requestHandle is nullptr");
+				throw Error::Boring32Error{"m_requestHandle is nullptr"};
 
 			m_winHttpWebSocket = Win32::WinHttp::WinHttpWebSocketCompleteUpgrade(m_requestHandle.Get(), 0);
 			if (not m_winHttpWebSocket)

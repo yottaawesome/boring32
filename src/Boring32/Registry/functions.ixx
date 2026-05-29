@@ -20,7 +20,7 @@ export namespace Boring32::Registry
 	T GetValue(const Win32::Winreg::HKEY key, const std::wstring& valueName)
 	{
 		if (not key)
-			throw Error::Boring32Error("key is nullptr");
+			throw Error::Boring32Error{ "key is nullptr" };
 
 		T out;
 		Win32::DWORD sizeInBytes = sizeof(out);
@@ -45,7 +45,7 @@ export namespace Boring32::Registry
 	)
 	{
 		if (not key)
-			throw Error::Boring32Error("m_key is null");
+			throw Error::Boring32Error{ "m_key is null" };
 
 		std::wstring out;
 		Win32::DWORD sizeInBytes = 0;
@@ -105,7 +105,7 @@ export namespace Boring32::Registry
 	)
 	{
 		if (not key)
-			throw Error::Boring32Error("key is nullptr");
+			throw Error::Boring32Error{ "key is nullptr" };
 
 		auto status = Win32::LSTATUS{
 			Win32::Winreg::RegSetValueExW(
@@ -125,9 +125,9 @@ export namespace Boring32::Registry
 	void WatchKey(const Win32::Winreg::HKEY key, const Async::AnyEvent auto& eventToSignal)
 	{
 		if (not key)
-			throw Error::Boring32Error("key cannot be nullptr");
+			throw Error::Boring32Error{ "key cannot be nullptr" };
 		if (not eventToSignal)
-			throw Error::Boring32Error("eventToSignal is not an initialised Event");
+			throw Error::Boring32Error{ "eventToSignal is not an initialised Event" };
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regnotifychangekeyvalue
 		auto status = Win32::LSTATUS{ 
@@ -145,7 +145,7 @@ export namespace Boring32::Registry
 	void DeleteKeyAndSubkey(const Win32::Winreg::HKEY parent, const std::wstring& subkey)
 	{
 		if (not parent)
-			throw Error::Boring32Error("Parent cannot be nullptr");
+			throw Error::Boring32Error{ "Parent cannot be nullptr" };
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-shdeletekeyw
 		auto status = Win32::LSTATUS{Win32::SHDeleteKeyW(parent, subkey.c_str())};
@@ -156,7 +156,7 @@ export namespace Boring32::Registry
 	void DeleteSubkeys(const Win32::Winreg::HKEY parent, const std::wstring& subkey)
 	{
 		if (not parent)
-			throw Error::Boring32Error("parent cannot be nullptr");
+			throw Error::Boring32Error{ "parent cannot be nullptr" };
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletetreew
 		auto status = Win32::LSTATUS{Win32::Winreg::RegDeleteTreeW(parent, subkey.c_str())};

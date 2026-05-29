@@ -72,7 +72,7 @@ export namespace Boring32::FileSystem
 	void CreateFileDirectory(const std::wstring& path)
 	{
 		if (path.empty())
-			throw Error::Boring32Error("path cannot be empty");
+			throw Error::Boring32Error{ "path cannot be empty" };
 		bool succeeded = Win32::CreateDirectoryW(path.c_str(), nullptr);
 		if (not succeeded)
 			throw Error::Win32Error{Win32::GetLastError(), "CreateDirectoryW() failed"};
@@ -81,9 +81,9 @@ export namespace Boring32::FileSystem
 	void CreateFileDirectory(const std::wstring& path, const std::wstring& dacl)
 	{
 		if (path.empty())
-			throw Error::Boring32Error("path cannot be empty");
+			throw Error::Boring32Error{ "path cannot be empty" };
 		if (dacl.empty())
-			throw Error::Boring32Error("dacl cannot be empty");
+			throw Error::Boring32Error{ "dacl cannot be empty" };
 
 		auto sd = (void*)nullptr;
 		auto succeeded = Win32::ConvertStringSecurityDescriptorToSecurityDescriptorW(
@@ -201,7 +201,7 @@ export namespace Boring32::FileSystem
 			return;
 		
 		if (not lpBuffer)
-			throw Error::Boring32Error("Buffer cannot be null");
+			throw Error::Boring32Error{ "Buffer cannot be null" };
 
 		// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile
 		auto success = 

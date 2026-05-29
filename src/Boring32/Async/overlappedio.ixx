@@ -28,7 +28,7 @@ export namespace Boring32::Async
 		void ResizeBuffer()
 		{
 			if (not IsSuccessful())
-				throw Error::Boring32Error("Operation is not successful");
+				throw Error::Boring32Error{ "Operation is not successful" };
 			const std::uint64_t bytesTransferred = GetBytesTransferred();
 			if (bytesTransferred > 0)
 				IoBuffer.resize(bytesTransferred);

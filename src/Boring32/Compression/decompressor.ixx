@@ -86,7 +86,7 @@ export namespace Boring32::Compression
 		auto DecompressBuffer(const std::vector<std::byte>& compressedBuffer) -> std::vector<std::byte>
 		{
 			if (not m_decompressor)
-				throw Error::Boring32Error("Decompressor handle is null");
+				throw Error::Boring32Error{ "Decompressor handle is null" };
 			if (compressedBuffer.empty())
 				throw Error::Boring32Error{ "Buffer is empty" };
 
@@ -116,7 +116,7 @@ export namespace Boring32::Compression
 		void Reset()
 		{
 			if (not m_decompressor)
-				throw Error::Boring32Error("Decompressor handle is null");
+				throw Error::Boring32Error{ "Decompressor handle is null" };
 			// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-resetdecompressor
 			if (not Win32::ResetDecompressor(m_decompressor.get()))
 				throw Error::Win32Error{ Win32::GetLastError(), "ResetDecompressor() failed" };

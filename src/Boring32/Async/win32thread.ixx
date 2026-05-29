@@ -51,7 +51,7 @@ export namespace Boring32::Async
 		void Terminate(Win32::DWORD exitCode)
 		{
 			if (not m_threadHandle)
-				throw Error::Boring32Error("No thread handle to terminate");
+				throw Error::Boring32Error{ "No thread handle to terminate" };
 			if (not Win32::TerminateThread(m_threadHandle.GetHandle(), exitCode))
 				throw Error::Win32Error{Win32::GetLastError(), "TerminateThread() failed"};
 		}
@@ -60,7 +60,7 @@ export namespace Boring32::Async
 		{
 			constexpr auto Failure = static_cast<Win32::DWORD>(-1);
 			if (not m_threadHandle)
-				throw Error::Boring32Error("No thread handle to suspend");
+				throw Error::Boring32Error{ "No thread handle to suspend" };
 			auto count = Win32::SuspendThread(m_threadHandle.GetHandle());
 			if (count == Failure)
 				throw Error::Win32Error{Win32::GetLastError(), "SuspendThread() failed"};
@@ -71,7 +71,7 @@ export namespace Boring32::Async
 		{
 			constexpr auto Failure = static_cast<Win32::DWORD>(-1);
 			if (not m_threadHandle)
-				throw Error::Boring32Error("No thread handle to resume");
+				throw Error::Boring32Error{ "No thread handle to resume" };
 			auto count = Win32::ResumeThread(m_threadHandle.GetHandle());
 			if (count == Failure)
 				throw Error::Win32Error{Win32::GetLastError(), "ResumeThread() failed"};
@@ -81,7 +81,7 @@ export namespace Boring32::Async
 		auto Join(Win32::DWORD joinTime) -> bool
 		{
 			if (m_threadHandle == nullptr)
-				throw Error::Boring32Error("No thread handle to wait on");
+				throw Error::Boring32Error{ "No thread handle to wait on" };
 
 			auto waitResult = Win32::WaitForSingleObject(m_threadHandle.GetHandle(), joinTime);
 			if (waitResult == Win32::WaitObject0)
@@ -153,7 +153,7 @@ export namespace Boring32::Async
 		auto GetExitCode() const -> Win32::DWORD
 		{
 			if (not m_threadHandle)
-				throw Error::Boring32Error("No handle to thread; has the the thread been started or destroyed?");
+				throw Error::Boring32Error{ "No handle to thread; has the the thread been started or destroyed?" };
 
 			auto exitCode = Win32::DWORD{};
 			if (not Win32::GetExitCodeThread(m_threadHandle.GetHandle(), &exitCode))
@@ -184,7 +184,7 @@ export namespace Boring32::Async
 		void SetDescription(const std::wstring& description)
 		{
 			if (not m_threadHandle)
-				throw Error::Boring32Error("No thread created.");
+				throw Error::Boring32Error{ "No thread created." };
 
 			auto hr = Win32::HRESULT{Win32::SetThreadDescription(m_threadHandle.GetHandle(), description.c_str())};
 			if (Win32::HrFailed(hr))

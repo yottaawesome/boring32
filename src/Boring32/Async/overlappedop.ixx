@@ -25,7 +25,7 @@ export namespace Boring32::Async
 		auto WaitForCompletion(this auto&& self, Win32::DWORD timeout) -> bool
 		{
 			if (m_ioOverlapped == nullptr)
-				throw Error::Boring32Error("IoOverlapped is null");
+				throw Error::Boring32Error{ "IoOverlapped is null" };
 			bool successfulWait = self.m_ioEvent.WaitOnEvent(timeout, true);
 			if (successfulWait)
 				OnSuccess();
@@ -40,14 +40,14 @@ export namespace Boring32::Async
 		auto GetOverlapped(this auto&& self) -> Win32::OVERLAPPED*
 		{
 			if (self.m_ioOverlapped == nullptr)
-				throw Error::Boring32Error("IoOverlapped is null");
+				throw Error::Boring32Error{ "IoOverlapped is null" };
 			return self.m_ioOverlapped.get();
 		}
 
 		auto GetStatus(this auto&& self) -> std::uint64_t
 		{
 			if (self.m_ioOverlapped == nullptr)
-				throw Error::Boring32Error("IoOverlapped is null");
+				throw Error::Boring32Error{ "IoOverlapped is null" };
 			//STATUS_PENDING,
 			//ERROR_IO_INCOMPLETE
 			return self.m_lastError == Win32::ErrorCodes::IoPending ? self.m_ioOverlapped->Internal : self.m_lastError;

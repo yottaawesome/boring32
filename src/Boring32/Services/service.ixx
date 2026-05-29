@@ -84,7 +84,7 @@ export namespace Boring32::Services
 		auto IsRunning() const -> bool
 		{
 			if (not m_service)
-				throw Error::Boring32Error("m_service is nullptr");
+				throw Error::Boring32Error{ "m_service is nullptr" };
 
 			// https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_status_process
 			auto status = Win32::SERVICE_STATUS_PROCESS{};

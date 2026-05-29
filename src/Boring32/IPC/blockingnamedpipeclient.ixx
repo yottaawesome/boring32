@@ -66,7 +66,7 @@ export namespace Boring32::IPC
 		void InternalWrite(const std::vector<std::byte>& data)
 		{
 			if (not m_handle)
-				throw Error::Boring32Error("No pipe to write to");
+				throw Error::Boring32Error{ "No pipe to write to" };
 
 			Win32::DWORD bytesWritten = 0;
 			// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile
@@ -81,21 +81,21 @@ export namespace Boring32::IPC
 				throw Error::Win32Error{Win32::GetLastError(), "Failed to write to client pipe"};
 		}
 
-		std::vector<std::byte> InternalRead()
+		auto InternalRead() -> std::vector<std::byte>
 		{
 			if (not m_handle)
-				throw Error::Boring32Error("No pipe to read from");
+				throw Error::Boring32Error{ "No pipe to read from" };
 
-			constexpr Win32::DWORD blockSize = 1024;
-			std::vector<std::byte> dataBuffer(blockSize);
+			constexpr auto blockSize = Win32::DWORD{ 1024 };
+			auto dataBuffer = std::vector<std::byte>(blockSize);
 
-			bool continueReading = true;
-			Win32::DWORD totalBytesRead = 0;
+			auto continueReading = true;
+			auto totalBytesRead = Win32::DWORD{};
 			while (continueReading)
 			{
-				Win32::DWORD currentBytesRead = 0;
+				auto currentBytesRead = Win32::DWORD{};
 				// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile
-				bool successfulRead = Win32::ReadFile(
+				auto successfulRead = Win32::ReadFile(
 					m_handle.GetHandle(),    // pipe handle 
 					&dataBuffer[0],    // buffer to receive reply 
 					static_cast<Win32::DWORD>(dataBuffer.size()),  // size of buffer 

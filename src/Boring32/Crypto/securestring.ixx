@@ -182,7 +182,7 @@ export namespace Boring32::Crypto
 			if (m_isEncrypted)
 				return;
 			if (m_protectedString.empty())
-				throw Error::Boring32Error("Nothing to encrypt");
+				throw Error::Boring32Error{ "Nothing to encrypt" };
 
 			bool succeeded = Win32::CryptProtectMemory(
 				reinterpret_cast<void*>(&m_protectedString[0]),
@@ -199,7 +199,7 @@ export namespace Boring32::Crypto
 			if (not m_isEncrypted)
 				return;
 			if (m_protectedString.empty())
-				throw Error::Boring32Error("Nothing to decrypt");
+				throw Error::Boring32Error{ "Nothing to decrypt" };
 
 			bool succeeded = Win32::CryptUnprotectMemory(
 				reinterpret_cast<void*>(&m_protectedString[0]),

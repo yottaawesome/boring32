@@ -325,7 +325,7 @@ export namespace Boring32::Crypto
 		{
 			// BCRYPT_BLOCK_PADDING must not be used with the authenticated encryption modes(AES - CCM and AES - GCM)
 			if (m_chainingMode == ChainingMode::NotSet)
-				throw Error::Boring32Error("m_chainingMode is not set");
+				throw Error::Boring32Error{ "m_chainingMode is not set" };
 			if (m_chainingMode == ChainingMode::GaloisCounterMode)
 				return 0;
 			if (m_chainingMode == ChainingMode::CbcMac)

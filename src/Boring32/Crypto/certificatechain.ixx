@@ -73,7 +73,7 @@ export namespace Boring32::Crypto
 		{
 			// TODO: need to verify this actually works
 			if (not m_chainContext)
-				throw Error::Boring32Error("m_chainContext is null");
+				throw Error::Boring32Error{ "m_chainContext is null" };
 
 			Win32::CERT_CHAIN_POLICY_PARA para{
 				.cbSize = sizeof(para),
@@ -103,26 +103,26 @@ export namespace Boring32::Crypto
 		auto GetCertChainAt(const Win32::DWORD chainIndex) const -> std::vector<Certificate>
 		{
 			if (not m_chainContext)
-				throw Error::Boring32Error("m_chainContext is null");
+				throw Error::Boring32Error{ "m_chainContext is null" };
 
 			if (chainIndex >= m_chainContext->cChain)
-				throw Error::Boring32Error(
+				throw Error::Boring32Error{
 					"Expected index to be less than {} but got an index of {}",
 					std::source_location::current(),
 					std::stacktrace::current(),
 					m_chainContext->cChain,
 					chainIndex
-				);
+				};
 
 			std::vector<Certificate> certsInChain;
 			Win32::CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
 			// This probably should never happen, but guard just in case
-			if (not simpleChain) throw Error::Boring32Error(
+			if (not simpleChain) throw Error::Boring32Error{
 				"The simpleChain at {} was unexpectedly null",
 				std::source_location::current(),
 				std::stacktrace::current(),
 				chainIndex
-			);
+			};
 
 			for (Win32::DWORD certIndexInChain = 0; certIndexInChain < simpleChain->cElement; certIndexInChain++)
 				certsInChain.emplace_back(simpleChain->rgpElement[certIndexInChain]->pCertContext, false);
@@ -133,26 +133,26 @@ export namespace Boring32::Crypto
 		auto GetCertAt(Win32::DWORD chainIndex, Win32::DWORD certIndex) const -> Certificate
 		{
 			if (not m_chainContext)
-				throw Error::Boring32Error("m_chainContext is null");
+				throw Error::Boring32Error{ "m_chainContext is null" };
 			if (chainIndex >= m_chainContext->cChain)
-				throw Error::Boring32Error(
+				throw Error::Boring32Error{
 					"Expected chainIndex to be less than {} but got an index of {}",
 					std::source_location::current(),
 					std::stacktrace::current(),
 					m_chainContext->cChain,
 					chainIndex
-				);
+				};
 
 			Win32::CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
 			if (not simpleChain)
-				throw Error::Boring32Error("simpleChain is null");
-			if (certIndex >= simpleChain->cElement) throw Error::Boring32Error(
+				throw Error::Boring32Error{ "simpleChain is null" };
+			if (certIndex >= simpleChain->cElement) throw Error::Boring32Error{
 				"Expected certIndex to be less than {} but got an index of {}",
 				std::source_location::current(),
 				std::stacktrace::current(),
 				simpleChain->cElement,
 				certIndex
-			);
+			};
 
 			return { simpleChain->rgpElement[certIndex]->pCertContext, false };
 		}
@@ -160,19 +160,19 @@ export namespace Boring32::Crypto
 		auto GetFirstCertAt(Win32::DWORD chainIndex) const -> Certificate
 		{
 			if (not m_chainContext)
-				throw Error::Boring32Error("m_chainContext is null");
+				throw Error::Boring32Error{ "m_chainContext is null" };
 			if (chainIndex >= m_chainContext->cChain)
-				throw Error::Boring32Error(
+				throw Error::Boring32Error{
 					"Expected index to be less than {} but got an index of {}",
 					std::source_location::current(),
 					std::stacktrace::current(),
 					m_chainContext->cChain,
 					chainIndex
-				);
+				};
 
 			Win32::CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
 			if (not simpleChain)
-				throw Error::Boring32Error("simpleChain is null");
+				throw Error::Boring32Error{ "simpleChain is null" };
 			if (simpleChain->cElement == 0)
 				return {};
 			return { simpleChain->rgpElement[0]->pCertContext, false };
@@ -181,19 +181,19 @@ export namespace Boring32::Crypto
 		auto GetLastCertAt(Win32::DWORD chainIndex) const -> Certificate
 		{
 			if (not m_chainContext)
-				throw Error::Boring32Error("m_chainContext is null");
+				throw Error::Boring32Error{ "m_chainContext is null" };
 			if (chainIndex >= m_chainContext->cChain)
-				throw Error::Boring32Error(
+				throw Error::Boring32Error{
 					"Expected index to be less than {} but got an index of {}",
 					std::source_location::current(),
 					std::stacktrace::current(),
 					m_chainContext->cChain,
 					chainIndex
-				);
+				};
 
 			Win32::CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
 			if (not simpleChain)
-				throw Error::Boring32Error("simpleChain is null");
+				throw Error::Boring32Error{ "simpleChain is null" };
 			if (simpleChain->cElement == 0)
 				return {};
 			return { simpleChain->rgpElement[simpleChain->cElement - 1]->pCertContext, false };

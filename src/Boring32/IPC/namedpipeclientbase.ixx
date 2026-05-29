@@ -79,7 +79,7 @@ export namespace Boring32::IPC
 		auto UnreadCharactersRemaining(this auto&& self) -> Win32::DWORD
 		{
 			if (not self.m_handle)
-				throw Error::Boring32Error("No pipe to read from");
+				throw Error::Boring32Error{ "No pipe to read from" };
 			auto bytesLeft = Win32::DWORD{};
 			auto succeeded = Win32::PeekNamedPipe(
 				self.m_handle.GetHandle(),
@@ -98,7 +98,7 @@ export namespace Boring32::IPC
 		void Flush(this auto&& self)
 		{
 			if (not self.m_handle)
-				throw Error::Boring32Error("No pipe to flush");
+				throw Error::Boring32Error{ "No pipe to flush" };
 			if (not Win32::FlushFileBuffers(self.m_handle.GetHandle()))
 				throw Error::Win32Error{Win32::GetLastError(), "FlushFileBuffers() failed"};
 		}
@@ -106,7 +106,7 @@ export namespace Boring32::IPC
 		void CancelCurrentThreadIo(this auto&& self)
 		{
 			if (not self.m_handle)
-				throw Error::Boring32Error("Pipe is nullptr");
+				throw Error::Boring32Error{ "Pipe is nullptr" };
 			if (not Win32::CancelIo(self.m_handle.GetHandle()))
 				throw Error::Win32Error{Win32::GetLastError(), "CancelIo failed"};
 		}
@@ -124,7 +124,7 @@ export namespace Boring32::IPC
 		void CancelCurrentProcessIo(this auto&& self, Win32::OVERLAPPED* overlapped)
 		{
 			if (not self.m_handle)
-				throw Error::Boring32Error("pipe is nullptr");
+				throw Error::Boring32Error{ "Pipe is nullptr" };
 			if (not Win32::CancelIoEx(self.m_handle.GetHandle(), overlapped))
 				throw Error::Win32Error{Win32::GetLastError(), "CancelIo() failed"};
 		}

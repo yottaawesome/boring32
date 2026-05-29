@@ -168,9 +168,9 @@ namespace Boring32::TaskScheduler
 		void CheckIsValid() const
 		{
 			if (not m_registeredTask)
-				throw Error::Boring32Error("m_registeredTask is nullptr");
+				throw Error::Boring32Error{ "m_registeredTask is nullptr" };
 			if (not m_taskDefinition)
-				throw Error::Boring32Error("m_taskDefinition is nullptr");
+				throw Error::Boring32Error{ "m_taskDefinition is nullptr" };
 		}
 
 		// https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-iregisteredtask

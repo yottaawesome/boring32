@@ -117,10 +117,9 @@ namespace Boring32::WinHttp::WebSockets
 							return;
 
 						default: // Unexpected responses
-							throw Error::Boring32Error(
-								"Received unexpected HTTP response code while upgrading to websocket: "
-								+ std::to_string(statusCode)
-							);
+							throw Error::Boring32Error{
+								std::format("Received unexpected HTTP response code while upgrading to websocket: {}", std::to_string(statusCode))
+							};
 					}
 
 					socket->CompleteUpgrade();
@@ -182,7 +181,7 @@ namespace Boring32::WinHttp::WebSockets
 							break;
 
 						default:
-							throw Error::Boring32Error("Unknown eBufferType");
+							throw Error::Boring32Error{ "Unknown eBufferType" };
 					}
 				}
 				catch (const std::exception& ex)

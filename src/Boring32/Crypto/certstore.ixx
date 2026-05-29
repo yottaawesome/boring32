@@ -155,7 +155,7 @@ export namespace Boring32::Crypto
 		auto GetAll() const -> std::vector<Certificate>
 		{
 			if (not m_certStore)
-				throw Error::Boring32Error("m_certStore is null");
+				throw Error::Boring32Error{ "m_certStore is null" };
 
 			std::vector<Certificate> results;
 			Win32::PCCERT_CONTEXT currentCert = nullptr;
@@ -180,8 +180,8 @@ export namespace Boring32::Crypto
 		[[nodiscard]] 
 		auto GetCertByFormattedSubject(const std::wstring& subjectRdn) const -> Certificate
 		{
-			Win32::PCCERT_CONTEXT currentCert = nullptr;
-			Certificate cert;
+			auto currentCert = Win32::PCCERT_CONTEXT{};
+			auto cert = Certificate{};
 			while (currentCert = Win32::CertEnumCertificatesInStore(m_certStore, currentCert))
 			{
 				cert.Attach(currentCert);
@@ -204,16 +204,16 @@ export namespace Boring32::Crypto
 		[[nodiscard]] 
 		auto GetCertBySubjectCn(const std::wstring& subjectCn) const -> Certificate
 		{
-			Win32::PCCERT_CONTEXT currentCert = nullptr;
+			auto currentCert = Win32::PCCERT_CONTEXT{};
 			while (currentCert = CertEnumCertificatesInStore(m_certStore, currentCert))
 			{
 				// The cert is automatically freed by the next call to CertEnumCertificatesInStore
 				// but Certificate also does its own cleanup, so signal that it needs to duplicate
 				// the handle
-				const Certificate cert(currentCert, false);
-				const std::wstring name = cert.GetFormattedSubject(Win32::CertX500NameStr);
-				const std::vector<std::wstring> tokens = Strings::TokeniseString(name, L", ");
-				for (const std::wstring& token : tokens)
+				const auto cert = Certificate(currentCert, false);
+				const auto name = cert.GetFormattedSubject(Win32::CertX500NameStr);
+				const auto tokens = Strings::TokeniseString(name, L", ");
+				for (const auto& token : tokens)
 					if (token.starts_with(L"CN="))
 						if (subjectCn == Strings::Replace(token, L"CN=", L""))
 							return cert;
@@ -298,9 +298,9 @@ export namespace Boring32::Crypto
 		void DeleteCert(const Win32::CERT_CONTEXT* cert)
 		{
 			if (not cert)
-				throw Error::Boring32Error("cert is nullptr");
+				throw Error::Boring32Error{ "cert is nullptr" };
 			if (not m_certStore)
-				throw Error::Boring32Error("m_certStore is nullptr");
+				throw Error::Boring32Error{ "m_certStore is nullptr" };
 
 			// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certdeletecertificatefromstore
 			if (not Win32::CertDeleteCertificateFromStore(cert))
@@ -310,9 +310,9 @@ export namespace Boring32::Crypto
 		void ImportCert(const Win32::CERT_CONTEXT* cert)
 		{
 			if (not m_certStore)
-				throw Error::Boring32Error("m_certStore is nullptr");
+				throw Error::Boring32Error{ "m_certStore is nullptr" };
 			if (not cert)
-				throw Error::Boring32Error("cert is nullptr");
+				throw Error::Boring32Error{ "cert is nullptr" };
 
 			// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/ns-cryptuiapi-cryptui_wiz_import_src_info
 			Win32::CRYPTUI_WIZ_IMPORT_SRC_INFO info{
@@ -328,7 +328,7 @@ export namespace Boring32::Crypto
 		void ImportCertsFromFile(const std::filesystem::path& path, const std::wstring& password)
 		{
 			if (not m_certStore)
-				throw Error::Boring32Error("m_certStore is nullptr");
+				throw Error::Boring32Error{ "m_certStore is nullptr" };
 			// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/ns-cryptuiapi-cryptui_wiz_import_src_info
 			std::wstring resolvedAbsolutePath = std::filesystem::absolute(path);
 			Win32::CRYPTUI_WIZ_IMPORT_SRC_INFO info{
@@ -344,9 +344,9 @@ export namespace Boring32::Crypto
 		void AddCertificate(const Win32::CERT_CONTEXT* cert, const CertAddDisposition disposition)
 		{
 			if (not cert)
-				throw Error::Boring32Error("cert is null");
+				throw Error::Boring32Error{ "cert is null" };
 			if (not m_certStore)
-				throw Error::Boring32Error("m_certStore is nullptr");
+				throw Error::Boring32Error{ "m_certStore is nullptr" };
 
 			// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certaddcertificatecontexttostore
 			bool succeeded = Win32::CertAddCertificateContextToStore(
@@ -367,7 +367,7 @@ export namespace Boring32::Crypto
 		auto GetLocalisedName() const -> std::wstring
 		{
 			if (not m_certStore)
-				throw Error::Boring32Error("m_certStore is nullptr");
+				throw Error::Boring32Error{ "m_certStore is nullptr" };
 
 			Win32::DWORD bytes = 0;
 			bool succeeded = Win32::CertGetStoreProperty(
@@ -433,7 +433,7 @@ export namespace Boring32::Crypto
 		void InternalOpen()
 		{
 			if (m_storeType != CertStoreType::InMemory && m_storeName.empty())
-				throw Error::Boring32Error("m_storeName is required for non-memory stores");
+				throw Error::Boring32Error{ "m_storeName is required for non-memory stores" };
 
 			switch (m_storeType)
 			{
@@ -470,7 +470,7 @@ export namespace Boring32::Crypto
 				}
 
 				default:
-					throw Error::Boring32Error("unknown m_storeType");
+					throw Error::Boring32Error{ "unknown m_storeType" };
 			}
 
 			if (not m_certStore)

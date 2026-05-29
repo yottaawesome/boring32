@@ -30,11 +30,11 @@ export namespace Boring32::Async
 			, m_pageProtection(pageProtection)
 		{
 			if (m_name.empty())
-				throw Error::Boring32Error("Name cannot be an empty string");
+				throw Error::Boring32Error{ "Name cannot be an empty string" };
 			if (m_maxSize == 0)
-				throw Error::Boring32Error("maxSize cannot be 0");
+				throw Error::Boring32Error{ "maxSize cannot be 0" };
 			if (m_pageProtection == 0)
-				throw Error::Boring32Error("pageProtection cannot be 0");
+				throw Error::Boring32Error{ "pageProtection cannot be 0" };
 			Create(Win32::FileMapAccess::All, isInheritable);
 		}
 
@@ -44,11 +44,11 @@ export namespace Boring32::Async
 			, m_maxSize(maxSize)
 		{
 			if (m_name.empty())
-				throw Error::Boring32Error("name cannot be an empty string");
+				throw Error::Boring32Error{ "name cannot be an empty string" };
 			if (m_maxSize == 0)
-				throw Error::Boring32Error("maxSize cannot be 0");
+				throw Error::Boring32Error{ "maxSize cannot be 0" };
 			if (m_pageProtection == 0)
-				throw Error::Boring32Error("pageProtection cannot be 0");
+				throw Error::Boring32Error{ "pageProtection cannot be 0" };
 			Open(desiredAccess, isInheritable);
 		}
 
@@ -106,7 +106,7 @@ export namespace Boring32::Async
 		void Create(Win32::FileMapAccess desiredAccess, bool isInheritable)
 		{
 			auto li = Win32::LARGE_INTEGER{ .QuadPart = static_cast<long long>(m_maxSize) };
-			const wchar_t* name = m_name.empty() ? nullptr : m_name.c_str();
+			auto name = m_name.empty() ? static_cast<const wchar_t*>(nullptr) : m_name.c_str();
 			// https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw
 			m_fileMapping = Win32::CreateFileMappingW(
 				Win32::InvalidHandleValue,	// use paging file
@@ -125,7 +125,7 @@ export namespace Boring32::Async
 		void Open(Win32::FileMapAccess desiredAccess, bool isInheritable)
 		{
 			if (m_name.empty())
-				throw Error::Boring32Error("m_name cannot be empty when opening a file mapping");
+				throw Error::Boring32Error{ "m_name cannot be empty when opening a file mapping" };
 
 			// https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-openfilemappingw
 			m_fileMapping = Win32::OpenFileMappingW(

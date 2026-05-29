@@ -138,7 +138,7 @@ export namespace Boring32::Crypto
 	) -> std::vector<std::byte>
 	{
 		if (not key.GetHandle())
-			throw Error::Boring32Error("key is null");
+			throw Error::Boring32Error{ "key is null" };
 
 		// IV is optional
 		auto pIV = (Win32::PUCHAR)nullptr;
@@ -147,7 +147,7 @@ export namespace Boring32::Crypto
 		{
 			// Do all cipher algs require this?
 			if (iv.size() != blockByteLength)
-				throw Error::Boring32Error("IV must be the same size as the AES block length");
+				throw Error::Boring32Error{ "IV must be the same size as the AES block length" };
 			pIV = reinterpret_cast<Win32::PUCHAR>(const_cast<std::byte*>(&iv[0]));
 			ivSize = static_cast<Win32::ULONG>(iv.size());
 		}
@@ -202,7 +202,7 @@ export namespace Boring32::Crypto
 	) -> std::vector<std::byte>
 	{
 		if (not key.GetHandle())
-			throw Error::Boring32Error("key is null");
+			throw Error::Boring32Error{ "key is null" };
 
 		// IV is optional
 		auto pIV = (Win32::PUCHAR)nullptr;
@@ -210,7 +210,7 @@ export namespace Boring32::Crypto
 		if (not iv.empty())
 		{
 			if (iv.size() != blockByteLength)
-				throw Error::Boring32Error("IV must be the same size as the AES block lenth");
+				throw Error::Boring32Error{ "IV must be the same size as the AES block length" };
 			pIV = reinterpret_cast<Win32::PUCHAR>(const_cast<std::byte*>(&iv[0]));
 			ivSize = static_cast<Win32::ULONG>(iv.size());
 		}
@@ -429,9 +429,9 @@ export namespace Boring32::Crypto
 	auto FindChainInStore(Win32::HCERTSTORE hCertStore, const std::wstring& issuer) -> std::vector<Win32::PCCERT_CHAIN_CONTEXT>
 	{
 		if (not hCertStore)
-			throw Error::Boring32Error("hCertStore cannot be null");
+			throw Error::Boring32Error{ "hCertStore cannot be null" };
 		if (issuer.empty())
-			throw Error::Boring32Error("issuer cannot be empty string");
+			throw Error::Boring32Error{ "issuer cannot be empty string" };
 
 		auto returnValue = std::vector<Win32::PCCERT_CHAIN_CONTEXT>{};
 		auto encodedIssuer = std::vector<std::byte>{ EncodeAsnString(issuer) };
@@ -487,7 +487,7 @@ export namespace Boring32::Crypto
 	) -> Win32::PCCERT_CHAIN_CONTEXT
 	{
 		if (not contextToBuildFrom)
-			throw Error::Boring32Error("contextToBuildFrom is null");
+			throw Error::Boring32Error{ "contextToBuildFrom is null" };
 
 		auto chainContext = Win32::PCCERT_CHAIN_CONTEXT{ nullptr };
 		auto enhkeyUsage = Win32::CERT_ENHKEY_USAGE{
@@ -524,7 +524,7 @@ export namespace Boring32::Crypto
 	void ImportCertToStore(const Win32::HCERTSTORE store, const Win32::CRYPTUI_WIZ_IMPORT_SRC_INFO& info)
 	{
 		if (not store)
-			throw Error::Boring32Error{"store is nullptr"};
+			throw Error::Boring32Error{ "store is nullptr" };
 
 		constexpr auto flags = Win32::DWORD{
 			Win32::CryptUiWizNoUi | Win32::CryptUiWizIgnoreNoUiFlagForCsps | Win32::CryptUiWizImportAllowCert
@@ -548,7 +548,7 @@ export namespace Boring32::Crypto
 	auto GetCertByArg(Win32::HCERTSTORE certStore, StoreFindType searchFlag, const void* arg) -> Win32::PCCERT_CONTEXT
 	{
 		if (not certStore)
-			throw Error::Boring32Error("CertStore cannot be null");
+			throw Error::Boring32Error{ "CertStore cannot be null" };
 
 		// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindcertificateinstore
 		auto certContext = Win32::PCCERT_CONTEXT{

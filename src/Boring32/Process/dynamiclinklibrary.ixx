@@ -62,7 +62,7 @@ export namespace Boring32::Process
 		void* Resolve(const std::string& symbolName)
 		{
 			if (not m_libraryHandle)
-				throw Error::Boring32Error("Library handle is null");
+				throw Error::Boring32Error{ "Library handle is null" };
 
 			if (void* ptr = Win32::GetProcAddress(m_libraryHandle, symbolName.c_str()))
 				return ptr;
@@ -125,7 +125,7 @@ export namespace Boring32::Process
 		void InternalLoad()
 		{
 			if (m_path.empty())
-				throw Error::Boring32Error("No library path specified");
+				throw Error::Boring32Error{ "No library path specified" };
 
 			m_libraryHandle = Win32::LoadLibraryW(m_path.c_str());
 			if (not m_libraryHandle)

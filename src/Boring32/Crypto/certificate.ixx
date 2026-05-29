@@ -103,7 +103,7 @@ export namespace Boring32::Crypto
 		auto GetIssuer() const -> std::vector<std::byte>
 		{
 			if (not m_certContext)
-				throw Error::Boring32Error("m_certContext is nullptr");
+				throw Error::Boring32Error{ "m_certContext is nullptr" };
 			if (not m_certContext->pCertInfo)
 				return {};
 			Win32::CERT_NAME_BLOB* blob = &m_certContext->pCertInfo->Issuer;
@@ -117,7 +117,7 @@ export namespace Boring32::Crypto
 		auto GetSubject() const -> std::vector<std::byte>
 		{
 			if (not m_certContext)
-				throw Error::Boring32Error("m_certContext is nullptr");
+				throw Error::Boring32Error{ "m_certContext is nullptr" };
 			if (not m_certContext->pCertInfo)
 				return {};
 			Win32::CERT_NAME_BLOB* blob = &m_certContext->pCertInfo->Subject;
@@ -158,7 +158,7 @@ export namespace Boring32::Crypto
 		auto IsValidForCurrentDate() const -> bool
 		{
 			if (not m_certContext)
-				throw Error::Boring32Error("m_certContext is nullptr");
+				throw Error::Boring32Error{ "m_certContext is nullptr" };
 			return GetTimeValidity(nullptr) == Certificate::CertTimeValidity::Valid;
 		}
 
@@ -166,7 +166,7 @@ export namespace Boring32::Crypto
 		auto GetTimeValidity(Win32::FILETIME* const ft) const -> CertTimeValidity
 		{
 			if (not m_certContext)
-				throw Error::Boring32Error("m_certContext is nullptr");
+				throw Error::Boring32Error{ "m_certContext is nullptr" };
 
 			// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certverifytimevalidity
 			long value = Win32::CertVerifyTimeValidity(ft, m_certContext->pCertInfo);
@@ -177,7 +177,7 @@ export namespace Boring32::Crypto
 		auto GetNotBefore() const -> Win32::FILETIME
 		{
 			if (not m_certContext)
-				throw Error::Boring32Error("m_certContext is nullptr");
+				throw Error::Boring32Error{ "m_certContext is nullptr" };
 			return m_certContext->pCertInfo->NotBefore;
 		}
 
@@ -185,7 +185,7 @@ export namespace Boring32::Crypto
 		auto GetNotAfter() const -> const Win32::FILETIME&
 		{
 			if (not m_certContext)
-				throw Error::Boring32Error("m_certContext is nullptr");
+				throw Error::Boring32Error{ "m_certContext is nullptr" };
 			return m_certContext->pCertInfo->NotAfter;
 		}
 
@@ -193,7 +193,7 @@ export namespace Boring32::Crypto
 		auto GetPublicKeyBitLength() const -> Win32::DWORD
 		{
 			if (not m_certContext)
-				throw Error::Boring32Error("m_certContext is nullptr");
+				throw Error::Boring32Error{ "m_certContext is nullptr" };
 			// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certgetpublickeylength
 			Win32::DWORD length = Win32::CertGetPublicKeyLength(
 				Win32::X509AsnEncoding | Win32::Pkcs7AsnEncoding,
@@ -242,7 +242,7 @@ export namespace Boring32::Crypto
 		auto InternalCertGetProperty(Win32::DWORD property) const -> std::vector<std::byte>
 		{
 			if (not m_certContext)
-				throw Error::Boring32Error("m_certContext is nullptr");
+				throw Error::Boring32Error{ "m_certContext is nullptr" };
 
 			Win32::DWORD sizeInBytes = 0;
 			bool succeeded = Win32::CertGetCertificateContextProperty(

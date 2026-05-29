@@ -116,7 +116,7 @@ export namespace Boring32::RAII
 		void SetInheritability(bool isInheritable)
 		{
 			if (not IsValidValue(m_handle))
-				throw Error::Boring32Error("handle is null or invalid.");
+				throw Error::Boring32Error{ "handle is null or invalid." };
 			if (not Win32::SetHandleInformation(m_handle, Win32::HandleFlagInherit, isInheritable))
 				throw Error::Win32Error{Win32::GetLastError(), "SetHandleInformation() failed"};
 		}

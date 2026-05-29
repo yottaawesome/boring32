@@ -51,7 +51,7 @@ export namespace Boring32::Async
 		void QueueAPC(ApcFunctionSignature apc, Win32::ULONG_PTR arg)
 		{
 			if (not this->m_thread.GetHandle())
-				throw Error::Boring32Error("No thread handle found. Either the thread hasn't been started or has been Close()d.");
+				throw Error::Boring32Error{ "No thread handle found. Either the thread hasn't been started or has been Close()d." };
 			if (not Win32::QueueUserAPC(apc, m_thread.GetHandle(), arg))
 				throw Error::Win32Error{ Win32::GetLastError(), "QueueUserAPC() failed" };
 		}

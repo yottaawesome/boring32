@@ -80,7 +80,7 @@ export namespace Boring32::WinHttp
 		void SetOnSession(Win32::WinHttp::HINTERNET session)
 		{
 			if (not m_info.lpszProxy)
-				throw Boring32::Error::Boring32Error("No proxy set");
+				throw Boring32::Error::Boring32Error{ "No proxy set" };
 			// https://docs.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpsetoption
 			if (not Win32::WinHttp::WinHttpSetOption(session, Win32::WinHttp::Options::Proxy, &m_info, sizeof(m_info)))
 				throw Error::Win32Error{ Win32::GetLastError(), "WinHttpSetOption() failed" };

@@ -41,7 +41,7 @@ export namespace Boring32::Async
 			: fileHandle(handle), params(params)
 		{
 			if (not HandleIsValid())
-				throw Error::Boring32Error("File handle is not a valid file handle.");
+				throw Error::Boring32Error{ "File handle is not a valid file handle." };
 			params.Acquire ? DoLock() : void();
 		}
 
@@ -75,7 +75,7 @@ export namespace Boring32::Async
 		void DoLock(this FileRangeLock& self)
 		{
 			if (not self.HandleIsValid())
-				throw Error::Boring32Error("File handle is null.");
+				throw Error::Boring32Error{ "File handle is null." };
 
 			auto overlapped = Win32::OVERLAPPED{
 				.Offset = self.params.Offset,

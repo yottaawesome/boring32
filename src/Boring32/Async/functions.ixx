@@ -15,9 +15,9 @@ export namespace Boring32::Async
 		-> Win32::WaitResult
 	{
 		if (not toSignal)
-			throw Error::Boring32Error("toSignal is nullptr");
+			throw Error::Boring32Error{ "toSignal is nullptr" };
 		if (not toWaitOn)
-			throw Error::Boring32Error("toWaitOn is nullptr");
+			throw Error::Boring32Error{ "toWaitOn is nullptr" };
 
 		auto wait = static_cast<Win32::DWORD>(std::chrono::duration_cast<std::chrono::milliseconds>(timeout).count());
 		auto result = SignalObjectAndWait(toSignal, toWaitOn, wait, alertable);
@@ -29,7 +29,7 @@ export namespace Boring32::Async
 	auto WaitFor(Win32::HANDLE handle, Win32::DWORD timeout, bool alertable) -> Win32::WaitResult
 	{
 		if (not handle)
-			throw Error::Boring32Error("Handle is nullptr");
+			throw Error::Boring32Error{ "Handle is nullptr" };
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobjectex
 		switch (auto status = static_cast<Win32::WaitResult>(Win32::WaitForSingleObjectEx(handle, timeout, alertable)))
@@ -40,13 +40,13 @@ export namespace Boring32::Async
 				return status;
 
 			case Win32::WaitResult::Abandoned:
-				throw Error::Boring32Error("The wait was abandoned");
+				throw Error::Boring32Error{ "The wait was abandoned" };
 
 			case Win32::WaitResult::Failed:
 				throw Error::Win32Error{Win32::GetLastError(), "WaitForSingleObjectEx() failed"};
 
 			default:
-				throw Error::Boring32Error(std::format("Unknown wait status: {}", static_cast<unsigned long>(status)));
+				throw Error::Boring32Error{ std::format("Unknown wait status: {}", static_cast<unsigned long>(status)) };
 		}
 	}
 
@@ -74,9 +74,9 @@ export namespace Boring32::Async
 		-> Win32::DWORD
 	{
 		if (handles.empty())
-			throw Error::Boring32Error("Handle is nullptr");
+			throw Error::Boring32Error{ "Handle is nullptr" };
 		if (handles.size() > Win32::MaximumWaitObjects)
-			throw Error::Boring32Error(std::format("Too many handles to wait on: {}", handles.size()));
+			throw Error::Boring32Error{ std::format("Too many handles to wait on: {}", handles.size()) };
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitformultipleobjectsex
 		auto status = Win32::WaitForMultipleObjectsEx(
@@ -89,7 +89,7 @@ export namespace Boring32::Async
 		switch (status)
 		{
 			case Win32::WaitAbandoned:
-				throw Error::Boring32Error("The wait was abandoned.");
+				throw Error::Boring32Error{ "The wait was abandoned." };
 
 			case Win32::WaitTimeout:
 			case Win32::WaitIoCompletion:
