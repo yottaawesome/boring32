@@ -170,6 +170,8 @@ export namespace Boring32::Win32
 		::IXAudio2SourceVoice,
 		::Microsoft::WRL::ComPtr,
 		::LPBYTE,
+		::GetFileSize,
+		::GetFileSizeEx,
 		::LockFile,
 		::LockFileEx,
 		::UnlockFile,
@@ -345,6 +347,7 @@ export namespace Boring32::Win32
 		::Compress,
 		::ResetCompressor,
 		::CreateCompressor,
+		::GetFileType,
 		::CloseCompressor,
 		::CloseDecompressor,
 		::Decompress,
@@ -481,6 +484,17 @@ export namespace Boring32::Win32
 		::GetClipboardData,
 		::CompareStringOrdinal
 		;
+
+	constexpr auto InvalidFileSize = INVALID_FILE_SIZE;
+
+	enum class FileType : DWORD
+	{
+		Unknown = FILE_TYPE_UNKNOWN,
+		Disk = FILE_TYPE_DISK,
+		Char = FILE_TYPE_CHAR,
+		Pipe = FILE_TYPE_PIPE,
+		// FILE_TYPE_REMOTE unused according to https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfiletype
+	};
 
 	namespace CStrComparison
 	{

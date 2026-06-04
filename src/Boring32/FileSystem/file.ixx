@@ -10,9 +10,7 @@ export namespace Boring32::FileSystem
 	{
 	public:
 		File() = default;
-		File(const File&) = default;
 		File(File&&) noexcept = default;
-		File& operator=(const File&) = default;
 		File& operator=(File&&) noexcept = default;
 
 		File(std::wstring fileName)
@@ -29,6 +27,33 @@ export namespace Boring32::FileSystem
 		auto GetHandle() const noexcept -> Win32::HANDLE
 		{
 			return *m_fileHandle;
+		}
+
+		auto GetFileName(this auto&& self) noexcept -> decltype(auto)
+		{
+			return std::forward_like<decltype(self)>(self.m_fileName);
+		}
+
+		auto GetSize() const -> Win32::DWORD
+		{
+			// see also GetFileSizeEx 
+			if (not m_fileHandle)
+				throw Error::Boring32Error{ "File is not open" };
+			auto fileSize = Win32::GetFileSize(*m_fileHandle, nullptr);
+			if (fileSize == Win32::InvalidFileSize)
+				throw Error::Win32Error{ Win32::GetLastError(), "GetFileSize() failed" };
+			return fileSize;
+		}
+
+		auto GetType() -> Win32::FileType
+		{
+			if (not m_fileHandle)
+				throw Error::Boring32Error{ "File is not open" };
+			auto fileType = Win32::GetFileType(*m_fileHandle);
+			if (static_cast<Win32::FileType>(fileType) == Win32::FileType::Unknown)
+				if (auto lastError = Win32::GetLastError(); lastError != Win32::ErrorCodes::Success)
+					throw Error::Win32Error{ lastError, "GetFileType() failed" };
+			return static_cast<Win32::FileType>(fileType);
 		}
 
 	private:
@@ -55,6 +80,6 @@ export namespace Boring32::FileSystem
 		}
 
 		std::wstring m_fileName;
-		RAII::SharedHandle m_fileHandle;
+		RAII::UniqueHandle m_fileHandle;
 	};
 }
