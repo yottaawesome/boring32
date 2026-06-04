@@ -93,13 +93,13 @@ export namespace Boring32::FileSystem
 			// https://learn.microsoft.com/en-us/windows/win32/fileio/file-access-rights-constants
 			m_fileHandle = 
 				Win32::CreateFileW(
-					m_fileName.c_str(),				// lpFileName
-					Win32::GenericRead | Win32::GenericWrite,	// dwDesiredAccess
-					0,								// dwShareMode
-					nullptr,						// lpSecurityAttributes
-					Win32::OpenAlways,					// dwCreationDisposition
-					Win32::FileAttributeNormal,			// dwFlagsAndAttributes
-					nullptr							// hTemplateFile
+					m_fileName.c_str(),
+					Win32::GenericRead | Win32::GenericWrite,
+					0,
+					nullptr,
+					Win32::OpenAlways,
+					Win32::FileAttributeNormal,
+					nullptr
 				);
 			if (m_fileHandle == Win32::InvalidHandleValue)
 				throw Error::Win32Error{Win32::GetLastError(), "CreateFileW() failed"};
