@@ -38,12 +38,12 @@ export namespace Boring32::Util
 		explicit GloballyUniqueID(const WrappedGuidString& guidString)
 		{
 			if (guidString.GuidString.empty())
-				throw Error::Boring32Error("GUID cannot be an empty string");
+				throw Error::Boring32Error{ "GUID cannot be an empty string" };
 			// Accepts {} around the GUID
 			// See https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-iidfromstring
 			Win32::HRESULT hr = Win32::IIDFromString(guidString.GuidString.c_str(), &m_guid);
 			if (hr != Win32::S_Ok)
-				throw Error::COMError(hr, "IIDFromString() failed");
+				throw Error::COMError{ hr, "IIDFromString() failed" };
 		}
 
 		explicit GloballyUniqueID(const BasicGuidString& guidString)

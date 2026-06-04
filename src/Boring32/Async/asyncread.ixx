@@ -19,7 +19,7 @@ export namespace Boring32::Async
 			: Pipe(handle)
 		{
 			if (not handle)
-				throw std::runtime_error("Handle cannot be nullptr");
+				throw Error::Boring32Error{ "Handle cannot be nullptr" };
 			Start();
 		}
 

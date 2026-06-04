@@ -36,7 +36,7 @@ export namespace Boring32::Async
 			: m_name(std::move(name))
 		{
 			if (m_name->empty())
-				throw Error::Boring32Error("Name of Event to open cannot be empty");
+				throw Error::Boring32Error{ "Name of Event to open cannot be empty" };
 
 			m_event = Win32::OpenEventW(desiredAccess, isInheritable, m_name->c_str());
 			if (not m_event)
@@ -56,7 +56,7 @@ export namespace Boring32::Async
 		void Signal()
 		{
 			if (not m_event)
-				throw Error::Boring32Error("No Event to signal");
+				throw Error::Boring32Error{ "No Event to signal" };
 			if (not Win32::SetEvent(m_event.GetHandle()))
 				throw Error::Win32Error{ Win32::GetLastError(), "Failed to signal event" };
 		}
@@ -95,13 +95,13 @@ export namespace Boring32::Async
 		void WaitOnEvent() const
 		{
 			if (not m_event)
-				throw Error::Boring32Error("No Event to wait on");
+				throw Error::Boring32Error{ "No Event to wait on" };
 
 			auto status = static_cast<Win32::WaitResult>(Win32::WaitForSingleObject(m_event.GetHandle(), Win32::Infinite));
 			if (status == Win32::WaitResult::Failed)
 				throw Error::Win32Error{Win32::GetLastError(), "WaitForSingleObject failed"};
 			if (status == Win32::WaitResult::Abandoned)
-				throw Error::Boring32Error{"The wait was abandoned"};
+				throw Error::Boring32Error{ "The wait was abandoned" };
 		}
 
 		auto WaitOnEvent(Win32::DWORD millis, bool interruptible) const -> bool
@@ -115,7 +115,7 @@ export namespace Boring32::Async
 			using std::chrono::milliseconds;
 
 			if (not m_event)
-				throw Error::Boring32Error("No Event to wait on");
+				throw Error::Boring32Error{ "No Event to wait on" };
 
 			unsigned long millis = static_cast<unsigned long>(duration_cast<milliseconds>(time).count());
 			switch (Win32::WaitResult status = static_cast<Win32::WaitResult>(Win32::WaitForSingleObjectEx(m_event.GetHandle(), millis, alertable)))
@@ -125,17 +125,16 @@ export namespace Boring32::Async
 				case Win32::WaitResult::Timeout: 
 					return false;
 				case Win32::WaitResult::Abandoned:
-					throw Error::Boring32Error("The wait was abandoned");
+					throw Error::Boring32Error{ "The wait was abandoned" };
 				case Win32::WaitResult::Failed: 
 					throw Error::Win32Error{ Win32::GetLastError(), "WaitForSingleObject() failed" };
 			}
 			return false;
 		}
 
-		auto WaitOnEvent(
+		auto TryWaitOnEvent(
 			Concepts::Duration auto&& time, 
-			bool alertable, 
-			const std::nothrow_t&
+			bool alertable 
 		) const noexcept -> bool
 		try
 		{

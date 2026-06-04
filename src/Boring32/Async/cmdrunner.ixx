@@ -92,7 +92,7 @@ export namespace Boring32::Async
         // Get a handle to an input file for the parent. 
         // This example assumes a plain text file and uses string output to verify data flow. 
         if (cmd.empty())
-            throw Error::Boring32Error("Please specify a cmd command.");
+            throw Error::Boring32Error{ "Please specify a cmd command." };
 
         // Set the bInheritHandle flag so pipe handles are inherited.
         auto saAttr = Win32::SECURITY_ATTRIBUTES{

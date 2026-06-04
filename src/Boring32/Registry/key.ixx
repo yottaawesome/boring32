@@ -14,13 +14,14 @@ export namespace Boring32::Registry
 		Win32::DWORD DataSizeBytes = 0;
 	};
 
-	struct Key final
+	class Key final
 	{
+	public:
 		Key() = default;
 		Key(const Key& other) = default;
 		Key(Key&& other) noexcept = default;
-		Key& operator=(const Key& other) = default;
-		Key& operator=(Key&& other) noexcept = default;
+		auto operator=(const Key& other) -> Key& = default;
+		auto operator=(Key&& other) noexcept -> Key& = default;
 
 		Key(const Win32::Winreg::HKEY key, const std::wstring& subkey)
 			: m_access(Win32::Winreg::_KEY_ALL_ACCESS)
@@ -44,7 +45,7 @@ export namespace Boring32::Registry
 		) noexcept
 			: m_access(Win32::Winreg::_KEY_ALL_ACCESS)
 		{
-			InternalOpen(key, subkey, std::nothrow);
+			TryInternalOpen(key, subkey);
 		}
 
 		Key(
@@ -55,7 +56,7 @@ export namespace Boring32::Registry
 		) noexcept
 			: m_access(access)
 		{
-			InternalOpen(key, subkey, std::nothrow);
+			TryInternalOpen(key, subkey);
 		}
 
 		Key(const Win32::Winreg::HKEY key)
@@ -63,7 +64,7 @@ export namespace Boring32::Registry
 			m_access(Win32::Winreg::_KEY_ALL_ACCESS)
 		{}
 
-		Key& operator=(const Win32::Winreg::HKEY other)
+		auto operator=(const Win32::Winreg::HKEY other) -> Key&
 		{
 			m_key = CreateRegKeyPtr(other);
 			return *this;
@@ -79,7 +80,7 @@ export namespace Boring32::Registry
 			m_key = nullptr;
 		}
 
-		Win32::Winreg::HKEY GetKey() const noexcept
+		auto GetKey() const noexcept -> Win32::Winreg::HKEY
 		{
 			return m_key.get();
 		}
@@ -87,7 +88,7 @@ export namespace Boring32::Registry
 		void GetValue(const std::wstring& valueName, std::wstring& out)
 		{
 			if (not m_key)
-				throw Error::Boring32Error("m_key is null");
+				throw Error::Boring32Error{ "m_key is null" };
 
 			Registry::GetValue(m_key.get(), valueName, out);
 		}
@@ -102,95 +103,87 @@ export namespace Boring32::Registry
 			Registry::GetValue(m_key.get(), valueName, out);
 		}
 
-		void WriteValue(
-			const std::wstring& valueName,
-			const std::wstring& value
-		)
+		void WriteValue(const std::wstring& valueName, const std::wstring& value)
 		{
 			if (not m_key)
-				throw Error::Boring32Error("m_key is null");
+				throw Error::Boring32Error{ "m_key is null" };
 
 			// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw
-			const Win32::LSTATUS status = Win32::Winreg::RegSetValueExW(
-				m_key.get(),
-				valueName.c_str(),
-				0,
-				(Win32::DWORD)ValueTypes::String,
-				(Win32::BYTE*)value.c_str(),
-				(Win32::DWORD)((value.size() + 1) * sizeof(wchar_t))
-			);
+			auto status = Win32::LSTATUS{
+				Win32::Winreg::RegSetValueExW(
+					m_key.get(),
+					valueName.c_str(),
+					0,
+					static_cast<Win32::DWORD>(ValueTypes::String),
+					reinterpret_cast<Win32::BYTE*>(const_cast<wchar_t*>(value.c_str())),
+					static_cast<Win32::DWORD>((value.size() + 1) * sizeof(wchar_t))
+				) };
 			if (status != Win32::ErrorCodes::Success)
 				throw Error::Win32Error{static_cast<Win32::DWORD>(status), "RegSetValueExW() failed"};
 		}
 
-		void WriteValue(
-			const std::wstring& valueName,
-			const Win32::DWORD value
-		)
+		void WriteValue(const std::wstring& valueName, Win32::DWORD value)
 		{
 			Registry::WriteValue(m_key.get(), valueName, value);
 		}
 
-		void WriteValue(
-			const std::wstring& valueName,
-			const size_t value
-		)
+		void WriteValue(const std::wstring& valueName, size_t value)
 		{
 			Registry::WriteValue(m_key.get(), valueName, value);
 		}
 
-		void Export(const std::wstring& path, const Win32::DWORD flags)
+		void Export(const std::wstring& path, Win32::DWORD flags)
 		{
 			if (not m_key)
-				throw Error::Boring32Error("m_key is null");
+				throw Error::Boring32Error{ "m_key is null" };
 
-			const Win32::LSTATUS status = Win32::Winreg::RegSaveKeyExW(
-				m_key.get(),
-				path.c_str(),
-				nullptr,
-				Win32::Winreg::_REG_LATEST_FORMAT
-			);
+			auto status = Win32::LSTATUS{ 
+				Win32::Winreg::RegSaveKeyExW(
+					m_key.get(),
+					path.c_str(),
+					nullptr,
+					Win32::Winreg::_REG_LATEST_FORMAT
+				) };
 			if (status != Win32::ErrorCodes::Success)
 				throw Error::Win32Error{static_cast<Win32::DWORD>(status), "RegSaveKeyExW() failed"};
 		}
 
-		std::vector<KeyValues> GetValues()
+		auto GetValues() -> std::vector<KeyValues>
 		{
 			if (not m_key)
-			{
-				throw Error::Boring32Error("Key not initialised.");
-			}
+				throw Error::Boring32Error{ "Key not initialised." };
 
 			// See: https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-element-size-limits
 			constexpr unsigned maxValueNameCharacterLength = 32767 / sizeof(wchar_t);
-			std::wstring valueNameBuffer(maxValueNameCharacterLength, '\0');
-			std::vector<KeyValues> values;
+			auto valueNameBuffer = std::wstring(maxValueNameCharacterLength, '\0');
+			auto values = std::vector<KeyValues>{};
 			// Essentially, this works by requesting the value at the index, which is incremented
 			// per successful iteration. Once the end is reached, RegEnumValueW() will fail with
 			// ERROR_NO_MORE_ITEMS, at which point we can terminate the loop. Note that the order 
 			// of the enumeration is unspecified and will probably differ to what appears in 
 			// Registry Editor.
-			for (Win32::DWORD index = 0;; index++)
+			for (auto index = Win32::DWORD{};; index++)
 			{
-				Win32::DWORD valueNameCharacterLength = maxValueNameCharacterLength;
-				KeyValues valueToAdd{};
+				auto valueNameCharacterLength = Win32::DWORD{maxValueNameCharacterLength};
+				auto valueToAdd = KeyValues{};
 				// https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regenumvaluew
-				const Win32::DWORD status = Win32::Winreg::RegEnumValueW(
-					m_key.get(),
-					index,
-					&valueNameBuffer[0],
-					&valueNameCharacterLength,
-					0,
-					reinterpret_cast<Win32::DWORD*>(&valueToAdd.DataType),
-					nullptr,
-					&valueToAdd.DataSizeBytes
-				);
+				auto status = Win32::LSTATUS{
+					Win32::Winreg::RegEnumValueW(
+						m_key.get(),
+						index,
+						&valueNameBuffer[0],
+						&valueNameCharacterLength,
+						0,
+						reinterpret_cast<Win32::DWORD*>(&valueToAdd.DataType),
+						nullptr,
+						&valueToAdd.DataSizeBytes
+					)};
 				if (status == Win32::ErrorCodes::NoMoreItems)
 				{
 					break;
 				}
 				if (status != Win32::ErrorCodes::Success)
-					throw Error::Win32Error{status, "RegEnumValueW() failed."};
+					throw Error::Win32Error{static_cast<Win32::DWORD>(status), "RegEnumValueW() failed."};
 				valueToAdd.Name = std::wstring(
 					valueNameBuffer.begin(),
 					valueNameBuffer.begin() + valueNameCharacterLength
@@ -201,35 +194,36 @@ export namespace Boring32::Registry
 			return values;
 		}
 
-		unsigned GetSubkeyCount()
+		auto GetSubkeyCount() -> unsigned
 		{
-			Win32::DWORD subkeys;
+			auto subkeys = Win32::DWORD{};
 			// https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryinfokeyw
-			const Win32::LSTATUS status = Win32::Winreg::RegQueryInfoKeyW(
-				m_key.get(),
-				nullptr,
-				nullptr,
-				nullptr,
-				&subkeys,
-				nullptr,
-				nullptr,
-				nullptr,
-				nullptr,
-				nullptr,
-				nullptr,
-				nullptr
-			);
+			auto status = Win32::LSTATUS{ 
+				Win32::Winreg::RegQueryInfoKeyW(
+					m_key.get(),
+					nullptr,
+					nullptr,
+					nullptr,
+					&subkeys,
+					nullptr,
+					nullptr,
+					nullptr,
+					nullptr,
+					nullptr,
+					nullptr,
+					nullptr
+				)};
 			if (status)
 				throw Error::Win32Error{static_cast<Win32::DWORD>(status), "Failed to open registry key"};
 			return subkeys;
 		}
 
-		bool IsPredefinedKey() const noexcept
+		auto IsPredefinedKey() const noexcept -> bool
 		{
 			return IsPredefinedKey(m_key.get());
 		}
 
-		static bool IsPredefinedKey(Win32::Winreg::HKEY const key) noexcept
+		static auto IsPredefinedKey(Win32::Winreg::HKEY const key) noexcept -> bool
 		{
 			if (key == Win32::Winreg::Keys::HKCR)
 				return true;
@@ -244,23 +238,24 @@ export namespace Boring32::Registry
 			return false;
 		}
 
-		private:
-		void InternalOpen(const Win32::Winreg::HKEY superKey, const std::wstring& subkey)
+	private:
+		void InternalOpen(Win32::Winreg::HKEY superKey, const std::wstring& subkey)
 		{
-			Win32::Winreg::HKEY key = nullptr;
-			Win32::LSTATUS status = Win32::Winreg::RegOpenKeyExW(
-				superKey,
-				subkey.c_str(),
-				0,
-				m_access,
-				&key
-			);
+			auto key = Win32::Winreg::HKEY{};
+			auto status = Win32::LSTATUS{ 
+				Win32::Winreg::RegOpenKeyExW(
+					superKey,
+					subkey.c_str(),
+					0,
+					m_access,
+					&key
+				) };
 			if (status != Win32::ErrorCodes::Success)
 				throw Error::Win32Error{static_cast<Win32::DWORD>(status), "Failed to open registry key"};
 			m_key = CreateRegKeyPtr(key);
 		}
 
-		void InternalOpen(const Win32::Winreg::HKEY key, const std::wstring& subkey, std::nothrow_t) noexcept 
+		void TryInternalOpen(Win32::Winreg::HKEY key, const std::wstring& subkey) noexcept 
 		try
 		{
 			InternalOpen(key, subkey);
@@ -270,7 +265,7 @@ export namespace Boring32::Registry
 			std::wcerr << ex.what() << std::endl;
 		}
 
-		static std::shared_ptr<Win32::Winreg::HKEY__> CreateRegKeyPtr(Win32::Winreg::HKEY key)
+		static auto CreateRegKeyPtr(Win32::Winreg::HKEY key) -> std::shared_ptr<Win32::Winreg::HKEY__>
 		{
 			return {
 				key,

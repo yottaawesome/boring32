@@ -51,9 +51,9 @@ export namespace Boring32::Compression
 		auto GetCompressedSize(const std::vector<std::byte>& buffer) const -> size_t
 		{
 			if (not m_compressor)
-				throw Error::Boring32Error("Compressor handle is null");
+				throw Error::Boring32Error{ "Compressor handle is null" };
 			if (buffer.empty())
-				throw Error::Boring32Error("Buffer is empty");
+				throw Error::Boring32Error{ "Buffer is empty" };
 
 			auto compressedBufferSize = size_t{};
 			// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-compress
@@ -121,7 +121,7 @@ export namespace Boring32::Compression
 		void Reset()
 		{
 			if (not m_compressor)
-				throw Error::Boring32Error("Compressor handle is null");
+				throw Error::Boring32Error{ "Compressor handle is null" };
 			// https://docs.microsoft.com/en-us/windows/win32/api/compressapi/nf-compressapi-resetcompressor
 			if (not Win32::ResetCompressor(m_compressor.get()))
 				throw Error::Win32Error{ Win32::GetLastError(), "ResetCompressor() failed" };

@@ -17,40 +17,41 @@ export namespace Boring32::Registry
 	struct RegistryValueMap<size_t> { static constexpr int Type = Win32::Winreg::_RRF_RT_REG_QWORD; };
 
 	template<Concepts::OneOf<std::wstring, Win32::DWORD, size_t> T>
-	T GetValue(const Win32::Winreg::HKEY key, const std::wstring& valueName)
+	auto GetValue(const Win32::Winreg::HKEY key, const std::wstring& valueName) -> T
 	{
 		if (not key)
-			throw Error::Boring32Error("key is nullptr");
+			throw Error::Boring32Error{ "key is nullptr" };
 
-		T out;
-		Win32::DWORD sizeInBytes = sizeof(out);
-		const Win32::LSTATUS status = Win32::Winreg::RegGetValueW(
-			key,
-			nullptr,
-			valueName.c_str(),
-			RegistryValueMap<T>::Type,
-			nullptr,
-			&out,
-			&sizeInBytes
-		);
+		auto out = T{};
+		auto sizeInBytes = Win32::DWORD{ sizeof(out) };
+		auto status = Win32::LSTATUS{ 
+			Win32::Winreg::RegGetValueW(
+				key,
+				nullptr,
+				valueName.c_str(),
+				RegistryValueMap<T>::Type,
+				nullptr,
+				&out,
+				&sizeInBytes
+			) };
 		if (status != Win32::ErrorCodes::Success)
 			throw Error::Win32Error{static_cast<Win32::DWORD>(status), "RegGetValueW() failed"};
 		return out;
 	}
 
 	template<>
-	std::wstring GetValue<std::wstring>(
+	auto GetValue<std::wstring>(
 		const Win32::Winreg::HKEY key,
 		const std::wstring& valueName
-	)
+	) -> std::wstring
 	{
 		if (not key)
-			throw Error::Boring32Error("m_key is null");
+			throw Error::Boring32Error{ "m_key is null" };
 
-		std::wstring out;
-		Win32::DWORD sizeInBytes = 0;
+		auto out = std::wstring{};
+		auto sizeInBytes = Win32::DWORD{};
 		// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew
-		Win32::LONG statusCode = Win32::Winreg::RegGetValueW(
+		auto statusCode = Win32::Winreg::RegGetValueW(
 			key,
 			nullptr,
 			valueName.c_str(),
@@ -105,7 +106,7 @@ export namespace Boring32::Registry
 	)
 	{
 		if (not key)
-			throw Error::Boring32Error("key is nullptr");
+			throw Error::Boring32Error{ "key is nullptr" };
 
 		auto status = Win32::LSTATUS{
 			Win32::Winreg::RegSetValueExW(
@@ -125,9 +126,9 @@ export namespace Boring32::Registry
 	void WatchKey(const Win32::Winreg::HKEY key, const Async::AnyEvent auto& eventToSignal)
 	{
 		if (not key)
-			throw Error::Boring32Error("key cannot be nullptr");
+			throw Error::Boring32Error{ "key cannot be nullptr" };
 		if (not eventToSignal)
-			throw Error::Boring32Error("eventToSignal is not an initialised Event");
+			throw Error::Boring32Error{ "eventToSignal is not an initialised Event" };
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regnotifychangekeyvalue
 		auto status = Win32::LSTATUS{ 
@@ -145,7 +146,7 @@ export namespace Boring32::Registry
 	void DeleteKeyAndSubkey(const Win32::Winreg::HKEY parent, const std::wstring& subkey)
 	{
 		if (not parent)
-			throw Error::Boring32Error("Parent cannot be nullptr");
+			throw Error::Boring32Error{ "Parent cannot be nullptr" };
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-shdeletekeyw
 		auto status = Win32::LSTATUS{Win32::SHDeleteKeyW(parent, subkey.c_str())};
@@ -156,7 +157,7 @@ export namespace Boring32::Registry
 	void DeleteSubkeys(const Win32::Winreg::HKEY parent, const std::wstring& subkey)
 	{
 		if (not parent)
-			throw Error::Boring32Error("parent cannot be nullptr");
+			throw Error::Boring32Error{ "parent cannot be nullptr" };
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletetreew
 		auto status = Win32::LSTATUS{Win32::Winreg::RegDeleteTreeW(parent, subkey.c_str())};

@@ -21,7 +21,7 @@ export namespace Boring32::Memory
 
 		Heap(Win32::HANDLE heap)
 		{
-			m_heap = heap ? heap : throw Error::Boring32Error("Must pass in a valid heap pointer");;
+			m_heap = heap ? heap : throw Error::Boring32Error{ "Must pass in a valid heap pointer" };
 		}
 
 		Heap(Win32::DWORD options, Win32::DWORD initialSize, Win32::DWORD maxSize = 0)

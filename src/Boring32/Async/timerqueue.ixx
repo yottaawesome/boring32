@@ -30,9 +30,9 @@ export namespace Boring32::Async
 			m_waitForAllCallbacks(true)
 		{
 			if (not m_completionEvent)
-				throw Error::Boring32Error("completionEvent cannot be nullptr");
+				throw Error::Boring32Error{ "completionEvent cannot be nullptr" };
 			if (m_completionEvent == Win32::InvalidHandleValue)
-				throw Error::Boring32Error("completionEvent cannot be INVALID_HANDLE_VALUE");
+				throw Error::Boring32Error{ "completionEvent cannot be INVALID_HANDLE_VALUE" };
 			InternalCreate();
 		}
 

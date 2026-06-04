@@ -10,7 +10,7 @@ export namespace Boring32::WinHttp
 			const std::string& msg,
 			const std::source_location& location = std::source_location::current(),
 			const std::stacktrace& trace = std::stacktrace::current()
-		) : Error::Boring32Error(msg, location, trace)
+		) : Error::Boring32Error{msg, location, trace}
 		{ }
 	};
 }

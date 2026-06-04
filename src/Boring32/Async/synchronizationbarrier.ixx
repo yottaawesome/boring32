@@ -36,7 +36,7 @@ export namespace Boring32::Async
 		auto Enter(Win32::DWORD flags) -> bool
 		{
 			if (not m_isInitialized)
-				throw Error::Boring32Error("Barrier is not initialised");
+				throw Error::Boring32Error{ "Barrier is not initialised" };
 			//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-entersynchronizationbarrier
 			return Win32::EnterSynchronizationBarrier(&m_barrier, flags);
 		}

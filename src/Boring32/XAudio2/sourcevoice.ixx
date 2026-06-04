@@ -7,8 +7,9 @@ import :xaudio2.voice;
 export namespace Boring32::XAudio2
 {
 	// https://docs.microsoft.com/en-us/windows/win32/api/xaudio2/nn-xaudio2-ixaudio2sourcevoice
-	struct SourceVoice final : Voice
+	class SourceVoice final : Voice
 	{
+	public:
 		~SourceVoice()
 		{
 			Close();
@@ -20,7 +21,7 @@ export namespace Boring32::XAudio2
 			: m_voice(voice)
 		{
 			if (not voice)
-				throw XAudio2Error("voice cannot be nullptr");
+				throw XAudio2Error{"voice cannot be nullptr"};
 		}
 
 		SourceVoice& operator=(const SourceVoice&) = delete;
@@ -35,7 +36,7 @@ export namespace Boring32::XAudio2
 			}
 		}
 
-		private:
+	private:
 		Win32::IXAudio2SourceVoice* m_voice;
 	};
 }

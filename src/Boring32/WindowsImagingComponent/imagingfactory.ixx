@@ -26,7 +26,7 @@ export namespace Boring32::WindowsImagingComponent
 					m_imagingFactory.ReleaseAndGetAddressOf()
 				);
 			if (Win32::HrFailed(hr))
-				throw Error::COMError(hr, "CoCreateInstance() failed");
+				throw Error::COMError{hr, "CoCreateInstance() failed"};
 		}
 
 		// We can support copy semantics trivially, but for now, no compelling reason to do so.

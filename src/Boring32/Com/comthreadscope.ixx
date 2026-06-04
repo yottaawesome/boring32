@@ -119,7 +119,7 @@ export namespace Boring32::Com
 			if (not m_isInitialised)
 				return;
 			if (m_comInitialisedThreadId != Win32::GetCurrentThreadId())
-				throw Error::Boring32Error("Attempt to uninitialise COM by a thread different to initialising one.");
+				throw Error::Boring32Error{ "Attempt to uninitialise COM by a thread different to initialising one." };
 			Win32::CoUninitialize();
 			m_isInitialised = false;
 		}

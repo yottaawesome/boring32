@@ -53,12 +53,12 @@ namespace Boring32::SSPI
 			);
 			if (status != Win32::Sec_E_OK)
 			{
-				throw Error::Boring32Error(
+				throw Error::Boring32Error{
 					"AcquireCredentialsHandleW() failed with code {:#X}",
 					std::source_location::current(),
 					std::stacktrace::current(),
 					status
-				);
+				};
 			}
 			m_credHandle = std::move(creds);
 		}
@@ -67,33 +67,34 @@ namespace Boring32::SSPI
 		{
 			// Non-deprecated version
 			// https://learn.microsoft.com/en-us/windows/win32/api/schannel/ns-schannel-sch_credentials
-			Win32::SCH_CREDENTIALS channelCred{
+			auto channelCred = Win32::SCH_CREDENTIALS{
 				.dwVersion = Win32::_SCH_CREDENTIALS_VERSION,
 				.dwFlags = Win32::_SCH_CRED_NO_DEFAULT_CREDS | Win32::_SCH_CRED_MANUAL_CRED_VALIDATION
 			};
-			Win32::TimeStamp tsExpiry;
+			auto tsExpiry = Win32::TimeStamp{};
 
 			// https://learn.microsoft.com/en-us/windows/win32/secauthn/acquirecredentialshandle--general
-			CredentialUniquePtr creds(new CredHandle{ 0 });
-			Win32::SECURITY_STATUS status = Win32::AcquireCredentialsHandleW(
-				nullptr,
-				const_cast<wchar_t*>(Win32::_UNISP_NAME_W),
-				Win32::_SECPKG_CRED_OUTBOUND,
-				nullptr,
-				&channelCred,
-				nullptr,
-				nullptr,
-				creds.get(),
-				&tsExpiry
-			);
+			auto creds = CredentialUniquePtr(new CredHandle{ 0 });
+			auto status = Win32::SECURITY_STATUS{ 
+				Win32::AcquireCredentialsHandleW(
+					nullptr,
+					const_cast<wchar_t*>(Win32::_UNISP_NAME_W),
+					Win32::_SECPKG_CRED_OUTBOUND,
+					nullptr,
+					&channelCred,
+					nullptr,
+					nullptr,
+					creds.get(),
+					&tsExpiry
+				) };
 			if (status != Win32::Sec_E_OK)
 			{
-				throw Error::Boring32Error(
+				throw Error::Boring32Error{
 					"AcquireCredentialsHandleW() failed with code {:#X}",
 					std::source_location::current(),
 					std::stacktrace::current(),
 					status
-				);
+				};
 			}
 			m_credHandle = std::move(creds);
 		}

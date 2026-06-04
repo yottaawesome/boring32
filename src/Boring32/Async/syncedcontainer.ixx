@@ -61,7 +61,7 @@ export namespace Boring32::Async
 		{
 			auto cs = CriticalSectionLock(m_cs);
 			if (index >= m_protected.size())
-				throw Error::Boring32Error("Invalid index");
+				throw Error::Boring32Error{ "Invalid index" };
 			return func(m_protected[index]);
 		}
 
@@ -86,7 +86,7 @@ export namespace Boring32::Async
 		{
 			auto cs = CriticalSectionLock(m_cs);
 			if (index >= m_protected.size())
-				throw Error::Boring32Error("Invalid index");
+				throw Error::Boring32Error{ "Invalid index" };
 			return m_protected[index];
 		}
 
@@ -156,7 +156,7 @@ export namespace Boring32::Async
 		{
 			auto cs = CriticalSectionLock(m_cs);
 			if (index >= m_protected.size())
-				throw Error::Boring32Error("Invalid index");
+				throw Error::Boring32Error{ "Invalid index" };
 			auto returnVal = m_protected[index];
 			m_protected.erase(m_protected.begin() + index);
 			return returnVal;

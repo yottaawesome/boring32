@@ -19,7 +19,7 @@ namespace Async
 		{
 			auto ofs = std::ofstream(FileNameA.data());
 			if (not ofs.good())
-				throw Boring32::Error::Boring32Error("Failed to create lock file.");
+				throw Boring32::Error::Boring32Error{ "Failed to create lock file." };
 		}
 		auto fileHandle = Win32::CreateFileW(
 			FileNameW.data(),

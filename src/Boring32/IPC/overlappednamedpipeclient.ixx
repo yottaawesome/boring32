@@ -57,7 +57,7 @@ export namespace Boring32::IPC
 		void InternalWrite(std::wstring_view msg, Async::OverlappedIo& oio)
 		{
 			if (not m_handle)
-				throw Error::Boring32Error("No pipe to write to");
+				throw Error::Boring32Error{ "No pipe to write to" };
 
 			oio = Async::OverlappedIo();
 			// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile
@@ -77,7 +77,7 @@ export namespace Boring32::IPC
 		void InternalRead(Win32::DWORD noOfCharacters, Async::OverlappedIo& oio)
 		{
 			if (not m_handle)
-				throw Error::Boring32Error("No pipe to read from");
+				throw Error::Boring32Error{ "No pipe to read from" };
 
 			oio = Async::OverlappedIo();
 			oio.IoBuffer.resize(noOfCharacters);

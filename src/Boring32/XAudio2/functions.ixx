@@ -72,7 +72,7 @@ export namespace Boring32::XAudio2
             }
             dwOffset += dwChunkDataSize;
             if (bytesRead >= dwRIFFDataSize)
-                throw Error::Boring32Error("bytesRead >= dwRIFFDataSize");
+                throw Error::Boring32Error{ "bytesRead >= dwRIFFDataSize" };
         }
     }
 }

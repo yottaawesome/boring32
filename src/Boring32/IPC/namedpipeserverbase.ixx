@@ -95,7 +95,7 @@ export namespace Boring32::IPC
 		void Flush(this auto&& self)
 		{
 			if (not self.m_pipe)
-				throw Error::Boring32Error("No pipe to flush");
+				throw Error::Boring32Error{ "No pipe to flush" };
 			if (not Win32::FlushFileBuffers(self.m_pipe.GetHandle()))
 				throw Error::Win32Error{Win32::GetLastError(), "Flush() failed"};
 		}
@@ -147,7 +147,7 @@ export namespace Boring32::IPC
 		void CancelCurrentThreadIo(this auto&& self)
 		{
 			if (not self.m_pipe)
-				throw Error::Boring32Error("pipe is nullptr");
+				throw Error::Boring32Error{ "Pipe is nullptr" };
 			if (not Win32::CancelIo(self.m_pipe.GetHandle()))
 				throw Error::Win32Error{Win32::GetLastError(), "CancelIo() failed"};
 		}
@@ -166,7 +166,7 @@ export namespace Boring32::IPC
 		auto CancelCurrentProcessIo(this auto&& self, Win32::OVERLAPPED* overlapped)
 		{
 			if (not self.m_pipe)
-				throw Error::Boring32Error("pipe is nullptr");
+				throw Error::Boring32Error{ "Pipe is nullptr" };
 			if (not Win32::CancelIoEx(self.m_pipe.GetHandle(), overlapped))
 				throw Error::Win32Error{Win32::GetLastError(), "CancelIo() failed"};
 		}

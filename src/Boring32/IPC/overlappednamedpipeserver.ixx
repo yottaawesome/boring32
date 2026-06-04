@@ -88,7 +88,7 @@ export namespace Boring32::IPC
 		void Connect(Async::OverlappedOp& oio)
 		{
 			if (not m_pipe)
-				throw Error::Boring32Error("No valid pipe handle to connect");
+				throw Error::Boring32Error{ "No valid pipe handle to connect" };
 			oio = Async::OverlappedOp();
 			bool succeeded = Win32::ConnectNamedPipe(m_pipe.GetHandle(), oio.GetOverlapped());
 			oio.LastError(Win32::GetLastError());
@@ -160,7 +160,7 @@ export namespace Boring32::IPC
 		void InternalWrite(const std::wstring& msg, Async::OverlappedIo& oio)
 		{
 			if (not m_pipe)
-				throw Error::Boring32Error("No pipe to write to");
+				throw Error::Boring32Error{ "No pipe to write to" };
 
 			oio = Async::OverlappedIo();
 			auto succeeded = 
@@ -179,7 +179,7 @@ export namespace Boring32::IPC
 		void InternalRead(const Win32::DWORD noOfCharacters, Async::OverlappedIo& oio)
 		{
 			if (not m_pipe)
-				throw Error::Boring32Error("No pipe to read from");
+				throw Error::Boring32Error{ "No pipe to read from" };
 
 			oio = Async::OverlappedIo();
 			oio.IoBuffer.resize(noOfCharacters);

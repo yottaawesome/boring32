@@ -214,7 +214,7 @@ export namespace Boring32::WinHttp::WebSockets
 		void InternalConnect(const std::wstring& path)
 		{
 			if (m_status != WebSocketStatus::NotInitialised)
-				throw Error::Boring32Error("WebSocket needs to be in NotInitialised state to connect");
+				throw Error::Boring32Error{ "WebSocket needs to be in NotInitialised state to connect" };
 
 			try
 			{

@@ -76,7 +76,7 @@ export namespace Boring32::Async
 		void Update(this auto&& self, Win32::DWORD dueTime, Win32::DWORD period)
 		{
 			if (not m_timerQueueTimer or m_timerQueueTimer == Win32::InvalidHandleValue)
-				throw Error::Boring32Error("m_timerQueueTimer is null");
+				throw Error::Boring32Error{ "m_timerQueueTimer is null" };
 
 			// https://learn.microsoft.com/en-us/windows/win32/api/threadpoollegacyapiset/nf-threadpoollegacyapiset-changetimerqueuetimer
 			auto success = 

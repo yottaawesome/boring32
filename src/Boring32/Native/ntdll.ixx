@@ -19,7 +19,7 @@ export namespace Boring32::Native
 		auto GetTypedProcAddress(this const NativeModule& self, std::string_view fnName) -> T
 		{
 			if (not self.hModule)
-				throw Boring32::Error::Boring32Error("Module is null");
+				throw Boring32::Error::Boring32Error{ "Module is null" };
 			auto fn = reinterpret_cast<T>(Win32::GetProcAddress(self.hModule, fnName.data()));
 			return fn ? fn : throw Error::Win32Error{ Win32::GetLastError(), std::format("GetProcAddress() failed on function {}", fnName) };
 		}

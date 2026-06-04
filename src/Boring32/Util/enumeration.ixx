@@ -38,7 +38,7 @@ export namespace Boring32::Util
 			requires HasASentinel<T>
 		{
 			if (not IsValid(value))
-				throw Error::Boring32Error("Value out of legal enum range");
+				throw Error::Boring32Error{ "Value out of legal enum range" };
 
 			m_value = static_cast<T>(value);
 		}
@@ -63,7 +63,7 @@ export namespace Boring32::Util
 			requires HasSentinelMin<T> or HasSentinelMax<T>
 		{
 			if (not IsValid(value))
-				throw Error::Boring32Error("Value out of legal enum range");
+				throw Error::Boring32Error{ "Value out of legal enum range" };
 
 			m_value = static_cast<T>(value);
 		}

@@ -69,7 +69,7 @@ export namespace Boring32::Util
 		auto filePath = GetCurrentExecutablePath().wstring();
 		Win32::HRESULT result = Win32::PathCchRemoveFileSpec(&filePath[0], filePath.size());
 		if (result != Win32::S_Ok && result != Win32::_S_FALSE)
-			throw Error::COMError(result, "PathCchRemoveFileSpec() failed");
+			throw Error::COMError{result, "PathCchRemoveFileSpec() failed"};
 		filePath = filePath.c_str();
 		return filePath;
 	}
@@ -122,7 +122,7 @@ export namespace Boring32::Util
 		std::wstring rawGuid(64, '\0');
 		int numberOfChars = Win32::StringFromGUID2(guid, &rawGuid[0], 64);
 		if (numberOfChars == 0)
-			throw Error::Boring32Error("StringFromGUID2() failed");
+			throw Error::Boring32Error{ "StringFromGUID2() failed" };
 		rawGuid.resize(numberOfChars - 1); // remove null terminator
 		return rawGuid;
 	}
@@ -132,16 +132,16 @@ export namespace Boring32::Util
 		Win32::GUID guidReference;
 		Win32::HRESULT result = Win32::CoCreateGuid(&guidReference);
 		if (Win32::HrFailed(result))
-			throw Error::COMError(result, "CoCreateGuid() failed");
+			throw Error::COMError{result, "CoCreateGuid() failed"};
 		return GetGuidAsWString(guidReference);
 	}
 
 	auto GenerateGUID() -> GUID
 	{
 		Win32::GUID guid;
-		HRESULT result = Win32::CoCreateGuid(&guid);
+		Win32::HRESULT result = Win32::CoCreateGuid(&guid);
 		if (Win32::HrFailed(result))
-			throw Error::COMError(result, "CoCreateGuid() failed");
+			throw Error::COMError{result, "CoCreateGuid() failed"};
 		return guid;
 	}
 

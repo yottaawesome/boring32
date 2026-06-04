@@ -11,7 +11,7 @@ export namespace Boring32::WinSock
 			const std::string& message,
 			const std::source_location& location = std::source_location::current(),
 			const std::stacktrace trace = std::stacktrace::current()
-		) : Error::Boring32Error(message, location, trace)
+		) : Error::Boring32Error{message, location, trace}
 		{ }
 	};
 }

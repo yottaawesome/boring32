@@ -12,7 +12,7 @@ export namespace Boring32::DataStructures
 			m_uniqueOnly(uniqueOnly)
 		{
 			if (m_maxSize == 0)
-				throw Error::Boring32Error("maxSize is 0");
+				throw Error::Boring32Error{ "maxSize is 0" };
 		}
 
 		constexpr auto Push(const T value) -> CappedStack&
@@ -45,7 +45,7 @@ export namespace Boring32::DataStructures
 		constexpr auto Pop() -> T
 		{
 			if (m_stack.empty())
-				throw Error::Boring32Error("Cannot pop empty stack");
+				throw Error::Boring32Error{ "Cannot pop empty stack" };
 			T value = m_stack.back();
 			m_stack.pop_back();
 			return value;
@@ -77,23 +77,23 @@ export namespace Boring32::DataStructures
 		constexpr auto GetFirst() -> T
 		{
 			if (m_stack.empty())
-				throw Error::Boring32Error("Cannot get from empty stack");
+				throw Error::Boring32Error{ "Cannot get from empty stack" };
 			return m_stack.front();
 		}
 
 		constexpr auto GetCurrent() -> T
 		{
 			if (m_stack.empty())
-				throw Error::Boring32Error("Cannot get from empty stack");
+				throw Error::Boring32Error{ "Cannot get from empty stack" };
 			return m_stack.back();
 		}
 
 		constexpr auto GetFromBack(const size_t backIndex) -> T
 		{
 			if (m_stack.empty())
-				throw Error::Boring32Error("Cannot get from empty stack");
+				throw Error::Boring32Error{ "Cannot get from empty stack" };
 			if((backIndex+1) >= m_stack.size())
-				throw Error::Boring32Error("Invalid index");
+				throw Error::Boring32Error{ "Invalid index" };
 			return m_stack.at(m_stack.size()-1-backIndex);
 		}
 
@@ -117,7 +117,7 @@ export namespace Boring32::DataStructures
 		constexpr auto operator[](const size_t index) const -> T
 		{
 			if (m_stack.empty())
-				throw Error::Boring32Error("Stack is empty");
+				throw Error::Boring32Error{ "Stack is empty" };
 			return m_stack[index];
 		}
 
