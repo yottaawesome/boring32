@@ -216,30 +216,31 @@ export namespace Boring32::FileSystem
 			throw Error::Win32Error{Win32::GetLastError(), "WriteFile() failed"};
 	}
 
-	void ReadFile(
+	auto ReadFile(
 		Win32::HANDLE file,
 		void* const lpBuffer,
-		Win32::DWORD nNumberOfBytesToRead,
-		Win32::DWORD& lpNumberOfBytesRead
-	)
+		Win32::DWORD numberOfBytesToRead
+	) -> Win32::DWORD
 	{
 		if (not file)
 			throw Error::Boring32Error{ "File handle cannot be null" };
 		if (file == Win32::InvalidHandleValue)
 			throw Error::Boring32Error{ "File handle cannot be INVALID_HANDLE_VALUE" };
-		if (nNumberOfBytesToRead == 0)
-			return;
+		if (numberOfBytesToRead == 0)
+			return 0;
 		if (not lpBuffer)
 			throw Error::Boring32Error{ "Buffer cannot be null" };
+		auto numberOfBytesRead = Win32::DWORD{};
 		auto success = 
 			Win32::ReadFile(
 				file,
 				lpBuffer,
-				nNumberOfBytesToRead,
-				&lpNumberOfBytesRead,
+				numberOfBytesToRead,
+				&numberOfBytesRead,
 				nullptr
 			);
 		if (not success)
 			throw Error::Win32Error{Win32::GetLastError(), "ReadFile() failed"};
+		return numberOfBytesRead;
 	}
 }

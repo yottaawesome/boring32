@@ -3,6 +3,7 @@ import std;
 import :win32;
 import :raii;
 import :error;
+import :filesystem.functions;
 
 export namespace Boring32::FileSystem
 {
@@ -32,6 +33,31 @@ export namespace Boring32::FileSystem
 		auto GetFileName(this auto&& self) noexcept -> decltype(auto)
 		{
 			return std::forward_like<decltype(self)>(self.m_fileName);
+		}
+
+		// TODO: Add methods to read/write to the file, and move the file pointer.
+		void WriteFile(std::ranges::range auto&& toWrite)
+		{
+			if (not m_fileHandle)
+				throw Error::Boring32Error{ "File is not open" };
+			if (toWrite.empty())
+				return;
+			auto numberOfBytesWritten = Win32::DWORD{};
+			::Boring32::FileSystem::WriteFile(*m_fileHandle, toWrite.data(), static_cast<Win32::DWORD>(toWrite.size()), &numberOfBytesWritten);
+			if (numberOfBytesWritten != toWrite.size())
+				throw Error::Boring32Error{ "Could not write all bytes to file" };
+		}
+
+		auto ReadFile(Win32::DWORD numberOfBytesToRead) -> std::vector<std::byte>
+		{
+			if (not m_fileHandle)
+				throw Error::Boring32Error{ "File is not open" };
+			if (numberOfBytesToRead == 0)
+				return {};
+			auto buffer = std::vector<std::byte>(numberOfBytesToRead);
+			auto numberOfBytesRead = ::Boring32::FileSystem::ReadFile(*m_fileHandle, buffer.data(), numberOfBytesToRead);
+			buffer.resize(numberOfBytesRead);
+			return buffer;
 		}
 
 		auto GetSize() const -> Win32::DWORD
