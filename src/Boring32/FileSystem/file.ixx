@@ -96,7 +96,7 @@ export namespace Boring32::FileSystem
 			SetEndOfFile();
 		}
 
-		auto TryFlush() -> std::optional<Win32::DWORD>
+		auto TryFlush() noexcept -> std::optional<Win32::DWORD>
 		{
 			if (m_fileHandle and m_accessMode & Win32::GenericWrite and not Win32::FlushFileBuffers(*m_fileHandle))
 				return Win32::GetLastError();
@@ -140,7 +140,7 @@ export namespace Boring32::FileSystem
 			return fileSize;
 		}
 
-		auto GetType() -> Win32::FileType
+		auto GetType() const -> Win32::FileType
 		{
 			if (not m_fileHandle)
 				throw Error::Boring32Error{ "File is not open" };
