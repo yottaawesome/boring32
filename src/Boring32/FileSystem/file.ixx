@@ -39,28 +39,17 @@ export namespace Boring32::FileSystem
 		{
 			// get the size
 			auto outputBuffer = std::wstring{};
-			auto size =
-				Win32::GetFinalPathNameByHandleW(
-					*m_fileHandle,
-					outputBuffer.data(),
-					0,
-					flags
-				);
+			// Returns the size of the buffer, including the null terminator.
+			auto size = Win32::GetFinalPathNameByHandleW(*m_fileHandle, outputBuffer.data(), 0, flags);
 			// Other win32 functions return ERROR_INSUFFICIENT_BUFFER, so GetFinalPathNameByHandleW() returning NotEnoughMemory is unusual.
 			if (auto lastError = Win32::GetLastError(); lastError != Win32::ErrorCodes::NotEnoughMemory)
 				throw Error::Win32Error{ lastError, "GetFinalPathNameByHandleW() failed" };
-			// Returns the size of the buffer, including the null terminator.
-			outputBuffer.resize(size-1);
-			size = 
-				Win32::GetFinalPathNameByHandleW(
-					*m_fileHandle,
-					outputBuffer.data(),
-					size,
-					0
-				);
+			// Size includes the null terminator for the initial call.
+			outputBuffer.resize(size);
+			// Size does not include the null terminator on success.
+			size = Win32::GetFinalPathNameByHandleW(*m_fileHandle, outputBuffer.data(), size, 0);
 			if (size == 0)
 				throw Error::Win32Error{ Win32::GetLastError(), "GetFinalPathNameByHandleW() failed" };
-			// does not include the null terminator, so size is the number of characters in the path.
 			outputBuffer.resize(size);
 			return outputBuffer;
 		}
