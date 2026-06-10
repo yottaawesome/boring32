@@ -170,6 +170,10 @@ export namespace Boring32::Win32
 		::IXAudio2SourceVoice,
 		::Microsoft::WRL::ComPtr,
 		::LPBYTE,
+		::SetFilePointer,
+		::SetFilePointerEx,
+		::SetEndOfFile,
+		::GetFinalPathNameByHandleW,
 		::GetFileSize,
 		::GetFileSizeEx,
 		::LockFile,
@@ -486,6 +490,25 @@ export namespace Boring32::Win32
 		;
 
 	constexpr auto InvalidFileSize = INVALID_FILE_SIZE;
+	enum class FilePointerMoveMethod : DWORD
+	{
+		Begin = FILE_BEGIN,
+		Current = FILE_CURRENT,
+		End = FILE_END
+	};
+
+	enum FilenameFlags
+	{
+		Normalized = FILE_NAME_NORMALIZED,
+		Opened = FILE_NAME_OPENED,
+	};
+	enum VolumeNameFlags
+	{
+		DosDevice = VOLUME_NAME_DOS,
+		Guid = VOLUME_NAME_GUID,
+		Nt = VOLUME_NAME_NT,
+		None = VOLUME_NAME_NONE
+	};
 
 	enum class FileType : DWORD
 	{
@@ -980,6 +1003,7 @@ export namespace Boring32::Win32
 		constexpr auto NoMoreFiles = ERROR_NO_MORE_FILES;
 		constexpr auto NotFound = ERROR_NOT_FOUND;
 		constexpr auto NotLocked = ERROR_NOT_LOCKED;
+		constexpr auto NotEnoughMemory = ERROR_NOT_ENOUGH_MEMORY;
 	}
 
 	namespace NTStatus // winnt.h

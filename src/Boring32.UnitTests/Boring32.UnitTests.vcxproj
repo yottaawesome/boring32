@@ -295,6 +295,7 @@
     <ClCompile Include="Error\functions.cpp" />
     <ClCompile Include="Error\ntstatuserror.cpp" />
     <ClCompile Include="Error\win32error.cpp" />
+    <ClCompile Include="FileSystem\file.cpp" />
     <ClCompile Include="Ipc\mailslotserver.cpp" />
     <ClCompile Include="Networking\api.cpp" />
     <ClCompile Include="MSI\functions.cpp" />
@@ -337,6 +338,9 @@
     <ProjectReference Include="..\Boring32\Boring32.vcxproj">
       <Project>{32c00709-6709-46d8-9167-4456047a2060}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="testfile.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
