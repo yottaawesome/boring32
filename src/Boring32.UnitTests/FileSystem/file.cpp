@@ -51,19 +51,27 @@ namespace FileSystem
 		TEST_METHOD(TestReadWriteClearFile)
 		{
 			auto file = Boring32::FileSystem::File{ L"testfile.txt",  Boring32::Win32::GenericWrite | Boring32::Win32::GenericRead };
-			auto data = std::vector<std::byte>{ static_cast<std::byte>('H'), static_cast<std::byte>('e'), static_cast<std::byte>('l'), static_cast<std::byte>('l'), static_cast<std::byte>('o') };
-			file.WriteFile(data);
+
+			constexpr auto stringToWrite = std::string_view{ "Hello, world!" };
+
+			auto dataToWrite = stringToWrite 
+				| std::ranges::views::transform([](char c) { return static_cast<std::byte>(c); }) 
+				| std::ranges::to<std::vector<std::byte>>();
+
+			file.WriteFile(dataToWrite);
 			file.Flush();
 
 			file.SetFilePointer(0, Boring32::Win32::FilePointerMoveMethod::Begin);
 			auto size = file.GetSize();
-			auto readData = file.ReadFile(size);
+			auto dataReadBack = file.ReadFile(size);
 
-			auto string = readData | std::ranges::views::transform([](std::byte b) { return static_cast<char>(b); }) | std::ranges::to<std::string>();
+			auto stringReadBack = dataReadBack 
+				| std::ranges::views::transform([](std::byte b) { return static_cast<char>(b); }) 
+				| std::ranges::to<std::string>();
 
 			file.Clear();
-			Assert::IsTrue(string == "Hello");
-			Assert::IsTrue(size == data.size());
+			Assert::IsTrue(stringReadBack == stringToWrite);
+			Assert::IsTrue(size == dataToWrite.size());
 			Assert::IsTrue(file.GetSize() == 0);
 		}
 	};

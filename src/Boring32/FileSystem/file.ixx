@@ -79,6 +79,16 @@ export namespace Boring32::FileSystem
 				throw Error::Win32Error{ Win32::GetLastError(), "SetFilePointer() failed" };
 		}
 
+		void SetPointerToEnd()
+		{
+			SetFilePointer(0, Win32::FilePointerMoveMethod::End);
+		}
+
+		void SetPointerToBeginning()
+		{
+			SetFilePointer(0, Win32::FilePointerMoveMethod::Begin);
+		}
+
 		void Clear()
 		{
 			SetFilePointer(0, Win32::FilePointerMoveMethod::Begin);
