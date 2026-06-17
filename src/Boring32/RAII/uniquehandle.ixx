@@ -5,8 +5,8 @@ import :error;
 
 export namespace Boring32::RAII
 {
-	/// Exclusive-ownership RAII wrapper for Win32 HANDLEs.
-	/// Move-only; analogous to std::unique_ptr.
+	// Exclusive-ownership RAII wrapper for Win32 HANDLEs.
+	// Move-only; analogous to std::unique_ptr.
 	class UniqueHandle final
 	{
 	public:
@@ -22,21 +22,18 @@ export namespace Boring32::RAII
 		{ }
 
 		UniqueHandle(const UniqueHandle&) = delete;
-		UniqueHandle& operator=(const UniqueHandle&) = delete;
+		auto operator=(const UniqueHandle&) -> UniqueHandle& = delete;
 
 		UniqueHandle(UniqueHandle&& other) noexcept
-			: m_handle(other.m_handle)
-		{
-			other.m_handle = nullptr;
-		}
+			: m_handle(std::exchange(other.m_handle, nullptr))
+		{ }
 
 		auto operator=(UniqueHandle&& other) noexcept -> UniqueHandle&
 		{
 			if (std::addressof(other) != this)
 			{
 				Close();
-				m_handle = other.m_handle;
-				other.m_handle = nullptr;
+				m_handle = std::exchange(other.m_handle, nullptr);
 			}
 			return *this;
 		}
@@ -93,9 +90,7 @@ export namespace Boring32::RAII
 
 		auto DuplicateCurrentHandle() const -> Win32::HANDLE
 		{
-			return IsValidValue(m_handle)
-				? UniqueHandle::DuplicatePassedHandle(m_handle, IsInheritable())
-				: nullptr;
+			return IsValidValue(m_handle) ? UniqueHandle::DuplicatePassedHandle(m_handle, IsInheritable()) : nullptr;
 		}
 
 		auto IsInheritable() const -> bool
@@ -107,9 +102,8 @@ export namespace Boring32::RAII
 
 		void Close() noexcept
 		{
-			if (IsValidValue(m_handle))
-				if (not Win32::CloseHandle(m_handle))
-					std::wcerr << L"Failed to close handle\n";
+			if (IsValidValue(m_handle) and not Win32::CloseHandle(m_handle))
+				std::wcerr << L"Failed to close handle\n";
 			m_handle = nullptr;
 		}
 
@@ -159,7 +153,7 @@ export namespace Boring32::RAII
 				return Win32::InvalidHandleValue;
 
 			auto duplicateHandle = Win32::HANDLE{};
-			bool succeeded = Win32::DuplicateHandle(
+			auto succeeded = Win32::DuplicateHandle(
 				Win32::GetCurrentProcess(),
 				handle,
 				Win32::GetCurrentProcess(),
