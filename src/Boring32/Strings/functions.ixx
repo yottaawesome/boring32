@@ -362,14 +362,11 @@ export namespace Boring32::Strings
 	// an std::exception and returns something convertible to either 
 	// a string or wstring.
 	template<typename T>
+	concept IsStringDefault = std::convertible_to<T, std::string> or std::convertible_to<T, std::wstring>;
+
+	template<typename T>
 	concept IsExpectedInvocable =
-		std::is_null_pointer_v<T>
-		or std::is_nothrow_invocable_v<T, const std::exception&>
-		and (
-			requires(T t) { { t(std::exception{}) } -> std::convertible_to<std::string>; }
-			or
-			requires(T t) { { t(std::exception{}) } -> std::convertible_to<std::wstring>; }
-		);
+		std::is_null_pointer_v<T> or requires(T t, const std::exception& e) { { t(e) } noexcept -> IsStringDefault; };
 
 	template<IsExpectedInvocable auto TDefault = nullptr>
 	[[nodiscard]]
