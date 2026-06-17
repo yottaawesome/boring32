@@ -17,7 +17,7 @@ export namespace Boring32::Async
 		WaitableAddress() = default;
 		WaitableAddress(const WaitableAddress& other) = delete;
 		WaitableAddress(WaitableAddress&& other) noexcept = delete;
-		WaitableAddress(const Win32::DWORD defaultValue, const Win32::DWORD waitValue)
+		WaitableAddress(Win32::DWORD defaultValue, Win32::DWORD waitValue)
 			: m_defaultValue(defaultValue), m_waitValue(waitValue)
 		{ }
 
@@ -29,7 +29,7 @@ export namespace Boring32::Async
 			return Wait(Win32::Infinite);
 		}
 
-		auto Wait(const Win32::DWORD millis) const -> bool
+		auto Wait(Win32::DWORD millis) const -> bool
 		{
 			// https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitonaddress
 			auto waitSucceeded = 
@@ -47,7 +47,7 @@ export namespace Boring32::Async
 			throw Error::Win32Error{lastError, "WaitOnAddress() failed"};
 		}
 
-		void SetValue(const Win32::DWORD newValue, const WakeType wakeType)
+		void SetValue(Win32::DWORD newValue, WakeType wakeType)
 		{
 			m_waitValue = newValue;
 			switch (wakeType)

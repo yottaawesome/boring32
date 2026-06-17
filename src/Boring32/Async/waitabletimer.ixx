@@ -81,12 +81,12 @@ export namespace Boring32::Async
 		///	the timer is signaled once, else if it is greater than zero, the
 		///	timer is periodic. A periodic timer automatically reactivates
 		///	each time the period elapses, until the timer is canceled.
-		auto SetTimerInNanos(
+		void SetTimerInNanos(
 			const int64_t hundredNanosecondIntervals, 
 			const Win32::UINT period,
 			const Win32::PTIMERAPCROUTINE callback,
 			void* param
-		) -> void
+		)
 		{
 			if (not m_handle)
 				throw Error::Boring32Error{ "Timer handle is null" };
@@ -110,12 +110,12 @@ export namespace Boring32::Async
 			return false;
 		}
 
-		auto SetTimerInMillis(
-			const int64_t ms,
+		void SetTimerInMillis(
+			const std::int64_t ms,
 			const Win32::UINT period,
 			const Win32::PTIMERAPCROUTINE callback,
 			void* param
-		) -> void
+		)
 		{
 			if (not m_handle)
 				throw Error::Boring32Error{ "Timer handle is null" };
@@ -123,7 +123,7 @@ export namespace Boring32::Async
 		}
 
 		auto SetTimerInMillis(
-			int64_t milliseconds,
+			std::int64_t milliseconds,
 			Win32::UINT period,
 			const Win32::PTIMERAPCROUTINE callback,
 			void* param,
@@ -147,7 +147,7 @@ export namespace Boring32::Async
 		}
 
 		template<typename T>
-		auto WaitOnTimer(Concepts::Duration auto time, bool alertable, std::nothrow_t) -> bool
+		auto TryWaitOnTimer(Concepts::Duration auto time, bool alertable) -> bool
 		try
 		{
 			if (not m_handle)
@@ -159,14 +159,14 @@ export namespace Boring32::Async
 			return false;
 		}
 
-		auto WaitOnTimer(const Win32::DWORD millis, const bool alertable) -> bool
+		auto WaitOnTimer(Win32::DWORD millis, bool alertable) -> bool
 		{
 			if (not m_handle)
 				throw Error::Boring32Error{ "Timer handle is null" };
 			return WaitFor(m_handle, millis, alertable) == Win32::WaitResult::Success;
 		}
 
-		auto WaitOnTimer(Win32::DWORD millis, bool alertable, std::nothrow_t) noexcept -> bool
+		auto TryWaitOnTimer(Win32::DWORD millis, bool alertable) noexcept -> bool
 		try
 		{
 			return WaitOnTimer(millis, alertable);
@@ -176,7 +176,7 @@ export namespace Boring32::Async
 			return false;
 		}
 
-		auto CancelTimer() -> void
+		void CancelTimer()
 		{
 			if (not m_handle)
 				throw Error::Boring32Error{ "Timer handle is null" };
@@ -213,13 +213,13 @@ export namespace Boring32::Async
 		}
 
 		///	Frees all native resources associated with this timer.
-		auto Close() -> void
+		void Close()
 		{
 			m_handle = nullptr;
 		}
 
-		protected:
-		auto Move(WaitableTimer& other) noexcept -> void
+	protected:
+		void Move(WaitableTimer& other) noexcept
 		{
 			Close();
 			m_name = std::move(other.m_name);
@@ -227,7 +227,7 @@ export namespace Boring32::Async
 			m_isManualReset = other.m_isManualReset;
 		}
 
-		auto Copy(const WaitableTimer& other) -> void
+		void Copy(const WaitableTimer& other)
 		{
 			Close();
 			m_name = other.m_name;
@@ -235,7 +235,7 @@ export namespace Boring32::Async
 			m_isManualReset = other.m_isManualReset;
 		}
 
-		auto InternalCreate(const bool isInheritable) -> void
+		void InternalCreate(const bool isInheritable)
 		{
 			//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createwaitabletimerw
 			m_handle = Win32::CreateWaitableTimerW(
@@ -248,17 +248,16 @@ export namespace Boring32::Async
 			m_handle.SetInheritability(isInheritable);
 		}
 
-		auto InternalSetTimer(
-			const int64_t time, 
-			const Win32::UINT period,
+		void InternalSetTimer(
+			std::int64_t time, 
+			Win32::UINT period,
 			const Win32::PTIMERAPCROUTINE callback,
 			void* param
-		) -> void
+		)
 		{
-			Win32::LARGE_INTEGER liDueTime;
-			liDueTime.QuadPart = time;
+			auto liDueTime = Win32::LARGE_INTEGER{.QuadPart = time};
 			//https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-setwaitabletimer
-			bool succeeded = Win32::SetWaitableTimer(
+			auto succeeded = Win32::SetWaitableTimer(
 				m_handle.GetHandle(),
 				&liDueTime,
 				period,

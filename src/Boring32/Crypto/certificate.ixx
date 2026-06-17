@@ -88,13 +88,13 @@ export namespace Boring32::Crypto
 		}
 
 		[[nodiscard]] 
-		auto GetFormattedSubject(const Win32::DWORD format) const -> std::wstring
+		auto GetFormattedSubject(Win32::DWORD format) const -> std::wstring
 		{
 			return FormatAsnNameBlob(m_certContext->pCertInfo->Subject, format);
 		}
 
 		[[nodiscard]] 
-		auto GetFormattedIssuer(const Win32::DWORD format) const -> std::wstring
+		auto GetFormattedIssuer(Win32::DWORD format) const -> std::wstring
 		{
 			return FormatAsnNameBlob(m_certContext->pCertInfo->Issuer, format);
 		}

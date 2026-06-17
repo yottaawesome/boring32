@@ -9,8 +9,9 @@ export namespace Boring32::Crypto
 {
 	using ChainVerificationPolicy = Win32::ChainVerificationPolicy;
 
-	struct CertificateChain final
+	class CertificateChain final
 	{
+	public:
 		~CertificateChain()
 		{
 			Close();
@@ -75,16 +76,16 @@ export namespace Boring32::Crypto
 			if (not m_chainContext)
 				throw Error::Boring32Error{ "m_chainContext is null" };
 
-			Win32::CERT_CHAIN_POLICY_PARA para{
-				.cbSize = sizeof(para),
+			auto para = Win32::CERT_CHAIN_POLICY_PARA{
+				.cbSize = sizeof(Win32::CERT_CHAIN_POLICY_PARA),
 				.dwFlags = 0,
 				.pvExtraPolicyPara = nullptr
 			};
-			Win32::CERT_CHAIN_POLICY_STATUS status{
-				.cbSize = sizeof(status)
+			auto status = Win32::CERT_CHAIN_POLICY_STATUS{
+				.cbSize = sizeof(Win32::CERT_CHAIN_POLICY_STATUS)
 			};
 			// https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certverifycertificatechainpolicy
-			bool succeeded = Win32::CertVerifyCertificateChainPolicy(
+			auto succeeded = Win32::CertVerifyCertificateChainPolicy(
 				reinterpret_cast<Win32::PCSTR>(policy),
 				m_chainContext,
 				&para,
@@ -100,7 +101,7 @@ export namespace Boring32::Crypto
 			return m_chainContext;
 		}
 
-		auto GetCertChainAt(const Win32::DWORD chainIndex) const -> std::vector<Certificate>
+		auto GetCertChainAt(Win32::DWORD chainIndex) const -> std::vector<Certificate>
 		{
 			if (not m_chainContext)
 				throw Error::Boring32Error{ "m_chainContext is null" };
@@ -114,17 +115,13 @@ export namespace Boring32::Crypto
 					chainIndex
 				};
 
-			std::vector<Certificate> certsInChain;
-			Win32::CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
+			auto certsInChain = std::vector<Certificate>{};
+			auto simpleChain = (Win32::CERT_SIMPLE_CHAIN*)(m_chainContext->rgpChain[chainIndex]);
 			// This probably should never happen, but guard just in case
-			if (not simpleChain) throw Error::Boring32Error{
-				"The simpleChain at {} was unexpectedly null",
-				std::source_location::current(),
-				std::stacktrace::current(),
-				chainIndex
-			};
+			if (not simpleChain) 
+				throw Error::Boring32Error{ std::format("The simpleChain at {} was unexpectedly null",chainIndex) };
 
-			for (Win32::DWORD certIndexInChain = 0; certIndexInChain < simpleChain->cElement; certIndexInChain++)
+			for (auto certIndexInChain = Win32::DWORD{}; certIndexInChain < simpleChain->cElement; certIndexInChain++)
 				certsInChain.emplace_back(simpleChain->rgpElement[certIndexInChain]->pCertContext, false);
 
 			return certsInChain;
@@ -135,24 +132,13 @@ export namespace Boring32::Crypto
 			if (not m_chainContext)
 				throw Error::Boring32Error{ "m_chainContext is null" };
 			if (chainIndex >= m_chainContext->cChain)
-				throw Error::Boring32Error{
-					"Expected chainIndex to be less than {} but got an index of {}",
-					std::source_location::current(),
-					std::stacktrace::current(),
-					m_chainContext->cChain,
-					chainIndex
-				};
+				throw Error::Boring32Error{ std::format("Expected chainIndex to be less than {} but got an index of {}", m_chainContext->cChain, chainIndex) };
 
-			Win32::CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
+			auto simpleChain = (Win32::CERT_SIMPLE_CHAIN*)(m_chainContext->rgpChain[chainIndex]);
 			if (not simpleChain)
 				throw Error::Boring32Error{ "simpleChain is null" };
-			if (certIndex >= simpleChain->cElement) throw Error::Boring32Error{
-				"Expected certIndex to be less than {} but got an index of {}",
-				std::source_location::current(),
-				std::stacktrace::current(),
-				simpleChain->cElement,
-				certIndex
-			};
+			if (certIndex >= simpleChain->cElement) 
+				throw Error::Boring32Error{ std::format("Expected certIndex to be less than {} but got an index of {}", simpleChain->cElement, certIndex) };
 
 			return { simpleChain->rgpElement[certIndex]->pCertContext, false };
 		}
@@ -162,15 +148,9 @@ export namespace Boring32::Crypto
 			if (not m_chainContext)
 				throw Error::Boring32Error{ "m_chainContext is null" };
 			if (chainIndex >= m_chainContext->cChain)
-				throw Error::Boring32Error{
-					"Expected index to be less than {} but got an index of {}",
-					std::source_location::current(),
-					std::stacktrace::current(),
-					m_chainContext->cChain,
-					chainIndex
-				};
+				throw Error::Boring32Error{ std::format("Expected index to be less than {} but got an index of {}", m_chainContext->cChain, chainIndex) };
 
-			Win32::CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
+			auto simpleChain = (Win32::CERT_SIMPLE_CHAIN*)(m_chainContext->rgpChain[chainIndex]);
 			if (not simpleChain)
 				throw Error::Boring32Error{ "simpleChain is null" };
 			if (simpleChain->cElement == 0)
@@ -183,15 +163,9 @@ export namespace Boring32::Crypto
 			if (not m_chainContext)
 				throw Error::Boring32Error{ "m_chainContext is null" };
 			if (chainIndex >= m_chainContext->cChain)
-				throw Error::Boring32Error{
-					"Expected index to be less than {} but got an index of {}",
-					std::source_location::current(),
-					std::stacktrace::current(),
-					m_chainContext->cChain,
-					chainIndex
-				};
+				throw Error::Boring32Error{ std::format("Expected index to be less than {} but got an index of {}", m_chainContext->cChain, chainIndex) };
 
-			Win32::CERT_SIMPLE_CHAIN* simpleChain = m_chainContext->rgpChain[chainIndex];
+			auto simpleChain = (Win32::CERT_SIMPLE_CHAIN*)(m_chainContext->rgpChain[chainIndex]);
 			if (not simpleChain)
 				throw Error::Boring32Error{ "simpleChain is null" };
 			if (simpleChain->cElement == 0)
@@ -218,7 +192,6 @@ export namespace Boring32::Crypto
 			Close();
 			if (other.m_chainContext)
 				m_chainContext = Win32::CertDuplicateCertificateChain(other.m_chainContext);
-
 			return *this;
 		}
 
@@ -230,7 +203,6 @@ export namespace Boring32::Crypto
 			Close();
 			m_chainContext = other.m_chainContext;
 			other.m_chainContext = nullptr;
-
 			return *this;
 		}
 
