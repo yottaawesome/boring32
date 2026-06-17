@@ -6,8 +6,9 @@ import :crypto.functions;
 
 export namespace Boring32::Crypto
 {
-	struct Certificate final
+	class Certificate final
 	{
+	public:
 		enum class CertTimeValidity : long
 		{
 			NotYetValid = -1,
@@ -106,7 +107,7 @@ export namespace Boring32::Crypto
 				throw Error::Boring32Error{ "m_certContext is nullptr" };
 			if (not m_certContext->pCertInfo)
 				return {};
-			Win32::CERT_NAME_BLOB* blob = &m_certContext->pCertInfo->Issuer;
+			auto blob = (Win32::CERT_NAME_BLOB*)(&m_certContext->pCertInfo->Issuer);
 			return {
 				reinterpret_cast<std::byte*>(blob->pbData),
 				reinterpret_cast<std::byte*>(blob->pbData + blob->cbData)
@@ -120,7 +121,7 @@ export namespace Boring32::Crypto
 				throw Error::Boring32Error{ "m_certContext is nullptr" };
 			if (not m_certContext->pCertInfo)
 				return {};
-			Win32::CERT_NAME_BLOB* blob = &m_certContext->pCertInfo->Subject;
+			auto blob = (Win32::CERT_NAME_BLOB*)(&m_certContext->pCertInfo->Subject);
 			return {
 				reinterpret_cast<std::byte*>(blob->pbData),
 				reinterpret_cast<std::byte*>(blob->pbData + blob->cbData)
@@ -136,11 +137,8 @@ export namespace Boring32::Crypto
 		[[nodiscard]] 
 		auto GetSignatureHashCngAlgorithm() const -> std::wstring
 		{
-			std::vector<std::byte> bytes = InternalCertGetProperty(Win32::CertSignHasCngAlgPropId);
-			std::wstring result(
-				reinterpret_cast<wchar_t*>(&bytes[0]),
-				bytes.size() / sizeof(wchar_t)
-			);
+			auto bytes = std::vector<std::byte>{InternalCertGetProperty(Win32::CertSignHasCngAlgPropId)};
+			auto result = std::wstring(reinterpret_cast<wchar_t*>(&bytes[0]), bytes.size() / sizeof(wchar_t));
 			if (not result.empty())
 				result.pop_back(); // remove added terminal null
 			return result;
@@ -149,7 +147,7 @@ export namespace Boring32::Crypto
 		[[nodiscard]] 
 		auto Detach() noexcept -> Win32::PCCERT_CONTEXT
 		{
-			Win32::PCCERT_CONTEXT temp = m_certContext;
+			auto temp = Win32::PCCERT_CONTEXT{ m_certContext };
 			m_certContext = nullptr;
 			return temp;
 		}
@@ -169,7 +167,7 @@ export namespace Boring32::Crypto
 				throw Error::Boring32Error{ "m_certContext is nullptr" };
 
 			// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certverifytimevalidity
-			long value = Win32::CertVerifyTimeValidity(ft, m_certContext->pCertInfo);
+			auto value = Win32::LONG{ Win32::CertVerifyTimeValidity(ft, m_certContext->pCertInfo) };
 			return static_cast<Certificate::CertTimeValidity>(value);
 		}
 
@@ -195,10 +193,9 @@ export namespace Boring32::Crypto
 			if (not m_certContext)
 				throw Error::Boring32Error{ "m_certContext is nullptr" };
 			// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certgetpublickeylength
-			Win32::DWORD length = Win32::CertGetPublicKeyLength(
-				Win32::X509AsnEncoding | Win32::Pkcs7AsnEncoding,
-				&m_certContext->pCertInfo->SubjectPublicKeyInfo
-			);
+			auto length = Win32::DWORD{
+				Win32::CertGetPublicKeyLength(Win32::X509AsnEncoding | Win32::Pkcs7AsnEncoding, &m_certContext->pCertInfo->SubjectPublicKeyInfo)
+			};
 			if (length == 0)
 				throw Error::Win32Error{Win32::GetLastError(), "CertGetPublicKeyLength() failed"};
 			return length;
@@ -207,20 +204,16 @@ export namespace Boring32::Crypto
 		[[nodiscard]] 
 		auto Duplicate() const noexcept -> Win32::PCCERT_CONTEXT
 		{
-			return m_certContext
-				? Win32::CertDuplicateCertificateContext(m_certContext)
-				: nullptr;
+			return m_certContext ? Win32::CertDuplicateCertificateContext(m_certContext) : nullptr;
 		}
 
 		[[nodiscard]] 
 		auto GetHash() const -> std::wstring
 		{
-			return m_certContext 
-				? ToBase64WString(InternalCertGetProperty(Win32::_CERT_HASH_PROP_ID))
-				: L"";
+			return m_certContext ? ToBase64WString(InternalCertGetProperty(Win32::_CERT_HASH_PROP_ID)) : L"";
 		}
 
-		private:
+	private:
 		auto Copy(const Certificate& other) -> Certificate&
 		{
 			if (this == &other)
@@ -244,17 +237,18 @@ export namespace Boring32::Crypto
 			if (not m_certContext)
 				throw Error::Boring32Error{ "m_certContext is nullptr" };
 
-			Win32::DWORD sizeInBytes = 0;
-			bool succeeded = Win32::CertGetCertificateContextProperty(
-				m_certContext,
-				property,
-				nullptr,
-				&sizeInBytes
-			);
+			auto sizeInBytes = Win32::DWORD{};
+			auto succeeded = 
+				Win32::CertGetCertificateContextProperty(
+					m_certContext,
+					property,
+					nullptr,
+					&sizeInBytes
+				);
 			if (not succeeded)
 				throw Error::Win32Error{Win32::GetLastError(), "CertGetCertificateContextProperty() failed (1)"};
 
-			std::vector<std::byte> returnValue(sizeInBytes);
+			auto returnValue = std::vector<std::byte>(sizeInBytes);
 			succeeded = Win32::CertGetCertificateContextProperty(
 				m_certContext,
 				property,

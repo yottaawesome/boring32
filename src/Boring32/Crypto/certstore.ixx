@@ -26,8 +26,9 @@ export namespace Boring32::Crypto
 		InMemory
 	};
 
-	struct CertStore final
+	class CertStore final
 	{
+	public:
 		// The Six
 		~CertStore()
 		{
@@ -63,19 +64,17 @@ export namespace Boring32::Crypto
 			InternalOpen();
 		}
 
-		CertStore(
-			std::wstring storeName, 
-			const CertStoreType storeType
-		) : m_storeName(std::move(storeName)),
-			m_storeType(storeType)
+		CertStore(std::wstring storeName, CertStoreType storeType) 
+			: m_storeName(std::move(storeName))
+			, m_storeType(storeType)
 		{
 			InternalOpen();
 		}
 
 		CertStore(
 			const Win32::HCERTSTORE certStore, 
-			const CertStoreType storeType,
-			const bool ownedExclusively
+			CertStoreType storeType,
+			bool ownedExclusively
 		) : m_certStore(certStore),
 			m_storeType(storeType)
 		{
@@ -89,25 +88,21 @@ export namespace Boring32::Crypto
 
 		CertStore(
 			const Win32::HCERTSTORE certStore,
-			const CertStoreType storeType, 
-			const bool ownedExclusively,
-			const CertStoreCloseOptions closeOptions
+			CertStoreType storeType, 
+			bool ownedExclusively,
+			CertStoreCloseOptions closeOptions
 		) : m_certStore(certStore),
 			m_closeOptions(closeOptions),
 			m_storeType(storeType)
 		{
 			if (certStore)
-			{
-				m_certStore = ownedExclusively
-					? certStore
-					: Win32::CertDuplicateStore(certStore);
-			}
+				m_certStore = ownedExclusively ? certStore : Win32::CertDuplicateStore(certStore);
 		}
 
 		CertStore(
 			std::wstring storeName,
-			const CertStoreType storeType,
-			const CertStoreCloseOptions closeOptions
+			CertStoreType storeType,
+			CertStoreCloseOptions closeOptions
 		) : m_storeName(std::move(storeName)),
 			m_closeOptions(closeOptions),
 			m_storeType(storeType)
@@ -131,9 +126,9 @@ export namespace Boring32::Crypto
 				return;
 			// See https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certclosestore
 			// for additional resource notes under remarks
-			if (not Win32::CertCloseStore(m_certStore, (Win32::DWORD)m_closeOptions))
+			if (not Win32::CertCloseStore(m_certStore, static_cast<Win32::DWORD>(m_closeOptions)))
 			{
-				Error::Win32Error error(Win32::GetLastError(), "CertCloseStore() failed");
+				auto error = Error::Win32Error{ Win32::GetLastError(), "CertCloseStore() failed" };
 				std::wcerr << error.what() << std::endl;
 			}
 			m_certStore = nullptr;
@@ -146,7 +141,7 @@ export namespace Boring32::Crypto
 		}
 
 		[[nodiscard]] 
-		auto GetName() const noexcept -> const std::wstring&
+		auto GetName() const noexcept -> std::wstring
 		{
 			return m_storeName;
 		}
@@ -157,8 +152,8 @@ export namespace Boring32::Crypto
 			if (not m_certStore)
 				throw Error::Boring32Error{ "m_certStore is null" };
 
-			std::vector<Certificate> results;
-			Win32::PCCERT_CONTEXT currentCert = nullptr;
+			auto results = std::vector<Certificate>{};
+			auto currentCert = Win32::PCCERT_CONTEXT{};
 			// The cert is automatically freed by the next call to CertEnumCertificatesInStore
 			// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certenumcertificatesinstore
 			while (currentCert = Win32::CertEnumCertificatesInStore(m_certStore, currentCert))
@@ -166,12 +161,12 @@ export namespace Boring32::Crypto
 				// I'm not sure if this intermediate error check is necessary.
 				// The MSDN sample doesn't do an error check, but I've added it
 				// just in case.
-				if (Win32::DWORD lastError = Win32::GetLastError(); lastError != Win32::ErrorCodes::FileNotFound)
+				if (auto lastError = Win32::GetLastError(); lastError != Win32::ErrorCodes::FileNotFound)
 					throw Error::Win32Error{lastError, "CertEnumCertificatesInStore() failed"};
 				results.emplace_back(currentCert, false);
 			}
 			auto lastError = Win32::GetLastError();
-			if (lastError != Win32::CryptoErrorCodes::NotFound && lastError != Win32::ErrorCodes::NoMoreFiles)
+			if (lastError != Win32::CryptoErrorCodes::NotFound and lastError != Win32::ErrorCodes::NoMoreFiles)
 				throw Error::Win32Error{lastError, "CertEnumCertificatesInStore() failed"};
 
 			return results;
@@ -185,7 +180,7 @@ export namespace Boring32::Crypto
 			while (currentCert = Win32::CertEnumCertificatesInStore(m_certStore, currentCert))
 			{
 				cert.Attach(currentCert);
-				std::wstring name = cert.GetFormattedSubject(Win32::CertX500NameStr);
+				auto name = std::wstring{cert.GetFormattedSubject(Win32::CertX500NameStr)};
 				if (name == subjectRdn)
 					return cert;
 
@@ -194,8 +189,7 @@ export namespace Boring32::Crypto
 				// GetFormattedSubjectName()
 				auto dummy = cert.Detach();
 			}
-			auto lastError = Win32::GetLastError();
-			if (lastError != Win32::CryptoErrorCodes::NotFound && lastError != Win32::ErrorCodes::NoMoreFiles)
+			if (auto lastError = Win32::GetLastError(); lastError != Win32::CryptoErrorCodes::NotFound and lastError != Win32::ErrorCodes::NoMoreFiles)
 				throw Error::Win32Error{lastError, "CertEnumCertificatesInStore() failed"};
 
 			return {};
@@ -218,8 +212,7 @@ export namespace Boring32::Crypto
 						if (subjectCn == Strings::Replace(token, L"CN=", L""))
 							return cert;
 			}
-			auto lastError = Win32::GetLastError();
-			if (lastError != Win32::CryptoErrorCodes::NotFound && lastError != Win32::ErrorCodes::NoMoreFiles)
+			if (auto lastError = Win32::GetLastError(); lastError != Win32::CryptoErrorCodes::NotFound and lastError != Win32::ErrorCodes::NoMoreFiles)
 				throw Error::Win32Error{lastError, "CertEnumCertificatesInStore() failed"};
 
 			return {};
@@ -240,8 +233,8 @@ export namespace Boring32::Crypto
 		[[nodiscard]] 
 		auto GetCertByExactSubject(const std::wstring& subjectName) const -> Certificate
 		{
-			std::vector<std::byte> encodedBytes = EncodeAsnString(subjectName);
-			const Win32::CERT_NAME_BLOB blob{
+			auto encodedBytes = std::vector<std::byte>{EncodeAsnString(subjectName)};
+			auto blob = Win32::CERT_NAME_BLOB{
 				.cbData = static_cast<Win32::DWORD>(encodedBytes.size()),
 				.pbData = reinterpret_cast<Win32::BYTE*>(&encodedBytes[0])
 			};
@@ -251,7 +244,7 @@ export namespace Boring32::Crypto
 		[[nodiscard]] 
 		auto GetCertByExactSubject(const std::vector<std::byte>& subjectName) const -> Certificate
 		{
-			Win32::CERT_NAME_BLOB blob{
+			auto blob = Win32::CERT_NAME_BLOB{
 				.cbData = static_cast<Win32::DWORD>(subjectName.size()),
 				.pbData = reinterpret_cast<Win32::BYTE*>(const_cast<std::byte*>(&subjectName[0]))
 			};
@@ -261,8 +254,8 @@ export namespace Boring32::Crypto
 		[[nodiscard]] 
 		auto GetCertByExactIssuer(const std::wstring& subjectName) const -> Certificate
 		{
-			std::vector<std::byte> encodedBytes = EncodeAsnString(subjectName);
-			const Win32::CERT_NAME_BLOB blob{
+			auto encodedBytes = std::vector<std::byte>{ EncodeAsnString(subjectName) };
+			auto blob = Win32::CERT_NAME_BLOB{
 				.cbData = static_cast<Win32::DWORD>(encodedBytes.size()),
 				.pbData = reinterpret_cast<Win32::BYTE*>(&encodedBytes[0])
 			};
@@ -278,8 +271,8 @@ export namespace Boring32::Crypto
 		[[nodiscard]]
 		auto GetCertByByBase64Signature(const std::wstring& base64Signature) const -> Certificate
 		{
-			std::vector<std::byte> bytes = ToBinary(base64Signature);
-			const Win32::CRYPT_HASH_BLOB blob{
+			auto bytes = std::vector<std::byte>{ ToBinary(base64Signature) };
+			auto blob = Win32::CRYPT_HASH_BLOB{
 				.cbData = static_cast<Win32::DWORD>(bytes.size()),
 				.pbData = reinterpret_cast<Win32::BYTE*>(&bytes[0])
 			};
@@ -315,8 +308,8 @@ export namespace Boring32::Crypto
 				throw Error::Boring32Error{ "cert is nullptr" };
 
 			// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/ns-cryptuiapi-cryptui_wiz_import_src_info
-			Win32::CRYPTUI_WIZ_IMPORT_SRC_INFO info{
-				.dwSize = sizeof(info),
+			auto info = Win32::CRYPTUI_WIZ_IMPORT_SRC_INFO{
+				.dwSize = sizeof(Win32::CRYPTUI_WIZ_IMPORT_SRC_INFO),
 				.dwSubjectChoice = Win32::_CRYPTUI_WIZ_IMPORT_SUBJECT_CERT_CONTEXT,
 				.pCertContext = cert,
 				.dwFlags = 0,
@@ -330,9 +323,9 @@ export namespace Boring32::Crypto
 			if (not m_certStore)
 				throw Error::Boring32Error{ "m_certStore is nullptr" };
 			// https://docs.microsoft.com/en-us/windows/win32/api/cryptuiapi/ns-cryptuiapi-cryptui_wiz_import_src_info
-			std::wstring resolvedAbsolutePath = std::filesystem::absolute(path);
-			Win32::CRYPTUI_WIZ_IMPORT_SRC_INFO info{
-				.dwSize = sizeof(info),
+			auto resolvedAbsolutePath = std::wstring{std::filesystem::absolute(path)};
+			auto info = Win32::CRYPTUI_WIZ_IMPORT_SRC_INFO{
+				.dwSize = sizeof(Win32::CRYPTUI_WIZ_IMPORT_SRC_INFO),
 				.dwSubjectChoice = Win32::_CRYPTUI_WIZ_IMPORT_SUBJECT_FILE,
 				.pwszFileName = resolvedAbsolutePath.c_str(),
 				.dwFlags = 0,
@@ -349,7 +342,7 @@ export namespace Boring32::Crypto
 				throw Error::Boring32Error{ "m_certStore is nullptr" };
 
 			// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certaddcertificatecontexttostore
-			bool succeeded = Win32::CertAddCertificateContextToStore(
+			auto succeeded = Win32::CertAddCertificateContextToStore(
 				m_certStore,
 				cert,
 				static_cast<Win32::DWORD>(disposition),
@@ -369,8 +362,8 @@ export namespace Boring32::Crypto
 			if (not m_certStore)
 				throw Error::Boring32Error{ "m_certStore is nullptr" };
 
-			Win32::DWORD bytes = 0;
-			bool succeeded = Win32::CertGetStoreProperty(
+			auto bytes = Win32::DWORD{};
+			auto succeeded = Win32::CertGetStoreProperty(
 				m_certStore,
 				Win32::CertStoreLocalizedNamePropId,
 				nullptr,
@@ -379,7 +372,7 @@ export namespace Boring32::Crypto
 			if (not succeeded)
 				throw Error::Win32Error{Win32::GetLastError(), "CertGetStoreProperty() failed"};
 
-			std::wstring returnValue(bytes / sizeof(wchar_t), '\0');
+			auto returnValue = std::wstring(bytes / sizeof(wchar_t), '\0');
 			succeeded = Win32::CertGetStoreProperty(
 				m_certStore,
 				Win32::CertStoreLocalizedNamePropId,
@@ -432,7 +425,7 @@ export namespace Boring32::Crypto
 
 		void InternalOpen()
 		{
-			if (m_storeType != CertStoreType::InMemory && m_storeName.empty())
+			if (m_storeType != CertStoreType::InMemory and m_storeName.empty())
 				throw Error::Boring32Error{ "m_storeName is required for non-memory stores" };
 
 			switch (m_storeType)
