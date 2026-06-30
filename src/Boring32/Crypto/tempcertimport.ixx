@@ -3,11 +3,13 @@ import std;
 import :win32;
 import :crypto.certificate;
 import :crypto.certstore;
+import :strings;
 
 export namespace Boring32::Crypto
 {
-	struct TempCertImport final
+	class TempCertImport final
 	{
+	public:
 		~TempCertImport()
 		{
 			Close();
@@ -16,7 +18,7 @@ export namespace Boring32::Crypto
 		TempCertImport(
 			CertStore& store, 
 			Certificate& toImport, 
-			const CertAddDisposition disposition = CertAddDisposition::AddNewer
+			CertAddDisposition disposition = CertAddDisposition::AddNewer
 		) : m_store(store), m_cert(toImport)
 		{
 			m_store.AddCertificate(toImport.GetCert(), disposition);
@@ -29,10 +31,10 @@ export namespace Boring32::Crypto
 		}
 		catch (const std::exception& ex)
 		{
-			std::wcerr << "Failed to delete temp cert: " << ex.what();
+			std::wcerr << std::format(L"Failed to delete temp cert: {}\n", Strings::ConvertString(ex.what()));
 		}
 
-		private:
+	private:
 		CertStore m_store;
 		Certificate m_cert;
 	};
