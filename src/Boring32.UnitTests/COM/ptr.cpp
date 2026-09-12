@@ -13,6 +13,8 @@ namespace Com
 		constexpr unsigned Release() { return --RefCount; };
 	};
 
+	using Ptr = Boring32::Com::Ptr<IDummy>;
+
 	// Default constructor
 	static_assert(
 		[]
@@ -27,7 +29,7 @@ namespace Com
 		[]
 		{
 			IDummy q{};
-			Boring32::Com::Ptr<IDummy> p1{ &q };
+			Ptr p1{ Ptr::Own{&q} };
 			return p1.get() == &q and q.RefCount == 0;
 		}(),
 		"Expected p1.get() to return &q and not to increment the existing count.");
@@ -37,8 +39,8 @@ namespace Com
 		[]
 		{
 			IDummy q{};
-			Boring32::Com::Ptr<IDummy> p1{ &q };
-			Boring32::Com::Ptr<IDummy> p2 = p1;
+			Ptr p1{ Ptr::Own{&q} };
+			Ptr p2 = p1;
 			return p1.get() == &q and p2.get() == &q;
 		}(),
 		"Expected p2.get() to return &q.");
@@ -47,8 +49,8 @@ namespace Com
 		[]
 		{
 			IDummy q{};
-			Boring32::Com::Ptr<IDummy> p1{ &q };
-			Boring32::Com::Ptr<IDummy> p2{};
+			Ptr p1{ Ptr::Own{&q} };
+			Ptr p2{};
 			p2 = p1;
 			return q.RefCount == 1;
 		}(),
@@ -59,8 +61,8 @@ namespace Com
 		[]
 		{
 			IDummy q{};
-			Boring32::Com::Ptr<IDummy> p1{ &q };
-			Boring32::Com::Ptr<IDummy> p2{ std::move(p1) };
+			Ptr p1{ Ptr::Own{&q} };
+			Ptr p2{ std::move(p1) };
 			return p1.get() == nullptr and p2.get() == &q;
 		}(),
 		"Expected p1.get() to return nullptr and p2.get() to return &q.");
@@ -68,8 +70,8 @@ namespace Com
 		[]
 		{
 			IDummy q{};
-			Boring32::Com::Ptr<IDummy> p1{ &q };
-			Boring32::Com::Ptr<IDummy> p2{};
+			Ptr p1{ Ptr::Own{&q} };
+			Ptr p2{};
 			p2 = std::move(p1);
 			return p1.get() == nullptr and p2.get() == &q;
 		}(),
@@ -80,7 +82,7 @@ namespace Com
 		[]
 		{
 			IDummy q{ 1 };
-			Boring32::Com::Ptr<IDummy> p1{ &q };
+			Ptr p1{ Ptr::Own{&q} };
 			p1.reset();
 			return q.RefCount == 0;
 		}(),
@@ -91,7 +93,7 @@ namespace Com
 		{
 			IDummy q{ 1 };
 			{
-				Boring32::Com::Ptr<IDummy> p{ &q };
+				Ptr p{ Ptr::Own{&q} };
 			}
 			return q.RefCount == 0;
 		}(),
@@ -101,7 +103,7 @@ namespace Com
 		[]
 		{
 			IDummy q{ 1 };
-			Boring32::Com::Ptr<IDummy> p1{ &q };
+			Ptr p1{ Ptr::Own{&q} };
 			auto rawPtr = p1.detach();
 			return q.RefCount == 1 and p1.get() == nullptr and rawPtr == &q;
 		}(),
@@ -111,7 +113,7 @@ namespace Com
 		[]
 		{
 			IDummy q{};
-			Boring32::Com::Ptr<IDummy> p1{ &q };
+			Ptr p1{ Ptr::Own{&q} };
 			return *p1 == &q;
 		}(),
 		"Expected *p1 to be &q.");

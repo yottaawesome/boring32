@@ -869,6 +869,11 @@ export namespace Boring32::Win32
 		return HRESULT_SEVERITY(hr);
 	}
 
+	constexpr auto HrSucceeded(HRESULT hr) noexcept -> bool
+	{
+		return SUCCEEDED(hr);
+	}
+
 	constexpr auto HrFailed(HRESULT hr) noexcept -> bool
 	{
 		return FAILED(hr);

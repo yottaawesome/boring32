@@ -12,6 +12,8 @@ export namespace Boring32::Com
 	{
 	public:
 		using pointer = T*;
+		struct Copy { T* ptr = nullptr; };
+		struct Own { T* ptr = nullptr; };
 
 		constexpr ~Ptr() noexcept
 		{
@@ -20,8 +22,19 @@ export namespace Boring32::Com
 
 		constexpr Ptr() = default;
 
-		constexpr Ptr(T* typePtr) noexcept
-			: ptr(typePtr)
+		constexpr Ptr(T* t) noexcept
+			: ptr(t)
+		{}
+		
+		constexpr Ptr(Copy copy) noexcept
+			: ptr(copy.ptr)
+		{
+			if (ptr)
+				ptr->AddRef();
+		}
+
+		constexpr Ptr(Own own) noexcept
+			: ptr(own.ptr)
 		{ }
 
 		// Copyable
@@ -65,6 +78,12 @@ export namespace Boring32::Com
 			return self.ptr != nullptr;
 		}
 
+		constexpr auto operator=(std::nullptr_t) noexcept -> Ptr&
+		{
+			reset();
+			return *this;
+		}
+
 		constexpr auto operator==(this const Ptr& self, const Ptr& other) noexcept -> bool
 		{
 			return self.ptr == other.ptr;
@@ -88,6 +107,12 @@ export namespace Boring32::Com
 				self.ptr = nullptr;
 			}
 			return self;
+		}
+
+		constexpr void reset(this Ptr& self, T* ptr)
+		{
+			self.reset();
+			self.ptr = ptr;
 		}
 
 		constexpr auto detach(this Ptr& self) noexcept -> T*
@@ -128,16 +153,21 @@ export namespace Boring32::Com
 		}
 
 		template<typename T>
-		constexpr auto As(this const Ptr& self) -> Ptr<T>
+		constexpr auto TryAs(this const Ptr& self) noexcept -> std::expected<Ptr<T>, Win32::HRESULT>
 		{
 			if (not self.ptr)
 				return Ptr<T>{};
 			auto result = Ptr<T>{};
 			auto hr = self.ptr->QueryInterface(__uuidof(T), reinterpret_cast<void**>(&result.ptr));
-			if (Win32::HrFailed(hr))
-				throw Error::COMError{hr, "QueryInterface() failed in Ptr::As()"};
-			return result;
-		}	
+			return Win32::HrSucceeded(hr) ? result : std::unexpected{ hr };
+		}
+
+		template<typename T>
+		constexpr auto As(this const Ptr& self) -> Ptr<T>
+		{
+			auto result = self.TryAs<T>();
+			return result ? *result : throw Error::COMError{ result.error(), "QueryInterface() failed" };
+		}
 
 	private:
 		T* ptr = nullptr;
