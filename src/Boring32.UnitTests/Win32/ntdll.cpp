@@ -8,10 +8,9 @@ namespace Win32
 {
 	TEST_CLASS(NTDLL)
 	{
-		public:
-			TEST_METHOD(TestLoad)
-			{
-				Boring32::Native::NTDLL ntdll;
-			}
+		TEST_METHOD(TestLoad)
+		{
+			Boring32::Native::NTDLL ntdll;
+		}
 	};
 }

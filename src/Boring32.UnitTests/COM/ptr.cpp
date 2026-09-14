@@ -11,6 +11,10 @@ namespace Com
 		unsigned RefCount = 0;
 		constexpr unsigned AddRef() { return ++RefCount; };
 		constexpr unsigned Release() { return --RefCount; };
+		constexpr unsigned QueryInterface(const Boring32::Win32::GUID& iid, void** ppv) 
+		{ 
+			return 0; 
+		};
 	};
 
 	using Ptr = Boring32::Com::Ptr<IDummy>;

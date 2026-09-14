@@ -158,8 +158,9 @@ export namespace Boring32::Com
 			if (not self.ptr)
 				return Ptr<T>{};
 			auto result = Ptr<T>{};
-			auto hr = self.ptr->QueryInterface(__uuidof(T), reinterpret_cast<void**>(&result.ptr));
-			return Win32::HrSucceeded(hr) ? result : std::unexpected{ hr };
+			if (auto hr = self.ptr->QueryInterface(__uuidof(T), std::out_ptr(result)); Win32::HrFailed(hr))
+				return std::unexpected{ hr };
+			return result;
 		}
 
 		template<typename T>
