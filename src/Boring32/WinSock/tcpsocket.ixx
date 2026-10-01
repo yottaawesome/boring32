@@ -39,13 +39,7 @@ export namespace Boring32::WinSock
 				Win32::WinSock::_IPPROTO_TCP
 			);
 			if (m_socket == Win32::WinSock::InvalidSocket)
-			{
-				auto lastError = Win32::WinSock::WSAGetLastError();
-				Error::ThrowNested(
-					Error::Win32Error(lastError, "socket() failed", L"ws2_32.dll"),
-					WinSockError("Failed to open socket")
-				);
-			}
+				throw WinSockError{ Win32::WinSock::WSAGetLastError(), "socket() failed"};
 		}
 
 		TCPSocket& operator=(const TCPSocket& other) = delete;
@@ -92,12 +86,7 @@ export namespace Boring32::WinSock
 				static_cast<int>(m_addrPtr->ai_addrlen)
 			);
 			if (connectionResult == Win32::WinSock::_SOCKET_ERROR)
-			{
-				Error::ThrowNested(
-					Error::Win32Error{static_cast<Win32::DWORD>(Win32::WinSock::WSAGetLastError()), "connect() failed", L"ws2_32.dll"},
-					WinSockError("Failed to connect socket")
-				);
-			}
+				throw WinSockError{Win32::WinSock::WSAGetLastError(), "connect() failed"};
 		}
 
 		void Close()
@@ -133,12 +122,7 @@ export namespace Boring32::WinSock
 					0
 				);
 				if (sentBytes == Win32::WinSock::_SOCKET_ERROR)
-				{
-					Error::ThrowNested(
-						Error::Win32Error{static_cast<Win32::DWORD>(Win32::WinSock::WSAGetLastError()), "send() failed", L"ws2_32.dll"},
-						WinSockError("Failed to send data through socket")
-					);
-				}
+					throw WinSockError{Win32::WinSock::WSAGetLastError(), "send() failed"};
 				totalSentBytes += sentBytes;
 			}
 		}
@@ -154,12 +138,7 @@ export namespace Boring32::WinSock
 			auto recvbuf = std::vector<std::byte>(bytesToRead);
 			auto actualBytesRead = Win32::WinSock::recv(m_socket, reinterpret_cast<char*>(&recvbuf[0]), bytesToRead, 0);
 			if (actualBytesRead < 0)
-			{
-				Error::ThrowNested(
-					Error::Win32Error{static_cast<Win32::DWORD>(Win32::WinSock::WSAGetLastError()), "recv() failed", L"ws2_32.dll"},
-					WinSockError("Failed to receive data through socket")
-				);
-			}
+				throw WinSockError{Win32::WinSock::WSAGetLastError(), "recv() failed"};
 
 			recvbuf.resize(actualBytesRead);
 			return recvbuf;
@@ -199,12 +178,7 @@ export namespace Boring32::WinSock
 				&optLen
 			);
 			if (optResult == Win32::WinSock::_SOCKET_ERROR)
-			{
-				Error::ThrowNested(
-					Error::Win32Error{static_cast<Win32::DWORD>(Win32::WinSock::WSAGetLastError()), "getsockopt() failed", L"ws2_32.dll"},
-					WinSockError{ "TTL option is not supported" }
-				);
-			}
+				throw WinSockError{Win32::WinSock::WSAGetLastError(), "getsockopt() failed"};
 
 			// Actually set the argument
 			optVal = ttl;
@@ -216,12 +190,7 @@ export namespace Boring32::WinSock
 				optLen
 			);
 			if (optResult == Win32::WinSock::_SOCKET_ERROR)
-			{
-				Error::ThrowNested(
-					Error::Win32Error{static_cast<Win32::DWORD>(Win32::WinSock::WSAGetLastError()), "setsockopt() failed", L"ws2_32.dll"},
-					WinSockError{ "Failed to set option" }
-				);
-			}
+				throw WinSockError{Win32::WinSock::WSAGetLastError(), "setsockopt() failed"};
 		}
 
 		void SetMaxRetryTimeout(Win32::DWORD timeoutSeconds)
@@ -240,10 +209,7 @@ export namespace Boring32::WinSock
 				reinterpret_cast<int*>(&optLen)
 			);
 			if (optResult == Win32::WinSock::_SOCKET_ERROR)
-				Error::ThrowNested(
-					Error::Win32Error{static_cast<Win32::DWORD>(Win32::WinSock::WSAGetLastError()), "getsockopt() failed", L"ws2_32.dll"},
-					WinSockError{ "RT option is not supported" }
-				);
+				throw WinSockError{Win32::WinSock::WSAGetLastError(), "getsockopt() failed"};
 
 			optVal = timeoutSeconds;
 			optResult = Win32::WinSock::setsockopt(
@@ -254,10 +220,7 @@ export namespace Boring32::WinSock
 				static_cast<int>(optLen)
 			);
 			if (optResult == Win32::WinSock::_SOCKET_ERROR)
-				Error::ThrowNested(
-					Error::Win32Error{static_cast<Win32::DWORD>(Win32::WinSock::WSAGetLastError()), "setsockopt() failed", L"ws2_32.dll"},
-					WinSockError{ "Failed to set RT option" }
-				);
+				throw WinSockError{Win32::WinSock::WSAGetLastError(), "setsockopt() failed"};
 		}
 
 		auto GetHost() const noexcept -> std::wstring

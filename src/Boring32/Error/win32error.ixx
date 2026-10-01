@@ -6,7 +6,7 @@ import :error.functions;
 
 export namespace Boring32::Error
 {
-	class Win32Error final : public Boring32Error
+	class Win32Error : public Boring32Error
 	{
 	public:
 		Win32Error(

@@ -64,10 +64,8 @@ export namespace Boring32::WinSock
 		{
 			//https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-wsastartup
 			auto error = Win32::WinSock::WSAStartup(Win32::MakeWord(m_highVersion, m_lowVersion), &m_wsaData);
-			if (error) Error::ThrowNested(
-				Error::Win32Error{static_cast<Win32::DWORD>(error), "WSAStartup() failed", L"Ws2_32.dll"},
-				WinSockError("Failed to initialise WinSock")
-			);
+			if (error) 
+				throw WinSockError{error, "WSAStartup() failed"};
 		}
 
 		Win32::WinSock::WSAData m_wsaData;

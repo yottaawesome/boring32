@@ -9,6 +9,7 @@ export namespace Boring32::WirelessLAN
 {
 	class Session final
 	{
+	public:
 		WirelessInterfaces Interfaces;
 
 		Session()

@@ -39,12 +39,7 @@ export namespace Boring32::WinSock
 		// https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-inet_ntop
 		auto ipCString = Win32::PCSTR{Win32::WinSock::inet_ntop(Win32::WinSock::AddressFamily::IPv6, &converted, &out[0], Win32::WinSock::_INET6_ADDRSTRLEN)};
 		if (not ipCString)
-		{
-			Error::ThrowNested(
-				Error::Win32Error{static_cast<Win32::DWORD>(Win32::WinSock::WSAGetLastError()), "inet_ntop() failed", L"Ws2_32.dll"},
-				WinSockError("Could not convert IPv6 network address string")
-			);
-		}
+			throw WinSockError{Win32::WinSock::WSAGetLastError(), "inet_ntop() failed"};
 		out = out.c_str();
 	}
 
@@ -58,26 +53,21 @@ export namespace Boring32::WinSock
 		// https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-inet_ntop
 		auto ipCString = Win32::PCSTR{Win32::WinSock::inet_ntop(Win32::WinSock::AddressFamily::IPv4, &converted, &out[0], Win32::WinSock::_INET_ADDRSTRLEN)};
 		if (not ipCString)
-		{
-			Error::ThrowNested(
-				Error::Win32Error{static_cast<Win32::DWORD>(Win32::WinSock::WSAGetLastError()), "inet_ntop() failed", L"Ws2_32.dll"},
-				WinSockError("Could not convert IPv4 network address string")
-			);
-		}
+			throw WinSockError{Win32::WinSock::WSAGetLastError(), "inet_ntop() failed"};
 		out = out.c_str();
 	}
 
 	void IPv4NetworkAddressToString(unsigned int ip, std::wstring& out)
 	{
 		auto str = std::string{};
-		IPv6NetworkAddressToString(ip, str);
+		IPv4NetworkAddressToString(ip, str);
 		out = Boring32::Strings::ConvertString(str);
 	}
 
 	void IPv6NetworkAddressToString(unsigned int ip, std::wstring& out)
 	{
 		auto str = std::string{};
-		IPv4NetworkAddressToString(ip, str);
+		IPv6NetworkAddressToString(ip, str);
 		out = Boring32::Strings::ConvertString(str);
 	}
 
@@ -104,12 +94,7 @@ export namespace Boring32::WinSock
 			&resolvedNames
 		);
 		if (result != 0)
-		{
-			Error::ThrowNested(
-				Error::Win32Error{static_cast<Win32::DWORD>(result), "GetAddrInfoW() failed", L"Ws2_32.dll"},
-				WinSockError("Could not get domain addr info")
-			);
-		}
+			throw WinSockError{result, "GetAddrInfoW() failed"};
 
 		auto names = std::vector<NetworkingAddress>{};
 		for (Win32::WinSock::PADDRINFOW ptr = resolvedNames; ptr != nullptr; ptr = ptr->ai_next)
@@ -173,16 +158,12 @@ export namespace Boring32::WinSock
 			QueryCompleteCallback<decltype(e)>,
 			&cancelHandle
 		);
-		if (error != Win32::WinSock::_WSA_IO_PENDING) Error::ThrowNested(
-			Error::Win32Error{static_cast<Win32::DWORD>(error), "GetAddrInfoExW() failed", L"Ws2_32.dll"},
-			WinSockError("Could not get domain addr info")
-		);
+		if (error != Win32::WinSock::_WSA_IO_PENDING) 
+			throw WinSockError{error, "GetAddrInfoExW() failed"};
 		e.WaitOnEvent();
 
-		if (ov.InternalHigh != Win32::ErrorCodes::NoError) Error::ThrowNested(
-			Error::Win32Error{(Win32::DWORD)ov.InternalHigh, "GetAddrInfoExW() overlapped op failed"},
-			WinSockError("Could not get domain addr info")
-		);
+		if (ov.InternalHigh != Win32::ErrorCodes::NoError) 
+			throw WinSockError{static_cast<int>(ov.InternalHigh), "GetAddrInfoExW() overlapped op failed"};
 
 		auto names = std::vector<NetworkingAddress>{};
 		for (Win32::WinSock::PADDRINFOEXW ptr = queryResults; ptr != nullptr; ptr = ptr->ai_next)
@@ -243,16 +224,12 @@ export namespace Boring32::WinSock
 			nullptr,
 			nullptr
 		);
-		if (error != Win32::WinSock::_WSA_IO_PENDING) Error::ThrowNested(
-			Error::Win32Error{static_cast<Win32::DWORD>(error), "GetAddrInfoExW() failed", L"Ws2_32.dll"},
-			WinSockError("Could not get domain addr info")
-		);
+		if (error != Win32::WinSock::_WSA_IO_PENDING) 
+			throw WinSockError{error, "GetAddrInfoExW() failed"};
 
 		opCompleted.WaitOnEvent();
-		if (ov.InternalHigh != Win32::ErrorCodes::NoError) Error::ThrowNested(
-			Error::Win32Error{(Win32::DWORD)ov.InternalHigh, "GetAddrInfoExW() overlapped op failed"},
-			WinSockError("Could not get domain addr info")
-		);
+		if (ov.InternalHigh != Win32::ErrorCodes::NoError) 
+			throw WinSockError{static_cast<int>(ov.InternalHigh), "GetAddrInfoExW() overlapped op failed"};
 
 		auto names = std::vector<NetworkingAddress>{};
 		for (Win32::WinSock::PADDRINFOEXW ptr = queryResults; ptr != nullptr; ptr = ptr->ai_next)

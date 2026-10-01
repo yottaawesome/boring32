@@ -43,10 +43,7 @@ export namespace Boring32::WinSock
 			if (m_socket == Win32::WinSock::InvalidSocket)
 			{
 				auto lastError = Win32::WinSock::WSAGetLastError();
-				Error::ThrowNested(
-					Error::Win32Error{static_cast<Win32::DWORD>(lastError), "socket() failed", L"ws2_32.dll"},
-					WinSockError("Failed to open socket")
-				);
+				throw WinSockError{ lastError, "socket() failed" };
 			}
 		}
 

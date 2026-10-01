@@ -1,13 +1,15 @@
 export module boring32:time.datetime;
-import <cstdint>;
+import std;
+import std.compat;
 import :win32;
 import :error;
 import :time.functions;
 
 export namespace Boring32::Time
 {
-	struct DateTime final
+	class DateTime final
 	{
+	public:
 		DateTime()
 		{
 			Win32::GetSystemTimeAsFileTime(&m_ft);
@@ -23,47 +25,47 @@ export namespace Boring32::Time
 			: m_ft(ft)
 		{ }
 
-		uint64_t ToMicroSeconds() const noexcept
+		auto ToMicroSeconds() const noexcept -> std::uint64_t
 		{
 			return FromFileTime(m_ft) / 10ull;
 		}
 
-		uint64_t ToNanosecondTicks() const noexcept
+		auto ToNanosecondTicks() const noexcept -> std::uint64_t
 		{
 			return FromFileTime(m_ft);
 		}
 
-		void AddMinutes(const int64_t minutes)
+		void AddMinutes(const std::int64_t minutes)
 		{
-			const int64_t nsTicks = minutes * 60ll * 1000ll * 1000ll * 10ll;
+			const auto nsTicks = minutes * 60ll * 1000ll * 1000ll * 10ll;
 			SetNewTotal(ToNanosecondTicks() + nsTicks);
 		}
 
-		void AddSeconds(const int64_t seconds)
+		void AddSeconds(const std::int64_t seconds)
 		{
-			const int64_t nsTicks = seconds * 1000ll * 1000ll * 10ll;
+			const auto nsTicks = seconds * 1000ll * 1000ll * 10ll;
 			SetNewTotal(ToNanosecondTicks() + nsTicks);
 		}
 
-		void AddMillseconds(const int64_t milliseconds)
+		void AddMillseconds(const std::int64_t milliseconds)
 		{
-			const int64_t nsTicks = milliseconds * 1000ll * 10ll;
+			const auto nsTicks = milliseconds * 1000ll * 10ll;
 			SetNewTotal(ToNanosecondTicks() + nsTicks);
 		}
 
-		Win32::SYSTEMTIME ToSystemTime() const
+		auto ToSystemTime() const -> Win32::SYSTEMTIME
 		{
-			Win32::SYSTEMTIME st;
+			auto st = Win32::SYSTEMTIME{};
 			// https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-filetimetosystemtime
 			if (not Win32::FileTimeToSystemTime(&m_ft, &st))
 				throw Error::Win32Error{Win32::GetLastError(), "FileTimeToSystemTime() failed"};
 			return st;
 		}
 
-		private:
-		void SetNewTotal(const uint64_t newTotal)
+	private:
+		void SetNewTotal(const std::uint64_t newTotal)
 		{
-			const Win32::LARGE_INTEGER li{
+			const auto li = Win32::LARGE_INTEGER{
 				.QuadPart = static_cast<long long>(newTotal)
 			};
 			m_ft = {
