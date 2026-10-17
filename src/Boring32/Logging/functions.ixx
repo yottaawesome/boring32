@@ -43,7 +43,10 @@ export namespace Boring32::Log
 			auto fmtString = Format(fmt, std::forward<Ts>(args)...);
 		}
 
-		constexpr std::string Format(std::format_string<Ts...> fmt, Ts&&...args, std::source_location loc = std::source_location::current()) noexcept
+		constexpr auto Format(
+			std::format_string<Ts...> fmt, Ts&&...args, 
+			std::source_location loc = std::source_location::current()
+		) noexcept -> std::string
 		try
 		{
 			return std::format(fmt, std::forward<Ts>(args)...);
@@ -53,7 +56,10 @@ export namespace Boring32::Log
 			return {};
 		}
 
-		constexpr std::wstring Format(std::wformat_string<Ts...> fmt, Ts&&...args, std::source_location loc = std::source_location::current()) noexcept
+		constexpr auto Format(
+			std::wformat_string<Ts...> fmt, Ts&&...args, 
+			std::source_location loc = std::source_location::current()
+		) noexcept -> std::wstring
 		try
 		{
 			return std::format(fmt, std::forward<Ts>(args)...);
