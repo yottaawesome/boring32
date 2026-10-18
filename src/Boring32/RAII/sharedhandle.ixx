@@ -5,8 +5,8 @@ import :error;
 
 export namespace Boring32::RAII
 {
-	/// Shared-ownership RAII wrapper for Win32 HANDLEs.
-	/// Copyable via reference counting; analogous to std::shared_ptr.
+	// Shared-ownership RAII wrapper for Win32 HANDLEs.
+	// Copyable via reference counting; analogous to std::shared_ptr.
 	class SharedHandle final
 	{
 	public:
@@ -21,45 +21,44 @@ export namespace Boring32::RAII
 		{
 			Copy(otherHandle);
 		}
+		auto operator=(const SharedHandle& other) -> SharedHandle&
+		{
+			Copy(other);
+			return *this;
+		}
 
 		SharedHandle(SharedHandle&& otherHandle) noexcept
 			: m_handle(CreateHandlePtr(nullptr))
 		{
 			Move(otherHandle);
 		}
-
-		void operator=(const SharedHandle& other)
-		{
-			Copy(other);
-		}
-			
-		SharedHandle& operator=(SharedHandle&& other) noexcept
+		auto operator=(SharedHandle&& other) noexcept -> SharedHandle&
 		{
 			Move(other);
 			return *this;
 		}
 
-		/// Compares the current handle to the specified handle.
-		/// A nullptr handle is considered equivalent to INVALID_HANDLE_VALUE.
-		bool operator==(const Win32::HANDLE other) const noexcept
+		// Compares the current handle to the specified handle.
+		// A nullptr handle is considered equivalent to INVALID_HANDLE_VALUE.
+		auto operator==(const Win32::HANDLE other) const noexcept -> bool
 		{
 			if (not IsValidValue(other))
 				return not IsValidValue(m_handle);
 			return m_handle && *m_handle == other;
 		}
 
-		/// Closes the current handle, if valid, and assumes
-		/// ownership of handle in the parameter.
-		SharedHandle& operator=(const Win32::HANDLE other)
+		// Closes the current handle, if valid, and assumes
+		// ownership of handle in the parameter.
+		auto operator=(const Win32::HANDLE other) -> SharedHandle&
 		{
 			Close();
 			m_handle = CreateHandlePtr(other);
 			return *this;
 		}
 
-		/// Compares the current handle to the specified handle.
-		/// A nullptr handle is considered equivalent to INVALID_HANDLE_VALUE.
-		bool operator==(const SharedHandle& other) const
+		// Compares the current handle to the specified handle.
+		// A nullptr handle is considered equivalent to INVALID_HANDLE_VALUE.
+		auto operator==(const SharedHandle& other) const -> bool
 		{
 			// https://devblogs.microsoft.com/oldnewthing/20040302-00/?p=40443
 			if (not IsValidValue(other.m_handle))
@@ -72,14 +71,14 @@ export namespace Boring32::RAII
 			return IsValidValue();
 		}
 
-		Win32::HANDLE* operator&()
+		auto operator&() -> Win32::HANDLE*
 		{
 			if (not m_handle)
 				m_handle = CreateHandlePtr(nullptr);
 			return m_handle.get();
 		}
 
-		constexpr Win32::HANDLE operator*() const noexcept
+		constexpr auto operator*() const noexcept -> Win32::HANDLE
 		{
 			return m_handle ? *m_handle : nullptr;
 		}
@@ -90,19 +89,19 @@ export namespace Boring32::RAII
 		}
 
 		// API
-		constexpr Win32::HANDLE GetHandle() const noexcept
+		constexpr auto GetHandle() const noexcept -> Win32::HANDLE
 		{
 			return m_handle ? *m_handle : nullptr;
 		}
 
-		Win32::HANDLE DuplicateCurrentHandle() const
+		auto DuplicateCurrentHandle() const -> Win32::HANDLE
 		{
 			return IsValidValue(m_handle)
 				? SharedHandle::DuplicatePassedHandle(*m_handle, IsInheritable())
 				: nullptr;
 		}
 			
-		bool IsInheritable() const
+		auto IsInheritable() const -> bool
 		{
 			if (not m_handle or not *m_handle)
 				return false;
@@ -122,55 +121,55 @@ export namespace Boring32::RAII
 				throw Error::Win32Error{Win32::GetLastError(), "SetHandleInformation() failed"};
 		}
 
-		Win32::HANDLE Detach() noexcept
+		auto Detach() noexcept -> Win32::HANDLE
 		{
 			if (not m_handle or not *m_handle)
 				return nullptr;
-			Win32::HANDLE temp = *m_handle;
+			auto temp = *m_handle;
 			*m_handle = nullptr;
 			return temp;
 		}
 
-		/// Returns whether the internal HANDLE's value is not 
-		/// nullptr or INVALID_HANDLE_VALUE. Note: this does not mean
-		/// the value is an actual current and valid HANDLE.
-		bool IsValidValue() const noexcept
+		// Returns whether the internal HANDLE's value is not 
+		// nullptr or INVALID_HANDLE_VALUE. Note: this does not mean
+		// the value is an actual current and valid HANDLE.
+		auto IsValidValue() const noexcept -> bool
 		{
-			return m_handle && IsValidValue(*m_handle);
+			return m_handle and IsValidValue(*m_handle);
 		}
 
-		bool IsValidValue(const std::shared_ptr<Win32::HANDLE>& handle) const noexcept
+		auto IsValidValue(const std::shared_ptr<Win32::HANDLE>& handle) const noexcept -> bool
 		{
-			return handle && IsValidValue(*handle);
+			return handle and IsValidValue(*handle);
 		}
 
-		static constexpr bool IsValidValue(Win32::HANDLE handle) noexcept
+		static constexpr auto IsValidValue(Win32::HANDLE handle) noexcept -> bool
 		{
-			return handle && handle != Win32::InvalidHandleValue;
+			return handle and handle != Win32::InvalidHandleValue;
 		}
 
-		static bool HandleIsInheritable(const Win32::HANDLE handle)
+		static auto HandleIsInheritable(const Win32::HANDLE handle) -> bool
 		{
 			if (not handle)
 				return false;
 			if (handle == Win32::InvalidHandleValue)
 				return false;
 
-			Win32::DWORD flags = 0;
+			auto flags = Win32::DWORD{};
 			if (not Win32::GetHandleInformation(handle, &flags))
 				throw Error::Win32Error{Win32::GetLastError(), "GetHandleInformation() failed"};
 			return flags & Win32::HandleFlagInherit;
 		}
 
-		static Win32::HANDLE DuplicatePassedHandle(const Win32::HANDLE handle, const bool isInheritable)
+		static auto DuplicatePassedHandle(const Win32::HANDLE handle, const bool isInheritable) -> Win32::HANDLE
 		{
 			if (not handle)
 				return nullptr;
 			if (handle == Win32::InvalidHandleValue)
 				return Win32::InvalidHandleValue;
 
-			Win32::HANDLE duplicateHandle = nullptr;
-			bool succeeded = Win32::DuplicateHandle(
+			auto duplicateHandle = Win32::HANDLE{};
+			auto succeeded = Win32::DuplicateHandle(
 				Win32::GetCurrentProcess(),
 				handle,
 				Win32::GetCurrentProcess(),
@@ -199,7 +198,7 @@ export namespace Boring32::RAII
 			other.m_handle = nullptr;
 		}
 
-		std::shared_ptr<Win32::HANDLE> CreateHandlePtr(Win32::HANDLE handle)
+		auto CreateHandlePtr(Win32::HANDLE handle) -> std::shared_ptr<Win32::HANDLE>
 		{
 			return { new void* (handle), &SharedHandle::CloseHandleAndFreeMemory };
 		}
@@ -209,7 +208,7 @@ export namespace Boring32::RAII
 			if (not pHandle)
 				return;
 
-			Win32::HANDLE wrappedHandle = *pHandle;
+			auto wrappedHandle = *pHandle;
 			if (wrappedHandle and wrappedHandle != Win32::InvalidHandleValue and not Win32::CloseHandle(wrappedHandle))
 				std::wcerr << L"Failed to close handle\n";
 

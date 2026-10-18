@@ -119,7 +119,6 @@
     <ClCompile Include="Util\globallyuniqueid.ixx" />
     <ClCompile Include="Services\services.ixx" />
     <ClCompile Include="Services\functions.ixx" />
-    <ClCompile Include="RAII\handle.ixx" />
     <ClCompile Include="WinHttp\handles.ixx" />
     <ClCompile Include="Computer\computer.ixx" />
     <ClCompile Include="Computer\functions.ixx" />

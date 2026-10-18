@@ -384,7 +384,6 @@
     <ClCompile Include="Networking\networking.ixx" />
     <ClCompile Include="Process\dynamiclinklibrary.ixx" />
     <ClCompile Include="Process\process.ixx" />
-    <ClCompile Include="RAII\handle.ixx" />
     <ClCompile Include="RAII\raii.ixx" />
     <ClCompile Include="RAII\uniquehandle.ixx" />
     <ClCompile Include="RAII\sharedhandle.ixx" />
