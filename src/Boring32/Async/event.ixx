@@ -42,7 +42,7 @@ export namespace Boring32::Async
 		Event(const EventOpen& open) 
 			: m_name{ open.Name }
 		{
-			if (not m_name or (m_name and m_name->empty()))
+			if (not m_name or m_name->empty())
 				throw Error::Boring32Error{ "Name of event to open cannot be empty" };
 
 			m_event = Win32::OpenEventW(open.DesiredAccess, open.IsInheritable, m_name->c_str());
@@ -68,7 +68,7 @@ export namespace Boring32::Async
 				throw Error::Win32Error{ Win32::GetLastError(), "Failed to signal event" };
 		}
 
-		auto Signal(const std::nothrow_t&) noexcept -> std::expected<void, std::string>
+		auto TrySignal() noexcept -> std::expected<void, std::string>
 		try
 		{
 			Signal();
@@ -87,7 +87,7 @@ export namespace Boring32::Async
 				throw Error::Win32Error{ Win32::GetLastError(), "ResetEvent() failed" };
 		}
 
-		auto Reset(const std::nothrow_t&) noexcept -> std::expected<void, std::string> 
+		auto TryReset() noexcept -> std::expected<void, std::string> 
 			requires VIsManualReset
 		try
 		{
