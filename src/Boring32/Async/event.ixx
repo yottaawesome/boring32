@@ -7,38 +7,45 @@ import :concepts;
 
 export namespace Boring32::Async
 {
+	struct EventCreate
+	{
+		bool IsSignaled = false;
+		bool IsInheritable = false;
+		std::optional<std::wstring> Name = std::nullopt;
+	};
+	struct EventOpen
+	{
+		std::wstring Name;
+		Win32::DWORD DesiredAccess = Win32::Synchronize;
+		bool IsInheritable = false;
+	};
+
 	/// Encapsulates a Win32 Event synchronization object.
 	template<bool VIsManualReset = false>
 	class Event final
 	{
 	public:
-		Event() = default;
 		Event(const Event& other) = delete;
 		auto operator=(const Event& other) -> Event& = delete;
 		Event(Event&& other) noexcept = default;
 		auto operator=(Event&& other) noexcept -> Event& = default;
 
 		// Custom constructors
-		//	Constructor for an anonymous Event object.
-		Event(bool isInheritable, bool isSignaled)
-		{
-			InternalCreate(isSignaled, isInheritable);
-		}
 
 		//	Constructor for a named or anonymous Event object.
-		Event(bool isInheritable, bool isSignaled, std::wstring name) 
-			: m_name(std::move(name))
+		Event(const EventCreate& create = {})
+			: m_name{ create.Name ? create.Name : std::wstring{} }
 		{
-			InternalCreate(isSignaled, isInheritable);
+			InternalCreate(create.IsSignaled, create.IsInheritable);
 		}
 
-		Event(bool isInheritable, std::wstring name, Win32::DWORD desiredAccess) 
-			: m_name(std::move(name))
+		Event(const EventOpen& open) 
+			: m_name{ open.Name }
 		{
-			if (m_name->empty())
-				throw Error::Boring32Error{ "Name of Event to open cannot be empty" };
+			if (not m_name or (m_name and m_name->empty()))
+				throw Error::Boring32Error{ "Name of event to open cannot be empty" };
 
-			m_event = Win32::OpenEventW(desiredAccess, isInheritable, m_name->c_str());
+			m_event = Win32::OpenEventW(open.DesiredAccess, open.IsInheritable, m_name->c_str());
 			if (not m_event)
 				throw Error::Win32Error{ Win32::GetLastError(), "Failed to create or open event" };
 		}
@@ -97,7 +104,8 @@ export namespace Boring32::Async
 			if (not m_event)
 				throw Error::Boring32Error{ "No Event to wait on" };
 
-			auto status = static_cast<Win32::WaitResult>(Win32::WaitForSingleObject(m_event.GetHandle(), Win32::Infinite));
+			auto status = static_cast<Win32::WaitResult>(
+				Win32::WaitForSingleObject(m_event.GetHandle(), Win32::Infinite));
 			if (status == Win32::WaitResult::Failed)
 				throw Error::Win32Error{Win32::GetLastError(), "WaitForSingleObject failed"};
 			if (status == Win32::WaitResult::Abandoned)

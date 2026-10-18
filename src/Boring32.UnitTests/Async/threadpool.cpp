@@ -23,7 +23,7 @@ namespace Async
 
 		TEST_METHOD(TestCreateSubmitWork)
 		{
-			TestAns::ManualResetEvent event(false, false);
+			TestAns::ManualResetEvent event{};
 			TestNs::ThreadPool pool(1, 10);
 			TestNs::ThreadPool::WorkItem<void*> workItem{
 				.Callback = [&event](PTP_CALLBACK_INSTANCE, void*, PTP_WORK)

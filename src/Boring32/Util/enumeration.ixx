@@ -22,7 +22,8 @@ export namespace Boring32::Util
 
 export namespace Boring32::Util
 {
-	template<typename T, T D = 0> requires std::is_enum_v<T>
+	template<typename T, T D = 0> 
+	requires std::is_enum_v<T>
 	struct Enum final
 	{
 		using UnderlyingType = std::underlying_type_t<T>;
@@ -53,72 +54,75 @@ export namespace Boring32::Util
 			return m_value;
 		}
 
-		Enum& operator=(const UnderlyingType value) noexcept
+		auto operator=(const UnderlyingType value) noexcept -> Enum&
 			requires HasNoSentinels<T>
 		{
 			m_value = static_cast<T>(value);
+			return *this;
 		}
 
-		Enum& operator=(const UnderlyingType value)
-			requires HasSentinelMin<T> or HasSentinelMax<T>
+		auto operator=(const UnderlyingType value) -> Enum&
+			requires (HasSentinelMin<T> or HasSentinelMax<T>)
 		{
 			if (not IsValid(value))
 				throw Error::Boring32Error{ "Value out of legal enum range" };
 
 			m_value = static_cast<T>(value);
+			return *this;
 		}
 
-		Enum& operator=(T other) noexcept
+		auto operator=(T other) noexcept -> Enum&
 		{
 			m_value = other;
+			return *this;
 		}
 
-		bool IsValid(const UnderlyingType value) const noexcept
-			requires HasSentinelMax<T> and not HasSentinelMin<T>
+		auto IsValid(const UnderlyingType value) const noexcept -> bool
+			requires (HasSentinelMax<T> and not HasSentinelMin<T>)
 		{
 			return IsBelowMax(value);
 		}
 
-		bool IsValid(const UnderlyingType value) const noexcept
-			requires not HasSentinelMax<T> and HasSentinelMin<T>
+		auto IsValid(const UnderlyingType value) const noexcept -> bool
+			requires (not HasSentinelMax<T> and HasSentinelMin<T>)
 		{
 			return IsAboveMin(value);
 		}
 
-		bool IsValid(const UnderlyingType value) const noexcept
+		auto IsValid(const UnderlyingType value) const noexcept -> bool
 			requires HasSentinels<T>
 		{
 			return IsAboveMin(value) and IsBelowMax(value);
 		}
 
-		bool IsAboveMin(const UnderlyingType value) const noexcept
+		auto IsAboveMin(const UnderlyingType value) const noexcept -> bool
 			requires HasSentinelMin<T>
 		{
 			return std::to_underlying(T::SentinelMin) < value;
 		}
 
-		bool IsBelowMax(const UnderlyingType value) const noexcept
+		auto IsBelowMax(const UnderlyingType value) const noexcept -> bool
 			requires HasSentinelMax<T>
 		{
 			return value < std::to_underlying(T::SentinelMax);
 		}
 
-		T GetValue() const noexcept
+		auto GetValue() const noexcept -> T
 		{
 			return m_value;
 		}
 
-		UnderlyingType GetRawValue() const noexcept
+		auto GetRawValue() const noexcept -> UnderlyingType
 		{
 			return std::to_underlying(m_value);
 		}
 
-		T Default() const noexcept
+		auto Default() const noexcept -> T
 		{
 			return D;
 		}
 
-		private:
+	private:
 		T m_value = D;
 
 		static_assert(
@@ -136,12 +140,4 @@ export namespace Boring32::Util
 			"SentinelMin must be < SentinelMax and SentinelMax cannot immediately follow SentinelMin."
 		);
 	};
-
-	/*enum class FailTest
-	{
-		SentinelMin,
-		SentinelMax
-	};
-	using MM = Enum<FailTest, FailTest::SentinelMin>;
-	MM m{};*/
 }

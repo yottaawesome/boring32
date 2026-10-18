@@ -9,7 +9,7 @@ namespace Async
 	{
 		TEST_METHOD(WaitForSingle)
 		{
-			auto event = Boring32::Async::ManualResetEvent(false, false, L"");
+			auto event = Boring32::Async::ManualResetEvent{};
 			auto signalThread = std::thread([&event] { event.Signal(); });
 			auto guardThread = std::thread(
 				[&event]{
@@ -24,7 +24,7 @@ namespace Async
 
 		TEST_METHOD(WaitForSingleChrono)
 		{
-			auto event = Boring32::Async::ManualResetEvent(false, false);
+			auto event = Boring32::Async::ManualResetEvent{};
 			event.Signal();
 			Assert::IsTrue(
 				Boring32::Async::WaitFor(
@@ -37,7 +37,7 @@ namespace Async
 
 		TEST_METHOD(WaitForSingleChronoTimeout)
 		{
-			auto event = Boring32::Async::ManualResetEvent(false, false);
+			auto event = Boring32::Async::ManualResetEvent{};
 			Assert::IsTrue(
 				Boring32::Async::WaitFor(
 					event.GetHandle(),
@@ -49,14 +49,14 @@ namespace Async
 
 		TEST_METHOD(WaitForSingleTimeout)
 		{
-			auto event = Boring32::Async::ManualResetEvent(false, false, L"");
+			auto event = Boring32::Async::ManualResetEvent{};
 			Assert::IsTrue(Boring32::Async::WaitFor(event.GetHandle(), 100) == Boring32::Win32::WaitResult::Timeout);
 		}
 
 		TEST_METHOD(WaitForMultipleOne)
 		{
-			auto event1 = Boring32::Async::ManualResetEvent(false, false, L"");
-			auto event2 = Boring32::Async::ManualResetEvent(false, false, L"");
+			auto event1 = Boring32::Async::ManualResetEvent{};
+			auto event2 = Boring32::Async::ManualResetEvent{};
 			std::vector<HANDLE> handles{ event1.GetHandle(), event2.GetHandle() };
 			std::thread signalThread(
 				[&event1, &event2]()
@@ -70,8 +70,8 @@ namespace Async
 
 		TEST_METHOD(WaitForMultipleAll)
 		{
-			auto event1 = Boring32::Async::ManualResetEvent(false, false, L"");
-			auto event2 = Boring32::Async::ManualResetEvent(false, false, L"");
+			auto event1 = Boring32::Async::ManualResetEvent{};
+			auto event2 = Boring32::Async::ManualResetEvent{};
 			std::vector<HANDLE> handles{ event1.GetHandle(), event2.GetHandle() };
 			std::thread signalThread(
 				[&event1, &event2]()
@@ -86,8 +86,8 @@ namespace Async
 
 		TEST_METHOD(WaitForMultipleTimeout)
 		{
-			auto event1 = Boring32::Async::ManualResetEvent(false, false, L"");
-			auto event2 = Boring32::Async::ManualResetEvent(false, false, L"");
+			auto event1 = Boring32::Async::ManualResetEvent{};
+			auto event2 = Boring32::Async::ManualResetEvent{};
 			std::vector<HANDLE> handles{ event1.GetHandle(), event2.GetHandle() };
 
 			Assert::IsTrue(Boring32::Async::WaitFor(handles, false, 100) == WAIT_TIMEOUT);
@@ -99,8 +99,8 @@ namespace Async
 			if (not status)
 				throw std::runtime_error("Failed to QueueUserAPC");
 
-			auto event1 = Boring32::Async::ManualResetEvent(false, false, L"");
-			auto event2 = Boring32::Async::ManualResetEvent(false, false, L"");
+			auto event1 = Boring32::Async::ManualResetEvent{};
+			auto event2 = Boring32::Async::ManualResetEvent{};
 			auto handles = std::vector<HANDLE>{ event1.GetHandle(), event2.GetHandle() };
 			Assert::IsTrue(
 				Boring32::Async::WaitFor(handles, false, INFINITE, true) == WAIT_IO_COMPLETION

@@ -142,7 +142,7 @@ export namespace Boring32::WinSock
 			.tv_usec = 10        /* and microseconds */
 		};
 
-		auto e = Async::ManualResetEvent{ false, false };
+		auto e = Async::ManualResetEvent{};
 		auto ov = Win32::OVERLAPPED{ .hEvent = e.GetHandle() };
 		auto hints = Win32::WinSock::ADDRINFOEX{ .ai_family = Win32::WinSock::AddressFamily::IPv4 };
 		//https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-getaddrinfoexw
@@ -204,7 +204,7 @@ export namespace Boring32::WinSock
 
 	auto Resolve3(const std::wstring& name) -> std::vector<NetworkingAddress>
 	{
-		auto opCompleted = Async::ManualResetEvent{ false, false };
+		auto opCompleted = Async::ManualResetEvent{};
 		auto ov = Win32::OVERLAPPED{ .hEvent = opCompleted.GetHandle() };
 		auto queryResults = Win32::WinSock::PADDRINFOEXW{};
 		auto timeout = Win32::timeval{

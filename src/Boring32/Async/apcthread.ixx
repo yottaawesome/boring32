@@ -143,6 +143,6 @@ export namespace Boring32::Async
 		}
 
 		Win32Thread m_thread;
-		ManualResetEvent m_wait{ false, false, };
+		ManualResetEvent m_wait{ EventCreate{} };
 	};
 }

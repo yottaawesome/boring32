@@ -915,11 +915,12 @@ export namespace Boring32::Win32
 
 	constexpr auto SddlRevision1 = SDDL_REVISION_1;
 
-	constexpr unsigned long GenericRead = GENERIC_READ;
-	constexpr unsigned long GenericWrite = GENERIC_WRITE;
-	constexpr unsigned long OpenAlways = OPEN_ALWAYS;
-	constexpr unsigned long FileAttributeNormal = FILE_ATTRIBUTE_NORMAL;
-	constexpr auto DuplicateSameAccess = DUPLICATE_SAME_ACCESS;
+	constexpr auto GenericRead = DWORD{GENERIC_READ};
+	constexpr auto GenericWrite = DWORD{GENERIC_WRITE};
+	constexpr auto OpenAlways = DWORD{OPEN_ALWAYS};
+	constexpr auto FileAttributeNormal = DWORD{FILE_ATTRIBUTE_NORMAL};
+	constexpr auto Synchronize = DWORD{ SYNCHRONIZE };
+	constexpr auto DuplicateSameAccess = DWORD{DUPLICATE_SAME_ACCESS};
 
 	namespace FileAttributes
 	{

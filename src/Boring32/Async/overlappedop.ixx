@@ -110,7 +110,7 @@ export namespace Boring32::Async
 	protected:
 		void OnSuccess(this auto&& self) {}
 
-		ManualResetEvent m_ioEvent{ false, false };
+		ManualResetEvent m_ioEvent{};
 		std::unique_ptr<Win32::OVERLAPPED> m_ioOverlapped = std::make_unique<Win32::OVERLAPPED>();
 		Win32::DWORD m_lastError = 0;
 	};

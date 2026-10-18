@@ -31,7 +31,7 @@ export namespace Boring32::WinHttp::WebSockets
 		ReadResultStatus Status = ReadResultStatus::NotInitiated;
 		Win32::DWORD TotalBytesRead = 0;
 		std::vector<char> Data;
-		Async::ManualResetEvent Complete{ false, false };
+		Async::ManualResetEvent Complete{};
 	};
 
 	enum class WriteResultStatus : Win32::DWORD
@@ -50,7 +50,7 @@ export namespace Boring32::WinHttp::WebSockets
 		WriteResult& operator=(WriteResult&& other) noexcept = default;
 
 		WriteResultStatus Status = WriteResultStatus::NotInitiated;
-		Async::ManualResetEvent Complete{ false,false };
+		Async::ManualResetEvent Complete{};
 	};
 
 	struct ConnectionResult
@@ -61,7 +61,7 @@ export namespace Boring32::WinHttp::WebSockets
 		ConnectionResult& operator=(ConnectionResult&& other) noexcept = default;
 
 		bool IsConnected = false;
-		Async::ManualResetEvent Complete{ false, false };
+		Async::ManualResetEvent Complete{};
 	};
 
 	struct AsyncWebSocket final

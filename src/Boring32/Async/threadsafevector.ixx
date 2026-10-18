@@ -157,6 +157,6 @@ export namespace Boring32::Async
 
 		std::vector<T> m_collection;
 		mutable TLockType m_mutex{ 0 }; // Mutable for const functions.
-		ManualResetEvent m_hasMessages{ false, false };
+		ManualResetEvent m_hasMessages{};
 	};
 }
