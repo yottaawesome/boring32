@@ -34,7 +34,7 @@ export namespace Boring32::Async
 
 		//	Constructor for a named or anonymous Event object.
 		Event(const EventCreate& create = {})
-			: m_name{ create.Name ? create.Name : std::wstring{} }
+			: m_name{ create.Name }
 		{
 			InternalCreate(create.IsSignaled, create.IsInheritable);
 		}
