@@ -4,37 +4,7 @@ import :win32;
 
 export namespace Boring32::Async
 {
-	template<bool VShared>
-	struct SlimLockScope final [[nodiscard]]
-	{
-		~SlimLockScope()
-		{
-			if constexpr (VShared)
-				Win32::ReleaseSRWLockShared(&m_srwLock);
-			else
-				Win32::ReleaseSRWLockExclusive(&m_srwLock);
-		}
-
-		SlimLockScope(Win32::SRWLOCK& srwLock) noexcept
-			: m_srwLock(srwLock)
-		{
-			if constexpr (VShared)
-				Win32::AcquireSRWLockShared(&m_srwLock);
-			else
-				Win32::AcquireSRWLockExclusive(&m_srwLock);
-		}
-
-		SlimLockScope(const SlimLockScope&) = delete;
-		auto operator=(const SlimLockScope&) -> SlimLockScope& = delete;
-
-	private:
-		Win32::SRWLOCK& m_srwLock;
-	};
-
-	using SharedLockScope = SlimLockScope<true>;
-	using ExclusiveLockScope = SlimLockScope<false>;
-
-	struct SlimReadWriteLock final [[nodiscard]]
+	struct [[nodiscard]] SlimReadWriteLock final
 	{
 		SlimReadWriteLock()
 		{
@@ -103,8 +73,42 @@ export namespace Boring32::Async
 		Win32::DWORD m_threadOwningExclusiveLock = 0;
 	};
 
+	template<bool VShared>
+	struct [[nodiscard]] SlimLockScope final
+	{
+		~SlimLockScope()
+		{
+			if constexpr (VShared)
+				Win32::ReleaseSRWLockShared(&m_srwLock);
+			else
+				Win32::ReleaseSRWLockExclusive(&m_srwLock);
+		}
+
+		SlimLockScope(Win32::SRWLOCK& srwLock) noexcept
+			: m_srwLock(srwLock)
+		{
+			if constexpr (VShared)
+				Win32::AcquireSRWLockShared(&m_srwLock);
+			else
+				Win32::AcquireSRWLockExclusive(&m_srwLock);
+		}
+
+		SlimLockScope(SlimReadWriteLock& lock) noexcept
+			: m_srwLock{lock.GetLock()}
+		{ }
+
+		SlimLockScope(const SlimLockScope&) = delete;
+		auto operator=(const SlimLockScope&) -> SlimLockScope & = delete;
+
+	private:
+		Win32::SRWLOCK& m_srwLock;
+	};
+
+	using SharedLockScope = SlimLockScope<true>;
+	using ExclusiveLockScope = SlimLockScope<false>;
+
 	template<typename TProtected>
-	class SlimRWProtectedObject final [[nodiscard]]
+	class [[nodiscard]] SlimRWProtectedObject final
 	{
 	public:
 		SlimRWProtectedObject()
@@ -124,14 +128,14 @@ export namespace Boring32::Async
 		auto Read(this auto&& self, auto&& func, auto&&...args)
 			requires std::invocable<decltype(func), const TProtected&, decltype(args)...>
 		{
-			SharedLockScope scope(self.m_lock.GetLock());
+			auto scope = SharedLockScope{self.m_lock.GetLock()};
 			return std::invoke(self.m_data, std::forward<decltype(args)>(args)...);
 		}
 
 		auto Mutate(this auto&& self, auto&& func, auto&&...args)
 			requires std::invocable<decltype(func), const TProtected&, decltype(args)...>
 		{
-			ExclusiveLockScope scope(self.m_lock.GetLock());
+			auto scope = ExclusiveLockScope{self.m_lock.GetLock()};
 			return func(self.m_data, std::forward<decltype(args)>(args)...);
 		}
 
