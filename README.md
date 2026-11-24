@@ -29,6 +29,10 @@ Some unit tests will likely fail on your machine as they are referencing objects
 
 `Boring32` is now (2023-11-24) fully module-based and has eliminated any direct reliance on the Windows headers. The primary module interface file is `Boring32.ixx`; consumers use `import Boring32;`. While compilation speeds are often touted as the reason to use modules, they also offer a much cleaner way of structuring your codebase with improved encapsulation by allowing you to selectively export only what you need. Modules also allow you to do all your work within the module interface files, which eliminates the duplication caused by seperate declarations and definitions in traditional header/source file C++ projects. This improvement is substantial: in my codebases, I've seen total LoC being reduced by 30-40% thanks to the removal of separate declarations/implementations, include statements, and include guards.
 
+### AI use
+
+The vast majority of the code is hand-written, having predated generative tools by years, and will stay that way. Where AI has been used, it's been done primarily for code review and tedious and time-consuming tasks, like mass filename/module renames.
+
 ## Additional resources
 
 * [Programming Windows 5th edition](https://github.com/yottaawesome/programming-windows-5th-edition)
