@@ -325,7 +325,7 @@
     <ClCompile Include="Win32\Win32.ixx" />
     <ClCompile Include="Com\Ptr.ixx" />
     <ClCompile Include="Concepts\Concepts.ixx" />
-    <ClCompile Include="boring32.ixx" />
+    <ClCompile Include="Boring32.ixx" />
     <ClCompile Include="Compression\Cabinet.ixx" />
     <ClCompile Include="Compression\Deleters.ixx" />
     <ClCompile Include="Computer\Functions.ixx" />

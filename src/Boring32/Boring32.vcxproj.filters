@@ -132,7 +132,7 @@
     <ClCompile Include="Networking\Networking.API.ixx" />
     <ClCompile Include="IPC\MailslotServer.ixx" />
     <ClCompile Include="Security\SecurityAttributes.ixx" />
-    <ClCompile Include="boring32.ixx" />
+    <ClCompile Include="Boring32.ixx" />
     <ClCompile Include="Time\DateTime.ixx" />
     <ClCompile Include="Time\Functions.ixx" />
     <ClCompile Include="Services\ServiceControlManager.ixx" />

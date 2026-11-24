@@ -18,196 +18,196 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\functions.cpp">
+    <ClCompile Include="Async\Functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\event.cpp">
+    <ClCompile Include="Async\Event.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\eventloop.cpp">
+    <ClCompile Include="Async\EventLoop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\filemapping.cpp">
+    <ClCompile Include="Async\FileMapping.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\memorymappedview.cpp">
+    <ClCompile Include="Async\MemoryMappedView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\mutex.cpp">
+    <ClCompile Include="Async\Mutex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\semaphore.cpp">
+    <ClCompile Include="Async\Semaphore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\threadpool.cpp">
+    <ClCompile Include="Async\ThreadPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\waitabletimer.cpp">
+    <ClCompile Include="Async\WaitableTimer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="COM\comthreadscope.cpp">
+    <ClCompile Include="COM\COMThreadScope.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Compression\compressor.cpp">
+    <ClCompile Include="Compression\Compressor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Compression\decompressor.cpp">
+    <ClCompile Include="Compression\Decompressor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Computer\functions.cpp">
+    <ClCompile Include="Computer\Functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\aesencryption.cpp">
+    <ClCompile Include="Crypto\AESEncryption.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\certificate.cpp">
+    <ClCompile Include="Crypto\Certificate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\certstore.cpp">
+    <ClCompile Include="Crypto\CertStore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\crypto.cpp">
+    <ClCompile Include="Crypto\Crypto.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Crypto\securestring.cpp">
+    <ClCompile Include="Crypto\SecureString.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DataStructures\cappedstack.cpp">
+    <ClCompile Include="DataStructures\CappedStack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DataStructures\singlylinkedlist.cpp">
+    <ClCompile Include="DataStructures\SinglyLinkedList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Error\functions.cpp">
+    <ClCompile Include="Error\Functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Registry\key.cpp">
+    <ClCompile Include="Registry\Key.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Security\securitydescriptor.cpp">
+    <ClCompile Include="Security\SecurityDescriptor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Security\functions.cpp">
+    <ClCompile Include="Security\Functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Services\servicecontrolmanager.cpp">
+    <ClCompile Include="Services\ServiceControlManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Strings\functions.cpp">
+    <ClCompile Include="Strings\Functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Time\datetime.cpp">
+    <ClCompile Include="Time\DateTime.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Util\functions.cpp">
+    <ClCompile Include="Util\Functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Util\globallyuniqueid.cpp">
+    <ClCompile Include="Util\GloballyUniqueID.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinHttp\session.cpp">
+    <ClCompile Include="WinHttp\Session.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinSock\socket.cpp">
+    <ClCompile Include="WinSock\Socket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinSock\winsockinit.cpp">
+    <ClCompile Include="WinSock\WinSockInit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Win32\ntdll.cpp">
+    <ClCompile Include="Win32\Ntdll.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TaskScheduler\registeredtask.cpp">
+    <ClCompile Include="TaskScheduler\RegisteredTask.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TaskScheduler\taskfolder.cpp">
+    <ClCompile Include="TaskScheduler\TaskFolder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TaskScheduler\taskservice.cpp">
+    <ClCompile Include="TaskScheduler\TaskService.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="COM\hresult.cpp">
+    <ClCompile Include="COM\HResult.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Error\win32error.cpp">
+    <ClCompile Include="Error\Win32Error.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Error\comerror.cpp">
+    <ClCompile Include="Error\COMError.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Error\ntstatuserror.cpp">
+    <ClCompile Include="Error\NTStatusError.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Error\boring32error.cpp">
+    <ClCompile Include="Error\Boring32Error.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\sharedmap.cpp">
+    <ClCompile Include="Async\SharedMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\apcthread.cpp">
+    <ClCompile Include="Async\APCThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\timerqueue.cpp">
+    <ClCompile Include="Async\TimerQueue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\timerqueuetimercallback.cpp">
+    <ClCompile Include="Async\TimerQueueTimerCallback.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MSI\functions.cpp">
+    <ClCompile Include="MSI\Functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Networking\api.cpp">
+    <ClCompile Include="Networking\API.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MSI\package.cpp">
+    <ClCompile Include="MSI\Package.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinHttp\decomposedurl.cpp">
+    <ClCompile Include="WinHttp\DecomposedURL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\waitable.cpp">
+    <ClCompile Include="Async\Waitable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Strings\fixedstring.cpp">
+    <ClCompile Include="Strings\FixedString.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WinHttp\httpwebclient.cpp">
+    <ClCompile Include="WinHttp\HttpWebClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Security\token.cpp">
+    <ClCompile Include="Security\Token.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Security\securityidentifier.cpp">
+    <ClCompile Include="Security\SecurityIdentifier.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Services\functions.cpp">
+    <ClCompile Include="Services\Functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\threadsafevector.cpp">
+    <ClCompile Include="Async\ThreadSafeVector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MSI\database.cpp">
+    <ClCompile Include="MSI\Database.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\filerangelock.cpp">
+    <ClCompile Include="Async\FileRangeLock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\filesystemlock.cpp">
+    <ClCompile Include="Async\FileSystemLock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="COM\ptr.cpp">
+    <ClCompile Include="COM\Ptr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Clipboard\operation.cpp">
+    <ClCompile Include="Clipboard\Operation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Async\job.cpp">
+    <ClCompile Include="Async\Job.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Ipc\mailslotserver.cpp">
+    <ClCompile Include="Ipc\MailslotServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileSystem\file.cpp">
+    <ClCompile Include="FileSystem\File.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

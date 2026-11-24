@@ -23,9 +23,9 @@ rem Run a single test by namespace, class, and method
 vstest.console.exe .\Boring32.UnitTests.dll /Platform:x64 /TestCaseFilter:"FullyQualifiedName=Strings::FixedString::TestSize"
 ```
 
-Tests use the native Visual Studio C++ Unit Test Framework (`pch.h`, `TEST_CLASS`, `TEST_METHOD`) and exercise the public API. Some certificate tests depend on certificates installed on the developer's machine.
+Tests use the native Visual Studio C++ Unit Test Framework (`pch.h`, `TEST_CLASS`, `TEST_METHOD`) and exercise the public API through `import Boring32;`. Test source filenames follow the library's PascalCase and acronym rules; keep `pch.cpp`, `pch.h`, and `testfile.txt` unchanged. Some certificate tests depend on certificates installed on the developer's machine.
 
-Use the library-only target until the test project migrates from `import boring32;` to `import Boring32;`. The pre-existing duplicate `Boring32:DataStructures.CappedStack` declaration in `CappedStack.ixx` and `CircularBuffer.ixx` also blocks compilation of the CappedStack tests.
+The duplicate `Boring32:DataStructures.CappedStack` declaration in `CappedStack.ixx` and `CircularBuffer.ixx` can block compilation of the CappedStack tests. The library-only target still builds.
 
 ## Architecture
 
