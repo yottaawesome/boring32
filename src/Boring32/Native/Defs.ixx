@@ -1,6 +1,6 @@
 #define NTAPI __stdcall
-export module boring32:native.defs;
-import :win32;
+export module Boring32:Native.Defs;
+import :Win32;
 
 namespace Boring32::Native
 {

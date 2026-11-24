@@ -1,6 +1,6 @@
-export module boring32:async.synchronizationbarrier;
-import :win32;
-import :error;
+export module Boring32:Async.SynchronizationBarrier;
+import :Win32;
+import :Error;
 
 export namespace Boring32::Async
 {

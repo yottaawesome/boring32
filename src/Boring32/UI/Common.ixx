@@ -1,7 +1,7 @@
-export module boring32:ui.common;
+export module Boring32:UI.Common;
 import std;
-import :raii;
-import :win32;
+import :Raii;
+import :Win32;
 
 export namespace Boring32::UI
 {

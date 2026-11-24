@@ -1,8 +1,8 @@
-export module boring32:taskscheduler.taskservice;
+export module Boring32:TaskScheduler.TaskService;
 import std;
-import :win32;
-import :error;
-import :taskscheduler.taskfolder;
+import :Win32;
+import :Error;
+import :TaskScheduler.TaskFolder;
 
 export namespace Boring32::TaskScheduler
 {

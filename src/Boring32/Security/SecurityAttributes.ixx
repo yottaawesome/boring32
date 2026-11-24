@@ -1,5 +1,5 @@
-export module boring32:security.securityattributes;
-import :win32;
+export module Boring32:Security.SecurityAttributes;
+import :Win32;
 
 export namespace Boring32::Security
 {

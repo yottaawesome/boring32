@@ -1,7 +1,7 @@
-export module boring32:process.dynamiclinklibrary;
+export module Boring32:Process.DynamicLinkLibrary;
 import std;
-import :win32;
-import :error;
+import :Win32;
+import :Error;
 
 export namespace Boring32::Process
 {

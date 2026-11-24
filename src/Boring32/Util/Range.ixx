@@ -1,6 +1,6 @@
-export module boring32:util.range;
+export module Boring32:Util.Range;
 import std;
-import :error;
+import :Error;
 
 namespace
 {

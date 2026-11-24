@@ -1,9 +1,9 @@
-export module boring32:async.cmdrunner;
+export module Boring32:Async.CmdRunner;
 import std;
-import :win32;
-import :error;
-import :strings;
-import :raii;
+import :Win32;
+import :Error;
+import :Strings;
+import :Raii;
 
 namespace Boring32::Async
 {

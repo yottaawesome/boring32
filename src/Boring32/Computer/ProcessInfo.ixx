@@ -1,9 +1,9 @@
-export module boring32:computer.processinfo;
+export module Boring32:Computer.ProcessInfo;
 import std;
-import :win32;
-import :raii;
-import :error;
-import :computer.functions;
+import :Win32;
+import :Raii;
+import :Error;
+import :Computer.Functions;
 
 export namespace Boring32::Computer
 {

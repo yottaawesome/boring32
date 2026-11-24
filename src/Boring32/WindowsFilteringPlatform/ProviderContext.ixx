@@ -1,4 +1,4 @@
-export module boring32:windowsfilteringplatform.providercontext;
+export module Boring32:WindowsFilteringPlatform.ProviderContext;
 
 export namespace Boring32::WindowsFilteringPlatform
 {

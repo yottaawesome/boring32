@@ -1,11 +1,11 @@
-export module boring32:winhttp.session;
+export module Boring32:WinHttp.Session;
 import std;
-import :win32;
-import :error;
-import :winhttp.winhttphandle;
-import :winhttp.enums;
-import :winhttp.handles;
-import :winhttp.winhttperror;
+import :Win32;
+import :Error;
+import :WinHttp.WinHttpHandle;
+import :WinHttp.Enums;
+import :WinHttp.Handles;
+import :WinHttp.WinHttpError;
 
 export namespace Boring32::WinHttp
 {

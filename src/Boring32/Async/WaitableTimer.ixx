@@ -1,10 +1,10 @@
-export module boring32:async.waitabletimer;
+export module Boring32:Async.WaitableTimer;
 import std;
-import :win32;
-import :error;
-import :raii;
-import :async.functions;
-import :concepts;
+import :Win32;
+import :Error;
+import :Raii;
+import :Async.Functions;
+import :Concepts;
 
 //https://docs.microsoft.com/en-us/windows/win32/sync/using-a-waitable-timer-with-an-asynchronous-procedure-call
 export namespace Boring32::Async

@@ -1,4 +1,4 @@
-export module boring32:async.nullmutex;
+export module Boring32:Async.NullMutex;
 
 export namespace Boring32::Async
 {

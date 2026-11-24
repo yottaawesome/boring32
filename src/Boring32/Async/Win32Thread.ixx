@@ -1,8 +1,8 @@
-export module boring32:async.win32thread;
+export module Boring32:Async.Win32Thread;
 import std;
-import :win32;
-import :error;
-import :raii;
+import :Win32;
+import :Error;
+import :Raii;
 
 export namespace Boring32::Async
 {

@@ -1,9 +1,9 @@
-export module boring32:security.functions;
+export module Boring32:Security.Functions;
 import std;
-import :win32;
-import :raii;
-import :error;
-import :security.constants;
+import :Win32;
+import :Raii;
+import :Error;
+import :Security.Constants;
 
 namespace Boring32::Security
 {

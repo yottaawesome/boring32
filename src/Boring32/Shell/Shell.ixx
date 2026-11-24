@@ -1,8 +1,8 @@
-export module boring32:shell;
+export module Boring32:Shell;
 import std;
-import :win32;
-import :error;
-import :raii;
+import :Win32;
+import :Error;
+import :Raii;
 
 namespace Boring32::Shell
 {

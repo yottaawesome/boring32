@@ -1,10 +1,10 @@
-export module boring32:async.filesystemlock;
+export module Boring32:Async.FileSystemLock;
 import std;
-import :win32;
-import :concepts;
-import :error;
-import :raii;
-import :strings;
+import :Win32;
+import :Concepts;
+import :Error;
+import :Raii;
+import :Strings;
 
 export namespace Boring32::Async
 {

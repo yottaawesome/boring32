@@ -1,6 +1,6 @@
-export module boring32:error.win32errorcodes;
+export module Boring32:Error.Win32ErrorCodes;
 import std;
-import :win32;
+import :Win32;
 
 namespace
 {

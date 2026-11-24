@@ -1,9 +1,9 @@
-export module boring32:async.event;
+export module Boring32:Async.Event;
 import std;
-import :win32;
-import :raii;
-import :error;
-import :concepts;
+import :Win32;
+import :Raii;
+import :Error;
+import :Concepts;
 
 export namespace Boring32::Async
 {

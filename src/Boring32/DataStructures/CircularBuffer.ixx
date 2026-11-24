@@ -1,4 +1,4 @@
-export module boring32:datastructures.cappedstack;
+export module Boring32:DataStructures.CappedStack;
 import std;
 
 export namespace Util

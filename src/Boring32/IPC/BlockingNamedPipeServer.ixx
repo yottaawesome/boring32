@@ -1,10 +1,10 @@
-export module boring32:ipc.blockingnamedpipeserver;
+export module Boring32:IPC.BlockingNamedPipeServer;
 import std;
-import :win32;
-import :util;
-import :raii;
-import :error;
-import :ipc.namedpipeserverbase;
+import :Win32;
+import :Util;
+import :Raii;
+import :Error;
+import :IPC.NamedPipeServerBase;
 
 export namespace Boring32::IPC
 {

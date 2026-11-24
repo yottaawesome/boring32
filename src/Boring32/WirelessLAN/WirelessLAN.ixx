@@ -1,7 +1,7 @@
 #pragma comment(lib, "wlanapi.lib")
 
-export module boring32:wirelesslan;
-export import :wirelesslan.session;
-export import :wirelesslan.cleanup;
-export import :wirelesslan.wirelessinterfaces;
-export import :wirelesslan.wirelessinterface;
+export module Boring32:WirelessLAN;
+export import :WirelessLAN.Session;
+export import :WirelessLAN.Cleanup;
+export import :WirelessLAN.WirelessInterfaces;
+export import :WirelessLAN.WirelessInterface;

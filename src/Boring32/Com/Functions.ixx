@@ -1,6 +1,6 @@
-export module boring32:com.functions;
+export module Boring32:COM.Functions;
 import std;
-import :win32;
+import :Win32;
 
 export namespace Boring32::Com
 {

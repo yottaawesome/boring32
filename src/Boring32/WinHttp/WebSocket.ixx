@@ -1,14 +1,14 @@
-export module boring32:winhttp.websocket;
+export module Boring32:WinHttp.WebSocket;
 import std;
-import :win32;
-import :error;
-import :util;
-import :winhttp.proxyinfo;
-import :winhttp.enums;
-import :winhttp.websocketsettings;
-import :winhttp.winhttphandle;
-import :winhttp.session;
-import :async;
+import :Win32;
+import :Error;
+import :Util;
+import :WinHttp.ProxyInfo;
+import :WinHttp.Enums;
+import :WinHttp.WebSocketSettings;
+import :WinHttp.WinHttpHandle;
+import :WinHttp.Session;
+import :Async;
 
 export namespace Boring32::WinHttp::WebSockets
 {

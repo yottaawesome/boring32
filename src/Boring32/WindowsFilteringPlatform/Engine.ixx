@@ -1,4 +1,4 @@
-export module boring32:windowsfilteringplatform.engine;
+export module Boring32:WindowsFilteringPlatform.Engine;
 
 export namespace Boring32::WindowsFilteringPlatform
 {

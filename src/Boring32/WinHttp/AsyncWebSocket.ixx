@@ -1,12 +1,12 @@
-export module boring32:winhttp.asyncwebsocket;
+export module Boring32:WinHttp.AsyncWebSocket;
 import std;
-import :win32;
-import :error;
-import :async;
-import :winhttp.winhttphandle;
-import :winhttp.enums;
-import :winhttp.winhttphandle;
-import :winhttp.asyncwebsocketsettings;
+import :Win32;
+import :Error;
+import :Async;
+import :WinHttp.WinHttpHandle;
+import :WinHttp.Enums;
+import :WinHttp.WinHttpHandle;
+import :WinHttp.AsyncWebSocketSettings;
 
 constexpr unsigned long BufferBlockSize = 1024;
 

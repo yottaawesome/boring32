@@ -1,8 +1,8 @@
-export module boring32:async.asyncread;
+export module Boring32:Async.AsyncRead;
 import std;
-import :win32;
-import :error;
-import :async.overlapped;
+import :Win32;
+import :Error;
+import :Async.Overlapped;
 
 export namespace Boring32::Async
 {

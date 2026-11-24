@@ -1,5 +1,5 @@
-export module boring32:raii.win32handle;
-import :raii.sharedhandle;
+export module Boring32:Raii.Win32Handle;
+import :Raii.SharedHandle;
 
 export namespace Boring32::RAII
 {

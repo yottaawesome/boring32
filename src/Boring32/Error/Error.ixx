@@ -1,7 +1,7 @@
-export module boring32:error;
-export import :error.functions; 
-export import :error.win32error;
-export import :error.ntstatuserror;
-export import :error.comerror;
-export import :error.boring32error;
-export import :error.win32errorcodes;
+export module Boring32:Error;
+export import :Error.Functions;
+export import :Error.Win32Error;
+export import :Error.NTStatusError;
+export import :Error.COMError;
+export import :Error.Boring32Error;
+export import :Error.Win32ErrorCodes;

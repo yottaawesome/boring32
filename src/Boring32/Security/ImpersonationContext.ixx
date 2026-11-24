@@ -1,7 +1,7 @@
-export module boring32:security.impersonationcontext;
+export module Boring32:Security.ImpersonationContext;
 import std;
-import :win32;
-import :error;
+import :Win32;
+import :Error;
 
 export namespace Boring32::Security
 {

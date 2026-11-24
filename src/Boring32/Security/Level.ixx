@@ -1,6 +1,6 @@
-export module boring32:security.saferlevel;
-import :win32;
-import :error;
+export module Boring32:Security.SaferLevel;
+import :Win32;
+import :Error;
 
 export namespace Boring32::Security
 {

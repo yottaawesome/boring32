@@ -1,1 +1,1 @@
-export module boring32:sspi.provider.ntlm;
+export module Boring32:Sspi.Provider.Ntlm;

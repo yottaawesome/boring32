@@ -1,6 +1,6 @@
 #pragma comment(lib, "taskschd.lib")
 
-export module boring32:taskscheduler;
-export import :taskscheduler.registeredtask;
-export import :taskscheduler.taskfolder;
-export import :taskscheduler.taskservice;
+export module Boring32:TaskScheduler;
+export import :TaskScheduler.RegisteredTask;
+export import :TaskScheduler.TaskFolder;
+export import :TaskScheduler.TaskService;

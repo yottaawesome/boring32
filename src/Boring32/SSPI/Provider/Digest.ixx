@@ -1,1 +1,1 @@
-export module boring32:sspi.provider.digest;
+export module Boring32:Sspi.Provider.Digest;

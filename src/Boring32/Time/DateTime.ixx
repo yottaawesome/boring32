@@ -1,9 +1,9 @@
-export module boring32:time.datetime;
+export module Boring32:Time.DateTime;
 import std;
 import std.compat;
-import :win32;
-import :error;
-import :time.functions;
+import :Win32;
+import :Error;
+import :Time.Functions;
 
 export namespace Boring32::Time
 {

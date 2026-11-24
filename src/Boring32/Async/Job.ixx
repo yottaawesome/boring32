@@ -1,8 +1,8 @@
-export module boring32:async.job;
+export module Boring32:Async.Job;
 import std;
-import :win32;
-import :raii;
-import :error;
+import :Win32;
+import :Raii;
+import :Error;
 
 export namespace Boring32::Async
 {

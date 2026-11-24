@@ -1,8 +1,8 @@
-export module boring32:xaudio2.masteringvoice;
-import :win32;
-import :error;
-import :xaudio2.xaudio2error;
-import :xaudio2.voice;
+export module Boring32:XAudio2.MasteringVoice;
+import :Win32;
+import :Error;
+import :XAudio2.XAudio2Error;
+import :XAudio2.Voice;
 
 export namespace Boring32::XAudio2
 {

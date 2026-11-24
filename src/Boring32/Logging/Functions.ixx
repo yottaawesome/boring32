@@ -1,4 +1,4 @@
-export module boring32:logging.functions;
+export module Boring32:Logging.Functions;
 import std;
 
 export namespace Boring32::Log

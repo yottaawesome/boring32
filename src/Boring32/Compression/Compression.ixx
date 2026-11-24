@@ -1,6 +1,6 @@
 #pragma comment(lib, "Cabinet.lib")
 
-export module boring32:compression;
-export import :compression.compressor;
-export import :compression.decompressor;
-export import :compression.cabinet;
+export module Boring32:Compression;
+export import :Compression.Compressor;
+export import :Compression.Decompressor;
+export import :Compression.Cabinet;

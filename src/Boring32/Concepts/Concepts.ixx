@@ -1,4 +1,4 @@
-export module boring32:concepts;
+export module Boring32:Concepts;
 import std;
 
 export namespace Boring32::Concepts

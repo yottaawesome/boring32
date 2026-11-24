@@ -1,8 +1,8 @@
-export module boring32:datastructures.singlylinkedlist;
+export module Boring32:DataStructures.SinglyLinkedList;
 import <malloc.h>;
 import std;
-import :win32;
-import :error;
+import :Win32;
+import :Error;
 
 export namespace Boring32::DataStructures
 {

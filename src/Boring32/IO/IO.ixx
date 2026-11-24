@@ -1,2 +1,2 @@
-export module boring32:io;
-export import :io.completionport;
+export module Boring32:IO;
+export import :IO.CompletionPort;

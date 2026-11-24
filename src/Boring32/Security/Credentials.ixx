@@ -1,8 +1,8 @@
-export module boring32:security.credentials;
+export module Boring32:Security.Credentials;
 import std;
-import :win32;
-import :raii;
-import :error;
+import :Win32;
+import :Raii;
+import :Error;
 
 namespace Boring32::Security::Credentials
 {

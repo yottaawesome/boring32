@@ -1,10 +1,10 @@
-export module boring32:registry.registryvalue;
+export module Boring32:Registry.RegistryValue;
 import std;
-import :win32;
-import :error;
-import :strings;
-import :concepts;
-import :raii;
+import :Win32;
+import :Error;
+import :Strings;
+import :Concepts;
+import :Raii;
 
 namespace Boring32::Registry
 {

@@ -1,8 +1,8 @@
-export module boring32:ipc.mailslotserver;
+export module Boring32:IPC.MailslotServer;
 import std;
-import :win32;
-import :error;
-import :raii;
+import :Win32;
+import :Error;
+import :Raii;
 
 export namespace Boring32::IPC
 {

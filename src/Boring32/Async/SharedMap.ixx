@@ -1,6 +1,6 @@
-export module boring32:async.sharedmap;
+export module Boring32:Async.SharedMap;
 import std;
-import :async.slimreadwritelock;
+import :Async.SlimReadWriteLock;
 
 export namespace Boring32::Async
 {

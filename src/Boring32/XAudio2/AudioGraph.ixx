@@ -1,4 +1,4 @@
-export module boring32:xaudio2.audiograph;
+export module Boring32:XAudio2.AudioGraph;
 
 export namespace Boring32::XAudio2
 {

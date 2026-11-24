@@ -1,12 +1,12 @@
-export module boring32:winhttp.httpwebclient;
+export module Boring32:WinHttp.HttpWebClient;
 import std;
-import :win32;
-import :error;
-import :strings;
-import :concepts;
-import :winhttp.winhttphandle;
-import :winhttp.requestresult;
-import :winhttp.proxyinfo;
+import :Win32;
+import :Error;
+import :Strings;
+import :Concepts;
+import :WinHttp.WinHttpHandle;
+import :WinHttp.RequestResult;
+import :WinHttp.ProxyInfo;
 
 export namespace Boring32::WinHttp::Verbs
 {

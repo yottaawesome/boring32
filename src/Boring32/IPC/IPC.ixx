@@ -1,10 +1,10 @@
-export module boring32:ipc;
+export module Boring32:IPC;
 
-export import :ipc.anonymouspipe; 
-export import :ipc.namedpipeserverbase;
-export import :ipc.namedpipeclientbase;
-export import :ipc.blockingnamedpipeclient;
-export import :ipc.blockingnamedpipeserver;
-export import :ipc.overlappednamedpipeserver;
-export import :ipc.overlappednamedpipeclient;
-export import :ipc.mailslotserver;
+export import :IPC.AnonymousPipe;
+export import :IPC.NamedPipeServerBase;
+export import :IPC.NamedPipeClientBase;
+export import :IPC.BlockingNamedPipeClient;
+export import :IPC.BlockingNamedPipeServer;
+export import :IPC.OverlappedNamedPipeServer;
+export import :IPC.OverlappedNamedPipeClient;
+export import :IPC.MailslotServer;

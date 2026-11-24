@@ -1,8 +1,8 @@
-export module boring32:async.timerqueuetimercallback;
+export module Boring32:Async.TimerQueueTimerCallback;
 import std;
-import :win32;
-import :error;
-import :async.timerqueuetimer;
+import :Win32;
+import :Error;
+import :Async.TimerQueueTimer;
 
 export namespace Boring32::Async
 {

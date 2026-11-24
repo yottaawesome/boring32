@@ -1,7 +1,7 @@
-export module boring32:com.ptr;
+export module Boring32:COM.Ptr;
 import std;
-import :win32;
-import :error;
+import :Win32;
+import :Error;
 
 export namespace Boring32::Com
 {

@@ -1,1 +1,1 @@
-export module boring32:sspi.provider.pku2u;
+export module Boring32:Sspi.Provider.Pku2u;

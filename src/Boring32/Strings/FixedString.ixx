@@ -1,6 +1,6 @@
-export module boring32:strings.fixedstring;
+export module Boring32:Strings.FixedString;
 import std;
-import :concepts;
+import :Concepts;
 
 export namespace Boring32::Strings
 {

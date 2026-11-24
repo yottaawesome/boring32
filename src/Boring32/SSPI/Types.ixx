@@ -1,7 +1,7 @@
-export module boring32:sspi.types;
+export module Boring32:Sspi.Types;
 import std;
-import :win32;
-import :raii;
+import :Win32;
+import :Raii;
 
 export namespace Boring32::SSPI
 {

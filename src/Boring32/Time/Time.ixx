@@ -1,3 +1,3 @@
-export module boring32:time;
-export import :time.datetime;
-export import :time.functions;
+export module Boring32:Time;
+export import :Time.DateTime;
+export import :Time.Functions;

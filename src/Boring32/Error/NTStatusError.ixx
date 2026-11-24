@@ -1,8 +1,8 @@
-export module boring32:error.ntstatuserror;
+export module Boring32:Error.NTStatusError;
 import std;
-import :win32;
-import :error.boring32error;
-import :error.functions;
+import :Win32;
+import :Error.Boring32Error;
+import :Error.Functions;
 
 export namespace Boring32::Error
 {

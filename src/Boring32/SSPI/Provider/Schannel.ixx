@@ -1,1 +1,1 @@
-export module boring32:sspi.provider.schannel;
+export module Boring32:Sspi.Provider.Schannel;

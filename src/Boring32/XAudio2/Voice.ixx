@@ -1,4 +1,4 @@
-export module boring32:xaudio2.voice;
+export module Boring32:XAudio2.Voice;
 
 export namespace Boring32::XAudio2
 {

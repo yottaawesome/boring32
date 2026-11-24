@@ -1,10 +1,10 @@
-export module boring32:async.functions;
+export module Boring32:Async.Functions;
 import std;
-import :win32;
-import :raii;
-import :strings;
-import :error;
-import :concepts;
+import :Win32;
+import :Raii;
+import :Strings;
+import :Error;
+import :Concepts;
 
 export namespace Boring32::Async
 {

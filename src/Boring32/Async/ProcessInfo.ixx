@@ -1,6 +1,6 @@
-export module boring32:async.processinfo;
-import :win32;
-import :raii;
+export module Boring32:Async.ProcessInfo;
+import :Win32;
+import :Raii;
 
 export namespace Boring32::Async
 {

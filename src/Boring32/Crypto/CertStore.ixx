@@ -6,13 +6,13 @@ module;
 //#include <cryptuiapi.h>
 //#include <winnt.h>
 
-export module boring32:crypto.certstore;
+export module Boring32:Crypto.CertStore;
 import std;
-import :win32;
-import :strings;
-import :error;
-import :crypto.functions;
-import :crypto.certificate;
+import :Win32;
+import :Strings;
+import :Error;
+import :Crypto.Functions;
+import :Crypto.Certificate;
 
 export namespace Boring32::Crypto
 {

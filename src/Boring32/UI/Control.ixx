@@ -1,8 +1,8 @@
-export module boring32:ui.control;
+export module Boring32:UI.Control;
 import std;
-import :win32;
-import :ui.window;
-import :ui.common;
+import :Win32;
+import :UI.Window;
+import :UI.Common;
 
 export namespace Boring32::UI
 {

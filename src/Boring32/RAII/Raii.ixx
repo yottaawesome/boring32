@@ -1,5 +1,5 @@
-export module boring32:raii;
-export import :raii.uniqueptrs;
-export import :raii.uniquehandle;
-export import :raii.sharedhandle;
-export import :raii.win32handle;
+export module Boring32:Raii;
+export import :Raii.UniquePtrs;
+export import :Raii.UniqueHandle;
+export import :Raii.SharedHandle;
+export import :Raii.Win32Handle;

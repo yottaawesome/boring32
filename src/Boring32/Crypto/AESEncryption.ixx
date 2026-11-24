@@ -1,9 +1,9 @@
-export module boring32:crypto.aesencryption;
+export module Boring32:Crypto.AESEncryption;
 import std;
-import :win32;
-import :error;
-import :crypto.cryptokey;
-import :crypto.chainingmode;
+import :Win32;
+import :Error;
+import :Crypto.CryptoKey;
+import :Crypto.ChainingMode;
 
 // See: https://docs.microsoft.com/en-us/windows/win32/seccng/encrypting-data-with-cng
 export namespace Boring32::Crypto

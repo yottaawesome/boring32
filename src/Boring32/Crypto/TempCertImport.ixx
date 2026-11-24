@@ -1,9 +1,9 @@
-export module boring32:crypto.tempcertimport;
+export module Boring32:Crypto.TempCertImport;
 import std;
-import :win32;
-import :crypto.certificate;
-import :crypto.certstore;
-import :strings;
+import :Win32;
+import :Crypto.Certificate;
+import :Crypto.CertStore;
+import :Strings;
 
 export namespace Boring32::Crypto
 {

@@ -1,6 +1,6 @@
-export module boring32:util.enumeration;
+export module Boring32:Util.Enumeration;
 import std;
-import :error;
+import :Error;
 
 export namespace Boring32::Util
 {

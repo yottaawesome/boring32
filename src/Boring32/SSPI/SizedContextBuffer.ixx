@@ -1,6 +1,6 @@
-export module boring32:sspi.sizedcontextbuffer;
+export module Boring32:Sspi.SizedContextBuffer;
 import std;
-import :win32;
+import :Win32;
 
 export namespace Boring32::SSPI
 {

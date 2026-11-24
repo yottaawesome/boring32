@@ -1,5 +1,5 @@
-export module boring32:memory;
-export import :memory.functions;
-export import :memory.heap;
-export import :memory.virtualaddress;
-export import :memory.typedgloballock;
+export module Boring32:Memory;
+export import :Memory.Functions;
+export import :Memory.Heap;
+export import :Memory.VirtualAddress;
+export import :Memory.TypedGlobalLock;

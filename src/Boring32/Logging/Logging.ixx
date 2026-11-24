@@ -1,2 +1,2 @@
-export module boring32:logging;
-export import :logging.functions;
+export module Boring32:Logging;
+export import :Logging.Functions;

@@ -1,9 +1,9 @@
-export module boring32:winsock.resolvedname;
+export module Boring32:WinSock.ResolvedName;
 import std;
-import :win32;
-import :error;
-import :winsock.uniqueptrs;
-import :winsock.winsockerror;
+import :Win32;
+import :Error;
+import :WinSock.UniquePtrs;
+import :WinSock.WinSockError;
 
 export namespace Boring32::WinSock
 {

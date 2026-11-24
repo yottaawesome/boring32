@@ -1,6 +1,6 @@
-export module boring32:error.boring32error;
+export module Boring32:Error.Boring32Error;
 import std;
-import :error.functions;
+import :Error.Functions;
 
 export namespace Boring32::Error
 {

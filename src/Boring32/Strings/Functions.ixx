@@ -1,9 +1,9 @@
-export module boring32:strings.functions;
+export module Boring32:Strings.Functions;
 import std;
 import std.compat;
-import :win32;
-import :error;
-import :concepts;
+import :Win32;
+import :Error;
+import :Concepts;
 
 export namespace Boring32::Strings
 {

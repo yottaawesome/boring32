@@ -1,9 +1,9 @@
-export module boring32:services.servicecontrolmanager;
+export module Boring32:Services.ServiceControlManager;
 import std;
-import :win32;
-import :error;
-import :services.service;
-import :services.raii;
+import :Win32;
+import :Error;
+import :Services.Service;
+import :Services.Raii;
 
 export namespace Boring32::Services
 {

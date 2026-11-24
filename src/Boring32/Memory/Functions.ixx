@@ -1,6 +1,6 @@
-export module boring32:memory.functions;
-import :computer;
-import :win32;
+export module Boring32:Memory.Functions;
+import :Computer;
+import :Win32;
 
 export namespace Boring32::Memory
 {

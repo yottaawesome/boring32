@@ -1,6 +1,6 @@
-export module boring32:async.waitableaddress;
-import :win32;
-import :error;
+export module Boring32:Async.WaitableAddress;
+import :Win32;
+import :Error;
 
 export namespace Boring32::Async
 {

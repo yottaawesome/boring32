@@ -1,10 +1,10 @@
-export module boring32:ui.window;
+export module Boring32:UI.Window;
 import std;
-import :win32;
-import :strings;
-import :error;
-import :raii;
-import :ui.common;
+import :Win32;
+import :Strings;
+import :Error;
+import :Raii;
+import :UI.Common;
 
 export namespace Boring32::UI
 {

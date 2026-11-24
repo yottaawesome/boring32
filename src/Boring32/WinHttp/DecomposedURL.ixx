@@ -1,7 +1,7 @@
-export module boring32:winhttp.decomposedurl;
+export module Boring32:WinHttp.DecomposedURL;
 import std;
-import :win32;
-import :error;
+import :Win32;
+import :Error;
 
 export namespace Boring32::WinHttp
 {

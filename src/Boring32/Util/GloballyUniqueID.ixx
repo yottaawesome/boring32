@@ -1,9 +1,9 @@
-export module boring32:util.guid;
+export module Boring32:Util.Guid;
 import std;
-import :win32;
-import :error;
-import :strings;
-import :util.functions;
+import :Win32;
+import :Error;
+import :Strings;
+import :Util.Functions;
 
 export namespace Boring32::Util
 {

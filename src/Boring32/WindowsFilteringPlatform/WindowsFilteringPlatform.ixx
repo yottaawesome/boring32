@@ -1,9 +1,9 @@
 #pragma comment(lib, "Fwpuclnt.lib")
 
-export module boring32:windowsfilteringplatform;
-export import :windowsfilteringplatform.engine;
-export import :windowsfilteringplatform.filter;
-export import :windowsfilteringplatform.callout;
-export import :windowsfilteringplatform.provider;
-export import :windowsfilteringplatform.providercontext;
-export import :windowsfilteringplatform.functions;
+export module Boring32:WindowsFilteringPlatform;
+export import :WindowsFilteringPlatform.Engine;
+export import :WindowsFilteringPlatform.Filter;
+export import :WindowsFilteringPlatform.Callout;
+export import :WindowsFilteringPlatform.Provider;
+export import :WindowsFilteringPlatform.ProviderContext;
+export import :WindowsFilteringPlatform.Functions;

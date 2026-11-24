@@ -1,7 +1,7 @@
-export module boring32:msi.database;
+export module Boring32:MSI.Database;
 import std;
-import :win32;
-import :error;
+import :Win32;
+import :Error;
 
 export namespace Boring32::MSI
 {

@@ -1,1 +1,1 @@
-export module boring32:sspi.provider.negotiate;
+export module Boring32:Sspi.Provider.Negotiate;

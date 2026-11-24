@@ -1,3 +1,3 @@
-export module boring32:strings;
-export import :strings.fixedstring;
-export import :strings.functions;
+export module Boring32:Strings;
+export import :Strings.FixedString;
+export import :Strings.Functions;

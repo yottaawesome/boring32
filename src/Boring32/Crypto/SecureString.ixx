@@ -1,7 +1,7 @@
-export module boring32:crypto.securestring;
+export module Boring32:Crypto.SecureString;
 import std;
-import :win32;
-import :error;
+import :Win32;
+import :Error;
 
 export namespace Boring32::Crypto
 {

@@ -1,9 +1,9 @@
-export module boring32:registry.key;
+export module Boring32:Registry.Key;
 import std;
-import :win32;
-import :error;
-import :registry.functions;
-import :registry.value;
+import :Win32;
+import :Error;
+import :Registry.Functions;
+import :Registry.Value;
 
 export namespace Boring32::Registry
 {

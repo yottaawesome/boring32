@@ -1,7 +1,7 @@
-export module boring32:windowsimagingcomponent.imagingfactory;
-import :win32;
-import :error;
-import :com;
+export module Boring32:WindowsImagingComponent.ImagingFactory;
+import :Win32;
+import :Error;
+import :COM;
 
 export namespace Boring32::WindowsImagingComponent
 {

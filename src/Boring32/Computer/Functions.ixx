@@ -1,9 +1,9 @@
-export module boring32:computer.functions;
+export module Boring32:Computer.Functions;
 import std;
-import :win32;
-import :error;
-import :raii;
-import :strings;
+import :Win32;
+import :Error;
+import :Raii;
+import :Strings;
 
 export namespace Boring32::Computer
 {

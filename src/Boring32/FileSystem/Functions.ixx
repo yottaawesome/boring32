@@ -1,8 +1,8 @@
-export module boring32:filesystem.functions;
+export module Boring32:FileSystem.Functions;
 import std;
-import :win32;
-import :error;
-import :strings;
+import :Win32;
+import :Error;
+import :Strings;
 
 export namespace Boring32::FileSystem
 {

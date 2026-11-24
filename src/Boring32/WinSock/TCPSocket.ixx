@@ -1,11 +1,11 @@
-export module boring32:winsock.tcpsocket;
+export module Boring32:WinSock.TCPSocket;
 import std;
-import :win32;
-import :error;
-import :strings;
-import :winsock.uniqueptrs;
-import :winsock.winsockerror;
-import :winsock.resolvedname;
+import :Win32;
+import :Error;
+import :Strings;
+import :WinSock.UniquePtrs;
+import :WinSock.WinSockError;
+import :WinSock.ResolvedName;
 
 export namespace Boring32::WinSock
 {

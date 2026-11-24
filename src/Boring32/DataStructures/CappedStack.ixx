@@ -1,6 +1,6 @@
-export module boring32:datastructures.cappedstack;
+export module Boring32:DataStructures.CappedStack;
 import std;
-import :error;
+import :Error;
 
 export namespace Boring32::DataStructures
 {

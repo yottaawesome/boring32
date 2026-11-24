@@ -1,1 +1,1 @@
-export module boring32:sspi.provider.credential;
+export module Boring32:Sspi.Provider.Credential;

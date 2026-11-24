@@ -1,7 +1,7 @@
-export module boring32:winsock.winsockerror;
+export module Boring32:WinSock.WinSockError;
 import std;
-import :win32;
-import :error;
+import :Win32;
+import :Error;
 
 export namespace Boring32::WinSock
 {

@@ -1,9 +1,9 @@
-export module boring32:wirelesslan.session;
+export module Boring32:WirelessLAN.Session;
 import std;
-import :win32;
-import :error;
-import :wirelesslan.cleanup;
-import :wirelesslan.wirelessinterfaces;
+import :Win32;
+import :Error;
+import :WirelessLAN.Cleanup;
+import :WirelessLAN.WirelessInterfaces;
 
 export namespace Boring32::WirelessLAN
 {

@@ -1,4 +1,4 @@
-export module boring32:windowsfilteringplatform.provider;
+export module Boring32:WindowsFilteringPlatform.Provider;
 
 export namespace Boring32::WindowsFilteringPlatform
 {

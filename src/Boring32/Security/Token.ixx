@@ -1,11 +1,11 @@
-export module boring32:security.token;
+export module Boring32:Security.Token;
 import std;
-import :win32;
-import :raii;
-import :error;
-import :security.constants;
-import :security.functions;
-import :security.securityidentifier;
+import :Win32;
+import :Raii;
+import :Error;
+import :Security.Constants;
+import :Security.Functions;
+import :Security.SecurityIdentifier;
 
 export namespace Boring32::Security
 {

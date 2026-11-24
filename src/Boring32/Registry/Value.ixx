@@ -1,8 +1,8 @@
-export module boring32:registry.value;
+export module Boring32:Registry.Value;
 import std;
-import :win32;
-import :error;
-import :strings;
+import :Win32;
+import :Error;
+import :Strings;
 
 export namespace Boring32::Registry
 {

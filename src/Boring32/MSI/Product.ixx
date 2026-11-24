@@ -1,7 +1,7 @@
-export module boring32:msi.product;
+export module Boring32:MSI.Product;
 import std;
-import :win32;
-import :error;
+import :Win32;
+import :Error;
 
 export namespace Boring32::MSI
 {

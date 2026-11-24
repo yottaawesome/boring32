@@ -1,7 +1,7 @@
-export module boring32:memory.typedgloballock;
+export module Boring32:Memory.TypedGlobalLock;
 import std;
-import :win32;
-import :error;
+import :Win32;
+import :Error;
 
 export namespace Boring32::Memory
 {

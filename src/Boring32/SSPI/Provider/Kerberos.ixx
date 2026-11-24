@@ -1,1 +1,1 @@
-export module boring32:sspi.provider.kerberos;
+export module Boring32:Sspi.Provider.Kerberos;

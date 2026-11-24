@@ -1,7 +1,7 @@
-export module boring32:raii.uniquehandle;
+export module Boring32:Raii.UniqueHandle;
 import std;
-import :win32;
-import :error;
+import :Win32;
+import :Error;
 
 export namespace Boring32::RAII
 {

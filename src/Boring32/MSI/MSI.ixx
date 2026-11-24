@@ -1,6 +1,6 @@
 // link to msi.lib to use this module
-export module boring32:msi;
-export import :msi.functions;
-export import :msi.database;
-export import :msi.package;
-export import :msi.product;
+export module Boring32:MSI;
+export import :MSI.Functions;
+export import :MSI.Database;
+export import :MSI.Package;
+export import :MSI.Product;

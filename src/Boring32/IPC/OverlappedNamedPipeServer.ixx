@@ -1,10 +1,10 @@
-export module boring32:ipc.overlappednamedpipeserver;
+export module Boring32:IPC.OverlappedNamedPipeServer;
 import std;
-import :win32;
-import :raii;
-import :error;
-import :async;
-import :ipc.namedpipeserverbase;
+import :Win32;
+import :Raii;
+import :Error;
+import :Async;
+import :IPC.NamedPipeServerBase;
 
 export namespace Boring32::IPC
 {

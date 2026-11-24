@@ -1,8 +1,8 @@
-export module boring32:compression.compressor;
+export module Boring32:Compression.Compressor;
 import std;
-import :win32;
-import :error;
-import :compression.deleters;
+import :Win32;
+import :Error;
+import :Compression.Deleters;
 
 // For reference of the Compression API, see: https://docs.microsoft.com/en-us/windows/win32/cmpapi/using-the-compression-api
 // For reference see: https://docs.microsoft.com/en-us/windows/win32/cmpapi/using-the-compression-api-in-block-mode

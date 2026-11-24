@@ -1,8 +1,8 @@
-export module boring32:security.privatenamespace;
+export module Boring32:Security.PrivateNamespace;
 import std;
-import :win32;
-import :raii;
-import :error;
+import :Win32;
+import :Raii;
+import :Error;
 
 export namespace Boring32::Security
 {

@@ -1,4 +1,4 @@
-export module boring32:filesystem;
-export import :filesystem.functions;
-export import :filesystem.file;
-export import :filesystem.directory;
+export module Boring32:FileSystem;
+export import :FileSystem.Functions;
+export import :FileSystem.File;
+export import :FileSystem.Directory;

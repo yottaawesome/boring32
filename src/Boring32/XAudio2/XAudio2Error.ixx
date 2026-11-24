@@ -1,6 +1,6 @@
-export module boring32:xaudio2.xaudio2error;
+export module Boring32:XAudio2.XAudio2Error;
 import std;
-import :error;
+import :Error;
 
 export namespace Boring32::XAudio2
 {

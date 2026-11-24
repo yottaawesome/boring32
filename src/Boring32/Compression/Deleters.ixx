@@ -1,7 +1,7 @@
-export module boring32:compression.deleters;
+export module Boring32:Compression.Deleters;
 import std;
-import :win32;
-import :raii;
+import :Win32;
+import :Raii;
 
 export namespace Boring32::Compression 
 {

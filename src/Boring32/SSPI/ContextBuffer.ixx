@@ -1,5 +1,5 @@
-export module boring32:sspi.contextbuffer;
-import :win32;
+export module Boring32:Sspi.ContextBuffer;
+import :Win32;
 
 export namespace Boring32::SSPI
 {

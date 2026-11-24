@@ -1,7 +1,7 @@
-export module boring32:io.completionport;
-import :win32;
-import :raii;
-import :error;
+export module Boring32:IO.CompletionPort;
+import :Win32;
+import :Raii;
+import :Error;
 
 export namespace Boring32::IO
 {

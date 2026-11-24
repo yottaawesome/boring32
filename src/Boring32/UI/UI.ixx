@@ -1,4 +1,4 @@
-export module boring32:ui;
-export import :ui.window;
-export import :ui.common;
-export import :ui.control;
+export module Boring32:UI;
+export import :UI.Window;
+export import :UI.Common;
+export import :UI.Control;

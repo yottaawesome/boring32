@@ -1,4 +1,4 @@
-export module boring32:winhttp.enums;
+export module Boring32:WinHttp.Enums;
 
 export namespace Boring32::WinHttp
 {

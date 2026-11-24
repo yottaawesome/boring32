@@ -1,8 +1,8 @@
-export module boring32:services.functions;
+export module Boring32:Services.Functions;
 import std;
-import :win32;
-import :error;
-import :services.raii;
+import :Win32;
+import :Error;
+import :Services.Raii;
 
 export namespace Boring32::Services
 {

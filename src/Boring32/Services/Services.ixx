@@ -1,5 +1,5 @@
-export module boring32:services;
-export import :services.functions;
-export import :services.servicecontrolmanager;
-export import :services.raii;
-export import :services.service;
+export module Boring32:Services;
+export import :Services.Functions;
+export import :Services.ServiceControlManager;
+export import :Services.Raii;
+export import :Services.Service;

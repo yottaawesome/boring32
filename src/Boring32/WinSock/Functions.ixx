@@ -1,11 +1,11 @@
-export module boring32:winsock.functions;
+export module Boring32:WinSock.Functions;
 import std;
-import :win32;
-import :raii;
-import :error;
-import :strings;
-import :async;
-import :winsock.winsockerror;
+import :Win32;
+import :Raii;
+import :Error;
+import :Strings;
+import :Async;
+import :WinSock.WinSockError;
 
 namespace Boring32::WinSock
 {

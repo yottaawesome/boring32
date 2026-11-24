@@ -2,10 +2,10 @@
 
 // TODO: rework nested exceptions, promote WinSockError to a full error type.
 
-export module boring32:winsock;
-export import :winsock.functions;
-export import :winsock.winsockerror;
-export import :winsock.winsockinit;
-export import :winsock.tcpsocket;
-export import :winsock.socket;
-export import :winsock.resolvedname;
+export module Boring32:WinSock;
+export import :WinSock.Functions;
+export import :WinSock.WinSockError;
+export import :WinSock.WinSockInit;
+export import :WinSock.TCPSocket;
+export import :WinSock.Socket;
+export import :WinSock.ResolvedName;

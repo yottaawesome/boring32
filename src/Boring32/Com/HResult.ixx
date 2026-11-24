@@ -1,8 +1,8 @@
-export module boring32:com.hresult;
+export module Boring32:COM.HResult;
 import std;
-import :win32;
-import :error;
-import :com.functions;
+import :Win32;
+import :Error;
+import :COM.Functions;
 
 export namespace Boring32::Com
 {

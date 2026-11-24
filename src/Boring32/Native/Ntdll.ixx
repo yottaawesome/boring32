@@ -1,8 +1,8 @@
-export module boring32:native.ntdll;
+export module Boring32:Native.Ntdll;
 import std;
-import :win32;
-import :error;
-import :native.defs;
+import :Win32;
+import :Error;
+import :Native.Defs;
 
 export namespace Boring32::Native
 {

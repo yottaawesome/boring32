@@ -1,7 +1,7 @@
-export module boring32:time.functions;
+export module Boring32:Time.Functions;
 import std;
-import :win32;
-import :error;
+import :Win32;
+import :Error;
 
 export namespace Boring32::Time
 {

@@ -1,11 +1,11 @@
-export module boring32:async.filerangelock;
+export module Boring32:Async.FileRangeLock;
 import std;
-import :win32;
-import :concepts;
-import :error;
-import :raii;
-import :util;
-import :strings;
+import :Win32;
+import :Concepts;
+import :Error;
+import :Raii;
+import :Util;
+import :Strings;
 
 export namespace Boring32::Async
 {

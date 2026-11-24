@@ -1,8 +1,8 @@
-export module boring32:async.eventloop;
+export module Boring32:Async.EventLoop;
 import std;
-import :win32;
-import :error;
-import :async.criticalsection;
+import :Win32;
+import :Error;
+import :Async.CriticalSection;
 
 export namespace Boring32::Async
 {

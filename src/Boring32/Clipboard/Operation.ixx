@@ -1,7 +1,7 @@
-export module boring32:clipboard.operation;
+export module Boring32:Clipboard.Operation;
 import std;
-import :win32;
-import :error;
+import :Win32;
+import :Error;
 
 namespace Boring32::Clipboard
 {

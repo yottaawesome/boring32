@@ -1,9 +1,9 @@
-export module boring32:async.waitable;
+export module Boring32:Async.Waitable;
 import std;
-import :win32;
-import :error;
-import :async.functions;
-import :concepts;
+import :Win32;
+import :Error;
+import :Async.Functions;
+import :Concepts;
 
 export namespace Boring32::Async
 {

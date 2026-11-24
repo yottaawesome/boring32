@@ -1,8 +1,8 @@
-export module boring32:ipc.blockingnamedpipeclient;
-import :win32;
-import :error;
-import :util;
-import :ipc.namedpipeclientbase;
+export module Boring32:IPC.BlockingNamedPipeClient;
+import :Win32;
+import :Error;
+import :Util;
+import :IPC.NamedPipeClientBase;
 
 export namespace Boring32::IPC
 {

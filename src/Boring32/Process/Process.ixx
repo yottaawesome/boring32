@@ -1,2 +1,2 @@
-export module boring32:process;
-export import :process.dynamiclinklibrary;
+export module Boring32:Process;
+export import :Process.DynamicLinkLibrary;
