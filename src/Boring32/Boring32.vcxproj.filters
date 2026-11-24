@@ -235,6 +235,7 @@
     <ClCompile Include="Memory\typedgloballock.ixx" />
     <ClCompile Include="Strings\functions.ixx" />
     <ClCompile Include="Async\asyncread.ixx" />
+    <ClCompile Include="DataStructures\CircularBuffer.ixx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win32\framework.h">

@@ -316,6 +316,7 @@
     <ClCompile Include="Async\async.ixx" />
     <ClCompile Include="Clipboard\clipboard.ixx" />
     <ClCompile Include="Clipboard\operation.ixx" />
+    <ClCompile Include="DataStructures\CircularBuffer.ixx" />
     <ClCompile Include="Memory\typedgloballock.ixx" />
     <ClCompile Include="Strings\functions.ixx" />
     <ClCompile Include="UI\common.ixx" />
